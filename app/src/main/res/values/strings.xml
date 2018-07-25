@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CoasterCreditCounter</string>
+    <string name="text_browse_locations">Browse Locations</string>
+
+    <string name="button_text_minus">-</string>
+    <string name="button_text_plus">+</string>
+    <string name="button_text_back">&#60; %1$s</string>
+    <string name="button_text_up">&#708;</string>
+    <string name="button_text_down">&#709;</string>
+</resources>
