@@ -2,6 +2,8 @@ package de.juliusawen.coastercreditcounter.content.database;
 
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
@@ -9,6 +11,7 @@ import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Coaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.content.Park;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -29,11 +32,28 @@ public final class DatabaseMock implements IDatabaseWrapper
         Location northRhineWestphalia = new Location("North Rhine-Westphalia", UUID.randomUUID());
         Location lowerSaxony = new Location("Lower Saxony", UUID.randomUUID());
 
+        List<Location> states = Arrays.asList(
+                new Location("Baden-Württemberg", UUID.randomUUID()),
+                new Location("Bavaria", UUID.randomUUID()),
+                new Location("Berlin", UUID.randomUUID()),
+                new Location("Brandenburg", UUID.randomUUID()),
+                new Location("Bremen", UUID.randomUUID()),
+                new Location("Hamburg", UUID.randomUUID()),
+                new Location("Hesse", UUID.randomUUID()),
+                new Location("Mecklenburg-Vorpommern", UUID.randomUUID()),
+                new Location("Rhineland-Palatinate", UUID.randomUUID()),
+                new Location("Saarland", UUID.randomUUID()),
+                new Location("Saxony", UUID.randomUUID()),
+                new Location("Saxony-Anhalt", UUID.randomUUID()),
+                new Location("Schleswig-Holstein", UUID.randomUUID()),
+                new Location("Thuringia", UUID.randomUUID())
+        );
+
         Location bruehl = new Location("Brühl", UUID.randomUUID());
         Location soltau = new Location("Soltau", UUID.randomUUID());
 
-        Location phantasialand = new Location("Phantasialand", UUID.randomUUID());
-        Location heidePark = new Location("Heide Park", UUID.randomUUID());
+        Park phantasialand = new Park("Phantasialand", UUID.randomUUID());
+        Park heidePark = new Park("Heide Park", UUID.randomUUID());
 
         Coaster taron = new Coaster("Taron", UUID.randomUUID());
         Attraction hollywoodTour = new Attraction("Hollywood Tour", UUID.randomUUID());
@@ -57,6 +77,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         germany.addChild(northRhineWestphalia);
         germany.addChild(lowerSaxony);
+        germany.addChildren(states);
 
         europe.addChild(germany);
         europe.addChild(netherlands);
@@ -64,6 +85,31 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
-        content.locationRoot = earth;
+
+        // do things with tree
+        this.putLocationsInAttractions(earth);
+
+        content.setLocationRoot(earth);
+    }
+
+    private void putLocationsInAttractions(Location location)
+    {
+        if (!location.getChildren().isEmpty())
+        {
+            for (Location child : location.getChildren())
+            {
+                if(child.getClass().equals(Location.class))
+                {
+                    this.putLocationsInAttractions(child);
+                }
+                else if(child.getClass().equals(Park.class))
+                {
+                    for (Attraction attraction : ((Park) child).getAttractions())
+                    {
+                        attraction.setLocation(child);
+                    }
+                }
+            }
+        }
     }
 }
