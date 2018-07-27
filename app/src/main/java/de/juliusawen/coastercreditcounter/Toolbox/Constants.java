@@ -4,6 +4,8 @@ public abstract class Constants
 {
     public static final String LOG_TAG = "|------JA.CODING------|";
 
+    public static final String KEY_ELEMENTS = "de.juliusawen.elements";
+
     public static final int BUTTON_PICK = ButtonFunctions.PICK.ordinal();
     public static final int BUTTON_DONE = ButtonFunctions.DONE.ordinal();
     public static final int BUTTON_BACK = ButtonFunctions.BACK.ordinal();

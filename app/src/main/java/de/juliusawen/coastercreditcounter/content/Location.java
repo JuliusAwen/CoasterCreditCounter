@@ -6,15 +6,12 @@ import java.util.UUID;
 
 public class Location extends Element
 {
-    private List<Attraction> attractions;
-
     private List<Location> children = new ArrayList<>();
     private Location parent = null;
 
     public Location(String name, UUID uuid)
     {
         super(name, uuid);
-        this.attractions = new ArrayList<>();
     }
 
     public Location addChild(Location child)
@@ -39,33 +36,15 @@ public class Location extends Element
         this.parent = parent;
     }
 
-    public List<Attraction> getAttractions()
+    public void addChildren(List<Location> children)
     {
-        return this.attractions;
-    }
-
-    public void addAttraction(Attraction attraction)
-    {
-        if(!this.attractions.contains(attraction))
+        for (Location child :children)
         {
-            this.attractions.add(attraction);
+            child.setParent(this);
         }
+
+        this.children.addAll(children);
     }
-
-//    private void addAttractions(List<Attraction> attractions)
-//    {
-//        this.attractions.addAll(attractions);
-//    }
-
-    //    public void addChildren(List<Location> children)
-//    {
-//        for (Location child :children)
-//        {
-//            child.setParent(this);
-//        }
-//
-//        this.children.addAll(children);
-//    }
 
 
 //    public Location getRoot()
