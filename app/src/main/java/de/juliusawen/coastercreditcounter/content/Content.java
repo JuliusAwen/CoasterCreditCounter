@@ -95,4 +95,29 @@ public class Content
 
         return elements;
     }
+
+    //TODO: implement List<Location> & List<Attraction>
+    public List<Location> getLocationsFromUuidStringArrayList(List<String> strings)
+    {
+        List<Location> locations = new ArrayList<>();
+
+        for(String string : strings)
+        {
+            locations.add((Location) this.getElementByUuid(UUID.fromString(string)));
+        }
+
+        return locations;
+    }
+
+    public List<Element> convertToElementArrayList(List<? extends Element> elementsToConvert)
+    {
+        List<Element> elements = new ArrayList<>();
+
+        for(Element element : elementsToConvert)
+        {
+            elements.add(element);
+        }
+
+        return elements;
+    }
 }

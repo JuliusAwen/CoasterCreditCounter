@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
+        toolbar.setTitle(getString(R.string.title_app_name));
         setSupportActionBar(toolbar);
 
         Intent intent = new Intent(this, BrowseLocationsActivity.class);
