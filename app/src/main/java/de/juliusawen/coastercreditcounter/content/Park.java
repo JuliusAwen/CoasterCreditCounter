@@ -19,6 +19,11 @@ public class Park extends Location
         return this.attractions;
     }
 
+    public void setAttractions(List<Attraction> attractions)
+    {
+        this.attractions = attractions;
+    }
+
     public void addAttraction(Attraction attraction)
     {
         this.attractions.add(attraction);

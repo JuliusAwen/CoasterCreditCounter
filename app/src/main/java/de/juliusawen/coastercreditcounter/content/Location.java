@@ -46,6 +46,10 @@ public class Location extends Element
         this.children.addAll(children);
     }
 
+    public void setChildren(List<Location> children)
+    {
+        this.children = children;
+    }
 
 //    public Location getRoot()
 //    {

@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="pressed_color">#303F51B5</color>
+    <color name="default_color">#00000000</color>
 </resources>

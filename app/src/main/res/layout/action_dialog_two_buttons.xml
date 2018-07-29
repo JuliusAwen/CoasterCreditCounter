@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutActionDialog"
+    android:id="@+id/linearLayout_actionDialog"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
@@ -9,7 +9,7 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/buttonActionDialogLeft"
+        android:id="@+id/button_actionDialogLeft"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="24sp"
@@ -26,7 +26,7 @@
         android:background="@color/white"/>
 
     <Button
-        android:id="@+id/buttonActionDialogRight"
+        android:id="@+id/button_actionDialogRight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="24sp"

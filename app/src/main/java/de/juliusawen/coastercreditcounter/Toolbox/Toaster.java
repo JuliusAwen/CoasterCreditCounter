@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.Toolbox;
 import android.content.Context;
 import android.widget.Toast;
 
-public abstract class Multitool
+public abstract class Toaster
 {
     public static void makeToast(Context context, String text)
     {

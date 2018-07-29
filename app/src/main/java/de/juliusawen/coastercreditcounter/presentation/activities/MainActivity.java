@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation;
+package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_app_name));
         setSupportActionBar(toolbar);
+
+
+//        View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
 
         Intent intent = new Intent(this, BrowseLocationsActivity.class);
         startActivity(intent);

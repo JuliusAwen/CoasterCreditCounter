@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button android:id="@+id/buttonNoBorder"
+<Button android:id="@+id/button_noBorder"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:gravity="center"

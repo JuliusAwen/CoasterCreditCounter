@@ -10,8 +10,12 @@
     <include
         layout="@layout/action_dialog_two_buttons"/>
 
-    <include
-        layout="@layout/content_container"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_content"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <include
         layout="@layout/action_dialog_two_buttons"/>

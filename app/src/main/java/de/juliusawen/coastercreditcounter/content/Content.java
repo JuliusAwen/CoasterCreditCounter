@@ -51,28 +51,23 @@ public class Content
 
     private void flattenContentTree(Location location)
     {
-        if (!location.getChildren().isEmpty())
-        {
-            this.elements.put(location.getUuid(), location);
+        this.elements.put(location.getUuid(), location);
 
-            for (Location child : location.getChildren())
+        for (Location child : location.getChildren())
+        {
+            this.flattenContentTree(child);
+        }
+
+        if(location.getClass().equals(Park.class))
+        {
+            for (Attraction attraction : ((Park) location).getAttractions())
             {
-                if(child.getClass().equals(Location.class))
-                {
-                    this.flattenContentTree(child);
-                }
-                else if(child.getClass().equals(Park.class))
-                {
-                    for (Attraction attraction : ((Park) child).getAttractions())
-                    {
-                        this.elements.put(attraction.getUuid(), attraction);
-                    }
-                }
+                this.elements.put(attraction.getUuid(), attraction);
             }
         }
     }
 
-    public ArrayList<String> convertToUuidStringArrayList(List<? extends Element> elements)
+    public ArrayList<String> getUuidStringsFromElements(List<? extends Element> elements)
     {
         ArrayList<String> strings = new ArrayList<>();
 
@@ -84,7 +79,7 @@ public class Content
         return strings;
     }
 
-    public List<Element> getElementsFromUuidStringArrayList(List<String> strings)
+    public List<Element> getElementsFromUuidStrings(List<String> strings)
     {
         List<Element> elements = new ArrayList<>();
 
@@ -97,7 +92,7 @@ public class Content
     }
 
     //TODO: implement List<Location> & List<Attraction>
-    public List<Location> getLocationsFromUuidStringArrayList(List<String> strings)
+    public List<Location> getLocationsFromUuidStrings(List<String> strings)
     {
         List<Location> locations = new ArrayList<>();
 
@@ -109,15 +104,27 @@ public class Content
         return locations;
     }
 
-    public List<Element> convertToElementArrayList(List<? extends Element> elementsToConvert)
+    public List<Location> convertElementsToLocations(List<Element> elements)
     {
-        List<Element> elements = new ArrayList<>();
+        List<Location> locations = new ArrayList<>();
 
-        for(Element element : elementsToConvert)
+        for(Element element : elements)
         {
-            elements.add(element);
+            locations.add(((Location) element));
         }
 
-        return elements;
+        return locations;
+    }
+
+    public List<Attraction> convertElementsToAttractions(List<Element> elements)
+    {
+        List<Attraction> attractions = new ArrayList<>();
+
+        for(Element element : elements)
+        {
+            attractions.add(((Attraction) element));
+        }
+
+        return attractions;
     }
 }
