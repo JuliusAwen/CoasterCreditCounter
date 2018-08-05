@@ -7,6 +7,7 @@ public abstract class Constants
     public static final String KEY_ELEMENTS = "de.juliusawen.elements";
     public static final String KEY_CURRENT_ELEMENT = "de.juliusawen.current_element";
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.selected_element";
+    public static final String KEY_HELP_ACTIVE = "de.juliusawen.help_active";
     public static final String EXTRA_UUID = "de.juliusawen.uuid";
 
     public static final int BUTTON_ACCEPT = ButtonFunctions.ACCEPT.ordinal();
@@ -14,6 +15,8 @@ public abstract class Constants
     public static final int BUTTON_BACK = ButtonFunctions.BACK.ordinal();
     public static final int BUTTON_UP = ButtonFunctions.UP.ordinal();
     public static final int BUTTON_DOWN = ButtonFunctions.DOWN.ordinal();
+    public static final int BUTTON_CLOSE_HELP_SCREEN = ButtonFunctions.CLOSE_HELP.ordinal();
+
 }
 
 enum ButtonFunctions
@@ -22,5 +25,6 @@ enum ButtonFunctions
     CANCEL,
     BACK,
     UP,
-    DOWN
+    DOWN,
+    CLOSE_HELP
 }

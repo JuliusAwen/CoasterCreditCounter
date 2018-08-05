@@ -8,9 +8,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,8 +36,12 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
 
     private List<Element> elementsToSort;
 
+    private View sortElementsView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
+
+    private View helpView;
+    private boolean helpActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,14 +70,16 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
 
     private void initializeViews()
     {
-        LinearLayout linearLayoutActivity = findViewById(R.id.linearLayout_sortElements);
-        View view = getLayoutInflater().inflate(R.layout.layout_sort_elements, linearLayoutActivity, false);
-        linearLayoutActivity.addView(view);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_sortElements);
+        this.sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
+        frameLayoutActivity.addView(sortElementsView);
 
-        this.createToolbar(view);
-        this.createActionDialogTop(view);
-        this.createContentRecyclerView(view);
-        this.createActionDialogBottom(view);
+        this.createToolbar(sortElementsView);
+        this.createActionDialogTop(sortElementsView);
+        this.createContentRecyclerView(sortElementsView);
+        this.createActionDialogBottom(sortElementsView);
+
+        this.createHelpView(frameLayoutActivity);
     }
 
     private void createToolbar(View view)
@@ -79,6 +88,14 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         toolbar.setTitle(getString(R.string.title_sort_elements));
         toolbar.setSubtitle(this.subtitle);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.options_menu_sort_elements_items, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void createActionDialogTop(View view)
@@ -110,14 +127,6 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         buttonAccept.setImageDrawable(drawable);
         buttonAccept.setId(Constants.BUTTON_ACCEPT);
         buttonAccept.setOnClickListener(this);
-    }
-
-    private Drawable setTintToWhite(Drawable drawable)
-    {
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
-
-        return drawable;
     }
 
     private void createContentRecyclerView(View view)
@@ -158,6 +167,50 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.recyclerView.setAdapter(this.recyclerViewAdapter);
     }
 
+    private void createHelpView(FrameLayout frameLayout)
+    {
+        this.helpView = getLayoutInflater().inflate(R.layout.layout_help, frameLayout, false);
+
+        TextView textView = helpView.findViewById(R.id.textViewHelp);
+        textView.setText(R.string.help_text_sort_elements);
+
+        ImageButton buttonBack = helpView.findViewById(R.id.imageButton_help);
+        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
+
+        buttonBack.setImageDrawable(drawable);
+        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_SCREEN);
+        buttonBack.setOnClickListener(this);
+
+        frameLayout.addView(helpView);
+
+        this.helpView.setVisibility(View.INVISIBLE);
+        this.helpActive = false;
+    }
+
+    private void setHelpActive(boolean active)
+    {
+        if(active)
+        {
+            this.helpView.setVisibility(View.VISIBLE);
+            this.sortElementsView.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            this.sortElementsView.setVisibility(View.VISIBLE);
+            this.helpView.setVisibility(View.INVISIBLE);
+        }
+
+        this.helpActive = active;
+    }
+
+    private Drawable setTintToWhite(Drawable drawable)
+    {
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
+
+        return drawable;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
@@ -165,7 +218,18 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToSort));
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
-        outState.putString(Constants.KEY_SELECTED_ELEMENT, this.recyclerViewAdapter.selectedElement.getUuid().toString());
+
+        if(this.recyclerViewAdapter.selectedElement == null)
+        {
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, "");
+        }
+        else
+        {
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.recyclerViewAdapter.selectedElement.getUuid().toString());
+        }
+
+
+        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpActive);
     }
 
     @Override
@@ -175,7 +239,18 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
 
         this.elementsToSort = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT)));
+
+        String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
+        if(selectedElementString.isEmpty())
+        {
+            this.recyclerViewAdapter.selectedElement = null;
+        }
+        else
+        {
+            this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
+        }
+
+        this.setHelpActive(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.recyclerViewAdapter.updateList(this.elementsToSort);
     }
@@ -183,7 +258,11 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View view)
     {
-        if (view.getId() == Constants.BUTTON_UP || view.getId() == Constants.BUTTON_DOWN)
+        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
+        {
+            this.setHelpActive(false);
+        }
+        else if (view.getId() == Constants.BUTTON_UP || view.getId() == Constants.BUTTON_DOWN)
         {
             if(this.recyclerViewAdapter.selectedElement != null)
             {
@@ -219,6 +298,23 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         else if (view.getId() == Constants.BUTTON_CANCEL)
         {
             finish();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.optionsMenuHelp:
+            {
+                this.setHelpActive(true);
+            }
+
+            default:
+            {
+                return super.onOptionsItemSelected(item);
+            }
         }
     }
 }

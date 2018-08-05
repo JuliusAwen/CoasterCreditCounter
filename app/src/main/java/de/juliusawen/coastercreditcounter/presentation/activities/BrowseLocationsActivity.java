@@ -13,7 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
 
+    private View browseLocationsView;
     private RecyclerViewAdapter contentRecyclerViewAdapter;
     private Toolbar toolbar;
+
+    private View helpView;
+    private boolean helpActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,13 +56,15 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
     private void initializeViews()
     {
-        LinearLayout linearLayoutActivity = findViewById(R.id.linearLayout_browseLocations);
-        View view = getLayoutInflater().inflate(R.layout.layout_browse_locations, linearLayoutActivity, false);
-        linearLayoutActivity.addView(view);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_browseLocations);
+        this.browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, frameLayoutActivity, false);
+        frameLayoutActivity.addView(browseLocationsView);
 
-        this.createToolbar(view);
-        this.createNavigationBar(view);
-        this.createContentRecyclerView(view);
+        this.createToolbar(browseLocationsView);
+        this.createNavigationBar(browseLocationsView);
+        this.createContentRecyclerView(browseLocationsView);
+
+        this.createHelpView(frameLayoutActivity);
     }
 
     private void refreshViews()
@@ -76,10 +85,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(this.currentLocation.getChildren().size() > 1)
-        {
-            getMenuInflater().inflate(R.menu.toolbar_items, menu);
-        }
+        getMenuInflater().inflate(R.menu.options_menu_browse_locations_items, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -100,7 +106,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
             View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_noBorder);
-            Drawable drawable = this.getWhiteDrawable(getResources().getDrawable(R.drawable.ic_baseline_chevron_left_24px));
+            Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_chevron_left_24px));
             button.setText(location.getName());
             button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             button.setId(Constants.BUTTON_BACK);
@@ -109,14 +115,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
             linearLayoutNavigationBar.addView(buttonView);
         }
-    }
-
-    private Drawable getWhiteDrawable(Drawable drawable)
-    {
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
-
-        return drawable;
     }
 
     private void createContentRecyclerView(View view)
@@ -144,7 +142,44 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
             @Override
             public void onLongClick(View view, int position) {}
         }));
+
         recyclerView.setAdapter(contentRecyclerViewAdapter);
+    }
+
+    private void createHelpView(FrameLayout frameLayout)
+    {
+        this.helpView = getLayoutInflater().inflate(R.layout.layout_help, frameLayout, false);
+
+        TextView textView = helpView.findViewById(R.id.textViewHelp);
+        textView.setText(R.string.help_text_browse_locations);
+
+        ImageButton buttonBack = helpView.findViewById(R.id.imageButton_help);
+        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
+
+        buttonBack.setImageDrawable(drawable);
+        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_SCREEN);
+        buttonBack.setOnClickListener(this);
+
+        frameLayout.addView(helpView);
+
+        this.helpView.setVisibility(View.INVISIBLE);
+        this.helpActive = false;
+    }
+
+    private void setHelpActive(boolean active)
+    {
+        if(active)
+        {
+            this.helpView.setVisibility(View.VISIBLE);
+            this.browseLocationsView.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            this.browseLocationsView.setVisibility(View.VISIBLE);
+            this.helpView.setVisibility(View.INVISIBLE);
+        }
+
+        this.helpActive = active;
     }
 
     private Drawable setTintToWhite(Drawable drawable)
@@ -162,6 +197,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.recentLocations));
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentLocation.getUuid().toString());
+        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpActive);
     }
 
     @Override
@@ -171,6 +207,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
         this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
+        this.setHelpActive(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.refreshViews();
     }
@@ -185,24 +222,31 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view)
     {
-        Location location = (Location) view.getTag();
-
-        int length = this.recentLocations.size() - 1;
-        for (int i = length; i >= 0; i--)
+        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
         {
-            if (this.recentLocations.get(i).equals(location))
-            {
-                this.recentLocations.remove(i);
-                break;
-            }
-            else
-            {
-                this.recentLocations.remove(i);
-            }
+            this.setHelpActive(false);
         }
+        else
+        {
+            Location location = (Location) view.getTag();
 
-        this.currentLocation = location;
-        this.refreshViews();
+            int length = this.recentLocations.size() - 1;
+            for (int i = length; i >= 0; i--)
+            {
+                if (this.recentLocations.get(i).equals(location))
+                {
+                    this.recentLocations.remove(i);
+                    break;
+                }
+                else
+                {
+                    this.recentLocations.remove(i);
+                }
+            }
+
+            this.currentLocation = location;
+            this.refreshViews();
+        }
     }
 
     @Override
@@ -210,7 +254,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     {
         switch (item.getItemId())
         {
-            case R.id.actionSettingsSort:
+            case R.id.optionsMenuSort:
             {
                 Intent intent = new Intent(this, SortElementsActivity.class);
                 intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
@@ -219,10 +263,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
                 return true;
             }
 
+            case R.id.optionsMenuHelp:
+            {
+                this.setHelpActive(true);
+            }
+
             default:
             {
-                Toaster.makeToast(this, "onOptionsItemSelected --> default...!?");
-
                 return super.onOptionsItemSelected(item);
             }
         }

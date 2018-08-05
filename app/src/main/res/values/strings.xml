@@ -1,10 +1,17 @@
 <resources>
+
+    <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
     <string name="title_browse_locations">Location</string>
     <string name="title_sort_elements">Sort</string>
 
-    <string name="action_menu_sort">sort</string>
 
+    <!--options menu entries-->
+    <string name="options_menu_sort">sort</string>
+    <string name="options_menu_help">help</string>
+
+
+    <!--button texts-->
     <string name="button_text_selected_element">&#62; %1$s &#60;</string>
 
     <string name="button_text_minus">-</string>
@@ -15,5 +22,21 @@
 
     <string name="button_text_accept">accept</string>
     <string name="button_text_cancel">cancel</string>
+    <string name="button_text_back">back</string>
+
+
+    <!--help texts-->
+    <string name="help_text_browse_locations">
+        <b><big>Navigation</big></b>
+        \n <li>Click location to navigate.</li>
+        \n <li>Use navigation bar to go back.</li>
+        \n <li>Hold location to enter edit mode.</li>
+    </string>
+
+    <string name="help_text_sort_elements">
+        <b><big>Sorting</big></b>
+        \n <li>Select location and use up or down button to move selection.</li>
+        \n <li>Either accept or cancel your changes by using the buttons on the bottom.</li>
+    </string>
 
 </resources>
