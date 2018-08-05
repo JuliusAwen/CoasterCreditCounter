@@ -1,7 +1,9 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,7 +35,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     private List<Location> recentLocations = new ArrayList<>();
 
     private RecyclerViewAdapter contentRecyclerViewAdapter;
-    private View browseLocationsView;
     private Toolbar toolbar;
 
     @Override
@@ -49,24 +50,24 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     private void initializeViews()
     {
         LinearLayout linearLayoutActivity = findViewById(R.id.linearLayout_browseLocations);
-        this.browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, linearLayoutActivity, false);
-        linearLayoutActivity.addView(this.browseLocationsView);
+        View view = getLayoutInflater().inflate(R.layout.layout_browse_locations, linearLayoutActivity, false);
+        linearLayoutActivity.addView(view);
 
-        this.createToolbar();
-        this.createNavigationBar();
-        this.createContentRecyclerView();
+        this.createToolbar(view);
+        this.createNavigationBar(view);
+        this.createContentRecyclerView(view);
     }
 
     private void refreshViews()
     {
         this.toolbar.setSubtitle(this.currentLocation.getName());
-        this.createNavigationBar();
+        this.createNavigationBar(this.findViewById(android.R.id.content).getRootView());
         this.contentRecyclerViewAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
-    private void createToolbar()
+    private void createToolbar(View view)
     {
-        this.toolbar = this.browseLocationsView.findViewById(R.id.toolbar);
+        this.toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_browse_locations));
 
         setSupportActionBar(toolbar);
@@ -83,14 +84,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void createNavigationBar()
+    private void createNavigationBar(View view)
     {
         if(this.currentLocation.getParent() != null && !this.recentLocations.contains(this.currentLocation.getParent()))
         {
             this.recentLocations.add(this.currentLocation.getParent());
         }
 
-        LinearLayout linearLayoutNavigationBar = this.browseLocationsView.findViewById(R.id.linearLayout_navigationBar);
+        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayout_navigationBar);
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
@@ -99,7 +100,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
             View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_noBorder);
-            button.setText(getString(R.string.button_text_back, location.getName()));
+            Drawable drawable = this.getWhiteDrawable(getResources().getDrawable(R.drawable.ic_baseline_chevron_left_24px));
+            button.setText(location.getName());
+            button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             button.setId(Constants.BUTTON_BACK);
             button.setTag(location);
             button.setOnClickListener(this);
@@ -108,9 +111,17 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void createContentRecyclerView()
+    private Drawable getWhiteDrawable(Drawable drawable)
     {
-        RecyclerView recyclerView = this.browseLocationsView.findViewById(R.id.recyclerView_content);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
+
+        return drawable;
+    }
+
+    private void createContentRecyclerView(View view)
+    {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_content);
         this.contentRecyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -128,13 +139,20 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
                     BrowseLocationsActivity.this.currentLocation = (Location) view.getTag();
                     BrowseLocationsActivity.this.refreshViews();
                 }
-
             }
 
             @Override
             public void onLongClick(View view, int position) {}
         }));
         recyclerView.setAdapter(contentRecyclerViewAdapter);
+    }
+
+    private Drawable setTintToWhite(Drawable drawable)
+    {
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
+
+        return drawable;
     }
 
     @Override

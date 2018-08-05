@@ -1,13 +1,15 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -81,15 +83,41 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
 
     private void createActionDialogTop(View view)
     {
-        Button buttonDown = view.findViewById(R.id.button_actionDialogLeft);
-        buttonDown.setText(getString(R.string.button_text_down));
+        ImageButton buttonDown = view.findViewById(R.id.imageButton_actionDialogLeft);
+        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
+        buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
         buttonDown.setOnClickListener(this);
 
-        Button buttonUp = view.findViewById(R.id.button_actionDialogRight);
-        buttonUp.setText(getString(R.string.button_text_up));
+        ImageButton buttonUp = view.findViewById(R.id.imageButton_actionDialogRight);
+        drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
+        buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);
         buttonUp.setOnClickListener(this);
+    }
+
+    private void createActionDialogBottom(View view)
+    {
+        ImageButton buttonCancel = view.findViewById(R.id.imageButton_actionDialogLeft);
+        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
+        buttonCancel.setImageDrawable(drawable);
+        buttonCancel.setId(Constants.BUTTON_CANCEL);
+        buttonCancel.setOnClickListener(this);
+
+
+        ImageButton buttonAccept = view.findViewById(R.id.imageButton_actionDialogRight);
+        drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_check_24px));
+        buttonAccept.setImageDrawable(drawable);
+        buttonAccept.setId(Constants.BUTTON_ACCEPT);
+        buttonAccept.setOnClickListener(this);
+    }
+
+    private Drawable setTintToWhite(Drawable drawable)
+    {
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
+
+        return drawable;
     }
 
     private void createContentRecyclerView(View view)
@@ -115,6 +143,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
                     {
                         SortElementsActivity.this.recyclerViewAdapter.selectedView.setSelected(false);
                     }
+
                     SortElementsActivity.this.recyclerViewAdapter.selectedElement = (Element) view.getTag();
                     SortElementsActivity.this.recyclerViewAdapter.selectedView = view;
                 }
@@ -127,19 +156,6 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         }));
 
         this.recyclerView.setAdapter(this.recyclerViewAdapter);
-    }
-
-    private void createActionDialogBottom(View view)
-    {
-        Button buttonCancel = view.findViewById(R.id.button_actionDialogLeft);
-        buttonCancel.setText(getString(R.string.button_text_cancel));
-        buttonCancel.setId(Constants.BUTTON_CANCEL);
-        buttonCancel.setOnClickListener(this);
-
-        Button buttonAccept = view.findViewById(R.id.button_actionDialogRight);
-        buttonAccept.setText(getString(R.string.button_text_accept));
-        buttonAccept.setId(Constants.BUTTON_ACCEPT);
-        buttonAccept.setOnClickListener(this);
     }
 
     @Override

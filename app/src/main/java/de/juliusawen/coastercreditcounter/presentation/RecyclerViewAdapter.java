@@ -14,10 +14,10 @@ import de.juliusawen.coastercreditcounter.content.Element;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
-    private List<Element> elements;
-
     public Element selectedElement;
     public View selectedView = null;
+
+    private List<Element> elements;
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -45,9 +45,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         Button button = (Button) LayoutInflater.from(parent.getContext()).inflate(R.layout.button_content, parent, false);
-        ViewHolder viewHolder = new ViewHolder(button);
 
-        return viewHolder;
+        return new ViewHolder(button);
     }
 
     @Override

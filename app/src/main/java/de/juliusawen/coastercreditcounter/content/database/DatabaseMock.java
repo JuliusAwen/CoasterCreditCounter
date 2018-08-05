@@ -85,10 +85,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
+//        {
+//            Location scrollTest = new Location("WowWasnDasFürnMeeeeeegaLangesBundeslandSowasGibtsDochGarnicht!", UUID.randomUUID());
+//            scrollTest.addChild(new Location("DiesIstEinPlatzhalterFürDenLängstenStädtenamenDerWelt", UUID.randomUUID()));
+//            germany.addChild(scrollTest);
+//        }
 
         // do things with tree
         this.putLocationsInAttractions(earth);
 
+
+        //Todo: root has ALWAYS to be generated - why not put it in Content itself als a fix static member or something, hm?
         content.setLocationRoot(earth);
     }
 
