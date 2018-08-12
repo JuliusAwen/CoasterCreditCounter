@@ -9,10 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@color/colorPrimaryDark"
         android:elevation="24dp">
 
@@ -29,8 +29,8 @@
             <ImageButton
                 android:id="@+id/imageButton_help"
                 android:layout_gravity="end"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginStart="16dp"
@@ -43,21 +43,28 @@
             <View xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="1dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@color/white"/>
 
-            <TextView
-                android:id="@+id/textViewHelp"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="16sp"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textViewHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"/>
+
+            </ScrollView>
+
 
         </LinearLayout>
 
