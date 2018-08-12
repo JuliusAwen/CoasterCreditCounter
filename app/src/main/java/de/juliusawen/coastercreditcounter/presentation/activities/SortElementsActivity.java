@@ -184,11 +184,9 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         if(active)
         {
             helpFragment.fragmentView.setVisibility(View.VISIBLE);
-            this.sortElementsView.setVisibility(View.INVISIBLE);
         }
         else
         {
-            this.sortElementsView.setVisibility(View.VISIBLE);
             helpFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 

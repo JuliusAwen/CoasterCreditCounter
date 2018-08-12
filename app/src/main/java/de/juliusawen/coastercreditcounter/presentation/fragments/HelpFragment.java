@@ -76,7 +76,7 @@ public class HelpFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                HelpFragment.this.onBackButtonPressed(view);
+                HelpFragment.this.onCloseButtonPressed(view);
             }
         });
 
@@ -87,7 +87,7 @@ public class HelpFragment extends Fragment
 
     }
 
-    public void onBackButtonPressed(View view)
+    public void onCloseButtonPressed(View view)
     {
         if (this.fragmentInteractionListener != null)
         {

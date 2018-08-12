@@ -162,11 +162,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
         if(active)
         {
             helpFragment.fragmentView.setVisibility(View.VISIBLE);
-            this.browseLocationsView.setVisibility(View.INVISIBLE);
         }
         else
         {
-            this.browseLocationsView.setVisibility(View.VISIBLE);
             helpFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
