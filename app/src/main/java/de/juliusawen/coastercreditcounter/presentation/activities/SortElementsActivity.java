@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,14 +21,16 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
+import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
 
-public class SortElementsActivity extends AppCompatActivity implements View.OnClickListener
+public class SortElementsActivity extends AppCompatActivity implements View.OnClickListener, HelpFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
@@ -40,8 +41,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     private RecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
 
-    private View helpView;
-    private boolean helpActive;
+    private boolean helpVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,7 +79,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.createContentRecyclerView(sortElementsView);
         this.createActionDialogBottom(sortElementsView);
 
-        this.createHelpView(frameLayoutActivity);
+        this.createHelpFragment();
     }
 
     private void createToolbar(View view)
@@ -101,13 +101,13 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     private void createActionDialogTop(View view)
     {
         ImageButton buttonDown = view.findViewById(R.id.imageButton_actionDialogLeft);
-        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
+        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
         buttonDown.setOnClickListener(this);
 
         ImageButton buttonUp = view.findViewById(R.id.imageButton_actionDialogRight);
-        drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
+        drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);
         buttonUp.setOnClickListener(this);
@@ -116,14 +116,14 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     private void createActionDialogBottom(View view)
     {
         ImageButton buttonCancel = view.findViewById(R.id.imageButton_actionDialogLeft);
-        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
+        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_close_24px));
         buttonCancel.setImageDrawable(drawable);
         buttonCancel.setId(Constants.BUTTON_CANCEL);
         buttonCancel.setOnClickListener(this);
 
 
         ImageButton buttonAccept = view.findViewById(R.id.imageButton_actionDialogRight);
-        drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_check_24px));
+        drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check_24px));
         buttonAccept.setImageDrawable(drawable);
         buttonAccept.setId(Constants.BUTTON_ACCEPT);
         buttonAccept.setOnClickListener(this);
@@ -167,48 +167,41 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.recyclerView.setAdapter(this.recyclerViewAdapter);
     }
 
-    private void createHelpView(FrameLayout frameLayout)
+    private void createHelpFragment()
     {
-        this.helpView = getLayoutInflater().inflate(R.layout.layout_help, frameLayout, false);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_sort_elements), false);
+        fragmentTransaction.add(R.id.frameLayout_sortElements, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.commit();
 
-        TextView textView = helpView.findViewById(R.id.textViewHelp);
-        textView.setText(R.string.help_text_sort_elements);
-
-        ImageButton buttonBack = helpView.findViewById(R.id.imageButton_help);
-        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
-
-        buttonBack.setImageDrawable(drawable);
-        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_SCREEN);
-        buttonBack.setOnClickListener(this);
-
-        frameLayout.addView(helpView);
-
-        this.helpView.setVisibility(View.INVISIBLE);
-        this.helpActive = false;
+        this.helpVisible = false;
     }
 
-    private void setHelpActive(boolean active)
+    private void setHelpVisibility(boolean active)
     {
+        HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
+
         if(active)
         {
-            this.helpView.setVisibility(View.VISIBLE);
+            helpFragment.fragmentView.setVisibility(View.VISIBLE);
             this.sortElementsView.setVisibility(View.INVISIBLE);
         }
         else
         {
             this.sortElementsView.setVisibility(View.VISIBLE);
-            this.helpView.setVisibility(View.INVISIBLE);
+            helpFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
-        this.helpActive = active;
+        this.helpVisible = active;
     }
 
-    private Drawable setTintToWhite(Drawable drawable)
+    @Override
+    public void onFragmentInteraction(View view)
     {
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
-
-        return drawable;
+        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
+        {
+            this.setHelpVisibility(false);
+        }
     }
 
     @Override
@@ -229,7 +222,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         }
 
 
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpActive);
+        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpVisible);
     }
 
     @Override
@@ -241,7 +234,8 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
-        if(selectedElementString.isEmpty())
+
+        if(selectedElementString != null && selectedElementString.isEmpty())
         {
             this.recyclerViewAdapter.selectedElement = null;
         }
@@ -250,7 +244,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
             this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
         }
 
-        this.setHelpActive(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.recyclerViewAdapter.updateList(this.elementsToSort);
     }
@@ -258,11 +252,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
-        {
-            this.setHelpActive(false);
-        }
-        else if (view.getId() == Constants.BUTTON_UP || view.getId() == Constants.BUTTON_DOWN)
+        if (view.getId() == Constants.BUTTON_UP || view.getId() == Constants.BUTTON_DOWN)
         {
             if(this.recyclerViewAdapter.selectedElement != null)
             {
@@ -308,7 +298,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         {
             case R.id.optionsMenuHelp:
             {
-                this.setHelpActive(true);
+                this.setHelpVisibility(true);
             }
 
             default:

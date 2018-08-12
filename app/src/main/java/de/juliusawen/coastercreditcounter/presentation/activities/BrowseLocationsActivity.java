@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +22,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
@@ -31,8 +30,9 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
+import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
 
-public class BrowseLocationsActivity extends AppCompatActivity implements View.OnClickListener
+public class BrowseLocationsActivity extends AppCompatActivity implements View.OnClickListener, HelpFragment.OnFragmentInteractionListener
 {
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
@@ -41,7 +41,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     private RecyclerViewAdapter contentRecyclerViewAdapter;
     private Toolbar toolbar;
 
-    private View helpView;
     private boolean helpActive;
 
     @Override
@@ -64,7 +63,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
         this.createNavigationBar(browseLocationsView);
         this.createContentRecyclerView(browseLocationsView);
 
-        this.createHelpView(frameLayoutActivity);
+        this.createHelpFragment();
     }
 
     private void refreshViews()
@@ -106,7 +105,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
             View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_noBorder);
-            Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_chevron_left_24px));
+            Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left_24px));
             button.setText(location.getName());
             button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             button.setId(Constants.BUTTON_BACK);
@@ -146,48 +145,41 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
         recyclerView.setAdapter(contentRecyclerViewAdapter);
     }
 
-    private void createHelpView(FrameLayout frameLayout)
+    private void createHelpFragment()
     {
-        this.helpView = getLayoutInflater().inflate(R.layout.layout_help, frameLayout, false);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_browse_locations), false);
+        fragmentTransaction.add(R.id.frameLayout_browseLocations, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.commit();
 
-        TextView textView = helpView.findViewById(R.id.textViewHelp);
-        textView.setText(R.string.help_text_browse_locations);
-
-        ImageButton buttonBack = helpView.findViewById(R.id.imageButton_help);
-        Drawable drawable = this.setTintToWhite(getDrawable(R.drawable.ic_baseline_close_24px));
-
-        buttonBack.setImageDrawable(drawable);
-        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_SCREEN);
-        buttonBack.setOnClickListener(this);
-
-        frameLayout.addView(helpView);
-
-        this.helpView.setVisibility(View.INVISIBLE);
         this.helpActive = false;
     }
 
-    private void setHelpActive(boolean active)
+    private void setHelpVisibility(boolean active)
     {
+        HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
+
         if(active)
         {
-            this.helpView.setVisibility(View.VISIBLE);
+            helpFragment.fragmentView.setVisibility(View.VISIBLE);
             this.browseLocationsView.setVisibility(View.INVISIBLE);
         }
         else
         {
             this.browseLocationsView.setVisibility(View.VISIBLE);
-            this.helpView.setVisibility(View.INVISIBLE);
+            helpFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
         this.helpActive = active;
     }
 
-    private Drawable setTintToWhite(Drawable drawable)
+    @Override
+    public void onFragmentInteraction(View view)
     {
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
-
-        return drawable;
+        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
+        {
+            this.setHelpVisibility(false);
+        }
     }
 
     @Override
@@ -207,7 +199,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
         this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpActive(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.refreshViews();
     }
@@ -222,31 +214,24 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
-        {
-            this.setHelpActive(false);
-        }
-        else
-        {
-            Location location = (Location) view.getTag();
+        Location location = (Location) view.getTag();
 
-            int length = this.recentLocations.size() - 1;
-            for (int i = length; i >= 0; i--)
+        int length = this.recentLocations.size() - 1;
+        for (int i = length; i >= 0; i--)
+        {
+            if (this.recentLocations.get(i).equals(location))
             {
-                if (this.recentLocations.get(i).equals(location))
-                {
-                    this.recentLocations.remove(i);
-                    break;
-                }
-                else
-                {
-                    this.recentLocations.remove(i);
-                }
+                this.recentLocations.remove(i);
+                break;
             }
-
-            this.currentLocation = location;
-            this.refreshViews();
+            else
+            {
+                this.recentLocations.remove(i);
+            }
         }
+
+        this.currentLocation = location;
+        this.refreshViews();
     }
 
     @Override
@@ -265,7 +250,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements View.O
 
             case R.id.optionsMenuHelp:
             {
-                this.setHelpActive(true);
+                this.setHelpVisibility(true);
             }
 
             default:

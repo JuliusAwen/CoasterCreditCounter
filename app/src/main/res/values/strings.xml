@@ -39,4 +39,7 @@
         \n <li>Either accept or cancel your changes by using the buttons on the bottom.</li>
     </string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
