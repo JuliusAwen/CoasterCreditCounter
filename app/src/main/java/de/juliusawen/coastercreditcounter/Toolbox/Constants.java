@@ -20,7 +20,7 @@ public abstract class Constants
     public static final int BUTTON_BACK = ButtonFunctions.BACK.ordinal();
     public static final int BUTTON_UP = ButtonFunctions.UP.ordinal();
     public static final int BUTTON_DOWN = ButtonFunctions.DOWN.ordinal();
-    public static final int BUTTON_CLOSE_HELP_SCREEN = ButtonFunctions.CLOSE_HELP.ordinal();
+    public static final int BUTTON_CLOSE_HELP_OVERLAY = ButtonFunctions.CLOSE_HELP.ordinal();
 
 }
 

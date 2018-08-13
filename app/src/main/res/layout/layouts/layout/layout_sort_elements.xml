@@ -11,13 +11,10 @@
         layout="@layout/action_dialog_two_image_buttons"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_content"
+        android:id="@+id/recyclerViewSortElements"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"/>
-
-    <include
-        layout="@layout/action_dialog_two_image_buttons"/>
 
 </LinearLayout>

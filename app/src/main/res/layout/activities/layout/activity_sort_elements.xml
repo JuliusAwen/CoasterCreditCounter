@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frameLayout_sortElements"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.activities.SortElementsActivity"/>
+    tools:context=".presentation.activities.SortElementsActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButtonSortElements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="?android:attr/colorPrimary"
+        android:layout_margin="16dp"
+        app:borderWidth="0dp" />
+
+</FrameLayout>

@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -30,18 +31,17 @@ import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
 
-public class SortElementsActivity extends AppCompatActivity implements View.OnClickListener, HelpFragment.OnFragmentInteractionListener
+public class SortElementsActivity extends AppCompatActivity implements HelpFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
 
     private List<Element> elementsToSort;
 
-    private View sortElementsView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
 
-    private boolean helpVisible;
+    private boolean helpOverlayVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,28 +58,27 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_UUID)));
         this.subtitle = currentElement.getName();
 
-        if(currentElement.getClass().equals(Location.class))
+        if(this.currentElement.getClass().equals(Location.class))
         {
-            this.elementsToSort = new ArrayList<Element>(((Location) currentElement).getChildren());
+            this.elementsToSort = new ArrayList<Element>(((Location) this.currentElement).getChildren());
         }
-        else if(currentElement.getClass().equals(Park.class))
+        else if(this.currentElement.getClass().equals(Park.class))
         {
-            this.elementsToSort = new ArrayList<Element>(((Park) currentElement).getAttractions());
+            this.elementsToSort = new ArrayList<Element>(((Park) this.currentElement).getAttractions());
         }
     }
 
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_sortElements);
-        this.sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
+        View sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(sortElementsView);
 
         this.createToolbar(sortElementsView);
         this.createActionDialogTop(sortElementsView);
         this.createContentRecyclerView(sortElementsView);
-        this.createActionDialogBottom(sortElementsView);
-
-        this.createHelpFragment();
+        this.createFloatingActionButton(frameLayoutActivity);
+        this.createHelpOverlay();
     }
 
     private void createToolbar(View view)
@@ -93,7 +92,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.options_menu_sort_elements_items, menu);
+        getMenuInflater().inflate(R.menu.options_menu_help_only_items, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -104,34 +103,52 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
-        buttonDown.setOnClickListener(this);
+        buttonDown.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(recyclerViewAdapter.selectedElement != null)
+                {
+                    int position = elementsToSort.indexOf(recyclerViewAdapter.selectedElement);
+
+                    if(position < elementsToSort.size() - 1)
+                    {
+                        Collections.swap(elementsToSort, position, position + 1);
+                        recyclerView.smoothScrollToPosition(position + 1);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
 
         ImageButton buttonUp = view.findViewById(R.id.imageButton_actionDialogRight);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);
-        buttonUp.setOnClickListener(this);
-    }
+        buttonUp.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(recyclerViewAdapter.selectedElement != null)
+                {
+                    int position = elementsToSort.indexOf(recyclerViewAdapter.selectedElement);
 
-    private void createActionDialogBottom(View view)
-    {
-        ImageButton buttonCancel = view.findViewById(R.id.imageButton_actionDialogLeft);
-        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_close_24px));
-        buttonCancel.setImageDrawable(drawable);
-        buttonCancel.setId(Constants.BUTTON_CANCEL);
-        buttonCancel.setOnClickListener(this);
-
-
-        ImageButton buttonAccept = view.findViewById(R.id.imageButton_actionDialogRight);
-        drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check_24px));
-        buttonAccept.setImageDrawable(drawable);
-        buttonAccept.setId(Constants.BUTTON_ACCEPT);
-        buttonAccept.setOnClickListener(this);
+                    if(position > 0)
+                    {
+                        Collections.swap(elementsToSort, position, position - 1);
+                        recyclerView.smoothScrollToPosition(position - 1);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 
     private void createContentRecyclerView(View view)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerView_content);
+        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
         this.recyclerViewAdapter = new RecyclerViewAdapter(this.elementsToSort);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -143,18 +160,18 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
             {
                 if(view.isSelected())
                 {
-                    SortElementsActivity.this.recyclerViewAdapter.selectedElement = null;
-                    SortElementsActivity.this.recyclerViewAdapter.selectedView = null;
+                    recyclerViewAdapter.selectedElement = null;
+                    recyclerViewAdapter.selectedView = null;
                 }
                 else
                 {
-                    if(SortElementsActivity.this.recyclerViewAdapter.selectedView != null)
+                    if(recyclerViewAdapter.selectedView != null)
                     {
-                        SortElementsActivity.this.recyclerViewAdapter.selectedView.setSelected(false);
+                        recyclerViewAdapter.selectedView.setSelected(false);
                     }
 
-                    SortElementsActivity.this.recyclerViewAdapter.selectedElement = (Element) view.getTag();
-                    SortElementsActivity.this.recyclerViewAdapter.selectedView = view;
+                    recyclerViewAdapter.selectedElement = (Element) view.getTag();
+                    recyclerViewAdapter.selectedView = view;
                 }
 
                 view.setSelected(!view.isSelected());
@@ -167,21 +184,61 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         this.recyclerView.setAdapter(this.recyclerViewAdapter);
     }
 
-    private void createHelpFragment()
+    private void createFloatingActionButton(View view)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_sort_elements), false);
-        fragmentTransaction.add(R.id.frameLayout_sortElements, helpFragment, Constants.FRAGMENT_TAG_HELP);
-        fragmentTransaction.commit();
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButtonSortElements);
 
-        this.helpVisible = false;
+        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check_24px));
+        floatingActionButton.setImageDrawable(drawable);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(currentElement.getClass().equals(Location.class))
+                {
+                    ((Location) currentElement).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(elementsToSort)));
+                }
+                else if(currentElement.getClass().equals(Park.class))
+                {
+                    ((Park) currentElement).setAttractions(new ArrayList<>(Content.getInstance().convertElementsToAttractions(elementsToSort)));
+                }
+
+                finish();
+            }
+        });
     }
 
-    private void setHelpVisibility(boolean active)
+    private void setFloatingActionButtonVisibility(boolean isVisible)
+    {
+        FloatingActionButton floatingActionButton = (this.findViewById(android.R.id.content).getRootView()).findViewById(R.id.floatingActionButtonSortElements);
+
+        if(isVisible)
+        {
+            floatingActionButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            floatingActionButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void createHelpOverlay()
+    {
+        this.helpOverlayVisible = false;
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_sort_elements), this.helpOverlayVisible);
+        fragmentTransaction.add(R.id.frameLayout_sortElements, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.commit();
+    }
+
+    private void setHelpOverlayVisibility(boolean isVisible)
     {
         HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
-        if(active)
+        if(isVisible)
         {
             helpFragment.fragmentView.setVisibility(View.VISIBLE);
         }
@@ -190,15 +247,16 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
             helpFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
-        this.helpVisible = active;
+        this.setFloatingActionButtonVisibility(!isVisible);
+        this.helpOverlayVisible = isVisible;
     }
 
     @Override
     public void onFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE_HELP_SCREEN)
+        if(view.getId() == Constants.BUTTON_CLOSE_HELP_OVERLAY)
         {
-            this.setHelpVisibility(false);
+            this.setHelpOverlayVisibility(false);
         }
     }
 
@@ -220,7 +278,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         }
 
 
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpVisible);
+        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpOverlayVisible);
     }
 
     @Override
@@ -242,51 +300,9 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
             this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
         }
 
-        this.setHelpVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.recyclerViewAdapter.updateList(this.elementsToSort);
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        if (view.getId() == Constants.BUTTON_UP || view.getId() == Constants.BUTTON_DOWN)
-        {
-            if(this.recyclerViewAdapter.selectedElement != null)
-            {
-                int position = this.elementsToSort.indexOf(this.recyclerViewAdapter.selectedElement);
-
-                if(view.getId() == Constants.BUTTON_UP && position > 0)
-                {
-                    Collections.swap(this.elementsToSort, position, position - 1);
-                    this.recyclerView.smoothScrollToPosition(position - 1);
-                    this.recyclerViewAdapter.notifyDataSetChanged();
-                }
-                else if(view.getId() == Constants.BUTTON_DOWN && position < this.elementsToSort.size() - 1)
-                {
-                    Collections.swap(this.elementsToSort, position, position + 1);
-                    this.recyclerView.smoothScrollToPosition(position + 1);
-                    this.recyclerViewAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-        else if(view.getId() == Constants.BUTTON_ACCEPT)
-        {
-            if(currentElement.getClass().equals(Location.class))
-            {
-                ((Location) currentElement).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(this.elementsToSort)));
-            }
-            else if(currentElement.getClass().equals(Park.class))
-            {
-                ((Park) currentElement).setAttractions(new ArrayList<>(Content.getInstance().convertElementsToAttractions(this.elementsToSort)));
-            }
-
-            finish();
-        }
-        else if (view.getId() == Constants.BUTTON_CANCEL)
-        {
-            finish();
-        }
     }
 
     @Override
@@ -296,7 +312,7 @@ public class SortElementsActivity extends AppCompatActivity implements View.OnCl
         {
             case R.id.optionsMenuHelp:
             {
-                this.setHelpVisibility(true);
+                this.setHelpOverlayVisibility(true);
             }
 
             default:

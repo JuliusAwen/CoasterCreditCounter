@@ -14,11 +14,10 @@ public class Location extends Element
         super(name, uuid);
     }
 
-    public Location addChild(Location child)
+    public void addChild(Location child)
     {
         child.setParent(this);
         this.children.add(child);
-        return child;
     }
 
     public List<Location> getChildren()
@@ -61,7 +60,17 @@ public class Location extends Element
 //        return this.parent.getRoot();
 //    }
 
-//    public void deleteNode()
+    public void deleteNodeAndChildren()
+    {
+        if (this.parent != null)
+        {
+            Content.getInstance().removeLocationAndChildren(this);
+            this.parent.getChildren().remove(this);
+            this.getChildren().clear();
+        }
+    }
+
+//    public void removeNode()
 //    {
 //        if (this.parent != null)
 //        {
@@ -75,19 +84,15 @@ public class Location extends Element
 //
 //            this.parent.getChildren().addAll(index, this.getChildren());
 //        }
-//        else
-//        {
-//           deleteRootNode();
-//        }
 //
 //        this.getChildren().clear();
 //    }
-
-//    public Location deleteRootNode()
+//
+//    private Location removeRootNode()
 //    {
 //        if (parent != null)
 //        {
-//            throw new IllegalStateException("deleteRootNode not called on root");
+//            throw new IllegalStateException("removeRootNode not called on root");
 //        }
 //
 //        Location newParent = null;
@@ -105,6 +110,8 @@ public class Location extends Element
 //            }
 //
 //            newParent.getChildren().addAll(getChildren());
+//            Content.getInstance().deleteElement(this);
+//            Content.getInstance().setLocationRoot(newParent);
 //        }
 //
 //        this.getChildren().clear();

@@ -91,7 +91,6 @@ public class Content
         return elements;
     }
 
-    //TODO: implement List<Location> & List<Attraction>
     public List<Location> getLocationsFromUuidStrings(List<String> strings)
     {
         List<Location> locations = new ArrayList<>();
@@ -126,5 +125,40 @@ public class Content
         }
 
         return attractions;
+    }
+
+    public void addLocation(Element parentElement, String childName)
+    {
+        if(!childName.isEmpty())
+        {
+            childName = childName.trim();
+            Location parent = (Location) parentElement;
+            Location child = new Location(childName, UUID.randomUUID());
+
+            parent.addChild(child);
+            this.elements.put(child.getUuid(), child);
+        }
+    }
+
+    public void removeLocationAndChildren(Element element)
+    {
+        Location location = (Location) element;
+
+        if(!location.getChildren().isEmpty())
+        {
+            for(Location child : location.getChildren())
+            {
+                this.removeLocationAndChildren(child);
+            }
+        }
+
+        this.elements.remove(location.getUuid());
+
+        Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: deleted " + location.getName());
+    }
+
+    public void deleteElement(Element element)
+    {
+        this.elements.remove(element.getUuid());
     }
 }

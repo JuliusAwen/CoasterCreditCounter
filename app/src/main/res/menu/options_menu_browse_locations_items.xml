@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/optionsMenuSort"
-        android:title="@string/options_menu_sort"
+        android:title="@string/options_menu_sort_entries"
         app:showAsAction="never"/>
 
     <item android:id="@+id/optionsMenuHelp"

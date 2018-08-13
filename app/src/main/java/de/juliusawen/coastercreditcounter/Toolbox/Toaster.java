@@ -10,4 +10,10 @@ public abstract class Toaster
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    public static void makeLongToast(Context context, String text)
+    {
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+        toast.show();
+    }
 }

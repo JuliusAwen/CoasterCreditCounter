@@ -69,8 +69,7 @@ public class HelpFragment extends Fragment
         ImageButton buttonBack = view.findViewById(R.id.imageButton_help);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close_24px));
         buttonBack.setImageDrawable(drawable);
-        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_SCREEN);
-
+        buttonBack.setId(Constants.BUTTON_CLOSE_HELP_OVERLAY);
         buttonBack.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -84,7 +83,6 @@ public class HelpFragment extends Fragment
         {
             view.setVisibility(View.INVISIBLE);
         }
-
     }
 
     public void onCloseButtonPressed(View view)
