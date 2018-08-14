@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
 
-public class HelpFragment extends Fragment
+public class HelpOverlayFragment extends Fragment
 {
     public View fragmentView;
 
@@ -27,11 +27,11 @@ public class HelpFragment extends Fragment
     private OnFragmentInteractionListener fragmentInteractionListener;
 
 
-    public HelpFragment() {}
+    public HelpOverlayFragment() {}
 
-    public static HelpFragment newInstance(CharSequence helpText, boolean isVisible)
+    public static HelpOverlayFragment newInstance(CharSequence helpText, boolean isVisible)
     {
-        HelpFragment fragment = new HelpFragment();
+        HelpOverlayFragment fragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
         args.putCharSequence(Constants.FRAGMENT_ARG_1, helpText);
         args.putBoolean(Constants.FRAGMENT_ARG_2, isVisible);
@@ -54,7 +54,7 @@ public class HelpFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.fragmentView = inflater.inflate(R.layout.fragment_help, container, false);
+        this.fragmentView = inflater.inflate(R.layout.fragment_help_overlay, container, false);
         return this.fragmentView;
     }
 
@@ -75,7 +75,7 @@ public class HelpFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                HelpFragment.this.onCloseButtonPressed(view);
+                HelpOverlayFragment.this.onCloseButtonPressed(view);
             }
         });
 

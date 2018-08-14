@@ -1,21 +1,25 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +35,14 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
-import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class BrowseLocationsActivity extends AppCompatActivity implements HelpFragment.OnFragmentInteractionListener
+public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
+
+    private Element longClickedElement;
 
     private RecyclerViewAdapter recyclerViewAdapter;
     private Toolbar toolbar;
@@ -62,9 +68,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
         this.createToolbar(browseLocationsView);
         this.createNavigationBar(browseLocationsView);
         this.createContentRecyclerView(browseLocationsView);
-        this.createFloatingActionButton(frameLayoutActivity);
 
-        this.createHelpOverlay();
+        this.createFloatingActionButton();
+        this.createHelpOverlayFragment();
     }
 
     private void refreshViews()
@@ -143,8 +149,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
 
     private void createContentRecyclerView(View view)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewSortElements);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerViewSortElements);
         this.recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
+
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getApplicationContext(), recyclerView, new RecyclerViewTouchListener.ClickListener()
@@ -154,6 +161,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
             {
                 if(view.getTag().getClass().equals(Park.class))
                 {
+                    //Todo: implement show park activity
                     Toaster.makeToast(getApplicationContext(), "start ShowParkActivity");
                 }
                 else
@@ -166,23 +174,72 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
             @Override
             public void onLongClick(View view, int position)
             {
-                //Todo: implement fragment selection edit/delete location (plus remove location)
-                //Todo: implement confirmation to delete
-                Toaster.makeToast(getApplicationContext(), "show fragment select edit/delete");
+                longClickedElement = (Element) view.getTag();
 
-                ((Location) view.getTag()).deleteNodeAndChildren();
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recyclerView);
+                MenuInflater menuInflater = popupMenu.getMenuInflater();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item)
+                    {
+                        switch(item.getItemId())
+                        {
+                            case(R.id.selectionEdit):
+                            {
+                                //Todo: implement edit activity
+                                Toaster.makeToast(getApplicationContext(), "not yet implemented");
+                                return true;
+                            }
+                            case(R.id.selectionDelete):
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
-                recyclerViewAdapter.notifyDataSetChanged();
-                refreshViews();
+                                builder.setTitle(R.string.alert_dialog_delete_title)
+                                        .setMessage(getString(R.string.alert_dialog_delete_message, longClickedElement.getName()));
+
+                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        dialog.dismiss();
+                                        ((Location) longClickedElement).deleteNodeAndChildren();
+                                        recyclerViewAdapter.notifyDataSetChanged();
+                                        refreshViews();
+                                    }
+                                });
+
+                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+
+                                return true;
+                            }
+                            default:
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                });
+                menuInflater.inflate(R.menu.selection_edit_or_delete, popupMenu.getMenu());
+                popupMenu.show();
             }
         }));
 
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void createFloatingActionButton(View view)
+    private void createFloatingActionButton()
     {
-        FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButtonBrowseLocations);
+        final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
 
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add_24px));
         floatingActionButton.setImageDrawable(drawable);
@@ -192,19 +249,43 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
             @Override
             public void onClick(View view)
             {
-                //Todo: implement fragment selection add location/park
-                Toaster.makeToast(getApplicationContext(), "show fragment select add location/park");
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
+                MenuInflater menuInflater = popupMenu.getMenuInflater();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item)
+                    {
+                        switch (item.getItemId())
+                        {
+                            case R.id.selectionAddLocation:
+                                Intent intent = new Intent(getApplicationContext(), AddLocationActivity.class);
+                                intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                                startActivity(intent);
+                                return true;
 
-                Intent intent = new Intent(getApplicationContext(), AddLocationActivity.class);
-                intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
-                startActivity(intent);
+                            case R.id.selectionAddPark:
+
+                                //Todo: implement add park activity
+                                Toaster.makeToast(getApplicationContext(), "not yet implemented");
+
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                menuInflater.inflate(R.menu.selection_add_location_or_park, popupMenu.getMenu());
+                popupMenu.show();
             }
         });
     }
 
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        FloatingActionButton floatingActionButton = (this.findViewById(android.R.id.content).getRootView()).findViewById(R.id.floatingActionButtonBrowseLocations);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
 
         if(isVisible)
         {
@@ -216,27 +297,27 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
         }
     }
 
-    private void createHelpOverlay()
+    private void createHelpOverlayFragment()
     {
         this.helpOverlayVisible = false;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_browse_locations), this.helpOverlayVisible);
-        fragmentTransaction.add(R.id.frameLayout_browseLocations, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), this.helpOverlayVisible);
+        fragmentTransaction.add(R.id.frameLayout_browseLocations, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
     }
 
-    private void setHelpOverlayVisibility(boolean isVisible)
+    private void setHelpOverlayFragmentVisibility(boolean isVisible)
     {
-        HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
         if(isVisible)
         {
-            helpFragment.fragmentView.setVisibility(View.VISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
         }
         else
         {
-            helpFragment.fragmentView.setVisibility(View.INVISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
         this.setFloatingActionButtonVisibility(!isVisible);
@@ -248,7 +329,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
     {
         if(view.getId() == Constants.BUTTON_CLOSE_HELP_OVERLAY)
         {
-            this.setHelpOverlayVisibility(false);
+            this.setHelpOverlayFragmentVisibility(false);
         }
     }
 
@@ -269,7 +350,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
 
         this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.refreshViews();
     }
@@ -304,7 +385,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpFr
 
             case R.id.optionsMenuHelp:
             {
-                this.setHelpOverlayVisibility(true);
+                this.setHelpOverlayFragmentVisibility(true);
 
                 return true;
             }

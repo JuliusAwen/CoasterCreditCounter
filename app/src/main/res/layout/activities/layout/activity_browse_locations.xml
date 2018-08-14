@@ -9,6 +9,8 @@
     android:fitsSystemWindows="true"
     tools:context=".presentation.activities.BrowseLocationsActivity">
 
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButtonBrowseLocations"
         android:layout_width="wrap_content"

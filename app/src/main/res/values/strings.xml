@@ -12,9 +12,20 @@
     <string name="options_menu_help">help</string>
 
 
-    <!--button texts-->
-    <string name="button_text_selected_element">&#62; %1$s &#60;</string>
+    <!--popup menu entries-->
+    <string name="selection_add_location">add location</string>
+    <string name="selection_add_park">add park</string>
 
+    <string name="selection_edit">edit</string>
+    <string name="selection_delete">delete</string>
+
+
+    <!--dialog texts-->
+    <string name="alert_dialog_delete_title">DELETE</string>
+    <string name="alert_dialog_delete_message">Do you really want to delete %1$s and all of its children?</string>
+
+
+    <!--button texts-->
     <string name="button_text_minus">-</string>
     <string name="button_text_plus">+</string>
 
@@ -46,6 +57,12 @@
     <string name="help_text_add_location">
         <b><big>Add</big></b>
         \n <li>Type new location name and press Done on keyboard.</li>
+    </string>
+
+    <string name="credits">
+        <div>Some icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
+            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
     </string>
 
 </resources>

@@ -29,9 +29,9 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
-import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class SortElementsActivity extends AppCompatActivity implements HelpFragment.OnFragmentInteractionListener
+public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
@@ -77,8 +77,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
         this.createToolbar(sortElementsView);
         this.createActionDialogTop(sortElementsView);
         this.createContentRecyclerView(sortElementsView);
-        this.createFloatingActionButton(frameLayoutActivity);
-        this.createHelpOverlay();
+
+        this.createFloatingActionButton();
+        this.createHelpOverlayFragment();
     }
 
     private void createToolbar(View view)
@@ -184,9 +185,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
         this.recyclerView.setAdapter(this.recyclerViewAdapter);
     }
 
-    private void createFloatingActionButton(View view)
+    private void createFloatingActionButton()
     {
-        FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButtonSortElements);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonSortElements);
 
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check_24px));
         floatingActionButton.setImageDrawable(drawable);
@@ -212,7 +213,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
 
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        FloatingActionButton floatingActionButton = (this.findViewById(android.R.id.content).getRootView()).findViewById(R.id.floatingActionButtonSortElements);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonSortElements);
 
         if(isVisible)
         {
@@ -224,27 +225,27 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
         }
     }
 
-    private void createHelpOverlay()
+    private void createHelpOverlayFragment()
     {
         this.helpOverlayVisible = false;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_sort_elements), this.helpOverlayVisible);
-        fragmentTransaction.add(R.id.frameLayout_sortElements, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), this.helpOverlayVisible);
+        fragmentTransaction.add(R.id.frameLayout_sortElements, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
     }
 
-    private void setHelpOverlayVisibility(boolean isVisible)
+    private void setHelpOverlayFragmentVisibility(boolean isVisible)
     {
-        HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
         if(isVisible)
         {
-            helpFragment.fragmentView.setVisibility(View.VISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
         }
         else
         {
-            helpFragment.fragmentView.setVisibility(View.INVISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
         this.setFloatingActionButtonVisibility(!isVisible);
@@ -256,7 +257,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
     {
         if(view.getId() == Constants.BUTTON_CLOSE_HELP_OVERLAY)
         {
-            this.setHelpOverlayVisibility(false);
+            this.setHelpOverlayFragmentVisibility(false);
         }
     }
 
@@ -300,7 +301,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
             this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
         }
 
-        this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
 
         this.recyclerViewAdapter.updateList(this.elementsToSort);
     }
@@ -312,7 +313,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpFragm
         {
             case R.id.optionsMenuHelp:
             {
-                this.setHelpOverlayVisibility(true);
+                this.setHelpOverlayFragmentVisibility(true);
             }
 
             default:

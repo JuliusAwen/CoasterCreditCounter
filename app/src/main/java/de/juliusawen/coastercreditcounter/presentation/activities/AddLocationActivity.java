@@ -19,9 +19,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.presentation.fragments.HelpFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class AddLocationActivity extends AppCompatActivity implements HelpFragment.OnFragmentInteractionListener
+public class AddLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
@@ -97,8 +97,8 @@ public class AddLocationActivity extends AppCompatActivity implements HelpFragme
     private void createHelpOverlay()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpFragment helpFragment = HelpFragment.newInstance(getText(R.string.help_text_add_location), false);
-        fragmentTransaction.add(R.id.frameLayout_addLocation, helpFragment, Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+        fragmentTransaction.add(R.id.frameLayout_addLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
 
         this.helpOverlayVisible = false;
@@ -106,15 +106,15 @@ public class AddLocationActivity extends AppCompatActivity implements HelpFragme
 
     private void setHelpOverlayVisibility(boolean isVisible)
     {
-        HelpFragment helpFragment = (HelpFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
         if(isVisible)
         {
-            helpFragment.fragmentView.setVisibility(View.VISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
         }
         else
         {
-            helpFragment.fragmentView.setVisibility(View.INVISIBLE);
+            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
         }
 
         this.helpOverlayVisible = isVisible;
