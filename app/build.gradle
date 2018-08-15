@@ -23,14 +23,7 @@ android {
             java.srcDirs = ['src/main/java', 'apt_generated']
             aidl.srcDirs = ['src/main.aidl', 'apt_generated']
             assets.srcDirs = ['src/main/assets']
-            res.srcDirs =
-                    [
-                            'src/main/res/layout/activities',
-                            'src/main/res/layout/fragments',
-                            'src/main/res/layout/layouts',
-                            'src/main/res/layout',
-                            'src/main/res'
-                    ]
+            res.srcDirs = ['src/main/res']
         }
     }
 }

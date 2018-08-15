@@ -2,7 +2,9 @@
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/button_noBorder"
     android:layout_width="wrap_content"
+    android:minWidth="0dp"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:textColor="@color/white"
+    android:textSize="14sp"
     android:background="?android:attr/selectableItemBackground" />
