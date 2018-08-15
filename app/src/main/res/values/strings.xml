@@ -43,30 +43,32 @@
     <!--EditText hints-->
     <string name="hint_name_location">name location</string>
 
+
     <!--help texts-->
     <string name="help_text_browse_locations">
-        <b><big>Navigation</big></b>
+        <b><big>Locations</big></b>
         \n <li>Click location to navigate.</li>
         \n <li>Use navigation bar to go back.</li>
-        \n <li>Hold to edit or delete location.</li>
+        \n <li>Hold entry to edit or delete location.</li>
         \n <li>Use options menu to sort entries.</li>
+        \n <li>On root level you have the option to rename the root location.</li>
     </string>
 
     <string name="help_text_sort_elements">
-        <b><big>Sorting</big></b>
+        <b><big>Sort</big></b>
         \n <li>Select entry and use up or down button to move selection.</li>
+        \n <li>Use options menu to sort entries alphabetically.</li>
         \n <li>Accept your changes by pressing the button at the bottom right.</li>
     </string>
 
     <string name="help_text_add_location">
         <b><big>Add</big></b>
-        \n <li>Name new location and press Done on keyboard.</li>
+        \n <li>Name the new location and press 'done' on keyboard.</li>
     </string>
 
     <string name="help_text_edit_location">
-        <b><big>Add</big></b>
-        \n <li>Rename location and press Done on keyboard.</li>
+        <b><big>Edit</big></b>
+        \n <li>Rename the location and press 'done' on keyboard.</li>
     </string>
-
 
 </resources>

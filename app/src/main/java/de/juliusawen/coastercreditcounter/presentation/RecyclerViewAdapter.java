@@ -22,6 +22,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public Button button;
+
         private ViewHolder(Button button)
         {
             super(button);
