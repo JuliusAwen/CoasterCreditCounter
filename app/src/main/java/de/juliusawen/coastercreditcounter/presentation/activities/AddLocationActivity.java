@@ -79,11 +79,12 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.options_menu_help_only_items, menu);
+        menu.clear();
+        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void createEditText(View view)
@@ -95,7 +96,6 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = false;
-
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
                     Location child = ((Location) currentElement).createChild(textView.getText().toString());
@@ -105,7 +105,6 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
 
                     handled = true;
                 }
-
                 return handled;
             }
         });
@@ -121,7 +120,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
         this.helpOverlayVisible = false;
     }
 
-    private void setHelpOverlayVisibility(boolean isVisible)
+    private void setHelpOverlayFragmentVisibility(boolean isVisible)
     {
         HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
@@ -142,7 +141,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     {
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
-            this.setHelpOverlayVisibility(false);
+            this.setHelpOverlayFragmentVisibility(false);
         }
     }
 
@@ -162,23 +161,19 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
         super.onRestoreInstanceState(savedInstanceState);
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        if(item.getItemId() == Constants.MENU_ENTRY_HELP)
         {
-            case R.id.optionsMenuHelp:
-            {
-                this.setHelpOverlayVisibility(true);
-            }
+            this.setHelpOverlayFragmentVisibility(true);
 
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

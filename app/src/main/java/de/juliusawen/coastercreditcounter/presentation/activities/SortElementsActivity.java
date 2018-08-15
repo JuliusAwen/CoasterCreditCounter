@@ -105,11 +105,13 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.options_menu_sort_elements, menu);
+        menu.clear();
+        menu.add(0, Constants.MENU_ENTRY_SORT_A_TO_Z, Menu.NONE, R.string.options_menu_sort_a_to_z);
+        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void createActionDialog(View view)
@@ -310,32 +312,29 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        if(item.getItemId() == Constants.MENU_ENTRY_SORT_A_TO_Z)
         {
-            case R.id.optionsMenuHelp:
+            Collections.sort(this.elementsToSort, new Comparator<Element>()
             {
-                this.setHelpOverlayFragmentVisibility(true);
-            }
-
-            case R.id.optionsMenuSortAToZ:
-            {
-                Collections.sort(this.elementsToSort, new Comparator<Element>()
+                @Override
+                public int compare(Element element1, Element element2)
                 {
-                    @Override
-                    public int compare(Element element1, Element element2)
-                    {
-                        return element1.getName().compareToIgnoreCase(element2.getName());
-                    }
-                });
+                    return element1.getName().compareToIgnoreCase(element2.getName());
+                }
+            });
 
-                this.recyclerViewAdapter.updateList(this.elementsToSort);
-                this.recyclerViewAdapter.notifyDataSetChanged();
-            }
+            this.recyclerViewAdapter.updateList(this.elementsToSort);
+            this.recyclerViewAdapter.notifyDataSetChanged();
 
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
+            return true;
         }
+        else if(item.getItemId() == Constants.MENU_ENTRY_HELP)
+        {
+            this.setHelpOverlayFragmentVisibility(true);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -22,6 +22,11 @@ public abstract class Constants
     public static final int BUTTON_DOWN = ButtonFunctions.DOWN.ordinal();
     public static final int BUTTON_CLOSE = ButtonFunctions.CLOSE.ordinal();
 
+    public static final int MENU_ENTRY_RENAME_ROOT = MenuEntries.RENAME_ROOT.ordinal();
+    public static final int MENU_ENTRY_SORT_ELEMENTS = MenuEntries.SORT_ELEMENTS.ordinal();
+    public static final int MENU_ENTRY_SORT_A_TO_Z = MenuEntries.SORT_A_TO_Z.ordinal();
+    public static final int MENU_ENTRY_HELP = MenuEntries.HELP.ordinal();
+
 }
 
 enum ButtonFunctions
@@ -32,4 +37,12 @@ enum ButtonFunctions
     UP,
     DOWN,
     CLOSE
+}
+
+enum MenuEntries
+{
+    RENAME_ROOT,
+    SORT_ELEMENTS,
+    SORT_A_TO_Z,
+    HELP
 }

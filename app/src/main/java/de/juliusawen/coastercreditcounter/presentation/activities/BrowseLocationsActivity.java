@@ -102,11 +102,20 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.options_menu_browse_locations_items, menu);
+        menu.clear();
+        if(this.currentLocation.getParent() == null)
+        {
+            menu.add(0, Constants.MENU_ENTRY_RENAME_ROOT, Menu.NONE, R.string.options_menu_rename_root);
+        }
+        if(this.currentLocation.getChildren().size() > 1)
+        {
+            menu.add(0, Constants.MENU_ENTRY_SORT_ELEMENTS, Menu.NONE, R.string.options_menu_sort_entries);
+        }
+        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void createNavigationBar(View view)
@@ -202,9 +211,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         {
                             case(R.id.selectionEdit):
                             {
-                                Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
-                                intent.putExtra(Constants.EXTRA_UUID, longClickedElement.getUuid().toString());
-                                startActivity(intent);
+                                startEditLocationActivity(longClickedElement);
 
                                 return true;
                             }
@@ -373,35 +380,34 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        if (item.getItemId() == Constants.MENU_ENTRY_RENAME_ROOT)
         {
-            case R.id.optionsMenuSort:
-            {
-                if(this.currentLocation.getChildren().size() > 1)
-                {
-                    Intent intent = new Intent(this, SortElementsActivity.class);
-                    intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toaster.makeToast(this, "nothing to sort here... Move along!");
-                }
+            this.startEditLocationActivity(this.currentLocation);
 
-                return true;
-            }
-
-            case R.id.optionsMenuHelp:
-            {
-                this.setHelpOverlayFragmentVisibility(true);
-
-                return true;
-            }
-
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
+            return true;
         }
+        else if(item.getItemId() == Constants.MENU_ENTRY_SORT_ELEMENTS)
+        {
+            Intent intent = new Intent(this, SortElementsActivity.class);
+            intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
+            startActivity(intent);
+
+            return true;
+        }
+        else if(item.getItemId() == Constants.MENU_ENTRY_HELP)
+        {
+            this.setHelpOverlayFragmentVisibility(true);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startEditLocationActivity(Element element)
+    {
+        Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
+        intent.putExtra(Constants.EXTRA_UUID, element.getUuid().toString());
+        startActivity(intent);
     }
 }

@@ -9,6 +9,7 @@
 
 
     <!--options menu entries-->
+    <string name="options_menu_rename_root">rename root</string>
     <string name="options_menu_sort_entries">sort entries</string>
     <string name="options_menu_help">help</string>
     <string name="options_menu_sort_a_to_z">sort a-z</string>
