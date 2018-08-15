@@ -162,11 +162,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createContentRecyclerView(View view)
     {
-        final RecyclerView recyclerView = view.findViewById(R.id.recyclerViewSortElements);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
+
         this.recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         recyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getApplicationContext(), recyclerView, new RecyclerViewTouchListener.ClickListener()
         {
             @Override
@@ -200,8 +202,10 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         {
                             case(R.id.selectionEdit):
                             {
-                                //Todo: implement edit activity
-                                Toaster.makeToast(getApplicationContext(), "not yet implemented");
+                                Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
+                                intent.putExtra(Constants.EXTRA_UUID, longClickedElement.getUuid().toString());
+                                startActivity(intent);
+
                                 return true;
                             }
                             case(R.id.selectionDelete):
@@ -216,7 +220,10 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     public void onClick(DialogInterface dialog, int id)
                                     {
                                         dialog.dismiss();
+
                                         ((Location) longClickedElement).deleteNodeAndChildren();
+                                        Content.getInstance().removeLocationAndChildren(longClickedElement);
+
                                         recyclerViewAdapter.notifyDataSetChanged();
                                         refreshViews();
                                     }
@@ -231,6 +238,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                 });
 
                                 AlertDialog alertDialog = builder.create();
+                                alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+
                                 alertDialog.show();
 
                                 return true;
@@ -340,7 +349,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     @Override
     public void onFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE_HELP_OVERLAY)
+        if(view.getId() == Constants.BUTTON_CLOSE)
         {
             this.setHelpOverlayFragmentVisibility(false);
         }

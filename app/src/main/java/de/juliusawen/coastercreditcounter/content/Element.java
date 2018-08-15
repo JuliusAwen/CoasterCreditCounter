@@ -20,7 +20,10 @@ public abstract class Element
 
     public void setName(String name)
     {
-        this.name = name;
+        if(!name.trim().isEmpty())
+        {
+            this.name = name.trim();
+        }
     }
 
     public UUID getUuid()

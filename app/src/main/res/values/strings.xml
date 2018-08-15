@@ -5,6 +5,7 @@
     <string name="title_browse_locations">Location</string>
     <string name="title_sort_elements">Sort</string>
     <string name="title_add_location">Add Location</string>
+    <string name="title_edit_location">Edit Location</string>
 
 
     <!--options menu entries-->
@@ -22,7 +23,7 @@
 
     <!--dialog texts-->
     <string name="alert_dialog_delete_title">DELETE</string>
-    <string name="alert_dialog_delete_message">Do you really want to delete %1$s and all of its children?</string>
+    <string name="alert_dialog_delete_message">Do you really want to delete %1$s and all of its children permanently?</string>
 
 
     <!--button texts-->
@@ -45,24 +46,25 @@
         <b><big>Navigation</big></b>
         \n <li>Click location to navigate.</li>
         \n <li>Use navigation bar to go back.</li>
-        \n <li>Hold location to enter edit mode.</li>
+        \n <li>Hold to edit or delete location.</li>
+        \n <li>Use options menu to sort entries.</li>
     </string>
 
     <string name="help_text_sort_elements">
         <b><big>Sorting</big></b>
         \n <li>Select entry and use up or down button to move selection.</li>
-        \n <li>Either accept or cancel your changes by using the buttons at the bottom.</li>
+        \n <li>Accept your changes by pressing the button at the bottom right.</li>
     </string>
 
     <string name="help_text_add_location">
         <b><big>Add</big></b>
-        \n <li>Type new location name and press Done on keyboard.</li>
+        \n <li>Name new location and press Done on keyboard.</li>
     </string>
 
-    <string name="credits">
-        <div>Some icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
-            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-            is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    <string name="help_text_edit_location">
+        <b><big>Add</big></b>
+        \n <li>Rename location and press Done on keyboard.</li>
     </string>
+
 
 </resources>

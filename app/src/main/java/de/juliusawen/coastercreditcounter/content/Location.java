@@ -20,6 +20,21 @@ public class Location extends Element
         this.children.add(child);
     }
 
+    public Location createChild(String childName)
+    {
+        Location child = null;
+
+        if(!childName.trim().isEmpty())
+        {
+            childName = childName.trim();
+            child = new Location(childName, UUID.randomUUID());
+
+            this.addChild(child);
+        }
+
+        return child;
+    }
+
     public List<Location> getChildren()
     {
         return this.children;
@@ -64,7 +79,6 @@ public class Location extends Element
     {
         if (this.parent != null)
         {
-            Content.getInstance().removeLocationAndChildren(this);
             this.parent.getChildren().remove(this);
             this.getChildren().clear();
         }

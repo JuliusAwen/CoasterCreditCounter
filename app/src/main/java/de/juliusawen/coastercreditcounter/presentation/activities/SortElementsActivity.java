@@ -164,6 +164,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     {
         this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
         this.recyclerViewAdapter = new RecyclerViewAdapter(this.elementsToSort);
+
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -268,7 +269,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     @Override
     public void onFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE_HELP_OVERLAY)
+        if(view.getId() == Constants.BUTTON_CLOSE)
         {
             this.setHelpOverlayFragmentVisibility(false);
         }

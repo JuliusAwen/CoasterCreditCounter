@@ -20,10 +20,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class AddLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class EditLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
@@ -34,7 +33,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_location);
+        setContentView(R.layout.activity_edit_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -48,8 +47,8 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_addLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_editLocation);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
@@ -61,7 +60,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     private void createToolbar(View view)
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_add_location));
+        toolbar.setTitle(getString(R.string.title_edit_location));
         toolbar.setSubtitle(this.subtitle);
         setSupportActionBar(toolbar);
 
@@ -88,24 +87,22 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
 
     private void createEditText(View view)
     {
-        EditText editText = view.findViewById(R.id.editTextAddLocation);
+        EditText editText = view.findViewById(R.id.editTextEditLocation);
+        editText.setHint(this.currentElement.getName());
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = false;
-
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    Location child = ((Location) currentElement).createChild(textView.getText().toString());
-                    Content.getInstance().addElement(child);
+                    currentElement.setName(textView.getText().toString());
 
                     finish();
 
                     handled = true;
                 }
-
                 return handled;
             }
         });
@@ -114,8 +111,8 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     private void createHelpOverlay()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
-        fragmentTransaction.add(R.id.frameLayout_addLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
+        fragmentTransaction.add(R.id.frameLayout_editLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
 
         this.helpOverlayVisible = false;

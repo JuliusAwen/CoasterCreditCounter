@@ -127,17 +127,9 @@ public class Content
         return attractions;
     }
 
-    public void addLocation(Element parentElement, String childName)
+    public void addElement(Element element)
     {
-        if(!childName.isEmpty())
-        {
-            childName = childName.trim();
-            Location parent = (Location) parentElement;
-            Location child = new Location(childName, UUID.randomUUID());
-
-            parent.addChild(child);
-            this.elements.put(child.getUuid(), child);
-        }
+        this.elements.put(element.getUuid(), element);
     }
 
     public void removeLocationAndChildren(Element element)
@@ -155,10 +147,5 @@ public class Content
         this.elements.remove(location.getUuid());
 
         Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: deleted " + location.getName());
-    }
-
-    public void deleteElement(Element element)
-    {
-        this.elements.remove(element.getUuid());
     }
 }
