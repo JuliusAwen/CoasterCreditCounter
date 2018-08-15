@@ -189,7 +189,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             {
                 longClickedElement = (Element) view.getTag();
 
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recyclerView);
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
                 MenuInflater menuInflater = popupMenu.getMenuInflater();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {

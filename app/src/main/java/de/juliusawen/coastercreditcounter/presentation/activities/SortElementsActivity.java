@@ -76,7 +76,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         frameLayoutActivity.addView(sortElementsView);
 
         this.createToolbar(sortElementsView);
-        this.createActionDialogTop(sortElementsView);
+        this.createActionDialog(sortElementsView);
         this.createContentRecyclerView(sortElementsView);
 
         this.createFloatingActionButton();
@@ -111,7 +111,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void createActionDialogTop(View view)
+    private void createActionDialog(View view)
     {
         ImageButton buttonDown = view.findViewById(R.id.imageButton_actionDialogLeft);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
