@@ -23,6 +23,7 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -86,6 +87,18 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         toolbar.setTitle(getString(R.string.title_browse_locations));
 
         setSupportActionBar(toolbar);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

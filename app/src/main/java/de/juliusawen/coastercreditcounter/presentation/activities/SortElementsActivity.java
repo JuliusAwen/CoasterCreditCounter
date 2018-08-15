@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -88,6 +89,18 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         toolbar.setTitle(getString(R.string.title_sort_elements));
         toolbar.setSubtitle(this.subtitle);
         setSupportActionBar(toolbar);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

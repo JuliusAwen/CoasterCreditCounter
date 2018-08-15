@@ -6,10 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     tools:context=".presentation.activities.BrowseLocationsActivity">
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButtonBrowseLocations"
@@ -19,4 +16,5 @@
         android:backgroundTint="?android:attr/colorPrimary"
         android:layout_margin="16dp"
         app:borderWidth="0dp" />
+
 </FrameLayout>
