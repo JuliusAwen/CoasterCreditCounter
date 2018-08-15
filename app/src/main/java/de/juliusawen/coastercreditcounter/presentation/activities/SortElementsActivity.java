@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -106,7 +107,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.options_menu_help_only_items, menu);
+        getMenuInflater().inflate(R.menu.options_menu_sort_elements, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -229,14 +230,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     {
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonSortElements);
 
-        if(isVisible)
-        {
-            floatingActionButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            floatingActionButton.setVisibility(View.INVISIBLE);
-        }
+        floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void createHelpOverlayFragment()
@@ -253,14 +247,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     {
         HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
-        if(isVisible)
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
-        }
+        helpOverlayFragment.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
 
         this.setFloatingActionButtonVisibility(!isVisible);
         this.helpOverlayVisible = isVisible;
@@ -328,6 +315,21 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             case R.id.optionsMenuHelp:
             {
                 this.setHelpOverlayFragmentVisibility(true);
+            }
+
+            case R.id.optionsMenuSortAToZ:
+            {
+                Collections.sort(this.elementsToSort, new Comparator<Element>()
+                {
+                    @Override
+                    public int compare(Element element1, Element element2)
+                    {
+                        return element1.getName().compareToIgnoreCase(element2.getName());
+                    }
+                });
+
+                this.recyclerViewAdapter.updateList(this.elementsToSort);
+                this.recyclerViewAdapter.notifyDataSetChanged();
             }
 
             default:

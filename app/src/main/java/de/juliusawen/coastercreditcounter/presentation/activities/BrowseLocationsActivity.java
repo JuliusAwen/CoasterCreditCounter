@@ -309,14 +309,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     {
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
 
-        if(isVisible)
-        {
-            floatingActionButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            floatingActionButton.setVisibility(View.INVISIBLE);
-        }
+        floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void createHelpOverlayFragment()
@@ -333,14 +326,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     {
         HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
 
-        if(isVisible)
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
-        }
+        helpOverlayFragment.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
 
         this.setFloatingActionButtonVisibility(!isVisible);
         this.helpOverlayVisible = isVisible;
