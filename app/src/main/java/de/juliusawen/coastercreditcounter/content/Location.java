@@ -17,7 +17,7 @@ public class Location extends Element
     public void addChild(Location child)
     {
         child.setParent(this);
-        this.children.add(child);
+        this.children.add(0, child);
     }
 
     public Location createChild(String childName)
