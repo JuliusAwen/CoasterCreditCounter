@@ -44,6 +44,10 @@
     <string name="button_text_back">Back</string>
 
 
+    <!--formatted texts-->
+    <string name="formatted_text_bold"><b>%1$s</b></string>
+
+
     <!--EditText hints-->
     <string name="hint_name_location">name location</string>
 

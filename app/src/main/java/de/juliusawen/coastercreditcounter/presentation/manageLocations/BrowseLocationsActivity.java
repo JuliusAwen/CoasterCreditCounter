@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.presentation.manageLocations;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
@@ -30,6 +32,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.Toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
@@ -143,9 +146,22 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_noBorder);
-            Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left_24px));
-            button.setText(location.getName());
-            button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+            if(this.recentLocations.indexOf(location) != 0)
+            {
+                Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left_24px));
+                button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            }
+
+            if(this.recentLocations.indexOf(location) != this.recentLocations.size() -1)
+            {
+                button.setText(location.getName());
+            }
+            else
+            {
+                button.setText(StringTool.getSpannableString(location.getName(), Typeface.BOLD_ITALIC));
+            }
+
             button.setId(Constants.BUTTON_BACK);
             button.setTag(location);
             button.setOnClickListener(new View.OnClickListener()
@@ -175,6 +191,16 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             });
 
             linearLayoutNavigationBar.addView(buttonView);
+
+            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewBrowseLocationsNavigationBar);
+            horizontalScrollView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
+                }
+            });
         }
     }
 
