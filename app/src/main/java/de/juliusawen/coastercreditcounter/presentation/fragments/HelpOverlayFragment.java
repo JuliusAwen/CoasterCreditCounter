@@ -63,8 +63,11 @@ public class HelpOverlayFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView textView = view.findViewById(R.id.textViewHelp);
-        textView.setText(this.helpText);
+        TextView textViewHelpTitle = view.findViewById(R.id.textViewHelpTitle);
+        textViewHelpTitle.setText(R.string.title_help);
+
+        TextView textViewHelpMessage = view.findViewById(R.id.textViewHelpMessage);
+        textViewHelpMessage.setText(this.helpText);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButton_help);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close_24px));
