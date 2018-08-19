@@ -10,4 +10,8 @@
         android:title="@string/selection_add_park"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/selectionInsertLocation"
+        android:title="@string/selection_insert_location_level"
+        app:showAsAction="never"/>
+
 </menu>

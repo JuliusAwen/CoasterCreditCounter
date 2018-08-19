@@ -9,23 +9,27 @@
 
 
     <!--options menu entries-->
-    <string name="options_menu_rename_root">rename root</string>
-    <string name="options_menu_sort_entries">sort entries</string>
-    <string name="options_menu_help">help</string>
-    <string name="options_menu_sort_a_to_z">sort a-z</string>
+    <string name="selection_rename_root">rename root</string>
+    <string name="selection_sort_entries">sort entries</string>
+    <string name="selection_help">help</string>
+    <string name="selection_sort_a_to_z">sort a-z</string>
+    <string name="selection_remove_location_level">remove location level</string>
 
 
     <!--popup menu entries-->
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
+    <string name="selection_insert_location_level">insert location level</string>
 
-    <string name="selection_edit">edit</string>
-    <string name="selection_delete">delete</string>
+    <string name="selection_edit_location">edit</string>
+    <string name="selection_delete_location">delete</string>
 
 
     <!--dialog texts-->
-    <string name="alert_dialog_delete_title">DELETE</string>
-    <string name="alert_dialog_delete_message">Do you really want to delete %1$s and all of its children permanently?</string>
+    <string name="alert_dialog_delete_location_title">DELETE</string>
+    <string name="alert_dialog_delete_location_message">Do you really want to delete %1$s and all of its children permanently?</string>
+    <string name="alert_dialog_remove_location_title">REMOVE</string>
+    <string name="alert_dialog_remove_location_level_message">Do you really want to remove %1$s and add all of its children to %2$s?</string>
 
 
     <!--button texts-->

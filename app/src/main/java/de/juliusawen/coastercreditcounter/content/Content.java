@@ -42,6 +42,7 @@ public class Content
     public void setLocationRoot(Location locationRoot)
     {
         this.locationRoot = locationRoot;
+        Log.v(Constants.LOG_TAG,  String.format("%s:: new root [%s]", this.getClass().toString(), locationRoot.getName()));
     }
 
     public Element getElementByUuid(UUID uuid)
@@ -144,8 +145,13 @@ public class Content
             }
         }
 
-        this.elements.remove(location.getUuid());
+        this.removeLocation(element);
+    }
 
-        Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: deleted " + location.getName());
+    public void removeLocation(Element element)
+    {
+        this.elements.remove(element.getUuid());
+
+        Log.d(Constants.LOG_TAG,  String.format("%s:: removed [%s]", this.getClass().toString(), element.getName()));
     }
 }

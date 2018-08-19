@@ -81,7 +81,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
+        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -165,7 +165,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.MENU_ENTRY_HELP)
+        if(item.getItemId() == Constants.SELECTION_HELP)
         {
             this.setHelpOverlayFragmentVisibility(true);
 

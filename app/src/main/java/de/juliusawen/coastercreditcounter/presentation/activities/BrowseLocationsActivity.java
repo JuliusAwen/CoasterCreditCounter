@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -46,7 +47,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private Element longClickedElement;
 
     private RecyclerViewAdapter recyclerViewAdapter;
-    private Toolbar toolbar;
 
     private boolean helpOverlayVisible;
 
@@ -56,8 +56,17 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_locations);
 
+        this.initializeContent();
+
         this.initializeViews();
         this.refreshViews();
+    }
+
+    private void initializeContent()
+    {
+        Intent intent = getIntent();
+
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
     }
 
     private void initializeViews()
@@ -76,14 +85,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void refreshViews()
     {
-        this.toolbar.setSubtitle(this.currentLocation.getName());
         this.createNavigationBar(this.findViewById(android.R.id.content).getRootView());
         this.recyclerViewAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     private void createToolbar(View view)
     {
-        this.toolbar = view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_browse_locations));
 
         setSupportActionBar(toolbar);
@@ -107,22 +115,22 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         menu.clear();
         if(this.currentLocation.getParent() == null)
         {
-            menu.add(0, Constants.MENU_ENTRY_RENAME_ROOT, Menu.NONE, R.string.options_menu_rename_root);
+            menu.add(0, Constants.SELECTION_RENAME_ROOT, Menu.NONE, R.string.selection_rename_root);
         }
         if(this.currentLocation.getChildren().size() > 1)
         {
-            menu.add(0, Constants.MENU_ENTRY_SORT_ELEMENTS, Menu.NONE, R.string.options_menu_sort_entries);
+            menu.add(0, Constants.SELECTION_SORT_ELEMENTS, Menu.NONE, R.string.selection_sort_entries);
         }
-        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
+        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
 
     private void createNavigationBar(View view)
     {
-        if(this.currentLocation.getParent() != null && !this.recentLocations.contains(this.currentLocation.getParent()))
+        if(!this.recentLocations.contains(this.currentLocation))
         {
-            this.recentLocations.add(this.currentLocation.getParent());
+            this.recentLocations.add(this.currentLocation);
         }
 
         LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutBrowseLocationsNavigationBar);
@@ -200,27 +208,31 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             {
                 longClickedElement = (Element) view.getTag();
 
+
+                //Todo: implement popup menu dynamically
+
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
                 MenuInflater menuInflater = popupMenu.getMenuInflater();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
+                    @SuppressLint("StringFormatMatches")
                     @Override
                     public boolean onMenuItemClick(MenuItem item)
                     {
                         switch(item.getItemId())
                         {
-                            case(R.id.selectionEdit):
+                            case(R.id.selectionEditLocation):
                             {
                                 startEditLocationActivity(longClickedElement);
 
                                 return true;
                             }
-                            case(R.id.selectionDelete):
+                            case(R.id.selectionDeleteLocation):
                             {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
-                                builder.setTitle(R.string.alert_dialog_delete_title)
-                                        .setMessage(getString(R.string.alert_dialog_delete_message, longClickedElement.getName()));
+                                builder.setTitle(R.string.alert_dialog_delete_location_title);
+                                builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedElement.getName()));
 
                                 builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                                 {
@@ -231,7 +243,43 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                         ((Location) longClickedElement).deleteNodeAndChildren();
                                         Content.getInstance().removeLocationAndChildren(longClickedElement);
 
-                                        recyclerViewAdapter.notifyDataSetChanged();
+                                        refreshViews();
+                                    }
+                                });
+
+                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+
+                                alertDialog.show();
+
+                                return true;
+                            }
+                            case(R.id.selectionRemoveLocationLevel):
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
+
+                                builder.setTitle(R.string.alert_dialog_remove_location_title);
+                                builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedElement.getName(),
+                                        ((Location)longClickedElement).getParent().getName()));
+
+                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        dialog.dismiss();
+
+                                        ((Location)longClickedElement).removeNode();
+                                        Content.getInstance().removeLocation(longClickedElement);
+
+                                        currentLocation = ((Location) longClickedElement).getParent();
                                         refreshViews();
                                     }
                                 });
@@ -258,7 +306,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         }
                     }
                 });
-                menuInflater.inflate(R.menu.selection_edit_or_delete, popupMenu.getMenu());
+                menuInflater.inflate(R.menu.selection_edit_mode_location, popupMenu.getMenu());
                 popupMenu.show();
             }
         }));
@@ -285,19 +333,30 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     @Override
                     public boolean onMenuItemClick(MenuItem item)
                     {
+                        Intent intent;
+
                         switch (item.getItemId())
                         {
                             case R.id.selectionAddLocation:
-                                Intent intent = new Intent(getApplicationContext(), AddLocationActivity.class);
+                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
                                 intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                                intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD_LOCATION);
                                 startActivity(intent);
                                 return true;
 
                             case R.id.selectionAddPark:
 
                                 //Todo: implement add park activity
+
                                 Toaster.makeToast(getApplicationContext(), "not yet implemented");
 
+                                return true;
+
+                            case R.id.selectionInsertLocation:
+                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
+                                intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                                intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_INSERT_LOCATION_LEVEL);
+                                startActivity(intent);
                                 return true;
 
                             default:
@@ -306,7 +365,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     }
                 });
 
-                menuInflater.inflate(R.menu.selection_add_location_or_park, popupMenu.getMenu());
+                menuInflater.inflate(R.menu.selection_fab_location, popupMenu.getMenu());
                 popupMenu.show();
             }
         });
@@ -380,13 +439,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (item.getItemId() == Constants.MENU_ENTRY_RENAME_ROOT)
+        if (item.getItemId() == Constants.SELECTION_RENAME_ROOT)
         {
             this.startEditLocationActivity(this.currentLocation);
 
             return true;
         }
-        else if(item.getItemId() == Constants.MENU_ENTRY_SORT_ELEMENTS)
+        else if(item.getItemId() == Constants.SELECTION_SORT_ELEMENTS)
         {
             Intent intent = new Intent(this, SortElementsActivity.class);
             intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
@@ -394,7 +453,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
             return true;
         }
-        else if(item.getItemId() == Constants.MENU_ENTRY_HELP)
+        else if(item.getItemId() == Constants.SELECTION_HELP)
         {
             this.setHelpOverlayFragmentVisibility(true);
 

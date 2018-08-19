@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -23,10 +24,12 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class AddLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class AddOrInsertLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
+
+    private int selection;
 
     private Boolean helpOverlayVisible;
 
@@ -42,7 +45,10 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
 
     private void initializeContent()
     {
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_UUID)));
+        Intent intent = getIntent();
+
+        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
+        this.selection = intent.getIntExtra(Constants.EXTRA_SELECTION, 0);
         this.subtitle = currentElement.getName();
     }
 
@@ -82,7 +88,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Constants.MENU_ENTRY_HELP, Menu.NONE, R.string.options_menu_help);
+        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -98,11 +104,21 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    Location child = ((Location) currentElement).createChild(textView.getText().toString());
-                    Content.getInstance().addElement(child);
+                    Location currentLocation = (Location) currentElement;
+                    Location newLocation = currentLocation.createLocation(textView.getText().toString());
+
+                    if(selection == Constants.SELECTION_ADD_LOCATION)
+                    {
+                        currentLocation.addChild(newLocation);
+                    }
+                    else if(selection == Constants.SELECTION_INSERT_LOCATION_LEVEL)
+                    {
+                        currentLocation.insertNode(newLocation);
+                    }
+
+                    Content.getInstance().addElement(newLocation);
 
                     finish();
-
                     handled = true;
                 }
                 return handled;
@@ -167,7 +183,7 @@ public class AddLocationActivity extends AppCompatActivity implements HelpOverla
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.MENU_ENTRY_HELP)
+        if(item.getItemId() == Constants.SELECTION_HELP)
         {
             this.setHelpOverlayFragmentVisibility(true);
 
