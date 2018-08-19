@@ -13,13 +13,13 @@
     <string name="selection_sort_entries">sort entries</string>
     <string name="selection_help">help</string>
     <string name="selection_sort_a_to_z">sort a-z</string>
-    <string name="selection_remove_location_level">remove location level</string>
+    <string name="selection_remove_location_level">remove location</string>
 
 
     <!--popup menu entries-->
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
-    <string name="selection_insert_location_level">insert location level</string>
+    <string name="selection_insert_location_level">insert location</string>
 
     <string name="selection_edit_location">edit</string>
     <string name="selection_delete_location">delete</string>

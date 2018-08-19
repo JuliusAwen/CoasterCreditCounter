@@ -107,11 +107,11 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
                     Location currentLocation = (Location) currentElement;
                     Location newLocation = currentLocation.createLocation(textView.getText().toString());
 
-                    if(selection == Constants.SELECTION_ADD_LOCATION)
+                    if(selection == Constants.SELECTION_ADD)
                     {
                         currentLocation.addChild(newLocation);
                     }
-                    else if(selection == Constants.SELECTION_INSERT_LOCATION_LEVEL)
+                    else if(selection == Constants.SELECTION_INSERT)
                     {
                         currentLocation.insertNode(newLocation);
                     }

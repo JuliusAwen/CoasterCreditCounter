@@ -17,19 +17,30 @@ public abstract class Constants
 
     public static final String FRAGMENT_TAG_HELP = "de.juliusawen.help_fragment";
 
-    public static final int BUTTON_BACK = ButtonFunctions.BACK.ordinal();
-    public static final int BUTTON_UP = ButtonFunctions.UP.ordinal();
-    public static final int BUTTON_DOWN = ButtonFunctions.DOWN.ordinal();
-    public static final int BUTTON_CLOSE = ButtonFunctions.CLOSE.ordinal();
 
-    public static final int SELECTION_RENAME_ROOT = Selections.RENAME_ROOT.ordinal();
-    public static final int SELECTION_SORT_ELEMENTS = Selections.SORT_ELEMENTS.ordinal();
-    public static final int SELECTION_SORT_A_TO_Z = Selections.SORT_A_TO_Z.ordinal();
-    public static final int SELECTION_HELP = Selections.HELP.ordinal();
-    public static final int SELECTION_ADD_LOCATION = Selections.ADD_LOCATION.ordinal();
-    public static final int SELECTION_INSERT_LOCATION_LEVEL = Selections.INSERT_LOCATION_LEVEL.ordinal();
-    public static final int SELECTION_REMOVE_LOCATION_LEVEL = Selections.REMOVE_LOCATION_LEVEL.ordinal();
+    private static final int MODIFIER_CONTENT_TYPE = 1000;
+    private static final int MODIFIER_BUTTON = 20000;
+    private static final int MODIFIER_SELECTION = 300000;
 
+    public static final int BUTTON_BACK = MODIFIER_BUTTON + ButtonFunctions.BACK.ordinal();
+    public static final int BUTTON_UP = MODIFIER_BUTTON + ButtonFunctions.UP.ordinal();
+    public static final int BUTTON_DOWN = MODIFIER_BUTTON + ButtonFunctions.DOWN.ordinal();
+    public static final int BUTTON_CLOSE = MODIFIER_BUTTON + ButtonFunctions.CLOSE.ordinal();
+
+    public static final int SELECTION_ADD = MODIFIER_SELECTION + Selections.ADD.ordinal();
+    public static final int SELECTION_INSERT = MODIFIER_SELECTION + Selections.INSERT.ordinal();
+    public static final int SELECTION_DELETE = MODIFIER_SELECTION + Selections.DELETE.ordinal();
+    public static final int SELECTION_REMOVE = MODIFIER_SELECTION + Selections.REMOVE.ordinal();
+    public static final int SELECTION_EDIT = MODIFIER_SELECTION + Selections.EDIT.ordinal();
+    public static final int SELECTION_SORT_MANUALLY = MODIFIER_SELECTION + Selections.SORT_MANUALLY.ordinal();
+    public static final int SELECTION_SORT_A_TO_Z = MODIFIER_SELECTION + Selections.SORT_A_TO_Z.ordinal();
+    public static final int SELECTION_HELP = MODIFIER_SELECTION + Selections.HELP.ordinal();
+
+    public static final int CONTENT_TYPE_ELEMENT = MODIFIER_CONTENT_TYPE + ContentTypes.ELEMENT.ordinal();
+    public static final int CONTENT_TYPE_LOCATION = MODIFIER_CONTENT_TYPE + ContentTypes.LOCATION.ordinal();
+    public static final int CONTENT_TYPE_PARK = MODIFIER_CONTENT_TYPE + ContentTypes.PARK.ordinal();
+    public static final int CONTENT_TYPE_ATTRACTION = MODIFIER_CONTENT_TYPE + ContentTypes.ATTRACTION.ordinal();
+    public static final int CONTENT_TYPE_COASTER = MODIFIER_CONTENT_TYPE + ContentTypes.COASTER.ordinal();
 }
 
 enum ButtonFunctions
@@ -42,11 +53,22 @@ enum ButtonFunctions
 
 enum Selections
 {
-    RENAME_ROOT,
-    SORT_ELEMENTS,
+    ADD,
+    INSERT,
+    DELETE,
+    REMOVE,
+    EDIT,
+    RENAME,
+    SORT_MANUALLY,
     SORT_A_TO_Z,
     HELP,
-    ADD_LOCATION,
-    INSERT_LOCATION_LEVEL,
-    REMOVE_LOCATION_LEVEL
+}
+
+enum ContentTypes
+{
+    ELEMENT,
+    LOCATION,
+    PARK,
+    ATTRACTION,
+    COASTER
 }

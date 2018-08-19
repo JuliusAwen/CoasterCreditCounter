@@ -119,11 +119,11 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         menu.clear();
         if(this.currentLocation.getParent() == null)
         {
-            menu.add(0, Constants.SELECTION_RENAME_ROOT, Menu.NONE, R.string.selection_rename_root);
+            menu.add(0, Constants.SELECTION_EDIT, Menu.NONE, R.string.selection_rename_root);
         }
         if(this.currentLocation.getChildren().size() > 1)
         {
-            menu.add(0, Constants.SELECTION_SORT_ELEMENTS, Menu.NONE, R.string.selection_sort_entries);
+            menu.add(0, Constants.SELECTION_SORT_MANUALLY, Menu.NONE, R.string.selection_sort_entries);
         }
         menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
 
@@ -354,7 +354,17 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             public void onClick(View view)
             {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
-                MenuInflater menuInflater = popupMenu.getMenuInflater();
+//                MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+                popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_add_location);
+                popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK, Menu.NONE, R.string.selection_add_park);
+
+                if(!currentLocation.getChildren().isEmpty())
+                {
+                    popupMenu.getMenu().add(0, Constants.SELECTION_INSERT + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_insert_location_level);
+                }
+
+
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
                     @Override
@@ -362,37 +372,36 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     {
                         Intent intent;
 
-                        switch (item.getItemId())
+                        if(item.getItemId() == Constants.SELECTION_ADD + Constants.CONTENT_TYPE_LOCATION)
                         {
-                            case R.id.selectionAddLocation:
-                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
-                                intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
-                                intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD_LOCATION);
-                                startActivity(intent);
-                                return true;
-
-                            case R.id.selectionAddPark:
-
-                                //Todo: implement add park activity
-
-                                Toaster.makeToast(getApplicationContext(), "not yet implemented");
-
-                                return true;
-
-                            case R.id.selectionInsertLocation:
-                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
-                                intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
-                                intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_INSERT_LOCATION_LEVEL);
-                                startActivity(intent);
-                                return true;
-
-                            default:
-                                return false;
+                            intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
+                            intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                            intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD);
+                            startActivity(intent);
+                            return true;
+                        }
+                        else if(item.getItemId() == Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK)
+                        {
+                            //Todo: implement add park activity
+                            Toaster.makeToast(getApplicationContext(), "not yet implemented");
+                            return true;
+                        }
+                        else if (item.getItemId() == Constants.SELECTION_INSERT + Constants.CONTENT_TYPE_LOCATION)
+                        {
+                            intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
+                            intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                            intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_INSERT);
+                            startActivity(intent);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 });
 
-                menuInflater.inflate(R.menu.selection_fab_location, popupMenu.getMenu());
+//                menuInflater.inflate(R.menu.selection_fab_location, popupMenu.getMenu());
                 popupMenu.show();
             }
         });
@@ -466,13 +475,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (item.getItemId() == Constants.SELECTION_RENAME_ROOT)
+        if (item.getItemId() == Constants.SELECTION_EDIT)
         {
             this.startEditLocationActivity(this.currentLocation);
 
             return true;
         }
-        else if(item.getItemId() == Constants.SELECTION_SORT_ELEMENTS)
+        else if(item.getItemId() == Constants.SELECTION_SORT_MANUALLY)
         {
             Intent intent = new Intent(this, SortElementsActivity.class);
             intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
