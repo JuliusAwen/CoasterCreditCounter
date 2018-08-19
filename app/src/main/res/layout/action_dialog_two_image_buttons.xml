@@ -3,36 +3,35 @@
     android:id="@+id/linearLayout_actionDialog"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="?android:attr/colorPrimary"
-    android:layout_weight="0"
-    android:elevation="8dp"
+    android:background="?android:attr/colorPrimaryDark"
+    android:elevation="6dp"
     android:orientation="horizontal">
 
-    <ImageButton
-        android:id="@+id/imageButton_actionDialogLeft"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_text_cancel" />
+        <ImageButton
+            android:id="@+id/imageButton_actionDialogLeft"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/button_text_cancel" />
 
-    <View xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="1dp"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/white"/>
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/white"/>
 
-    <ImageButton
-        android:id="@+id/imageButton_actionDialogRight"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_text_accept" />
+        <ImageButton
+            android:id="@+id/imageButton_actionDialogRight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/button_text_accept" />
 
 </LinearLayout>
