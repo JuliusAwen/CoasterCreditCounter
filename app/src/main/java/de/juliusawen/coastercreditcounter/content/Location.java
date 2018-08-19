@@ -25,21 +25,27 @@ public class Location extends Element
 
     public void setChildren(List<Location> children)
     {
-        for(Location child : children)
-        {
-            Log.d(Constants.LOG_TAG,  String.format("Location.setChildren:: node[%s] - child[%s] set.", this.getName(), child.getName()));
-        }
+        Log.v(Constants.LOG_TAG,  String.format("Location.setChildren:: node[%s] -> children set.", this.getName()));
         this.children = children;
     }
 
     public Location getParent()
     {
+        if(this.parent != null)
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Location.getParent:: node[%s] -> parent is [%s].", this.getName(), this.parent.getName()));
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Location.getParent:: node[%s] -> parent is [null].", this.getName()));
+        }
+
         return this.parent;
     }
 
     private void setParent(Location parent)
     {
-        Log.d(Constants.LOG_TAG,  String.format("Location.setParent:: node[%s] - parent[%s] set.", this.getName(), parent.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Location.setParent:: node[%s] -> parent[%s] set.", this.getName(), parent.getName()));
         this.parent = parent;
     }
 
@@ -51,7 +57,7 @@ public class Location extends Element
         {
             name = name.trim();
 
-            Log.d(Constants.LOG_TAG,  String.format("Location.createLocation:: node[%s] created.", name));
+            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: node[%s] created.", name));
             location = new Location(name, UUID.randomUUID());
         }
 
@@ -62,20 +68,15 @@ public class Location extends Element
     {
         child.setParent(this);
 
-        Log.d(Constants.LOG_TAG,  String.format("Location.addChild:: node[%s] - child[%s] added.", this.getName(), child.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Location.addChild:: node[%s] -> child[%s] added.", this.getName(), child.getName()));
         this.children.add(0, child);
     }
 
     public void addChildren(List<Location> children)
     {
-        this.children.addAll(children);
-        for(Location child : children)
-        {
-            Log.d(Constants.LOG_TAG,  String.format("Location.addChildren:: node[%s] - child[%s] added.", this.getName(), child.getName()));
-        }
-
         for (Location child :children)
         {
+            this.addChild(child);
             child.setParent(this);
         }
     }
@@ -84,35 +85,21 @@ public class Location extends Element
     {
         location.setChildren(new ArrayList<>(this.getChildren()));
 
-        Log.d(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] - children cleared.", this.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.getName()));
         this.getChildren().clear();
 
         this.addChild(location);
     }
 
-
-//    public Location getRoot()
-//    {
-//        if(this.parent == null)
-//        {
-//            return this;
-//        }
-//
-//        return this.parent.getRoot();
-//    }
-
     public void deleteNodeAndChildren()
     {
         if (this.parent != null)
         {
-            Log.d(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] removed from parent[%S].", this.getName(), this.parent.getName()));
-            this.parent.getChildren().remove(this);
-
-            for(Location child : this.getChildren())
-            {
-                Log.d(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] - child[%s] removed.", this.getName(), child.getName()));
-            }
+            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> children cleared.", this.getName()));
             this.getChildren().clear();
+
+            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
+            this.parent.getChildren().remove(this);
         }
     }
 
@@ -122,7 +109,7 @@ public class Location extends Element
         {
             int index = this.parent.getChildren().indexOf(this);
 
-            Log.d(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] removed from parent[%S].", this.getName(), this.parent.getName()));
+            Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
 
             for (Location location : getChildren())
@@ -130,45 +117,12 @@ public class Location extends Element
                 location.setParent(this.parent);
             }
 
-            for(Location child : this.getChildren())
-            {
-                Log.d(Constants.LOG_TAG,  String.format("Location.addChildren:: node[%s] - child[%s] added.", this.parent.getName(), child.getName()));
-            }
+            Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children added.", this.parent.getName()));
             this.parent.getChildren().addAll(index, this.getChildren());
         }
 
+        Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children cleared.", this.getName()));
         this.getChildren().clear();
     }
-
-//    private Location removeRootNode()
-//    {
-//        if (parent != null)
-//        {
-//            throw new IllegalStateException("removeRootNode not called on root");
-//        }
-//
-//        Location newParent = null;
-//
-//        if (!getChildren().isEmpty())
-//        {
-//            newParent = getChildren().get(0);
-//            newParent.setParent(null);
-//
-//            getChildren().remove(0);
-//
-//            for (Location child : getChildren())
-//            {
-//                child.setParent(newParent);
-//            }
-//
-//            newParent.getChildren().addAll(getChildren());
-//            Content.getInstance().deleteElement(this);
-//            Content.getInstance().setLocationRoot(newParent);
-//        }
-//
-//        this.getChildren().clear();
-//
-//        return newParent;
-//    }
 }
 

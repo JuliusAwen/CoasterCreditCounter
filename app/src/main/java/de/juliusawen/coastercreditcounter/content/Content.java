@@ -20,13 +20,12 @@ public class Content
 
     public static Content getInstance()
     {
-
         return instance;
     }
 
     private Content()
     {
-        Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: Constructor called.");
+        Log.v(Constants.LOG_TAG,  String.format("Content:: Constructor called."));
 
         this.elements = new HashMap<>();
 
@@ -36,13 +35,14 @@ public class Content
 
     public Location getLocationRoot()
     {
+        Log.v(Constants.LOG_TAG,  String.format("Content.getLocationRoot:: locationRoot is [%s].", locationRoot.getName()));
         return this.locationRoot;
     }
 
     public void setLocationRoot(Location locationRoot)
     {
+        Log.v(Constants.LOG_TAG,  String.format("Content.setLocationRoot:: root[%s] set.", locationRoot.getName()));
         this.locationRoot = locationRoot;
-        Log.v(Constants.LOG_TAG,  String.format("%s:: new root [%s]", this.getClass().toString(), locationRoot.getName()));
     }
 
     public Element getElementByUuid(UUID uuid)
@@ -52,6 +52,7 @@ public class Content
 
     private void flattenContentTree(Location location)
     {
+
         this.elements.put(location.getUuid(), location);
 
         for (Location child : location.getChildren())
@@ -130,6 +131,7 @@ public class Content
 
     public void addElement(Element element)
     {
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: element[%s] added.", element.getName()));
         this.elements.put(element.getUuid(), element);
     }
 
@@ -150,8 +152,7 @@ public class Content
 
     public void removeLocation(Element element)
     {
+        Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: element[%s] removed.", element.getName()));
         this.elements.remove(element.getUuid());
-
-        Log.d(Constants.LOG_TAG,  String.format("%s:: removed [%s]", this.getClass().toString(), element.getName()));
     }
 }

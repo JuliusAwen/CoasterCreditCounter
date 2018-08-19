@@ -9,7 +9,7 @@ public abstract class Element
 
     public Element(String name, UUID uuid)
     {
-        this.name = name;
+        this.setName(name);
         this.uuid = uuid;
     }
 

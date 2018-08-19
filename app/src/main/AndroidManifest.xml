@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.manageLocations.BrowseLocationsActivity" />
-        <activity android:name=".presentation.manageLocations.SortElementsActivity" />
+        <activity android:name=".presentation.SortElementsActivity" />
         <activity android:name=".presentation.manageLocations.AddOrInsertLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".presentation.manageLocations.EditLocationActivity"

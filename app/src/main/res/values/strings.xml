@@ -2,8 +2,8 @@
 
     <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
-    <string name="title_browse_locations">Location</string>
-    <string name="title_sort_elements">Sort</string>
+    <string name="title_browse_locations">Manage Locations</string>
+    <string name="title_sort_elements">Sort Locations</string>
     <string name="title_add_location">Add Location</string>
     <string name="title_edit_location">Edit Location</string>
 
