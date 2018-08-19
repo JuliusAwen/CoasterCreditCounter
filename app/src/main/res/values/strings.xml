@@ -4,17 +4,17 @@
     <string name="title_app_name">CoasterCreditCounter</string>
     <string name="title_browse_locations">Manage Locations</string>
     <string name="title_sort_elements">Sort Locations</string>
-    <string name="title_add_location">Add Location</string>
+    <string name="title_add_or_insert_location">%1$s Location</string>
     <string name="title_edit_location">Edit Location</string>
 
+    <string name="dynamic_text_add">Add</string>
+    <string name="dynamic_text_insert">Insert</string>
 
     <!--options menu entries-->
     <string name="selection_rename_root">rename root</string>
     <string name="selection_sort_entries">sort entries</string>
     <string name="selection_help">help</string>
     <string name="selection_sort_a_to_z">sort a-z</string>
-    <string name="selection_remove_location_level">remove location</string>
-
 
     <!--popup menu entries-->
     <string name="selection_add_location">add location</string>
@@ -23,6 +23,7 @@
 
     <string name="selection_edit_location">edit</string>
     <string name="selection_delete_location">delete</string>
+    <string name="selection_remove_location_level">remove</string>
 
 
     <!--dialog texts-->

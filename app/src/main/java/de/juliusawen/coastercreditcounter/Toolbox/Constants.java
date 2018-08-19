@@ -18,9 +18,11 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_HELP = "de.juliusawen.help_fragment";
 
 
-    private static final int MODIFIER_CONTENT_TYPE = 1000;
-    private static final int MODIFIER_BUTTON = 20000;
-    private static final int MODIFIER_SELECTION = 300000;
+    private static final int MODIFIER_BUTTON = 1000;
+    private static final int MODIFIER_SELECTION = 2000;
+
+    public static final int CONTENT_TYPE_LOCATION = 10000;
+    public static final int CONTENT_TYPE_PARK = 20000;
 
     public static final int BUTTON_BACK = MODIFIER_BUTTON + ButtonFunctions.BACK.ordinal();
     public static final int BUTTON_UP = MODIFIER_BUTTON + ButtonFunctions.UP.ordinal();
@@ -35,12 +37,6 @@ public abstract class Constants
     public static final int SELECTION_SORT_MANUALLY = MODIFIER_SELECTION + Selections.SORT_MANUALLY.ordinal();
     public static final int SELECTION_SORT_A_TO_Z = MODIFIER_SELECTION + Selections.SORT_A_TO_Z.ordinal();
     public static final int SELECTION_HELP = MODIFIER_SELECTION + Selections.HELP.ordinal();
-
-    public static final int CONTENT_TYPE_ELEMENT = MODIFIER_CONTENT_TYPE + ContentTypes.ELEMENT.ordinal();
-    public static final int CONTENT_TYPE_LOCATION = MODIFIER_CONTENT_TYPE + ContentTypes.LOCATION.ordinal();
-    public static final int CONTENT_TYPE_PARK = MODIFIER_CONTENT_TYPE + ContentTypes.PARK.ordinal();
-    public static final int CONTENT_TYPE_ATTRACTION = MODIFIER_CONTENT_TYPE + ContentTypes.ATTRACTION.ordinal();
-    public static final int CONTENT_TYPE_COASTER = MODIFIER_CONTENT_TYPE + ContentTypes.COASTER.ordinal();
 }
 
 enum ButtonFunctions

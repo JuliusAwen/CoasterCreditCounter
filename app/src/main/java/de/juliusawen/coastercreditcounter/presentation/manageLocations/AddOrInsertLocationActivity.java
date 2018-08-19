@@ -37,7 +37,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_location);
+        setContentView(R.layout.activity_add_or_insert_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -67,7 +67,18 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     private void createToolbar(View view)
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_add_location));
+
+        String dynamicText = "";
+        if(this.selection == Constants.SELECTION_ADD)
+        {
+            dynamicText = getString(R.string.dynamic_text_add);
+        }
+        else if(this.selection == Constants.SELECTION_INSERT)
+        {
+            dynamicText = getString(R.string.dynamic_text_insert);
+        }
+        toolbar.setTitle(getString(R.string.title_add_or_insert_location, dynamicText));
+
         toolbar.setSubtitle(this.subtitle);
         setSupportActionBar(toolbar);
 

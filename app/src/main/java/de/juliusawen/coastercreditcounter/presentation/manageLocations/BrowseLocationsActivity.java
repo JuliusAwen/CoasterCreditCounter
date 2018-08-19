@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation.manageLocations;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -15,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -235,105 +233,104 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             {
                 longClickedElement = (Element) view.getTag();
 
-
-                //Todo: implement popup menu dynamically
-
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-                MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+                popupMenu.getMenu().add(0, Constants.SELECTION_EDIT + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_edit_location);
+                popupMenu.getMenu().add(0, Constants.SELECTION_DELETE + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_delete_location);
+
+                if(!((Location)longClickedElement).getChildren().isEmpty())
+                {
+                    popupMenu.getMenu().add(0, Constants.SELECTION_REMOVE + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_remove_location_level);
+                }
+
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
-                    @SuppressLint("StringFormatMatches")
                     @Override
                     public boolean onMenuItemClick(MenuItem item)
                     {
-                        switch(item.getItemId())
+                        if(item.getItemId() == Constants.SELECTION_EDIT + Constants.CONTENT_TYPE_LOCATION)
                         {
-                            case(R.id.selectionEditLocation):
+                            startEditLocationActivity(longClickedElement);
+                            return true;
+                        }
+                        else if(item.getItemId() == Constants.SELECTION_DELETE + Constants.CONTENT_TYPE_LOCATION)
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
+
+                            builder.setTitle(R.string.alert_dialog_delete_location_title);
+                            builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedElement.getName()));
+
+                            builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
-                                startEditLocationActivity(longClickedElement);
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                    dialog.dismiss();
 
-                                return true;
-                            }
-                            case(R.id.selectionDeleteLocation):
+                                    ((Location) longClickedElement).deleteNodeAndChildren();
+                                    Content.getInstance().removeLocationAndChildren(longClickedElement);
+
+                                    refreshViews();
+                                }
+                            });
+
+                            builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
                             {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
-
-                                builder.setTitle(R.string.alert_dialog_delete_location_title);
-                                builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedElement.getName()));
-
-                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                public void onClick(DialogInterface dialog, int id)
                                 {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
+                                    dialog.dismiss();
+                                }
+                            });
 
-                                        ((Location) longClickedElement).deleteNodeAndChildren();
-                                        Content.getInstance().removeLocationAndChildren(longClickedElement);
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
 
-                                        refreshViews();
-                                    }
-                                });
+                            alertDialog.show();
 
-                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
-                                    }
-                                });
+                            return true;
+                        }
+                        else if(item.getItemId() == Constants.SELECTION_REMOVE + Constants.CONTENT_TYPE_LOCATION)
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+                            builder.setTitle(R.string.alert_dialog_remove_location_title);
+                            builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedElement.getName(),
+                                    ((Location)longClickedElement).getParent().getName()));
 
-                                alertDialog.show();
-
-                                return true;
-                            }
-                            case(R.id.selectionRemoveLocationLevel):
+                            builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
-
-                                builder.setTitle(R.string.alert_dialog_remove_location_title);
-                                builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedElement.getName(),
-                                        ((Location)longClickedElement).getParent().getName()));
-
-                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                public void onClick(DialogInterface dialog, int id)
                                 {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
+                                    dialog.dismiss();
 
-                                        ((Location)longClickedElement).removeNode();
-                                        Content.getInstance().removeLocation(longClickedElement);
+                                    ((Location)longClickedElement).removeNode();
+                                    Content.getInstance().removeLocation(longClickedElement);
 
-                                        currentLocation = ((Location) longClickedElement).getParent();
-                                        refreshViews();
-                                    }
-                                });
+                                    currentLocation = ((Location) longClickedElement).getParent();
+                                    refreshViews();
+                                }
+                            });
 
-                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
-
-                                alertDialog.show();
-
-                                return true;
-                            }
-                            default:
+                            builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
                             {
-                                return false;
-                            }
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+
+                            alertDialog.show();
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 });
-                menuInflater.inflate(R.menu.selection_edit_mode_location, popupMenu.getMenu());
+
                 popupMenu.show();
             }
         }));
@@ -354,7 +351,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             public void onClick(View view)
             {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
-//                MenuInflater menuInflater = popupMenu.getMenuInflater();
 
                 popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_add_location);
                 popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK, Menu.NONE, R.string.selection_add_park);
@@ -401,7 +397,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     }
                 });
 
-//                menuInflater.inflate(R.menu.selection_fab_location, popupMenu.getMenu());
                 popupMenu.show();
             }
         });
