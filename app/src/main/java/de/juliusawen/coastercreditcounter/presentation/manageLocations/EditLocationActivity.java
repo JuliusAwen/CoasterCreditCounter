@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.activities;
+package de.juliusawen.coastercreditcounter.presentation.manageLocations;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;

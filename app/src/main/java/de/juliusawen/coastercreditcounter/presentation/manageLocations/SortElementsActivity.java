@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.activities;
+package de.juliusawen.coastercreditcounter.presentation.manageLocations;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
