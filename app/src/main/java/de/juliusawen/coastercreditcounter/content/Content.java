@@ -35,14 +35,20 @@ public class Content
 
     public Location getLocationRoot()
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.getLocationRoot:: locationRoot is [%s].", locationRoot.getName()));
         return this.locationRoot;
     }
 
     public void setLocationRoot(Location locationRoot)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setLocationRoot:: root[%s] set.", locationRoot.getName()));
-        this.locationRoot = locationRoot;
+        if(locationRoot.getParent() == null)
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Content.setLocationRoot:: root[%s] set.", locationRoot.getName()));
+            this.locationRoot = locationRoot;
+        }
+        else
+        {
+            throw new IllegalStateException("Location with parent can not be set as location root - parent has to be [null].");
+        }
     }
 
     public Element getElementByUuid(UUID uuid)

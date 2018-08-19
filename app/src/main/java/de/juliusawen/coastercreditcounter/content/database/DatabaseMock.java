@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Attraction;
@@ -21,45 +20,44 @@ public final class DatabaseMock implements IDatabaseWrapper
         Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: fetchContent called.");
 
         // create Nodes
-        Location earth = new Location("Earth", UUID.randomUUID());
+        Location earth = Location.createLocation("Earth");
 
-        Location europe = new Location("Europe", UUID.randomUUID());
-        Location usa = new Location("USA", UUID.randomUUID());
+        Location europe = Location.createLocation("Europe");
+        Location usa = Location.createLocation("USA");
 
-        Location germany = new Location("Germany", UUID.randomUUID());
-        Location netherlands = new Location("Netherlands", UUID.randomUUID());
+        Location germany = Location.createLocation("Germany");
+        Location netherlands = Location.createLocation("Netherlands");
 
-        Location northRhineWestphalia = new Location("North Rhine-Westphalia", UUID.randomUUID());
-        Location lowerSaxony = new Location("Lower Saxony", UUID.randomUUID());
-
+        Location northRhineWestphalia = Location.createLocation("North Rhine-Westphalia");
+        Location lowerSaxony = Location.createLocation("Lower Saxony");
         List<Location> states = Arrays.asList(
-                new Location("Baden-Württemberg", UUID.randomUUID()),
-                new Location("Bavaria", UUID.randomUUID()),
-                new Location("Berlin", UUID.randomUUID()),
-                new Location("Brandenburg", UUID.randomUUID()),
-                new Location("Bremen", UUID.randomUUID()),
-                new Location("Hamburg", UUID.randomUUID()),
-                new Location("Hesse", UUID.randomUUID()),
-                new Location("Mecklenburg-Vorpommern", UUID.randomUUID()),
-                new Location("Rhineland-Palatinate", UUID.randomUUID()),
-                new Location("Saarland", UUID.randomUUID()),
-                new Location("Saxony", UUID.randomUUID()),
-                new Location("Saxony-Anhalt", UUID.randomUUID()),
-                new Location("Schleswig-Holstein", UUID.randomUUID()),
-                new Location("Thuringia", UUID.randomUUID())
+                Location.createLocation("Baden-Württemberg"),
+                Location.createLocation("Bavaria"),
+                Location.createLocation("Berlin"),
+                Location.createLocation("Brandenburg"),
+                Location.createLocation("Bremen"),
+                Location.createLocation("Hamburg"),
+                Location.createLocation("Hesse"),
+                Location.createLocation("Mecklenburg-Vorpommern"),
+                Location.createLocation("Rhineland-Palatinate"),
+                Location.createLocation("Saarland"),
+                Location.createLocation("Saxony"),
+                Location.createLocation("Saxony-Anhalt"),
+                Location.createLocation("Schleswig-Holstein"),
+                Location.createLocation("Thuringia")
         );
 
-        Location bruehl = new Location("Brühl", UUID.randomUUID());
-        Location soltau = new Location("Soltau", UUID.randomUUID());
+        Location bruehl = Location.createLocation("Brühl");
+        Location soltau = Location.createLocation("Soltau");
 
-        Park phantasialand = new Park("Phantasialand", UUID.randomUUID());
-        Park heidePark = new Park("Heide Park", UUID.randomUUID());
+        Park phantasialand = Park.createPark("Phantasialand");
+        Park heidePark = Park.createPark("Heide Park Resort");
 
-        Coaster taron = new Coaster("Taron", UUID.randomUUID());
-        Attraction hollywoodTour = new Attraction("Hollywood Tour", UUID.randomUUID());
+        Coaster taron = Coaster.createCoaster("Taron");
+        Attraction hollywoodTour = Attraction.createAttraction("Hollywood Tour");
 
-        Coaster krake = new Coaster("Krake", UUID.randomUUID());
-        Attraction scream = new Attraction("Scream", UUID.randomUUID());
+        Coaster krake = Coaster.createCoaster("Krake");
+        Attraction scream = Attraction.createAttraction("Scream");
 
 
         // build tree
@@ -85,17 +83,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
-//        {
-//            Location scrollTest = new Location("WowWasnDasFürnMeeeeeegaLangesBundeslandSowasGibtsDochGarnicht!", UUID.randomUUID());
-//            scrollTest.addChild(new Location("DiesIstEinPlatzhalterFürDenLängstenStädtenamenDerWelt", UUID.randomUUID()));
-//            germany.addChild(scrollTest);
-//        }
 
         // do things with tree
         this.putLocationsInAttractions(earth);
 
-
-        //Todo: root has ALWAYS to be generated - why not put it in Content itself als a fix static member or something, hm?
         content.setLocationRoot(earth);
     }
 

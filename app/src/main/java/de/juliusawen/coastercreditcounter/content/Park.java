@@ -18,6 +18,21 @@ public class Park extends Location
         this.attractions = new ArrayList<>();
     }
 
+    public static Park createPark(String name)
+    {
+        Park park = null;
+
+        if(!name.trim().isEmpty())
+        {
+            name = name.trim();
+
+            Log.v(Constants.LOG_TAG,  String.format("Park.createPark:: park[%s] created.", name));
+            park = new Park(name, UUID.randomUUID());
+        }
+
+        return park;
+    }
+
     public List<Attraction> getAttractions()
     {
         return this.attractions;
@@ -27,14 +42,14 @@ public class Park extends Location
     {
         for(Attraction attraction : attractions)
         {
-            Log.d(Constants.LOG_TAG,  String.format("Park.setAdttraction:: park[%s] -> attraction[%s] set.", this.getName(), attraction.getName()));
+            Log.d(Constants.LOG_TAG,  String.format("Park.setAttraction:: park[%s] -> attraction[%s] set.", this.getName(), attraction.getName()));
         }
         this.attractions = attractions;
     }
 
     public void addAttraction(Attraction attraction)
     {
-        Log.d(Constants.LOG_TAG,  String.format("Park.addAdttraction:: park[%s] -> attraction[%s] added.", this.getName(), attraction.getName()));
+        Log.d(Constants.LOG_TAG,  String.format("Park.addAttraction:: park[%s] -> attraction[%s] added.", this.getName(), attraction.getName()));
         this.attractions.add(attraction);
     }
 }

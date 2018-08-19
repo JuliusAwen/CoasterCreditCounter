@@ -18,6 +18,21 @@ public class Location extends Element
         super(name, uuid);
     }
 
+    public static Location createLocation(String name)
+    {
+        Location location = null;
+
+        if(!name.trim().isEmpty())
+        {
+            name = name.trim();
+
+            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: location[%s] created.", name));
+            location = new Location(name, UUID.randomUUID());
+        }
+
+        return location;
+    }
+
     public List<Location> getChildren()
     {
         return this.children;
@@ -31,15 +46,6 @@ public class Location extends Element
 
     public Location getParent()
     {
-        if(this.parent != null)
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Location.getParent:: node[%s] -> parent is [%s].", this.getName(), this.parent.getName()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Location.getParent:: node[%s] -> parent is [null].", this.getName()));
-        }
-
         return this.parent;
     }
 
@@ -47,21 +53,6 @@ public class Location extends Element
     {
         Log.v(Constants.LOG_TAG,  String.format("Location.setParent:: node[%s] -> parent[%s] set.", this.getName(), parent.getName()));
         this.parent = parent;
-    }
-
-    public Location createLocation(String name)
-    {
-        Location location = null;
-
-        if(!name.trim().isEmpty())
-        {
-            name = name.trim();
-
-            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: node[%s] created.", name));
-            location = new Location(name, UUID.randomUUID());
-        }
-
-        return location;
     }
 
     public void addChild(Location child)
