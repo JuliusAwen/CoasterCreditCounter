@@ -124,7 +124,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void createHelpOverlayFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_or_insert_location), false);
         fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
         fragmentTransaction.commit();
     }

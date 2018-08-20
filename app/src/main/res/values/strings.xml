@@ -2,7 +2,7 @@
 
     <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
-    <string name="title_browse_locations">Manage Locations</string>
+    <string name="title_locations">Locations</string>
     <string name="title_sort_elements">Sort Entries</string>
     <string name="title_add_or_insert_location">%1$s Location</string>
     <string name="title_edit_location">Edit Location</string>
@@ -35,7 +35,7 @@
     <string name="alert_dialog_delete_location_title">DELETE</string>
     <string name="alert_dialog_delete_location_message">Do you really want to delete %1$s and all of its children permanently?</string>
     <string name="alert_dialog_remove_location_title">REMOVE</string>
-    <string name="alert_dialog_remove_location_level_message">Do you really want to remove %1$s and add all of its children to %2$s?</string>
+    <string name="alert_dialog_remove_location_level_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
 
 
     <!--button texts-->
@@ -53,10 +53,6 @@
 
     <!--edit text texts-->
     <string name="edit_text_hint_enter_name">enter location name</string>
-
-
-    <!--formatted texts-->
-    <string name="formatted_text_bold"><b>%1$s</b></string>
 
 
     <!--help texts-->
@@ -92,7 +88,7 @@
         \n <li><i>help:</i> show this.</li>
     </string>
 
-    <string name="help_text_add_location">
+    <string name="help_text_add_or_insert_location">
         <b><big>Add</big></b>
         \n <li>Name the new location and confirm.</li>
     </string>

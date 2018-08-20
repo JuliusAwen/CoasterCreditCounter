@@ -91,7 +91,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void createToolbar(View view)
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_browse_locations));
+        toolbar.setTitle(getString(R.string.title_locations));
 
         setSupportActionBar(toolbar);
 
