@@ -8,7 +8,7 @@
     android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/buttonActionDialogUpDown_down"
+        android:id="@+id/buttonActionDialogUpDown_moveDown"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -26,7 +26,7 @@
         android:background="@color/white"/>
 
     <ImageButton
-        android:id="@+id/buttonActionDialogUpDown_up"
+        android:id="@+id/buttonActionDialogUpDown_moveUp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

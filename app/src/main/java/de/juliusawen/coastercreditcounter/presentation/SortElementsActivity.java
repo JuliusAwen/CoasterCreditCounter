@@ -112,7 +112,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createActionDialog(View view)
     {
-        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_down);
+        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_moveDown);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
@@ -128,14 +128,23 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                     if(position < elementsToSort.size() - 1)
                     {
                         Collections.swap(elementsToSort, position, position + 1);
-                        recyclerView.smoothScrollToPosition(position + 1);
                         recyclerViewAdapter.notifyDataSetChanged();
+
+                        int scrollMargin = getScrollMargin(recyclerView);
+                        if(elementsToSort.size() > position + 1 + scrollMargin)
+                        {
+                            recyclerView.smoothScrollToPosition(position + 1 + scrollMargin);
+                        }
+                        else
+                        {
+                            recyclerView.smoothScrollToPosition(position + 1);
+                        }
                     }
                 }
             }
         });
 
-        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_up);
+        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_moveUp);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);
@@ -147,16 +156,33 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 if(recyclerViewAdapter.selectedElement != null)
                 {
                     int position = elementsToSort.indexOf(recyclerViewAdapter.selectedElement);
+                    recyclerViewAdapter.notifyDataSetChanged();
 
                     if(position > 0)
                     {
                         Collections.swap(elementsToSort, position, position - 1);
-                        recyclerView.smoothScrollToPosition(position - 1);
-                        recyclerViewAdapter.notifyDataSetChanged();
+
+                        int scrollMargin = getScrollMargin(recyclerView);
+                        if(position - 1 - scrollMargin >= 0)
+                        {
+                            recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
+                        }
+                        else
+                        {
+                            recyclerView.smoothScrollToPosition(position - 1);
+                        }
                     }
                 }
             }
         });
+    }
+
+    private int getScrollMargin(RecyclerView recyclerView)
+    {
+        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
+        return visibleViewsCount / 2;
     }
 
     private void createContentRecyclerView(View view)
