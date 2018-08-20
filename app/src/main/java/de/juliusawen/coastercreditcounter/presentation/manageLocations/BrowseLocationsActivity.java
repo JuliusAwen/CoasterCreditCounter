@@ -41,7 +41,7 @@ import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener
 import de.juliusawen.coastercreditcounter.presentation.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
@@ -66,22 +66,20 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void initializeContent()
     {
         Intent intent = getIntent();
-
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
     }
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_browseLocations);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutBrowseLocations);
         View browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, frameLayoutActivity, false);
         frameLayoutActivity.addView(browseLocationsView);
 
         this.createToolbar(browseLocationsView);
         this.createNavigationBar(browseLocationsView);
         this.createContentRecyclerView(browseLocationsView);
-
         this.createFloatingActionButton();
-        this.createHelpOverlayFragment();
+        this.createHelpOverlayFragment(frameLayoutActivity.getId());
     }
 
     private void refreshViews()
@@ -407,22 +405,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void createHelpOverlayFragment()
+    private void createHelpOverlayFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
-        fragmentTransaction.add(R.id.frameLayout_browseLocations, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(View view)
-    {
-        if(view.getId() == Constants.BUTTON_CLOSE)
-        {
-            this.helpOverlayFragment.setVisibility(false);
-            this.setFloatingActionButtonVisibility(true);
-        }
     }
 
     @Override
@@ -478,6 +466,16 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onHelpOverlayFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_CLOSE)
+        {
+            this.helpOverlayFragment.setVisibility(false);
+            this.setFloatingActionButtonVisibility(true);
+        }
     }
 
     private void startEditLocationActivity(Element element)

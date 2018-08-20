@@ -31,7 +31,7 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private Element currentElement;
     private String subtitle;
@@ -69,16 +69,15 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_sortElements);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutSortElements);
         View sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(sortElementsView);
 
         this.createToolbar(sortElementsView);
         this.createActionDialog(sortElementsView);
         this.createContentRecyclerView(sortElementsView);
-
         this.createFloatingActionButton();
-        this.createHelpOverlayFragment();
+        this.createHelpOverlayFragment(frameLayoutActivity.getId());
     }
 
     private void createToolbar(View view)
@@ -113,7 +112,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createActionDialog(View view)
     {
-        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
+        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_down);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
@@ -136,7 +135,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             }
         });
 
-        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
+        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_up);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);
@@ -232,22 +231,12 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void createHelpOverlayFragment()
+    private void createHelpOverlayFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), false);
-        fragmentTransaction.add(R.id.frameLayout_sortElements, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(View view)
-    {
-        if(view.getId() == Constants.BUTTON_CLOSE)
-        {
-            this.helpOverlayFragment.setVisibility(false);
-            this.setFloatingActionButtonVisibility(true);
-        }
     }
 
     @Override
@@ -322,4 +311,15 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onHelpOverlayFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_CLOSE)
+        {
+            this.helpOverlayFragment.setVisibility(false);
+            this.setFloatingActionButtonVisibility(true);
+        }
+    }
+
 }

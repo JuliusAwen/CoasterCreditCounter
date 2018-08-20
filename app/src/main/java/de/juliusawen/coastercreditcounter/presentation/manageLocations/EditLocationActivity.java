@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -20,9 +19,12 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class EditLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class EditLocationActivity extends AppCompatActivity implements
+        HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
+        ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
     private Element currentElement;
 
@@ -52,9 +54,8 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
 
         this.createToolbar(addLocationView);
         this.createEditText(addLocationView);
-        this.createConfirmDialog(addLocationView);
-
-        this.createHelpOverlay();
+        this.createConfirmDialogFragment(frameLayoutActivity.getId());
+        this.createHelpOverlayFragment(frameLayoutActivity.getId());
     }
 
     private void createToolbar(View view)
@@ -97,48 +98,20 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
         });
     }
 
-    private void createConfirmDialog(View view)
-    {
-        Button buttonCancel = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
-        buttonCancel.setId(Constants.BUTTON_CANCEL);
-        buttonCancel.setText(R.string.button_text_cancel);
-        buttonCancel.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
-
-        Button buttonOk = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
-        buttonOk.setId(Constants.BUTTON_OK);
-        buttonOk.setText(R.string.button_text_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnEditorActionDone();
-            }
-        });
-    }
-
-    private void createHelpOverlay()
+    private void createConfirmDialogFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
-        fragmentTransaction.add(R.id.frameLayoutEditLocation, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance();
+        fragmentTransaction.add(frameLayoutId, confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(View view)
+    private void createHelpOverlayFragment(int frameLayoutId)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE)
-        {
-            this.helpOverlayFragment.setVisibility(false);
-        }
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
+        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -160,12 +133,6 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
-    private void handleOnEditorActionDone()
-    {
-        currentElement.setName(this.editText.getText().toString());
-        finish();
-    }
-
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item.getItemId() == Constants.SELECTION_HELP)
@@ -175,5 +142,33 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onHelpOverlayFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_CLOSE)
+        {
+            this.helpOverlayFragment.setVisibility(false);
+        }
+    }
+
+    @Override
+    public void onConfirmDialogFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_OK)
+        {
+            handleOnEditorActionDone();
+        }
+        else if(view.getId() == Constants.BUTTON_CANCEL)
+        {
+            finish();
+        }
+    }
+
+    private void handleOnEditorActionDone()
+    {
+        currentElement.setName(this.editText.getText().toString());
+        finish();
     }
 }

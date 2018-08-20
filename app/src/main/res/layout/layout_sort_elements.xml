@@ -8,7 +8,7 @@
         layout="@layout/toolbar"/>
 
     <include
-        layout="@layout/action_dialog_two_image_buttons"/>
+        layout="@layout/action_dialog_up_down"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewSortElements"

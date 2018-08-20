@@ -15,7 +15,8 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.fragment_arg_1";
     public static final String FRAGMENT_ARG_2 = "de.juliusawen.fragment_arg_2";
 
-    public static final String FRAGMENT_TAG_HELP = "de.juliusawen.help_fragment";
+    public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.help_overlay_fragment";
+    public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.confirm_dialog_fragment";
 
 
     private static final int MODIFIER_BUTTON = 1000;

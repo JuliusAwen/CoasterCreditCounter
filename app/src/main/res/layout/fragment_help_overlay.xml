@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/textViewHelpTitle"
+                    android:id="@+id/textViewHelp_title"
                     android:layout_width="0dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/textViewHelpMessage"
+                    android:id="@+id/textViewHelp_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"

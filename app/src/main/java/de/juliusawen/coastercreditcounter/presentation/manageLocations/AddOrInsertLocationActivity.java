@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -22,9 +21,12 @@ import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class AddOrInsertLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
+public class AddOrInsertLocationActivity extends AppCompatActivity implements
+        HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
+        ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
     private Element currentElement;
     private int selection;
@@ -52,15 +54,14 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_addLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_edit_location, frameLayoutActivity, false);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddOrInsertLocation);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_insert_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
         this.createEditText(addLocationView);
-        this.createConfirmDialog(addLocationView);
-
-        this.createHelpOverlay();
+        this.createConfirmDialogFragment(frameLayoutActivity.getId());
+        this.createHelpOverlayFragment(frameLayoutActivity.getId());
     }
 
     private void createToolbar(View view)
@@ -93,7 +94,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
     private void createEditText(View view)
     {
-        this.editText = view.findViewById(R.id.editTextAddOrEditLocation);
+        this.editText = view.findViewById(R.id.editTextAddOrInsertLocation);
         this.editText.setHint(R.string.edit_text_hint_enter_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -112,48 +113,20 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
         });
     }
 
-    private void createConfirmDialog(View view)
-    {
-        Button buttonCancel = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
-        buttonCancel.setId(Constants.BUTTON_CANCEL);
-        buttonCancel.setText(R.string.button_text_cancel);
-        buttonCancel.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
-
-        Button buttonOk = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
-        buttonOk.setId(Constants.BUTTON_OK);
-        buttonOk.setText(R.string.button_text_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnEditorActionDone();
-            }
-        });
-    }
-
-    private void createHelpOverlay()
+    private void createConfirmDialogFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
-        fragmentTransaction.add(R.id.frameLayout_addLocation, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance();
+        fragmentTransaction.add(frameLayoutId, confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(View view)
+    private void createHelpOverlayFragment(int frameLayoutId)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE)
-        {
-            this.helpOverlayFragment.setVisibility(false);
-        }
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -175,6 +148,40 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == Constants.SELECTION_HELP)
+        {
+            this.helpOverlayFragment.setVisibility(true);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onHelpOverlayFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_CLOSE)
+        {
+            this.helpOverlayFragment.setVisibility(false);
+        }
+    }
+
+    @Override
+    public void onConfirmDialogFragmentInteraction(View view)
+    {
+        if(view.getId() == Constants.BUTTON_OK)
+        {
+            handleOnEditorActionDone();
+        }
+        else if(view.getId() == Constants.BUTTON_CANCEL)
+        {
+            finish();
+        }
+    }
+
     private void handleOnEditorActionDone()
     {
         Location newLocation = Location.createLocation(this.editText.getText().toString());
@@ -191,17 +198,5 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
         Content.getInstance().addElement(newLocation);
 
         finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(item.getItemId() == Constants.SELECTION_HELP)
-        {
-            this.helpOverlayFragment.setVisibility(true);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

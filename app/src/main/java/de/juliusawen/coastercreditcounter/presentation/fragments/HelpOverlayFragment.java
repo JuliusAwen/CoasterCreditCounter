@@ -23,8 +23,7 @@ public class HelpOverlayFragment extends Fragment
     private Boolean isVisibleOnCreation;
 
     private CharSequence helpText;
-
-    private OnFragmentInteractionListener fragmentInteractionListener;
+    private HelpOverlayFragmentInteractionListener helpOverlayFragmentInteractionListener;
 
 
     public HelpOverlayFragment() {}
@@ -63,10 +62,10 @@ public class HelpOverlayFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView textViewHelpTitle = view.findViewById(R.id.textViewHelpTitle);
+        TextView textViewHelpTitle = view.findViewById(R.id.textViewHelp_title);
         textViewHelpTitle.setText(R.string.title_help);
 
-        TextView textViewHelpMessage = view.findViewById(R.id.textViewHelpMessage);
+        TextView textViewHelpMessage = view.findViewById(R.id.textViewHelp_message);
         textViewHelpMessage.setText(this.helpText);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButton_help);
@@ -87,9 +86,9 @@ public class HelpOverlayFragment extends Fragment
 
     public void onCloseButtonPressed(View view)
     {
-        if (this.fragmentInteractionListener != null)
+        if (this.helpOverlayFragmentInteractionListener != null)
         {
-            this.fragmentInteractionListener.onFragmentInteraction(view);
+            this.helpOverlayFragmentInteractionListener.onHelpOverlayFragmentInteraction(view);
         }
     }
 
@@ -98,13 +97,13 @@ public class HelpOverlayFragment extends Fragment
     {
         super.onAttach(context);
 
-        if (context instanceof OnFragmentInteractionListener)
+        if (context instanceof HelpOverlayFragmentInteractionListener)
         {
-            this.fragmentInteractionListener = (OnFragmentInteractionListener) context;
+            this.helpOverlayFragmentInteractionListener = (HelpOverlayFragmentInteractionListener) context;
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement HelpOverlayFragmentInteractionListener");
         }
     }
 
@@ -113,15 +112,15 @@ public class HelpOverlayFragment extends Fragment
     {
         super.onDetach();
 
-        this.fragmentInteractionListener = null;
+        this.helpOverlayFragmentInteractionListener = null;
         this.fragmentView = null;
         this.helpText = null;
         this.isVisibleOnCreation = null;
     }
 
-    public interface OnFragmentInteractionListener
+    public interface HelpOverlayFragmentInteractionListener
     {
-        void onFragmentInteraction(View view);
+        void onHelpOverlayFragmentInteraction(View view);
     }
 
     public void setVisibility(Boolean isVisible)

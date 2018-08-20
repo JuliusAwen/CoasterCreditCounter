@@ -14,7 +14,7 @@
         android:layout_weight="1">
 
         <EditText
-            android:id="@+id/editTextAddOrEditLocation"
+            android:id="@+id/editTextAddOrInsertLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -28,8 +28,5 @@
             tools:ignore="LabelFor" />
 
     </LinearLayout>
-
-    <include
-        layout="@layout/action_dialog_two_transparent_buttons_bottom"/>
 
 </LinearLayout>
