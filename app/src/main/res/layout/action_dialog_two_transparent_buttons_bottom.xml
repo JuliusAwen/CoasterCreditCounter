@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutActionDialogTwoImageButtons"
+    android:id="@+id/linearLayoutActionDialogTwoTransparentButtonsBottom"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="?android:attr/colorPrimaryDark"
+    android:layout_gravity="bottom"
+    android:background="?android:attr/selectableItemBackground"
     android:elevation="6dp"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-        <ImageButton
+    <View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
             android:id="@+id/buttonActionDialogTwoImageButtonsBottomLeft"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textSize="16sp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/button_text_cancel" />
 
         <View xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/white"/>
+            android:background="@color/grey"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/buttonActionDialogTwoImageButtonsBottomRight"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textSize="16sp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/button_text_ok" />
+
+    </LinearLayout>
 
 </LinearLayout>

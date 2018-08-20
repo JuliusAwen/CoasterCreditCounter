@@ -114,7 +114,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createActionDialog(View view)
     {
-        ImageButton buttonDown = view.findViewById(R.id.imageButton_actionDialogLeft);
+        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(Constants.BUTTON_DOWN);
@@ -137,7 +137,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             }
         });
 
-        ImageButton buttonUp = view.findViewById(R.id.imageButton_actionDialogRight);
+        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(Constants.BUTTON_UP);

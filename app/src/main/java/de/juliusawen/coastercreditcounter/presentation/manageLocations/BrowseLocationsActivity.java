@@ -141,7 +141,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         for (Location location : this.recentLocations)
         {
-            View buttonView = getLayoutInflater().inflate(R.layout.button_no_border, linearLayoutNavigationBar, false);
+            View buttonView = getLayoutInflater().inflate(R.layout.button_transparent, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_noBorder);
 

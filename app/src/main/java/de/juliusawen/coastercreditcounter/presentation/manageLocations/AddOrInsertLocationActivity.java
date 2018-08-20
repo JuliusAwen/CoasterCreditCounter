@@ -10,11 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -27,10 +27,9 @@ import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFrag
 public class AddOrInsertLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
-    private String subtitle;
-
     private int selection;
 
+    private EditText editText;
     private Boolean helpOverlayVisible;
 
     @Override
@@ -49,17 +48,17 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
         this.selection = intent.getIntExtra(Constants.EXTRA_SELECTION, 0);
-        this.subtitle = currentElement.getName();
     }
 
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_addLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_edit_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
         this.createEditText(addLocationView);
+        this.createConfirmDialog(addLocationView);
 
         this.createHelpOverlay();
     }
@@ -77,22 +76,10 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
         {
             dynamicText = getString(R.string.dynamic_text_insert);
         }
+
         toolbar.setTitle(getString(R.string.title_add_or_insert_location, dynamicText));
-
-        toolbar.setSubtitle(this.subtitle);
+        toolbar.setSubtitle(this.currentElement.getName());
         setSupportActionBar(toolbar);
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -106,8 +93,10 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
     private void createEditText(View view)
     {
-        EditText editText = view.findViewById(R.id.editTextAddLocation);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        this.editText = view.findViewById(R.id.editTextAddOrEditLocation);
+        this.editText.setHint(R.string.edit_text_hint_enter_name);
+
+        this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
@@ -115,24 +104,37 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    Location currentLocation = (Location) currentElement;
-                    Location newLocation = currentLocation.createLocation(textView.getText().toString());
-
-                    if(selection == Constants.SELECTION_ADD)
-                    {
-                        currentLocation.addChild(newLocation);
-                    }
-                    else if(selection == Constants.SELECTION_INSERT)
-                    {
-                        currentLocation.insertNode(newLocation);
-                    }
-
-                    Content.getInstance().addElement(newLocation);
-
-                    finish();
+                    handleOnEditorActionDone();
                     handled = true;
                 }
                 return handled;
+            }
+        });
+    }
+
+    private void createConfirmDialog(View view)
+    {
+        Button buttonCancel = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
+        buttonCancel.setId(Constants.BUTTON_CANCEL);
+        buttonCancel.setText(R.string.button_text_cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
+
+        Button buttonOk = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
+        buttonOk.setId(Constants.BUTTON_OK);
+        buttonOk.setText(R.string.button_text_ok);
+        buttonOk.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnEditorActionDone();
             }
         });
     }
@@ -189,6 +191,24 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
         this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+    }
+
+    private void handleOnEditorActionDone()
+    {
+        Location newLocation = Location.createLocation(this.editText.getText().toString());
+
+        if(selection == Constants.SELECTION_ADD)
+        {
+            ((Location) this.currentElement).addChild(newLocation);
+        }
+        else if(selection == Constants.SELECTION_INSERT)
+        {
+            ((Location) this.currentElement).insertNode(newLocation);
+        }
+
+        Content.getInstance().addElement(newLocation);
+
+        finish();
     }
 
     @Override

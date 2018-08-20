@@ -45,17 +45,18 @@
     <string name="button_text_up">&#708;</string>
     <string name="button_text_down">&#709;</string>
 
+    <string name="button_text_ok">OK</string>
     <string name="button_text_accept">Accept</string>
+    <string name="button_text_close">Close</string>
     <string name="button_text_cancel">Cancel</string>
-    <string name="button_text_back">Back</string>
+
+
+    <!--edit text texts-->
+    <string name="edit_text_hint_enter_name">enter location name</string>
 
 
     <!--formatted texts-->
     <string name="formatted_text_bold"><b>%1$s</b></string>
-
-
-    <!--EditText hints-->
-    <string name="hint_name_location">name location</string>
 
 
     <!--help texts-->

@@ -9,11 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -25,7 +25,8 @@ import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFrag
 public class EditLocationActivity extends AppCompatActivity implements HelpOverlayFragment.OnFragmentInteractionListener
 {
     private Element currentElement;
-    private String subtitle;
+
+    private EditText editText;
 
     private Boolean helpOverlayVisible;
 
@@ -42,17 +43,17 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     private void initializeContent()
     {
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_UUID)));
-        this.subtitle = currentElement.getName();
     }
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayout_editLocation);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
         View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
         this.createEditText(addLocationView);
+        this.createConfirmDialog(addLocationView);
 
         this.createHelpOverlay();
     }
@@ -61,20 +62,8 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_edit_location));
-        toolbar.setSubtitle(this.subtitle);
+        toolbar.setSubtitle(this.currentElement.getName());
         setSupportActionBar(toolbar);
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -88,19 +77,19 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
 
     private void createEditText(View view)
     {
-        EditText editText = view.findViewById(R.id.editTextEditLocation);
-        editText.setHint(this.currentElement.getName());
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        this.editText = view.findViewById(R.id.editTextEditLocation);
+        this.editText.setText(this.currentElement.getName());
+
+        this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = false;
+
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    currentElement.setName(textView.getText().toString());
-
-                    finish();
+                    handleOnEditorActionDone();
 
                     handled = true;
                 }
@@ -109,11 +98,38 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
         });
     }
 
+    private void createConfirmDialog(View view)
+    {
+        Button buttonCancel = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomLeft);
+        buttonCancel.setId(Constants.BUTTON_CANCEL);
+        buttonCancel.setText(R.string.button_text_cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
+
+        Button buttonOk = view.findViewById(R.id.buttonActionDialogTwoImageButtonsBottomRight);
+        buttonOk.setId(Constants.BUTTON_OK);
+        buttonOk.setText(R.string.button_text_ok);
+        buttonOk.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnEditorActionDone();
+            }
+        });
+    }
+
     private void createHelpOverlay()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
-        fragmentTransaction.add(R.id.frameLayout_editLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        fragmentTransaction.add(R.id.frameLayoutEditLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
 
         this.helpOverlayVisible = false;
@@ -161,6 +177,12 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
         this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+    }
+
+    private void handleOnEditorActionDone()
+    {
+        currentElement.setName(this.editText.getText().toString());
+        finish();
     }
 
     public boolean onOptionsItemSelected(MenuItem item)

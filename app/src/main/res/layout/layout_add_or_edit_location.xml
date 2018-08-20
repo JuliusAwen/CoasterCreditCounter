@@ -14,7 +14,7 @@
         android:layout_weight="1">
 
         <EditText
-            android:id="@+id/editTextAddLocation"
+            android:id="@+id/editTextAddOrEditLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -23,11 +23,13 @@
             android:layout_marginEnd="16dp"
             android:inputType="textCapWords"
             android:imeOptions="actionDone"
-            android:hint="@string/hint_name_location"
             android:backgroundTint="@color/colorPrimaryDark"
             android:textCursorDrawable="@null"
             tools:ignore="LabelFor" />
 
     </LinearLayout>
+
+    <include
+        layout="@layout/action_dialog_two_transparent_buttons_bottom"/>
 
 </LinearLayout>
