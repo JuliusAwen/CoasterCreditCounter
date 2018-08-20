@@ -33,6 +33,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
+    private ConfirmDialogFragment confirmDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -116,8 +117,8 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void createConfirmDialogFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance();
-        fragmentTransaction.add(frameLayoutId, confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+        this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
+        fragmentTransaction.add(frameLayoutId, this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
         fragmentTransaction.commit();
     }
 
@@ -135,7 +136,6 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
 
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
-
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -146,6 +146,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
+        this.confirmDialogFragment.setVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
     @Override
@@ -154,6 +155,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         if(item.getItemId() == Constants.SELECTION_HELP)
         {
             this.helpOverlayFragment.setVisibility(true);
+            this.confirmDialogFragment.setVisibility(false);
             return true;
         }
 
@@ -166,6 +168,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
             this.helpOverlayFragment.setVisibility(false);
+            this.confirmDialogFragment.setVisibility(true);
         }
     }
 

@@ -14,6 +14,7 @@ import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 
 public class ConfirmDialogFragment extends Fragment
 {
+    private View fragmentView;
     private ConfirmDialogFragmentInteractionListener confirmDialogFragmentInteractionListener;
 
     public ConfirmDialogFragment() {}
@@ -32,7 +33,8 @@ public class ConfirmDialogFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
+        this.fragmentView = inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
+        return this.fragmentView;
     }
 
     @Override
@@ -98,5 +100,10 @@ public class ConfirmDialogFragment extends Fragment
     public interface ConfirmDialogFragmentInteractionListener
     {
         void onConfirmDialogFragmentInteraction(View view);
+    }
+
+    public void setVisibility(Boolean isVisible)
+    {
+        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 }

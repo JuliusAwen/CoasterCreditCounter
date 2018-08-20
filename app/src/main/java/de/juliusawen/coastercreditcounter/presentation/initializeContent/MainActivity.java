@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, 1, Menu.NONE, "Manage Locations");
+        menu.add(0, 1, Menu.NONE, R.string.title_locations);
 
         return super.onPrepareOptionsMenu(menu);
     }
