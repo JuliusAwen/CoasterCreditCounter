@@ -26,8 +26,8 @@ public abstract class Constants
     public static final int CONTENT_TYPE_PARK = 20000;
 
     public static final int BUTTON_BACK = MODIFIER_BUTTON + ButtonFunctions.BACK.ordinal();
-    public static final int BUTTON_UP = MODIFIER_BUTTON + ButtonFunctions.UP.ordinal();
-    public static final int BUTTON_DOWN = MODIFIER_BUTTON + ButtonFunctions.DOWN.ordinal();
+    public static final int BUTTON_MOVE_SELECTION_UP = MODIFIER_BUTTON + ButtonFunctions.MOVE_SELECTION_UP.ordinal();
+    public static final int BUTTON_MOVE_SELECTION_DOWN = MODIFIER_BUTTON + ButtonFunctions.MOVE_SELECTION_DOWN.ordinal();
     public static final int BUTTON_CLOSE = MODIFIER_BUTTON + ButtonFunctions.CLOSE.ordinal();
     public static final int BUTTON_CANCEL = MODIFIER_BUTTON + ButtonFunctions.CANCEL.ordinal();
     public static final int BUTTON_OK = MODIFIER_BUTTON + ButtonFunctions.OK.ordinal();
@@ -44,9 +44,9 @@ public abstract class Constants
 
 enum ButtonFunctions
 {
+    MOVE_SELECTION_UP,
+    MOVE_SELECTION_DOWN,
     BACK,
-    UP,
-    DOWN,
     CLOSE,
     CANCEL,
     OK,
@@ -63,13 +63,4 @@ enum Selections
     SORT_MANUALLY,
     SORT_A_TO_Z,
     HELP,
-}
-
-enum ContentTypes
-{
-    ELEMENT,
-    LOCATION,
-    PARK,
-    ATTRACTION,
-    COASTER
 }

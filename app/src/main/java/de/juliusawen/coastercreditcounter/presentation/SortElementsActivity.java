@@ -112,10 +112,10 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createActionDialog(View view)
     {
-        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_moveDown);
+        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_moveSelectionDown);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward_24px));
         buttonDown.setImageDrawable(drawable);
-        buttonDown.setId(Constants.BUTTON_DOWN);
+        buttonDown.setId(Constants.BUTTON_MOVE_SELECTION_DOWN);
         buttonDown.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -147,10 +147,10 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             }
         });
 
-        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_moveUp);
+        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_moveSelectionUp);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward_24px));
         buttonUp.setImageDrawable(drawable);
-        buttonUp.setId(Constants.BUTTON_UP);
+        buttonUp.setId(Constants.BUTTON_MOVE_SELECTION_UP);
         buttonUp.setOnClickListener(new View.OnClickListener()
         {
             @Override
