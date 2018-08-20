@@ -30,7 +30,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     private int selection;
 
     private EditText editText;
-    private Boolean helpOverlayVisible;
+    private HelpOverlayFragment helpOverlayFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -142,27 +142,9 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     private void createHelpOverlay()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
-        fragmentTransaction.add(R.id.frameLayout_addLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+        fragmentTransaction.add(R.id.frameLayout_addLocation, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
-
-        this.helpOverlayVisible = false;
-    }
-
-    private void setHelpOverlayFragmentVisibility(boolean isVisible)
-    {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
-
-        if(isVisible)
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
-        }
-
-        this.helpOverlayVisible = isVisible;
     }
 
     @Override
@@ -170,7 +152,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     {
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
-            this.setHelpOverlayFragmentVisibility(false);
+            this.helpOverlayFragment.setVisibility(false);
         }
     }
 
@@ -181,7 +163,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
 
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
 
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpOverlayVisible);
+        outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
     @Override
@@ -190,7 +172,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
         super.onRestoreInstanceState(savedInstanceState);
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
     private void handleOnEditorActionDone()
@@ -216,8 +198,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements He
     {
         if(item.getItemId() == Constants.SELECTION_HELP)
         {
-            this.setHelpOverlayFragmentVisibility(true);
-
+            this.helpOverlayFragment.setVisibility(true);
             return true;
         }
 

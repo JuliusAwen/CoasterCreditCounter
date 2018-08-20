@@ -7,7 +7,7 @@ public abstract class Constants
     public static final String KEY_ELEMENTS = "de.juliusawen.elements";
     public static final String KEY_CURRENT_ELEMENT = "de.juliusawen.current_element";
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.selected_element";
-    public static final String KEY_HELP_ACTIVE = "de.juliusawen.help_active";
+    public static final String KEY_HELP_VISIBLE = "de.juliusawen.help_visible";
 
     public static final String EXTRA_UUID = "de.juliusawen.uuid";
     public static final String EXTRA_SELECTION = "de.juliusawen.selection";

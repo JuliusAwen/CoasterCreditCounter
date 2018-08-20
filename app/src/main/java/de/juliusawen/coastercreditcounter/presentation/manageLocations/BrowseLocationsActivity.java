@@ -49,8 +49,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private Element longClickedElement;
 
     private RecyclerViewAdapter recyclerViewAdapter;
-
-    private boolean helpOverlayVisible;
+    private HelpOverlayFragment helpOverlayFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -405,28 +404,15 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
-
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void createHelpOverlayFragment()
     {
-        this.helpOverlayVisible = false;
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), this.helpOverlayVisible);
-        fragmentTransaction.add(R.id.frameLayout_browseLocations, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
+        fragmentTransaction.add(R.id.frameLayout_browseLocations, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
-    }
-
-    private void setHelpOverlayFragmentVisibility(boolean isVisible)
-    {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
-
-        helpOverlayFragment.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-
-        this.setFloatingActionButtonVisibility(!isVisible);
-        this.helpOverlayVisible = isVisible;
     }
 
     @Override
@@ -434,7 +420,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     {
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
-            this.setHelpOverlayFragmentVisibility(false);
+            this.helpOverlayFragment.setVisibility(false);
+            this.setFloatingActionButtonVisibility(true);
         }
     }
 
@@ -445,7 +432,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.recentLocations));
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentLocation.getUuid().toString());
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpOverlayVisible);
+        outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
     @Override
@@ -455,7 +442,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
+        this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
 
         this.refreshViews();
     }
@@ -473,7 +461,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         if (item.getItemId() == Constants.SELECTION_EDIT)
         {
             this.startEditLocationActivity(this.currentLocation);
-
             return true;
         }
         else if(item.getItemId() == Constants.SELECTION_SORT_MANUALLY)
@@ -481,13 +468,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             Intent intent = new Intent(this, SortElementsActivity.class);
             intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
             startActivity(intent);
-
             return true;
         }
         else if(item.getItemId() == Constants.SELECTION_HELP)
         {
-            this.setHelpOverlayFragmentVisibility(true);
-
+            this.helpOverlayFragment.setVisibility(true);
+            this.setFloatingActionButtonVisibility(false);
             return true;
         }
 

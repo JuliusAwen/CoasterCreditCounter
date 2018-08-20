@@ -20,9 +20,9 @@ import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
 public class HelpOverlayFragment extends Fragment
 {
     public View fragmentView;
+    private Boolean isVisibleOnCreation;
 
     private CharSequence helpText;
-    private Boolean isVisibleOnCreation;
 
     private OnFragmentInteractionListener fragmentInteractionListener;
 
@@ -82,10 +82,7 @@ public class HelpOverlayFragment extends Fragment
             }
         });
 
-        if(!this.isVisibleOnCreation)
-        {
-            view.setVisibility(View.INVISIBLE);
-        }
+        this.setVisibility(this.isVisibleOnCreation);
     }
 
     public void onCloseButtonPressed(View view)
@@ -100,6 +97,7 @@ public class HelpOverlayFragment extends Fragment
     public void onAttach(Context context)
     {
         super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener)
         {
             this.fragmentInteractionListener = (OnFragmentInteractionListener) context;
@@ -124,5 +122,10 @@ public class HelpOverlayFragment extends Fragment
     public interface OnFragmentInteractionListener
     {
         void onFragmentInteraction(View view);
+    }
+
+    public void setVisibility(Boolean isVisible)
+    {
+        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 }

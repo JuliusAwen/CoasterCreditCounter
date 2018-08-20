@@ -27,8 +27,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     private Element currentElement;
 
     private EditText editText;
-
-    private Boolean helpOverlayVisible;
+    private HelpOverlayFragment helpOverlayFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -128,27 +127,9 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     private void createHelpOverlay()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
-        fragmentTransaction.add(R.id.frameLayoutEditLocation, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
+        fragmentTransaction.add(R.id.frameLayoutEditLocation, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
-
-        this.helpOverlayVisible = false;
-    }
-
-    private void setHelpOverlayFragmentVisibility(boolean isVisible)
-    {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
-
-        if(isVisible)
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            helpOverlayFragment.fragmentView.setVisibility(View.INVISIBLE);
-        }
-
-        this.helpOverlayVisible = isVisible;
     }
 
     @Override
@@ -156,7 +137,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     {
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
-            this.setHelpOverlayFragmentVisibility(false);
+            this.helpOverlayFragment.setVisibility(false);
         }
     }
 
@@ -167,7 +148,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
 
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
 
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpOverlayVisible);
+        outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
     @Override
@@ -176,7 +157,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
         super.onRestoreInstanceState(savedInstanceState);
 
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
-        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
     private void handleOnEditorActionDone()
@@ -189,8 +170,7 @@ public class EditLocationActivity extends AppCompatActivity implements HelpOverl
     {
         if(item.getItemId() == Constants.SELECTION_HELP)
         {
-            this.setHelpOverlayFragmentVisibility(true);
-
+            this.helpOverlayFragment.setVisibility(true);
             return true;
         }
 

@@ -40,8 +40,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private RecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
-
-    private boolean helpOverlayVisible;
+    private HelpOverlayFragment helpOverlayFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -235,22 +234,10 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createHelpOverlayFragment()
     {
-        this.helpOverlayVisible = false;
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        HelpOverlayFragment helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), this.helpOverlayVisible);
-        fragmentTransaction.add(R.id.frameLayout_sortElements, helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), false);
+        fragmentTransaction.add(R.id.frameLayout_sortElements, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP);
         fragmentTransaction.commit();
-    }
-
-    private void setHelpOverlayFragmentVisibility(boolean isVisible)
-    {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP);
-
-        helpOverlayFragment.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-
-        this.setFloatingActionButtonVisibility(!isVisible);
-        this.helpOverlayVisible = isVisible;
     }
 
     @Override
@@ -258,7 +245,8 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     {
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
-            this.setHelpOverlayFragmentVisibility(false);
+            this.helpOverlayFragment.setVisibility(false);
+            this.setFloatingActionButtonVisibility(true);
         }
     }
 
@@ -279,8 +267,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             outState.putString(Constants.KEY_SELECTED_ELEMENT, this.recyclerViewAdapter.selectedElement.getUuid().toString());
         }
 
-
-        outState.putBoolean(Constants.KEY_HELP_ACTIVE, this.helpOverlayVisible);
+        outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
     @Override
@@ -302,7 +289,8 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
         }
 
-        this.setHelpOverlayFragmentVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_ACTIVE));
+        this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
+        this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
 
         this.recyclerViewAdapter.updateList(this.elementsToSort);
     }
@@ -323,13 +311,12 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
             this.recyclerViewAdapter.updateList(this.elementsToSort);
             this.recyclerViewAdapter.notifyDataSetChanged();
-
             return true;
         }
         else if(item.getItemId() == Constants.SELECTION_HELP)
         {
-            this.setHelpOverlayFragmentVisibility(true);
-
+            this.helpOverlayFragment.setVisibility(true);
+            this.setFloatingActionButtonVisibility(false);
             return true;
         }
 
