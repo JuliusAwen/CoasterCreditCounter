@@ -130,14 +130,17 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                         Collections.swap(elementsToSort, position, position + 1);
                         recyclerViewAdapter.notifyDataSetChanged();
 
-                        int scrollMargin = getScrollMargin(recyclerView);
+                        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
+                        int scrollMargin = Math.round(visibleViewsCount / 2);
                         if(elementsToSort.size() > position + 1 + scrollMargin)
                         {
                             recyclerView.smoothScrollToPosition(position + 1 + scrollMargin);
                         }
                         else
                         {
-                            recyclerView.smoothScrollToPosition(position + 1);
+                            recyclerView.smoothScrollToPosition(elementsToSort.size() - 1);
                         }
                     }
                 }
@@ -156,33 +159,28 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 if(recyclerViewAdapter.selectedElement != null)
                 {
                     int position = elementsToSort.indexOf(recyclerViewAdapter.selectedElement);
-                    recyclerViewAdapter.notifyDataSetChanged();
 
                     if(position > 0)
                     {
                         Collections.swap(elementsToSort, position, position - 1);
+                        recyclerViewAdapter.notifyDataSetChanged();
 
-                        int scrollMargin = getScrollMargin(recyclerView);
+                        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
+                        int scrollMargin = Math.round(visibleViewsCount / 2);
                         if(position - 1 - scrollMargin >= 0)
                         {
                             recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
                         }
                         else
                         {
-                            recyclerView.smoothScrollToPosition(position - 1);
+                            recyclerView.smoothScrollToPosition(0);
                         }
                     }
                 }
             }
         });
-    }
-
-    private int getScrollMargin(RecyclerView recyclerView)
-    {
-        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
-        return visibleViewsCount / 2;
     }
 
     private void createContentRecyclerView(View view)
@@ -302,6 +300,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         else
         {
             this.recyclerViewAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
+            this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(recyclerViewAdapter.selectedElement));
         }
 
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
