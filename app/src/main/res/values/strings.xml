@@ -55,6 +55,10 @@
     <string name="edit_text_hint_enter_name">enter location name</string>
 
 
+    <!--error messages-->
+    <string name="error_location_name_not_valid">Location name is not valid!</string>
+
+
     <!--help texts-->
     <string name="help_text_browse_locations">
         <b><big>Locations</big></b>

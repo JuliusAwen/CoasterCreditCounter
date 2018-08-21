@@ -1,6 +1,10 @@
 package de.juliusawen.coastercreditcounter.content;
 
+import android.util.Log;
+
 import java.util.UUID;
+
+import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 
 public abstract class Element
 {
@@ -23,6 +27,10 @@ public abstract class Element
         if(!name.trim().isEmpty())
         {
             this.name = name.trim();
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid.", name));
         }
     }
 

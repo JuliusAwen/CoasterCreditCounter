@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
@@ -189,17 +190,24 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         Location newLocation = Location.createLocation(this.editText.getText().toString());
 
-        if(selection == Constants.SELECTION_ADD)
+        if(newLocation != null)
         {
-            ((Location) this.currentElement).addChild(newLocation);
+            if(selection == Constants.SELECTION_ADD)
+            {
+                ((Location) this.currentElement).addChild(newLocation);
+            }
+            else if(selection == Constants.SELECTION_INSERT)
+            {
+                ((Location) this.currentElement).insertNode(newLocation);
+            }
+
+            Content.getInstance().addElement(newLocation);
+
+            finish();
         }
-        else if(selection == Constants.SELECTION_INSERT)
+        else
         {
-            ((Location) this.currentElement).insertNode(newLocation);
+            Toaster.makeToast(this, getString(R.string.error_location_name_not_valid));
         }
-
-        Content.getInstance().addElement(newLocation);
-
-        finish();
     }
 }

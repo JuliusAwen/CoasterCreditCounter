@@ -29,6 +29,10 @@ public class Location extends Element
             Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: location[%s] created.", name));
             location = new Location(name, UUID.randomUUID());
         }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Location.createLocation:: not able to create location with name[%s].", name));
+        }
 
         return location;
     }
@@ -40,8 +44,44 @@ public class Location extends Element
 
     public void setChildren(List<Location> children)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Location.setChildren:: node[%s] -> children set.", this.getName()));
-        this.children = children;
+        Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.getName()));
+        this.children.clear();
+
+        this.addChildren(children);
+    }
+
+    public void addChildren(List<Location> children)
+    {
+        for (Location child : children)
+        {
+            this.addChild(child);
+            child.setParent(this);
+        }
+    }
+
+    public void addChildren(int index, List<Location> children)
+    {
+        int increment = -1;
+
+        for (Location child : children)
+        {
+            increment ++;
+            this.addChild(index + increment, child);
+            child.setParent(this);
+        }
+    }
+
+    public void addChild(Location child)
+    {
+        this.addChild(this.getChildren().size(), child);
+    }
+
+    public void addChild(int index, Location child)
+    {
+        child.setParent(this);
+
+        Log.v(Constants.LOG_TAG,  String.format("Location.addChild:: node[%s] -> child[%s] added.", this.getName(), child.getName()));
+        this.children.add(index, child);
     }
 
     public Location getParent()
@@ -55,29 +95,12 @@ public class Location extends Element
         this.parent = parent;
     }
 
-    public void addChild(Location child)
-    {
-        child.setParent(this);
-
-        Log.v(Constants.LOG_TAG,  String.format("Location.addChild:: node[%s] -> child[%s] added.", this.getName(), child.getName()));
-        this.children.add(0, child);
-    }
-
-    public void addChildren(List<Location> children)
-    {
-        for (Location child :children)
-        {
-            this.addChild(child);
-            child.setParent(this);
-        }
-    }
-
     public void insertNode(Location location)
     {
-        location.setChildren(new ArrayList<>(this.getChildren()));
+        location.addChildren(new ArrayList<>(this.getChildren()));
 
         Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.getName()));
-        this.getChildren().clear();
+        this.children.clear();
 
         this.addChild(location);
     }
@@ -86,11 +109,15 @@ public class Location extends Element
     {
         if (this.parent != null)
         {
-            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> children cleared.", this.getName()));
-            this.getChildren().clear();
-
             Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
+
+            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> children cleared.", this.getName()));
+            this.getChildren().clear();
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> can not delete node as it is the root node.", this.getName()));
         }
     }
 
@@ -103,17 +130,15 @@ public class Location extends Element
             Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
 
-            for (Location location : getChildren())
-            {
-                location.setParent(this.parent);
-            }
+            this.parent.addChildren(index, this.getChildren());
 
-            Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children added.", this.parent.getName()));
-            this.parent.getChildren().addAll(index, this.getChildren());
+            Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children cleared.", this.getName()));
+            this.getChildren().clear();
         }
-
-        Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children cleared.", this.getName()));
-        this.getChildren().clear();
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> can not remove node as it is the root node.", this.getName()));
+        }
     }
 }
 

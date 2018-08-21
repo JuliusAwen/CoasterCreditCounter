@@ -265,6 +265,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
                                     ((Location) longClickedElement).deleteNodeAndChildren();
                                     Content.getInstance().removeLocationAndChildren(longClickedElement);
+                                    recyclerViewAdapter.notifyDataSetChanged();
 
                                     refreshViews();
                                 }
