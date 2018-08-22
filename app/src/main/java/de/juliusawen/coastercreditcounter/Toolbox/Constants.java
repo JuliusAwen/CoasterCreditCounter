@@ -9,7 +9,7 @@ public abstract class Constants
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.selected_element";
     public static final String KEY_HELP_VISIBLE = "de.juliusawen.help_visible";
 
-    public static final String EXTRA_UUID = "de.juliusawen.uuid";
+    public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.uuid";
     public static final String EXTRA_SELECTION = "de.juliusawen.selection";
 
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.fragment_arg_1";
@@ -40,6 +40,9 @@ public abstract class Constants
     public static final int SELECTION_SORT_MANUALLY = MODIFIER_SELECTION + Selections.SORT_MANUALLY.ordinal();
     public static final int SELECTION_SORT_A_TO_Z = MODIFIER_SELECTION + Selections.SORT_A_TO_Z.ordinal();
     public static final int SELECTION_HELP = MODIFIER_SELECTION + Selections.HELP.ordinal();
+
+    public static final int REQUEST_ADD_OR_INSERT_LOCATION = Requests.ADD_OR_INSERT_LOCATION.ordinal();
+    public static final int REQUEST_SORT_ELEMENTS = Requests.SORT_ELEMENTS.ordinal();
 }
 
 enum ButtonFunctions
@@ -63,4 +66,10 @@ enum Selections
     SORT_MANUALLY,
     SORT_A_TO_Z,
     HELP,
+}
+
+enum Requests
+{
+    ADD_OR_INSERT_LOCATION,
+    SORT_ELEMENTS,
 }

@@ -50,7 +50,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         Intent intent = getIntent();
 
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
+        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         this.selection = intent.getIntExtra(Constants.EXTRA_SELECTION, 0);
     }
 
@@ -182,6 +182,8 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         }
         else if(view.getId() == Constants.BUTTON_CANCEL)
         {
+            Intent intent = new Intent();
+            setResult(RESULT_CANCELED, intent);
             finish();
         }
     }
@@ -192,17 +194,20 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
         if(newLocation != null)
         {
-            if(selection == Constants.SELECTION_ADD)
+            if(this.selection == Constants.SELECTION_ADD)
             {
                 ((Location) this.currentElement).addChild(newLocation);
             }
-            else if(selection == Constants.SELECTION_INSERT)
+            else if(this.selection == Constants.SELECTION_INSERT)
             {
                 ((Location) this.currentElement).insertNode(newLocation);
             }
 
             Content.getInstance().addElement(newLocation);
 
+            Intent intent = new Intent();
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, newLocation.getUuid().toString());
+            setResult(RESULT_OK, intent);
             finish();
         }
         else

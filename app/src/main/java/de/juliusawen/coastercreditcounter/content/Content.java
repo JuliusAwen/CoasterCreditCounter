@@ -47,13 +47,20 @@ public class Content
         }
         else
         {
-            throw new IllegalStateException("Location with parent can not be set as location root - parent has to be [null].");
+            throw new IllegalStateException("Location with parent can not be set as location root - parent has to be null.");
         }
     }
 
     public Element getElementByUuid(UUID uuid)
     {
-        return this.elements.get(uuid);
+        if(this.elements.containsKey(uuid))
+        {
+            return this.elements.get(uuid);
+        }
+        else
+        {
+            throw new IllegalStateException(String.format("No element found for uuid[%s].", uuid));
+        }
     }
 
     private void flattenContentTree(Location location)
@@ -87,25 +94,30 @@ public class Content
         return strings;
     }
 
-    public List<Element> getElementsFromUuidStrings(List<String> strings)
+    public List<Element> getElementsFromUuidStrings(List<String> uuidStrings)
     {
         List<Element> elements = new ArrayList<>();
 
-        for(String string : strings)
+        for(String uuidString : uuidStrings)
         {
-            elements.add(this.getElementByUuid(UUID.fromString(string)));
+            elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
         }
 
         return elements;
     }
 
-    public List<Location> getLocationsFromUuidStrings(List<String> strings)
+    public Location getLocationFromUuidString(String uuidString)
+    {
+        return (Location) this.getElementByUuid(UUID.fromString(uuidString));
+    }
+
+    public List<Location> getLocationsFromUuidStrings(List<String> uuidStrings)
     {
         List<Location> locations = new ArrayList<>();
 
-        for(String string : strings)
+        for(String uuidString : uuidStrings)
         {
-            locations.add((Location) this.getElementByUuid(UUID.fromString(string)));
+            locations.add((Location) this.getElementByUuid(UUID.fromString(uuidString)));
         }
 
         return locations;

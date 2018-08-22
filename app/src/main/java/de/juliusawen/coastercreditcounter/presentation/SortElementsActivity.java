@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -54,7 +55,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void initializeContent()
     {
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_UUID)));
+        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         this.subtitle = currentElement.getName();
 
         if(this.currentElement.getClass().equals(Location.class))
@@ -243,6 +244,16 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                     ((Park) currentElement).setAttractions(new ArrayList<>(Content.getInstance().convertElementsToAttractions(elementsToSort)));
                 }
 
+                Intent intent = new Intent();
+                if(recyclerViewAdapter.selectedElement != null)
+                {
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, recyclerViewAdapter.selectedElement.getUuid().toString());
+                    setResult(RESULT_OK, intent);
+                }
+                else
+                {
+                    setResult(RESULT_CANCELED);
+                }
                 finish();
             }
         });

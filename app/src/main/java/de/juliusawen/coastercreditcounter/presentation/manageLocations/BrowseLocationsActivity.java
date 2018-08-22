@@ -48,6 +48,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private Element longClickedElement;
 
+    private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private HelpOverlayFragment helpOverlayFragment;
 
@@ -66,7 +67,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void initializeContent()
     {
         Intent intent = getIntent();
-        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_UUID)));
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void initializeViews()
@@ -201,8 +202,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createContentRecyclerView(View view)
     {
-        final RecyclerView recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
-
+        this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
         this.recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -369,9 +369,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         if(item.getItemId() == Constants.SELECTION_ADD + Constants.CONTENT_TYPE_LOCATION)
                         {
                             intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
-                            intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentLocation.getUuid().toString());
                             intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD);
-                            startActivity(intent);
+                            startActivityForResult(intent, Constants.REQUEST_ADD_OR_INSERT_LOCATION);
                             return true;
                         }
                         else if(item.getItemId() == Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK)
@@ -383,7 +383,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         else if (item.getItemId() == Constants.SELECTION_INSERT + Constants.CONTENT_TYPE_LOCATION)
                         {
                             intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
-                            intent.putExtra(Constants.EXTRA_UUID, currentLocation.getUuid().toString());
+                            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentLocation.getUuid().toString());
                             intent.putExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_INSERT);
                             startActivity(intent);
                             return true;
@@ -455,8 +455,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         else if(item.getItemId() == Constants.SELECTION_SORT_MANUALLY)
         {
             Intent intent = new Intent(this, SortElementsActivity.class);
-            intent.putExtra(Constants.EXTRA_UUID, this.currentLocation.getUuid().toString());
-            startActivity(intent);
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.currentLocation.getUuid().toString());
+            startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
             return true;
         }
         else if(item.getItemId() == Constants.SELECTION_HELP)
@@ -482,7 +482,23 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void startEditLocationActivity(Element element)
     {
         Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
-        intent.putExtra(Constants.EXTRA_UUID, element.getUuid().toString());
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == Constants.REQUEST_ADD_OR_INSERT_LOCATION || requestCode == Constants.REQUEST_SORT_ELEMENTS)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                Location receivedLocation = Content.getInstance().getLocationFromUuidString(uuidString);
+
+                int position = this.currentLocation.getChildren().indexOf(receivedLocation);
+                this.recyclerView.smoothScrollToPosition(position);
+            }
+        }
     }
 }
