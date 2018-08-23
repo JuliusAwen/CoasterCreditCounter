@@ -32,6 +32,7 @@ import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.Toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
+import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
@@ -497,7 +498,18 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 Location receivedLocation = Content.getInstance().getLocationFromUuidString(uuidString);
 
                 int position = this.currentLocation.getChildren().indexOf(receivedLocation);
-                this.recyclerView.smoothScrollToPosition(position);
+
+                int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
+                if(this.currentLocation.getChildren().size() > position + scrollMargin)
+                {
+                    recyclerView.smoothScrollToPosition(position + scrollMargin);
+                }
+                else
+                {
+                    recyclerView.smoothScrollToPosition(position);
+                }
+
+                Toaster.makeToast(this, String.valueOf(position));
             }
         }
     }

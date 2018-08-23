@@ -26,6 +26,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
@@ -131,10 +132,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                         Collections.swap(elementsToSort, position, position + 1);
                         recyclerViewAdapter.notifyDataSetChanged();
 
-                        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-                        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
-                        int scrollMargin = Math.round(visibleViewsCount / 2);
+                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
                         if(elementsToSort.size() > position + 1 + scrollMargin)
                         {
                             recyclerView.smoothScrollToPosition(position + 1 + scrollMargin);
@@ -166,10 +164,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                         Collections.swap(elementsToSort, position, position - 1);
                         recyclerViewAdapter.notifyDataSetChanged();
 
-                        int firstVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-                        int lastVisibleViewPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                        int visibleViewsCount = lastVisibleViewPosition - firstVisibleViewPosition;
-                        int scrollMargin = Math.round(visibleViewsCount / 2);
+                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);;
                         if(position - 1 - scrollMargin >= 0)
                         {
                             recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
