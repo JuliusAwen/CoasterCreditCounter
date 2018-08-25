@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
 
-    private Element longClickedElement;
+    private Location longClickedLocation;
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -227,16 +228,16 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             }
 
             @Override
-            public void onLongClick(View view, int position)
+            public void onLongClick(final View view, int position)
             {
-                longClickedElement = (Element) view.getTag();
+                longClickedLocation = (Location) view.getTag();
 
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
 
                 popupMenu.getMenu().add(0, Constants.SELECTION_EDIT + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_edit_location);
                 popupMenu.getMenu().add(0, Constants.SELECTION_DELETE + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_delete_location);
 
-                if(!((Location)longClickedElement).getChildren().isEmpty())
+                if(!(longClickedLocation).getChildren().isEmpty())
                 {
                     popupMenu.getMenu().add(0, Constants.SELECTION_REMOVE + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_remove_location_level);
                 }
@@ -248,7 +249,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     {
                         if(item.getItemId() == Constants.SELECTION_EDIT + Constants.CONTENT_TYPE_LOCATION)
                         {
-                            startEditLocationActivity(longClickedElement);
+                            startEditLocationActivity(longClickedLocation);
                             return true;
                         }
                         else if(item.getItemId() == Constants.SELECTION_DELETE + Constants.CONTENT_TYPE_LOCATION)
@@ -256,7 +257,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                             AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
                             builder.setTitle(R.string.alert_dialog_delete_location_title);
-                            builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedElement.getName()));
+                            builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedLocation.getName()));
 
                             builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
@@ -264,11 +265,38 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                 {
                                     dialog.dismiss();
 
-                                    ((Location) longClickedElement).deleteNodeAndChildren();
-                                    Content.getInstance().removeLocationAndChildren(longClickedElement);
-                                    recyclerViewAdapter.notifyDataSetChanged();
+                                    if(longClickedLocation.deleteNodeAndChildren())
+                                    {
+                                        Content.getInstance().deleteLocationAndChildren(longClickedLocation);
+                                        recyclerViewAdapter.notifyDataSetChanged();
+                                    }
+                                    else
+                                    {
+                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+                                    }
+
 
                                     refreshViews();
+
+                                    Snackbar snackbar = Snackbar.make(view, R.string.action_undo_delete_location_text, Snackbar.LENGTH_LONG);
+                                    snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
+                                            {
+                                                Content.getInstance().addLocationAndChildren(longClickedLocation);
+                                                recyclerViewAdapter.notifyDataSetChanged();
+                                                refreshViews();
+                                            }
+                                            else
+                                            {
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                            }
+                                        }
+                                    });
+                                    snackbar.show();
                                 }
                             });
 
@@ -292,8 +320,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                             AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
                             builder.setTitle(R.string.alert_dialog_remove_location_title);
-                            builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedElement.getName(),
-                                    ((Location)longClickedElement).getParent().getName()));
+                            builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(),
+                                    longClickedLocation.getParent().getName()));
 
                             builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
@@ -301,11 +329,37 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                 {
                                     dialog.dismiss();
 
-                                    ((Location)longClickedElement).removeNode();
-                                    Content.getInstance().removeLocation(longClickedElement);
+                                    if(longClickedLocation.removeNode())
+                                    {
+                                        Content.getInstance().deleteElement(longClickedLocation);
+                                        currentLocation = longClickedLocation.getParent();
+                                        refreshViews();
+                                    }
+                                    else
+                                    {
+                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+                                    }
 
-                                    currentLocation = ((Location) longClickedElement).getParent();
-                                    refreshViews();
+                                    Snackbar snackbar = Snackbar.make(view, R.string.action_undo_remove_location_text, Snackbar.LENGTH_LONG);
+                                    snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
+                                            {
+                                                longClickedLocation.undoRemoveNode();
+                                                Content.getInstance().addElement(longClickedLocation);
+                                                recyclerViewAdapter.notifyDataSetChanged();
+                                                refreshViews();
+                                            }
+                                            else
+                                            {
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                            }
+                                        }
+                                    });
+                                    snackbar.show();
                                 }
                             });
 
@@ -508,8 +562,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 {
                     recyclerView.smoothScrollToPosition(position);
                 }
-
-                Toaster.makeToast(this, String.valueOf(position));
             }
         }
     }

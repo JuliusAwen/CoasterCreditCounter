@@ -10,8 +10,19 @@ import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 
 public class Location extends Element
 {
+    public boolean undoDeleteNodeAndChildrenPossible = false;
+    public boolean undoRemoveNodePossible = false;
+
     private List<Location> children = new ArrayList<>();
     private Location parent = null;
+
+    private List<Location> deletedNodesChildren = new ArrayList<>();
+    private Location deltedNodesParent = null;
+    private int deletedNodesIndex = -1;
+
+    private List<Location> removedNodesChildren = new ArrayList<>();
+    private Location removedNodesParent = null;
+    private int removedNodesIndex = -1;
 
     public Location(String name, UUID uuid)
     {
@@ -97,48 +108,136 @@ public class Location extends Element
 
     public void insertNode(Location location)
     {
+        this.insertNode(this.getChildren().size(), location);
+    }
+
+    public void insertNode(int index, Location location)
+    {
         location.addChildren(new ArrayList<>(this.getChildren()));
 
         Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.getName()));
         this.children.clear();
 
-        this.addChild(location);
+        this.addChild(index, location);
     }
 
-    public void deleteNodeAndChildren()
+    public boolean deleteNodeAndChildren()
     {
         if (this.parent != null)
         {
-            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
+            this.deletedNodesChildren = new ArrayList<>(this.children);
+            this.deltedNodesParent = this.parent;
+            this.deletedNodesIndex = this.parent.getChildren().indexOf(this);
+            this.undoDeleteNodeAndChildrenPossible = true;
+
+            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].",
+                    this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
 
             Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> children cleared.", this.getName()));
             this.getChildren().clear();
+
+            return true;
         }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> can not delete node as it is the root node.", this.getName()));
-        }
+
+        Log.w(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> can not delete node as it is the root node.", this.getName()));
+        return false;
     }
 
-    public void removeNode()
+    public boolean undoDeleteNodeAndChildren()
+    {
+        boolean deleteNodeAndChildrenUndone = false;
+
+        if(this.undoDeleteNodeAndChildrenPossible
+                && this.deltedNodesParent != null
+                && this.deletedNodesIndex != -1)
+        {
+            this.addChildren(this.deletedNodesChildren);
+            this.deltedNodesParent.addChild(this.deletedNodesIndex, this);
+            this.parent = this.deltedNodesParent;
+
+            deleteNodeAndChildrenUndone = true;
+        }
+        {
+            Log.w(Constants.LOG_TAG, String.format("Location.undoDeleteNodeAndChildren:: not able to undo delete node[%s] -" +
+                                    " undoDeleteLocationAndChildrenPossible[%s]," +
+                                    " deletedNodesChildrenSize[%d]," +
+                                    " deletedNodesParent[%s]," +
+                                    " deletedNodesIndex[%d]",
+                            this.getName(),
+                            this.undoDeleteNodeAndChildrenPossible,
+                            this.removedNodesChildren.size(),
+                            this.removedNodesParent != null ? this.removedNodesParent.getName() : null,
+                            this.removedNodesIndex));
+        }
+
+        this.deletedNodesChildren.clear();
+        this.deltedNodesParent = null;
+        this.deletedNodesIndex = -1;
+        this.undoDeleteNodeAndChildrenPossible = false;
+
+        return deleteNodeAndChildrenUndone;
+    }
+
+    public boolean removeNode()
     {
         if (this.parent != null)
         {
-            int index = this.parent.getChildren().indexOf(this);
+            this.removedNodesChildren = new ArrayList<>(this.children);
+            this.removedNodesParent = this.parent;
+            this.removedNodesIndex = this.parent.getChildren().indexOf(this);
+            this.undoRemoveNodePossible = true;
 
             Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
 
-            this.parent.addChildren(index, this.getChildren());
+            this.parent.addChildren(this.removedNodesIndex, this.getChildren());
 
             Log.v(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> children cleared.", this.getName()));
             this.getChildren().clear();
+
+            return true;
+        }
+
+        Log.w(Constants.LOG_TAG,  String.format("Location.removeNode:: can not remove node[%s] as it is the root node.", this.getName()));
+        return false;
+    }
+
+    public boolean undoRemoveNode()
+    {
+        boolean removeNodeUndone = false;
+
+        if(this.undoRemoveNodePossible
+                && this.removedNodesParent != null
+                && this.removedNodesIndex != -1)
+        {
+            this.addChildren(this.removedNodesChildren);
+            this.removedNodesParent.getChildren().removeAll(this.removedNodesChildren);
+            this.removedNodesParent.addChild(this.removedNodesIndex, this);
+            this.parent = this.removedNodesParent;
+
+            removeNodeUndone = true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Location.removeNode:: node[%s] -> can not remove node as it is the root node.", this.getName()));
+            Log.w(Constants.LOG_TAG, String.format("Location.undoRemoveNode:: not able to undo remove node[%s] -" +
+                                    " undoRemoveNodePossible[%s]," +
+                                    " removedNodesChildrenSize[%d]," +
+                                    " removedNodesParent[%s]," +
+                                    " removedNodesIndex[%d]",
+                            this.getName(),
+                            this.undoDeleteNodeAndChildrenPossible,
+                            this.removedNodesChildren.size(),
+                            this.removedNodesParent != null ? this.removedNodesParent.getName() : null,
+                            this.removedNodesIndex));
         }
+
+        this.removedNodesChildren.clear();
+        this.removedNodesParent = null;
+        this.removedNodesIndex = -1;
+        this.undoRemoveNodePossible = false;
+
+        return removeNodeUndone;
     }
 }
 

@@ -147,30 +147,34 @@ public class Content
         return attractions;
     }
 
+    public void addLocationAndChildren(Location location)
+    {
+        this.addElement(location);
+        for(Location child : location.getChildren())
+        {
+            this.addLocationAndChildren(child);
+        }
+    }
+
+    public void deleteLocationAndChildren(Location location)
+    {
+        for(Location child : location.getChildren())
+        {
+            this.deleteLocationAndChildren(child);
+        }
+
+        this.deleteElement(location);
+    }
+
     public void addElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: element[%s] added.", element.getName()));
         this.elements.put(element.getUuid(), element);
     }
 
-    public void removeLocationAndChildren(Element element)
+    public void deleteElement(Element element)
     {
-        Location location = (Location) element;
-
-        if(!location.getChildren().isEmpty())
-        {
-            for(Location child : location.getChildren())
-            {
-                this.removeLocationAndChildren(child);
-            }
-        }
-
-        this.removeLocation(element);
-    }
-
-    public void removeLocation(Element element)
-    {
-        Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: element[%s] removed.", element.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: element[%s] removed.", element.getName()));
         this.elements.remove(element.getUuid());
     }
 }

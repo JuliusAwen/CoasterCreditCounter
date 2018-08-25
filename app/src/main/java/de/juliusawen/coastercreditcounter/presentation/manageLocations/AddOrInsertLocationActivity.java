@@ -212,7 +212,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_location_name_not_valid));
+            Toaster.makeToast(this, getString(R.string.error_text_location_name_not_valid));
         }
     }
 }
