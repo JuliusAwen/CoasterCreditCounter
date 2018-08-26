@@ -57,10 +57,18 @@ public class Location extends Element
 
     public void setChildren(List<Location> children)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Location.setChildren:: node[%s] -> children cleared.", this.toString()));
         this.children.clear();
 
         this.addChildren(children);
+    }
+
+    public void setChild(Location child)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Location.setChild:: node[%s] -> children cleared.", this.toString()));
+        this.children.clear();
+
+        this.addChild(child);
     }
 
     public void addChildren(List<Location> children)
@@ -68,11 +76,10 @@ public class Location extends Element
         for (Location child : children)
         {
             this.addChild(child);
-            child.setParent(this);
         }
     }
 
-    public void addChildren(int index, List<Location> children)
+    private void addChildren(int index, List<Location> children)
     {
         int increment = -1;
 
@@ -89,7 +96,7 @@ public class Location extends Element
         this.addChild(this.getChildren().size(), child);
     }
 
-    public void addChild(int index, Location child)
+    private void addChild(int index, Location child)
     {
         child.setParent(this);
 
@@ -107,7 +114,7 @@ public class Location extends Element
         this.addPark(this.parks.size(), park);
     }
 
-    public void addPark(int index, Park park)
+    private void addPark(int index, Park park)
     {
         Log.v(Constants.LOG_TAG,  String.format("Location.addPark:: node[%s] -> park[%s] added.", this.toString(), park.toString()));
         this.parks.add(index, park);
@@ -124,19 +131,19 @@ public class Location extends Element
         this.parent = parent;
     }
 
-    public void insertNode(Location location)
+    public void insertNode(Location newLocation)
     {
-        this.insertNode(this.getChildren().size(), location);
+        this.insertNode(0, newLocation);
     }
 
-    public void insertNode(int index, Location location)
+    private void insertNode(int index, Location newLocation)
     {
-        location.addChildren(new ArrayList<>(this.getChildren()));
+        newLocation.addChildren(new ArrayList<>(this.getChildren()));
 
         Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.toString()));
         this.children.clear();
 
-        this.addChild(index, location);
+        this.addChild(index, newLocation);
     }
 
     public boolean deleteNodeAndChildren()

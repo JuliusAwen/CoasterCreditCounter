@@ -23,7 +23,9 @@ public abstract class Constants
     private static final int MODIFIER_SELECTION = 2000;
 
     public static final int CONTENT_TYPE_LOCATION = 10000;
-    public static final int CONTENT_TYPE_PARK = 20000;
+    public static final int CONTENT_TYPE_PARK = 11000;
+
+    public static final int VIEW_TYPE_CHILD = 20000;
 
     public static final int BUTTON_BACK = MODIFIER_BUTTON + ButtonFunctions.BACK.ordinal();
     public static final int BUTTON_MOVE_SELECTION_UP = MODIFIER_BUTTON + ButtonFunctions.MOVE_SELECTION_UP.ordinal();
@@ -31,7 +33,7 @@ public abstract class Constants
     public static final int BUTTON_CLOSE = MODIFIER_BUTTON + ButtonFunctions.CLOSE.ordinal();
     public static final int BUTTON_CANCEL = MODIFIER_BUTTON + ButtonFunctions.CANCEL.ordinal();
     public static final int BUTTON_OK = MODIFIER_BUTTON + ButtonFunctions.OK.ordinal();
-    public static final int BUTTON_DROP_DOWN = MODIFIER_BUTTON + ButtonFunctions.DROP_DOWN.ordinal();
+    public static final int BUTTON_TOGGLE_EXPAND = MODIFIER_BUTTON + ButtonFunctions.TOGGLE_EXPAND.ordinal();
 
     public static final int SELECTION_ADD = MODIFIER_SELECTION + Selections.ADD.ordinal();
     public static final int SELECTION_INSERT = MODIFIER_SELECTION + Selections.INSERT.ordinal();
@@ -41,6 +43,7 @@ public abstract class Constants
     public static final int SELECTION_SORT_MANUALLY = MODIFIER_SELECTION + Selections.SORT_MANUALLY.ordinal();
     public static final int SELECTION_SORT_A_TO_Z = MODIFIER_SELECTION + Selections.SORT_A_TO_Z.ordinal();
     public static final int SELECTION_HELP = MODIFIER_SELECTION + Selections.HELP.ordinal();
+
 
     public static final int REQUEST_ADD_OR_INSERT_LOCATION = Requests.ADD_OR_INSERT_LOCATION.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Requests.SORT_ELEMENTS.ordinal();
@@ -54,7 +57,7 @@ enum ButtonFunctions
     CLOSE,
     CANCEL,
     OK,
-    DROP_DOWN,
+    TOGGLE_EXPAND,
 }
 
 enum Selections

@@ -37,8 +37,9 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerTouchListener;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerClickListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -61,7 +62,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         this.initializeContent();
 
         this.initializeViews();
-        this.refreshViews();
     }
 
     private void initializeContent()
@@ -77,16 +77,10 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         frameLayoutActivity.addView(browseLocationsView);
 
         this.createToolbar(browseLocationsView);
-        this.createNavigationBar(browseLocationsView);
+        this.createNavigationBar();
         this.createContentRecyclerView(browseLocationsView);
         this.createFloatingActionButton();
         this.createHelpOverlayFragment(frameLayoutActivity.getId());
-    }
-
-    private void refreshViews()
-    {
-        this.createNavigationBar(this.findViewById(android.R.id.content).getRootView());
-        this.recyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     private void createToolbar(View view)
@@ -126,8 +120,10 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void createNavigationBar(View view)
+    private void createNavigationBar()
     {
+        View view = this.findViewById(android.R.id.content).getRootView();
+
         if(!this.recentLocations.contains(this.currentLocation))
         {
             this.recentLocations.add(this.currentLocation);
@@ -182,7 +178,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                     }
 
                     currentLocation = location;
-                    refreshViews();
+                    updateRecyclerView();
+                    createNavigationBar();
                 }
             });
 
@@ -200,20 +197,34 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         }
     }
 
+    private void updateRecyclerView()
+    {
+        this.recyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
+    }
+
     private void createContentRecyclerView(View view)
     {
-        this.recyclerAdapter = new RecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), true);
-        this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.OnItemClickListener()
+        RecyclerClickListener.OnClickListener onClickListener = new RecyclerClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view, int position, RecyclerAdapter.ViewHolder viewHolder)
             {
-                currentLocation = (Location) view.getTag();
-                refreshViews();
+                if(view.getId() == Constants.BUTTON_TOGGLE_EXPAND)
+                {
+                    viewHolder.isExpanded = !viewHolder.isExpanded;
+                    recyclerAdapter.notifyDataSetChanged();
+                }
+                else if(view.getTag().getClass() == Location.class)
+                {
+                    currentLocation = (Location) view.getTag();
+                    updateRecyclerView();
+                    createNavigationBar();
+                }
+                else if(view.getTag().getClass() == Park.class)
+                {
+                    //Todo: implement show park activity
+                    Toaster.makeToast(getApplicationContext(), "not yet implemented");
+                }
             }
 
             @Override
@@ -247,7 +258,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
                             builder.setTitle(R.string.alert_dialog_delete_location_title);
                             builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedLocation.getName()));
-
                             builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
                                 public void onClick(DialogInterface dialog, int id)
@@ -257,15 +267,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     if(longClickedLocation.deleteNodeAndChildren())
                                     {
                                         Content.getInstance().deleteLocationAndChildren(longClickedLocation);
-                                        recyclerAdapter.notifyDataSetChanged();
+                                        updateRecyclerView();
                                     }
                                     else
                                     {
                                         Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
                                     }
 
-
-                                    refreshViews();
+                                    recyclerAdapter.updateList(new ArrayList<Element>(currentLocation.getChildren()));
 
                                     Snackbar snackbar = Snackbar.make(view, R.string.action_undo_delete_location_text, Snackbar.LENGTH_LONG);
                                     snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
@@ -276,8 +285,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                             if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
                                             {
                                                 Content.getInstance().addLocationAndChildren(longClickedLocation);
-                                                recyclerAdapter.notifyDataSetChanged();
-                                                refreshViews();
+                                                updateRecyclerView();
                                             }
                                             else
                                             {
@@ -309,8 +317,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                             AlertDialog.Builder builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
 
                             builder.setTitle(R.string.alert_dialog_remove_location_title);
-                            builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(),
-                                    longClickedLocation.getParent().getName()));
+                            builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(), longClickedLocation.getParent().getName()));
 
                             builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
                             {
@@ -322,7 +329,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     {
                                         Content.getInstance().deleteElement(longClickedLocation);
                                         currentLocation = longClickedLocation.getParent();
-                                        refreshViews();
+                                        updateRecyclerView();
+
                                     }
                                     else
                                     {
@@ -339,8 +347,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                             {
                                                 longClickedLocation.undoRemoveNode();
                                                 Content.getInstance().addElement(longClickedLocation);
-                                                recyclerAdapter.notifyDataSetChanged();
-                                                refreshViews();
+                                                updateRecyclerView();
                                             }
                                             else
                                             {
@@ -375,8 +382,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
                 popupMenu.show();
             }
-        }));
+        };
 
+        this.recyclerAdapter = new RecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), true, onClickListener);
+        this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerAdapter);
     }
 
@@ -401,7 +412,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 {
                     popupMenu.getMenu().add(0, Constants.SELECTION_INSERT + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_insert_location_level);
                 }
-
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -478,14 +488,17 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
 
-        this.refreshViews();
+        this.updateRecyclerView();
+        this.createNavigationBar();
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        this.refreshViews();
+
+        this.updateRecyclerView();
+        this.createNavigationBar();
     }
 
     @Override

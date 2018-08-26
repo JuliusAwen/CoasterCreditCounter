@@ -52,6 +52,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         Park phantasialand = Park.createPark("Phantasialand");
         Park heidePark = Park.createPark("Heide Park Resort");
+        Park cedarPoint = Park.createPark("Cedar Point");
+        Park sixFlagsMagicMountain = Park.createPark("Six Flags Magic Mountain");
 
         Coaster taron = Coaster.createCoaster("Taron");
         Attraction hollywoodTour = Attraction.createAttraction("Hollywood Tour");
@@ -83,8 +85,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
-        usa.addPark(heidePark);
-        usa.addPark(phantasialand);
+        usa.addPark(cedarPoint);
+        usa.addPark(sixFlagsMagicMountain);
 
 
         // do things with tree

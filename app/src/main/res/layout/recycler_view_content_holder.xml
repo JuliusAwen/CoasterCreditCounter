@@ -2,14 +2,11 @@
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/linearLayoutRecyclerViewContentHolder"
     android:orientation="vertical">
 
     <LinearLayout
         style="@style/content_holder_layout"
-        android:orientation="horizontal"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp">
+        android:orientation="horizontal">
 
         <TextView
             style="@style/contentHolder"
@@ -17,16 +14,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|start"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/imageViewRecyclerViewContentHolder"
+            android:id="@+id/imageViewRecyclerViewContentHolder_ToggleExpand"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
             android:baselineAligned="false"
-            android:contentDescription="@string/description_drop_down"
+            android:contentDescription="@string/description_toggle_expand"
             android:scaleType="fitCenter"
             android:background="?android:attr/selectableItemBackground"
             android:visibility="gone"/>

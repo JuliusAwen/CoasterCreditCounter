@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerTouchListener;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerClickListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -125,7 +125,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(recyclerAdapter.selectedElement != null)
+                if(recyclerAdapter.selectedElement != null && recyclerAdapter.selectedView != null)
                 {
                     int position = elementsToSort.indexOf(recyclerAdapter.selectedElement);
 
@@ -157,7 +157,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(recyclerAdapter.selectedElement != null)
+                if(recyclerAdapter.selectedElement != null && recyclerAdapter.selectedView != null)
                 {
                     int position = elementsToSort.indexOf(recyclerAdapter.selectedElement);
 
@@ -183,16 +183,10 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createContentRecyclerView(View view)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
-        this.recyclerAdapter = new RecyclerAdapter(this.elementsToSort, false);
-
-        this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        this.recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.OnItemClickListener()
+        RecyclerClickListener.OnClickListener onClickListener = new RecyclerClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view, int position, RecyclerAdapter.ViewHolder viewHolder)
             {
                 if(view.isSelected())
                 {
@@ -211,12 +205,19 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 }
 
                 view.setSelected(!view.isSelected());
+
+                recyclerAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLongClick(View view, int position) {}
-        }));
+        };
 
+        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
+        this.recyclerAdapter = new RecyclerAdapter(this.elementsToSort, false, onClickListener);
+
+        this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setAdapter(this.recyclerAdapter);
     }
 
