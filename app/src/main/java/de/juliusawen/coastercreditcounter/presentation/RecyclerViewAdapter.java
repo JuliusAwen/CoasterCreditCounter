@@ -45,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        Button button = (Button) LayoutInflater.from(parent.getContext()).inflate(R.layout.button_content, parent, false);
+        Button button = (Button) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_button, parent, false);
 
         return new ViewHolder(button);
     }

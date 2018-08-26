@@ -7,4 +7,11 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="content_holder" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_selectable_toggle</item>
+    </style>
+
 </resources>

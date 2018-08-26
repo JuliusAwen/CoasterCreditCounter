@@ -37,7 +37,6 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
 import de.juliusawen.coastercreditcounter.presentation.SortElementsActivity;
@@ -215,16 +214,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             @Override
             public void onClick(View view, int position)
             {
-                if(view.getTag().getClass().equals(Park.class))
-                {
-                    //Todo: implement show park activity
-                    Toaster.makeToast(getApplicationContext(), "start ShowParkActivity");
-                }
-                else
-                {
-                    currentLocation = (Location) view.getTag();
-                    refreshViews();
-                }
+                currentLocation = (Location) view.getTag();
+                refreshViews();
             }
 
             @Override

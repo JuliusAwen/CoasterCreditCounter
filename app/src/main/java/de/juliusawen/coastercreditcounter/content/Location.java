@@ -13,9 +13,6 @@ public class Location extends Element
     public boolean undoDeleteNodeAndChildrenPossible = false;
     public boolean undoRemoveNodePossible = false;
 
-    private List<Location> children = new ArrayList<>();
-    private Location parent = null;
-
     private List<Location> deletedNodesChildren = new ArrayList<>();
     private Location deltedNodesParent = null;
     private int deletedNodesIndex = -1;
@@ -23,6 +20,11 @@ public class Location extends Element
     private List<Location> removedNodesChildren = new ArrayList<>();
     private Location removedNodesParent = null;
     private int removedNodesIndex = -1;
+
+    private Location parent = null;
+    private List<Location> children = new ArrayList<>();
+
+    private List<Park> parks = new ArrayList<>();
 
     public Location(String name, UUID uuid)
     {
@@ -93,6 +95,17 @@ public class Location extends Element
 
         Log.v(Constants.LOG_TAG,  String.format("Location.addChild:: node[%s] -> child[%s] added.", this.getName(), child.getName()));
         this.children.add(index, child);
+    }
+
+    public void addPark(Park park)
+    {
+        this.addPark(this.parks.size(), park);
+    }
+
+    public void addPark(int index, Park park)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Location.addPark:: node[%s] -> park[%s] added.", this.getName(), park.getName()));
+        this.parks.add(index, park);
     }
 
     public Location getParent()

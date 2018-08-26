@@ -67,8 +67,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         heidePark.addAttraction(krake);
         heidePark.addAttraction(scream);
 
-        bruehl.addChild(phantasialand);
-        soltau.addChild(heidePark);
+        bruehl.addPark(phantasialand);
+        soltau.addPark(heidePark);
 
         northRhineWestphalia.addChild(bruehl);
         lowerSaxony.addChild(soltau);
