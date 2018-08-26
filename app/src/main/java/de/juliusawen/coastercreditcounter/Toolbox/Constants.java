@@ -31,6 +31,7 @@ public abstract class Constants
     public static final int BUTTON_CLOSE = MODIFIER_BUTTON + ButtonFunctions.CLOSE.ordinal();
     public static final int BUTTON_CANCEL = MODIFIER_BUTTON + ButtonFunctions.CANCEL.ordinal();
     public static final int BUTTON_OK = MODIFIER_BUTTON + ButtonFunctions.OK.ordinal();
+    public static final int BUTTON_DROP_DOWN = MODIFIER_BUTTON + ButtonFunctions.DROP_DOWN.ordinal();
 
     public static final int SELECTION_ADD = MODIFIER_SELECTION + Selections.ADD.ordinal();
     public static final int SELECTION_INSERT = MODIFIER_SELECTION + Selections.INSERT.ordinal();
@@ -53,6 +54,7 @@ enum ButtonFunctions
     CLOSE,
     CANCEL,
     OK,
+    DROP_DOWN,
 }
 
 enum Selections

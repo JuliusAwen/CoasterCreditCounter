@@ -133,7 +133,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             this.recentLocations.add(this.currentLocation);
         }
 
-        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutBrowseLocationsNavigationBar);
+        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutBrowseLocations_NavigationBar);
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
@@ -141,7 +141,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         {
             View buttonView = getLayoutInflater().inflate(R.layout.button_transparent, linearLayoutNavigationBar, false);
 
-            Button button = buttonView.findViewById(R.id.button_noBorder);
+            Button button = buttonView.findViewById(R.id.button_transparent);
 
             if(this.recentLocations.indexOf(location) != 0)
             {
@@ -188,7 +188,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
             linearLayoutNavigationBar.addView(buttonView);
 
-            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewBrowseLocationsNavigationBar);
+            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewBrowseLocations_NavigationBar);
             horizontalScrollView.post(new Runnable()
             {
                 @Override

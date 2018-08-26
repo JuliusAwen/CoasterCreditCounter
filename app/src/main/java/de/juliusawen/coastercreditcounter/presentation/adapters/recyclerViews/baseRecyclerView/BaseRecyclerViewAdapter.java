@@ -28,7 +28,7 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerVi
         private ViewHolder(LinearLayout linearLayout)
         {
             super(linearLayout);
-            this.textView = linearLayout.findViewById(R.id.ContentHolderLocationTextView);
+            this.textView = linearLayout.findViewById(R.id.textViewContentHolderLocation);
             this.linearLayout = linearLayout;
         }
     }

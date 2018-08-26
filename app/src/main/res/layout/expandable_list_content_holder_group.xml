@@ -6,11 +6,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/expandableListContentTextViewTitle"
+        android:id="@+id/textViewExpandableListContentHolder_Group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textColor="@android:color/black"
         android:paddingTop="10dp"
         android:paddingBottom="10dp" />
 

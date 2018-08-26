@@ -18,9 +18,11 @@
         </activity>
         <activity android:name=".presentation.activities.manageLocations.BrowseLocationsActivity" />
         <activity android:name=".presentation.activities.manageLocations.SortElementsActivity" />
-        <activity android:name=".presentation.activities.manageLocations.AddOrInsertLocationActivity"
+        <activity
+            android:name=".presentation.activities.manageLocations.AddOrInsertLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.activities.manageLocations.EditLocationActivity"
+        <activity
+            android:name=".presentation.activities.manageLocations.EditLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 

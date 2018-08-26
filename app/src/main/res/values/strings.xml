@@ -51,11 +51,17 @@
     <string name="button_text_cancel">Cancel</string>
 
 
+    <!--button descriptions-->
+    <string name="button_description_ok">@string/button_text_close</string>
+    <string name="button_description_cancel">@string/button_text_cancel</string>
+    <string name="button_description_close">@string/button_text_close</string>
+    <string name="button_description_drop_down">drop down</string>
+
+
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
     <string name="action_undo_delete_location_text">Location deleted</string>
     <string name="action_undo_remove_location_text">Location removed</string>
-
 
 
     <!--edit text texts-->

@@ -8,13 +8,13 @@
     android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/buttonActionDialogUpDown_moveSelectionDown"
+        android:id="@+id/buttonActionDialogUpDown_MoveSelectionDown"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_text_ok" />
+        android:contentDescription="@string/button_description_ok" />
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="1dp"
@@ -26,12 +26,12 @@
         android:background="@color/white"/>
 
     <ImageButton
-        android:id="@+id/buttonActionDialogUpDown_moveSelectionUp"
+        android:id="@+id/buttonActionDialogUpDown_MoveSelectionUp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_text_cancel" />
+        android:contentDescription="@string/button_description_cancel" />
 
 </LinearLayout>

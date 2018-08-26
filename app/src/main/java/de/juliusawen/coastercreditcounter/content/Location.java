@@ -97,6 +97,11 @@ public class Location extends Element
         this.children.add(index, child);
     }
 
+    public List<Park> getParks()
+    {
+        return this.parks;
+    }
+
     public void addPark(Park park)
     {
         this.addPark(this.parks.size(), park);

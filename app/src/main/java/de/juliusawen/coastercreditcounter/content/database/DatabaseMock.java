@@ -83,6 +83,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
+        usa.addPark(heidePark);
+        usa.addPark(phantasialand);
+
 
         // do things with tree
         this.putLocationsInAttractions(earth);
