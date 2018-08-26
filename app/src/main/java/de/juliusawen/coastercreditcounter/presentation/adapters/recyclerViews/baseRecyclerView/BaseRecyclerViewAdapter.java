@@ -5,14 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
+public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerViewAdapter.ViewHolder>
 {
     public Element selectedElement;
     public View selectedView = null;
@@ -21,16 +22,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        public Button button;
+        public LinearLayout linearLayout;
+        public TextView textView;
 
-        private ViewHolder(Button button)
+        private ViewHolder(LinearLayout linearLayout)
         {
-            super(button);
-            this.button = button;
+            super(linearLayout);
+            this.textView = linearLayout.findViewById(R.id.ContentHolderLocationTextView);
+            this.linearLayout = linearLayout;
         }
     }
 
-    public RecyclerViewAdapter(List<Element> elements)
+    public BaseRecyclerViewAdapter(List<Element> elements)
     {
         this.elements = elements;
     }
@@ -43,11 +46,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @NonNull
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        Button button = (Button) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_button, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_location, parent, false);
 
-        return new ViewHolder(button);
+        return new ViewHolder(linearLayout);
     }
 
     @Override
@@ -55,8 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     {
         Element element = elements.get(position);
 
-        viewHolder.button.setText(element.getName());
-        viewHolder.button.setTag(element);
+        viewHolder.textView.setText(element.getName());
+        viewHolder.linearLayout.setTag(element);
 
         if(element.equals(this.selectedElement))
         {

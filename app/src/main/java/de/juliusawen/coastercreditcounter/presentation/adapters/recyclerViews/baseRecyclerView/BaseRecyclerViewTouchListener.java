@@ -6,12 +6,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener
+public class BaseRecyclerViewTouchListener implements RecyclerView.OnItemTouchListener
 {
     private GestureDetector gestureDetector;
     private ClickListener clickListener;
 
-    public RecyclerViewTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener)
+    public BaseRecyclerViewTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener)
     {
         this.clickListener = clickListener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener()

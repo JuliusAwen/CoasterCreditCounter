@@ -36,7 +36,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_location);
+        setContentView(R.layout.edit_location_activity);
 
         this.initializeContent();
         this.initializeViews();
@@ -50,7 +50,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
+        View addLocationView = getLayoutInflater().inflate(R.layout.edit_location_layout, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);

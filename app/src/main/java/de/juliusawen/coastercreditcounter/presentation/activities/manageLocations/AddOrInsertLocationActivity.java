@@ -40,7 +40,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_or_insert_location);
+        setContentView(R.layout.add_or_insert_location_activity);
 
         this.initializeContent();
         this.initializeViews();
@@ -57,7 +57,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddOrInsertLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_insert_location, frameLayoutActivity, false);
+        View addLocationView = getLayoutInflater().inflate(R.layout.add_or_insert_location_layout, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);

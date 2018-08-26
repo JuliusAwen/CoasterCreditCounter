@@ -37,8 +37,8 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.RecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.RecyclerViewTouchListener;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.BaseRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.BaseRecyclerViewTouchListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -49,14 +49,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private Location longClickedLocation;
 
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
     private HelpOverlayFragment helpOverlayFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_browse_locations);
+        setContentView(R.layout.browse_locations_activity);
 
         this.initializeContent();
 
@@ -73,7 +73,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutBrowseLocations);
-        View browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, frameLayoutActivity, false);
+        View browseLocationsView = getLayoutInflater().inflate(R.layout.browse_locations_layout, frameLayoutActivity, false);
         frameLayoutActivity.addView(browseLocationsView);
 
         this.createToolbar(browseLocationsView);
@@ -86,7 +86,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void refreshViews()
     {
         this.createNavigationBar(this.findViewById(android.R.id.content).getRootView());
-        this.recyclerViewAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
+        this.baseRecyclerViewAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     private void createToolbar(View view)
@@ -145,7 +145,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
             if(this.recentLocations.indexOf(location) != 0)
             {
-                Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left_24px));
+                Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left));
                 button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             }
 
@@ -203,12 +203,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void createContentRecyclerView(View view)
     {
         this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
-        this.recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
+        this.baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(new ArrayList<Element>(this.currentLocation.getChildren()));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        recyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getApplicationContext(), recyclerView, new RecyclerViewTouchListener.ClickListener()
+        recyclerView.addOnItemTouchListener(new BaseRecyclerViewTouchListener(getApplicationContext(), recyclerView, new BaseRecyclerViewTouchListener.ClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -258,7 +258,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     if(longClickedLocation.deleteNodeAndChildren())
                                     {
                                         Content.getInstance().deleteLocationAndChildren(longClickedLocation);
-                                        recyclerViewAdapter.notifyDataSetChanged();
+                                        baseRecyclerViewAdapter.notifyDataSetChanged();
                                     }
                                     else
                                     {
@@ -277,7 +277,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                             if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
                                             {
                                                 Content.getInstance().addLocationAndChildren(longClickedLocation);
-                                                recyclerViewAdapter.notifyDataSetChanged();
+                                                baseRecyclerViewAdapter.notifyDataSetChanged();
                                                 refreshViews();
                                             }
                                             else
@@ -299,7 +299,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                             });
 
                             AlertDialog alertDialog = builder.create();
-                            alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+                            alertDialog.setIcon(R.drawable.ic_baseline_warning);
 
                             alertDialog.show();
 
@@ -340,7 +340,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                             {
                                                 longClickedLocation.undoRemoveNode();
                                                 Content.getInstance().addElement(longClickedLocation);
-                                                recyclerViewAdapter.notifyDataSetChanged();
+                                                baseRecyclerViewAdapter.notifyDataSetChanged();
                                                 refreshViews();
                                             }
                                             else
@@ -362,7 +362,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                             });
 
                             AlertDialog alertDialog = builder.create();
-                            alertDialog.setIcon(R.drawable.ic_baseline_warning_24px);
+                            alertDialog.setIcon(R.drawable.ic_baseline_warning);
 
                             alertDialog.show();
                             return true;
@@ -378,14 +378,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             }
         }));
 
-        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setAdapter(baseRecyclerViewAdapter);
     }
 
     private void createFloatingActionButton()
     {
         final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
 
-        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add_24px));
+        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add));
         floatingActionButton.setImageDrawable(drawable);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener()
