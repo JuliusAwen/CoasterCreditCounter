@@ -37,9 +37,9 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.RecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView.RecyclerViewTouchListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
-import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewTouchListener;
 
 public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {

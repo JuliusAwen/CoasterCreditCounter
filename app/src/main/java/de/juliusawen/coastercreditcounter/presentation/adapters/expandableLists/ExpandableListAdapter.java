@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.expandableLists;
+package de.juliusawen.coastercreditcounter.presentation.adapters.expandableLists;
 
 import android.content.Context;
 import android.graphics.Typeface;
