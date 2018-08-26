@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView;
+package de.juliusawen.coastercreditcounter.presentation.adapters.recycler.baseRecycler;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,12 +6,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class BaseRecyclerViewTouchListener implements RecyclerView.OnItemTouchListener
+public class BaseRecyclerTouchListener implements RecyclerView.OnItemTouchListener
 {
     private GestureDetector gestureDetector;
     private ClickListener clickListener;
 
-    public BaseRecyclerViewTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener)
+    public BaseRecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener)
     {
         this.clickListener = clickListener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener()

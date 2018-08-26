@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.adapters.recyclerViews.baseRecyclerView;
+package de.juliusawen.coastercreditcounter.presentation.adapters.recycler.baseRecycler;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 
-public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerViewAdapter.ViewHolder>
+public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapter.ViewHolder>
 {
     public Element selectedElement;
     public View selectedView = null;
@@ -33,7 +33,7 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerVi
         }
     }
 
-    public BaseRecyclerViewAdapter(List<Element> elements)
+    public BaseRecyclerAdapter(List<Element> elements)
     {
         this.elements = elements;
     }
@@ -46,7 +46,7 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerVi
 
     @NonNull
     @Override
-    public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public BaseRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_location, parent, false);
 
