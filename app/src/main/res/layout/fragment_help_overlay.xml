@@ -54,7 +54,7 @@
                     android:adjustViewBounds="true"
                     android:background="@color/colorPrimary"
                     android:baselineAligned="false"
-                    android:contentDescription="@string/button_description_close"
+                    android:contentDescription="@string/description_close"
                     android:scaleType="fitCenter" />
 
             </LinearLayout>

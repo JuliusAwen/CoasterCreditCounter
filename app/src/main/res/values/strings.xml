@@ -51,11 +51,11 @@
     <string name="button_text_cancel">Cancel</string>
 
 
-    <!--button descriptions-->
-    <string name="button_description_ok">@string/button_text_close</string>
-    <string name="button_description_cancel">@string/button_text_cancel</string>
-    <string name="button_description_close">@string/button_text_close</string>
-    <string name="button_description_drop_down">drop down</string>
+    <!--descriptions-->
+    <string name="description_ok">@string/button_text_close</string>
+    <string name="description_cancel">@string/button_text_cancel</string>
+    <string name="description_close">@string/button_text_close</string>
+    <string name="description_drop_down">drop down</string>
 
 
     <!--action texts -->

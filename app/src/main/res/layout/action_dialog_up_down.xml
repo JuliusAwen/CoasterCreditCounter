@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_description_ok" />
+        android:contentDescription="@string/description_ok" />
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="1dp"
@@ -32,6 +32,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/button_description_cancel" />
+        android:contentDescription="@string/description_cancel" />
 
 </LinearLayout>
