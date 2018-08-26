@@ -1,5 +1,6 @@
-package de.juliusawen.coastercreditcounter.presentation.manageLocations;
+package de.juliusawen.coastercreditcounter.presentation.activities.manageLocations;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -17,16 +18,19 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public class EditLocationActivity extends AppCompatActivity implements
+public class AddOrInsertLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
     private Element currentElement;
+    private int selection;
 
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
@@ -36,7 +40,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_location);
+        setContentView(R.layout.activity_add_or_insert_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -44,13 +48,16 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     private void initializeContent()
     {
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        Intent intent = getIntent();
+
+        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.selection = intent.getIntExtra(Constants.EXTRA_SELECTION, 0);
     }
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddOrInsertLocation);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_insert_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
@@ -62,7 +69,18 @@ public class EditLocationActivity extends AppCompatActivity implements
     private void createToolbar(View view)
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_edit_location));
+
+        String dynamicText = "";
+        if(this.selection == Constants.SELECTION_ADD)
+        {
+            dynamicText = getString(R.string.dynamic_text_add);
+        }
+        else if(this.selection == Constants.SELECTION_INSERT)
+        {
+            dynamicText = getString(R.string.dynamic_text_insert);
+        }
+
+        toolbar.setTitle(getString(R.string.title_add_or_insert_location, dynamicText));
         toolbar.setSubtitle(this.currentElement.getName());
         setSupportActionBar(toolbar);
     }
@@ -78,8 +96,8 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     private void createEditText(View view)
     {
-        this.editText = view.findViewById(R.id.editTextEditLocation);
-        this.editText.setText(this.currentElement.getName());
+        this.editText = view.findViewById(R.id.editTextAddOrInsertLocation);
+        this.editText.setHint(R.string.edit_text_hint_enter_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -87,11 +105,9 @@ public class EditLocationActivity extends AppCompatActivity implements
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = false;
-
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
                     handleOnEditorActionDone();
-
                     handled = true;
                 }
                 return handled;
@@ -110,7 +126,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     private void createHelpOverlayFragment(int frameLayoutId)
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
+        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_or_insert_location), false);
         fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
         fragmentTransaction.commit();
     }
@@ -134,6 +150,7 @@ public class EditLocationActivity extends AppCompatActivity implements
         this.confirmDialogFragment.setVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item.getItemId() == Constants.SELECTION_HELP)
@@ -152,6 +169,7 @@ public class EditLocationActivity extends AppCompatActivity implements
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
             this.helpOverlayFragment.setVisibility(false);
+            this.confirmDialogFragment.setVisibility(true);
         }
     }
 
@@ -164,13 +182,37 @@ public class EditLocationActivity extends AppCompatActivity implements
         }
         else if(view.getId() == Constants.BUTTON_CANCEL)
         {
+            Intent intent = new Intent();
+            setResult(RESULT_CANCELED, intent);
             finish();
         }
     }
 
     private void handleOnEditorActionDone()
     {
-        currentElement.setName(this.editText.getText().toString());
-        finish();
+        Location newLocation = Location.createLocation(this.editText.getText().toString());
+
+        if(newLocation != null)
+        {
+            if(this.selection == Constants.SELECTION_ADD)
+            {
+                ((Location) this.currentElement).addChild(newLocation);
+            }
+            else if(this.selection == Constants.SELECTION_INSERT)
+            {
+                ((Location) this.currentElement).insertNode(newLocation);
+            }
+
+            Content.getInstance().addElement(newLocation);
+
+            Intent intent = new Intent();
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, newLocation.getUuid().toString());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        else
+        {
+            Toaster.makeToast(this, getString(R.string.error_text_location_name_not_valid));
+        }
     }
 }

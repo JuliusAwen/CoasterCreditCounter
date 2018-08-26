@@ -9,18 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".presentation.initializeContent.MainActivity">
+        <activity android:name=".presentation.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.manageLocations.BrowseLocationsActivity" />
-        <activity android:name=".presentation.SortElementsActivity" />
-        <activity android:name=".presentation.manageLocations.AddOrInsertLocationActivity"
+        <activity android:name=".presentation.activities.manageLocations.BrowseLocationsActivity" />
+        <activity android:name=".presentation.activities.manageLocations.SortElementsActivity" />
+        <activity android:name=".presentation.activities.manageLocations.AddOrInsertLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.manageLocations.EditLocationActivity"
+        <activity android:name=".presentation.activities.manageLocations.EditLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation;
+package de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

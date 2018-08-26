@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation;
+package de.juliusawen.coastercreditcounter.presentation.activities.manageLocations;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -32,6 +32,8 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewTouchListener;
 
 public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {

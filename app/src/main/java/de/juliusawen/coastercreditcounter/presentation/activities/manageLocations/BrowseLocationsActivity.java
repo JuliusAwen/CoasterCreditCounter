@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.manageLocations;
+package de.juliusawen.coastercreditcounter.presentation.activities.manageLocations;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,10 +37,9 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.presentation.RecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.presentation.RecyclerViewTouchListener;
-import de.juliusawen.coastercreditcounter.presentation.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recyclerViews.baseRecyclerView.RecyclerViewTouchListener;
 
 public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {

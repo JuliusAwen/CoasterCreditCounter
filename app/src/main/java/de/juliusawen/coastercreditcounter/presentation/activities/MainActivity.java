@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.initializeContent;
+package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
-import de.juliusawen.coastercreditcounter.presentation.manageLocations.BrowseLocationsActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.manageLocations.BrowseLocationsActivity;
 
 public class MainActivity extends AppCompatActivity
 {
