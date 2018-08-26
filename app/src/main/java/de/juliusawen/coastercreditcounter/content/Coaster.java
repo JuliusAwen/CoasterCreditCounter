@@ -8,7 +8,7 @@ import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 
 public class Coaster extends Attraction
 {
-    public Coaster(String name, UUID uuid)
+    private Coaster(String name, UUID uuid)
     {
         super(name, uuid);
     }
@@ -23,6 +23,10 @@ public class Coaster extends Attraction
 
             Log.v(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: coaster[%s] created.", name));
             coaster = new Coaster(name, UUID.randomUUID());
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: invalid name[%s] - coaster not created.", name));
         }
 
         return coaster;

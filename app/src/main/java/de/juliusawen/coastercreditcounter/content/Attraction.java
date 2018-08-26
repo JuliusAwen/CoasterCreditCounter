@@ -12,7 +12,7 @@ public class Attraction extends Element
     //private Model model;
     //private Manufacturer manufacturer
 
-    public Attraction(String name, UUID uuid)
+    Attraction(String name, UUID uuid)
     {
         super(name, uuid);
     }
@@ -27,6 +27,10 @@ public class Attraction extends Element
 
             Log.v(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: attraction[%s] created.", name));
             attraction = new Attraction(name, UUID.randomUUID());
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: invalid name[%s] - attraction not created.", name));
         }
 
         return attraction;

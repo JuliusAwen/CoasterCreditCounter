@@ -25,7 +25,7 @@ public class Content
 
     private Content()
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content:: Constructor called."));
+        Log.v(Constants.LOG_TAG, "Content:: Constructor called.");
 
         this.elements = new HashMap<>();
 
@@ -168,13 +168,13 @@ public class Content
 
     public void addElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: element[%s] added.", element.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: element[%s] added.", element.toString()));
         this.elements.put(element.getUuid(), element);
     }
 
     public void deleteElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: element[%s] removed.", element.getName()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: element[%s] removed.", element.toString()));
         this.elements.remove(element.getUuid());
     }
 }

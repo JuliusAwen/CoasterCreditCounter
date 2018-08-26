@@ -12,7 +12,7 @@ public class Park extends Location
 {
     private List<Attraction> attractions;
 
-    public Park(String name, UUID uuid)
+    private Park(String name, UUID uuid)
     {
         super(name, uuid);
         this.attractions = new ArrayList<>();
@@ -29,6 +29,10 @@ public class Park extends Location
             Log.v(Constants.LOG_TAG,  String.format("Park.createPark:: park[%s] created.", name));
             park = new Park(name, UUID.randomUUID());
         }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Park.createPark:: invalid name[%s] - park not created.", name));
+        }
 
         return park;
     }
@@ -40,16 +44,18 @@ public class Park extends Location
 
     public void setAttractions(List<Attraction> attractions)
     {
+        Log.d(Constants.LOG_TAG,  String.format("Park.setAttractions:: park[%s] -> attractions cleared.", this.toString()));
+        this.attractions.clear();
+
         for(Attraction attraction : attractions)
         {
-            Log.d(Constants.LOG_TAG,  String.format("Park.setAttraction:: park[%s] -> attraction[%s] set.", this.getName(), attraction.getName()));
+            this.addAttraction(attraction);
         }
-        this.attractions = attractions;
     }
 
     public void addAttraction(Attraction attraction)
     {
-        Log.d(Constants.LOG_TAG,  String.format("Park.addAttraction:: park[%s] -> attraction[%s] added.", this.getName(), attraction.getName()));
+        Log.d(Constants.LOG_TAG,  String.format("Park.addAttraction:: park[%s] -> attraction[%s] added.", this.toString(), attraction.toString()));
         this.attractions.add(attraction);
     }
 }

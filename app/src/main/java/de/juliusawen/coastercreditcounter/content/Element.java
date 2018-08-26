@@ -11,7 +11,7 @@ public abstract class Element
     private String name;
     private UUID uuid;
 
-    public Element(String name, UUID uuid)
+    Element(String name, UUID uuid)
     {
         this.setName(name);
         this.uuid = uuid;
@@ -37,5 +37,11 @@ public abstract class Element
     public UUID getUuid()
     {
         return this.uuid;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getName();
     }
 }

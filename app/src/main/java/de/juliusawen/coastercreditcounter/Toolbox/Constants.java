@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.Toolbox;
 
 public abstract class Constants
 {
-    public static final String LOG_TAG = "JA.CODING";
+    public static String LOG_TAG = "JA.CODING";
 
     public static final String KEY_ELEMENTS = "de.juliusawen.elements";
     public static final String KEY_CURRENT_ELEMENT = "de.juliusawen.current_element";
