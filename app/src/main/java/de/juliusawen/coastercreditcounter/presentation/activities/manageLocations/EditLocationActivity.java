@@ -152,6 +152,7 @@ public class EditLocationActivity extends AppCompatActivity implements
         if(view.getId() == Constants.BUTTON_CLOSE)
         {
             this.helpOverlayFragment.setVisibility(false);
+            this.confirmDialogFragment.setVisibility(true);
         }
     }
 
