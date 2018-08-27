@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -72,15 +72,15 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutBrowseLocations);
-        View browseLocationsView = getLayoutInflater().inflate(R.layout.browse_locations_layout, frameLayoutActivity, false);
-        frameLayoutActivity.addView(browseLocationsView);
+        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutBrowseLocations);
+        View browseLocationsView = getLayoutInflater().inflate(R.layout.browse_locations_layout, coordinatorLayoutActivity, false);
+        coordinatorLayoutActivity.addView(browseLocationsView);
 
         this.createToolbar(browseLocationsView);
         this.createNavigationBar();
         this.createContentRecyclerView(browseLocationsView);
         this.createFloatingActionButton();
-        this.createHelpOverlayFragment(frameLayoutActivity.getId());
+        this.createHelpOverlayFragment(coordinatorLayoutActivity.getId());
     }
 
     private void createToolbar(View view)
