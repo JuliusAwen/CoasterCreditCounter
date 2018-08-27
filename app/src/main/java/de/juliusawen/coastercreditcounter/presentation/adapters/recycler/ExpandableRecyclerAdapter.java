@@ -24,7 +24,7 @@ import de.juliusawen.coastercreditcounter.content.Park;
 public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRecyclerAdapter.ViewHolder>
 {
     private List<Element> elements;
-    private RecyclerClickListener.OnClickListener onClickListener;
+    private RecyclerOnClickListener.OnClickListener onClickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -47,7 +47,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
     }
 
-    public ExpandableRecyclerAdapter(List<Element> elements, RecyclerClickListener.OnClickListener onClickListener)
+    public ExpandableRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.elements = elements;
         this.onClickListener = onClickListener;
@@ -56,6 +56,12 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public void updateList(List<Element> elements)
     {
         this.elements = elements;
+        notifyDataSetChanged();
+    }
+
+    public void toggleExpanded(ViewHolder viewHolder)
+    {
+        viewHolder.isExpanded = !viewHolder.isExpanded;
         notifyDataSetChanged();
     }
 
@@ -77,12 +83,12 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             this.removeChildViews(viewHolder);
         }
 
-        RecyclerClickListener recyclerClickListener = new RecyclerClickListener(viewHolder, this.onClickListener);
+        RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
         viewHolder.textView.setTag(element);
-        viewHolder.textView.setOnClickListener(recyclerClickListener);
-        viewHolder.textView.setOnLongClickListener(recyclerClickListener);
+        viewHolder.textView.setOnClickListener(recyclerOnClickListener);
+        viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
 
         if(element.getClass() == Location.class)
         {
@@ -94,11 +100,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
                 for(Park park : location.getParks())
                 {
-                    this.createChildView(viewHolder, recyclerClickListener, park, increment);
+                    this.createChildView(viewHolder, recyclerOnClickListener, park, increment);
                     increment ++;
                 }
 
-                this.decorateExpandableView(viewHolder, recyclerClickListener);
+                this.decorateExpandableView(viewHolder, recyclerOnClickListener);
             }
             else
             {
@@ -121,7 +127,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
     }
 
-    private void createChildView(ViewHolder viewHolder, RecyclerClickListener recyclerClickListener, Element element, int increment)
+    private void createChildView(ViewHolder viewHolder, RecyclerOnClickListener recyclerOnClickListener, Element element, int increment)
     {
         View childView = viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + increment);
         if(childView == null)
@@ -131,7 +137,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.recycler_view_content_holder, viewHolder.linearLayout, false);
             childView.setId(Constants.VIEW_TYPE_CHILD + increment);
             childView.setTag(element);
-            childView.setOnClickListener(recyclerClickListener);
+            childView.setOnClickListener(recyclerOnClickListener);
 
             TextView textView = childView.findViewById(R.id.textViewRecyclerViewContentHolder);
             textView.setText(element.getName());
@@ -150,9 +156,9 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
     }
 
-    private void decorateExpandableView(ViewHolder viewHolder, RecyclerClickListener recyclerClickListener)
+    private void decorateExpandableView(ViewHolder viewHolder, RecyclerOnClickListener recyclerOnClickListener)
     {
-        viewHolder.imageViewToggleExpand.setOnClickListener(recyclerClickListener);
+        viewHolder.imageViewToggleExpand.setOnClickListener(recyclerOnClickListener);
         viewHolder.imageViewToggleExpand.setId(Constants.BUTTON_TOGGLE_EXPAND);
 
         if(viewHolder.isExpanded)

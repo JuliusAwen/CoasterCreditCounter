@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapter.ViewHolder>
 {
     private List<Element> elements;
-    private RecyclerClickListener.OnClickListener onClickListener;
+    private RecyclerOnClickListener.OnClickListener onClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -33,7 +33,7 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapte
         }
     }
 
-    public BaseRecyclerAdapter(List<Element> elements, RecyclerClickListener.OnClickListener onClickListener)
+    public BaseRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.elements = elements;
         this.onClickListener = onClickListener;
@@ -58,12 +58,12 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapte
     {
         Element element = elements.get(position);
 
-        RecyclerClickListener recyclerClickListener = new RecyclerClickListener(viewHolder, this.onClickListener);
+        RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
         viewHolder.textView.setTag(element);
-        viewHolder.textView.setOnClickListener(recyclerClickListener);
-        viewHolder.textView.setOnLongClickListener(recyclerClickListener);
+        viewHolder.textView.setOnClickListener(recyclerOnClickListener);
+        viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
     }
 
     @Override

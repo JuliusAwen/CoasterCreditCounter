@@ -39,7 +39,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerClickListener;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -204,15 +204,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createContentRecyclerView(View view)
     {
-        RecyclerClickListener.OnClickListener onClickListener = new RecyclerClickListener.OnClickListener()
+        RecyclerOnClickListener.OnClickListener onClickListener = new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position, RecyclerView.ViewHolder viewHolder)
             {
                 if(view.getId() == Constants.BUTTON_TOGGLE_EXPAND)
                 {
-                    ((ExpandableRecyclerAdapter.ViewHolder)viewHolder).isExpanded = !((ExpandableRecyclerAdapter.ViewHolder)viewHolder).isExpanded;
-                    expandableRecyclerAdapter.notifyDataSetChanged();
+                    expandableRecyclerAdapter.toggleExpanded((ExpandableRecyclerAdapter.ViewHolder)viewHolder);
                 }
                 else if(view.getTag().getClass() == Location.class)
                 {

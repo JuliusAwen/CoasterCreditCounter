@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.StringTool;
@@ -17,11 +20,10 @@ import de.juliusawen.coastercreditcounter.content.Element;
 
 public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.ViewHolder>
 {
-    public Element selectedElement;
-    public View selectedView = null;
-
     private List<Element> elements;
-    private RecyclerClickListener.OnClickListener onClickListener;
+
+    private boolean selectMultiple;
+    private Map<Element, View> selectedViewsByElement = new HashMap<>();
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -37,16 +39,26 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
     }
 
-    public SelectableRecyclerAdapter(List<Element> elements, RecyclerClickListener.OnClickListener onClickListener)
+    public SelectableRecyclerAdapter(List<Element> elements, boolean selectMultiple)
     {
         this.elements = elements;
-        this.onClickListener = onClickListener;
+        this.selectMultiple = selectMultiple;
     }
 
     public void updateList(List<Element> elements)
     {
         this.elements = elements;
         notifyDataSetChanged();
+    }
+
+    public List<Element> getSelectedElements()
+    {
+        return new ArrayList<>(this.selectedViewsByElement.keySet());
+    }
+
+    public void addSelectedElement(Element element)
+    {
+        this.selectedViewsByElement.put(element, null);
     }
 
     @NonNull
@@ -61,23 +73,50 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
         Element element = elements.get(position);
-
-        if(element.equals(this.selectedElement))
+        if(this.selectedViewsByElement.containsKey(element))
         {
             viewHolder.itemView.setSelected(true);
-            this.selectedView = viewHolder.itemView;
+            this.selectedViewsByElement.put(element, viewHolder.itemView);
         }
         else
         {
             viewHolder.itemView.setSelected(false);
         }
 
-        RecyclerClickListener recyclerClickListener = new RecyclerClickListener(viewHolder, this.onClickListener);
+        viewHolder.itemView.setTag(element);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Element element = (Element) view.getTag();
+
+                if(view.isSelected())
+                {
+                    selectedViewsByElement.remove(element);
+                }
+                else
+                {
+                    if(selectedViewsByElement.get(element) != null)
+                    {
+                        selectedViewsByElement.get(element).setSelected(false);
+                    }
+
+                    if(!selectMultiple)
+                    {
+                        selectedViewsByElement.clear();
+                    }
+
+                    selectedViewsByElement.put(element, view);
+                }
+
+                view.setSelected(!view.isSelected());
+
+                notifyDataSetChanged();
+            }
+        });
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
-        viewHolder.textView.setTag(element);
-        viewHolder.textView.setOnClickListener(recyclerClickListener);
-        viewHolder.textView.setOnLongClickListener(recyclerClickListener);
     }
 
     @Override

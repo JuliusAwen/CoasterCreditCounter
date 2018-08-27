@@ -3,13 +3,13 @@ package de.juliusawen.coastercreditcounter.presentation.adapters.recycler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class RecyclerClickListener implements View.OnClickListener, View.OnLongClickListener
+public class RecyclerOnClickListener implements View.OnClickListener, View.OnLongClickListener
 {
     public RecyclerView.ViewHolder viewHolder;
 
     private OnClickListener onClickListener;
 
-    RecyclerClickListener(RecyclerView.ViewHolder viewHolder, final OnClickListener onClickListener)
+    RecyclerOnClickListener(RecyclerView.ViewHolder viewHolder, final OnClickListener onClickListener)
     {
         this.viewHolder = viewHolder;
         this.onClickListener = onClickListener;

@@ -30,6 +30,12 @@
             android:background="?android:attr/selectableItemBackground"
             android:visibility="gone"/>
 
+        <CheckBox
+            android:id="@+id/checkBoxRecyclerViewContentHolder"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </LinearLayout>
