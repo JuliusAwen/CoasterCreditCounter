@@ -38,7 +38,7 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerClickListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
@@ -50,7 +50,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private Location longClickedLocation;
 
     private RecyclerView recyclerView;
-    private RecyclerAdapter recyclerAdapter;
+    private ExpandableRecyclerAdapter expandableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
 
     @Override
@@ -199,7 +199,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void updateRecyclerView()
     {
-        this.recyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
+        this.expandableRecyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     private void createContentRecyclerView(View view)
@@ -207,12 +207,12 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         RecyclerClickListener.OnClickListener onClickListener = new RecyclerClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position, RecyclerAdapter.ViewHolder viewHolder)
+            public void onClick(View view, int position, RecyclerView.ViewHolder viewHolder)
             {
                 if(view.getId() == Constants.BUTTON_TOGGLE_EXPAND)
                 {
-                    viewHolder.isExpanded = !viewHolder.isExpanded;
-                    recyclerAdapter.notifyDataSetChanged();
+                    ((ExpandableRecyclerAdapter.ViewHolder)viewHolder).isExpanded = !((ExpandableRecyclerAdapter.ViewHolder)viewHolder).isExpanded;
+                    expandableRecyclerAdapter.notifyDataSetChanged();
                 }
                 else if(view.getTag().getClass() == Location.class)
                 {
@@ -274,7 +274,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                         Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
                                     }
 
-                                    recyclerAdapter.updateList(new ArrayList<Element>(currentLocation.getChildren()));
+                                    expandableRecyclerAdapter.updateList(new ArrayList<Element>(currentLocation.getChildren()));
 
                                     Snackbar snackbar = Snackbar.make(view, R.string.action_undo_delete_location_text, Snackbar.LENGTH_LONG);
                                     snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
@@ -384,11 +384,11 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             }
         };
 
-        this.recyclerAdapter = new RecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), true, onClickListener);
+        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), onClickListener);
         this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(expandableRecyclerAdapter);
     }
 
     private void createFloatingActionButton()

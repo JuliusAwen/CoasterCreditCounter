@@ -31,8 +31,8 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerClickListener;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -42,7 +42,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private List<Element> elementsToSort;
 
-    private RecyclerAdapter recyclerAdapter;
+    private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private RecyclerView recyclerView;
     private HelpOverlayFragment helpOverlayFragment;
 
@@ -125,14 +125,14 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(recyclerAdapter.selectedElement != null && recyclerAdapter.selectedView != null)
+                if(selectableRecyclerAdapter.selectedElement != null && selectableRecyclerAdapter.selectedView != null)
                 {
-                    int position = elementsToSort.indexOf(recyclerAdapter.selectedElement);
+                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.selectedElement);
 
                     if(position < elementsToSort.size() - 1)
                     {
                         Collections.swap(elementsToSort, position, position + 1);
-                        recyclerAdapter.notifyDataSetChanged();
+                        selectableRecyclerAdapter.notifyDataSetChanged();
 
                         int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
                         if(elementsToSort.size() > position + 1 + scrollMargin)
@@ -157,14 +157,14 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(recyclerAdapter.selectedElement != null && recyclerAdapter.selectedView != null)
+                if(selectableRecyclerAdapter.selectedElement != null && selectableRecyclerAdapter.selectedView != null)
                 {
-                    int position = elementsToSort.indexOf(recyclerAdapter.selectedElement);
+                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.selectedElement);
 
                     if(position > 0)
                     {
                         Collections.swap(elementsToSort, position, position - 1);
-                        recyclerAdapter.notifyDataSetChanged();
+                        selectableRecyclerAdapter.notifyDataSetChanged();
 
                         int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);;
                         if(position - 1 - scrollMargin >= 0)
@@ -186,39 +186,39 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         RecyclerClickListener.OnClickListener onClickListener = new RecyclerClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position, RecyclerAdapter.ViewHolder viewHolder)
+            public void onClick(View view, int position, RecyclerView.ViewHolder viewHolder)
             {
                 if(view.isSelected())
                 {
-                    recyclerAdapter.selectedElement = null;
-                    recyclerAdapter.selectedView = null;
+                    selectableRecyclerAdapter.selectedElement = null;
+                    selectableRecyclerAdapter.selectedView = null;
                 }
                 else
                 {
-                    if(recyclerAdapter.selectedView != null)
+                    if(selectableRecyclerAdapter.selectedView != null)
                     {
-                        recyclerAdapter.selectedView.setSelected(false);
+                        selectableRecyclerAdapter.selectedView.setSelected(false);
                     }
 
-                    recyclerAdapter.selectedElement = (Element) view.getTag();
-                    recyclerAdapter.selectedView = view;
+                    selectableRecyclerAdapter.selectedElement = (Element) view.getTag();
+                    selectableRecyclerAdapter.selectedView = view;
                 }
 
                 view.setSelected(!view.isSelected());
 
-                recyclerAdapter.notifyDataSetChanged();
+                selectableRecyclerAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLongClick(View view, int position) {}
         };
 
-        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
-        this.recyclerAdapter = new RecyclerAdapter(this.elementsToSort, false, onClickListener);
+        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, onClickListener);
 
+        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setAdapter(this.recyclerAdapter);
+        this.recyclerView.setAdapter(this.selectableRecyclerAdapter);
     }
 
     private void createFloatingActionButton()
@@ -243,9 +243,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 }
 
                 Intent intent = new Intent();
-                if(recyclerAdapter.selectedElement != null)
+                if(selectableRecyclerAdapter.selectedElement != null)
                 {
-                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, recyclerAdapter.selectedElement.getUuid().toString());
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, selectableRecyclerAdapter.selectedElement.getUuid().toString());
                     setResult(RESULT_OK, intent);
                 }
                 else
@@ -280,13 +280,13 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToSort));
         outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
 
-        if(this.recyclerAdapter.selectedElement == null)
+        if(this.selectableRecyclerAdapter.selectedElement == null)
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, "");
         }
         else
         {
-            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.recyclerAdapter.selectedElement.getUuid().toString());
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.selectableRecyclerAdapter.selectedElement.getUuid().toString());
         }
 
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
@@ -304,18 +304,18 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
         if(selectedElementString != null && selectedElementString.isEmpty())
         {
-            this.recyclerAdapter.selectedElement = null;
+            this.selectableRecyclerAdapter.selectedElement = null;
         }
         else
         {
-            this.recyclerAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
-            this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(recyclerAdapter.selectedElement));
+            this.selectableRecyclerAdapter.selectedElement = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
+            this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(selectableRecyclerAdapter.selectedElement));
         }
 
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
 
-        this.recyclerAdapter.updateList(this.elementsToSort);
+        this.selectableRecyclerAdapter.updateList(this.elementsToSort);
     }
 
     @Override
@@ -332,8 +332,8 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 }
             });
 
-            this.recyclerAdapter.updateList(this.elementsToSort);
-            this.recyclerAdapter.notifyDataSetChanged();
+            this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+            this.selectableRecyclerAdapter.notifyDataSetChanged();
             return true;
         }
         else if(item.getItemId() == Constants.SELECTION_HELP)
