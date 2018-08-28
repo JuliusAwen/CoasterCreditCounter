@@ -30,13 +30,12 @@ import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    private Element currentElement;
+    private Element element;
     private String subtitle;
 
     private List<Element> elementsToSort;
@@ -49,7 +48,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sort_elements_activity);
+        setContentView(R.layout.activity_sort_elements);
 
         this.initializeContent();
         this.initializeViews();
@@ -57,23 +56,19 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void initializeContent()
     {
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.subtitle = currentElement.getName();
+        this.element = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.subtitle = element.getName();
 
-        if(this.currentElement.getClass().equals(Location.class))
+        if(this.element.getClass().equals(Location.class))
         {
-            this.elementsToSort = new ArrayList<Element>(((Location) this.currentElement).getChildren());
-        }
-        else if(this.currentElement.getClass().equals(Park.class))
-        {
-            this.elementsToSort = new ArrayList<Element>(((Park) this.currentElement).getAttractions());
+            this.elementsToSort = new ArrayList<Element>(((Location) this.element).getChildren());
         }
     }
 
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutSortElements);
-        View sortElementsView = getLayoutInflater().inflate(R.layout.sort_elements_layout, frameLayoutActivity, false);
+        View sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(sortElementsView);
 
         this.createToolbar(sortElementsView);
@@ -203,9 +198,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(currentElement.getClass().equals(Location.class))
+                if(element.getClass().equals(Location.class))
                 {
-                    ((Location) currentElement).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(elementsToSort)));
+                    ((Location) element).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(elementsToSort)));
                 }
 
                 Intent intent = new Intent();
@@ -243,7 +238,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         super.onSaveInstanceState(outState);
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToSort));
-        outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
 
         if(this.selectableRecyclerAdapter.getSelectedElements().isEmpty())
         {
@@ -263,7 +258,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         super.onRestoreInstanceState(savedInstanceState);
 
         this.elementsToSort = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
+        this.element = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
 
@@ -274,7 +269,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         else
         {
             Element element = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
-            this.selectableRecyclerAdapter.addSelectedElement(element);
+            this.selectableRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
 
@@ -320,5 +315,4 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             this.setFloatingActionButtonVisibility(true);
         }
     }
-
 }

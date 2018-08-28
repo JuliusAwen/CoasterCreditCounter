@@ -56,7 +56,15 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         return new ArrayList<>(this.selectedViewsByElement.keySet());
     }
 
-    public void addSelectedElement(Element element)
+    public void selectElements(List<Element> elements)
+    {
+        for(Element element : elements)
+        {
+            this.selectElement(element);
+        }
+    }
+
+    public void selectElement(Element element)
     {
         this.selectedViewsByElement.put(element, null);
     }

@@ -46,9 +46,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 {
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
-
     private Location longClickedLocation;
-
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
@@ -57,7 +55,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.browse_locations_activity);
+        setContentView(R.layout.activity_browse_locations);
 
         this.initializeContent();
 
@@ -66,14 +64,13 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void initializeContent()
     {
-        Intent intent = getIntent();
-        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void initializeViews()
     {
         CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutBrowseLocations);
-        View browseLocationsView = getLayoutInflater().inflate(R.layout.browse_locations_layout, coordinatorLayoutActivity, false);
+        View browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, coordinatorLayoutActivity, false);
         coordinatorLayoutActivity.addView(browseLocationsView);
 
         this.createToolbar(browseLocationsView);
@@ -462,7 +459,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         super.onSaveInstanceState(outState);
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.recentLocations));
-        outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentLocation.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.currentLocation.getUuid().toString());
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -472,7 +469,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         super.onRestoreInstanceState(savedInstanceState);
 
         this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
 

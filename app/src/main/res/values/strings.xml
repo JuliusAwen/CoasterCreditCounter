@@ -3,10 +3,14 @@
     <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
     <string name="title_locations">Locations</string>
-    <string name="title_sort_elements">Sort Entries</string>
-    <string name="title_add_or_insert_location">%1$s Location</string>
-    <string name="title_edit_location">Edit Location</string>
+    <string name="title_sort_elements">Sort</string>
+    <string name="title_pick_elements">Pick</string>
+    <string name="title_add_or_insert_location">%1$s</string>
+    <string name="title_edit_location">Edit</string>
     <string name="title_help">Help</string>
+
+    <!--subtitles-->
+    <string name="subtitle_pick_children_insert">children to add under new location</string>
 
 
     <!--dynamic texts-->
@@ -73,6 +77,7 @@
     <string name="error_text_undo_not_possible">UNDO not possible…</string>
     <string name="error_text_delete_failed">Deletion failed…</string>
     <string name="error_text_remove_failed">Removal failed…</string>
+    <string name="error_text_no_entry_selected">No entry selected</string>
 
 
     <!--help texts-->
@@ -101,11 +106,16 @@
     </string>
 
     <string name="help_text_sort_elements">
-        <b><big>Sort Entries</big></b>
+        <b><big>Sort</big></b>
         \n <li>Select entry and use up or down button to move selection. Accept your changes by pressing the floating action button.</li>
         \n\n <b>Options Menu</b>
         \n <li><i>sort a-z:</i> order list alphabetically.</li>
         \n <li><i>help:</i> show this.</li>
+    </string>
+
+    <string name="help_text_pick_elements">
+        <b><big>Pick</big></b>
+        \n <li>Select entries and confirm.</li>
     </string>
 
     <string name="help_text_add_or_insert_location">

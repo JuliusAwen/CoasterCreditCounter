@@ -18,7 +18,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
-import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
@@ -26,8 +26,7 @@ public class EditLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private Element currentElement;
-
+    private Location locationToEdit;
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
@@ -36,7 +35,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_location_activity);
+        setContentView(R.layout.activity_edit_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -44,13 +43,13 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     private void initializeContent()
     {
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.locationToEdit = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.edit_location_layout, frameLayoutActivity, false);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
@@ -63,7 +62,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_edit_location));
-        toolbar.setSubtitle(this.currentElement.getName());
+        toolbar.setSubtitle(this.locationToEdit.getName());
         setSupportActionBar(toolbar);
     }
 
@@ -79,7 +78,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     private void createEditText(View view)
     {
         this.editText = view.findViewById(R.id.editTextEditLocation);
-        this.editText.setText(this.currentElement.getName());
+        this.editText.setText(this.locationToEdit.getName());
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -120,7 +119,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     {
         super.onSaveInstanceState(outState);
 
-        outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.locationToEdit.getUuid().toString());
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -129,7 +128,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
+        this.locationToEdit = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.confirmDialogFragment.setVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
@@ -171,7 +170,7 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     private void handleOnEditorActionDone()
     {
-        currentElement.setName(this.editText.getText().toString());
+        locationToEdit.setName(this.editText.getText().toString());
         finish();
     }
 }

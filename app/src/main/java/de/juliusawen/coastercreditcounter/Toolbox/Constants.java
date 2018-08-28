@@ -4,12 +4,14 @@ public abstract class Constants
 {
     public static String LOG_TAG = "JA.CODING";
 
+    public static final String KEY_ELEMENT = "de.juliusawen.element";
     public static final String KEY_ELEMENTS = "de.juliusawen.elements";
-    public static final String KEY_CURRENT_ELEMENT = "de.juliusawen.current_element";
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.selected_element";
+    public static final String KEY_SELECTED_ELEMENTS = "de.juliusawen.selected_elements";
     public static final String KEY_HELP_VISIBLE = "de.juliusawen.help_visible";
 
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.uuid";
+    public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.uuids";
     public static final String EXTRA_SELECTION = "de.juliusawen.selection";
 
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.fragment_arg_1";
@@ -33,7 +35,6 @@ public abstract class Constants
     public static final int BUTTON_CLOSE = MODIFIER_BUTTON + ButtonFunctions.CLOSE.ordinal();
     public static final int BUTTON_CANCEL = MODIFIER_BUTTON + ButtonFunctions.CANCEL.ordinal();
     public static final int BUTTON_OK = MODIFIER_BUTTON + ButtonFunctions.OK.ordinal();
-    public static final int BUTTON_TOGGLE_EXPAND = MODIFIER_BUTTON + ButtonFunctions.TOGGLE_EXPAND.ordinal();
 
     public static final int SELECTION_ADD = MODIFIER_SELECTION + Selections.ADD.ordinal();
     public static final int SELECTION_INSERT = MODIFIER_SELECTION + Selections.INSERT.ordinal();
@@ -47,6 +48,7 @@ public abstract class Constants
 
     public static final int REQUEST_ADD_OR_INSERT_LOCATION = Requests.ADD_OR_INSERT_LOCATION.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Requests.SORT_ELEMENTS.ordinal();
+    public static final int REQUEST_PICK_ELEMENTS = Requests.PICK_ELEMENTS.ordinal();
 }
 
 enum ButtonFunctions
@@ -57,7 +59,6 @@ enum ButtonFunctions
     CLOSE,
     CANCEL,
     OK,
-    TOGGLE_EXPAND,
 }
 
 enum Selections
@@ -77,4 +78,5 @@ enum Requests
 {
     ADD_OR_INSERT_LOCATION,
     SORT_ELEMENTS,
+    PICK_ELEMENTS,
 }

@@ -14,13 +14,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
-import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
@@ -29,7 +29,8 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private Element currentElement;
+    private Location locationToAddToOrInsertInto;
+    private Location newLocation;
     private int selection;
 
     private EditText editText;
@@ -40,7 +41,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_or_insert_location_activity);
+        setContentView(R.layout.activity_add_or_insert_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -48,16 +49,14 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private void initializeContent()
     {
-        Intent intent = getIntent();
-
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(intent.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.selection = intent.getIntExtra(Constants.EXTRA_SELECTION, 0);
+        this.locationToAddToOrInsertInto = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.selection = getIntent().getIntExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD);
     }
 
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddOrInsertLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.add_or_insert_location_layout, frameLayoutActivity, false);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_insert_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
@@ -81,7 +80,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         }
 
         toolbar.setTitle(getString(R.string.title_add_or_insert_location, dynamicText));
-        toolbar.setSubtitle(this.currentElement.getName());
+        toolbar.setSubtitle(this.locationToAddToOrInsertInto.getName());
         setSupportActionBar(toolbar);
     }
 
@@ -136,7 +135,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         super.onSaveInstanceState(outState);
 
-        outState.putString(Constants.KEY_CURRENT_ELEMENT, this.currentElement.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.locationToAddToOrInsertInto.getUuid().toString());
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -145,7 +144,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_CURRENT_ELEMENT)));
+        this.locationToAddToOrInsertInto = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.confirmDialogFragment.setVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
@@ -190,29 +189,51 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private void handleOnEditorActionDone()
     {
-        Location newLocation = Location.createLocation(this.editText.getText().toString());
+        this.newLocation = Location.createLocation(this.editText.getText().toString());
+        Content.getInstance().addElement(this.newLocation);
 
-        if(newLocation != null)
+        if(this.newLocation != null)
         {
             if(this.selection == Constants.SELECTION_ADD)
             {
-                ((Location) this.currentElement).addChild(newLocation);
+                this.locationToAddToOrInsertInto.addChild(this.newLocation);
+                this.returnResult();
             }
             else if(this.selection == Constants.SELECTION_INSERT)
             {
-                ((Location) this.currentElement).insertNode(newLocation);
+                Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
+                startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
             }
-
-            Content.getInstance().addElement(newLocation);
-
-            Intent intent = new Intent();
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, newLocation.getUuid().toString());
-            setResult(RESULT_OK, intent);
-            finish();
         }
         else
         {
             Toaster.makeToast(this, getString(R.string.error_text_location_name_not_valid));
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == Constants.REQUEST_PICK_ELEMENTS)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+                List<Location> pickedChildren = Content.getInstance().getLocationsFromUuidStrings(uuidStrings);
+
+                this.locationToAddToOrInsertInto.insertNode(this.newLocation, pickedChildren);
+
+                this.returnResult();
+            }
+        }
+    }
+
+    private void returnResult()
+    {
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.newLocation.getUuid().toString());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
