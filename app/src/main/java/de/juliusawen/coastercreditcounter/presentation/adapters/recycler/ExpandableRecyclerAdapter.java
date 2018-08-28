@@ -51,6 +51,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public ExpandableRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.elements = elements;
+
         this.onClickListener = onClickListener;
     }
 

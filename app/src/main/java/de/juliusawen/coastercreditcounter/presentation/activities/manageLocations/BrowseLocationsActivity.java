@@ -391,12 +391,11 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
 
                 popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_add_location);
-                popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK, Menu.NONE, R.string.selection_add_park);
-
                 if(!currentLocation.getChildren().isEmpty())
                 {
                     popupMenu.getMenu().add(0, Constants.SELECTION_INSERT + Constants.CONTENT_TYPE_LOCATION, Menu.NONE, R.string.selection_insert_location_level);
                 }
+                popupMenu.getMenu().add(0, Constants.SELECTION_ADD + Constants.CONTENT_TYPE_PARK, Menu.NONE, R.string.selection_add_park);
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
