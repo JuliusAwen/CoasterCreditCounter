@@ -207,10 +207,6 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 {
                     ((Location) currentElement).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(elementsToSort)));
                 }
-//                else if(currentElement.getClass().equals(Park.class))
-//                {
-//                    ((Park) currentElement).setAttractions(new ArrayList<>(Content.getInstance().convertElementsToAttractions(elementsToSort)));
-//                }
 
                 Intent intent = new Intent();
                 if(!selectableRecyclerAdapter.getSelectedElements().isEmpty())

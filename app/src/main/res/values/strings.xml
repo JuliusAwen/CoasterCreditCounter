@@ -55,7 +55,7 @@
     <string name="description_ok">@string/button_text_close</string>
     <string name="description_cancel">@string/button_text_cancel</string>
     <string name="description_close">@string/button_text_close</string>
-    <string name="description_toggle_expand">drop down</string>
+    <string name="description_expand_toggle">drop down</string>
 
 
     <!--action texts -->

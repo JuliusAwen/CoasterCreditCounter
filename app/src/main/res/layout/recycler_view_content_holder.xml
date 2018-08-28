@@ -19,13 +19,13 @@
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/imageViewRecyclerViewContentHolder_ToggleExpand"
+            android:id="@+id/imageViewRecyclerViewContentHolder_ExpandToggle"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
             android:baselineAligned="false"
-            android:contentDescription="@string/description_toggle_expand"
+            android:contentDescription="@string/description_expand_toggle"
             android:scaleType="fitCenter"
             android:background="?android:attr/selectableItemBackground"
             android:visibility="gone"/>

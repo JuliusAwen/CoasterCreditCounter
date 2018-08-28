@@ -5,7 +5,7 @@ import android.view.View;
 
 public class RecyclerOnClickListener implements View.OnClickListener, View.OnLongClickListener
 {
-    public RecyclerView.ViewHolder viewHolder;
+    private RecyclerView.ViewHolder viewHolder;
 
     private OnClickListener onClickListener;
 
@@ -18,7 +18,7 @@ public class RecyclerOnClickListener implements View.OnClickListener, View.OnLon
     @Override
     public void onClick(View view)
     {
-        this.onClickListener.onClick(view, this.viewHolder.getLayoutPosition(), this.viewHolder);
+        this.onClickListener.onClick(view, this.viewHolder.getLayoutPosition());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class RecyclerOnClickListener implements View.OnClickListener, View.OnLon
 
     public interface OnClickListener
     {
-        void onClick(View view, int position, RecyclerView.ViewHolder viewHolder);
+        void onClick(View view, int position);
 
         void onLongClick(View view, int position);
     }

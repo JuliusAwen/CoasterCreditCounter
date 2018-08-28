@@ -197,32 +197,24 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         }
     }
 
-    private void updateRecyclerView()
-    {
-        this.expandableRecyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
-    }
-
     private void createContentRecyclerView(View view)
     {
         RecyclerOnClickListener.OnClickListener onClickListener = new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position, RecyclerView.ViewHolder viewHolder)
+            public void onClick(View view, int position)
             {
-                if(view.getId() == Constants.BUTTON_TOGGLE_EXPAND)
-                {
-                    expandableRecyclerAdapter.toggleExpanded((ExpandableRecyclerAdapter.ViewHolder)viewHolder);
-                }
-                else if(view.getTag().getClass() == Location.class)
+                if(view.getTag().getClass() == Location.class)
                 {
                     currentLocation = (Location) view.getTag();
                     updateRecyclerView();
                     createNavigationBar();
+
                 }
                 else if(view.getTag().getClass() == Park.class)
                 {
                     //Todo: implement show park activity
-                    Toaster.makeToast(getApplicationContext(), "not yet implemented");
+                    Toaster.makeToast(getApplicationContext(), "ShowPark not yet implemented");
                 }
             }
 
@@ -273,13 +265,11 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                         Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
                                     }
 
-                                    expandableRecyclerAdapter.updateList(new ArrayList<Element>(currentLocation.getChildren()));
-
                                     Snackbar snackbar = Snackbar.make(view, R.string.action_undo_delete_location_text, Snackbar.LENGTH_LONG);
                                     snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
                                     {
                                         @Override
-                                        public void onClick(View v)
+                                        public void onClick(View view)
                                         {
                                             if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
                                             {
@@ -344,7 +334,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                         {
                                             if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
                                             {
-                                                longClickedLocation.undoRemoveNode();
                                                 Content.getInstance().addElement(longClickedLocation);
                                                 updateRecyclerView();
                                             }
@@ -498,6 +487,11 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         this.updateRecyclerView();
         this.createNavigationBar();
+    }
+
+    private void updateRecyclerView()
+    {
+        this.expandableRecyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     @Override
