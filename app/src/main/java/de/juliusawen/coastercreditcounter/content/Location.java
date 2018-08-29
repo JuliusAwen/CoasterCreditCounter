@@ -131,16 +131,6 @@ public class Location extends Element
         this.parent = parent;
     }
 
-    public void insertNode(Location newLocation)
-    {
-        newLocation.addChildren(new ArrayList<>(this.getChildren()));
-
-        Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> children cleared.", this.toString()));
-        this.children.clear();
-
-        this.addChild(0, newLocation);
-    }
-
     public void insertNode(Location newLocation, List<Location> children)
     {
         newLocation.addChildren(new ArrayList<>(children));

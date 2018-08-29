@@ -28,6 +28,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         Location germany = Location.createLocation("Germany");
         Location netherlands = Location.createLocation("Netherlands");
 
+        Location limburg = Location.createLocation("Limburg");
+
         Location northRhineWestphalia = Location.createLocation("North Rhine-Westphalia");
         Location lowerSaxony = Location.createLocation("Lower Saxony");
         List<Location> states = Arrays.asList(
@@ -78,6 +80,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         germany.addChild(northRhineWestphalia);
         germany.addChild(lowerSaxony);
         germany.addChildren(states);
+
+        netherlands.addChild(limburg);
 
         europe.addChild(germany);
         europe.addChild(netherlands);

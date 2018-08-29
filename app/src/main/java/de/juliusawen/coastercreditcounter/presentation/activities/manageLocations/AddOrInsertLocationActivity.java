@@ -189,10 +189,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private void handleOnEditorActionDone()
     {
-        this.newLocation = Location.createLocation(this.editText.getText().toString());
-        Content.getInstance().addElement(this.newLocation);
-
-        if(this.newLocation != null)
+        if(this.handleLocationCreation())
         {
             if(this.selection == Constants.SELECTION_ADD)
             {
@@ -201,15 +198,37 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
             }
             else if(this.selection == Constants.SELECTION_INSERT)
             {
-                Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
-                startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
+                if(this.locationToAddToOrInsertInto.getChildren().size() > 1)
+                {
+                    Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
+                    startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
+                }
+                else
+                {
+                    this.locationToAddToOrInsertInto.insertNode(this.newLocation, this.locationToAddToOrInsertInto.getChildren());
+                    returnResult();
+                }
             }
         }
         else
         {
             Toaster.makeToast(this, getString(R.string.error_text_location_name_not_valid));
         }
+    }
+
+    private boolean handleLocationCreation()
+    {
+        boolean success = false;
+        this.newLocation = Location.createLocation(this.editText.getText().toString());
+
+        if(this.newLocation != null)
+        {
+            Content.getInstance().addElement(this.newLocation);
+            success = true;
+        }
+
+        return success;
     }
 
     @Override
