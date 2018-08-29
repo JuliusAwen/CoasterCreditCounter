@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -257,9 +258,9 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Location> pickedChildren = Content.getInstance().getLocationsFromUuidStrings(uuidStrings);
+                pickedChildren = Content.getInstance().orderLocationListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(locationToAddToOrInsertInto.getChildren()));
 
                 this.locationToAddToOrInsertInto.insertNode(this.newLocation, pickedChildren);
-
                 this.returnResult();
             }
         }

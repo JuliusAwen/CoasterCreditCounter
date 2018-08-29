@@ -181,4 +181,19 @@ public class Content
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: element[%s] removed.", element.toString()));
         this.elements.remove(element.getUuid());
     }
+
+    public List<Location> orderLocationListByCompareList(ArrayList<Location> listToOrder, ArrayList<Location> listToCompare)
+    {
+        ArrayList<Location> orderedList = new ArrayList<>();
+
+        for(Location location : listToCompare)
+        {
+            if(listToOrder.contains(location))
+            {
+                orderedList.add(listToOrder.get(listToOrder.indexOf(location)));
+            }
+        }
+
+        return orderedList;
+    }
 }
