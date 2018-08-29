@@ -63,21 +63,25 @@ public class Content
         }
     }
 
-    private void flattenContentTree(Location location)
+    private void flattenContentTree(Element element)
     {
+        this.addElement(element);
 
-        this.elements.put(location.getUuid(), location);
-
-        for (Location child : location.getChildren())
+        for (Element child : ((Location)element).getChildren())
         {
             this.flattenContentTree(child);
         }
 
-        if(location.getClass().equals(Park.class))
+        if(!((Location)element).getParks().isEmpty())
         {
-            for (Attraction attraction : ((Park) location).getAttractions())
+            for(Park park : ((Location)element).getParks())
             {
-                this.elements.put(attraction.getUuid(), attraction);
+                this.addElement(park);
+
+                for (Attraction attraction : park.getAttractions())
+                {
+                    this.addElement(attraction);
+                }
             }
         }
     }
