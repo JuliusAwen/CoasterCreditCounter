@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Location extends Element
 {
@@ -138,7 +138,7 @@ public class Location extends Element
         Log.v(Constants.LOG_TAG,  String.format("Location.insertNode:: node[%s] -> [%d]children removed.", this.toString(), children.size()));
         this.children.removeAll(children);
 
-        this.addChild(0, newLocation);
+        this.addChild(this.getChildren().size(), newLocation);
     }
 
     public boolean deleteNodeAndChildren()
@@ -150,8 +150,7 @@ public class Location extends Element
             this.deletedNodesIndex = this.parent.getChildren().indexOf(this);
             this.undoDeleteNodeAndChildrenPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].",
-                    this.getName(), this.parent.getName()));
+            Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> removed from parent[%S].", this.getName(), this.parent.getName()));
             this.parent.getChildren().remove(this);
 
             Log.v(Constants.LOG_TAG,  String.format("Location.deleteNodeAndChildren:: node[%s] -> children cleared.", this.toString()));

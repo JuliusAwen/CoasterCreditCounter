@@ -5,12 +5,12 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Coaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {

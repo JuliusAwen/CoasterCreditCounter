@@ -8,9 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.presentation.activities.manageLocations.BrowseLocationsActivity;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class MainActivity extends AppCompatActivity
 {

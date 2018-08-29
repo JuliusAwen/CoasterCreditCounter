@@ -14,8 +14,9 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
-import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class HelpOverlayFragment extends Fragment
 {
@@ -71,7 +72,7 @@ public class HelpOverlayFragment extends Fragment
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close));
         buttonBack.setImageDrawable(drawable);
-        buttonBack.setId(Constants.BUTTON_CLOSE);
+        buttonBack.setId(ButtonFunction.CLOSE.ordinal());
         buttonBack.setOnClickListener(new View.OnClickListener()
         {
             @Override

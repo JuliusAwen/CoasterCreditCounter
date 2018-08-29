@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.Toolbox;
+package de.juliusawen.coastercreditcounter.toolbox;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

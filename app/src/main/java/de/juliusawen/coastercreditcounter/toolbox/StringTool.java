@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.Toolbox;
+package de.juliusawen.coastercreditcounter.toolbox;
 
 import android.text.SpannableString;
 import android.text.style.StyleSpan;

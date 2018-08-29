@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.ViewHolder>
 {

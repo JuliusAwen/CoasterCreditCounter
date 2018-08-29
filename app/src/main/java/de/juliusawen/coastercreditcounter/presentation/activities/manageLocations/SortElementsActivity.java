@@ -24,14 +24,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
-import de.juliusawen.coastercreditcounter.Toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.Toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
+import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class SortElementsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
@@ -102,8 +104,8 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Constants.SELECTION_SORT_A_TO_Z, Menu.NONE, R.string.selection_sort_a_to_z);
-        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
+        menu.add(0, Selection.SORT_A_TO_Z.ordinal(), Menu.NONE, R.string.selection_sort_a_to_z);
+        menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -113,7 +115,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionDown);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward));
         buttonDown.setImageDrawable(drawable);
-        buttonDown.setId(Constants.BUTTON_MOVE_SELECTION_DOWN);
+        buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
         buttonDown.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -145,7 +147,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionUp);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward));
         buttonUp.setImageDrawable(drawable);
-        buttonUp.setId(Constants.BUTTON_MOVE_SELECTION_UP);
+        buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
         buttonUp.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -282,37 +284,42 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.SELECTION_SORT_A_TO_Z)
+        Selection selection = Selection.values()[item.getItemId()];
+        switch (selection)
         {
-            Collections.sort(this.elementsToSort, new Comparator<Element>()
-            {
-                @Override
-                public int compare(Element element1, Element element2)
+            case SORT_A_TO_Z:
+                Collections.sort(this.elementsToSort, new Comparator<Element>()
                 {
-                    return element1.getName().compareToIgnoreCase(element2.getName());
-                }
-            });
+                    @Override
+                    public int compare(Element element1, Element element2)
+                    {
+                        return element1.getName().compareToIgnoreCase(element2.getName());
+                    }
+                });
 
-            this.selectableRecyclerAdapter.updateList(this.elementsToSort);
-            return true;
-        }
-        else if(item.getItemId() == Constants.SELECTION_HELP)
-        {
-            this.helpOverlayFragment.setVisibility(true);
-            this.setFloatingActionButtonVisibility(false);
-            return true;
-        }
+                this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+                return true;
 
-        return super.onOptionsItemSelected(item);
+            case HELP:
+                this.helpOverlayFragment.setVisibility(true);
+                this.setFloatingActionButtonVisibility(false);
+                return true;
+
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE)
+        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        switch (buttonFunction)
         {
-            this.helpOverlayFragment.setVisibility(false);
-            this.setFloatingActionButtonVisibility(true);
+            case CLOSE:
+                this.helpOverlayFragment.setVisibility(false);
+                this.setFloatingActionButtonVisibility(true);
+                break;
         }
     }
 }

@@ -16,11 +16,13 @@ import android.widget.TextView;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class EditLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
@@ -70,7 +72,7 @@ public class EditLocationActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
+        menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -135,36 +137,45 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.SELECTION_HELP)
+        Selection selection = Selection.values()[item.getItemId()];
+        switch (selection)
         {
-            this.helpOverlayFragment.setVisibility(true);
-            this.confirmDialogFragment.setVisibility(false);
-            return true;
-        }
+            case HELP:
+                this.helpOverlayFragment.setVisibility(true);
+                this.confirmDialogFragment.setVisibility(false);
+                return true;
 
-        return super.onOptionsItemSelected(item);
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE)
+        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        switch (buttonFunction)
         {
-            this.helpOverlayFragment.setVisibility(false);
-            this.confirmDialogFragment.setVisibility(true);
+            case CLOSE:
+                this.helpOverlayFragment.setVisibility(false);
+                this.confirmDialogFragment.setVisibility(true);
+                break;
         }
     }
 
     @Override
     public void onConfirmDialogFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_OK)
+        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        switch (buttonFunction)
         {
-            handleOnEditorActionDone();
-        }
-        else if(view.getId() == Constants.BUTTON_CANCEL)
-        {
-            finish();
+            case OK:
+                handleOnEditorActionDone();
+                break;
+
+            case CANCEL:
+                finish();
+                break;
         }
     }
 

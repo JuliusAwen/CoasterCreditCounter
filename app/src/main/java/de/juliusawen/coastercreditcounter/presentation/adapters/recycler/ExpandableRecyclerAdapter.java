@@ -17,11 +17,11 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
-import de.juliusawen.coastercreditcounter.Toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRecyclerAdapter.ViewHolder>
 {
@@ -51,7 +51,6 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public ExpandableRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.elements = elements;
-
         this.onClickListener = onClickListener;
     }
 

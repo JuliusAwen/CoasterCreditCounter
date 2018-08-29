@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Park extends Location
 {

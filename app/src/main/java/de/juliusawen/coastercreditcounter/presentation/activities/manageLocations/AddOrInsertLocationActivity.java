@@ -18,12 +18,14 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
-import de.juliusawen.coastercreditcounter.Toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
+import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class AddOrInsertLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
@@ -31,7 +33,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 {
     private Location locationToAddToOrInsertInto;
     private Location newLocation;
-    private int selection;
+    private Selection selection;
 
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
@@ -50,7 +52,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void initializeContent()
     {
         this.locationToAddToOrInsertInto = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.selection = getIntent().getIntExtra(Constants.EXTRA_SELECTION, Constants.SELECTION_ADD);
+        this.selection = Selection.values()[getIntent().getIntExtra(Constants.EXTRA_SELECTION, Selection.ADD_LOCATION.ordinal())];
     }
 
     private void initializeViews()
@@ -70,11 +72,11 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
         Toolbar toolbar = view.findViewById(R.id.toolbar);
 
         String dynamicText = "";
-        if(this.selection == Constants.SELECTION_ADD)
+        if(this.selection == Selection.ADD_LOCATION)
         {
             dynamicText = getString(R.string.dynamic_text_add);
         }
-        else if(this.selection == Constants.SELECTION_INSERT)
+        else if(this.selection == Selection.INSERT_LOCATION)
         {
             dynamicText = getString(R.string.dynamic_text_insert);
         }
@@ -88,7 +90,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
+        menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -104,11 +106,15 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE)
+
+                switch (actionId)
                 {
-                    handleOnEditorActionDone();
-                    handled = true;
+                    case EditorInfo.IME_ACTION_DONE:
+                        handleOnEditorActionDone();
+                        handled = true;
+                        break;
                 }
+
                 return handled;
             }
         });
@@ -152,38 +158,47 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.SELECTION_HELP)
+        Selection selection = Selection.values()[item.getItemId()];
+        switch (selection)
         {
-            this.helpOverlayFragment.setVisibility(true);
-            this.confirmDialogFragment.setVisibility(false);
-            return true;
-        }
+            case HELP:
+                this.helpOverlayFragment.setVisibility(true);
+                this.confirmDialogFragment.setVisibility(false);
+                return true;
 
-        return super.onOptionsItemSelected(item);
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_CLOSE)
+        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        switch (buttonFunction)
         {
-            this.helpOverlayFragment.setVisibility(false);
-            this.confirmDialogFragment.setVisibility(true);
+            case CLOSE:
+                this.helpOverlayFragment.setVisibility(false);
+                this.confirmDialogFragment.setVisibility(true);
+                break;
         }
     }
 
     @Override
     public void onConfirmDialogFragmentInteraction(View view)
     {
-        if(view.getId() == Constants.BUTTON_OK)
+        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        switch (buttonFunction)
         {
-            handleOnEditorActionDone();
-        }
-        else if(view.getId() == Constants.BUTTON_CANCEL)
-        {
-            Intent intent = new Intent();
-            setResult(RESULT_CANCELED, intent);
-            finish();
+            case OK:
+                handleOnEditorActionDone();
+                break;
+
+            case CANCEL:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+                break;
         }
     }
 
@@ -191,24 +206,26 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         if(this.handleLocationCreation())
         {
-            if(this.selection == Constants.SELECTION_ADD)
+            switch (this.selection)
             {
-                this.locationToAddToOrInsertInto.addChild(this.newLocation);
-                this.returnResult();
-            }
-            else if(this.selection == Constants.SELECTION_INSERT)
-            {
-                if(this.locationToAddToOrInsertInto.getChildren().size() > 1)
-                {
-                    Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
-                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
-                    startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
-                }
-                else
-                {
-                    this.locationToAddToOrInsertInto.insertNode(this.newLocation, this.locationToAddToOrInsertInto.getChildren());
-                    returnResult();
-                }
+                case ADD_LOCATION:
+                    this.locationToAddToOrInsertInto.addChild(this.newLocation);
+                    this.returnResult();
+                    break;
+
+                case INSERT_LOCATION:
+                    if (this.locationToAddToOrInsertInto.getChildren().size() > 1)
+                    {
+                        Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
+                        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
+                        startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
+                    }
+                    else
+                    {
+                        this.locationToAddToOrInsertInto.insertNode(this.newLocation, this.locationToAddToOrInsertInto.getChildren());
+                        returnResult();
+                    }
+                    break;
             }
         }
         else

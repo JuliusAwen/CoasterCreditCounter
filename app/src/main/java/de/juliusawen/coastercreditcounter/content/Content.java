@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
 import de.juliusawen.coastercreditcounter.content.database.DatabaseMock;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Content
 {

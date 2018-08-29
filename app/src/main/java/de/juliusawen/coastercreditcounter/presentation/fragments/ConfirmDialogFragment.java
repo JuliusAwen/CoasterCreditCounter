@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.Toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class ConfirmDialogFragment extends Fragment
 {
@@ -43,7 +43,7 @@ public class ConfirmDialogFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         Button buttonCancel = view.findViewById(R.id.buttonConfirmDialogFragment_cancel);
-        buttonCancel.setId(Constants.BUTTON_CANCEL);
+        buttonCancel.setId(ButtonFunction.CLOSE.ordinal());
         buttonCancel.setText(R.string.button_text_cancel);
         buttonCancel.setOnClickListener(new View.OnClickListener()
         {
@@ -55,7 +55,7 @@ public class ConfirmDialogFragment extends Fragment
         });
 
         Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);
-        buttonOk.setId(Constants.BUTTON_OK);
+        buttonOk.setId(ButtonFunction.OK.ordinal());
         buttonOk.setText(R.string.button_text_ok);
         buttonOk.setOnClickListener(new View.OnClickListener()
         {
