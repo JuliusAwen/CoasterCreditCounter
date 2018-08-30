@@ -32,12 +32,15 @@ public class EditLocationActivity extends AppCompatActivity implements
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
+
+        this.savedInstanceState = savedInstanceState;
 
         this.initializeContent();
         this.initializeViews();
@@ -102,18 +105,32 @@ public class EditLocationActivity extends AppCompatActivity implements
 
     private void createConfirmDialogFragment(int frameLayoutId)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
-        fragmentTransaction.add(frameLayoutId, this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-        fragmentTransaction.commit();
+        if(this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
+            fragmentTransaction.add(frameLayoutId, this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+        }
     }
 
     private void createHelpOverlayFragment(int frameLayoutId)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
-        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        fragmentTransaction.commit();
+        if(this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        }
     }
 
     @Override

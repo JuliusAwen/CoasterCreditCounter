@@ -39,18 +39,19 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 {
     private Element element;
     private String subtitle;
-
     private List<Element> elementsToSort;
-
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private RecyclerView recyclerView;
     private HelpOverlayFragment helpOverlayFragment;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort_elements);
+
+        this.savedInstanceState = savedInstanceState;
 
         this.initializeContent();
         this.initializeViews();
@@ -121,9 +122,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(!selectableRecyclerAdapter.getSelectedElements().isEmpty())
+                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElements().get(0));
+                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
 
                     if(position < elementsToSort.size() - 1)
                     {
@@ -153,9 +154,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
             @Override
             public void onClick(View view)
             {
-                if(!selectableRecyclerAdapter.getSelectedElements().isEmpty())
+                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElements().get(0));
+                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
 
                     if(position > 0)
                     {
@@ -206,9 +207,9 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
                 }
 
                 Intent intent = new Intent();
-                if(!selectableRecyclerAdapter.getSelectedElements().isEmpty())
+                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, selectableRecyclerAdapter.getSelectedElements().get(0).getUuid().toString());
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
                     setResult(RESULT_OK, intent);
                 }
                 else
@@ -228,10 +229,17 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createHelpOverlayFragment(int frameLayoutId)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), false);
-        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        fragmentTransaction.commit();
+        if(this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        }
     }
 
     @Override
@@ -242,13 +250,13 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToSort));
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
 
-        if(this.selectableRecyclerAdapter.getSelectedElements().isEmpty())
+        if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, "");
         }
         else
         {
-            outState.putString(Constants.KEY_SELECTED_ELEMENT, selectableRecyclerAdapter.getSelectedElements().get(0).getUuid().toString());
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
         }
 
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
@@ -266,7 +274,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
         if(selectedElementString != null && selectedElementString.isEmpty())
         {
-            this.selectableRecyclerAdapter.getSelectedElements().clear();
+            this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
         }
         else
         {

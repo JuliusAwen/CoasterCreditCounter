@@ -52,6 +52,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,8 +60,9 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_locations);
 
-        this.initializeContent();
+        this.savedInstanceState = savedInstanceState;
 
+        this.initializeContent();
         this.initializeViews();
     }
 
@@ -438,10 +440,17 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createHelpOverlayFragment(int frameLayoutId)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
-        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        fragmentTransaction.commit();
+        if(this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        }
     }
 
     @Override

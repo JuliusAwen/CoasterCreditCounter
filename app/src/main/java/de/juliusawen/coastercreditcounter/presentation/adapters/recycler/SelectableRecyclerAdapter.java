@@ -70,7 +70,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         notifyDataSetChanged();
     }
 
-    public List<Element> getSelectedElements()
+    public List<Element> getSelectedElementsInOrderOfSelection()
     {
         return new ArrayList<>(this.selectedViewsByElement.keySet());
     }
@@ -79,11 +79,6 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     {
         this.selectedViewsByElement.clear();
         this.selectElements(this.elementsToSelectFrom);
-    }
-
-    public void unselectAllElements()
-    {
-        this.selectedViewsByElement.clear();
     }
 
     public void selectElements(List<Element> elements)

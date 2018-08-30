@@ -43,12 +43,15 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
     private RadioButton radioButtonSelectAll;
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_elements);
+
+        this.savedInstanceState = savedInstanceState;
 
         this.initializeContent();
         this.initializeViews();
@@ -170,9 +173,9 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
             public void onClick(View view)
             {
                 Intent intent = new Intent();
-                if(!selectableRecyclerAdapter.getSelectedElements().isEmpty())
+                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElements()));
+                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -192,10 +195,17 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createHelpOverlayFragment(int frameLayoutId)
     {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_pick_elements), false);
-        fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        fragmentTransaction.commit();
+        if(this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        }
     }
 
     @Override
@@ -206,13 +216,13 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToPickFrom));
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
 
-        if(this.selectableRecyclerAdapter.getSelectedElements().isEmpty())
+        if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, new ArrayList<String>());
         }
         else
         {
-            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElements()));
+            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
@@ -230,7 +240,7 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
 
         if(selectedElementStrings != null && selectedElementStrings.isEmpty())
         {
-            this.selectableRecyclerAdapter.getSelectedElements().clear();
+            this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
         }
         else
         {
