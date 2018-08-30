@@ -77,7 +77,7 @@ public class AddLocationActivity extends AppCompatActivity implements
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_add_location));
-        toolbar.setSubtitle(this.parentLocation.getName());
+        toolbar.setSubtitle(getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()));
         setSupportActionBar(toolbar);
     }
 

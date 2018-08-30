@@ -11,7 +11,8 @@
 
 
     <!--subtitles-->
-    <string name="subtitle_pick_children_insert">children to add under new location</string>
+    <string name="subtitle_pick_add_children">children to add under new location</string>
+    <string name="subtitle_add_location_add_to">to %1$s</string>
 
 
     <!--options menu entries-->

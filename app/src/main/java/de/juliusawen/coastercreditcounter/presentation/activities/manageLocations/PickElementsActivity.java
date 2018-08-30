@@ -84,7 +84,7 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_pick_elements));
-        toolbar.setSubtitle(getString(R.string.subtitle_pick_children_insert));
+        toolbar.setSubtitle(getString(R.string.subtitle_pick_add_children));
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
