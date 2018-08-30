@@ -7,6 +7,29 @@
     <include
         layout="@layout/toolbar"/>
 
+    <LinearLayout
+        android:id="@+id/linearLayoutPickElements_SelectAll"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/contentHolder"
+            android:id="@+id/textViewPickElements_SelectAll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:gravity="end|center_vertical"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonPickElements_SelectAll"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_gravity="end|center_vertical" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewPickElements"
         android:scrollbars="vertical"

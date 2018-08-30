@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
@@ -36,6 +40,7 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
 {
     private Element element;
     private List<Element> elementsToPickFrom;
+    private RadioButton radioButtonSelectAll;
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
 
@@ -66,6 +71,7 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
         frameLayoutActivity.addView(pickElementsView);
 
         this.createToolbar(pickElementsView);
+        this.createSelectAllBar(pickElementsView);
         this.createContentRecyclerView(pickElementsView);
         this.createFloatingActionButton();
         this.createHelpOverlayFragment(frameLayoutActivity.getId());
@@ -100,9 +106,49 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
         return super.onPrepareOptionsMenu(menu);
     }
 
+    private void createSelectAllBar(View view)
+    {
+        LinearLayout linearLayoutSelectAll = view.findViewById(R.id.linearLayoutPickElements_SelectAll);
+        linearLayoutSelectAll.setVisibility(View.VISIBLE);
+
+        TextView textViewSelectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
+        textViewSelectAll.setText(R.string.hint_select_all);
+
+        this.radioButtonSelectAll = linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
+        this.radioButtonSelectAll.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(!view.isSelected())
+                {
+                    selectableRecyclerAdapter.selectAllElements();
+                    selectableRecyclerAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
     private void createContentRecyclerView(View view)
     {
-        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true);
+        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view, int position)
+            {
+                if(view.isSelected() && selectableRecyclerAdapter.isAllSelected())
+                {
+                    radioButtonSelectAll.setChecked(true);
+                }
+                else
+                {
+                    radioButtonSelectAll.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {}
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewPickElements);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -226,4 +272,5 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
                 break;
         }
     }
+
 }

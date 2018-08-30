@@ -13,7 +13,7 @@
     <string name="subtitle_pick_children_insert">children to add under new location</string>
 
 
-    <!--dynamic texts-->
+    <!--dynamic text components -->
     <string name="dynamic_text_add">Add</string>
     <string name="dynamic_text_insert">Insert</string>
 
@@ -59,7 +59,7 @@
     <string name="description_ok">@string/button_text_close</string>
     <string name="description_cancel">@string/button_text_cancel</string>
     <string name="description_close">@string/button_text_close</string>
-    <string name="description_expand_toggle">drop down</string>
+    <string name="description_expand_toggle">expand/collapse toggle</string>
 
 
     <!--action texts -->
@@ -68,8 +68,9 @@
     <string name="action_undo_remove_location_text">Location removed</string>
 
 
-    <!--edit text texts-->
-    <string name="edit_text_hint_enter_name">enter location name</string>
+    <!--hint texts-->
+    <string name="hint_enter_name">enter location name</string>
+    <string name="hint_select_all">select all</string>
 
 
     <!--error messages-->
@@ -84,30 +85,30 @@
     <string name="help_text_browse_locations">
         <b><big>Locations</big></b>
         \n\n <b>Toolbar</b>
-        \n <li>Click the back arrow to return to the previous activity.</li>
+        \n <li>Click back arrow to return to previous activity.</li>
         \n\n <b>Options Menu</b>
-        \n <li><i>rename root:</i> edit the root locations name (only available on root level).</li>
-        \n <li><i>sort:</i> change the lists order (only available if list contains multiple entries).</li>
+        \n <li><i>rename root:</i> edit root locations name (available only on root level).</li>
+        \n <li><i>sort:</i> change list entries order (only available if list contains multiple entries).</li>
         \n <li><i>help:</i> show this.</li>
         \n\n <b>Navigation Bar</b>
-        \n <li>Click an entry to move back to a recent location.</li>
+        \n <li>Click entry to move back to a recent location.</li>
         \n\n <b>Click Location</b>
-        \n <li>Move into the selected location.</li>
+        \n <li>Move into selected location.</li>
         \n\n <b>Hold Location</b>
-        \n <li><i>edit:</i> change the selected locations name.</li>
-        \n <li><i>delete:</i> delete the selected location and all its children.</li>
-        \n <li><i>remove:</i> remove the selected location and attach all its children to the current location
+        \n <li><i>edit:</i> change selected locations name.</li>
+        \n <li><i>delete:</i> delete selected location and all its children.</li>
+        \n <li><i>remove:</i> remove selected location and attach all its children to current location
         (only available if selected location has any children).</li>
         \n\n <b>Floating Action Button</b>
-        \n <li><i>add location:</i> add a new location on current location level.</li>
-        \n <li><i>add park:</i> add a new park on current location level.</li>
-        \n <li><i>insert location:</i> add a new location on current location level and attach current location's children to new location
+        \n <li><i>add location:</i> add new location on current location level.</li>
+        \n <li><i>add park:</i> add new park on current location level.</li>
+        \n <li><i>insert location:</i> add new location on current location level and attach current location's children to new location
         (only available if current location has any children).</li>
     </string>
 
     <string name="help_text_sort_elements">
         <b><big>Sort</big></b>
-        \n <li>Select entry and use up or down button to move selection. Accept your changes by pressing the floating action button.</li>
+        \n <li>Select entry and use up or down button to move selection. Accept changes with floating action button.</li>
         \n\n <b>Options Menu</b>
         \n <li><i>sort a-z:</i> order list alphabetically.</li>
         \n <li><i>help:</i> show this.</li>
@@ -120,12 +121,12 @@
 
     <string name="help_text_add_or_insert_location">
         <b><big>Add</big></b>
-        \n <li>Name the new location and confirm.</li>
+        \n <li>Name new location and confirm.</li>
     </string>
 
     <string name="help_text_edit_location">
         <b><big>Edit</big></b>
-        \n <li>Rename the location and confirm.</li>
+        \n <li>Rename location and confirm.</li>
     </string>
 
 </resources>

@@ -99,7 +99,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void createEditText(View view)
     {
         this.editText = view.findViewById(R.id.editTextAddOrInsertLocation);
-        this.editText.setHint(R.string.edit_text_hint_enter_name);
+        this.editText.setHint(R.string.hint_enter_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {

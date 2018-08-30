@@ -43,7 +43,7 @@ public class ConfirmDialogFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         Button buttonCancel = view.findViewById(R.id.buttonConfirmDialogFragment_cancel);
-        buttonCancel.setId(ButtonFunction.CLOSE.ordinal());
+        buttonCancel.setId(ButtonFunction.CANCEL.ordinal());
         buttonCancel.setText(R.string.button_text_cancel);
         buttonCancel.setOnClickListener(new View.OnClickListener()
         {

@@ -198,7 +198,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createContentRecyclerView(View view)
     {
-        RecyclerOnClickListener.OnClickListener onClickListener = new RecyclerOnClickListener.OnClickListener()
+        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -374,7 +374,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             }
         };
 
-        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), onClickListener);
+        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), recyclerOnClickListener);
         this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -20,10 +20,10 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.ViewHolder>
 {
-    private List<Element> elements;
-
+    private List<Element> elementsToSelectFrom;
     private boolean selectMultiple;
     private Map<Element, View> selectedViewsByElement = new HashMap<>();
+    private RecyclerOnClickListener.OnClickListener onClickListener = null;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -39,21 +39,51 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
     }
 
-    public SelectableRecyclerAdapter(List<Element> elements, boolean selectMultiple)
+    public boolean isAllSelected()
     {
-        this.elements = elements;
+        if(this.elementsToSelectFrom != null)
+        {
+            List<Element> compareList = new ArrayList<>(this.elementsToSelectFrom);
+            compareList.removeAll(selectedViewsByElement.keySet());
+            return compareList.isEmpty();
+        }
+
+        return false;
+    }
+
+    public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple)
+    {
+        this.elementsToSelectFrom = elementsToSelectFrom;
         this.selectMultiple = selectMultiple;
+    }
+
+    public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple, RecyclerOnClickListener.OnClickListener onClickListener)
+    {
+        this.elementsToSelectFrom = elementsToSelectFrom;
+        this.selectMultiple = selectMultiple;
+        this.onClickListener = onClickListener;
     }
 
     public void updateList(List<Element> elements)
     {
-        this.elements = elements;
+        this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
     }
 
     public List<Element> getSelectedElements()
     {
         return new ArrayList<>(this.selectedViewsByElement.keySet());
+    }
+
+    public void selectAllElements()
+    {
+        this.selectedViewsByElement.clear();
+        this.selectElements(this.elementsToSelectFrom);
+    }
+
+    public void unselectAllElements()
+    {
+        this.selectedViewsByElement.clear();
     }
 
     public void selectElements(List<Element> elements)
@@ -80,7 +110,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
-        Element element = elements.get(position);
+        Element element = elementsToSelectFrom.get(position);
         if(this.selectedViewsByElement.containsKey(element))
         {
             viewHolder.itemView.setSelected(true);
@@ -92,37 +122,45 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         viewHolder.itemView.setTag(element);
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener()
+        if(!viewHolder.itemView.hasOnClickListeners())
         {
-            @Override
-            public void onClick(View view)
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener()
             {
-                Element element = (Element) view.getTag();
+                @Override
+                public void onClick(View view)
+                {
+                    Element element = (Element) view.getTag();
 
-                if(view.isSelected())
-                {
-                    selectedViewsByElement.remove(element);
-                }
-                else
-                {
-                    if(selectedViewsByElement.get(element) != null)
+                    if(view.isSelected())
                     {
-                        selectedViewsByElement.get(element).setSelected(false);
+                        selectedViewsByElement.remove(element);
+                    }
+                    else
+                    {
+                        if(selectedViewsByElement.get(element) != null)
+                        {
+                            selectedViewsByElement.get(element).setSelected(false);
+                        }
+
+                        if(!selectMultiple)
+                        {
+                            selectedViewsByElement.clear();
+                        }
+
+                        selectedViewsByElement.put(element, view);
                     }
 
-                    if(!selectMultiple)
+                    view.setSelected(!view.isSelected());
+
+                    if(onClickListener != null)
                     {
-                        selectedViewsByElement.clear();
+                        onClickListener.onClick(view, viewHolder.getAdapterPosition());
                     }
 
-                    selectedViewsByElement.put(element, view);
+                    notifyDataSetChanged();
                 }
-
-                view.setSelected(!view.isSelected());
-
-                notifyDataSetChanged();
-            }
-        });
+            });
+        }
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
     }
@@ -130,6 +168,6 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public int getItemCount()
     {
-        return elements.size();
+        return elementsToSelectFrom.size();
     }
 }
