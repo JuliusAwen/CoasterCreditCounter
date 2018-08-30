@@ -10,8 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,23 +30,23 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
-public class AddOrInsertLocationActivity extends AppCompatActivity implements
+public class AddLocationActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private Location locationToAddToOrInsertInto;
+    private Location parentLocation;
     private Location newLocation;
-    private Selection selection;
 
     private EditText editText;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
+    private CheckBox checkBoxAddChildren;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_or_insert_location);
+        setContentView(R.layout.activity_add_location);
 
         this.initializeContent();
         this.initializeViews();
@@ -52,14 +54,13 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private void initializeContent()
     {
-        this.locationToAddToOrInsertInto = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.selection = Selection.values()[getIntent().getIntExtra(Constants.EXTRA_SELECTION, Selection.ADD_LOCATION.ordinal())];
+        this.parentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void initializeViews()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddOrInsertLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_or_insert_location, frameLayoutActivity, false);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddLocation);
+        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
         this.createToolbar(addLocationView);
@@ -71,19 +72,8 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     private void createToolbar(View view)
     {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-
-        String dynamicText = "";
-        if(this.selection == Selection.ADD_LOCATION)
-        {
-            dynamicText = getString(R.string.dynamic_text_add);
-        }
-        else if(this.selection == Selection.INSERT_LOCATION)
-        {
-            dynamicText = getString(R.string.dynamic_text_insert);
-        }
-
-        toolbar.setTitle(getString(R.string.title_add_or_insert_location, dynamicText));
-        toolbar.setSubtitle(this.locationToAddToOrInsertInto.getName());
+        toolbar.setTitle(getString(R.string.title_add_location));
+        toolbar.setSubtitle(this.parentLocation.getName());
         setSupportActionBar(toolbar);
     }
 
@@ -98,7 +88,18 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
 
     private void createEditText(View view)
     {
-        this.editText = view.findViewById(R.id.editTextAddOrInsertLocation);
+        if(!this.parentLocation.getChildren().isEmpty())
+        {
+            LinearLayout linearLayoutAddChildren = view.findViewById(R.id.linearLayoutAddLocation_AddChildren);
+            linearLayoutAddChildren.setVisibility(View.VISIBLE);
+
+            TextView textViewAddChildren = linearLayoutAddChildren.findViewById(R.id.textViewAddLocation_AddChildren);
+            textViewAddChildren.setText(R.string.hint_add_children);
+
+            this.checkBoxAddChildren = linearLayoutAddChildren.findViewById(R.id.checkBoxAddLocation_AddChildren);
+        }
+
+        this.editText = view.findViewById(R.id.editTextAddLocation);
         this.editText.setHint(R.string.hint_enter_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -142,7 +143,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         super.onSaveInstanceState(outState);
 
-        outState.putString(Constants.KEY_ELEMENT, this.locationToAddToOrInsertInto.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.parentLocation.getUuid().toString());
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -151,7 +152,7 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.locationToAddToOrInsertInto = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.confirmDialogFragment.setVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
     }
@@ -207,26 +208,24 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
     {
         if(this.handleLocationCreation())
         {
-            switch (this.selection)
+            if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
-                case ADD_LOCATION:
-                    this.locationToAddToOrInsertInto.addChild(this.newLocation);
-                    this.returnResult();
-                    break;
-
-                case INSERT_LOCATION:
-                    if (this.locationToAddToOrInsertInto.getChildren().size() > 1)
-                    {
-                        Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
-                        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.locationToAddToOrInsertInto.getUuid().toString());
-                        startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
-                    }
-                    else
-                    {
-                        this.locationToAddToOrInsertInto.insertNode(this.newLocation, this.locationToAddToOrInsertInto.getChildren());
-                        returnResult();
-                    }
-                    break;
+                if (this.parentLocation.getChildren().size() > 1)
+                {
+                    Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
+                    startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
+                }
+                else
+                {
+                    this.parentLocation.insertNode(this.newLocation, this.parentLocation.getChildren());
+                    returnResult();
+                }
+            }
+            else
+            {
+                this.parentLocation.addChild(this.newLocation);
+                this.returnResult();
             }
         }
         else
@@ -258,9 +257,9 @@ public class AddOrInsertLocationActivity extends AppCompatActivity implements
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Location> pickedChildren = Content.getInstance().getLocationsFromUuidStrings(uuidStrings);
-                pickedChildren = Content.getInstance().orderLocationListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(locationToAddToOrInsertInto.getChildren()));
+                pickedChildren = Content.getInstance().orderLocationListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
-                this.locationToAddToOrInsertInto.insertNode(this.newLocation, pickedChildren);
+                this.parentLocation.insertNode(this.newLocation, pickedChildren);
                 this.returnResult();
             }
         }

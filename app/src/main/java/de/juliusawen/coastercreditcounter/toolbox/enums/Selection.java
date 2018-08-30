@@ -4,7 +4,6 @@ public enum Selection
 {
     ADD_LOCATION,
     EDIT_LOCATION,
-    INSERT_LOCATION,
     DELETE_LOCATION,
     REMOVE_LOCATION,
 

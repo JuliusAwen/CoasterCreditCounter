@@ -5,17 +5,13 @@
     <string name="title_locations">Locations</string>
     <string name="title_sort_elements">Sort</string>
     <string name="title_pick_elements">Pick</string>
-    <string name="title_add_or_insert_location">%1$s</string>
+    <string name="title_add_location">Add</string>
     <string name="title_edit_location">Edit</string>
     <string name="title_help">Help</string>
 
+
     <!--subtitles-->
     <string name="subtitle_pick_children_insert">children to add under new location</string>
-
-
-    <!--dynamic text components -->
-    <string name="dynamic_text_add">Add</string>
-    <string name="dynamic_text_insert">Insert</string>
 
 
     <!--options menu entries-->
@@ -28,7 +24,6 @@
     <!--popup menu entries-->
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
-    <string name="selection_insert_location">insert location</string>
 
     <string name="selection_edit_location">edit</string>
     <string name="selection_delete_location">delete</string>
@@ -71,6 +66,7 @@
     <!--hint texts-->
     <string name="hint_enter_name">enter location name</string>
     <string name="hint_select_all">select all</string>
+    <string name="hint_add_children">add children</string>
 
 
     <!--error messages-->

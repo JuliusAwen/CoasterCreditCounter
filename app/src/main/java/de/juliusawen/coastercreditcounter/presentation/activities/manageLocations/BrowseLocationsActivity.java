@@ -396,10 +396,6 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
 
                 popupMenu.getMenu().add(0, Selection.ADD_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
-                if(!currentLocation.getChildren().isEmpty())
-                {
-                    popupMenu.getMenu().add(0, Selection.INSERT_LOCATION.ordinal(), Menu.NONE, R.string.selection_insert_location);
-                }
                 popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
@@ -413,22 +409,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                         switch (selection)
                         {
                             case ADD_LOCATION:
-                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
+                                intent = new Intent(getApplicationContext(), AddLocationActivity.class);
                                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentLocation.getUuid().toString());
-                                intent.putExtra(Constants.EXTRA_SELECTION, Selection.ADD_LOCATION.ordinal());
-                                startActivityForResult(intent, Constants.REQUEST_ADD_OR_INSERT_LOCATION);
+                                startActivityForResult(intent, Constants.REQUEST_ADD_LOCATION);
                                 return true;
 
                             case ADD_PARK:
                                 //Todo: implement add park activity
                                 Toaster.makeToast(getApplicationContext(), "not yet implemented");
-                                return true;
-
-                            case INSERT_LOCATION:
-                                intent = new Intent(getApplicationContext(), AddOrInsertLocationActivity.class);
-                                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentLocation.getUuid().toString());
-                                intent.putExtra(Constants.EXTRA_SELECTION, Selection.INSERT_LOCATION.ordinal());
-                                startActivity(intent);
                                 return true;
 
                                 default:
@@ -544,7 +532,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(requestCode == Constants.REQUEST_ADD_OR_INSERT_LOCATION || requestCode == Constants.REQUEST_SORT_ELEMENTS)
+        if(requestCode == Constants.REQUEST_ADD_LOCATION || requestCode == Constants.REQUEST_SORT_ELEMENTS)
         {
             if(resultCode == RESULT_OK)
             {

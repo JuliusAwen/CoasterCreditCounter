@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ExpandableListView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/contentHolder"
+    style="@style/standard_text_view"
     android:id="@+id/expandableListViewLayout"
     android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
     android:divider="@android:color/darker_gray"

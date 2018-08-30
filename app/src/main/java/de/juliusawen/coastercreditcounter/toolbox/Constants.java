@@ -22,14 +22,14 @@ public abstract class Constants
 
     public static final int VIEW_TYPE_CHILD = 10000;
 
-    public static final int REQUEST_ADD_OR_INSERT_LOCATION = Request.ADD_OR_INSERT_LOCATION.ordinal();
+    public static final int REQUEST_ADD_LOCATION = Request.ADD_LOCATION.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Request.SORT_ELEMENTS.ordinal();
     public static final int REQUEST_PICK_ELEMENTS = Request.PICK_ELEMENTS.ordinal();
 }
 
 enum Request
 {
-    ADD_OR_INSERT_LOCATION,
+    ADD_LOCATION,
     SORT_ELEMENTS,
     PICK_ELEMENTS,
 }
