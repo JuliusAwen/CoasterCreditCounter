@@ -281,6 +281,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                                 {
                                                     Content.getInstance().addLocationAndChildren(longClickedLocation);
                                                     updateRecyclerView();
+
+                                                    smoothScrollToLocation(longClickedLocation);
                                                 }
                                                 else
                                                 {
@@ -334,12 +336,14 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                         snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
                                         {
                                             @Override
-                                            public void onClick(View v)
+                                            public void onClick(View view)
                                             {
                                                 if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
                                                 {
                                                     Content.getInstance().addElement(longClickedLocation);
                                                     updateRecyclerView();
+
+                                                    smoothScrollToLocation(longClickedLocation);
                                                 }
                                                 else
                                                 {
@@ -548,18 +552,22 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Location receivedLocation = Content.getInstance().getLocationFromUuidString(uuidString);
 
-                int position = this.currentLocation.getChildren().indexOf(receivedLocation);
-
-                int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
-                if(this.currentLocation.getChildren().size() > position + scrollMargin)
-                {
-                    recyclerView.smoothScrollToPosition(position + scrollMargin);
-                }
-                else
-                {
-                    recyclerView.smoothScrollToPosition(position);
-                }
+                this.smoothScrollToLocation(receivedLocation);
             }
+        }
+    }
+
+    private void smoothScrollToLocation(Location location)
+    {
+        int position = this.currentLocation.getChildren().indexOf(location);
+        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
+        if(this.currentLocation.getChildren().size() > position + scrollMargin)
+        {
+            recyclerView.smoothScrollToPosition(position + scrollMargin);
+        }
+        else
+        {
+            recyclerView.smoothScrollToPosition(position);
         }
     }
 }
