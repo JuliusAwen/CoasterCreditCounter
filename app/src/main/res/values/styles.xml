@@ -15,7 +15,7 @@
     <style name="standard_text_view" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center|center_vertical</item>
         <item name="android:background">@drawable/background_selectable_toggle</item>
         <item name="android:textSize">20sp</item>
     </style>

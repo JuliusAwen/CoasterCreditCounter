@@ -9,14 +9,17 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutPickElements_SelectAll"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:orientation="horizontal"
+        android:elevation="6dp"
         android:visibility="gone" >
 
         <TextView
             style="@style/standard_text_view"
             android:id="@+id/textViewPickElements_SelectAll"
+            android:textColor="@color/white"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:paddingStart="8dp"
@@ -26,6 +29,7 @@
 
         <RadioButton
             android:id="@+id/radioButtonPickElements_SelectAll"
+            android:buttonTint="@color/white"
             android:layout_width="wrap_content"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"

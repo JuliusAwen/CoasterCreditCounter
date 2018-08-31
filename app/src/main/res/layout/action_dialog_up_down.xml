@@ -3,7 +3,7 @@
     android:id="@+id/linearLayoutActionDialogUpDown"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="?android:attr/colorPrimaryDark"
+    android:background="?android:attr/colorPrimary"
     android:elevation="6dp"
     android:orientation="horizontal">
 
