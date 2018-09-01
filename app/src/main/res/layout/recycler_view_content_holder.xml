@@ -13,21 +13,15 @@
             android:id="@+id/textViewRecyclerViewContentHolder"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|start"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
+            android:gravity="center_vertical|start"
             android:layout_weight="1"/>
 
         <ImageView
+            style="@style/standard_image_holder"
             android:id="@+id/imageViewRecyclerViewContentHolder_ExpandToggle"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:adjustViewBounds="true"
-            android:baselineAligned="false"
             android:contentDescription="@string/description_expand_toggle"
-            android:scaleType="fitCenter"
-            android:background="?android:attr/selectableItemBackground"
             android:visibility="gone"/>
 
     </LinearLayout>

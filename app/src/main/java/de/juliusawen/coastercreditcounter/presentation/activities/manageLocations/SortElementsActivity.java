@@ -191,7 +191,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void createFloatingActionButton()
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonSortElements);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
 
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check));
         floatingActionButton.setImageDrawable(drawable);
@@ -223,7 +223,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
 
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonSortElements);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -232,7 +232,7 @@ public class SortElementsActivity extends AppCompatActivity implements HelpOverl
         if(this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_sort_elements), false);
             fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }

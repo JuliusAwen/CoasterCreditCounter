@@ -65,7 +65,8 @@
 
 
     <!--hint texts-->
-    <string name="hint_enter_name">enter location name</string>
+    <string name="hint_enter_location_name">enter location name</string>
+    <string name="hint_edit_location_name">edit location name</string>
     <string name="hint_select_all">select all</string>
     <string name="hint_add_children">add children</string>
 

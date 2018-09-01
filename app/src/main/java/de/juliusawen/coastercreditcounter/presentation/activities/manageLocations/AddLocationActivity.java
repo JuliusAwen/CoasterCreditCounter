@@ -104,7 +104,7 @@ public class AddLocationActivity extends AppCompatActivity implements
         }
 
         this.editText = view.findViewById(R.id.editTextAddLocation);
-        this.editText.setHint(R.string.hint_enter_name);
+        this.editText.setHint(R.string.hint_enter_location_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {

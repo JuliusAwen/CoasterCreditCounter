@@ -136,7 +136,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         for (Location location : this.recentLocations)
         {
-            View buttonView = getLayoutInflater().inflate(R.layout.button_transparent, linearLayoutNavigationBar, false);
+            View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
 
             Button button = buttonView.findViewById(R.id.button_transparent);
 
@@ -389,7 +389,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void createFloatingActionButton()
     {
-        final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
+        final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
 
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add));
         floatingActionButton.setImageDrawable(drawable);
@@ -438,7 +438,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonBrowseLocations);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -447,7 +447,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         if(this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
             fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }

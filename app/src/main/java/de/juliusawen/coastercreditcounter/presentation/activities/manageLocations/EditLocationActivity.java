@@ -123,7 +123,7 @@ public class EditLocationActivity extends AppCompatActivity implements
         if(this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_add_location), false);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_edit_location), false);
             fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }

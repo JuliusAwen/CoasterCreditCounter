@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,30 +8,23 @@
     <include
         layout="@layout/toolbar"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="?android:attr/colorPrimary"
-        android:elevation="6dp">
-
         <HorizontalScrollView
+            style="@style/standard_bar_layout"
             android:id="@+id/horizontalScrollViewBrowseLocations_NavigationBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:fadeScrollbars="false"
-            tools:ignore="UselessParent">
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:background="?android:attr/colorPrimary"
+            android:scrollbars="none"
+            android:elevation="6dp">
 
             <LinearLayout
                 android:id="@+id/linearLayoutBrowseLocations_NavigationBar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"/>
 
         </HorizontalScrollView>
-
-    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewBrowseLocations"
