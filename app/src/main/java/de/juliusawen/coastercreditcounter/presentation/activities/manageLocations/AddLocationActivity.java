@@ -98,13 +98,12 @@ public class AddLocationActivity extends AppCompatActivity implements
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
 
             TextView textViewAddChildren = linearLayoutAddChildren.findViewById(R.id.textViewAddLocation_AddChildren);
-            textViewAddChildren.setText(R.string.hint_add_children);
+            textViewAddChildren.setText(R.string.add_children);
 
             this.checkBoxAddChildren = linearLayoutAddChildren.findViewById(R.id.checkBoxAddLocation_AddChildren);
         }
 
         this.editText = view.findViewById(R.id.editTextAddLocation);
-        this.editText.setHint(R.string.hint_enter_location_name);
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {

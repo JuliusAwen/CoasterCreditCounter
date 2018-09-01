@@ -255,7 +255,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
                                 builder.setTitle(R.string.alert_dialog_delete_location_title);
                                 builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedLocation.getName()));
-                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {
@@ -294,7 +294,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     }
                                 });
 
-                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
+                                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {
@@ -314,7 +314,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                 builder.setTitle(R.string.alert_dialog_remove_location_title);
                                 builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(), longClickedLocation.getParent().getName()));
 
-                                builder.setPositiveButton(R.string.button_text_accept, new DialogInterface.OnClickListener()
+                                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {
@@ -355,7 +355,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                                     }
                                 });
 
-                                builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener()
+                                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {

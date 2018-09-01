@@ -40,7 +40,8 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
 {
     private Element element;
     private List<Element> elementsToPickFrom;
-    private RadioButton radioButtonSelectAll;
+    private RadioButton radioButtonSelectOrDeselectAll;
+    private TextView textViewSelectOrDeselectAll;
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private HelpOverlayFragment helpOverlayFragment;
     private Bundle savedInstanceState;
@@ -74,7 +75,7 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
         frameLayoutActivity.addView(pickElementsView);
 
         this.createToolbar(pickElementsView);
-        this.createSelectAllBar(pickElementsView);
+        this.createSelectOrDeselectAllBar(pickElementsView);
         this.createContentRecyclerView(pickElementsView);
         this.createFloatingActionButton();
         this.createHelpOverlayFragment(frameLayoutActivity.getId());
@@ -109,27 +110,44 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void createSelectAllBar(View view)
+    private void createSelectOrDeselectAllBar(View view)
     {
         LinearLayout linearLayoutSelectAll = view.findViewById(R.id.linearLayoutPickElements_SelectAll);
         linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
-        TextView textViewSelectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
-        textViewSelectAll.setText(R.string.hint_select_all);
+        this.textViewSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
+        this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
 
-        this.radioButtonSelectAll = linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
-        this.radioButtonSelectAll.setOnClickListener(new View.OnClickListener()
+        this.radioButtonSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
+        this.radioButtonSelectOrDeselectAll.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if(!view.isSelected())
+                if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
                     selectableRecyclerAdapter.selectAllElements();
-                    selectableRecyclerAdapter.notifyDataSetChanged();
+                    changeToDeselectAll();
+                }
+                else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+                {
+                    selectableRecyclerAdapter.deselectAllElements();
+                    changeToSelectAll();
                 }
             }
         });
+    }
+
+    private void changeToSelectAll()
+    {
+        textViewSelectOrDeselectAll.setText(R.string.text_select_all);
+        radioButtonSelectOrDeselectAll.setChecked(false);
+    }
+
+    private void changeToDeselectAll()
+    {
+        textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
+        radioButtonSelectOrDeselectAll.setChecked(false);
     }
 
     private void createContentRecyclerView(View view)
@@ -141,11 +159,11 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
             {
                 if(view.isSelected() && selectableRecyclerAdapter.isAllSelected())
                 {
-                    radioButtonSelectAll.setChecked(true);
+                    changeToDeselectAll();
                 }
                 else
                 {
-                    radioButtonSelectAll.setChecked(false);
+                    changeToSelectAll();
                 }
             }
 

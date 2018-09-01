@@ -31,6 +31,23 @@
     <string name="selection_remove_location_level">remove</string>
 
 
+    <!--general texts-->
+    <string name="text_minus">-</string>
+    <string name="text_plus">+</string>
+
+    <string name="text_up">&#708;</string>
+    <string name="text_down">&#709;</string>
+
+    <string name="text_ok">OK</string>
+    <string name="text_accept">Accept</string>
+    <string name="text_close">Close</string>
+    <string name="text_cancel">Cancel</string>
+
+    <string name="text_select_all">select all</string>
+    <string name="text_deselect_all">deselect all</string>
+    <string name="add_children">add children</string>
+
+
     <!--dialog texts-->
     <string name="alert_dialog_delete_location_title">DELETE</string>
     <string name="alert_dialog_delete_location_message">Do you really want to delete %1$s and all of its children permanently?</string>
@@ -38,23 +55,10 @@
     <string name="alert_dialog_remove_location_level_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
 
 
-    <!--button texts-->
-    <string name="button_text_minus">-</string>
-    <string name="button_text_plus">+</string>
-
-    <string name="button_text_up">&#708;</string>
-    <string name="button_text_down">&#709;</string>
-
-    <string name="button_text_ok">OK</string>
-    <string name="button_text_accept">Accept</string>
-    <string name="button_text_close">Close</string>
-    <string name="button_text_cancel">Cancel</string>
-
-
     <!--descriptions-->
-    <string name="description_ok">@string/button_text_close</string>
-    <string name="description_cancel">@string/button_text_cancel</string>
-    <string name="description_close">@string/button_text_close</string>
+    <string name="description_ok">@string/text_close</string>
+    <string name="description_cancel">@string/text_cancel</string>
+    <string name="description_close">@string/text_close</string>
     <string name="description_expand_toggle">expand/collapse toggle</string>
 
 
@@ -67,8 +71,6 @@
     <!--hint texts-->
     <string name="hint_enter_location_name">enter location name</string>
     <string name="hint_edit_location_name">edit location name</string>
-    <string name="hint_select_all">select all</string>
-    <string name="hint_add_children">add children</string>
 
 
     <!--error messages-->

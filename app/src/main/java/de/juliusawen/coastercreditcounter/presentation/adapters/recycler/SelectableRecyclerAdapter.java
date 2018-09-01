@@ -79,6 +79,13 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     {
         this.selectedViewsByElement.clear();
         this.selectElements(this.elementsToSelectFrom);
+        notifyDataSetChanged();
+    }
+
+    public void deselectAllElements()
+    {
+        this.selectedViewsByElement.clear();
+        notifyDataSetChanged();
     }
 
     public void selectElements(List<Element> elements)

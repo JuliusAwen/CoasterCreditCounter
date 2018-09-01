@@ -22,7 +22,7 @@
             style="@style/standard_button"
             android:id="@+id/buttonConfirmDialogFragment_cancel"
             android:layout_weight="1"
-            android:contentDescription="@string/button_text_cancel" />
+            android:contentDescription="@string/text_cancel" />
 
         <View xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="1dp"
@@ -33,7 +33,7 @@
             style="@style/standard_button"
             android:id="@+id/buttonConfirmDialogFragment_ok"
             android:layout_weight="1"
-            android:contentDescription="@string/button_text_ok" />
+            android:contentDescription="@string/text_ok" />
 
     </LinearLayout>
 
