@@ -12,7 +12,7 @@ public abstract class Constants
 
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.uuids";
-    public static final String EXTRA_SELECTION = "de.juliusawen.selection";
+    public static final String EXTRA_RADIO_BUTTON_STATE = "de.juliusawen.radio_button_state";
 
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.fragment_arg_1";
     public static final String FRAGMENT_ARG_2 = "de.juliusawen.fragment_arg_2";

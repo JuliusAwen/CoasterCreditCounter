@@ -231,8 +231,8 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
     {
         super.onSaveInstanceState(outState);
 
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToPickFrom));
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToPickFrom));
 
         if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -243,6 +243,8 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
             outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
+        outState.putString(Constants.EXTRA_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
+
         outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
     }
 
@@ -251,11 +253,12 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.elementsToPickFrom = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.element = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
+        this.elementsToPickFrom = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.selectableRecyclerAdapter.updateList(this.elementsToPickFrom);
 
+        List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
         if(selectedElementStrings != null && selectedElementStrings.isEmpty())
         {
             this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
@@ -266,10 +269,10 @@ public class PickElementsActivity extends AppCompatActivity implements HelpOverl
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 
+        this.textViewSelectOrDeselectAll.setText(savedInstanceState.getString(Constants.EXTRA_RADIO_BUTTON_STATE));
+
         this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
         this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
-
-        this.selectableRecyclerAdapter.updateList(this.elementsToPickFrom);
     }
 
     @Override
