@@ -115,7 +115,7 @@
     <string name="help_text_pick_elements">
         <b><big>Pick</big></b>
         \n <li>Select entries and confirm.</li>
-        \n <li><i>select all:</i> select all entries.</li>
+        \n <li><i>select/deselct all:</i> select/deselect all entries.</li>
     </string>
 
     <string name="help_text_add_location">
