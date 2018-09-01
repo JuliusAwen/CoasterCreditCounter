@@ -1,5 +1,6 @@
-package de.juliusawen.coastercreditcounter.presentation.activities.manageLocations;
+package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -40,25 +41,29 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
-import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.enums.Mode;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
-public class BrowseLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public class ShowLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
+    private Mode mode;
     private Location currentLocation = Content.getInstance().getLocationRoot();
     private List<Location> recentLocations = new ArrayList<>();
-    private Location longClickedLocation;
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
+    private Location longClickedLocation;
+    private int coordinatorLayoutId;
     private HelpOverlayFragment helpOverlayFragment;
     private Bundle savedInstanceState;
+    private Toolbar toolbar;
+    private MenuItem menuItemSwitchMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_browse_locations);
+        setContentView(R.layout.activity_show_locations);
 
         this.savedInstanceState = savedInstanceState;
 
@@ -68,26 +73,28 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
     private void initializeContent()
     {
+        this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
         this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void initializeViews()
     {
-        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutBrowseLocations);
-        View browseLocationsView = getLayoutInflater().inflate(R.layout.layout_browse_locations, coordinatorLayoutActivity, false);
-        coordinatorLayoutActivity.addView(browseLocationsView);
+        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
+        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
+        coordinatorLayoutActivity.addView(showLocationsView);
+        this.coordinatorLayoutId = coordinatorLayoutActivity.getId();
 
-        this.createToolbar(browseLocationsView);
+        this.createToolbar(showLocationsView);
         this.createNavigationBar();
-        this.createContentRecyclerView(browseLocationsView);
+        this.createContentRecyclerView(showLocationsView);
         this.createFloatingActionButton();
-        this.createHelpOverlayFragment(coordinatorLayoutActivity.getId());
+        this.createHelpOverlayFragment();
     }
 
     private void createToolbar(View view)
     {
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_locations));
+        this.toolbar = view.findViewById(R.id.toolbar);
+        this.setToolbarTitle();
 
         setSupportActionBar(toolbar);
 
@@ -104,21 +111,61 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
         });
     }
 
+    private void setToolbarTitle()
+    {
+        switch(this.mode)
+        {
+            case MANAGE:
+                this.toolbar.setTitle(getString(R.string.title_manage_locations));
+                break;
+
+            case BROWSE:
+                this.toolbar.setTitle(getString(R.string.title_browse_locations));
+                break;
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        if(this.currentLocation.getParent() == null)
+
+        menu.add(0, Selection.SWITCH_MODE.ordinal(), Menu.NONE, R.string.selection_switch_mode);
+        this.menuItemSwitchMode = menu.findItem(Selection.SWITCH_MODE.ordinal());
+        this.menuItemSwitchMode.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        this.setMenuItemSwitchModeIcon();
+
+        if(this.mode.equals(Mode.MANAGE))
         {
-            menu.add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_rename_root);
+            if(this.currentLocation.getParent() == null)
+            {
+                menu.add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_rename_root);
+            }
+            if(this.currentLocation.getChildren().size() > 1)
+            {
+                menu.add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_entries);
+            }
         }
-        if(this.currentLocation.getChildren().size() > 1)
-        {
-            menu.add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_entries);
-        }
+
         menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setMenuItemSwitchModeIcon()
+    {
+        switch(this.mode)
+        {
+            case MANAGE: ;
+                this.menuItemSwitchMode.setIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_cancel)));
+                break;
+
+            case BROWSE:
+                this.menuItemSwitchMode.setIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_create)));
+                break;
+
+        }
     }
 
     private void createNavigationBar()
@@ -130,7 +177,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             this.recentLocations.add(this.currentLocation);
         }
 
-        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutBrowseLocations_NavigationBar);
+        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
@@ -186,7 +233,7 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
             linearLayoutNavigationBar.addView(buttonView);
 
-            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewBrowseLocations_NavigationBar);
+            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
             horizontalScrollView.post(new Runnable()
             {
                 @Override
@@ -222,166 +269,174 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
             @Override
             public void onLongClick(final View view, int position)
             {
-                longClickedLocation = (Location) view.getTag();
-
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-
-                popupMenu.getMenu().add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_location);
-                popupMenu.getMenu().add(0, Selection.DELETE_LOCATION.ordinal(), Menu.NONE, R.string.selection_delete_location);
-
-                if(!(longClickedLocation).getChildren().isEmpty())
+                if(mode.equals(Mode.MANAGE))
                 {
-                    popupMenu.getMenu().add(0, Selection.REMOVE_LOCATION.ordinal(), Menu.NONE, R.string.selection_remove_location_level);
-                }
+                    longClickedLocation = (Location) view.getTag();
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item)
+                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+
+                    popupMenu.getMenu().add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_location);
+                    popupMenu.getMenu().add(0, Selection.DELETE_LOCATION.ordinal(), Menu.NONE, R.string.selection_delete_location);
+
+                    if(!(longClickedLocation).getChildren().isEmpty())
                     {
-                        Selection selection = Selection.values()[item.getItemId()];
+                        popupMenu.getMenu().add(0, Selection.REMOVE_LOCATION.ordinal(), Menu.NONE, R.string.selection_remove_location_level);
+                    }
 
-                        AlertDialog.Builder builder;
-                        AlertDialog alertDialog;
-
-                        switch (selection)
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
                         {
-                            case EDIT_LOCATION:
-                                startEditLocationActivity(longClickedLocation);
-                                return true;
+                            Selection selection = Selection.values()[item.getItemId()];
 
-                            case DELETE_LOCATION:
-                                builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
+                            AlertDialog.Builder builder;
+                            AlertDialog alertDialog;
 
-                                builder.setTitle(R.string.alert_dialog_delete_location_title);
-                                builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedLocation.getName()));
-                                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
+                            switch (selection)
+                            {
+                                case EDIT_LOCATION:
+                                    startEditLocationActivity(longClickedLocation);
+                                    return true;
+
+                                case DELETE_LOCATION:
+                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                                    builder.setTitle(R.string.alert_dialog_delete_location_title);
+                                    builder.setMessage(getString(R.string.alert_dialog_delete_location_message, longClickedLocation.getName()));
+                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
                                     {
-                                        dialog.dismiss();
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            dialog.dismiss();
 
-                                        if(longClickedLocation.deleteNodeAndChildren())
-                                        {
-                                            Content.getInstance().deleteLocationAndChildren(longClickedLocation);
-                                            updateRecyclerView();
-                                        }
-                                        else
-                                        {
-                                            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
-                                        }
-
-                                        Snackbar snackbar = Snackbar.make(view, R.string.action_undo_delete_location_text, Snackbar.LENGTH_LONG);
-                                        snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                        {
-                                            @Override
-                                            public void onClick(View view)
+                                            if(longClickedLocation.deleteNodeAndChildren())
                                             {
-                                                if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
-                                                {
-                                                    Content.getInstance().addLocationAndChildren(longClickedLocation);
-                                                    updateRecyclerView();
-
-                                                    smoothScrollToLocation(longClickedLocation);
-                                                }
-                                                else
-                                                {
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                }
+                                                Content.getInstance().deleteLocationAndChildren(longClickedLocation);
+                                                updateRecyclerView();
                                             }
-                                        });
-                                        snackbar.show();
-                                    }
-                                });
-
-                                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                alertDialog = builder.create();
-                                alertDialog.setIcon(R.drawable.ic_baseline_warning);
-
-                                alertDialog.show();
-                                return true;
-
-                            case REMOVE_LOCATION:
-                                builder = new AlertDialog.Builder(BrowseLocationsActivity.this);
-
-                                builder.setTitle(R.string.alert_dialog_remove_location_title);
-                                builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(), longClickedLocation.getParent().getName()));
-
-                                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        dialog.dismiss();
-
-                                        if(longClickedLocation.removeNode())
-                                        {
-                                            Content.getInstance().deleteElement(longClickedLocation);
-                                            currentLocation = longClickedLocation.getParent();
-                                            updateRecyclerView();
-
-                                        }
-                                        else
-                                        {
-                                            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
-                                        }
-
-                                        Snackbar snackbar = Snackbar.make(view, R.string.action_undo_remove_location_text, Snackbar.LENGTH_LONG);
-                                        snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                        {
-                                            @Override
-                                            public void onClick(View view)
+                                            else
                                             {
-                                                if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
-                                                {
-                                                    Content.getInstance().addElement(longClickedLocation);
-                                                    updateRecyclerView();
-
-                                                    smoothScrollToLocation(longClickedLocation);
-                                                }
-                                                else
-                                                {
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                }
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
                                             }
-                                        });
-                                        snackbar.show();
-                                    }
-                                });
 
-                                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
+                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_location_text, longClickedLocation.getName()), Snackbar.LENGTH_LONG);
+                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View view)
+                                                {
+                                                    if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
+                                                    {
+                                                        Content.getInstance().addLocationAndChildren(longClickedLocation);
+                                                        updateRecyclerView();
+
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_location_restored_text, longClickedLocation.getName()));
+
+                                                        smoothScrollToLocation(longClickedLocation);
+                                                    }
+                                                    else
+                                                    {
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                                    }
+                                                }
+                                            });
+                                            snackbar.show();
+                                        }
+                                    });
+
+                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
                                     {
-                                        dialog.dismiss();
-                                    }
-                                });
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
 
-                                alertDialog = builder.create();
-                                alertDialog.setIcon(R.drawable.ic_baseline_warning);
+                                    alertDialog = builder.create();
+                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
 
-                                alertDialog.show();
-                                return true;
+                                    alertDialog.show();
+                                    return true;
+
+                                case REMOVE_LOCATION:
+                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                                    builder.setTitle(R.string.alert_dialog_remove_location_title);
+                                    builder.setMessage(getString(R.string.alert_dialog_remove_location_level_message, longClickedLocation.getName(), longClickedLocation.getParent().getName()));
+
+                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            dialog.dismiss();
+
+                                            if(longClickedLocation.removeNode())
+                                            {
+                                                Content.getInstance().deleteElement(longClickedLocation);
+                                                currentLocation = longClickedLocation.getParent();
+                                                updateRecyclerView();
+
+                                            }
+                                            else
+                                            {
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+                                            }
+
+                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_location_text, longClickedLocation.getName()), Snackbar.LENGTH_LONG);
+                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View view)
+                                                {
+                                                    if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
+                                                    {
+                                                        Content.getInstance().addElement(longClickedLocation);
+                                                        updateRecyclerView();
+
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_location_restored_text, longClickedLocation.getName()));
+
+                                                        smoothScrollToLocation(longClickedLocation);
+                                                    }
+                                                    else
+                                                    {
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                                    }
+                                                }
+                                            });
+                                            snackbar.show();
+                                        }
+                                    });
+
+                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    alertDialog = builder.create();
+                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
+
+                                    alertDialog.show();
+                                    return true;
 
                                 default:
                                     return false;
+                            }
+
                         }
+                    });
 
-                    }
-                });
+                    popupMenu.show();
+                }
 
-                popupMenu.show();
             }
         };
 
         this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), recyclerOnClickListener);
-        this.recyclerView = view.findViewById(R.id.recyclerViewBrowseLocations);
+        this.recyclerView = view.findViewById(R.id.recyclerViewShowLocations);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(expandableRecyclerAdapter);
@@ -434,21 +489,44 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
                 popupMenu.show();
             }
         });
+
+        if(this.mode.equals(Mode.BROWSE))
+        {
+            setFloatingActionButtonVisibility(false);
+        }
     }
 
     private void setFloatingActionButtonVisibility(boolean isVisible)
     {
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+
+        switch(this.mode)
+        {
+            case BROWSE:
+                floatingActionButton.setVisibility(View.GONE);
+                break;
+
+            case MANAGE:
+                floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
 
-    private void createHelpOverlayFragment(int frameLayoutId)
+    private void createHelpOverlayFragment()
     {
         if(this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
-            fragmentTransaction.add(frameLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+            if(this.mode.equals(Mode.MANAGE))
+            {
+                this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_manage_locations), false);
+            }
+            else
+            {
+                this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
+            }
+
+            fragmentTransaction.add(this.coordinatorLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }
         else
@@ -502,6 +580,27 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
 
         switch(selection)
         {
+            case SWITCH_MODE:
+                switch(this.mode)
+                {
+                    case MANAGE:
+                        this.mode = Mode.BROWSE;
+                        setFloatingActionButtonVisibility(false);
+                        this.setToolbarTitle();
+                        this.setMenuItemSwitchModeIcon();
+                        this.createHelpOverlayFragment();
+                        break;
+
+                    case BROWSE:
+                        this.mode = Mode.MANAGE;
+                        setFloatingActionButtonVisibility(true);
+                        this.setToolbarTitle();
+                        this.setMenuItemSwitchModeIcon();
+                        this.createHelpOverlayFragment();
+                        break;
+                }
+                return true;
+
             case EDIT_LOCATION:
                 this.startEditLocationActivity(this.currentLocation);
                 return true;
@@ -560,12 +659,8 @@ public class BrowseLocationsActivity extends AppCompatActivity implements HelpOv
     private void smoothScrollToLocation(Location location)
     {
         int position = this.currentLocation.getChildren().indexOf(location);
-        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
-        if(this.currentLocation.getChildren().size() > position + scrollMargin)
-        {
-            recyclerView.smoothScrollToPosition(position + scrollMargin);
-        }
-        else
+
+        if(position != -1)
         {
             recyclerView.smoothScrollToPosition(position);
         }

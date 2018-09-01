@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
-import de.juliusawen.coastercreditcounter.presentation.activities.manageLocations.BrowseLocationsActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.Locations.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class MainActivity extends AppCompatActivity
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.title_app_name));
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent(this, BrowseLocationsActivity.class);
+        Intent intent = new Intent(this, ShowLocationsActivity.class);
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getLocationRoot().getUuid().toString());
         startActivity(intent);
     }
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, 1, Menu.NONE, R.string.title_locations);
+        menu.add(0, 1, Menu.NONE, R.string.title_manage_locations);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     {
         if(item.getItemId() == 1)
         {
-            Intent intent = new Intent(this, BrowseLocationsActivity.class);
+            Intent intent = new Intent(this, ShowLocationsActivity.class);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getLocationRoot().getUuid().toString());
             startActivity(intent);
 

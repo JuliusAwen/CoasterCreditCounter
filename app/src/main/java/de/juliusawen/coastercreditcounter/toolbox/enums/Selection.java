@@ -13,4 +13,6 @@ public enum Selection
     SORT_ELEMENTS,
     SORT_A_TO_Z,
     HELP,
+
+    SWITCH_MODE,
 }

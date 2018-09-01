@@ -16,15 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.activities.manageLocations.BrowseLocationsActivity" />
-        <activity android:name=".presentation.activities.manageLocations.SortElementsActivity" />
+        <activity android:name=".presentation.activities.Locations.ShowLocationsActivity" />
+        <activity android:name=".presentation.activities.Locations.SortElementsActivity" />
         <activity
-            android:name=".presentation.activities.manageLocations.AddLocationActivity"
+            android:name=".presentation.activities.Locations.AddLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.activities.manageLocations.EditLocationActivity"
+            android:name=".presentation.activities.Locations.EditLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.activities.manageLocations.PickElementsActivity"></activity>
+        <activity android:name=".presentation.activities.Locations.PickElementsActivity"></activity>
     </application>
 
 </manifest>

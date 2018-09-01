@@ -2,11 +2,11 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayoutBrowseLocations"
+    android:id="@+id/coordinatorLayoutShowLocations"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.activities.manageLocations.BrowseLocationsActivity">
+    tools:context=".presentation.activities.Locations.ShowLocationsActivity">
 
     <include
         layout="@layout/floating_action_button"/>

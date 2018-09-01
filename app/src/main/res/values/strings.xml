@@ -2,7 +2,8 @@
 
     <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
-    <string name="title_locations">Locations</string>
+    <string name="title_manage_locations">Manage Locations</string>
+    <string name="title_browse_locations">Browse Locations</string>
     <string name="title_sort_elements">Sort</string>
     <string name="title_pick_elements">Pick</string>
     <string name="title_add_location">Add</string>
@@ -20,6 +21,7 @@
     <string name="selection_sort_entries">sort entries</string>
     <string name="selection_help">help</string>
     <string name="selection_sort_a_to_z">sort a-z</string>
+    <string name="selection_switch_mode">switch mode</string>
 
 
     <!--popup menu entries-->
@@ -64,8 +66,9 @@
 
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
-    <string name="action_undo_delete_location_text">Location deleted</string>
-    <string name="action_undo_remove_location_text">Location removed</string>
+    <string name="action_undo_delete_location_text">%1$s deleted</string>
+    <string name="action_undo_remove_location_text">%1$s removed</string>
+    <string name="action_location_restored_text">%1$s restored</string>
 
 
     <!--hint texts-->
@@ -82,11 +85,12 @@
 
 
     <!--help texts-->
-    <string name="help_text_browse_locations">
-        <b><big>Locations</big></b>
+    <string name="help_text_manage_locations">
+        <b><big>Manage Locations</big></b>
         \n\n <b>Toolbar</b>
         \n <li>Click back arrow to return to previous activity.</li>
         \n\n <b>Options Menu</b>
+        \n <li><i>close icon:</i> change to browsing mode.</li>
         \n <li><i>rename root:</i> edit root locations name (available only on root level).</li>
         \n <li><i>sort:</i> change list entries order (only available if list contains multiple entries).</li>
         \n <li><i>help:</i> show this.</li>
@@ -104,6 +108,20 @@
         \n <li><i>add park:</i> add new park on current location level.</li>
     </string>
 
+    <string name="help_text_browse_locations">
+        <b><big>Browse Locations</big></b>
+        \n\n <b>Toolbar</b>
+        \n <li>Click back arrow to return to previous activity.</li>
+        \n\n <b>Options Menu</b>
+        \n <li><i>pencil icon
+        :</i> change to management mode.</li>
+        \n <li><i>help:</i> show this.</li>
+        \n\n <b>Navigation Bar</b>
+        \n <li>Click entry to move back to a recent location.</li>
+        \n\n <b>Click Location</b>
+        \n <li>Move into selected location.</li>
+    </string>
+
     <string name="help_text_sort_elements">
         <b><big>Sort</big></b>
         \n <li>Select entry and use up or down button to move selection. Accept changes with floating action button.</li>
@@ -115,7 +133,7 @@
     <string name="help_text_pick_elements">
         <b><big>Pick</big></b>
         \n <li>Select entries and confirm.</li>
-        \n <li><i>select/deselct all:</i> select/deselect all entries.</li>
+        \n <li><i>select/deselect all:</i> select/deselect all entries.</li>
     </string>
 
     <string name="help_text_add_location">
