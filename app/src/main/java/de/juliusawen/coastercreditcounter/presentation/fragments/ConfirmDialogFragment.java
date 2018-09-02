@@ -104,6 +104,6 @@ public class ConfirmDialogFragment extends Fragment
 
     public void setVisibility(Boolean isVisible)
     {
-        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

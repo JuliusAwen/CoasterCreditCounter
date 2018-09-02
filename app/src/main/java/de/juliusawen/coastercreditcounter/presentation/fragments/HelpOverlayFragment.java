@@ -66,8 +66,12 @@ public class HelpOverlayFragment extends Fragment
         TextView textViewHelpTitle = view.findViewById(R.id.textViewHelp_Title);
         textViewHelpTitle.setText(R.string.title_help);
 
-        TextView textViewHelpMessage = view.findViewById(R.id.textViewHelp_Message);
-        textViewHelpMessage.setText(this.helpText);
+        if(savedInstanceState != null)
+        {
+            this.helpText = savedInstanceState.getCharSequence(Constants.KEY_HELP_TEXT);
+        }
+
+        this.setHelpText(this.helpText);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close));
@@ -91,6 +95,14 @@ public class HelpOverlayFragment extends Fragment
         {
             this.helpOverlayFragmentInteractionListener.onHelpOverlayFragmentInteraction(view);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putCharSequence(Constants.KEY_HELP_TEXT, this.helpText);
     }
 
     @Override
@@ -124,8 +136,15 @@ public class HelpOverlayFragment extends Fragment
         void onHelpOverlayFragmentInteraction(View view);
     }
 
+    public void setHelpText(CharSequence helpText)
+    {
+        this.helpText = helpText;
+        TextView textViewHelpMessage = this.fragmentView.findViewById(R.id.textViewHelp_Message);
+        textViewHelpMessage.setText(this.helpText);
+    }
+
     public void setVisibility(Boolean isVisible)
     {
-        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

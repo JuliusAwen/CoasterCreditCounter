@@ -22,6 +22,7 @@
     <string name="selection_help">help</string>
     <string name="selection_sort_a_to_z">sort a-z</string>
     <string name="selection_switch_mode">switch mode</string>
+    <string name="selection_locations">locations</string>
 
 
     <!--popup menu entries-->

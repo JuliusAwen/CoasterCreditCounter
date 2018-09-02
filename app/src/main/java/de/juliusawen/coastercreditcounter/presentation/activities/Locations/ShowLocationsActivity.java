@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,13 +8,10 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +22,6 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -34,9 +29,9 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
@@ -45,7 +40,7 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Mode;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
-public class ShowLocationsActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public class ShowLocationsActivity extends BaseActivity
 {
     private Mode mode;
     private Location currentLocation = Content.getInstance().getLocationRoot();
@@ -53,10 +48,6 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
     private Location longClickedLocation;
-    private int coordinatorLayoutId;
-    private HelpOverlayFragment helpOverlayFragment;
-    private Bundle savedInstanceState;
-    private Toolbar toolbar;
     private MenuItem menuItemSwitchMode;
 
     @Override
@@ -65,67 +56,10 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_locations);
 
-        this.savedInstanceState = savedInstanceState;
-
         this.initializeContent();
         this.initializeViews();
     }
 
-    private void initializeContent()
-    {
-        this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
-        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-    }
-
-    private void initializeViews()
-    {
-        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
-        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
-        coordinatorLayoutActivity.addView(showLocationsView);
-        this.coordinatorLayoutId = coordinatorLayoutActivity.getId();
-
-        this.createToolbar(showLocationsView);
-        this.createNavigationBar();
-        this.createContentRecyclerView(showLocationsView);
-        this.createFloatingActionButton();
-        this.createHelpOverlayFragment();
-    }
-
-    private void createToolbar(View view)
-    {
-        this.toolbar = view.findViewById(R.id.toolbar);
-        this.setToolbarTitle();
-
-        setSupportActionBar(toolbar);
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
-    }
-
-    private void setToolbarTitle()
-    {
-        switch(this.mode)
-        {
-            case MANAGE:
-                this.toolbar.setTitle(getString(R.string.title_manage_locations));
-                break;
-
-            case BROWSE:
-                this.toolbar.setTitle(getString(R.string.title_browse_locations));
-                break;
-        }
-    }
-
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -148,9 +82,115 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
             }
         }
 
-        menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
-
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Selection selection = Selection.values()[item.getItemId()];
+
+        switch(selection)
+        {
+            case SWITCH_MODE:
+                switch(this.mode)
+                {
+                    case MANAGE:
+                        this.mode = Mode.BROWSE;
+                        super.setFloatingActionButtonVisibility(false);
+                        break;
+
+                    case BROWSE:
+                        this.mode = Mode.MANAGE;
+                        super.setFloatingActionButtonVisibility(true);
+                        break;
+                }
+
+                super.setToolbarTitle(this.fetchToolbarTitle());
+                super.setHelpOverlayText(this.fetchHelpOverlayText());
+                this.setMenuItemSwitchModeIcon();
+
+                return true;
+
+            case EDIT_LOCATION:
+                this.startEditLocationActivity(this.currentLocation);
+                return true;
+
+            case SORT_ELEMENTS:
+                Intent intent = new Intent(this, SortElementsActivity.class);
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.currentLocation.getUuid().toString());
+                startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.recentLocations));
+        outState.putString(Constants.KEY_ELEMENT, this.currentLocation.getUuid().toString());
+        outState.putInt(Constants.KEY_MODE, this.mode.ordinal());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
+
+        this.updateExpandableRecyclerAdapter();
+        this.createNavigationBar();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        this.updateExpandableRecyclerAdapter();
+        this.createNavigationBar();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == Constants.REQUEST_ADD_LOCATION || requestCode == Constants.REQUEST_SORT_ELEMENTS)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                Location receivedLocation = Content.getInstance().getLocationFromUuidString(uuidString);
+
+                this.smoothScrollToLocation(receivedLocation);
+            }
+        }
+    }
+
+    private void initializeContent()
+    {
+        this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
+        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+    }
+
+    private void initializeViews()
+    {
+        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
+        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
+        coordinatorLayoutActivity.addView(showLocationsView);
+
+        super.createToolbar(showLocationsView, this.fetchToolbarTitle(), null, true);
+        this.createFloatingActionButton();
+        this.createNavigationBar();
+        this.createContentRecyclerView(showLocationsView);
+        super.createHelpOverlayFragment(coordinatorLayoutActivity, this.fetchHelpOverlayText(), false);
     }
 
     private void setMenuItemSwitchModeIcon()
@@ -164,7 +204,6 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
             case BROWSE:
                 this.menuItemSwitchMode.setIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_create)));
                 break;
-
         }
     }
 
@@ -226,7 +265,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                     }
 
                     currentLocation = location;
-                    updateRecyclerView();
+                    updateExpandableRecyclerAdapter();
                     createNavigationBar();
                 }
             });
@@ -255,7 +294,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                 if(view.getTag().getClass().equals(Location.class))
                 {
                     currentLocation = (Location) view.getTag();
-                    updateRecyclerView();
+                    updateExpandableRecyclerAdapter();
                     createNavigationBar();
 
                 }
@@ -313,7 +352,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                                             if(longClickedLocation.deleteNodeAndChildren())
                                             {
                                                 Content.getInstance().deleteLocationAndChildren(longClickedLocation);
-                                                updateRecyclerView();
+                                                updateExpandableRecyclerAdapter();
                                             }
                                             else
                                             {
@@ -329,7 +368,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                                                     if(longClickedLocation.undoDeleteNodeAndChildrenPossible && longClickedLocation.undoDeleteNodeAndChildren())
                                                     {
                                                         Content.getInstance().addLocationAndChildren(longClickedLocation);
-                                                        updateRecyclerView();
+                                                        updateExpandableRecyclerAdapter();
 
                                                         Toaster.makeToast(getApplicationContext(), getString(R.string.action_location_restored_text, longClickedLocation.getName()));
 
@@ -375,7 +414,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                                             {
                                                 Content.getInstance().deleteElement(longClickedLocation);
                                                 currentLocation = longClickedLocation.getParent();
-                                                updateRecyclerView();
+                                                updateExpandableRecyclerAdapter();
 
                                             }
                                             else
@@ -392,7 +431,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
                                                     if(longClickedLocation.undoRemoveNodePossible && longClickedLocation.undoRemoveNode())
                                                     {
                                                         Content.getInstance().addElement(longClickedLocation);
-                                                        updateRecyclerView();
+                                                        updateExpandableRecyclerAdapter();
 
                                                         Toaster.makeToast(getApplicationContext(), getString(R.string.action_location_restored_text, longClickedLocation.getName()));
 
@@ -437,19 +476,22 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
 
         this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<Element>(this.currentLocation.getChildren()), recyclerOnClickListener);
         this.recyclerView = view.findViewById(R.id.recyclerViewShowLocations);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(expandableRecyclerAdapter);
+        this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setAdapter(expandableRecyclerAdapter);
+    }
+
+    private void updateExpandableRecyclerAdapter()
+    {
+        this.expandableRecyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
     }
 
     private void createFloatingActionButton()
     {
         final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        super.createFloatingActionButton(floatingActionButton, DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
 
-        Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add));
-        floatingActionButton.setImageDrawable(drawable);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -488,150 +530,24 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
 
                 popupMenu.show();
             }
-        });
+        };
+
+        super.setFloatingActionButtonOnClickListener(onClickListener);
 
         if(this.mode.equals(Mode.BROWSE))
         {
-            setFloatingActionButtonVisibility(false);
+            super.setFloatingActionButtonVisibility(false);
         }
     }
 
-    private void setFloatingActionButtonVisibility(boolean isVisible)
+    private String fetchToolbarTitle()
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
-
-        switch(this.mode)
-        {
-            case BROWSE:
-                floatingActionButton.setVisibility(View.GONE);
-                break;
-
-            case MANAGE:
-                floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        }
+        return this.mode.equals(Mode.MANAGE) ? getString(R.string.title_manage_locations) : getString(R.string.title_browse_locations);
     }
 
-    private void createHelpOverlayFragment()
+    private CharSequence fetchHelpOverlayText()
     {
-        if(this.savedInstanceState == null)
-        {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            if(this.mode.equals(Mode.MANAGE))
-            {
-                this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_manage_locations), false);
-            }
-            else
-            {
-                this.helpOverlayFragment = HelpOverlayFragment.newInstance(getText(R.string.help_text_browse_locations), false);
-            }
-
-            fragmentTransaction.add(this.coordinatorLayoutId, this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.recentLocations));
-        outState.putString(Constants.KEY_ELEMENT, this.currentLocation.getUuid().toString());
-        outState.putBoolean(Constants.KEY_HELP_VISIBLE, this.helpOverlayFragment.isVisible());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        this.recentLocations = Content.getInstance().getLocationsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
-        this.helpOverlayFragment.setVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
-        this.setFloatingActionButtonVisibility(!savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBLE));
-
-        this.updateRecyclerView();
-        this.createNavigationBar();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        this.updateRecyclerView();
-        this.createNavigationBar();
-    }
-
-    private void updateRecyclerView()
-    {
-        this.expandableRecyclerAdapter.updateList(new ArrayList<Element>(this.currentLocation.getChildren()));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        Selection selection = Selection.values()[item.getItemId()];
-
-        switch(selection)
-        {
-            case SWITCH_MODE:
-                switch(this.mode)
-                {
-                    case MANAGE:
-                        this.mode = Mode.BROWSE;
-                        setFloatingActionButtonVisibility(false);
-                        this.setToolbarTitle();
-                        this.setMenuItemSwitchModeIcon();
-                        this.createHelpOverlayFragment();
-                        break;
-
-                    case BROWSE:
-                        this.mode = Mode.MANAGE;
-                        setFloatingActionButtonVisibility(true);
-                        this.setToolbarTitle();
-                        this.setMenuItemSwitchModeIcon();
-                        this.createHelpOverlayFragment();
-                        break;
-                }
-                return true;
-
-            case EDIT_LOCATION:
-                this.startEditLocationActivity(this.currentLocation);
-                return true;
-
-            case SORT_ELEMENTS:
-                Intent intent = new Intent(this, SortElementsActivity.class);
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.currentLocation.getUuid().toString());
-                startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
-                return true;
-
-            case HELP:
-                this.helpOverlayFragment.setVisibility(true);
-                this.setFloatingActionButtonVisibility(false);
-                return true;
-
-                default:
-                    return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onHelpOverlayFragmentInteraction(View view)
-    {
-        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        switch (buttonFunction)
-        {
-            case CLOSE:
-                this.helpOverlayFragment.setVisibility(false);
-                this.setFloatingActionButtonVisibility(true);
-                break;
-        }
+        return  this.mode.equals(Mode.MANAGE) ? getText(R.string.help_text_manage_locations) : getText(R.string.help_text_browse_locations);
     }
 
     private void startEditLocationActivity(Element element)
@@ -639,21 +555,6 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
         Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(requestCode == Constants.REQUEST_ADD_LOCATION || requestCode == Constants.REQUEST_SORT_ELEMENTS)
-        {
-            if(resultCode == RESULT_OK)
-            {
-                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Location receivedLocation = Content.getInstance().getLocationFromUuidString(uuidString);
-
-                this.smoothScrollToLocation(receivedLocation);
-            }
-        }
     }
 
     private void smoothScrollToLocation(Location location)
