@@ -11,8 +11,6 @@
         <HorizontalScrollView
             style="@style/standard_bar_layout"
             android:id="@+id/horizontalScrollViewShowLocations_NavigationBar"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
             android:background="?android:attr/colorPrimary"
             android:scrollbars="none"
             android:elevation="6dp">
@@ -21,6 +19,8 @@
                 android:id="@+id/linearLayoutShowLocations_NavigationBar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"/>
 

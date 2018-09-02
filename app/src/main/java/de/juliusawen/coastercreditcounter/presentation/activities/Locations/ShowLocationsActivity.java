@@ -185,7 +185,7 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
         {
             View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
 
-            Button button = buttonView.findViewById(R.id.button_transparent);
+            Button button = buttonView.findViewById(R.id.buttonNavigationBar);
 
             if(this.recentLocations.indexOf(location) != 0)
             {
