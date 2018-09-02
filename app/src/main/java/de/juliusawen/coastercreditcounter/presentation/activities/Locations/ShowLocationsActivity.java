@@ -658,10 +658,9 @@ public class ShowLocationsActivity extends AppCompatActivity implements HelpOver
 
     private void smoothScrollToLocation(Location location)
     {
-        int position = this.currentLocation.getChildren().indexOf(location);
-
-        if(position != -1)
+        if(this.currentLocation.getChildren().contains(location))
         {
+            int position = this.currentLocation.getChildren().indexOf(location);
             recyclerView.smoothScrollToPosition(position);
         }
     }
