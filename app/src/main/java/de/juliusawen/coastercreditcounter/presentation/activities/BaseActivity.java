@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             outState.putString(Constants.KEY_SUBTITLE, getSupportActionBar().getSubtitle() != null ? getSupportActionBar().getSubtitle().toString() : "");
         }
 
-        outState.putBoolean(Constants.KEY_HELP_IS_VISIBLE, this.helpOverlayFragment.isVisible());
+        outState.putBoolean(Constants.KEY_HELP_VISIBILITY, this.helpOverlayFragment.isVisible());
     }
 
     @Override
@@ -97,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         if(this.helpOverlayFragment != null)
         {
-            this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_IS_VISIBLE));
+            this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBILITY));
         }
 
     }

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Intent intent = new Intent(this, ShowLocationsActivity.class);
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getLocationRoot().getUuid().toString());
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getRootElement().getUuid().toString());
         startActivity(intent);
     }
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         if(item.getItemId() == 1)
         {
             Intent intent = new Intent(this, ShowLocationsActivity.class);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getLocationRoot().getUuid().toString());
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getRootElement().getUuid().toString());
             startActivity(intent);
 
             return true;

@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Content
 {
-    private Location locationRoot;
+    private Element rootElement;
     private Map<UUID, Element> elements;
 
     private static final Content instance = new Content();
@@ -30,25 +30,68 @@ public class Content
         this.elements = new HashMap<>();
 
         new DatabaseMock().fetchContent(this);
-        this.flattenContentTree(this.getLocationRoot());
-    }
 
-    public Location getLocationRoot()
-    {
-        return this.locationRoot;
-    }
-
-    public void setLocationRoot(Location locationRoot)
-    {
-        if(locationRoot.getParent() == null)
+        if(!this.elements.isEmpty())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Content.setLocationRoot:: root[%s] set.", locationRoot.getName()));
-            this.locationRoot = locationRoot;
+            Element element = ((Element) this.elements.values().toArray()[0]).getRootElement();
+
+            this.setRootElement(element);
+            this.flattenContentTree(this.rootElement);
         }
         else
         {
-            throw new IllegalStateException("Location with parent can not be set as location root - parent has to be null.");
+            throw new IllegalStateException("Content.Constructor:: not able to find root element.");
         }
+    }
+
+    public Element getRootElement()
+    {
+        return this.rootElement;
+    }
+
+    private void setRootElement(Element element)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s[%s] set as root element.", element.getClass().getSimpleName(), element.toString()));
+        this.rootElement = element;
+    }
+
+    private void flattenContentTree(Element element)
+    {
+        this.addElement(element);
+
+        for (Element child : element.getChildren())
+        {
+            this.flattenContentTree(child);
+        }
+    }
+
+    public static ArrayList<String> createUuidStringsFromElements(List<? extends Element> elements)
+    {
+        ArrayList<String> strings = new ArrayList<>();
+
+        for(Element element : elements)
+        {
+            strings.add(element.getUuid().toString());
+        }
+
+        return strings;
+    }
+
+    public List<Element> fetchElementsFromUuidStrings(List<String> uuidStrings)
+    {
+        List<Element> elements = new ArrayList<>();
+
+        for(String uuidString : uuidStrings)
+        {
+            elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
+        }
+
+        return elements;
+    }
+
+    public Location fetchElementFromUuidString(String uuidString)
+    {
+        return (Location) this.getElementByUuid(UUID.fromString(uuidString));
     }
 
     public Element getElementByUuid(UUID uuid)
@@ -63,134 +106,47 @@ public class Content
         }
     }
 
-    private void flattenContentTree(Element element)
+    public void addElementAndChildren(Element element)
     {
+        for(Element child : element.getChildren())
+        {
+            this.addElementAndChildren(child);
+        }
+
         this.addElement(element);
-
-        for (Element child : ((Location)element).getChildren())
-        {
-            this.flattenContentTree(child);
-        }
-
-        if(!((Location)element).getParks().isEmpty())
-        {
-            for(Park park : ((Location)element).getParks())
-            {
-                this.addElement(park);
-
-                for (Attraction attraction : park.getAttractions())
-                {
-                    this.addElement(attraction);
-                }
-            }
-        }
     }
 
-    public ArrayList<String> getUuidStringsFromElements(List<? extends Element> elements)
+    public void deleteElementAndChildren(Element element)
     {
-        ArrayList<String> strings = new ArrayList<>();
-
-        for(Element element : elements)
+        for(Element child : element.getChildren())
         {
-            strings.add(element.getUuid().toString());
+            this.deleteElementAndChildren(child);
         }
 
-        return strings;
-    }
-
-    public List<Element> getElementsFromUuidStrings(List<String> uuidStrings)
-    {
-        List<Element> elements = new ArrayList<>();
-
-        for(String uuidString : uuidStrings)
-        {
-            elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
-        }
-
-        return elements;
-    }
-
-    public Location getLocationFromUuidString(String uuidString)
-    {
-        return (Location) this.getElementByUuid(UUID.fromString(uuidString));
-    }
-
-    public List<Location> getLocationsFromUuidStrings(List<String> uuidStrings)
-    {
-        List<Location> locations = new ArrayList<>();
-
-        for(String uuidString : uuidStrings)
-        {
-            locations.add((Location) this.getElementByUuid(UUID.fromString(uuidString)));
-        }
-
-        return locations;
-    }
-
-    public List<Location> convertElementsToLocations(List<Element> elements)
-    {
-        List<Location> locations = new ArrayList<>();
-
-        for(Element element : elements)
-        {
-            locations.add(((Location) element));
-        }
-
-        return locations;
-    }
-
-    public List<Attraction> convertElementsToAttractions(List<Element> elements)
-    {
-        List<Attraction> attractions = new ArrayList<>();
-
-        for(Element element : elements)
-        {
-            attractions.add(((Attraction) element));
-        }
-
-        return attractions;
-    }
-
-    public void addLocationAndChildren(Location location)
-    {
-        this.addElement(location);
-        for(Location child : location.getChildren())
-        {
-            this.addLocationAndChildren(child);
-        }
-    }
-
-    public void deleteLocationAndChildren(Location location)
-    {
-        for(Location child : location.getChildren())
-        {
-            this.deleteLocationAndChildren(child);
-        }
-
-        this.deleteElement(location);
+        this.deleteElement(element);
     }
 
     public void addElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: element[%s] added.", element.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s[%s] added.", element.getClass().getSimpleName(), element.toString()));
         this.elements.put(element.getUuid(), element);
     }
 
     public void deleteElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: element[%s] removed.", element.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s[%s] removed.", element.getClass().getSimpleName(), element.toString()));
         this.elements.remove(element.getUuid());
     }
 
-    public List<Location> orderLocationListByCompareList(ArrayList<Location> listToOrder, ArrayList<Location> listToCompare)
+    public static List<Element> orderElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
     {
-        ArrayList<Location> orderedList = new ArrayList<>();
+        ArrayList<Element> orderedList = new ArrayList<>();
 
-        for(Location location : listToCompare)
+        for(Element element : listToCompare)
         {
-            if(listToOrder.contains(location))
+            if(listToOrder.contains(element))
             {
-                orderedList.add(listToOrder.get(listToOrder.indexOf(location)));
+                orderedList.add(listToOrder.get(listToOrder.indexOf(element)));
             }
         }
 

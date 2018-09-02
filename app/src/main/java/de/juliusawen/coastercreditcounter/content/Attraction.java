@@ -8,10 +8,6 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Attraction extends Element
 {
-    private Location location;
-    //private Model model;
-    //private Manufacturer manufacturer
-
     Attraction(String name, UUID uuid)
     {
         super(name, uuid);
@@ -34,15 +30,5 @@ public class Attraction extends Element
         }
 
         return attraction;
-    }
-
-    public Location getLocation()
-    {
-        return this.location;
-    }
-
-    public void setLocation(Location location)
-    {
-        this.location = location;
     }
 }

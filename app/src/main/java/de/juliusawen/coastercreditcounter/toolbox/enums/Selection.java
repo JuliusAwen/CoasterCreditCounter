@@ -2,10 +2,10 @@ package de.juliusawen.coastercreditcounter.toolbox.enums;
 
 public enum Selection
 {
-    ADD_LOCATION,
-    EDIT_LOCATION,
-    DELETE_LOCATION,
-    REMOVE_LOCATION,
+    ADD_ELEMENT,
+    EDIT_ELEMENT,
+    DELETE_ELEMENT,
+    REMOVE_ELEMENT,
 
     ADD_PARK,
 

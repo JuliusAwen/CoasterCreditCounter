@@ -86,7 +86,7 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onSaveInstanceState(outState);
 
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToSort));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.createUuidStringsFromElements(this.elementsToSort));
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
 
         if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
@@ -104,7 +104,7 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.elementsToSort = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToSort = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.element = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
@@ -129,7 +129,7 @@ public class SortElementsActivity extends BaseActivity
 
         if(this.element.getClass().equals(Location.class))
         {
-            this.elementsToSort = new ArrayList<Element>(((Location) this.element).getChildren());
+            this.elementsToSort = new ArrayList<>(this.element.getChildren());
         }
     }
 
@@ -154,10 +154,7 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(element.getClass().equals(Location.class))
-                {
-                    ((Location) element).setChildren(new ArrayList<>(Content.getInstance().convertElementsToLocations(elementsToSort)));
-                }
+                element.setChildren(new ArrayList<>(elementsToSort));
 
                 Intent intent = new Intent();
                 if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
@@ -169,6 +166,7 @@ public class SortElementsActivity extends BaseActivity
                 {
                     setResult(RESULT_CANCELED);
                 }
+
                 finish();
             }
         });

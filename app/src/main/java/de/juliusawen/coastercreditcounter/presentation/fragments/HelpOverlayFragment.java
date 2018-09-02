@@ -98,7 +98,7 @@ public class HelpOverlayFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
+    public void onSaveInstanceState(@NonNull Bundle outState)
     {
         super.onSaveInstanceState(outState);
 

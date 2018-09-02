@@ -71,12 +71,12 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     private void initializeViews()
     {
         FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
-        frameLayoutActivity.addView(addLocationView);
+        View editLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
+        frameLayoutActivity.addView(editLocationView);
 
-        super.createToolbar(addLocationView, getString(R.string.title_edit_location), this.locationToEdit.getName(), false);
+        super.createToolbar(editLocationView, getString(R.string.title_edit_location), this.locationToEdit.getName(), false);
         super.createConfirmDialogFragment(frameLayoutActivity);
-        this.createEditText(addLocationView);
+        this.createEditText(editLocationView);
         super.createHelpOverlayFragment(frameLayoutActivity, getText(R.string.help_text_edit_location), false);
     }
 

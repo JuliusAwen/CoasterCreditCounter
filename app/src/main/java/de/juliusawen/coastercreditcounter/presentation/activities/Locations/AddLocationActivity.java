@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
+import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
@@ -82,10 +83,10 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             if(resultCode == RESULT_OK)
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Location> pickedChildren = Content.getInstance().getLocationsFromUuidStrings(uuidStrings);
-                pickedChildren = Content.getInstance().orderLocationListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
+                List<Element> pickedChildren = Content.getInstance().fetchElementsFromUuidStrings(uuidStrings);
+                pickedChildren = Content.orderElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
-                this.parentLocation.insertNode(this.newLocation, pickedChildren);
+                this.parentLocation.insertElement(this.newLocation, new ArrayList<>(pickedChildren));
                 this.returnResult();
             }
         }
@@ -110,7 +111,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void createEditText(View view)
     {
-        if(!this.parentLocation.getChildren().isEmpty())
+        if(!this.parentLocation.hasChildren())
         {
             LinearLayout linearLayoutAddChildren = view.findViewById(R.id.linearLayoutAddLocation_AddChildren);
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
@@ -157,7 +158,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 }
                 else
                 {
-                    this.parentLocation.insertNode(this.newLocation, this.parentLocation.getChildren());
+                    this.parentLocation.insertElement(this.newLocation, this.parentLocation.getChildren());
                     returnResult();
                 }
             }
@@ -169,7 +170,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_text_location_name_not_valid));
+            Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
         }
     }
 

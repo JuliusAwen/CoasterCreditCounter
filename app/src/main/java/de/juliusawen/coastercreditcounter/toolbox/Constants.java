@@ -8,15 +8,15 @@ public abstract class Constants
     public static final String KEY_ELEMENTS = "de.juliusawen.coding.key_elements";
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.coding.key_selected_element";
     public static final String KEY_SELECTED_ELEMENTS = "de.juliusawen.coding.key_selected_elements";
-    public static final String KEY_HELP_IS_VISIBLE = "de.juliusawen.coding.key_help_is_visible";
+    public static final String KEY_HELP_VISIBILITY = "de.juliusawen.coding.key_help_visibility";
     public static final String KEY_TITLE = "de.juliusawen.coding.key_title";
     public static final String KEY_SUBTITLE = "de.juliusawen.coding.key_subtitle";
     public static final String KEY_HELP_TEXT = "de.juliusawen.coding.key_help_text";
     public static final String KEY_MODE = "de.juliusawen.coding.key_mode";
 
     public static final String EXTRA_MODE = "de.juliusawen.coding.extra_mode";
-    public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_uuid";
-    public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_uuids";
+    public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
+    public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_RADIO_BUTTON_STATE = "de.juliusawen.coding.extra_radio_button_state";
 
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.coding.fragment_arg_1";
@@ -27,14 +27,14 @@ public abstract class Constants
 
     public static final int VIEW_TYPE_CHILD = 10000;
 
-    public static final int REQUEST_ADD_LOCATION = Request.ADD_LOCATION.ordinal();
+    public static final int REQUEST_ADD_ELEMENT = Request.ADD_ELEMENT.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Request.SORT_ELEMENTS.ordinal();
     public static final int REQUEST_PICK_ELEMENTS = Request.PICK_ELEMENTS.ordinal();
 }
 
 enum Request
 {
-    ADD_LOCATION,
+    ADD_ELEMENT,
     SORT_ELEMENTS,
     PICK_ELEMENTS,
 }

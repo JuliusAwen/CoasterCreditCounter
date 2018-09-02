@@ -12,7 +12,7 @@
 
 
     <!--subtitles-->
-    <string name="subtitle_pick_add_children">children to add under new location</string>
+    <string name="subtitle_pick_add_children_to_new_location">children to add to new location</string>
     <string name="subtitle_add_location_add_to">to %1$s</string>
 
 
@@ -29,9 +29,9 @@
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
 
-    <string name="selection_edit_location">edit</string>
-    <string name="selection_delete_location">delete</string>
-    <string name="selection_remove_location_level">remove</string>
+    <string name="selection_edit_element">edit</string>
+    <string name="selection_delete_element">delete</string>
+    <string name="selection_remove_element">remove</string>
 
 
     <!--general texts-->
@@ -52,10 +52,10 @@
 
 
     <!--dialog texts-->
-    <string name="alert_dialog_delete_location_title">DELETE</string>
-    <string name="alert_dialog_delete_location_message">Do you really want to delete %1$s and all of its children permanently?</string>
-    <string name="alert_dialog_remove_location_title">REMOVE</string>
-    <string name="alert_dialog_remove_location_level_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
+    <string name="alert_dialog_delete_element_title">DELETE</string>
+    <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
+    <string name="alert_dialog_remove_element_title">REMOVE</string>
+    <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
 
 
     <!--descriptions-->
@@ -67,9 +67,9 @@
 
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
-    <string name="action_undo_delete_location_text">%1$s deleted</string>
-    <string name="action_undo_remove_location_text">%1$s removed</string>
-    <string name="action_location_restored_text">%1$s restored</string>
+    <string name="action_undo_delete_element_text">%1$s deleted</string>
+    <string name="action_undo_remove_element_text">%1$s removed</string>
+    <string name="action_element_restored_text">%1$s restored</string>
 
 
     <!--hint texts-->
@@ -78,11 +78,11 @@
 
 
     <!--error messages-->
-    <string name="error_text_location_name_not_valid">Location name is not valid!</string>
+    <string name="error_text_name_not_valid">Name is not valid!</string>
     <string name="error_text_undo_not_possible">UNDO not possible…</string>
     <string name="error_text_delete_failed">Deletion failed…</string>
     <string name="error_text_remove_failed">Removal failed…</string>
-    <string name="error_text_no_entry_selected">No entry selected</string>
+    <string name="error_text_no_entry_selected">No entry selected!</string>
 
 
     <!--help texts-->

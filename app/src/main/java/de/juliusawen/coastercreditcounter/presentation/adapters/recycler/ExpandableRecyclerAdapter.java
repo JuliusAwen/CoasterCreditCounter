@@ -19,7 +19,6 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
@@ -89,13 +88,14 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         viewHolder.textView.setOnClickListener(recyclerOnClickListener);
         viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
 
-        if(element.getClass().equals(Location.class))
+        if(element.isLocation())
         {
             Location location = (Location) element;
 
-            if(!location.getParks().isEmpty())
+            if(location.hasParks())
             {
-                this.addChildViewsForLocation(viewHolder, location, recyclerOnClickListener);
+                this.handleExpandToggle(viewHolder, location);
+                this.addChildViews(viewHolder, location.getChildren(), recyclerOnClickListener);
 
                 viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
             }
@@ -119,14 +119,12 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
     }
 
-    private void addChildViewsForLocation(final ViewHolder viewHolder, final Location location, RecyclerOnClickListener recyclerOnClickListener)
+    private void addChildViews(final ViewHolder viewHolder, List<Element> elements, RecyclerOnClickListener recyclerOnClickListener)
     {
-        this.handleExpandToggle(viewHolder, location);
-
         int increment = 0;
-        for(Park park : location.getParks())
+        for(Element element : elements)
         {
-            View childView = this.createChildView(viewHolder, park, increment, recyclerOnClickListener);
+            View childView = this.createChildView(viewHolder, element, increment, recyclerOnClickListener);
 
             if(viewHolder.isExpanded)
             {

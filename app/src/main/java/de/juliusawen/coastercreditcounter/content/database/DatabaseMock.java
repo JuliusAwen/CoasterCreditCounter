@@ -2,12 +2,14 @@ package de.juliusawen.coastercreditcounter.content.database;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Coaster;
 import de.juliusawen.coastercreditcounter.content.Content;
+import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
@@ -65,58 +67,33 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         // build tree
-        phantasialand.addAttraction(taron);
-        phantasialand.addAttraction(hollywoodTour);
+        phantasialand.addChild(taron);
+        phantasialand.addChild(hollywoodTour);
 
-        heidePark.addAttraction(krake);
-        heidePark.addAttraction(scream);
+        heidePark.addChild(krake);
+        heidePark.addChild(scream);
 
-        bruehl.addPark(phantasialand);
-        soltau.addPark(heidePark);
+        bruehl.addChild(phantasialand);
+        soltau.addChild(heidePark);
 
         northRhineWestphalia.addChild(bruehl);
         lowerSaxony.addChild(soltau);
 
         germany.addChild(northRhineWestphalia);
         germany.addChild(lowerSaxony);
-        germany.addChildren(states);
+        germany.addChildren(new ArrayList<Element>(states));
 
         netherlands.addChild(limburg);
 
         europe.addChild(germany);
         europe.addChild(netherlands);
 
+        usa.addChild(cedarPoint);
+        usa.addChild(sixFlagsMagicMountain);
+
         earth.addChild(europe);
         earth.addChild(usa);
 
-        usa.addPark(cedarPoint);
-        usa.addPark(sixFlagsMagicMountain);
-
-
-        // do things with tree
-        this.putLocationsInAttractions(earth);
-
-        content.setLocationRoot(earth);
-    }
-
-    private void putLocationsInAttractions(Location location)
-    {
-        if (!location.getChildren().isEmpty())
-        {
-            for (Location child : location.getChildren())
-            {
-                if(child.getClass().equals(Location.class))
-                {
-                    this.putLocationsInAttractions(child);
-                }
-                else if(child.getClass().equals(Park.class))
-                {
-                    for (Attraction attraction : ((Park) child).getAttractions())
-                    {
-                        attraction.setLocation(child);
-                    }
-                }
-            }
-        }
+        content.addElement(taron);
     }
 }

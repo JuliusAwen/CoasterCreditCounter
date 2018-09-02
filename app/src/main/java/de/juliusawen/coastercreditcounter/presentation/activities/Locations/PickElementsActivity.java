@@ -52,7 +52,7 @@ public class PickElementsActivity extends BaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getInstance().getUuidStringsFromElements(this.elementsToPickFrom));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.createUuidStringsFromElements(this.elementsToPickFrom));
 
         if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -60,7 +60,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.createUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         outState.putString(Constants.EXTRA_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
@@ -73,7 +73,7 @@ public class PickElementsActivity extends BaseActivity
 
         this.element = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.elementsToPickFrom = Content.getInstance().getElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToPickFrom = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.selectableRecyclerAdapter.updateList(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
@@ -83,7 +83,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            List<Element> selectedElements = Content.getInstance().getElementsFromUuidStrings(selectedElementStrings);
+            List<Element> selectedElements = Content.getInstance().fetchElementsFromUuidStrings(selectedElementStrings);
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 
@@ -96,7 +96,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.element.getClass().equals(Location.class))
         {
-            this.elementsToPickFrom = new ArrayList<Element>(((Location)this.element).getChildren());
+            this.elementsToPickFrom = new ArrayList<>(this.element.getChildren());
         }
     }
 
@@ -106,7 +106,7 @@ public class PickElementsActivity extends BaseActivity
         View pickElementsView = getLayoutInflater().inflate(R.layout.layout_pick_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(pickElementsView);
 
-        super.createToolbar(pickElementsView, getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children), true);
+        super.createToolbar(pickElementsView, getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location), true);
         this.createFloatingActionButton();
         this.createSelectOrDeselectAllBar(pickElementsView);
         this.createContentRecyclerView(pickElementsView);
@@ -124,7 +124,7 @@ public class PickElementsActivity extends BaseActivity
                 Intent intent = new Intent();
                 if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getInstance().getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.createUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
                     setResult(RESULT_OK, intent);
                     finish();
                 }
