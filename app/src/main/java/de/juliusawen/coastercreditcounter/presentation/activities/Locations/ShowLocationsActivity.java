@@ -54,10 +54,12 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onCreate:: creating activity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_locations);
 
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onCreate:: creating activity...");
         this.initializeContent();
         this.initializeViews();
     }

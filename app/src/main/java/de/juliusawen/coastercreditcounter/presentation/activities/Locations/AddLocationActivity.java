@@ -37,10 +37,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.d(Constants.LOG_TAG, "AddLocationsActivity.onCreate:: creating activity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
-
-        Log.d(Constants.LOG_TAG, "AddLocationsActivity.onCreate:: creating activity...");
 
         this.initializeContent();
         this.initializeViews();

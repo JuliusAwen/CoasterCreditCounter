@@ -29,6 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
+
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
     }

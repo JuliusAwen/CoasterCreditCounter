@@ -41,10 +41,11 @@ public class SortElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.d(Constants.LOG_TAG, "SortElementsActivity.onCreate:: creating activity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort_elements);
-
-        Log.d(Constants.LOG_TAG, "SortElementsActivity.onCreate:: creating activity...");
 
         this.initializeContent();
         this.initializeViews();
