@@ -49,6 +49,8 @@ public class SortElementsActivity extends BaseActivity
 
         this.initializeContent();
         this.initializeViews();
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override

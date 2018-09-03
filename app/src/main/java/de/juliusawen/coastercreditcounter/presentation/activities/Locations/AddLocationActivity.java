@@ -45,6 +45,8 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
         this.initializeContent();
         this.initializeViews();
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override

@@ -34,6 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override

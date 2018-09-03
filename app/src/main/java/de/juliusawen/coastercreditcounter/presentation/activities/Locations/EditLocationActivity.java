@@ -35,6 +35,8 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
         this.initializeContent();
         this.initializeViews();
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override
