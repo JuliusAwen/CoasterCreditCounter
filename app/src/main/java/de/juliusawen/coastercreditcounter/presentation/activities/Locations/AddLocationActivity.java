@@ -111,7 +111,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void createEditText(View view)
     {
-        if(!this.parentLocation.hasChildren())
+        if(this.parentLocation.hasChildren())
         {
             LinearLayout linearLayoutAddChildren = view.findViewById(R.id.linearLayoutAddLocation_AddChildren);
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
