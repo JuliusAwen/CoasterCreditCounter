@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -39,6 +40,8 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
 
+        Log.d(Constants.LOG_TAG, "AddLocationsActivity.onCreate:: creating activity...");
+
         this.initializeContent();
         this.initializeViews();
     }
@@ -55,6 +58,13 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
             case CANCEL:
                 Intent intent = new Intent();
+
+                if(this.newLocation != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: cancelled -> removing %s", this.newLocation));
+                    Content.getInstance().deleteElementAndChildren(this.newLocation);
+                }
+
                 setResult(RESULT_CANCELED, intent);
                 finish();
                 break;
@@ -150,7 +160,9 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         {
             if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
-                if (this.parentLocation.getChildren().size() > 1)
+                Log.d(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren <CHECKED>");
+
+                if (this.parentLocation.getChildCount() > 1)
                 {
                     Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
@@ -158,12 +170,15 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 }
                 else
                 {
+                    Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: %s has only one child -> inserting in %s", this.parentLocation, this.newLocation));
                     this.parentLocation.insertElement(this.newLocation, this.parentLocation.getChildren());
                     returnResult();
                 }
             }
             else
             {
+                Log.d(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren <UNCHECKED>");
+
                 this.parentLocation.addChild(this.newLocation);
                 this.returnResult();
             }

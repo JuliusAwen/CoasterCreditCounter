@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.presentation.adapters.recycler;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.ViewHolder>
@@ -112,7 +114,12 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+
         Element element = elementsToSelectFrom.get(position);
+
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s (position[%d])", element, position));
+
         if(this.selectedViewsByElement.containsKey(element))
         {
             viewHolder.itemView.setSelected(true);
@@ -124,47 +131,46 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         viewHolder.itemView.setTag(element);
-        if(!viewHolder.itemView.hasOnClickListeners())
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener()
         {
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View view)
             {
-                @Override
-                public void onClick(View view)
+                Element element = (Element) view.getTag();
+
+                if(view.isSelected())
                 {
-                    Element element = (Element) view.getTag();
-
-                    if(view.isSelected())
-                    {
-                        selectedViewsByElement.remove(element);
-                    }
-                    else
-                    {
-                        if(selectedViewsByElement.get(element) != null)
-                        {
-                            selectedViewsByElement.get(element).setSelected(false);
-                        }
-
-                        if(!selectMultiple)
-                        {
-                            selectedViewsByElement.clear();
-                        }
-
-                        selectedViewsByElement.put(element, view);
-                    }
-
-                    view.setSelected(!view.isSelected());
-
-                    if(onClickListener != null)
-                    {
-                        onClickListener.onClick(view, viewHolder.getAdapterPosition());
-                    }
-
-                    notifyDataSetChanged();
+                    selectedViewsByElement.remove(element);
                 }
-            });
-        }
+                else
+                {
+                    if(selectedViewsByElement.get(element) != null)
+                    {
+                        selectedViewsByElement.get(element).setSelected(false);
+                    }
+
+                    if(!selectMultiple)
+                    {
+                        selectedViewsByElement.clear();
+                    }
+
+                    selectedViewsByElement.put(element, view);
+                }
+
+                view.setSelected(!view.isSelected());
+
+                if(onClickListener != null)
+                {
+                    onClickListener.onClick(view, viewHolder.getAdapterPosition());
+                }
+
+                notifyDataSetChanged();
+            }
+        });
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override

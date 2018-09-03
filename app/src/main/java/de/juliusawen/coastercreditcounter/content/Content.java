@@ -25,23 +25,32 @@ public class Content
 
     private Content()
     {
-        Log.v(Constants.LOG_TAG, "Content:: Constructor called.");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
 
         this.elements = new HashMap<>();
 
+        Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         new DatabaseMock().fetchContent(this);
+        Log.d(Constants.LOG_TAG, "Content.Constructor:: content fetched.");
 
         if(!this.elements.isEmpty())
         {
-            Element element = ((Element) this.elements.values().toArray()[0]).getRootElement();
+            Log.d(Constants.LOG_TAG, "Content.Constructor:: searching for root element...");
+            Element rootElement = ((Element) this.elements.values().toArray()[0]).getRootElement();
+            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root element %s found.", rootElement));
 
-            this.setRootElement(element);
+            this.setRootElement(rootElement);
+
+            Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             this.flattenContentTree(this.rootElement);
+            Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened.");
         }
         else
         {
-            throw new IllegalStateException("Content.Constructor:: not able to find root element.");
+            throw new IllegalStateException("Content.Constructor:: no elements fetched - unable to find root element.");
         }
+
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     public Element getRootElement()
@@ -51,7 +60,7 @@ public class Content
 
     private void setRootElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s[%s] set as root element.", element.getClass().getSimpleName(), element.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s set as root element.", element));
         this.rootElement = element;
     }
 
@@ -128,18 +137,20 @@ public class Content
 
     public void addElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s[%s] added.", element.getClass().getSimpleName(), element.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added.", element));
         this.elements.put(element.getUuid(), element);
     }
 
     public void deleteElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s[%s] removed.", element.getClass().getSimpleName(), element.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed.", element));
         this.elements.remove(element.getUuid());
     }
 
     public static List<Element> orderElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
     {
+        Log.d(Constants.LOG_TAG, "Content.orderElementListByCompareList:: getting list in order...");
+
         ArrayList<Element> orderedList = new ArrayList<>();
 
         for(Element element : listToCompare)

@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,6 +30,8 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
+        Log.d(Constants.LOG_TAG, "EditLocationActivity.onCreate:: creating activity...");
+
         this.initializeContent();
         this.initializeViews();
     }
@@ -44,6 +47,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
                 break;
 
             case CANCEL:
+                Log.d(Constants.LOG_TAG, "EditLocationActivity.onConfirmDialogFragmentInteraction:: cancelled");
                 finish();
                 break;
         }

@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,6 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
@@ -43,6 +43,8 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort_elements);
+
+        Log.d(Constants.LOG_TAG, "SortElementsActivity.onCreate:: creating activity...");
 
         this.initializeContent();
         this.initializeViews();
@@ -126,11 +128,7 @@ public class SortElementsActivity extends BaseActivity
     private void initializeContent()
     {
         this.element = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-
-        if(this.element.getClass().equals(Location.class))
-        {
-            this.elementsToSort = new ArrayList<>(this.element.getChildren());
-        }
+        this.elementsToSort = new ArrayList<>(this.element.getChildren());
     }
 
     private void initializeViews()

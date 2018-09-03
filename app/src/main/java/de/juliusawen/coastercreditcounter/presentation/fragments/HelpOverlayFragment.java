@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,10 +142,13 @@ public class HelpOverlayFragment extends Fragment
         this.helpText = helpText;
         TextView textViewHelpMessage = this.fragmentView.findViewById(R.id.textViewHelp_Message);
         textViewHelpMessage.setText(this.helpText);
+
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.setHelpText:: HelpText set");
     }
 
     public void setVisibility(Boolean isVisible)
     {
         this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        Log.d(Constants.LOG_TAG, String.format("HelpOverlayFragment.setVisibility:: isVisible[%S]", this.isVisible()));
     }
 }

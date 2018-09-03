@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -41,6 +42,8 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_elements);
+
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.onCreate:: creating activity...");
 
         this.initializeContent();
         this.initializeViews();

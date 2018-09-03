@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,6 +105,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void createToolbar(View view, String title, String subtitle, boolean setHomeButton)
     {
+        Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: creating toolbar...");
+
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -145,6 +148,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void createFloatingActionButton(FloatingActionButton floatingActionButton, Drawable icon)
     {
+        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
+
         this.floatingActionButton = floatingActionButton;
         this.floatingActionButton.setImageDrawable(icon);
     }
@@ -159,12 +164,14 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    protected void createHelpOverlayFragment(View containerView, CharSequence helpText, boolean isVisible)
+    protected void createHelpOverlayFragment(View containerView, CharSequence helpText, boolean isVisibleOnCreation)
     {
+        Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating fragment...");
+
         if (this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpText, isVisible);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpText, isVisibleOnCreation);
             fragmentTransaction.add(containerView.getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }
@@ -196,6 +203,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void createConfirmDialogFragment(View containerView)
     {
+        Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating fragment...");
+
         if(this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

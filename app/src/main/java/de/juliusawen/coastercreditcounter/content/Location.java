@@ -21,7 +21,7 @@ public class Location extends Element
         {
             name = name.trim();
 
-            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: location[%s] created.", name));
+            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: Location[%s] created.", name));
             location = new Location(name, UUID.randomUUID());
         }
         else

@@ -21,7 +21,7 @@ public class Coaster extends Attraction
         {
             name = name.trim();
 
-            Log.v(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: coaster[%s] created.", name));
+            Log.v(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: Coaster[%s] created.", name));
             coaster = new Coaster(name, UUID.randomUUID());
         }
         else

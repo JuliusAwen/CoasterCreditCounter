@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
@@ -36,14 +37,19 @@ public abstract class Element
     @Override
     public String toString()
     {
-        return this.getName();
+        return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
+    }
+
+    public <T> boolean isInstance(Class<T> type)
+    {
+        return type.isInstance(this);
     }
 
     public Element getRootElement()
     {
         if(this.parent != null)
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s[%s] is not root element - calling parent.", this.getClass().getSimpleName(), this.getName()));
+            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent.", this));
             return this.parent.getRootElement();
         }
         else
@@ -89,45 +95,19 @@ public abstract class Element
         return this.children;
     }
 
-    public int getChildrenCount()
+    public <T> List<Element> getChildrenOfInstance(Class<T> type)
     {
-        return this.children.size();
-    }
+        List<Element> children = new ArrayList<>();
 
-    public boolean hasLocations()
-    {
-        boolean hasLocations = false;
-
-        if(this.hasChildren() && this.children.get(0).isLocation())
+        for(Element element : this.children)
         {
-            hasLocations = true;
+            if(element.isInstance(type))
+            {
+                children.add(element);
+            }
         }
 
-        return hasLocations;
-    }
-
-    public boolean hasParks()
-    {
-        boolean hasParks = false;
-
-        if(this.hasChildren() && this.children.get(0).isPark())
-        {
-            hasParks = true;
-        }
-
-        return hasParks;
-    }
-
-    public boolean hasAttractions()
-    {
-        boolean hasAttractions = false;
-
-        if(this.hasChildren() && this.children.get(0).isAttraction())
-        {
-            hasAttractions = true;
-        }
-
-        return hasAttractions;
+        return children;
     }
 
     public boolean hasChildren()
@@ -135,29 +115,24 @@ public abstract class Element
         return !this.children.isEmpty();
     }
 
-    public boolean isLocation()
+    public <T> boolean hasChildrenOfInstance(Class<T> type)
     {
-        return this instanceof Location;
+        return !this.getChildrenOfInstance(type).isEmpty();
     }
 
-    public boolean isPark()
+    public int getChildCount()
     {
-        return this instanceof Park;
+        return this.children.size();
     }
 
-    public boolean isAttraction()
+    public <T> int getChildCountOfInstance(Class<T> type)
     {
-        return this instanceof Attraction;
-    }
-
-    public boolean isCoaster()
-    {
-        return this instanceof Coaster;
+        return this.getChildrenOfInstance(type).size();
     }
 
     public void setChildren(List<Element> children)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s[%s] -> children cleared.", this.getClass().getSimpleName(), this.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared.", this));
         this.children.clear();
 
         this.addChildren(children);
@@ -165,7 +140,7 @@ public abstract class Element
 
     public void setChild(Element child)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setChild:: %s[%s] -> children cleared.", this.getClass().getSimpleName(), this.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.setChild:: %s -> children cleared.", this));
         this.children.clear();
 
         this.addChild(child);
@@ -200,7 +175,7 @@ public abstract class Element
     {
         child.setParent(this);
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s[%s] -> %s[%s] added.", this.getClass().getSimpleName(), this.toString(), child.getClass().getSimpleName(), child.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added.", this, child));
         this.children.add(index, child);
     }
 
@@ -211,7 +186,7 @@ public abstract class Element
 
     private void setParent(Element parent)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s[%s] -> %s[%s] set as parent.", this.getClass().getSimpleName(), this.toString(), parent.getClass().getSimpleName(), parent.toString()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set.", this, parent));
         this.parent = parent;
     }
 
@@ -219,7 +194,7 @@ public abstract class Element
     {
         newElement.addChildren(new ArrayList<>(children));
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s[%s] -> [%d]children removed.", this.getClass().getSimpleName(), this.toString(), children.size()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s -> #[%d]children removed.", this, this.getChildCount()));
         this.children.removeAll(children);
 
         this.addChild(this.getChildren().size(), newElement);
@@ -234,22 +209,22 @@ public abstract class Element
             this.deletedElementsIndex = this.parent.getChildren().indexOf(this);
             this.undoDeleteElementAndChildrenPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s[%s] -> removed from parent[%S].", this.getClass().getSimpleName(), this.getName(), this.parent.getName()));
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> removed from parent %s.", this, this.parent));
             this.parent.getChildren().remove(this);
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s[%s] -> children cleared.", this.getClass().getSimpleName(), this.toString()));
-            this.getChildren().clear();
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> #[%d]children cleared.", this, this.getChildCount()));
+            this.children.clear();
 
             return true;
         }
 
-        Log.w(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s[%s] -> can not delete element as it is the root element.", this.getClass().getSimpleName(), this.toString()));
+        Log.w(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element.", this));
         return false;
     }
 
     public boolean undoDeleteElementAndChildren()
     {
-        boolean deleteElementAndChildrenUndone = false;
+        boolean success = false;
 
         if(this.undoDeleteElementAndChildrenPossible
                 && this.deletedElementsParent != null
@@ -259,16 +234,15 @@ public abstract class Element
             this.deletedElementsParent.addChild(this.deletedElementsIndex, this);
             this.parent = this.deletedElementsParent;
 
-            deleteElementAndChildrenUndone = true;
+            success = true;
         }
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to undo delete %s[%s] -" +
+            Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to undo delete %s -" +
                             " undoDeleteElementAndChildrenPossible[%s]," +
                             " deletedElementsChildrenSize[%d]," +
                             " deletedElementsParent[%s]," +
                             " deletedElementsIndex[%d]",
-                    this.getClass().getSimpleName(),
-                    this.getName(),
+                    this,
                     this.undoDeleteElementAndChildrenPossible,
                     this.removedElementsChildren.size(),
                     this.removedElementsParent != null ? this.removedElementsParent.getName() : null,
@@ -280,7 +254,7 @@ public abstract class Element
         this.deletedElementsIndex = -1;
         this.undoDeleteElementAndChildrenPossible = false;
 
-        return deleteElementAndChildrenUndone;
+        return success;
     }
 
     public boolean removeElement()
@@ -292,24 +266,26 @@ public abstract class Element
             this.removedElementsIndex = this.parent.getChildren().indexOf(this);
             this.undoRemoveElementPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s[%s] -> removed from parent[%s].", this.getClass().getSimpleName(), this.toString(), this.parent.toString()));
+            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> removed from parent %s.", this, this.parent));
             this.parent.getChildren().remove(this);
 
             this.parent.addChildren(this.removedElementsIndex, this.getChildren());
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s[%s] -> children cleared.", this.getClass().getSimpleName(), this.toString()));
-            this.getChildren().clear();
+            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> #[%d]children cleared.", this, this.getChildCount()));
+            this.children.clear();
 
             return true;
         }
-
-        Log.w(Constants.LOG_TAG,  String.format("Element.removeElement:: can not remove %s[%s] as it is the root element.", this.getClass().getSimpleName(), this.toString()));
-        return false;
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element.", this));
+            return false;
+        }
     }
 
     public boolean undoRemoveElement()
     {
-        boolean removeElementUndone = false;
+        boolean success = false;
 
         if(this.undoRemoveElementPossible
                 && this.removedElementsParent != null
@@ -320,17 +296,16 @@ public abstract class Element
             this.removedElementsParent.addChild(this.removedElementsIndex, this);
             this.parent = this.removedElementsParent;
 
-            removeElementUndone = true;
+            success = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to undo remove %s[%s] -" +
+            Log.w(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to undo remove %s -" +
                             " undoRemoveElementPossible[%s]," +
                             " removedElementsChildrenSize[%d]," +
                             " removedElementsParent[%s]," +
                             " removedElementsIndex[%d]",
-                    this.getClass().getSimpleName(),
-                    this.getName(),
+                    this,
                     this.undoDeleteElementAndChildrenPossible,
                     this.removedElementsChildren.size(),
                     this.removedElementsParent != null ? this.removedElementsParent.getName() : null,
@@ -342,6 +317,6 @@ public abstract class Element
         this.removedElementsIndex = -1;
         this.undoRemoveElementPossible = false;
 
-        return removeElementUndone;
+        return success;
     }
 }
