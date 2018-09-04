@@ -32,23 +32,25 @@ public class Content
 
         Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         new DatabaseMock().fetchContent(this);
-        Log.d(Constants.LOG_TAG, "Content.Constructor:: content fetched.");
+        Log.d(Constants.LOG_TAG, "Content.Constructor:: content fetched");
 
         if(!this.elements.isEmpty())
         {
             Log.d(Constants.LOG_TAG, "Content.Constructor:: searching for root element...");
             Element rootElement = ((Element) this.elements.values().toArray()[0]).getRootElement();
-            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root element %s found.", rootElement));
+            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root element %s found", rootElement));
 
             this.setRootElement(rootElement);
 
             Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             this.flattenContentTree(this.rootElement);
-            Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened.");
+            Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened");
         }
         else
         {
-            throw new IllegalStateException("Content.Constructor:: no elements fetched - unable to find root element.");
+            String errorMessage = "Content.Constructor:: no elements fetched - unable to find root element";
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
     }
 
@@ -59,7 +61,7 @@ public class Content
 
     private void setRootElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s set as root element.", element));
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s set as root element", element));
         this.rootElement = element;
     }
 
@@ -110,7 +112,9 @@ public class Content
         }
         else
         {
-            throw new IllegalStateException(String.format("No element found for uuid[%s].", uuid));
+            String errorMessage = String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid);
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
     }
 
@@ -136,13 +140,13 @@ public class Content
 
     public void addElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added.", element));
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
         this.elements.put(element.getUuid(), element);
     }
 
     public void deleteElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed.", element));
+        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
         this.elements.remove(element.getUuid());
     }
 

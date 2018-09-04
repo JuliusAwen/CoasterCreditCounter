@@ -58,7 +58,7 @@ public abstract class Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid.", name));
+            Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
         }
     }
 
@@ -76,7 +76,7 @@ public abstract class Element
     {
         if(this.parent != null)
         {
-            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent.", this));
+            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent", this));
             return this.parent.getRootElement();
         }
         else
@@ -91,20 +91,20 @@ public abstract class Element
 
         if(!children.isEmpty())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared.", this));
+            Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared", this));
             this.children.clear();
 
             this.addChildren(children);
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> no children to set!", this));
+            Log.w(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> no children to set", this));
         }
     }
 
     public void setChild(Element child)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setChild:: %s -> children cleared.", this));
+        Log.v(Constants.LOG_TAG,  String.format("Element.setChild:: %s -> children cleared", this));
         this.children.clear();
 
         this.addChild(child);
@@ -141,7 +141,7 @@ public abstract class Element
     {
         child.setParent(this);
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added.", this, child));
+        Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added", this, child));
         this.children.add(index, child);
     }
 
@@ -202,7 +202,7 @@ public abstract class Element
 
     private void setParent(Element parent)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set.", this, parent));
+        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
         this.parent = parent;
     }
 
@@ -212,7 +212,7 @@ public abstract class Element
 
         newElement.addChildren(new ArrayList<>(children));
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s -> #[%d]children removed.", this, this.getChildCount()));
+        Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s -> #[%d]children removed", this, this.getChildCount()));
         this.children.removeAll(children);
 
         this.addChild(this.getChildren().size(), newElement);
@@ -224,21 +224,21 @@ public abstract class Element
 
         if (this.parent != null)
         {
-            this.deletedElementsChildren = new ArrayList<>(this.children);
+            this.deletedElementsChildren = new ArrayList<>(this.getChildren());
             this.deletedElementsParent = this.parent;
-            this.deletedElementsIndex = this.parent.getChildren().indexOf(this);
+            this.deletedElementsIndex = this.parent.indexOfChild(this);
             this.undoDeleteElementAndChildrenPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> removed from parent %s.", this, this.parent));
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> removed from parent %s", this, this.parent));
             this.parent.getChildren().remove(this);
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> #[%d]children cleared.", this, this.getChildCount()));
-            this.children.clear();
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> #[%d]children cleared", this, this.getChildCount()));
+            this.getChildren().clear();
 
             return true;
         }
 
-        Log.w(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element.", this));
+        Log.w(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
         return false;
     }
 
@@ -287,24 +287,24 @@ public abstract class Element
 
         if (this.parent != null)
         {
-            this.removedElementsChildren = new ArrayList<>(this.children);
+            this.removedElementsChildren = new ArrayList<>(this.getChildren());
             this.removedElementsParent = this.parent;
-            this.removedElementsIndex = this.parent.getChildren().indexOf(this);
+            this.removedElementsIndex = this.parent.indexOfChild(this);
             this.undoRemoveElementPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> removed from parent %s.", this, this.parent));
+            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> removed from parent %s", this, this.parent));
             this.parent.getChildren().remove(this);
 
             this.parent.addChildren(this.removedElementsIndex, this.getChildren());
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> #[%d]children cleared.", this, this.getChildCount()));
-            this.children.clear();
+            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> #[%d]children cleared", this, this.getChildCount()));
+            this.getChildren().clear();
 
             return true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element.", this));
+            Log.w(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element", this));
             return false;
         }
     }
