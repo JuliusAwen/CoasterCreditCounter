@@ -21,8 +21,8 @@ public class Attraction extends Element
         {
             name = name.trim();
 
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: Attraction[%s] created.", name));
             attraction = new Attraction(name, UUID.randomUUID());
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: %s created.", attraction.getFullName()));
         }
         else
         {

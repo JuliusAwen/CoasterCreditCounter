@@ -25,7 +25,8 @@ public class Content
 
     private Content()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.i(Constants.LOG_TAG, "Content.Constructor:: creating instance...");
 
         this.elements = new HashMap<>();
 
@@ -49,8 +50,6 @@ public class Content
         {
             throw new IllegalStateException("Content.Constructor:: no elements fetched - unable to find root element.");
         }
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     public Element getRootElement()
@@ -74,16 +73,16 @@ public class Content
         }
     }
 
-    public static ArrayList<String> createUuidStringsFromElements(List<? extends Element> elements)
+    public static ArrayList<String> getUuidStringsFromElements(List<Element> elements)
     {
-        ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> uuidStrings = new ArrayList<>();
 
         for(Element element : elements)
         {
-            strings.add(element.getUuid().toString());
+            uuidStrings.add(element.getUuid().toString());
         }
 
-        return strings;
+        return uuidStrings;
     }
 
     public List<Element> fetchElementsFromUuidStrings(List<String> uuidStrings)
@@ -147,9 +146,9 @@ public class Content
         this.elements.remove(element.getUuid());
     }
 
-    public static List<Element> orderElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
+    public static List<Element> sortElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
     {
-        Log.d(Constants.LOG_TAG, "Content.orderElementListByCompareList:: getting list in order...");
+        Log.d(Constants.LOG_TAG, "Content.sortElementListByCompareList:: sort list...");
 
         ArrayList<Element> orderedList = new ArrayList<>();
 

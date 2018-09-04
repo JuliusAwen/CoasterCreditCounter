@@ -29,18 +29,17 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
+        Log.d(Constants.LOG_TAG, "BaseActivity.onPrepareOptionsMenu:: OptionsMenu in this or child activity prepared");
+
         if(helpOverlayFragment != null)
         {
             if(menu.findItem(Selection.HELP.ordinal()) == null)
@@ -59,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch (selection)
         {
             case HELP:
+                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%S] selected", selection));
                 this.setHelpOverlayVisibility(true);
                 return true;
 
@@ -74,6 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch (buttonFunction)
         {
             case CLOSE:
+                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%S] selected", buttonFunction));
                 this.setHelpOverlayVisibility(false);
                 break;
         }
@@ -128,11 +129,17 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 @Override
                 public void onClick(View view)
                 {
-                    finish();
+                    onHomeButtonBackClicked();
                 }
 
             });
         }
+    }
+
+    protected void onHomeButtonBackClicked()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.onHomeButtonBackClicked:: finishing activity...");
+        finish();
     }
 
     protected void setToolbarTitle(String title)
@@ -171,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void createHelpOverlayFragment(View containerView, CharSequence helpText, boolean isVisibleOnCreation)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating fragment...");
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.createHelpOverlayFragment:: creating fragment - isVisibleOnCreation[%S]", isVisibleOnCreation));
 
         if (this.savedInstanceState == null)
         {

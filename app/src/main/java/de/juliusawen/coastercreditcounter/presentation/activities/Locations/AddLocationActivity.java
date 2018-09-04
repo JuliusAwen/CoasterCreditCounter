@@ -37,22 +37,22 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.d(Constants.LOG_TAG, "AddLocationsActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.i(Constants.LOG_TAG, "AddLocationsActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
 
         this.initializeContent();
         this.initializeViews();
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override
     public void onConfirmDialogFragmentInteraction(View view)
     {
         ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.onConfirmDialogFragment:: [%S] selected", buttonFunction));
+
         switch (buttonFunction)
         {
             case OK:
@@ -64,7 +64,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.newLocation != null)
                 {
-                    Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: cancelled -> removing %s", this.newLocation));
+                    Log.i(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removing %s", this.newLocation));
                     Content.getInstance().deleteElementAndChildren(this.newLocation);
                 }
 
@@ -91,18 +91,20 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
         if(requestCode == Constants.REQUEST_PICK_ELEMENTS)
         {
             if(resultCode == RESULT_OK)
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> pickedChildren = Content.getInstance().fetchElementsFromUuidStrings(uuidStrings);
-                pickedChildren = Content.orderElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
+                pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
                 this.parentLocation.insertElement(this.newLocation, new ArrayList<>(pickedChildren));
-                this.returnResult();
+                this.returnResult(resultCode);
             }
-        }
+         }
     }
 
     private void initializeContent()
@@ -136,7 +138,6 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         }
 
         this.editText = view.findViewById(R.id.editTextAddLocation);
-
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -147,6 +148,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
+                        Log.i(Constants.LOG_TAG, "AddLocationsActivity.createEditText.onEditorAction:: IME_ACTION_DONE");
                         handleOnEditorActionDone();
                         handled = true;
                         break;
@@ -161,29 +163,27 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     {
         if(this.handleLocationCreation())
         {
-            if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
+            Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren[%S]", this.checkBoxAddChildren.isChecked()));
+            if(this.checkBoxAddChildren.isChecked())
             {
-                Log.d(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren <CHECKED>");
-
                 if (this.parentLocation.getChildCount() > 1)
                 {
+                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting Activity...");
                     Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
                     startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: %s has only one child -> inserting in %s", this.parentLocation, this.newLocation));
+                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: %s has only one child -> inserting in %s", this.parentLocation, this.newLocation));
                     this.parentLocation.insertElement(this.newLocation, this.parentLocation.getChildren());
-                    returnResult();
+                    returnResult(RESULT_OK);
                 }
             }
             else
             {
-                Log.d(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren <UNCHECKED>");
-
                 this.parentLocation.addChild(this.newLocation);
-                this.returnResult();
+                this.returnResult(RESULT_OK);
             }
         }
         else
@@ -203,14 +203,23 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             success = true;
         }
 
+        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create location[%s] success[%S]",this.editText.getText().toString(), success));
+
         return success;
     }
 
-    private void returnResult()
+    private void returnResult(int resultCode)
     {
+        Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: result code [%d]", resultCode));
+
         Intent intent = new Intent();
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.newLocation.getUuid().toString());
-        setResult(RESULT_OK, intent);
+
+        if(resultCode == RESULT_OK)
+        {
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.newLocation.getUuid().toString());
+        }
+
+        setResult(resultCode, intent);
         finish();
     }
 }

@@ -21,8 +21,8 @@ public class Park extends Element
         {
             name = name.trim();
 
-            Log.v(Constants.LOG_TAG,  String.format("Park.createPark:: Park[%s] created.", name));
             park = new Park(name, UUID.randomUUID());
+            Log.v(Constants.LOG_TAG,  String.format("Park.createPark:: %s created.", park.getFullName()));
         }
         else
         {

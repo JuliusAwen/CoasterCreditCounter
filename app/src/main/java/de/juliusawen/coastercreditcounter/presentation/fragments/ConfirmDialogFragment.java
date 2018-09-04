@@ -23,6 +23,8 @@ public class ConfirmDialogFragment extends Fragment
 
     public static ConfirmDialogFragment newInstance()
     {
+        Log.i(Constants.LOG_TAG, "ConfirmDialogFragment.newInstance:: creating instance...");
+
         return new ConfirmDialogFragment();
     }
 

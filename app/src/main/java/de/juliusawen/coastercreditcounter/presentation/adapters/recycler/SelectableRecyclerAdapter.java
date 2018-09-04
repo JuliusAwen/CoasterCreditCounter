@@ -55,12 +55,15 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple)
     {
+        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: creating instance - selectMultiple[%S]...", selectMultiple));
         this.elementsToSelectFrom = elementsToSelectFrom;
         this.selectMultiple = selectMultiple;
     }
 
     public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple, RecyclerOnClickListener.OnClickListener onClickListener)
     {
+        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: creating instance - selectMultiple[%S]...", selectMultiple));
+
         this.elementsToSelectFrom = elementsToSelectFrom;
         this.selectMultiple = selectMultiple;
         this.onClickListener = onClickListener;
@@ -68,8 +71,15 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public void updateList(List<Element> elements)
     {
+        Log.v(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateList:: updating list with #[%d] elements...", elements.size()));
+
         this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
+    }
+
+    public List<Element> getElementsToSelectFrom()
+    {
+        return this.elementsToSelectFrom;
     }
 
     public List<Element> getSelectedElementsInOrderOfSelection()
@@ -79,6 +89,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public void selectAllElements()
     {
+        Log.i(Constants.LOG_TAG, "SelectableRecyclerAdapter.selectAllElements:: selecting all elements...");
+
         this.selectedViewsByElement.clear();
         this.selectElements(this.elementsToSelectFrom);
         notifyDataSetChanged();
@@ -86,6 +98,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public void deselectAllElements()
     {
+        Log.i(Constants.LOG_TAG, "SelectableRecyclerAdapter.deselectAllElements:: deselecting all elements...");
+
         this.selectedViewsByElement.clear();
         notifyDataSetChanged();
     }
@@ -101,6 +115,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     public void selectElement(Element element)
     {
         this.selectedViewsByElement.put(element, null);
+
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.selectElement:: %s selected", element));
     }
 
     @NonNull
@@ -114,8 +130,6 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-
         Element element = elementsToSelectFrom.get(position);
 
         Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s (position[%d])", element, position));
@@ -141,6 +155,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
                 if(view.isSelected())
                 {
                     selectedViewsByElement.remove(element);
+                    Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: %s deselected", element));
                 }
                 else
                 {
@@ -155,6 +170,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
                     }
 
                     selectedViewsByElement.put(element, view);
+                    Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: %s selected", element));
                 }
 
                 view.setSelected(!view.isSelected());
@@ -169,8 +185,6 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         });
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override

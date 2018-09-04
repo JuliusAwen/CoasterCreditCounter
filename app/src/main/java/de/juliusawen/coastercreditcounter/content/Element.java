@@ -40,22 +40,9 @@ public abstract class Element
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
     }
 
-    public <T> boolean isInstance(Class<T> type)
+    public String getFullName()
     {
-        return type.isInstance(this);
-    }
-
-    public Element getRootElement()
-    {
-        if(this.parent != null)
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent.", this));
-            return this.parent.getRootElement();
-        }
-        else
-        {
-            return this;
-        }
+        return String.format(Locale.getDefault(), "[%s \"%s\" (%s)]", this.getClass().getSimpleName(), this.getName(), this.getUuid());
     }
 
     public String getName()
@@ -80,62 +67,39 @@ public abstract class Element
         return this.uuid;
     }
 
-    public boolean containsChild(Element child)
+    public <T> boolean isInstance(Class<T> type)
     {
-        return this.children.contains(child);
+        return type.isInstance(this);
     }
 
-    public int indexOfChild(Element child)
+    public Element getRootElement()
     {
-        return this.children.indexOf(child);
-    }
-
-    public List<Element> getChildren()
-    {
-        return this.children;
-    }
-
-    public <T> List<Element> getChildrenOfInstance(Class<T> type)
-    {
-        List<Element> children = new ArrayList<>();
-
-        for(Element element : this.children)
+        if(this.parent != null)
         {
-            if(element.isInstance(type))
-            {
-                children.add(element);
-            }
+            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent.", this));
+            return this.parent.getRootElement();
         }
-
-        return children;
-    }
-
-    public boolean hasChildren()
-    {
-        return !this.children.isEmpty();
-    }
-
-    public <T> boolean hasChildrenOfInstance(Class<T> type)
-    {
-        return !this.getChildrenOfInstance(type).isEmpty();
-    }
-
-    public int getChildCount()
-    {
-        return this.children.size();
-    }
-
-    public <T> int getChildCountOfInstance(Class<T> type)
-    {
-        return this.getChildrenOfInstance(type).size();
+        else
+        {
+            return this;
+        }
     }
 
     public void setChildren(List<Element> children)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared.", this));
-        this.children.clear();
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "setChildren");
 
-        this.addChildren(children);
+        if(!children.isEmpty())
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared.", this));
+            this.children.clear();
+
+            this.addChildren(children);
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> no children to set!", this));
+        }
     }
 
     public void setChild(Element child)
@@ -156,6 +120,8 @@ public abstract class Element
 
     private void addChildren(int index, List<Element> children)
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "addChildren");
+
         int increment = -1;
 
         for (Element child : children)
@@ -179,6 +145,56 @@ public abstract class Element
         this.children.add(index, child);
     }
 
+    public boolean containsChild(Element child)
+    {
+        return this.children.contains(child);
+    }
+
+    public int indexOfChild(Element child)
+    {
+        return this.children.indexOf(child);
+    }
+
+    public boolean hasChildren()
+    {
+        return !this.getChildren().isEmpty();
+    }
+
+    public <T> boolean hasChildrenOfInstance(Class<T> type)
+    {
+        return !this.getChildrenOfInstance(type).isEmpty();
+    }
+
+    public int getChildCount()
+    {
+        return this.getChildren().size();
+    }
+
+    public <T> int getChildCountOfInstance(Class<T> type)
+    {
+        return this.getChildrenOfInstance(type).size();
+    }
+
+    public List<Element> getChildren()
+    {
+        return this.children;
+    }
+
+    public <T> List<Element> getChildrenOfInstance(Class<T> type)
+    {
+        List<Element> children = new ArrayList<>();
+
+        for(Element element : this.children)
+        {
+            if(element.isInstance(type))
+            {
+                children.add(element);
+            }
+        }
+
+        return children;
+    }
+
     public Element getParent()
     {
         return this.parent;
@@ -192,6 +208,8 @@ public abstract class Element
 
     public void insertElement(Element newElement, List<Element> children)
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "insertElement");
+
         newElement.addChildren(new ArrayList<>(children));
 
         Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s -> #[%d]children removed.", this, this.getChildCount()));
@@ -202,6 +220,8 @@ public abstract class Element
 
     public boolean deleteElementAndChildren()
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "deleteElementAndChildren");
+
         if (this.parent != null)
         {
             this.deletedElementsChildren = new ArrayList<>(this.children);
@@ -224,6 +244,8 @@ public abstract class Element
 
     public boolean undoDeleteElementAndChildren()
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "undoDeleteElementAndChildren");
+
         boolean success = false;
 
         if(this.undoDeleteElementAndChildrenPossible
@@ -236,6 +258,7 @@ public abstract class Element
 
             success = true;
         }
+        else
         {
             Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to undo delete %s -" +
                             " undoDeleteElementAndChildrenPossible[%s]," +
@@ -254,11 +277,14 @@ public abstract class Element
         this.deletedElementsIndex = -1;
         this.undoDeleteElementAndChildrenPossible = false;
 
+        Log.i(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: undo delete %s success[%s]", this, success));
         return success;
     }
 
     public boolean removeElement()
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "removeElement");
+
         if (this.parent != null)
         {
             this.removedElementsChildren = new ArrayList<>(this.children);
@@ -285,6 +311,8 @@ public abstract class Element
 
     public boolean undoRemoveElement()
     {
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "undoRemoveElement");
+
         boolean success = false;
 
         if(this.undoRemoveElementPossible
@@ -317,6 +345,7 @@ public abstract class Element
         this.removedElementsIndex = -1;
         this.undoRemoveElementPossible = false;
 
+        Log.i(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: undo remove %s success[%s]", this, success));
         return success;
     }
 }

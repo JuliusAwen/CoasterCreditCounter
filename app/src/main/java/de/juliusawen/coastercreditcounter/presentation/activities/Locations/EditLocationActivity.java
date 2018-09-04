@@ -27,22 +27,22 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.d(Constants.LOG_TAG, "EditLocationActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.i(Constants.LOG_TAG, "EditLocationActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
         this.initializeContent();
         this.initializeViews();
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override
     public void onConfirmDialogFragmentInteraction(View view)
     {
         ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        Log.i(Constants.LOG_TAG, String.format("EditLocationsActivity.onConfirmDialogIntercation:: [%S] selected", buttonFunction));
+
         switch (buttonFunction)
         {
             case OK:
@@ -50,7 +50,6 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
                 break;
 
             case CANCEL:
-                Log.d(Constants.LOG_TAG, "EditLocationActivity.onConfirmDialogFragmentInteraction:: cancelled");
                 finish();
                 break;
         }
@@ -90,6 +89,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     private void createEditText(View view)
     {
         this.editText = view.findViewById(R.id.editTextEditLocation);
+        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: edit %s", this.locationToEdit));
         this.editText.append(this.locationToEdit.getName());
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -101,6 +101,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
+                    Log.i(Constants.LOG_TAG, "EditLocationActivity.createEditText.onEditorAction:: IME_ACTION_DONE");
                     handleOnEditorActionDone();
 
                     handled = true;
@@ -112,6 +113,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     private void handleOnEditorActionDone()
     {
+        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: changing name of %s to [%s]", this.locationToEdit, this.editText.getText().toString()));
         locationToEdit.setName(this.editText.getText().toString());
         finish();
     }

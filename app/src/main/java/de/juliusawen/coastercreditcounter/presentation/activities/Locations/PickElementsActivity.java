@@ -40,8 +40,8 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
+        Log.i(Constants.LOG_TAG, "PickElementsActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_elements);
@@ -49,8 +49,6 @@ public class PickElementsActivity extends BaseActivity
 
         this.initializeContent();
         this.initializeViews();
-
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class PickElementsActivity extends BaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putString(Constants.KEY_ELEMENT, this.element.getUuid().toString());
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.createUuidStringsFromElements(this.elementsToPickFrom));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToPickFrom));
 
         if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -67,7 +65,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.createUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         outState.putString(Constants.EXTRA_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
@@ -116,7 +114,7 @@ public class PickElementsActivity extends BaseActivity
         super.createToolbar(pickElementsView, getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location), true);
         this.createFloatingActionButton();
         this.createSelectOrDeselectAllBar(pickElementsView);
-        this.createContentRecyclerView(pickElementsView);
+        this.createSelectableRecyclerView(pickElementsView);
         super.createHelpOverlayFragment(frameLayoutActivity, getText(R.string.help_text_pick_elements), false);
     }
 
@@ -128,15 +126,14 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent();
                 if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.createUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.createFloatingActionButton.onClick:: FloatingActionButton clicked - returning result");
+                    returnResult(RESULT_OK);
                 }
                 else
                 {
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.createFloatingActionButton.onClick:: FloatingActionButton clicked - no element was selected");
                     Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_no_entry_selected));
                 }
             }
@@ -159,6 +156,8 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
+                Log.d(Constants.LOG_TAG, "PickElementsActivity.createSelectOrDeselectAllBar.onClick:: RadioButton clicked");
+
                 if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
                     selectableRecyclerAdapter.selectAllElements();
@@ -175,17 +174,21 @@ public class PickElementsActivity extends BaseActivity
 
     private void changeToSelectAll()
     {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeToSelectAll:: changing RadioButton text");
+
         textViewSelectOrDeselectAll.setText(R.string.text_select_all);
         radioButtonSelectOrDeselectAll.setChecked(false);
     }
 
     private void changeToDeselectAll()
     {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeToDeselectAll:: changing RadioButton text");
+
         textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         radioButtonSelectOrDeselectAll.setChecked(false);
     }
 
-    private void createContentRecyclerView(View view)
+    private void createSelectableRecyclerView(View view)
     {
         this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
         {
@@ -211,5 +214,20 @@ public class PickElementsActivity extends BaseActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(this.selectableRecyclerAdapter);
+    }
+
+    private void returnResult(int resultCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: resultCode[%d]", resultCode));
+
+        Intent intent = new Intent();
+
+        if(resultCode == RESULT_OK)
+        {
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+        }
+
+        setResult(resultCode, intent);
+        finish();
     }
 }
