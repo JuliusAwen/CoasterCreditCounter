@@ -18,7 +18,8 @@
 
     <!--options menu entries-->
     <string name="selection_rename_root">rename root</string>
-    <string name="selection_sort_entries">sort entries</string>
+    <string name="selection_sort_locations">sort locations</string>
+    <string name="selection_sort_parks">sort parks</string>
     <string name="selection_help">help</string>
     <string name="selection_sort_a_to_z">sort a-z</string>
     <string name="selection_switch_mode">switch mode</string>

@@ -11,16 +11,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public abstract class Element
 {
-    public boolean undoDeleteElementAndChildrenPossible = false;
-    public boolean undoRemoveElementPossible = false;
-
-    private List<Element> deletedElementsChildren = new ArrayList<>();
-    private Element deletedElementsParent = null;
-    private int deletedElementsIndex = -1;
-
-    private List<Element> removedElementsChildren = new ArrayList<>();
-    private Element removedElementsParent = null;
-    private int removedElementsIndex = -1;
+    public boolean undoPossible = false;
+    private Element backupParent = null;
+    private List<Element> backupChildren = new ArrayList<>();
+    private int undoIndex = -1;
 
     private Element parent = null;
     private List<Element> children = new ArrayList<>();
@@ -85,31 +79,6 @@ public abstract class Element
         }
     }
 
-    public void setChildren(List<Element> children)
-    {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "setChildren");
-
-        if(!children.isEmpty())
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> children cleared", this));
-            this.children.clear();
-
-            this.addChildren(children);
-        }
-        else
-        {
-            Log.w(Constants.LOG_TAG,  String.format("Element.setChildren:: %s -> no children to set", this));
-        }
-    }
-
-    public void setChild(Element child)
-    {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setChild:: %s -> children cleared", this));
-        this.children.clear();
-
-        this.addChild(child);
-    }
-
     public void addChildren(List<Element> children)
     {
         for (Element child : children)
@@ -134,7 +103,7 @@ public abstract class Element
 
     public void addChild(Element child)
     {
-        this.addChild(this.getChildren().size(), child);
+        this.addChild(this.getChildCount(), child);
     }
 
     private void addChild(int index, Element child)
@@ -184,7 +153,7 @@ public abstract class Element
     {
         List<Element> children = new ArrayList<>();
 
-        for(Element element : this.children)
+        for(Element element : this.getChildren())
         {
             if(element.isInstance(type))
             {
@@ -193,6 +162,29 @@ public abstract class Element
         }
 
         return children;
+    }
+
+    public void deleteChildren(List<Element> children)
+    {
+        for(Element child : children)
+        {
+            this.deleteChild(child);
+        }
+    }
+
+    private void deleteChild(Element child)
+    {
+        if(this.containsChild(child))
+        {
+            this.getChildren().remove(child);
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s removed", this, child));
+        }
+        else
+        {
+            String errorMessage = String.format("Element.deleteChild:: %s -> child %s not found", this, child);
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
     }
 
     public Element getParent()
@@ -208,97 +200,89 @@ public abstract class Element
 
     public void insertElement(Element newElement, List<Element> children)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "insertElement");
+        Log.d(Constants.LOG_TAG, String.format("Element.insertElement:: inserting %s into %s", newElement, this));
 
         newElement.addChildren(new ArrayList<>(children));
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.insertElement:: %s -> #[%d]children removed", this, this.getChildCount()));
-        this.children.removeAll(children);
+        this.deleteChildren(children);
 
-        this.addChild(this.getChildren().size(), newElement);
+        this.addChild(this.getChildCount(), newElement);
     }
 
     public boolean deleteElementAndChildren()
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "deleteElementAndChildren");
+        Log.d(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: deleting %s and children", this));
 
         if (this.parent != null)
         {
-            this.deletedElementsChildren = new ArrayList<>(this.getChildren());
-            this.deletedElementsParent = this.parent;
-            this.deletedElementsIndex = this.parent.indexOfChild(this);
-            this.undoDeleteElementAndChildrenPossible = true;
+            this.backupChildren = new ArrayList<>(this.getChildren());
+            this.backupParent = this.parent;
+            this.undoIndex = this.parent.indexOfChild(this);
+            this.undoPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> removed from parent %s", this, this.parent));
-            this.parent.getChildren().remove(this);
-
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: %s -> #[%d]children cleared", this, this.getChildCount()));
-            this.getChildren().clear();
+            this.parent.deleteChild(this);
+            this.deleteChildren(this.backupChildren);
 
             return true;
         }
 
-        Log.w(Constants.LOG_TAG,  String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
+        Log.w(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
         return false;
     }
 
     public boolean undoDeleteElementAndChildren()
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "undoDeleteElementAndChildren");
+        Log.d(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: restoring %s and children", this));
 
         boolean success = false;
 
-        if(this.undoDeleteElementAndChildrenPossible
-                && this.deletedElementsParent != null
-                && this.deletedElementsIndex != -1)
+        if(this.undoPossible
+                && this.backupParent != null
+                && this.undoIndex != -1)
         {
-            this.addChildren(this.deletedElementsChildren);
-            this.deletedElementsParent.addChild(this.deletedElementsIndex, this);
-            this.parent = this.deletedElementsParent;
+            this.addChildren(this.backupChildren);
+            this.backupParent.addChild(this.undoIndex, this);
+            this.parent = this.backupParent;
 
             success = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to undo delete %s -" +
-                            " undoDeleteElementAndChildrenPossible[%s]," +
-                            " deletedElementsChildrenSize[%d]," +
-                            " deletedElementsParent[%s]," +
-                            " deletedElementsIndex[%d]",
+            Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to restore %s -" +
+                            " undoPossible[%s]," +
+                            " backupChildrenCount[%d]," +
+                            " backupParent[%s]," +
+                            " undoIndex[%d]",
                     this,
-                    this.undoDeleteElementAndChildrenPossible,
-                    this.removedElementsChildren.size(),
-                    this.removedElementsParent != null ? this.removedElementsParent.getName() : null,
-                    this.removedElementsIndex));
+                    this.undoPossible,
+                    this.backupChildren.size(),
+                    this.backupParent,
+                    this.undoIndex));
         }
 
-        this.deletedElementsChildren.clear();
-        this.deletedElementsParent = null;
-        this.deletedElementsIndex = -1;
-        this.undoDeleteElementAndChildrenPossible = false;
+        this.backupChildren.clear();
+        this.backupParent = null;
+        this.undoIndex = -1;
+        this.undoPossible = false;
 
-        Log.i(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: undo delete %s success[%s]", this, success));
+        Log.i(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: restore %s success[%s]", this, success));
         return success;
     }
 
     public boolean removeElement()
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "removeElement");
+        Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s", this));
 
         if (this.parent != null)
         {
-            this.removedElementsChildren = new ArrayList<>(this.getChildren());
-            this.removedElementsParent = this.parent;
-            this.removedElementsIndex = this.parent.indexOfChild(this);
-            this.undoRemoveElementPossible = true;
+            this.backupChildren = new ArrayList<>(this.getChildren());
+            this.backupParent = this.parent;
+            this.undoIndex = this.parent.indexOfChild(this);
+            this.undoPossible = true;
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> removed from parent %s", this, this.parent));
-            this.parent.getChildren().remove(this);
-
-            this.parent.addChildren(this.removedElementsIndex, this.getChildren());
-
-            Log.v(Constants.LOG_TAG,  String.format("Element.removeElement:: %s -> #[%d]children cleared", this, this.getChildCount()));
-            this.getChildren().clear();
+            this.parent.deleteChild(this);
+            this.parent.addChildren(this.undoIndex, this.backupChildren);
+            this.deleteChildren(this.backupChildren);
 
             return true;
         }
@@ -311,41 +295,41 @@ public abstract class Element
 
     public boolean undoRemoveElement()
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "undoRemoveElement");
+        Log.d(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: restoring %s", this));
 
         boolean success = false;
 
-        if(this.undoRemoveElementPossible
-                && this.removedElementsParent != null
-                && this.removedElementsIndex != -1)
+        if(this.undoPossible
+                && this.backupParent != null
+                && this.undoIndex != -1)
         {
-            this.addChildren(this.removedElementsChildren);
-            this.removedElementsParent.getChildren().removeAll(this.removedElementsChildren);
-            this.removedElementsParent.addChild(this.removedElementsIndex, this);
-            this.parent = this.removedElementsParent;
+            this.addChildren(this.backupChildren);
+            this.backupParent.deleteChildren(this.backupChildren);
+            this.backupParent.addChild(this.undoIndex, this);
+            this.parent = this.backupParent;
 
             success = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to undo remove %s -" +
-                            " undoRemoveElementPossible[%s]," +
-                            " removedElementsChildrenSize[%d]," +
-                            " removedElementsParent[%s]," +
-                            " removedElementsIndex[%d]",
+            Log.w(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to restore %s -" +
+                            " undoPossible[%s]," +
+                            " backupChildrenCount[%d]," +
+                            " backupParent[%s]," +
+                            " undoIndex[%d]",
                     this,
-                    this.undoDeleteElementAndChildrenPossible,
-                    this.removedElementsChildren.size(),
-                    this.removedElementsParent != null ? this.removedElementsParent.getName() : null,
-                    this.removedElementsIndex));
+                    this.undoPossible,
+                    this.backupChildren.size(),
+                    this.backupParent,
+                    this.undoIndex));
         }
 
-        this.removedElementsChildren.clear();
-        this.removedElementsParent = null;
-        this.removedElementsIndex = -1;
-        this.undoRemoveElementPossible = false;
+        this.backupChildren.clear();
+        this.backupParent = null;
+        this.undoIndex = -1;
+        this.undoPossible = false;
 
-        Log.i(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: undo remove %s success[%s]", this, success));
+        Log.i(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
         return success;
     }
 }

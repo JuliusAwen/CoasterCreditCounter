@@ -31,6 +31,9 @@ public abstract class Constants
     public static final int REQUEST_ADD_ELEMENT = Request.ADD_ELEMENT.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Request.SORT_ELEMENTS.ordinal();
     public static final int REQUEST_PICK_ELEMENTS = Request.PICK_ELEMENTS.ordinal();
+
+    public static final int CONTENT_TYPE_LOCATION = ContentType.LOCATION.ordinal();
+    public static final int CONTENT_TYPE_PARK = ContentType.PARK.ordinal();
 }
 
 enum Request
@@ -40,3 +43,8 @@ enum Request
     PICK_ELEMENTS,
 }
 
+enum ContentType
+{
+    LOCATION,
+    PARK,
+}

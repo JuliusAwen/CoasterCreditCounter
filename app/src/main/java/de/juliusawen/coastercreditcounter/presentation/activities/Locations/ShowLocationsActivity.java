@@ -84,7 +84,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
         {
-            menu.add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_entries);
+            menu.add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -111,11 +111,9 @@ public class ShowLocationsActivity extends BaseActivity
                         super.setFloatingActionButtonVisibility(true);
                         break;
                 }
-
                 super.setToolbarTitle(this.fetchToolbarTitle());
                 super.setHelpOverlayText(this.fetchHelpOverlayText());
                 this.setMenuItemSwitchModeIcon();
-
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: mode switched to [%S]", this.mode));
                 return true;
 
@@ -124,10 +122,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_ELEMENTS:
-                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onOptionsItemSelected:: starting Activity...");
-                Intent intent = new Intent(this, SortElementsActivity.class);
-                intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(this.currentElement.getChildrenOfInstance(Location.class)));
-                startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
+                this.startSortElementsActivity(this.currentElement.getChildrenOfInstance(Location.class));
                 return true;
 
             default:
@@ -186,9 +181,12 @@ public class ShowLocationsActivity extends BaseActivity
         {
             if(resultCode == RESULT_OK)
             {
-                List<String> elementsUuids = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> elements = Content.getInstance().fetchElementsFromUuidStrings(elementsUuids);
-                this.currentElement.setChildren(elements);
+                List<String> resultElementsUuids = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+                List<Element> resultElements = Content.getInstance().fetchElementsFromUuidStrings(resultElementsUuids);
+                Element parentElement = resultElements.get(0).getParent();
+
+                parentElement.deleteChildren(resultElements);
+                parentElement.addChildren(resultElements);
 
                 this.expandableRecyclerAdapter.updateList(this.currentElement.getChildrenOfInstance(Location.class));
             }
@@ -392,16 +390,16 @@ public class ShowLocationsActivity extends BaseActivity
             @Override
             public void onLongClick(final View view, int position)
             {
-                if(mode.equals(Mode.MANAGE))
+                longClickedElement = (Element) view.getTag();
+                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onLongClick:: %s long clicked", longClickedElement));
+
+
+                if(longClickedElement.isInstance(Location.class))
                 {
-                    longClickedElement = (Element) view.getTag();
+                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
 
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onLongClick:: %s long clicked", longClickedElement));
-
-                    if(longClickedElement.isInstance(Location.class))
+                    if(mode == Mode.MANAGE)
                     {
-                        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-
                         popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
                         popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
 
@@ -409,178 +407,188 @@ public class ShowLocationsActivity extends BaseActivity
                         {
                             popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove_element);
                         }
-
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                        {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item)
-                            {
-                                AlertDialog.Builder builder;
-                                AlertDialog alertDialog;
-
-                                Selection selection = Selection.values()[item.getItemId()];
-                                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.PopupMenu.onMenuItemClick:: [%S] selected", selection));
-                                switch (selection)
-                                {
-                                    case EDIT_ELEMENT:
-                                        startEditLocationActivity(longClickedElement);
-                                        return true;
-
-                                    case DELETE_ELEMENT:
-                                        builder = new AlertDialog.Builder(ShowLocationsActivity.this);
-
-                                        builder.setTitle(R.string.alert_dialog_delete_element_title);
-                                        builder.setMessage(getString(R.string.alert_dialog_delete_element_message, longClickedElement.getName()));
-                                        builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                        {
-                                            public void onClick(DialogInterface dialog, int id)
-                                            {
-                                                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s]...", longClickedElement));
-
-                                                dialog.dismiss();
-
-                                                if(longClickedElement.deleteElementAndChildren())
-                                                {
-                                                    Content.getInstance().deleteElementAndChildren(longClickedElement);
-                                                    updateExpandableRecyclerAdapter();
-                                                }
-                                                else
-                                                {
-                                                    Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s] failed!",
-                                                            longClickedElement));
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
-                                                }
-
-                                                Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                                                snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                                {
-                                                    @Override
-                                                    public void onClick(View view)
-                                                    {
-                                                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s]...",
-                                                                longClickedElement));
-
-                                                        if(longClickedElement.undoDeleteElementAndChildrenPossible && longClickedElement.undoDeleteElementAndChildren())
-                                                        {
-                                                            Content.getInstance().addElementAndChildren(longClickedElement);
-                                                            updateExpandableRecyclerAdapter();
-
-                                                            Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                            smoothScrollToElement(longClickedElement);
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s] failed!",
-                                                                    longClickedElement));
-
-                                                            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                        }
-                                                    }
-                                                });
-                                                snackbar.show();
-                                            }
-                                        });
-
-                                        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                        {
-                                            public void onClick(DialogInterface dialog, int id)
-                                            {
-                                                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                        alertDialog = builder.create();
-                                        alertDialog.setIcon(R.drawable.ic_baseline_warning);
-
-                                        alertDialog.show();
-                                        return true;
-
-                                    case REMOVE_ELEMENT:
-                                        builder = new AlertDialog.Builder(ShowLocationsActivity.this);
-
-                                        builder.setTitle(R.string.alert_dialog_remove_element_title);
-                                        builder.setMessage(getString(R.string.alert_dialog_remove_element_message, longClickedElement.getName(), longClickedElement.getParent().getName()));
-
-                                        builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                        {
-                                            public void onClick(DialogInterface dialog, int id)
-                                            {
-                                                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s]...", longClickedElement));
-
-                                                dialog.dismiss();
-
-                                                if(longClickedElement.removeElement())
-                                                {
-                                                    Content.getInstance().deleteElement(longClickedElement);
-                                                    currentElement = longClickedElement.getParent();
-                                                    updateExpandableRecyclerAdapter();
-
-                                                }
-                                                else
-                                                {
-                                                    Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s] failed!",
-                                                            longClickedElement));
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
-                                                }
-
-                                                Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                                                snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                                {
-                                                    @Override
-                                                    public void onClick(View view)
-                                                    {
-                                                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s]...",
-                                                                longClickedElement));
-
-                                                        if(longClickedElement.undoRemoveElementPossible && longClickedElement.undoRemoveElement())
-                                                        {
-                                                            Content.getInstance().addElement(longClickedElement);
-                                                            updateExpandableRecyclerAdapter();
-
-                                                            Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                            smoothScrollToElement(longClickedElement);
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s] failed!",
-                                                                    longClickedElement));
-                                                            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                        }
-                                                    }
-                                                });
-                                                snackbar.show();
-                                            }
-                                        });
-
-                                        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                        {
-                                            public void onClick(DialogInterface dialog, int id)
-                                            {
-                                                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                        alertDialog = builder.create();
-                                        alertDialog.setIcon(R.drawable.ic_baseline_warning);
-
-                                        alertDialog.show();
-                                        return true;
-
-                                    default:
-                                        return false;
-                                }
-
-                            }
-                        });
-
-                        popupMenu.show();
                     }
-                }
 
+                    if(longClickedElement.getChildCountOfInstance(Park.class) > 1)
+                    {
+                        popupMenu.getMenu().add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
+                        {
+                            AlertDialog.Builder builder;
+                            AlertDialog alertDialog;
+
+                            Selection selection = Selection.values()[item.getItemId()];
+                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.PopupMenu.onMenuItemClick:: [%S] selected", selection));
+
+                            switch (selection)
+                            {
+                                case EDIT_ELEMENT:
+                                    startEditLocationActivity(longClickedElement);
+                                    return true;
+
+                                case DELETE_ELEMENT:
+                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                                    builder.setTitle(R.string.alert_dialog_delete_element_title);
+                                    builder.setMessage(getString(R.string.alert_dialog_delete_element_message, longClickedElement.getName()));
+                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s]...", longClickedElement));
+
+                                            dialog.dismiss();
+
+                                            Content.getInstance().deleteElementAndChildren(longClickedElement);
+                                            if(longClickedElement.deleteElementAndChildren())
+                                            {
+                                                updateExpandableRecyclerAdapter();
+                                            }
+                                            else
+                                            {
+                                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s] failed!",
+                                                        longClickedElement));
+
+                                                Content.getInstance().addElementAndChildren(longClickedElement);
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+                                            }
+
+                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
+                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View view)
+                                                {
+                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s]...",
+                                                            longClickedElement));
+
+                                                    if(longClickedElement.undoPossible && longClickedElement.undoDeleteElementAndChildren())
+                                                    {
+                                                        Content.getInstance().addElementAndChildren(longClickedElement);
+                                                        updateExpandableRecyclerAdapter();
+
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
+
+                                                        smoothScrollToElement(longClickedElement);
+                                                    }
+                                                    else
+                                                    {
+                                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s] failed!",
+                                                                longClickedElement));
+
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                                    }
+                                                }
+                                            });
+                                            snackbar.show();
+                                        }
+                                    });
+
+                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    alertDialog = builder.create();
+                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
+
+                                    alertDialog.show();
+                                    return true;
+
+                                case REMOVE_ELEMENT:
+                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                                    builder.setTitle(R.string.alert_dialog_remove_element_title);
+                                    builder.setMessage(getString(R.string.alert_dialog_remove_element_message, longClickedElement.getName(), longClickedElement.getParent().getName()));
+
+                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s]...", longClickedElement));
+
+                                            dialog.dismiss();
+
+                                            Content.getInstance().deleteElement(longClickedElement);
+                                            if(longClickedElement.removeElement())
+                                            {
+                                                currentElement = longClickedElement.getParent();
+                                                updateExpandableRecyclerAdapter();
+                                            }
+                                            else
+                                            {
+                                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s] failed!",
+                                                        longClickedElement));
+
+                                                Content.getInstance().addElementAndChildren(longClickedElement);
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+                                            }
+
+                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
+                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View view)
+                                                {
+                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s]...",
+                                                            longClickedElement));
+
+                                                    if(longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
+                                                    {
+                                                        Content.getInstance().addElement(longClickedElement);
+                                                        updateExpandableRecyclerAdapter();
+
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
+
+                                                        smoothScrollToElement(longClickedElement);
+                                                    }
+                                                    else
+                                                    {
+                                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s] failed!",
+                                                                longClickedElement));
+                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+                                                    }
+                                                }
+                                            });
+                                            snackbar.show();
+                                        }
+                                    });
+
+                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    alertDialog = builder.create();
+                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
+
+                                    alertDialog.show();
+                                    return true;
+
+                                case SORT_ELEMENTS:
+                                    startSortElementsActivity(longClickedElement.getChildrenOfInstance(Park.class));
+
+                                default:
+                                    return false;
+                            }
+
+                        }
+                    });
+                    popupMenu.show();
+                }
             }
         };
 
@@ -607,13 +615,20 @@ public class ShowLocationsActivity extends BaseActivity
         return  this.mode.equals(Mode.MANAGE) ? getText(R.string.help_text_manage_locations) : getText(R.string.help_text_browse_locations);
     }
 
-    private void startEditLocationActivity(Element element)
+    private void startEditLocationActivity(Element elementToEdit)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startEditLocationActivity:: starting Activity...");
-
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startEditLocationActivity:: starting EditLocationsActivity...");
         Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
         startActivity(intent);
+    }
+
+    private void startSortElementsActivity(List<Element> elementsToSort)
+    {
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onOptionsItemSelected:: starting SortElementsActivity...");
+        Intent intent = new Intent(this, SortElementsActivity.class);
+        intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
+        startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
     }
 
     private void smoothScrollToElement(Element element)

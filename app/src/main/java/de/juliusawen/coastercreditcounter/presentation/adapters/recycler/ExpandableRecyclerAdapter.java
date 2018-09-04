@@ -22,6 +22,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
+import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 
 public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRecyclerAdapter.ViewHolder>
 {
@@ -92,10 +93,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
         RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
 
-        if(viewHolder.textView.getTag() != null && !((Element)viewHolder.textView.getTag()).getUuid().equals(element.getUuid()))
-        {
-            this.removeChildViews(viewHolder);
-        }
+        this.removeChildViews(viewHolder);
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
         viewHolder.textView.setTag(element);
@@ -211,13 +209,22 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
             LayoutInflater layoutInflater = (LayoutInflater) viewHolder.linearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+
             childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.recycler_view_content_holder, viewHolder.linearLayout, false);
+            childView.findViewById(R.id.linearLayoutRecyclerViewContentHolder_Inner).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
             childView.setId(Constants.VIEW_TYPE_CHILD + increment);
             childView.setTag(element);
             childView.setOnClickListener(recyclerOnClickListener);
+            childView.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            childView.setPadding(
+                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 32),
+                    0,
+                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 32),
+                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 16));
 
             TextView textView = childView.findViewById(R.id.textViewRecyclerViewContentHolder);
             textView.setText(element.getName());
+
 
             viewHolder.linearLayout.addView(childView);
             viewHolder.childCount++;

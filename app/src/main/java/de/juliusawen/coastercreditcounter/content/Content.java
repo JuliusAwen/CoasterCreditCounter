@@ -13,6 +13,9 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Content
 {
+    private boolean undoPossible = false;
+    private Map<UUID, Element> backupElements = new HashMap<>();
+
     private Element rootElement;
     private Map<UUID, Element> elements;
 
@@ -137,6 +140,7 @@ public class Content
 
         this.deleteElement(element);
     }
+
 
     public void addElement(Element element)
     {

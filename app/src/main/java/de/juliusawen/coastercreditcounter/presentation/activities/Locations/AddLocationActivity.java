@@ -163,12 +163,13 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     {
         if(this.handleLocationCreation())
         {
-            Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren[%S]", this.checkBoxAddChildren.isChecked()));
-            if(this.checkBoxAddChildren.isChecked())
+            if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
+                Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren[%S]", this.checkBoxAddChildren.isChecked()));
+
                 if (this.parentLocation.getChildCount() > 1)
                 {
-                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting Activity...");
+                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting PickLocationsActivity...");
                     Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
                     startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
