@@ -44,13 +44,12 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 public class ShowLocationsActivity extends BaseActivity
 {
     private Mode mode;
-    private Element currentElement = Content.getInstance().getRootElement();
+    private Element currentElement;
     private List<Element> recentElements = new ArrayList<>();
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
     private Element longClickedElement;
     private MenuItem menuItemSwitchMode;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,20 +59,33 @@ public class ShowLocationsActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_locations);
-
-        this.initializeContent();
-        this.initializeViews();
     }
 
     @Override
-    public void onResume()
+    protected void onStart()
+    {
+        super.onStart();
+
+        if(!super.isInitialized)
+        {
+            this.initializeContent();
+            this.initializeViews();
+        }
+    }
+
+    @Override
+    protected void onResume()
     {
         Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with %s", this.currentElement));
 
-        super.onResume();
 
-        this.updateExpandableRecyclerAdapter();
-        this.updateNavigationBar();
+        if(super.content != null)
+        {
+            this.updateExpandableRecyclerAdapter();
+            this.updateNavigationBar();
+        }
+
+        super.onResume();
     }
 
     @Override
@@ -160,8 +172,8 @@ public class ShowLocationsActivity extends BaseActivity
 
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.recentElements = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.currentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
         this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
 
         this.updateExpandableRecyclerAdapter();
@@ -178,7 +190,7 @@ public class ShowLocationsActivity extends BaseActivity
             if(resultCode == RESULT_OK)
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element resultElement = Content.getInstance().fetchElementFromUuidString(uuidString);
+                Element resultElement = super.content.fetchElementFromUuidString(uuidString);
                 this.currentElement = resultElement;
 
                 this.smoothScrollToElement(resultElement);
@@ -189,14 +201,14 @@ public class ShowLocationsActivity extends BaseActivity
             if(resultCode == RESULT_OK)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = Content.getInstance().fetchElementsFromUuidStrings(resultElementsUuidStrings);
+                List<Element> resultElements = super.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
                 Element parentElement = resultElements.get(0).getParent();
 
                 parentElement.deleteChildren(resultElements);
                 parentElement.addChildren(resultElements);
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element selectedElement = Content.getInstance().fetchElementFromUuidString(selectedElementUuidString);
+                Element selectedElement = super.content.fetchElementFromUuidString(selectedElementUuidString);
                 if(selectedElement != null)
                 {
                     this.smoothScrollToElement(selectedElement);
@@ -208,10 +220,15 @@ public class ShowLocationsActivity extends BaseActivity
     private void initializeContent()
     {
         this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
-        this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        if(this.currentElement == null)
+
+        String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+        if(elementUuid != null)
         {
-            this.currentElement = Content.getInstance().getRootElement();
+            this.currentElement = super.content.getElementByUuid(UUID.fromString(elementUuid));
+        }
+        else
+        {
+            this.currentElement = super.content.getRootElement();
         }
 
         Log.e(Constants.LOG_TAG, String.format("InitializeContent currentElement%s", this.currentElement));
@@ -463,7 +480,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                             dialog.dismiss();
 
-                                            if(Content.getInstance().deleteElementAndChildren(longClickedElement))
+                                            if(content.deleteElementAndChildren(longClickedElement))
                                             {
                                                 if(longClickedElement.deleteElementAndChildren())
                                                 {
@@ -475,7 +492,7 @@ public class ShowLocationsActivity extends BaseActivity
                                                             "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting %s and children failed - restoring content...",
                                                             longClickedElement));
 
-                                                    Content.getInstance().addElementAndChildren(longClickedElement);
+                                                    content.addElementAndChildren(longClickedElement);
                                                     Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
                                                 }
                                             }
@@ -502,7 +519,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                                     if(longClickedElement.undoPossible && longClickedElement.undoDeleteElementAndChildren())
                                                     {
-                                                        Content.getInstance().addElementAndChildren(longClickedElement);
+                                                        content.addElementAndChildren(longClickedElement);
                                                         updateExpandableRecyclerAdapter();
 
                                                         Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
@@ -551,7 +568,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                             dialog.dismiss();
 
-                                            if(Content.getInstance().deleteElement(longClickedElement))
+                                            if(content.deleteElement(longClickedElement))
                                             {
                                                 if( longClickedElement.removeElement())
                                                 {
@@ -564,7 +581,7 @@ public class ShowLocationsActivity extends BaseActivity
                                                             "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s failed - restoring content...",
                                                             longClickedElement));
 
-                                                    Content.getInstance().addElementAndChildren(longClickedElement);
+                                                    content.addElementAndChildren(longClickedElement);
                                                     Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
                                                 }
                                             }
@@ -589,7 +606,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                                     if(longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
                                                     {
-                                                        Content.getInstance().addElement(longClickedElement);
+                                                        content.addElement(longClickedElement);
                                                         updateExpandableRecyclerAdapter();
 
                                                         Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));

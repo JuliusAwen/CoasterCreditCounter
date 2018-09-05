@@ -23,7 +23,6 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.coding.fragment_arg_1";
     public static final String FRAGMENT_ARG_2 = "de.juliusawen.coding.fragment_arg_2";
 
-    public static final String FRAGMENT_TAG_CONTENT_HANDLER = "de.juliusawen.coding.tag_content_handler";
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.tag_help_overlay_fragment";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.tag_confirm_dialog_fragment";
 
@@ -39,10 +38,4 @@ enum Request
     ADD_ELEMENT,
     SORT_ELEMENTS,
     PICK_ELEMENTS,
-}
-
-enum ContentType
-{
-    LOCATION,
-    PARK,
 }

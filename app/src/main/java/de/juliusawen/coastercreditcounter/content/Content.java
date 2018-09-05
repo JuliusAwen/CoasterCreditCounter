@@ -13,7 +13,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Content
 {
-    public static boolean isInitialized = false;
+    public static class ContentState
+    {
+        public static boolean isInitialized = false;
+    }
 
     private Element rootElement;
     private Map<UUID, Element> elements;
@@ -48,7 +51,7 @@ public class Content
             this.flattenContentTree(this.rootElement);
             Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened");
 
-            Content.isInitialized = true;
+            ContentState.isInitialized = true;
         }
         else
         {
@@ -105,8 +108,7 @@ public class Content
 
     public Element fetchElementFromUuidString(String uuidString)
     {
-        Element element = this.getElementByUuid(UUID.fromString(uuidString));
-        return element;
+        return this.getElementByUuid(UUID.fromString(uuidString));
     }
 
     public Element getElementByUuid(UUID uuid)

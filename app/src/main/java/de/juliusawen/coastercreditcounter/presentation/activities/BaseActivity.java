@@ -14,7 +14,6 @@ import android.view.View;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
-import de.juliusawen.coastercreditcounter.presentation.fragments.ContentHandlerFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
@@ -22,11 +21,11 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    protected Content content;
+    public Content content;
+    protected boolean isInitialized = false;
 
     private Bundle savedInstanceState;
 
-    private ContentHandlerFragment contentHandlerFragment;
     private FloatingActionButton floatingActionButton;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
@@ -38,10 +37,15 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
-
-
-//        this.createContentHandlerFragment();
     }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        this.content = Content.getInstance();
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
@@ -113,23 +117,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         if(this.helpOverlayFragment != null)
         {
             this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBILITY));
-        }
-    }
-
-    private void createContentHandlerFragment()
-    {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createContentHandlerFragment:: creating fragment...");
-
-        if (this.savedInstanceState == null)
-        {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.contentHandlerFragment = new ContentHandlerFragment();
-            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.contentHandlerFragment, Constants.FRAGMENT_TAG_CONTENT_HANDLER);
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            this.contentHandlerFragment = (ContentHandlerFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONTENT_HANDLER);
         }
     }
 

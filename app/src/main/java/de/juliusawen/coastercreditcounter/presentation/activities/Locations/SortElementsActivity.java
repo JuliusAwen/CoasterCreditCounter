@@ -232,7 +232,7 @@ public class SortElementsActivity extends BaseActivity
                         Collections.swap(elementsToSort, position, position - 1);
                         selectableRecyclerAdapter.notifyDataSetChanged();
 
-                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);;
+                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
                         if(position - 1 - scrollMargin >= 0)
                         {
                             recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
