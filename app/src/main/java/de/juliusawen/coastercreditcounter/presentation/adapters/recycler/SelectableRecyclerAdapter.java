@@ -29,15 +29,13 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
-        LinearLayout linearLayout;
         TextView textView;
 
         ViewHolder(LinearLayout linearLayout)
         {
             super(linearLayout);
 
-            this.textView = linearLayout.findViewById(R.id.textViewRecyclerViewContentHolder);
-            this.linearLayout = linearLayout;
+            this.textView = linearLayout.findViewById(R.id.textViewSelectableElementsContentHolder);
         }
     }
 
@@ -123,7 +121,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public SelectableRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_content_holder, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.selectable_elements_content_holder, parent, false);
         return new ViewHolder(linearLayout);
     }
 
@@ -185,6 +183,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         });
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
+        viewHolder.textView.setVisibility(View.VISIBLE);
     }
 
     @Override

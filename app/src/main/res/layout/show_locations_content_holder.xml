@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/standard_bar_layout"
+        android:id="@+id/linearLayoutShowLocationsContentHolder"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            style="@style/standard_image_holder"
+            android:id="@+id/imageViewShowLocationsContentHolder_ExpandToggle"
+            android:contentDescription="@string/description_expand_toggle"
+            android:visibility="invisible"/>
+
+        <TextView
+            style="@style/standard_text_view"
+            android:id="@+id/textViewShowLocationsContentHolder_Parent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|start"
+            android:paddingStart="8dp"
+            android:paddingEnd="64dp"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/standard_text_view"
+            android:id="@+id/textViewShowLocationsContentHolder_Child"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+
+

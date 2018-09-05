@@ -22,7 +22,6 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
-import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 
 public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRecyclerAdapter.ViewHolder>
 {
@@ -44,8 +43,8 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             super(linearLayout);
 
             this.linearLayout = linearLayout;
-            this.textView = linearLayout.findViewById(R.id.textViewRecyclerViewContentHolder);
-            this.imageViewExpandToggle = linearLayout.findViewById(R.id.imageViewRecyclerViewContentHolder_ExpandToggle);
+            this.textView = linearLayout.findViewById(R.id.textViewShowLocationsContentHolder_Parent);
+            this.imageViewExpandToggle = linearLayout.findViewById(R.id.imageViewShowLocationsContentHolder_ExpandToggle);
         }
     }
 
@@ -80,7 +79,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     @Override
     public ExpandableRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_content_holder, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.show_locations_content_holder, parent, false);
         return new ViewHolder(linearLayout);
     }
 
@@ -88,7 +87,6 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
         final Element element = elements.get(position);
-
         Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s (position[%d])", element, position));
 
         RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
@@ -99,12 +97,13 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         viewHolder.textView.setTag(element);
         viewHolder.textView.setOnClickListener(recyclerOnClickListener);
         viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
+        viewHolder.textView.setVisibility(View.VISIBLE);
+
+        this.handleExpandToggle(viewHolder, element);
 
         if(element.hasChildrenOfInstance(Park.class))
         {
             Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
-
-            this.handleExpandToggle(viewHolder, element);
             this.addChildViews(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
 
             viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
@@ -112,8 +111,8 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
         else
         {
-            viewHolder.imageViewExpandToggle.setVisibility(View.GONE);
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: ExpandToggle for %s is <GONE>", element));
+            viewHolder.imageViewExpandToggle.setVisibility(View.INVISIBLE);
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: ExpandToggle for %s is <INVISIBLE>", element));
         }
     }
 
@@ -129,7 +128,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         else
         {
             viewHolder.isExpanded = false;
-            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_left));
+            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
 
             Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <COLLAPSED>", element));
         }
@@ -168,7 +167,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
                 viewHolder.linearLayout.removeView(viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + i));
             }
 
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.removeChildViews:: #[%d] ChildViews removed", viewHolder.childCount));
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.removeChildViews:: #[%d] ChildViews removed", viewHolder.childCount));
 
             viewHolder.childCount = 0;
         }
@@ -203,28 +202,23 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     private View createChildView(ViewHolder viewHolder, Element element, int increment, RecyclerOnClickListener recyclerOnClickListener)
     {
         View childView = viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + increment);
+
         if(childView == null)
         {
             Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.createChildView:: creating View %s...", element));
 
             LayoutInflater layoutInflater = (LayoutInflater) viewHolder.linearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
-            childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.recycler_view_content_holder, viewHolder.linearLayout, false);
-            childView.findViewById(R.id.linearLayoutRecyclerViewContentHolder_Inner).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.show_locations_content_holder, viewHolder.linearLayout, false);
+            childView.findViewById(R.id.linearLayoutShowLocationsContentHolder).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
             childView.setId(Constants.VIEW_TYPE_CHILD + increment);
             childView.setTag(element);
             childView.setOnClickListener(recyclerOnClickListener);
             childView.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            childView.setPadding(
-                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 32),
-                    0,
-                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 32),
-                    ViewTool.convertDpToPx(viewHolder.itemView.getContext(), 16));
 
-            TextView textView = childView.findViewById(R.id.textViewRecyclerViewContentHolder);
+            TextView textView = childView.findViewById(R.id.textViewShowLocationsContentHolder_Child);
             textView.setText(element.getName());
-
+            textView.setVisibility(View.VISIBLE);
 
             viewHolder.linearLayout.addView(childView);
             viewHolder.childCount++;

@@ -19,9 +19,9 @@
                 android:id="@+id/linearLayoutShowLocations_NavigationBar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"/>
 
         </HorizontalScrollView>

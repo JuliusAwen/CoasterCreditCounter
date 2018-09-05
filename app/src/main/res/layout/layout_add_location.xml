@@ -24,22 +24,22 @@
             <TextView
                 style="@style/standard_text_view"
                 android:id="@+id/textViewAddLocation_AddChildren"
-                android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:gravity="end|center_vertical"
+                android:textColor="@color/white"
                 android:layout_weight="1"/>
 
             <CheckBox
                 android:id="@+id/checkBoxAddLocation_AddChildren"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
+                android:layout_gravity="end|center_vertical|center_horizontal"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:buttonTint="@color/white"
-                android:layout_gravity="end|center_vertical|center_horizontal" />
+                android:buttonTint="@color/white" />
 
         </LinearLayout>
 
