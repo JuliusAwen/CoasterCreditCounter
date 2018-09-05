@@ -19,6 +19,16 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public void fetchContent(Content content)
     {
+
+//        try
+//        {
+//            Thread.sleep(5000);
+//        }
+//        catch (InterruptedException e)
+//        {
+//            e.printStackTrace();
+//        }
+
         Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: fetchContent called.");
 
         // create Nodes

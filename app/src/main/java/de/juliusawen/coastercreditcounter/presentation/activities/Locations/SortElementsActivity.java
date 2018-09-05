@@ -141,11 +141,11 @@ public class SortElementsActivity extends BaseActivity
         View sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(sortElementsView);
 
-        super.createToolbar(sortElementsView, getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName(), true);
+        super.createToolbar(getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName(), true);
         this.createFloatingActionButton();
         this.createActionDialog(sortElementsView);
         this.createContentRecyclerView(sortElementsView);
-        this.createHelpOverlayFragment(frameLayoutActivity, getText(R.string.help_text_sort_elements), false);
+        this.createHelpOverlayFragment(getText(R.string.help_text_sort_elements), false);
     }
 
     private void createFloatingActionButton()
@@ -274,10 +274,15 @@ public class SortElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result",
-                    selectableRecyclerAdapter.getElementsToSelectFrom().size()));
+            Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result", this.selectableRecyclerAdapter.getElementsToSelectFrom().size()));
 
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(this.selectableRecyclerAdapter.getElementsToSelectFrom()));
+
+            if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+            {
+                Element lastSelectedElement = this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().size() - 1);
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, lastSelectedElement.getUuid().toString());
+            }
         }
 
         setResult(resultCode, intent);

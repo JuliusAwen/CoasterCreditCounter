@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.ContentHandlerFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
@@ -20,8 +22,11 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
+    protected Content content;
+
     private Bundle savedInstanceState;
 
+    private ContentHandlerFragment contentHandlerFragment;
     private FloatingActionButton floatingActionButton;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
@@ -33,6 +38,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+
+
+//        this.createContentHandlerFragment();
     }
 
     @Override
@@ -106,14 +114,30 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBILITY));
         }
-
     }
 
-    protected void createToolbar(View view, String title, String subtitle, boolean setHomeButton)
+    private void createContentHandlerFragment()
+    {
+        Log.d(Constants.LOG_TAG, "BaseActivity.createContentHandlerFragment:: creating fragment...");
+
+        if (this.savedInstanceState == null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.contentHandlerFragment = new ContentHandlerFragment();
+            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.contentHandlerFragment, Constants.FRAGMENT_TAG_CONTENT_HANDLER);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            this.contentHandlerFragment = (ContentHandlerFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONTENT_HANDLER);
+        }
+    }
+
+    protected void createToolbar(String title, String subtitle, boolean setHomeButton)
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: creating toolbar...");
 
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        Toolbar toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         this.setToolbarTitle(title);
@@ -176,7 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    protected void createHelpOverlayFragment(View containerView, CharSequence helpText, boolean isVisibleOnCreation)
+    protected void createHelpOverlayFragment(CharSequence helpText, boolean isVisibleOnCreation)
     {
         Log.d(Constants.LOG_TAG, String.format("BaseActivity.createHelpOverlayFragment:: creating fragment - isVisibleOnCreation[%S]", isVisibleOnCreation));
 
@@ -184,7 +208,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpText, isVisibleOnCreation);
-            fragmentTransaction.add(containerView.getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.commit();
         }
         else
@@ -213,7 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
-    protected void createConfirmDialogFragment(View containerView)
+    protected void createConfirmDialogFragment()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating fragment...");
 
@@ -221,7 +245,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
-            fragmentTransaction.add(containerView.getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
             fragmentTransaction.commit();
         }
         else

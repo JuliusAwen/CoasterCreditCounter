@@ -111,11 +111,11 @@ public class PickElementsActivity extends BaseActivity
         View pickElementsView = getLayoutInflater().inflate(R.layout.layout_pick_elements, frameLayoutActivity, false);
         frameLayoutActivity.addView(pickElementsView);
 
-        super.createToolbar(pickElementsView, getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location), true);
+        super.createToolbar(getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location), true);
         this.createFloatingActionButton();
         this.createSelectOrDeselectAllBar(pickElementsView);
         this.createSelectableRecyclerView(pickElementsView);
-        super.createHelpOverlayFragment(frameLayoutActivity, getText(R.string.help_text_pick_elements), false);
+        super.createHelpOverlayFragment(getText(R.string.help_text_pick_elements), false);
     }
 
     private void createFloatingActionButton()

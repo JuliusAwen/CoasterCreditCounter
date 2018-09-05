@@ -13,8 +13,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class Content
 {
-    private boolean undoPossible = false;
-    private Map<UUID, Element> backupElements = new HashMap<>();
+    public static boolean isInitialized = false;
 
     private Element rootElement;
     private Map<UUID, Element> elements;
@@ -48,6 +47,8 @@ public class Content
             Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             this.flattenContentTree(this.rootElement);
             Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened");
+
+            Content.isInitialized = true;
         }
         else
         {
@@ -102,9 +103,10 @@ public class Content
         return elements;
     }
 
-    public Location fetchElementFromUuidString(String uuidString)
+    public Element fetchElementFromUuidString(String uuidString)
     {
-        return (Location) this.getElementByUuid(UUID.fromString(uuidString));
+        Element element = this.getElementByUuid(UUID.fromString(uuidString));
+        return element;
     }
 
     public Element getElementByUuid(UUID uuid)
@@ -115,9 +117,8 @@ public class Content
         }
         else
         {
-            String errorMessage = String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid);
-            Log.e(Constants.LOG_TAG, errorMessage);
-            throw new IllegalStateException(errorMessage);
+            Log.i(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid));
+            return null;
         }
     }
 
@@ -131,14 +132,17 @@ public class Content
         this.addElement(element);
     }
 
-    public void deleteElementAndChildren(Element element)
+    public boolean deleteElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
         {
-            this.deleteElementAndChildren(child);
+            if(!this.deleteElementAndChildren(child))
+            {
+                return false;
+            }
         }
 
-        this.deleteElement(element);
+        return this.deleteElement(element);
     }
 
 
@@ -148,10 +152,15 @@ public class Content
         this.elements.put(element.getUuid(), element);
     }
 
-    public void deleteElement(Element element)
+    public boolean deleteElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
-        this.elements.remove(element.getUuid());
+        if(this.elements.containsKey(element.getUuid()))
+        {
+            this.elements.remove(element.getUuid());
+            return true;
+        }
+        else return false;
     }
 
     public static List<Element> sortElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)

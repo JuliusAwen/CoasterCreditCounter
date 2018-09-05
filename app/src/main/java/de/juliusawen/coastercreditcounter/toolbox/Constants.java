@@ -23,6 +23,7 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_1 = "de.juliusawen.coding.fragment_arg_1";
     public static final String FRAGMENT_ARG_2 = "de.juliusawen.coding.fragment_arg_2";
 
+    public static final String FRAGMENT_TAG_CONTENT_HANDLER = "de.juliusawen.coding.tag_content_handler";
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.tag_help_overlay_fragment";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.tag_confirm_dialog_fragment";
 
@@ -31,9 +32,6 @@ public abstract class Constants
     public static final int REQUEST_ADD_ELEMENT = Request.ADD_ELEMENT.ordinal();
     public static final int REQUEST_SORT_ELEMENTS = Request.SORT_ELEMENTS.ordinal();
     public static final int REQUEST_PICK_ELEMENTS = Request.PICK_ELEMENTS.ordinal();
-
-    public static final int CONTENT_TYPE_LOCATION = ContentType.LOCATION.ordinal();
-    public static final int CONTENT_TYPE_PARK = ContentType.PARK.ordinal();
 }
 
 enum Request

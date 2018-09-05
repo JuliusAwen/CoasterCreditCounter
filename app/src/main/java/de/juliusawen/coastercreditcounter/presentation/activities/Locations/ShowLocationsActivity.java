@@ -51,6 +51,7 @@ public class ShowLocationsActivity extends BaseActivity
     private Element longClickedElement;
     private MenuItem menuItemSwitchMode;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -62,6 +63,17 @@ public class ShowLocationsActivity extends BaseActivity
 
         this.initializeContent();
         this.initializeViews();
+    }
+
+    @Override
+    public void onResume()
+    {
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with %s", this.currentElement));
+
+        super.onResume();
+
+        this.updateExpandableRecyclerAdapter();
+        this.updateNavigationBar();
     }
 
     @Override
@@ -133,6 +145,7 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
+        Log.e(Constants.LOG_TAG, "onSaveInstanceState()");
         super.onSaveInstanceState(outState);
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.recentElements));
@@ -143,6 +156,8 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
+        Log.e(Constants.LOG_TAG, "onRestoreInstanceState()");
+
         super.onRestoreInstanceState(savedInstanceState);
 
         this.recentElements = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
@@ -150,19 +165,10 @@ public class ShowLocationsActivity extends BaseActivity
         this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
 
         this.updateExpandableRecyclerAdapter();
-        this.createNavigationBar();
+        this.updateNavigationBar();
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        this.updateExpandableRecyclerAdapter();
-        this.createNavigationBar();
-    }
-
-    @Override
+        @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
@@ -173,6 +179,7 @@ public class ShowLocationsActivity extends BaseActivity
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = Content.getInstance().fetchElementFromUuidString(uuidString);
+                this.currentElement = resultElement;
 
                 this.smoothScrollToElement(resultElement);
             }
@@ -181,14 +188,19 @@ public class ShowLocationsActivity extends BaseActivity
         {
             if(resultCode == RESULT_OK)
             {
-                List<String> resultElementsUuids = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = Content.getInstance().fetchElementsFromUuidStrings(resultElementsUuids);
+                List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+                List<Element> resultElements = Content.getInstance().fetchElementsFromUuidStrings(resultElementsUuidStrings);
                 Element parentElement = resultElements.get(0).getParent();
 
                 parentElement.deleteChildren(resultElements);
                 parentElement.addChildren(resultElements);
 
-                this.expandableRecyclerAdapter.updateList(this.currentElement.getChildrenOfInstance(Location.class));
+                String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                Element selectedElement = Content.getInstance().fetchElementFromUuidString(selectedElementUuidString);
+                if(selectedElement != null)
+                {
+                    this.smoothScrollToElement(selectedElement);
+                }
             }
         }
     }
@@ -197,19 +209,26 @@ public class ShowLocationsActivity extends BaseActivity
     {
         this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
         this.currentElement = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        if(this.currentElement == null)
+        {
+            this.currentElement = Content.getInstance().getRootElement();
+        }
+
+        Log.e(Constants.LOG_TAG, String.format("InitializeContent currentElement%s", this.currentElement));
     }
 
     private void initializeViews()
     {
+        Log.e(Constants.LOG_TAG, "initializeViews");
         CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
         View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
         coordinatorLayoutActivity.addView(showLocationsView);
 
-        super.createToolbar(showLocationsView, this.fetchToolbarTitle(), null, true);
+        super.createToolbar(this.fetchToolbarTitle(), null, true);
         this.createFloatingActionButton();
-        this.createNavigationBar();
+        this.updateNavigationBar();
         this.createContentRecyclerView(showLocationsView);
-        super.createHelpOverlayFragment(coordinatorLayoutActivity, this.fetchHelpOverlayText(), false);
+        super.createHelpOverlayFragment(this.fetchHelpOverlayText(), false);
     }
 
     private void setMenuItemSwitchModeIcon()
@@ -226,7 +245,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private void createNavigationBar()
+    private void updateNavigationBar()
     {
         View view = this.findViewById(android.R.id.content).getRootView();
 
@@ -269,7 +288,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     Element element = (Element) view.getTag();
 
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createNavigationBar.onClick:: %s clicked", element));
+                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
 
                     int length = recentElements.size() - 1;
                     for (int i = length; i >= 0; i--)
@@ -287,7 +306,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                     currentElement = element;
                     updateExpandableRecyclerAdapter();
-                    createNavigationBar();
+                    updateNavigationBar();
                 }
             });
 
@@ -378,7 +397,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     currentElement = element;
                     updateExpandableRecyclerAdapter();
-                    createNavigationBar();
+                    updateNavigationBar();
                 }
                 else if(element.isInstance(Park.class))
                 {
@@ -440,22 +459,36 @@ public class ShowLocationsActivity extends BaseActivity
                                     {
                                         public void onClick(DialogInterface dialog, int id)
                                         {
-                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s]...", longClickedElement));
+                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting %s...", longClickedElement));
 
                                             dialog.dismiss();
 
-                                            Content.getInstance().deleteElementAndChildren(longClickedElement);
-                                            if(longClickedElement.deleteElementAndChildren())
+                                            if(Content.getInstance().deleteElementAndChildren(longClickedElement))
                                             {
-                                                updateExpandableRecyclerAdapter();
+                                                if(longClickedElement.deleteElementAndChildren())
+                                                {
+                                                    updateExpandableRecyclerAdapter();
+                                                }
+                                                else
+                                                {
+                                                    Log.e(Constants.LOG_TAG, String.format(
+                                                            "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting %s and children failed - restoring content...",
+                                                            longClickedElement));
+
+                                                    Content.getInstance().addElementAndChildren(longClickedElement);
+                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+                                                }
                                             }
                                             else
                                             {
-                                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting [%s] failed!",
-                                                        longClickedElement));
-
-                                                Content.getInstance().addElementAndChildren(longClickedElement);
                                                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+
+                                                String errorMessage = String.format(
+                                                        "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s and children from content failed!",
+                                                        longClickedElement);
+
+                                                Log.e(Constants.LOG_TAG, errorMessage);
+                                                throw new IllegalStateException(errorMessage);
                                             }
 
                                             Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
@@ -518,19 +551,32 @@ public class ShowLocationsActivity extends BaseActivity
 
                                             dialog.dismiss();
 
-                                            Content.getInstance().deleteElement(longClickedElement);
-                                            if(longClickedElement.removeElement())
+                                            if(Content.getInstance().deleteElement(longClickedElement))
                                             {
-                                                currentElement = longClickedElement.getParent();
-                                                updateExpandableRecyclerAdapter();
+                                                if( longClickedElement.removeElement())
+                                                {
+                                                    currentElement = longClickedElement.getParent();
+                                                    updateExpandableRecyclerAdapter();
+                                                }
+                                                else
+                                                {
+                                                    Log.e(Constants.LOG_TAG, String.format(
+                                                            "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s failed - restoring content...",
+                                                            longClickedElement));
+
+                                                    Content.getInstance().addElementAndChildren(longClickedElement);
+                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+                                                }
                                             }
                                             else
                                             {
-                                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s] failed!",
-                                                        longClickedElement));
+                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
 
-                                                Content.getInstance().addElementAndChildren(longClickedElement);
-                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+                                                String errorMessage = String.format(
+                                                        "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s from content failed!", longClickedElement);
+
+                                                Log.e(Constants.LOG_TAG, errorMessage);
+                                                throw new IllegalStateException(errorMessage);
                                             }
 
                                             Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
@@ -539,8 +585,7 @@ public class ShowLocationsActivity extends BaseActivity
                                                 @Override
                                                 public void onClick(View view)
                                                 {
-                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s]...",
-                                                            longClickedElement));
+                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s]...", longClickedElement));
 
                                                     if(longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
                                                     {

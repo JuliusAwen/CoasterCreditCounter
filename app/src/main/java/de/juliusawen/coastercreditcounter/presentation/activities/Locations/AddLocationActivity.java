@@ -64,8 +64,14 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.newLocation != null)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removing %s", this.newLocation));
-                    Content.getInstance().deleteElementAndChildren(this.newLocation);
+                    if(Content.getInstance().deleteElement(this.newLocation))
+                    {
+                        Log.i(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.newLocation));
+                    }
+                    else
+                    {
+                        Log.e(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> not able to remove remove %s", this.newLocation));
+                    }
                 }
 
                 setResult(RESULT_CANCELED, intent);
@@ -118,10 +124,10 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false);
         frameLayoutActivity.addView(addLocationView);
 
-        super.createToolbar(addLocationView, getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()), false);
-        super.createConfirmDialogFragment(frameLayoutActivity);
+        super.createToolbar(getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()), false);
+        super.createConfirmDialogFragment();
         this.createEditText(addLocationView);
-        super.createHelpOverlayFragment(frameLayoutActivity, getText(R.string.help_text_add_location), false);
+        super.createHelpOverlayFragment(getText(R.string.help_text_add_location), false);
     }
 
     private void createEditText(View view)
@@ -169,8 +175,8 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if (this.parentLocation.getChildCount() > 1)
                 {
-                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting PickLocationsActivity...");
                     Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
+                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting PickLocationsActivity...");
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
                     startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
                 }
