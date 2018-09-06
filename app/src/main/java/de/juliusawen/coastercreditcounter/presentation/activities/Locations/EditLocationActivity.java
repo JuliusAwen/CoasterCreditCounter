@@ -27,8 +27,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.i(Constants.LOG_TAG, "EditLocationActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "EditLocationActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);

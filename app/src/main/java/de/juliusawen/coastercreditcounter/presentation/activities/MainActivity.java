@@ -1,13 +1,12 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
@@ -16,63 +15,74 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class MainActivity extends AppCompatActivity
 {
+    private View progressBar;
+    private Content content;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "MainActivity.onCreate:: creating activity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.title_app_name));
-        setSupportActionBar(toolbar);
 
-        new OnFetchContent().execute();
+        this.progressBar = findViewById(R.id.linearLayoutProgressBar);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected void onResume()
     {
-        menu.clear();
-        menu.add(0, 1, Menu.NONE, R.string.selection_locations);
+        super.onResume();
 
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(item.getItemId() == 1)
+        Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: ContentState.isInitialized[%S]", Content.ContentState.isInitialized));
+        if(Content.ContentState.isInitialized)
         {
-            Intent intent = new Intent(this, ShowLocationsActivity.class);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getRootElement().getUuid().toString());
-            startActivity(intent);
-
-            return true;
+            this.content = Content.getInstance();
+            this.startHubActivity();
         }
-
-        return super.onOptionsItemSelected(item);
+        else
+        {
+            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: fetching content...");
+            new FetchContent().execute();
+        }
     }
 
-
-    private class OnFetchContent extends AsyncTask<Void, Void, Void>
+    private void startHubActivity()
     {
-        private ProgressDialog progressDialog;
+        Log.i(Constants.LOG_TAG, "MainActivity.startHubActivity:: starting activty...");
 
+        Intent intent = new Intent(MainActivity.this, ShowLocationsActivity.class);
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.content.getRootElement().getUuid().toString());
+        startActivity(intent);
+    }
+
+    private class FetchContent extends AsyncTask<Void, Void, Void>
+    {
         @Override
         protected void onPreExecute()
         {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setTitle("Content");
-            progressDialog.setMessage("fetching...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params)
         {
-            Content.getInstance();
+
+//        try
+//        {
+//            Thread.sleep(5000);
+//        }
+//        catch (InterruptedException e)
+//        {
+//            e.printStackTrace();
+//        }
+
+
+            content = Content.getInstance();
             return null;
         }
 
@@ -80,11 +90,9 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
-            progressDialog.dismiss();
 
-            Intent intent = new Intent(MainActivity.this, ShowLocationsActivity.class);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, Content.getInstance().getRootElement().getUuid().toString());
-            startActivity(intent);
+            progressBar.setVisibility(View.GONE);
+            startHubActivity();
         }
 
         @Override

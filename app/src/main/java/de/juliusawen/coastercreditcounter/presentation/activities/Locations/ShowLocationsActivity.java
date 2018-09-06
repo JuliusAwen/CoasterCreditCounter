@@ -54,36 +54,28 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_locations);
+
+        this.initializeContent();
+        this.initializeViews();
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-
-        if(!super.isInitialized)
-        {
-            this.initializeContent();
-            this.initializeViews();
-        }
     }
 
     @Override
     protected void onResume()
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with %s", this.currentElement));
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
 
-
-        if(super.content != null)
-        {
-            this.updateExpandableRecyclerAdapter();
-            this.updateNavigationBar();
-        }
+        this.updateExpandableRecyclerAdapter();
+        this.updateNavigationBar();
 
         super.onResume();
     }
@@ -160,9 +152,9 @@ public class ShowLocationsActivity extends BaseActivity
         Log.e(Constants.LOG_TAG, "onSaveInstanceState()");
         super.onSaveInstanceState(outState);
 
+        outState.putInt(Constants.KEY_MODE, this.mode.ordinal());
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.recentElements));
         outState.putString(Constants.KEY_ELEMENT, this.currentElement.getUuid().toString());
-        outState.putInt(Constants.KEY_MODE, this.mode.ordinal());
     }
 
     @Override
@@ -172,15 +164,15 @@ public class ShowLocationsActivity extends BaseActivity
 
         super.onRestoreInstanceState(savedInstanceState);
 
+        this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
         this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
-        this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
 
         this.updateExpandableRecyclerAdapter();
         this.updateNavigationBar();
     }
 
-        @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
@@ -231,12 +223,11 @@ public class ShowLocationsActivity extends BaseActivity
             this.currentElement = super.content.getRootElement();
         }
 
-        Log.e(Constants.LOG_TAG, String.format("InitializeContent currentElement%s", this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized in mode[%S] with currentElement%s", this.mode, this.currentElement));
     }
 
     private void initializeViews()
     {
-        Log.e(Constants.LOG_TAG, "initializeViews");
         CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
         View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
         coordinatorLayoutActivity.addView(showLocationsView);

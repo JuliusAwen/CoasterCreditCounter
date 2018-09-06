@@ -10,4 +10,21 @@
     <include
         layout="@layout/toolbar"/>
 
+    <LinearLayout
+        android:id="@+id/linearLayoutProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/semi_transparent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="75dp"
+            android:minWidth="75dp"
+            android:indeterminateTint="@color/colorPrimaryDark"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 </FrameLayout>

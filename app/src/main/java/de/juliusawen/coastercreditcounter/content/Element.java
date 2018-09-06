@@ -89,7 +89,7 @@ public abstract class Element
 
     private void addChildren(int index, List<Element> children)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "addChildren");
+        Log.d(Constants.LOG_TAG, String.format("Element.addChildren:: called with #[$d] children", children.size()));
 
         int increment = -1;
 

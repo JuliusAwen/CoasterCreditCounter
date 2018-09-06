@@ -33,19 +33,33 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+        this.content = Content.getInstance();
     }
+
 
     @Override
     protected void onStart()
     {
         super.onStart();
-        this.content = Content.getInstance();
+
+//        this.createToolbar();
+//        this.createFloatingActionButton();
+//        this.createConfirmDialogFragment();
+//        this.createHelpOverlayFragment();
+
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        this.isInitialized = true;
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)

@@ -30,8 +30,7 @@ public class Content
 
     private Content()
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER);
-        Log.i(Constants.LOG_TAG, "Content.Constructor:: creating instance...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
 
         this.elements = new HashMap<>();
 
