@@ -148,42 +148,47 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             @Override
             public void onClick(View view)
             {
-                Element element = (Element) view.getTag();
-
-                if(view.isSelected())
-                {
-                    selectedViewsByElement.remove(element);
-                    Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: %s deselected", element));
-                }
-                else
-                {
-                    if(selectedViewsByElement.get(element) != null)
-                    {
-                        selectedViewsByElement.get(element).setSelected(false);
-                    }
-
-                    if(!selectMultiple)
-                    {
-                        selectedViewsByElement.clear();
-                    }
-
-                    selectedViewsByElement.put(element, view);
-                    Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: %s selected", element));
-                }
-
-                view.setSelected(!view.isSelected());
-
-                if(onClickListener != null)
-                {
-                    onClickListener.onClick(view, viewHolder.getAdapterPosition());
-                }
-
-                notifyDataSetChanged();
+                onClickItemView(viewHolder, view);
             }
         });
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
         viewHolder.textView.setVisibility(View.VISIBLE);
+    }
+
+    private void onClickItemView(ViewHolder viewHolder, View view)
+    {
+        Element element = (Element) view.getTag();
+
+        if(view.isSelected())
+        {
+            this.selectedViewsByElement.remove(element);
+            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s deselected", element));
+        }
+        else
+        {
+            if(this.selectedViewsByElement.get(element) != null)
+            {
+                this.selectedViewsByElement.get(element).setSelected(false);
+            }
+
+            if(!this.selectMultiple)
+            {
+                this.selectedViewsByElement.clear();
+            }
+
+            this.selectedViewsByElement.put(element, view);
+            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s selected", element));
+        }
+
+        view.setSelected(!view.isSelected());
+
+        if(this.onClickListener != null)
+        {
+            this.onClickListener.onClick(view, viewHolder.getAdapterPosition());
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override

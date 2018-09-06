@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,18 +35,35 @@ public class PickElementsActivity extends BaseActivity
     private TextView textViewSelectOrDeselectAll;
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
 
-
+    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.e(Constants.LOG_TAG, "onCreate()");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "PickElementsActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_elements);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutPickElements);
+        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_pick_elements, frameLayoutActivity, false));
 
-
+        super.onCreate(savedInstanceState);
+        super.addToolbar();
+        super.addFloatingActionButton();
+        super.addHelpOverlay();
         this.initializeContent();
-        this.initializeViews();
+
+        this.addSelectOrDeselectAllBar();
+        this.addSelectableRecyclerView();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        this.decorateToolbar();
+        this.decorateFloatingActionButton();
+        this.decorateHelpOverlay();
+
+        super.onResume();
     }
 
     @Override
@@ -75,9 +91,9 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.element = Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.element = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.elementsToPickFrom = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToPickFrom = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.selectableRecyclerAdapter.updateList(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
@@ -87,63 +103,104 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            List<Element> selectedElements = Content.getInstance().fetchElementsFromUuidStrings(selectedElementStrings);
+            List<Element> selectedElements = super.content.fetchElementsFromUuidStrings(selectedElementStrings);
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 
         this.textViewSelectOrDeselectAll.setText(savedInstanceState.getString(Constants.EXTRA_RADIO_BUTTON_STATE));
     }
+    //endregion
 
     private void initializeContent()
     {
-        this.element = Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.element = super.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
 
-        if(this.element.getClass().equals(Location.class))
+        if(this.element.isInstance(Location.class))
         {
-            this.elementsToPickFrom = new ArrayList<>(this.element.getChildren());
+            this.elementsToPickFrom = new ArrayList<>(this.element.getChildrenOfInstance(Location.class));
         }
     }
 
-    private void initializeViews()
+    private void decorateToolbar()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutPickElements);
-        View pickElementsView = getLayoutInflater().inflate(R.layout.layout_pick_elements, frameLayoutActivity, false);
-        frameLayoutActivity.addView(pickElementsView);
-
-        super.createToolbar(getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location), true);
-        this.createFloatingActionButton();
-        this.createSelectOrDeselectAllBar(pickElementsView);
-        this.createSelectableRecyclerView(pickElementsView);
-        super.createHelpOverlayFragment(getText(R.string.help_text_pick_elements), false);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location));
+        super.setToolbarHomeButton();
     }
 
-    private void createFloatingActionButton()
+    //region FLOATING ACTION BUTTON
+    private void decorateFloatingActionButton()
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
-                {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.createFloatingActionButton.onClick:: FloatingActionButton clicked - returning result");
-                    returnResult(RESULT_OK);
-                }
-                else
-                {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.createFloatingActionButton.onClick:: FloatingActionButton clicked - no element was selected");
-                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_no_entry_selected));
-                }
+                onClickFloatingActionButton();
             }
         });
-
-        super.createFloatingActionButton(floatingActionButton, DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonVisibility(true);
     }
 
-    private void createSelectOrDeselectAllBar(View view)
+    private void onClickFloatingActionButton()
     {
-        LinearLayout linearLayoutSelectAll = view.findViewById(R.id.linearLayoutPickElements_SelectAll);
+        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        {
+            Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
+            returnResult(RESULT_OK);
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no element selected");
+            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_no_entry_selected));
+        }
+    }
+    //endregion
+
+    private void decorateHelpOverlay()
+    {
+        super.setHelpOverlayMessage(getText(R.string.help_text_pick_elements));
+    }
+
+    //region SELECTABLE RECYCLER VIEW
+    private void addSelectableRecyclerView()
+    {
+        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view, int position)
+            {
+                onClickSelectableRecyclerView(view);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {}
+        });
+
+        RecyclerView recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewPickElements);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(this.selectableRecyclerAdapter);
+    }
+
+    private void onClickSelectableRecyclerView(View view)
+    {
+        if(view.isSelected() && selectableRecyclerAdapter.isAllSelected())
+        {
+            this.changeRadioButtonToDeselectAll();
+        }
+        else
+        {
+            this.changeRadioButtonToSelectAll();
+        }
+    }
+    //endregion
+
+    //region SELECT OR DESELECT ALL BAR
+    private void addSelectOrDeselectAllBar()
+    {
+        LinearLayout linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
         linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
         this.textViewSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
@@ -155,65 +212,43 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "PickElementsActivity.createSelectOrDeselectAllBar.onClick:: RadioButton clicked");
-
-                if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
-                {
-                    selectableRecyclerAdapter.selectAllElements();
-                    changeToDeselectAll();
-                }
-                else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
-                {
-                    selectableRecyclerAdapter.deselectAllElements();
-                    changeToSelectAll();
-                }
+                onClickSelectOrDeselectAllBar();
             }
         });
     }
 
-    private void changeToSelectAll()
+    private void onClickSelectOrDeselectAllBar()
     {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeToSelectAll:: changing RadioButton text");
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickSelectOrDeselectAllBar:: RadioButton clicked");
 
-        textViewSelectOrDeselectAll.setText(R.string.text_select_all);
-        radioButtonSelectOrDeselectAll.setChecked(false);
-    }
-
-    private void changeToDeselectAll()
-    {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeToDeselectAll:: changing RadioButton text");
-
-        textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
-        radioButtonSelectOrDeselectAll.setChecked(false);
-    }
-
-    private void createSelectableRecyclerView(View view)
-    {
-        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
+        if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
         {
-            @Override
-            public void onClick(View view, int position)
-            {
-                if(view.isSelected() && selectableRecyclerAdapter.isAllSelected())
-                {
-                    changeToDeselectAll();
-                }
-                else
-                {
-                    changeToSelectAll();
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {}
-        });
-
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewPickElements);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.selectableRecyclerAdapter);
+            this.selectableRecyclerAdapter.selectAllElements();
+            changeRadioButtonToDeselectAll();
+        }
+        else if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+        {
+            this.selectableRecyclerAdapter.deselectAllElements();
+            changeRadioButtonToSelectAll();
+        }
     }
+
+    private void changeRadioButtonToSelectAll()
+    {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToSelectAll:: changing RadioButton");
+
+        this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
+        this.radioButtonSelectOrDeselectAll.setChecked(false);
+    }
+
+    private void changeRadioButtonToDeselectAll()
+    {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToDeselectAll:: changing RadioButton");
+
+        this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
+        this.radioButtonSelectOrDeselectAll.setChecked(false);
+    }
+    //endregion
 
     private void returnResult(int resultCode)
     {

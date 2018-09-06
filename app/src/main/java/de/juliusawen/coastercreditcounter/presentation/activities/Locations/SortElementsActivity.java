@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,16 +35,34 @@ public class SortElementsActivity extends BaseActivity
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private RecyclerView recyclerView;
 
+    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "SortElementsActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort_elements);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutSortElements);
+        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false));
 
+        super.onCreate(savedInstanceState);
+        super.addToolbar();
+        super.addFloatingActionButton();
+        super.addHelpOverlay();
         this.initializeContent();
-        this.initializeViews();
+
+        this.createActionDialog();
+        this.createContentRecyclerView();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        this.decorateToolbar();
+        this.decorateFloatingActionButton();
+        this.decorateHelpOverlay();
+
+        super.onResume();
     }
 
     @Override
@@ -95,7 +112,7 @@ public class SortElementsActivity extends BaseActivity
         }
         else
         {
-            outState.putString(Constants.KEY_SELECTED_ELEMENT, selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
         }
     }
 
@@ -104,7 +121,7 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.elementsToSort = Content.getInstance().fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToSort = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
         if(selectedElementString != null && selectedElementString.isEmpty())
@@ -113,7 +130,7 @@ public class SortElementsActivity extends BaseActivity
         }
         else
         {
-            Element element = Content.getInstance().getElementByUuid(UUID.fromString(selectedElementString));
+            Element element = super.content.getElementByUuid(UUID.fromString(selectedElementString));
             this.selectableRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
@@ -122,50 +139,58 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    protected void onHomeButtonBackClicked()
+    protected void onToolbarHomeButtonBackClicked()
     {
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onHomeButtonBackClicked:: result canceled");
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onToolbarHomeButtonBackClicked:: result canceled");
         returnResult(RESULT_CANCELED);
     }
+    //endregion
 
     private void initializeContent()
     {
-        this.elementsToSort = Content.getInstance().fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        this.elementsToSort = super.content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: fetched #[%d] elements from extra", this.elementsToSort.size()));
     }
 
-    private void initializeViews()
+    private void decorateToolbar()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutSortElements);
-        View sortElementsView = getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false);
-        frameLayoutActivity.addView(sortElementsView);
-
-        super.createToolbar(getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName(), true);
-        this.createFloatingActionButton();
-        this.createActionDialog(sortElementsView);
-        this.createContentRecyclerView(sortElementsView);
-        this.createHelpOverlayFragment(getText(R.string.help_text_sort_elements), false);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName());
+        super.setToolbarHomeButton();
     }
 
-    private void createFloatingActionButton()
+    //region FLOATING ACTION BUTTON
+    private void decorateFloatingActionButton()
     {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createFloatingActionButton.onMenuItemClick:: accepted - result ok");
-                returnResult(RESULT_OK);
+                onClickFloatingActionButton();
             }
         });
-
-        super.createFloatingActionButton(floatingActionButton, DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonVisibility(true);
     }
 
-    private void createActionDialog(View view)
+    private void onClickFloatingActionButton()
     {
-        ImageButton buttonDown = view.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionDown);
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: accepted - return code <OK>...");
+        returnResult(RESULT_OK);
+    }
+    //endregion
+
+    private void decorateHelpOverlay()
+    {
+        super.setHelpOverlayMessage(getText(R.string.help_text_sort_elements));
+    }
+
+    //region ACTION DIALOG
+    private void createActionDialog()
+    {
+        View contentView = this.findViewById(android.R.id.content);
+
+        ImageButton buttonDown = contentView.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionDown);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward));
         buttonDown.setImageDrawable(drawable);
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
@@ -174,42 +199,11 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: button<DOWN> clicked");
-
-                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
-                {
-                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
-
-                    if(position < elementsToSort.size() - 1)
-                    {
-                        Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
-
-                        Collections.swap(elementsToSort, position, position + 1);
-                        selectableRecyclerAdapter.notifyDataSetChanged();
-
-                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
-                        if(elementsToSort.size() > position + 1 + scrollMargin)
-                        {
-                            recyclerView.smoothScrollToPosition(position + 1 + scrollMargin);
-                        }
-                        else
-                        {
-                            recyclerView.smoothScrollToPosition(elementsToSort.size() - 1);
-                        }
-                    }
-                    else
-                    {
-                        Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: end of list - not swapping elements");
-                    }
-                }
-                else
-                {
-                    Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: no element selected");
-                }
+                onClickActionDialogButtonDown();
             }
         });
 
-        ImageButton buttonUp = view.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionUp);
+        ImageButton buttonUp = contentView.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionUp);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward));
         buttonUp.setImageDrawable(drawable);
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
@@ -218,47 +212,89 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: button<UP> clicked");
-
-                if(!selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
-                {
-                    int position = elementsToSort.indexOf(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
-
-                    if(position > 0)
-                    {
-                        Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
-
-                        Collections.swap(elementsToSort, position, position - 1);
-                        selectableRecyclerAdapter.notifyDataSetChanged();
-
-                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
-                        if(position - 1 - scrollMargin >= 0)
-                        {
-                            recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
-                        }
-                        else
-                        {
-                            recyclerView.smoothScrollToPosition(0);
-                        }
-                    }
-                    else
-                    {
-                        Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: end of list - not swapping elements");
-                    }
-                }
-                else
-                {
-                    Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: no element selected");
-                }
+                onClickActionDialogButtonUp();
             }
         });
     }
 
-    private void createContentRecyclerView(View view)
+    private void onClickActionDialogButtonDown()
+    {
+        Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
+
+        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        {
+            int position = this.elementsToSort.indexOf(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
+
+            if(position < this.elementsToSort.size() - 1)
+            {
+                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
+
+                Collections.swap(this.elementsToSort, position, position + 1);
+                this.selectableRecyclerAdapter.notifyDataSetChanged();
+
+                int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
+                if(this.elementsToSort.size() > position + 1 + scrollMargin)
+                {
+                    this.recyclerView.smoothScrollToPosition(position + 1 + scrollMargin);
+                }
+                else
+                {
+                    this.recyclerView.smoothScrollToPosition(this.elementsToSort.size() - 1);
+                }
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
+            }
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
+        }
+    }
+
+    private void onClickActionDialogButtonUp()
+    {
+        Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
+
+        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        {
+            int position = this.elementsToSort.indexOf(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
+
+            if(position > 0)
+            {
+                Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
+
+                Collections.swap(this.elementsToSort, position, position - 1);
+                this.selectableRecyclerAdapter.notifyDataSetChanged();
+
+                int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
+                if(position - 1 - scrollMargin >= 0)
+                {
+                    this.recyclerView.smoothScrollToPosition(position - 1 - scrollMargin);
+                }
+                else
+                {
+                    this.recyclerView.smoothScrollToPosition(0);
+                }
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
+            }
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: no element selected");
+        }
+    }
+    //endregion
+
+    private void createContentRecyclerView()
     {
         this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false);
 
-        this.recyclerView = view.findViewById(R.id.recyclerViewSortElements);
+        this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setHasFixedSize(true);

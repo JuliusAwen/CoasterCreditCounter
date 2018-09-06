@@ -34,16 +34,32 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     private EditText editText;
     private CheckBox checkBoxAddChildren;
 
+    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "AddLocationsActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddLocation);
+        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false));
 
+        super.onCreate(savedInstanceState);
+        super.addToolbar();
+        super.addConfirmDialog();
+        super.addHelpOverlay();
         this.initializeContent();
-        this.initializeViews();
+
+        this.createEditText();
+    }
+
+
+    @Override
+    protected void onResume()
+    {
+        this.decorateToolbar();
+        this.decorateHelpOverlay();
+        super.onResume();
     }
 
     @Override
@@ -63,7 +79,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.newLocation != null)
                 {
-                    if(Content.getInstance().deleteElement(this.newLocation))
+                    if(content.deleteElement(this.newLocation))
                     {
                         Log.i(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.newLocation));
                     }
@@ -90,7 +106,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-        this.parentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentLocation = (Location) super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
     @Override
@@ -103,7 +119,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             if(resultCode == RESULT_OK)
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> pickedChildren = Content.getInstance().fetchElementsFromUuidStrings(uuidStrings);
+                List<Element> pickedChildren = super.content.fetchElementsFromUuidStrings(uuidStrings);
                 pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
                 this.parentLocation.insertElement(this.newLocation, new ArrayList<>(pickedChildren));
@@ -111,29 +127,31 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             }
          }
     }
+    //endregion
 
     private void initializeContent()
     {
-        this.parentLocation = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.parentLocation = (Location) super.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
-    private void initializeViews()
+    private void decorateToolbar()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddLocation);
-        View addLocationView = getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false);
-        frameLayoutActivity.addView(addLocationView);
-
-        super.createToolbar(getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()), false);
-        super.createConfirmDialogFragment();
-        this.createEditText(addLocationView);
-        super.createHelpOverlayFragment(getText(R.string.help_text_add_location), false);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()));
     }
 
-    private void createEditText(View view)
+    private void decorateHelpOverlay()
     {
+        super.setHelpOverlayMessage(getText(R.string.help_text_add_location));
+    }
+
+    //region EDIT TEXT
+    private void createEditText()
+    {
+        View contentView = this.findViewById(android.R.id.content);
+
         if(this.parentLocation.hasChildren())
         {
-            LinearLayout linearLayoutAddChildren = view.findViewById(R.id.linearLayoutAddLocation_AddChildren);
+            LinearLayout linearLayoutAddChildren = contentView.findViewById(R.id.linearLayoutAddLocation_AddChildren);
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
 
             TextView textViewAddChildren = linearLayoutAddChildren.findViewById(R.id.textViewAddLocation_AddChildren);
@@ -142,26 +160,31 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             this.checkBoxAddChildren = linearLayoutAddChildren.findViewById(R.id.checkBoxAddLocation_AddChildren);
         }
 
-        this.editText = view.findViewById(R.id.editTextAddLocation);
+        this.editText = contentView.findViewById(R.id.editTextAddLocation);
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                boolean handled = false;
-
-                switch (actionId)
-                {
-                    case EditorInfo.IME_ACTION_DONE:
-                        Log.i(Constants.LOG_TAG, "AddLocationsActivity.createEditText.onEditorAction:: IME_ACTION_DONE");
-                        handleOnEditorActionDone();
-                        handled = true;
-                        break;
-                }
-
-                return handled;
+                return onClickEditorAction(actionId);
             }
         });
+    }
+
+    private boolean onClickEditorAction(int actionId)
+    {
+        boolean handled = false;
+
+        switch (actionId)
+        {
+            case EditorInfo.IME_ACTION_DONE:
+                Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickEditorAction:: IME_ACTION_DONE");
+                handleOnEditorActionDone();
+                handled = true;
+                break;
+        }
+
+        return handled;
     }
 
     private void handleOnEditorActionDone()
@@ -205,14 +228,15 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
         if(this.newLocation != null)
         {
-            Content.getInstance().addElement(this.newLocation);
+            super.content.addElement(this.newLocation);
             success = true;
         }
 
-        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create location[%s] success[%S]",this.editText.getText().toString(), success));
+        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create location[%s] success[%S]", this.editText.getText().toString(), success));
 
         return success;
     }
+    //endregion
 
     private void returnResult(int resultCode)
     {

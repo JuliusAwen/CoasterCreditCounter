@@ -9,10 +9,11 @@ public abstract class Constants
     public static final String KEY_ELEMENTS = "de.juliusawen.coding.key_elements";
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.coding.key_selected_element";
     public static final String KEY_SELECTED_ELEMENTS = "de.juliusawen.coding.key_selected_elements";
-    public static final String KEY_HELP_VISIBILITY = "de.juliusawen.coding.key_help_visibility";
+    public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_TITLE = "de.juliusawen.coding.key_title";
     public static final String KEY_SUBTITLE = "de.juliusawen.coding.key_subtitle";
-    public static final String KEY_HELP_TEXT = "de.juliusawen.coding.key_help_text";
+    public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
+    public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";
     public static final String KEY_MODE = "de.juliusawen.coding.key_mode";
 
     public static final String EXTRA_MODE = "de.juliusawen.coding.extra_mode";

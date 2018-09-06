@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
@@ -24,16 +23,32 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     private Location locationToEdit;
     private EditText editText;
 
+    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "EditLocationActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
+        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
+        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false));
 
+        super.onCreate(savedInstanceState);
+        super.addToolbar();
+        super.addConfirmDialog();
+        super.addHelpOverlay();
         this.initializeContent();
-        this.initializeViews();
+
+        this.createEditText();
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        this.decorateToolbar();
+        this.decorateHelpOverlay();
+        super.onResume();
     }
 
     @Override
@@ -65,29 +80,30 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-        this.locationToEdit = (Location) Content.getInstance().getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.locationToEdit = (Location) super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
+    //endregion
 
     private void initializeContent()
     {
-        this.locationToEdit = (Location) Content.getInstance().getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.locationToEdit = (Location) super.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
-    private void initializeViews()
+    private void decorateToolbar()
     {
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        View editLocationView = getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false);
-        frameLayoutActivity.addView(editLocationView);
-
-        super.createToolbar(getString(R.string.title_edit_location), this.locationToEdit.getName(), false);
-        super.createConfirmDialogFragment();
-        this.createEditText(editLocationView);
-        super.createHelpOverlayFragment(getText(R.string.help_text_edit_location), false);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_edit_location), this.locationToEdit.getName());
     }
 
-    private void createEditText(View view)
+    private void decorateHelpOverlay()
     {
-        this.editText = view.findViewById(R.id.editTextEditLocation);
+        super.setHelpOverlayMessage(getText(R.string.help_text_edit_location));
+    }
+
+    //region EDIT TEXT
+    private void createEditText()
+    {
+        this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
+
         Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: edit %s", this.locationToEdit));
         this.editText.append(this.locationToEdit.getName());
 
@@ -96,18 +112,23 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                boolean handled = false;
-
-                if (actionId == EditorInfo.IME_ACTION_DONE)
-                {
-                    Log.i(Constants.LOG_TAG, "EditLocationActivity.createEditText.onEditorAction:: IME_ACTION_DONE");
-                    handleOnEditorActionDone();
-
-                    handled = true;
-                }
-                return handled;
+                return onClickEditorAction(actionId);
             }
         });
+    }
+
+    private boolean onClickEditorAction(int actionId)
+    {
+        boolean handled = false;
+
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+        {
+            Log.i(Constants.LOG_TAG, "EditLocationActivity.onClickEditorAction:: IME_ACTION_DONE");
+            this.handleOnEditorActionDone();
+
+            handled = true;
+        }
+        return handled;
     }
 
     private void handleOnEditorActionDone()
@@ -116,4 +137,5 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
         locationToEdit.setName(this.editText.getText().toString());
         finish();
     }
+    //endregion
 }

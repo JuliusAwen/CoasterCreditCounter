@@ -15,8 +15,9 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class MainActivity extends AppCompatActivity
 {
-    private View progressBar;
     private Content content;
+
+    private View progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

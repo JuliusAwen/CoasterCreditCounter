@@ -138,24 +138,28 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             @Override
             public void onClick(View view)
             {
-                if(!viewHolder.isExpanded)
-                {
-
-                    elementsToExpand.add(element);
-                    Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: expanded %s", element));
-
-                    notifyDataSetChanged();
-                }
-                else
-                {
-                    elementsToExpand.remove(element);
-                    Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: collapsed %s", element));
-
-                    notifyDataSetChanged();
-                }
+                onClickExpandToggle(viewHolder, element);
             }
         });
+    }
 
+    private void onClickExpandToggle(ViewHolder viewHolder, Element element)
+    {
+        if(!viewHolder.isExpanded)
+        {
+
+            elementsToExpand.add(element);
+            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: expanded %s", element));
+
+            notifyDataSetChanged();
+        }
+        else
+        {
+            elementsToExpand.remove(element);
+            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: collapsed %s", element));
+
+            notifyDataSetChanged();
+        }
     }
 
     private void removeChildViews(ViewHolder viewHolder)

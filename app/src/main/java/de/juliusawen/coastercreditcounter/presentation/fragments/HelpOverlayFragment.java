@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Objects;
@@ -21,44 +22,29 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class HelpOverlayFragment extends Fragment
 {
-    public View fragmentView;
-    private Boolean isVisibleOnCreation;
+    private String helpTitle;
+    private CharSequence helpMessage;
 
-    private CharSequence helpText;
+    private TextView textViewHelpTitle;
+    private TextView textViewHelpMessage;
+
     private HelpOverlayFragmentInteractionListener helpOverlayFragmentInteractionListener;
-
 
     public HelpOverlayFragment() {}
 
-    public static HelpOverlayFragment newInstance(CharSequence helpText, boolean isVisible)
+    public static HelpOverlayFragment newInstance()
     {
         Log.i(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: creating instance...");
-
-        HelpOverlayFragment fragment = new HelpOverlayFragment();
-        Bundle args = new Bundle();
-        args.putCharSequence(Constants.FRAGMENT_ARG_1, helpText);
-        args.putBoolean(Constants.FRAGMENT_ARG_2, isVisible);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null)
-        {
-            this.helpText = getArguments().getCharSequence(Constants.FRAGMENT_ARG_1);
-            this.isVisibleOnCreation = getArguments().getBoolean(Constants.FRAGMENT_ARG_2);
-        }
+        return new HelpOverlayFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.fragmentView = inflater.inflate(R.layout.fragment_help_overlay, container, false);
-        return this.fragmentView;
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
+        this.textViewHelpTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
+        this.textViewHelpMessage = linearLayout.findViewById(R.id.textViewHelp_Message);
+        return linearLayout;
     }
 
     @Override
@@ -66,15 +52,19 @@ public class HelpOverlayFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView textViewHelpTitle = view.findViewById(R.id.textViewHelp_Title);
-        textViewHelpTitle.setText(R.string.title_help);
-
         if(savedInstanceState != null)
         {
-            this.helpText = savedInstanceState.getCharSequence(Constants.KEY_HELP_TEXT);
+            this.helpTitle = savedInstanceState.getString(Constants.KEY_HELP_TITLE);
+            this.helpMessage = savedInstanceState.getCharSequence(Constants.KEY_HELP_MESSAGE);
+        }
+        else
+        {
+            this.helpTitle = getString(R.string.title_help);
+            this.helpMessage = "";
         }
 
-        this.setHelpText(this.helpText);
+        this.setHelpTitle(this.helpTitle);
+        this.setHelpMessage(this.helpMessage);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close));
@@ -88,11 +78,9 @@ public class HelpOverlayFragment extends Fragment
                 HelpOverlayFragment.this.onCloseButtonPressed(view);
             }
         });
-
-        this.setVisibility(this.isVisibleOnCreation);
     }
 
-    public void onCloseButtonPressed(View view)
+    private void onCloseButtonPressed(View view)
     {
         if (this.helpOverlayFragmentInteractionListener != null)
         {
@@ -103,9 +91,10 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState)
     {
-        super.onSaveInstanceState(outState);
+        outState.putString(Constants.KEY_HELP_TITLE, this.helpTitle);
+        outState.putCharSequence(Constants.KEY_HELP_MESSAGE, this.helpMessage);
 
-        outState.putCharSequence(Constants.KEY_HELP_TEXT, this.helpText);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -129,9 +118,7 @@ public class HelpOverlayFragment extends Fragment
         super.onDetach();
 
         this.helpOverlayFragmentInteractionListener = null;
-        this.fragmentView = null;
-        this.helpText = null;
-        this.isVisibleOnCreation = null;
+        this.helpMessage = null;
     }
 
     public interface HelpOverlayFragmentInteractionListener
@@ -139,18 +126,19 @@ public class HelpOverlayFragment extends Fragment
         void onHelpOverlayFragmentInteraction(View view);
     }
 
-    public void setHelpText(CharSequence helpText)
+    public void setHelpTitle(String helpTitle)
     {
-        this.helpText = helpText;
-        TextView textViewHelpMessage = this.fragmentView.findViewById(R.id.textViewHelp_Message);
-        textViewHelpMessage.setText(this.helpText);
+        this.helpTitle = helpTitle;
+        this.textViewHelpTitle.setText(helpTitle);
 
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.setHelpText:: HelpText set");
+        Log.d(Constants.LOG_TAG, String.format("HelpOverlayFragment.setHelpTitle:: helpTitle set to [%s]", helpTitle));
     }
 
-    public void setVisibility(Boolean isVisible)
+    public void setHelpMessage(CharSequence helpMessage)
     {
-        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        Log.d(Constants.LOG_TAG, String.format("HelpOverlayFragment.setVisibility:: isVisible[%S]", this.isVisible()));
+        this.helpMessage = helpMessage;
+        this.textViewHelpMessage.setText(helpMessage);
+
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.setHelpMessage:: message set");
     }
 }

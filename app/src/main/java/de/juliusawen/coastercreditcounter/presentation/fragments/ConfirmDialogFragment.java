@@ -16,7 +16,6 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class ConfirmDialogFragment extends Fragment
 {
-    private View fragmentView;
     private ConfirmDialogFragmentInteractionListener confirmDialogFragmentInteractionListener;
 
     public ConfirmDialogFragment() {}
@@ -24,15 +23,13 @@ public class ConfirmDialogFragment extends Fragment
     public static ConfirmDialogFragment newInstance()
     {
         Log.i(Constants.LOG_TAG, "ConfirmDialogFragment.newInstance:: creating instance...");
-
         return new ConfirmDialogFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.fragmentView = inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
-        return this.fragmentView;
+        return inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
     }
 
     @Override
@@ -40,10 +37,10 @@ public class ConfirmDialogFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        Button buttonCancel = view.findViewById(R.id.buttonConfirmDialogFragment_cancel);
-        buttonCancel.setId(ButtonFunction.CANCEL.ordinal());
-        buttonCancel.setText(R.string.text_cancel);
-        buttonCancel.setOnClickListener(new View.OnClickListener()
+        Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);
+        buttonOk.setId(ButtonFunction.OK.ordinal());
+        buttonOk.setText(R.string.text_ok);
+        buttonOk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -52,10 +49,10 @@ public class ConfirmDialogFragment extends Fragment
             }
         });
 
-        Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);
-        buttonOk.setId(ButtonFunction.OK.ordinal());
-        buttonOk.setText(R.string.text_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener()
+        Button buttonCancel = view.findViewById(R.id.buttonConfirmDialogFragment_cancel);
+        buttonCancel.setId(ButtonFunction.CANCEL.ordinal());
+        buttonCancel.setText(R.string.text_cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -98,11 +95,5 @@ public class ConfirmDialogFragment extends Fragment
     public interface ConfirmDialogFragmentInteractionListener
     {
         void onConfirmDialogFragmentInteraction(View view);
-    }
-
-    public void setVisibility(Boolean isVisible)
-    {
-        this.fragmentView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        Log.d(Constants.LOG_TAG, String.format("ConfirmDialogFragment.setVisibility:: isVisible[%S]", this.isVisible()));
     }
 }

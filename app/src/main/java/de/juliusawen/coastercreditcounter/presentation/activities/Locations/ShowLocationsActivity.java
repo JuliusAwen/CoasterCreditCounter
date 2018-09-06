@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
@@ -47,34 +46,53 @@ public class ShowLocationsActivity extends BaseActivity
     private Element currentElement;
     private List<Element> recentElements = new ArrayList<>();
     private RecyclerView recyclerView;
-    private ExpandableRecyclerAdapter expandableRecyclerAdapter;
+    private ExpandableRecyclerAdapter contentRecyclerAdapter;
     private Element longClickedElement;
     private MenuItem menuItemSwitchMode;
 
+    //region @Override
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.e(Constants.LOG_TAG, "onCreate()");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_locations);
+        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
+        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
+        coordinatorLayoutActivity.addView(showLocationsView);
 
+        super.onCreate(savedInstanceState);
+        super.addToolbar();
+        super.addFloatingActionButton();
+        super.addHelpOverlay();
         this.initializeContent();
-        this.initializeViews();
+
+        this.updateNavigationBar();
+        this.createContentRecyclerView();
     }
 
     @Override
     protected void onStart()
     {
+        Log.e(Constants.LOG_TAG, "onStart()");
+
+        this.decorateToolbar();
+        this.decorateFloatingActionButton();
+
         super.onStart();
     }
 
     @Override
     protected void onResume()
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
+        Log.e(Constants.LOG_TAG, "onResume()");
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
 
-        this.updateExpandableRecyclerAdapter();
+
+        this.decorateHelpOverlay();
+
+        this.updateContentRecyclerAdapter();
         this.updateNavigationBar();
 
         super.onResume();
@@ -127,8 +145,8 @@ public class ShowLocationsActivity extends BaseActivity
                         super.setFloatingActionButtonVisibility(true);
                         break;
                 }
-                super.setToolbarTitle(this.fetchToolbarTitle());
-                super.setHelpOverlayText(this.fetchHelpOverlayText());
+                super.setToolbarTitleAndSubtitle(this.fetchToolbarTitle(), null);
+                super.setHelpOverlayMessage(this.fetchHelpOverlayText());
                 this.setMenuItemSwitchModeIcon();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: mode switched to [%S]", this.mode));
                 return true;
@@ -168,7 +186,7 @@ public class ShowLocationsActivity extends BaseActivity
         this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.updateExpandableRecyclerAdapter();
+        this.updateContentRecyclerAdapter();
         this.updateNavigationBar();
     }
 
@@ -208,35 +226,16 @@ public class ShowLocationsActivity extends BaseActivity
             }
         }
     }
+    //endregion
 
     private void initializeContent()
     {
         this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
 
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        if(elementUuid != null)
-        {
-            this.currentElement = super.content.getElementByUuid(UUID.fromString(elementUuid));
-        }
-        else
-        {
-            this.currentElement = super.content.getRootElement();
-        }
+        this.currentElement = elementUuid != null ? super.content.getElementByUuid(UUID.fromString(elementUuid)) :  super.content.getRootElement();
 
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized in mode[%S] with currentElement%s", this.mode, this.currentElement));
-    }
-
-    private void initializeViews()
-    {
-        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
-        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
-        coordinatorLayoutActivity.addView(showLocationsView);
-
-        super.createToolbar(this.fetchToolbarTitle(), null, true);
-        this.createFloatingActionButton();
-        this.updateNavigationBar();
-        this.createContentRecyclerView(showLocationsView);
-        super.createHelpOverlayFragment(this.fetchHelpOverlayText(), false);
     }
 
     private void setMenuItemSwitchModeIcon()
@@ -253,6 +252,94 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
+    //region TOOLBAR
+    private void decorateToolbar()
+    {
+        super.setToolbarTitleAndSubtitle(this.fetchToolbarTitle(), null);
+        super.setToolbarHomeButton();
+    }
+
+    private String fetchToolbarTitle()
+    {
+        return this.mode.equals(Mode.MANAGE) ? getString(R.string.title_manage_locations) : getString(R.string.title_browse_locations);
+    }
+    //endregion
+
+    //region FLOATING ACTION BUTTON
+    private void decorateFloatingActionButton()
+    {
+        Log.e(Constants.LOG_TAG, "decorateFAB()");
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                onClickFloatingActionButton();
+            }
+        });
+
+        super.setFloatingActionButtonVisibility(this.mode == Mode.MANAGE);
+    }
+
+    private void onClickFloatingActionButton()
+    {
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton::");
+
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getFloatingActionButton());
+
+        popupMenu.getMenu().add(0, Selection.ADD_ELEMENT.ordinal(), Menu.NONE, R.string.selection_add_location);
+        popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                return onMenuItemClickPopupMenuFloatingActionButton(item);
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private boolean onMenuItemClickPopupMenuFloatingActionButton(MenuItem item)
+    {
+        Selection selection = Selection.values()[item.getItemId()];
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickFloatingActionButton.PopupMenu.onMenuItemClick:: [%S] selected", selection));
+
+        switch (selection)
+        {
+            case ADD_ELEMENT:
+                Intent intent = new Intent(getApplicationContext(), AddLocationActivity.class);
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentElement.getUuid().toString());
+                startActivityForResult(intent, Constants.REQUEST_ADD_ELEMENT);
+                return true;
+
+            case ADD_PARK:
+                //Todo: implement add park activity
+                Toaster.makeToast(getApplicationContext(), "AddPark not yet implemented");
+                return true;
+
+            default:
+                return false;
+        }
+    }
+    //endregion
+
+    //region HELP OVERLAY
+    private void decorateHelpOverlay()
+    {
+        super.setHelpOverlayMessage(this.fetchHelpOverlayText());
+    }
+
+    private CharSequence fetchHelpOverlayText()
+    {
+        return  this.mode.equals(Mode.MANAGE) ? getText(R.string.help_text_manage_locations) : getText(R.string.help_text_browse_locations);
+    }
+    //endregion
+
+    //region NAVIGATION BAR
     private void updateNavigationBar()
     {
         View view = this.findViewById(android.R.id.content).getRootView();
@@ -294,27 +381,7 @@ public class ShowLocationsActivity extends BaseActivity
                 @Override
                 public void onClick(View view)
                 {
-                    Element element = (Element) view.getTag();
-
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
-
-                    int length = recentElements.size() - 1;
-                    for (int i = length; i >= 0; i--)
-                    {
-                        if (recentElements.get(i).equals(element))
-                        {
-                            recentElements.remove(i);
-                            break;
-                        }
-                        else
-                        {
-                            recentElements.remove(i);
-                        }
-                    }
-
-                    currentElement = element;
-                    updateExpandableRecyclerAdapter();
-                    updateNavigationBar();
+                    onClickNavigationBar(view);
                 }
             });
 
@@ -332,342 +399,338 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private void createFloatingActionButton()
+    private void onClickNavigationBar(View view)
     {
-        final FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
-        super.createFloatingActionButton(floatingActionButton, DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        Element element = (Element) view.getTag();
 
-        View.OnClickListener onClickListener = new View.OnClickListener()
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
+
+        int length = this.recentElements.size() - 1;
+        for (int i = length; i >= 0; i--)
         {
-            @Override
-            public void onClick(View view)
+            if(this.recentElements.get(i).equals(element))
             {
-                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createFloatingActionButton.onClick:: FloatingActionButton clicked");
-
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), floatingActionButton);
-
-                popupMenu.getMenu().add(0, Selection.ADD_ELEMENT.ordinal(), Menu.NONE, R.string.selection_add_location);
-                popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item)
-                    {
-                        Intent intent;
-
-                        Selection selection = Selection.values()[item.getItemId()];
-                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createFloatingActionButton.PopupMenu.onMenuItemClick:: [%S] selected", selection));
-
-                        switch (selection)
-                        {
-                            case ADD_ELEMENT:
-                                intent = new Intent(getApplicationContext(), AddLocationActivity.class);
-                                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentElement.getUuid().toString());
-                                startActivityForResult(intent, Constants.REQUEST_ADD_ELEMENT);
-                                return true;
-
-                            case ADD_PARK:
-                                //Todo: implement add park activity
-                                Toaster.makeToast(getApplicationContext(), "AddPark not yet implemented");
-                                return true;
-
-                            default:
-                                return false;
-                        }
-                    }
-                });
-
-                popupMenu.show();
+                this.recentElements.remove(i);
+                break;
             }
-        };
-
-        super.setFloatingActionButtonOnClickListener(onClickListener);
-
-        if(this.mode.equals(Mode.BROWSE))
-        {
-            super.setFloatingActionButtonVisibility(false);
+            else
+            {
+                this.recentElements.remove(i);
+            }
         }
-    }
 
-    private void createContentRecyclerView(View view)
+        this.currentElement = element;
+        updateContentRecyclerAdapter();
+        updateNavigationBar();
+    }
+    //endregion
+
+    //region CONTENT RECYCLER VIEW
+    private void createContentRecyclerView()
     {
         RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
             {
-                Element element = (Element) view.getTag();
-
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onClick:: %s clicked", element));
-
-                if(element.isInstance(Location.class))
-                {
-                    currentElement = element;
-                    updateExpandableRecyclerAdapter();
-                    updateNavigationBar();
-                }
-                else if(element.isInstance(Park.class))
-                {
-                    //Todo: implement show park activity
-                    Toaster.makeToast(getApplicationContext(), "ShowPark not yet implemented");
-                }
+                onClickContentRecyclerView(view);
             }
 
             @Override
             public void onLongClick(final View view, int position)
             {
-                longClickedElement = (Element) view.getTag();
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onLongClick:: %s long clicked", longClickedElement));
-
-
-                if(longClickedElement.isInstance(Location.class))
-                {
-                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-
-                    if(mode == Mode.MANAGE)
-                    {
-                        popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
-                        popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
-
-                        if(longClickedElement.hasChildren())
-                        {
-                            popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove_element);
-                        }
-                    }
-
-                    if(longClickedElement.getChildCountOfInstance(Park.class) > 1)
-                    {
-                        popupMenu.getMenu().add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
-                    }
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                    {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item)
-                        {
-                            AlertDialog.Builder builder;
-                            AlertDialog alertDialog;
-
-                            Selection selection = Selection.values()[item.getItemId()];
-                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.PopupMenu.onMenuItemClick:: [%S] selected", selection));
-
-                            switch (selection)
-                            {
-                                case EDIT_ELEMENT:
-                                    startEditLocationActivity(longClickedElement);
-                                    return true;
-
-                                case DELETE_ELEMENT:
-                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
-
-                                    builder.setTitle(R.string.alert_dialog_delete_element_title);
-                                    builder.setMessage(getString(R.string.alert_dialog_delete_element_message, longClickedElement.getName()));
-                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                    {
-                                        public void onClick(DialogInterface dialog, int id)
-                                        {
-                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting %s...", longClickedElement));
-
-                                            dialog.dismiss();
-
-                                            if(content.deleteElementAndChildren(longClickedElement))
-                                            {
-                                                if(longClickedElement.deleteElementAndChildren())
-                                                {
-                                                    updateExpandableRecyclerAdapter();
-                                                }
-                                                else
-                                                {
-                                                    Log.e(Constants.LOG_TAG, String.format(
-                                                            "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: deleting %s and children failed - restoring content...",
-                                                            longClickedElement));
-
-                                                    content.addElementAndChildren(longClickedElement);
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
-
-                                                String errorMessage = String.format(
-                                                        "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s and children from content failed!",
-                                                        longClickedElement);
-
-                                                Log.e(Constants.LOG_TAG, errorMessage);
-                                                throw new IllegalStateException(errorMessage);
-                                            }
-
-                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(View view)
-                                                {
-                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s]...",
-                                                            longClickedElement));
-
-                                                    if(longClickedElement.undoPossible && longClickedElement.undoDeleteElementAndChildren())
-                                                    {
-                                                        content.addElementAndChildren(longClickedElement);
-                                                        updateExpandableRecyclerAdapter();
-
-                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                        smoothScrollToElement(longClickedElement);
-                                                    }
-                                                    else
-                                                    {
-                                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo delete [%s] failed!",
-                                                                longClickedElement));
-
-                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                    }
-                                                }
-                                            });
-                                            snackbar.show();
-                                        }
-                                    });
-
-                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                    {
-                                        public void onClick(DialogInterface dialog, int id)
-                                        {
-                                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    alertDialog = builder.create();
-                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
-
-                                    alertDialog.show();
-                                    return true;
-
-                                case REMOVE_ELEMENT:
-                                    builder = new AlertDialog.Builder(ShowLocationsActivity.this);
-
-                                    builder.setTitle(R.string.alert_dialog_remove_element_title);
-                                    builder.setMessage(getString(R.string.alert_dialog_remove_element_message, longClickedElement.getName(), longClickedElement.getParent().getName()));
-
-                                    builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
-                                    {
-                                        public void onClick(DialogInterface dialog, int id)
-                                        {
-                                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing [%s]...", longClickedElement));
-
-                                            dialog.dismiss();
-
-                                            if(content.deleteElement(longClickedElement))
-                                            {
-                                                if( longClickedElement.removeElement())
-                                                {
-                                                    currentElement = longClickedElement.getParent();
-                                                    updateExpandableRecyclerAdapter();
-                                                }
-                                                else
-                                                {
-                                                    Log.e(Constants.LOG_TAG, String.format(
-                                                            "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s failed - restoring content...",
-                                                            longClickedElement));
-
-                                                    content.addElementAndChildren(longClickedElement);
-                                                    Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
-
-                                                String errorMessage = String.format(
-                                                        "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: removing %s from content failed!", longClickedElement);
-
-                                                Log.e(Constants.LOG_TAG, errorMessage);
-                                                throw new IllegalStateException(errorMessage);
-                                            }
-
-                                            Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_element_text, longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                                            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(View view)
-                                                {
-                                                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s]...", longClickedElement));
-
-                                                    if(longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
-                                                    {
-                                                        content.addElement(longClickedElement);
-                                                        updateExpandableRecyclerAdapter();
-
-                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                        smoothScrollToElement(longClickedElement);
-                                                    }
-                                                    else
-                                                    {
-                                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.Snackbar.onClick:: undo remove [%s] failed!",
-                                                                longClickedElement));
-                                                        Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
-                                                    }
-                                                }
-                                            });
-                                            snackbar.show();
-                                        }
-                                    });
-
-                                    builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
-                                    {
-                                        public void onClick(DialogInterface dialog, int id)
-                                        {
-                                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.createContentRecyclerView.AlertDialog.onClick:: canceled");
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    alertDialog = builder.create();
-                                    alertDialog.setIcon(R.drawable.ic_baseline_warning);
-
-                                    alertDialog.show();
-                                    return true;
-
-                                case SORT_ELEMENTS:
-                                    startSortElementsActivity(longClickedElement.getChildrenOfInstance(Park.class));
-
-                                default:
-                                    return false;
-                            }
-
-                        }
-                    });
-                    popupMenu.show();
-                }
+                onLongClickContentRecyclerView(view);
             }
         };
 
-        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<>(this.currentElement.getChildren()), recyclerOnClickListener);
-        this.recyclerView = view.findViewById(R.id.recyclerViewShowLocations);
+        this.contentRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<>(this.currentElement.getChildren()), recyclerOnClickListener);
+        this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewShowLocations);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setAdapter(expandableRecyclerAdapter);
+        this.recyclerView.setAdapter(this.contentRecyclerAdapter);
     }
 
-    private void updateExpandableRecyclerAdapter()
+    private void onClickContentRecyclerView(View view)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateExpandableRecyclerAdapter:: updating RecyclerView...");
-        this.expandableRecyclerAdapter.updateList(new ArrayList<>(this.currentElement.getChildrenOfInstance(Location.class)));
+        Element element = (Element) view.getTag();
+
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onClick:: %s clicked", element));
+
+        if(element.isInstance(Location.class))
+        {
+            this.currentElement = element;
+            updateContentRecyclerAdapter();
+            updateNavigationBar();
+        }
+        else if(element.isInstance(Park.class))
+        {
+            //Todo: implement show park activity
+            Toaster.makeToast(getApplicationContext(), "ShowPark not yet implemented");
+        }
     }
 
-    private String fetchToolbarTitle()
+    private void onLongClickContentRecyclerView(final View view)
     {
-        return this.mode.equals(Mode.MANAGE) ? getString(R.string.title_manage_locations) : getString(R.string.title_browse_locations);
+        this.longClickedElement = (Element) view.getTag();
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.createContentRecyclerView.onLongClick:: %s long clicked", longClickedElement));
+
+        if(this.longClickedElement.isInstance(Location.class))
+        {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+
+            if(this.mode == Mode.MANAGE)
+            {
+                popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
+                popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
+
+                if(this.longClickedElement.hasChildren())
+                {
+                    popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove_element);
+                }
+            }
+
+            if(this.longClickedElement.getChildCountOfInstance(Park.class) > 1)
+            {
+                popupMenu.getMenu().add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
+            }
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem item)
+                {
+                    return onClickMenuItemPopupMenuLongClickContentRecyclerView(item, view);
+                }
+            });
+            popupMenu.show();
+        }
     }
 
-    private CharSequence fetchHelpOverlayText()
+    private boolean onClickMenuItemPopupMenuLongClickContentRecyclerView(MenuItem item, final View view)
     {
-        return  this.mode.equals(Mode.MANAGE) ? getText(R.string.help_text_manage_locations) : getText(R.string.help_text_browse_locations);
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+
+        Selection selection = Selection.values()[item.getItemId()];
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
+
+        switch (selection)
+        {
+            case EDIT_ELEMENT:
+                startEditLocationActivity(this.longClickedElement);
+                return true;
+
+            case DELETE_ELEMENT:
+                builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                builder.setTitle(R.string.alert_dialog_delete_element_title);
+                builder.setMessage(getString(R.string.alert_dialog_delete_element_message, this.longClickedElement.getName()));
+                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        onClickAlertDialogPositiveButtonDeleteElement(dialog, view);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        onClickAlertDialogNegativeButton(dialog);
+                    }
+                });
+
+                alertDialog = builder.create();
+                alertDialog.setIcon(R.drawable.ic_baseline_warning);
+
+                alertDialog.show();
+                return true;
+
+            case REMOVE_ELEMENT:
+                builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+
+                builder.setTitle(R.string.alert_dialog_remove_element_title);
+                builder.setMessage(getString(R.string.alert_dialog_remove_element_message, this.longClickedElement.getName(), this.longClickedElement.getParent().getName()));
+
+                builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        onClickAlertDialogPositiveButtonRemoveElement(dialog, view);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        onClickAlertDialogNegativeButton(dialog);
+                    }
+                });
+                alertDialog = builder.create();
+                alertDialog.setIcon(R.drawable.ic_baseline_warning);
+                alertDialog.show();
+                return true;
+
+            case SORT_ELEMENTS:
+                startSortElementsActivity(this.longClickedElement.getChildrenOfInstance(Park.class));
+
+            default:
+                return false;
+        }
     }
 
+    private void onClickAlertDialogPositiveButtonDeleteElement(DialogInterface dialog, View view)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s...", longClickedElement));
+
+        dialog.dismiss();
+
+        if(super.content.deleteElementAndChildren(this.longClickedElement))
+        {
+            if(this.longClickedElement.deleteElementAndChildren())
+            {
+                updateContentRecyclerAdapter();
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format(
+                        "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s and children failed - restoring content...",
+                        longClickedElement));
+
+                super.content.addElementAndChildren(longClickedElement);
+                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+            }
+        }
+        else
+        {
+            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+
+            String errorMessage = String.format(
+                    "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: removing %s and children from content failed!",
+                    this.longClickedElement);
+
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
+
+        Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_delete_element_text, this.longClickedElement.getName()), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                onClickSnackbarUndoDeleteElement();
+            }
+        });
+        snackbar.show();
+    }
+
+    private void onClickSnackbarUndoDeleteElement()
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s]...",
+                this.longClickedElement));
+
+        if(this.longClickedElement.undoPossible && this.longClickedElement.undoDeleteElementAndChildren())
+        {
+            super.content.addElementAndChildren(this.longClickedElement);
+            updateContentRecyclerAdapter();
+
+            Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
+
+            smoothScrollToElement(this.longClickedElement);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s] failed!",
+                    this.longClickedElement));
+
+            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+        }
+    }
+
+    private void onClickAlertDialogPositiveButtonRemoveElement(DialogInterface dialog, View view)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing [%s]...", this.longClickedElement));
+
+        dialog.dismiss();
+
+        if(super.content.deleteElement(this.longClickedElement))
+        {
+            if(this.longClickedElement.removeElement())
+            {
+                this.currentElement = this.longClickedElement.getParent();
+                updateContentRecyclerAdapter();
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format(
+                        "ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s failed - restoring content...",
+                        this.longClickedElement));
+
+                super.content.addElementAndChildren(this.longClickedElement);
+                Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
+            }
+        }
+        else
+        {
+            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
+
+            String errorMessage = String.format(
+                    "ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s from content failed!", this.longClickedElement);
+
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
+
+        Snackbar snackbar = Snackbar.make(view, getString(R.string.action_undo_remove_element_text, this.longClickedElement.getName()), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                onClickSnackbarUndoRemoveElement();
+            }
+        });
+        snackbar.show();
+    }
+
+    private void onClickSnackbarUndoRemoveElement()
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: undo remove [%s]...", this.longClickedElement));
+
+        if(this.longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
+        {
+            super.content.addElement(this.longClickedElement);
+            updateContentRecyclerAdapter();
+
+            Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
+
+            smoothScrollToElement(this.longClickedElement);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: undo remove [%s] failed!",
+                    this.longClickedElement));
+            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
+        }
+    }
+
+    private void onClickAlertDialogNegativeButton(DialogInterface dialog)
+    {
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: canceled");
+        dialog.dismiss();
+    }
+
+    private void updateContentRecyclerAdapter()
+    {
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerAdapter:: updating RecyclerView...");
+        this.contentRecyclerAdapter.updateList(new ArrayList<>(this.currentElement.getChildrenOfInstance(Location.class)));
+    }
+    //endregion
+
+    //region START ACTIVITIES
     private void startEditLocationActivity(Element elementToEdit)
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startEditLocationActivity:: starting EditLocationsActivity...");
@@ -683,6 +746,7 @@ public class ShowLocationsActivity extends BaseActivity
         intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
         startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
     }
+    //endregion
 
     private void smoothScrollToElement(Element element)
     {

@@ -3,6 +3,8 @@ package de.juliusawen.coastercreditcounter.presentation.activities;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,23 +21,27 @@ import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
-public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity implements
+        HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
+        ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
     public Content content;
-    protected boolean isInitialized = false;
 
     private Bundle savedInstanceState;
 
+    private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
 
+    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
+
         this.savedInstanceState = savedInstanceState;
         this.content = Content.getInstance();
     }
@@ -46,19 +52,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         super.onStart();
 
-//        this.createToolbar();
-//        this.createFloatingActionButton();
-//        this.createConfirmDialogFragment();
-//        this.createHelpOverlayFragment();
-
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-
-        this.isInitialized = true;
     }
 
     @Override
@@ -107,6 +106,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     }
 
     @Override
+    public void onConfirmDialogFragmentInteraction(View view) {}
+
+    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -117,7 +119,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             outState.putString(Constants.KEY_SUBTITLE, getSupportActionBar().getSubtitle() != null ? getSupportActionBar().getSubtitle().toString() : "");
         }
 
-        outState.putBoolean(Constants.KEY_HELP_VISIBILITY, this.helpOverlayFragment.isVisible());
+        if(this.helpOverlayFragment != null)
+        {
+            outState.putBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE, this.helpOverlayFragment.isVisible());
+        }
     }
 
     @Override
@@ -125,91 +130,123 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.setToolbarTitle(savedInstanceState.getString(Constants.KEY_TITLE));
-        this.setToolbarSubtitle(savedInstanceState.getString(Constants.KEY_SUBTITLE));
+        if(getSupportActionBar() != null)
+        {
+            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TITLE), savedInstanceState.getString(Constants.KEY_SUBTITLE));
+        }
 
         if(this.helpOverlayFragment != null)
         {
-            this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_VISIBILITY));
+            this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE));
         }
     }
+    //endregion
 
-    protected void createToolbar(String title, String subtitle, boolean setHomeButton)
+    //region TOOLBAR
+    protected void addToolbar()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: creating toolbar...");
 
-        Toolbar toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
+        this.toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
-        this.setToolbarTitle(title);
-        this.setToolbarSubtitle(subtitle);
+    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
+    {
+        if(getSupportActionBar() != null)
+        {
+            if(title != null && !title.trim().isEmpty())
+            {
+                getSupportActionBar().setTitle(title);
+            }
 
-        if (getSupportActionBar() != null && setHomeButton)
+            if(subtitle != null && !subtitle.trim().isEmpty())
+            {
+                getSupportActionBar().setSubtitle(subtitle);
+            }
+        }
+    }
+
+    protected void setToolbarHomeButton()
+    {
+        if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            toolbar.setNavigationOnClickListener(new View.OnClickListener()
+            this.toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    onHomeButtonBackClicked();
+                    onToolbarHomeButtonBackClicked();
                 }
 
             });
         }
     }
 
-    protected void onHomeButtonBackClicked()
+    protected void onToolbarHomeButtonBackClicked()
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onHomeButtonBackClicked:: finishing activity...");
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
         finish();
     }
+    //endregion
 
-    protected void setToolbarTitle(String title)
-    {
-        if (getSupportActionBar() != null && title != null && !title.trim().isEmpty())
-        {
-            getSupportActionBar().setTitle(title);
-        }
-    }
-
-    protected void setToolbarSubtitle(String subtitle)
-    {
-        if (getSupportActionBar() != null && subtitle != null && !subtitle.trim().isEmpty())
-        {
-            getSupportActionBar().setSubtitle(subtitle);
-        }
-    }
-
-    protected void createFloatingActionButton(FloatingActionButton floatingActionButton, Drawable icon)
+    //region FLOATING ACTION BUTTON
+    protected void addFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
 
-        this.floatingActionButton = floatingActionButton;
-        this.floatingActionButton.setImageDrawable(icon);
+        this.floatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
+
+        if(this.helpOverlayFragment.isVisible())
+        {
+            this.setFloatingActionButtonVisibility(false);
+        }
+    }
+
+    protected FloatingActionButton getFloatingActionButton()
+    {
+        return this.floatingActionButton;
+    }
+
+    protected void setFloatingActionButtonIcon(Drawable icon)
+    {
+        if(this.floatingActionButton != null)
+        {
+            this.floatingActionButton.setImageDrawable(icon);
+        }
     }
 
     protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
-        this.floatingActionButton.setOnClickListener(onClickListener);
+        if(this.floatingActionButton != null)
+        {
+            this.floatingActionButton.setOnClickListener(onClickListener);
+        }
     }
 
     protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if(this.floatingActionButton != null)
+        {
+            floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
+    //endregion
 
-    protected void createHelpOverlayFragment(CharSequence helpText, boolean isVisibleOnCreation)
+    //region HELP OVERLAY
+    protected void addHelpOverlay()
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.createHelpOverlayFragment:: creating fragment - isVisibleOnCreation[%S]", isVisibleOnCreation));
+        Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating fragment...");
 
         if (this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpText, isVisibleOnCreation);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance();
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.hide(this.helpOverlayFragment);
             fragmentTransaction.commit();
         }
         else
@@ -218,27 +255,43 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
-    protected void setHelpOverlayText(CharSequence helpText)
+    protected void setHelpOverlayTitle(String helpTitle)
     {
-        this.helpOverlayFragment.setHelpText(helpText);
+        if(this.helpOverlayFragment != null)
+        {
+            this.helpOverlayFragment.setHelpTitle(helpTitle);
+        }
+    }
+
+    protected void setHelpOverlayMessage(CharSequence helpText)
+    {
+        if(this.helpOverlayFragment != null)
+        {
+            this.helpOverlayFragment.setHelpMessage(helpText);
+        }
     }
 
     protected void setHelpOverlayVisibility(boolean isVisible)
     {
-        this.helpOverlayFragment.setVisibility(isVisible);
-
-        if(this.floatingActionButton != null)
+        if(this.helpOverlayFragment != null)
         {
+            if(isVisible)
+            {
+                this.showFragment(this.helpOverlayFragment);
+            }
+            else
+            {
+                this.hideFragment(this.helpOverlayFragment);
+            }
+
             this.setFloatingActionButtonVisibility(!isVisible);
-        }
-
-        if(this.confirmDialogFragment != null)
-        {
-            this.confirmDialogFragment.setVisibility(!isVisible);
+            this.setConfirmDialogVisibility(!isVisible);
         }
     }
+    //endregion
 
-    protected void createConfirmDialogFragment()
+    //region CONFIRM DIALOG
+    protected void addConfirmDialog()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating fragment...");
 
@@ -253,5 +306,39 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
         }
+    }
+
+    protected void setConfirmDialogVisibility(boolean isVisible)
+    {
+        if(this.confirmDialogFragment != null)
+        {
+            if(isVisible)
+            {
+                this.showFragment(this.confirmDialogFragment);
+            }
+            else
+            {
+                this.hideFragment(this.confirmDialogFragment);
+            }
+        }
+    }
+    //endregion
+
+    private void showFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .show(fragment)
+                .commit();
+    }
+
+    private void hideFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .hide(fragment)
+                .commit();
     }
 }
