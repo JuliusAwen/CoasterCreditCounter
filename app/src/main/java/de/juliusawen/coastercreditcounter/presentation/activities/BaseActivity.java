@@ -200,7 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         this.floatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
 
-        if(this.helpOverlayFragment.isVisible())
+        if(this.helpOverlayFragment != null && this.helpOverlayFragment.isVisible())
         {
             this.setFloatingActionButtonVisibility(false);
         }
