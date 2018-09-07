@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayoutShowLocations"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.activities.locations.ShowLocationsActivity">
-
-    <include
-        layout="@layout/floating_action_button"/>
+    tools:context=".presentation.activities.parks.ShowParkActivity">
 
 </android.support.design.widget.CoordinatorLayout>
