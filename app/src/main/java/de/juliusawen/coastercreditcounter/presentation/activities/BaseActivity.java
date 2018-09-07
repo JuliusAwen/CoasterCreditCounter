@@ -148,6 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: creating toolbar...");
 
         this.toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
+        this.toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
     }
 

@@ -31,6 +31,7 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
@@ -387,8 +388,9 @@ public class ShowLocationsActivity extends BaseActivity
         }
         else if(element.isInstance(Park.class))
         {
-            //Todo: implement show park activity
-            Toaster.makeToast(getApplicationContext(), "ShowPark not yet implemented");
+            Intent intent = new Intent(this, ShowParkActivity.class);
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+            startActivity(intent);
         }
     }
 

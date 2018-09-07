@@ -7,12 +7,25 @@
     <string name="title_pick_elements">Pick</string>
     <string name="title_add_location">Add</string>
     <string name="title_edit_location">Edit</string>
+
+    <string name="title_show_park">Park</string>
+
     <string name="title_help">Help</string>
 
 
-    <!--subtitles-->
+    <!--activity subtitles-->
     <string name="subtitle_pick_add_children_to_new_location">children to add to new location</string>
     <string name="subtitle_add_location_add_to">to %1$s</string>
+
+
+    <!--tab labels-->
+    <string name="tab_label_show_park_overview">Overview</string>
+    <string name="tab_label_show_park_attractions">Attractions</string>
+    <string name="tab_label_show_park_visits">Visits</string>
+
+    <string name="section_format">SECTION FORMAT %1$d</string>
+
+
 
 
     <!--options menu entries-->
