@@ -18,14 +18,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.activities.Locations.ShowLocationsActivity" />
-        <activity android:name=".presentation.activities.Locations.SortElementsActivity" />
+        <activity android:name=".presentation.activities.Elements.SortElementsActivity" />
         <activity
             android:name=".presentation.activities.Locations.AddLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.activities.Locations.EditLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.activities.Locations.PickElementsActivity" />
+        <activity android:name=".presentation.activities.Elements.PickElementsActivity" />
         <activity android:name=".presentation.activities.BaseActivity" />
     </application>
 
