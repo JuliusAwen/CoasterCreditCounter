@@ -37,18 +37,16 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.enums.Mode;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class ShowLocationsActivity extends BaseActivity
 {
-    private Mode mode;
+//    private Mode mode;
     private Element currentElement;
     private List<Element> recentElements = new ArrayList<>();
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter contentRecyclerAdapter;
     private Element longClickedElement;
-    private MenuItem menuItemSwitchMode;
 
     //region @Override
     @Override
@@ -103,17 +101,9 @@ public class ShowLocationsActivity extends BaseActivity
     {
         menu.clear();
 
-        menu.add(0, Selection.SWITCH_MODE.ordinal(), Menu.NONE, R.string.selection_switch_mode);
-        this.menuItemSwitchMode = menu.findItem(Selection.SWITCH_MODE.ordinal());
-        this.menuItemSwitchMode.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        this.setMenuItemSwitchModeIcon();
-
-        if(this.mode.equals(Mode.MANAGE))
+        if(this.currentElement.getParent() == null)
         {
-            if(this.currentElement.getParent() == null)
-            {
-                menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root);
-            }
+            menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root);
         }
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
@@ -132,25 +122,6 @@ public class ShowLocationsActivity extends BaseActivity
 
         switch(selection)
         {
-            case SWITCH_MODE:
-                switch(this.mode)
-                {
-                    case MANAGE:
-                        this.mode = Mode.BROWSE;
-                        super.setFloatingActionButtonVisibility(false);
-                        break;
-
-                    case BROWSE:
-                        this.mode = Mode.MANAGE;
-                        super.setFloatingActionButtonVisibility(true);
-                        break;
-                }
-                super.setToolbarTitleAndSubtitle(this.fetchToolbarTitle(), null);
-                super.setHelpOverlayMessage(this.fetchHelpOverlayText());
-                this.setMenuItemSwitchModeIcon();
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: mode switched to [%S]", this.mode));
-                return true;
-
             case EDIT_ELEMENT:
                 this.startEditLocationActivity(this.currentElement);
                 return true;
@@ -170,7 +141,6 @@ public class ShowLocationsActivity extends BaseActivity
         Log.e(Constants.LOG_TAG, "onSaveInstanceState()");
         super.onSaveInstanceState(outState);
 
-        outState.putInt(Constants.KEY_MODE, this.mode.ordinal());
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.recentElements));
         outState.putString(Constants.KEY_ELEMENT, this.currentElement.getUuid().toString());
     }
@@ -182,7 +152,6 @@ public class ShowLocationsActivity extends BaseActivity
 
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.mode = Mode.values()[savedInstanceState.getInt(Constants.KEY_MODE)];
         this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
@@ -230,40 +199,17 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void initializeContent()
     {
-        this.mode = Mode.values()[getIntent().getIntExtra(Constants.EXTRA_MODE, Mode.BROWSE.ordinal())];
-
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
         this.currentElement = elementUuid != null ? super.content.getElementByUuid(UUID.fromString(elementUuid)) :  super.content.getRootElement();
 
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized in mode[%S] with currentElement%s", this.mode, this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement%s", this.currentElement));
     }
 
-    private void setMenuItemSwitchModeIcon()
-    {
-        switch(this.mode)
-        {
-            case MANAGE:
-                this.menuItemSwitchMode.setIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_cancel)));
-                break;
-
-            case BROWSE:
-                this.menuItemSwitchMode.setIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_create)));
-                break;
-        }
-    }
-
-    //region TOOLBAR
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.fetchToolbarTitle(), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_show_locations), null);
         super.setToolbarHomeButton();
     }
-
-    private String fetchToolbarTitle()
-    {
-        return this.mode.equals(Mode.MANAGE) ? getString(R.string.title_manage_locations) : getString(R.string.title_browse_locations);
-    }
-    //endregion
 
     //region FLOATING ACTION BUTTON
     private void decorateFloatingActionButton()
@@ -278,8 +224,6 @@ public class ShowLocationsActivity extends BaseActivity
                 onClickFloatingActionButton();
             }
         });
-
-        super.setFloatingActionButtonVisibility(this.mode == Mode.MANAGE);
     }
 
     private void onClickFloatingActionButton()
@@ -327,17 +271,11 @@ public class ShowLocationsActivity extends BaseActivity
     }
     //endregion
 
-    //region HELP OVERLAY
     private void decorateHelpOverlay()
     {
-        super.setHelpOverlayMessage(this.fetchHelpOverlayText());
+        super.setHelpOverlayMessage(getText(R.string.help_text_show_locations));
     }
 
-    private CharSequence fetchHelpOverlayText()
-    {
-        return  this.mode.equals(Mode.MANAGE) ? getText(R.string.help_text_manage_locations) : getText(R.string.help_text_browse_locations);
-    }
-    //endregion
 
     //region NAVIGATION BAR
     private void updateNavigationBar()
@@ -478,15 +416,12 @@ public class ShowLocationsActivity extends BaseActivity
         {
             PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
 
-            if(this.mode == Mode.MANAGE)
-            {
-                popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
-                popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
+            popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
+            popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
 
-                if(this.longClickedElement.hasChildren())
-                {
-                    popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove_element);
-                }
+            if(this.longClickedElement.hasChildren())
+            {
+                popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove_element);
             }
 
             if(this.longClickedElement.getChildCountOfInstance(Park.class) > 1)

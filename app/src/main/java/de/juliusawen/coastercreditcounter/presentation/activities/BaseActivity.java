@@ -199,11 +199,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
 
         this.floatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
-
-        if(this.helpOverlayFragment != null && this.helpOverlayFragment.isVisible())
-        {
-            this.setFloatingActionButtonVisibility(false);
-        }
     }
 
     protected FloatingActionButton getFloatingActionButton()

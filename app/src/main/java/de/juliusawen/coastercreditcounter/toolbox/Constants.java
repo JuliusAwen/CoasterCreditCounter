@@ -14,9 +14,9 @@ public abstract class Constants
     public static final String KEY_SUBTITLE = "de.juliusawen.coding.key_subtitle";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
     public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";
-    public static final String KEY_MODE = "de.juliusawen.coding.key_mode";
+//    public static final String KEY_MODE = "de.juliusawen.coding.key_mode";
 
-    public static final String EXTRA_MODE = "de.juliusawen.coding.extra_mode";
+//    public static final String EXTRA_MODE = "de.juliusawen.coding.extra_mode";
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_RADIO_BUTTON_STATE = "de.juliusawen.coding.extra_radio_button_state";
