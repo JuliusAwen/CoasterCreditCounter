@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.activities.Elements;
+package de.juliusawen.coastercreditcounter.presentation.activities.elements;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

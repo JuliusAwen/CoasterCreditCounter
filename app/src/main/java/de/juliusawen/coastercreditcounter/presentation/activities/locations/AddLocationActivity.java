@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
+package de.juliusawen.coastercreditcounter.presentation.activities.locations;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.Elements.PickElementsActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.elements.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;

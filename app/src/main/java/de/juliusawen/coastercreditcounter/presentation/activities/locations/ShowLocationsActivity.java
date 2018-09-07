@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.activities.Locations;
+package de.juliusawen.coastercreditcounter.presentation.activities.locations;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.Elements.SortElementsActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
