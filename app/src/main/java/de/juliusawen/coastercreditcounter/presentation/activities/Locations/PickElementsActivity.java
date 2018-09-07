@@ -49,21 +49,14 @@ public class PickElementsActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         super.addToolbar();
         super.addFloatingActionButton();
-        super.addHelpOverlay();
+        super.addHelpOverlay(null, getText(R.string.help_text_pick_elements));
+
         this.initializeContent();
 
-        this.addSelectOrDeselectAllBar();
-        this.addSelectableRecyclerView();
-    }
-
-    @Override
-    protected void onResume()
-    {
         this.decorateToolbar();
         this.decorateFloatingActionButton();
-        this.decorateHelpOverlay();
-
-        super.onResume();
+        this.addSelectOrDeselectAllBar();
+        this.addSelectableRecyclerView();
     }
 
     @Override
@@ -124,7 +117,7 @@ public class PickElementsActivity extends BaseActivity
     private void decorateToolbar()
     {
         super.setToolbarTitleAndSubtitle(getString(R.string.title_pick_elements), getString(R.string.subtitle_pick_add_children_to_new_location));
-        super.setToolbarHomeButton();
+        super.addToolbarHomeButton();
     }
 
     //region FLOATING ACTION BUTTON
@@ -156,11 +149,6 @@ public class PickElementsActivity extends BaseActivity
         }
     }
     //endregion
-
-    private void decorateHelpOverlay()
-    {
-        super.setHelpOverlayMessage(getText(R.string.help_text_pick_elements));
-    }
 
     //region SELECTABLE RECYCLER VIEW
     private void addSelectableRecyclerView()

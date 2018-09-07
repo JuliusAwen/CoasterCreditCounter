@@ -48,21 +48,14 @@ public class SortElementsActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         super.addToolbar();
         super.addFloatingActionButton();
-        super.addHelpOverlay();
+        super.addHelpOverlay(null, getText(R.string.help_text_sort_elements));
+
         this.initializeContent();
 
-        this.createActionDialog();
-        this.createContentRecyclerView();
-    }
-
-    @Override
-    protected void onResume()
-    {
         this.decorateToolbar();
         this.decorateFloatingActionButton();
-        this.decorateHelpOverlay();
-
-        super.onResume();
+        this.createActionDialog();
+        this.createContentRecyclerView();
     }
 
     @Override
@@ -155,7 +148,7 @@ public class SortElementsActivity extends BaseActivity
     private void decorateToolbar()
     {
         super.setToolbarTitleAndSubtitle(getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName());
-        super.setToolbarHomeButton();
+        super.addToolbarHomeButton();
     }
 
     //region FLOATING ACTION BUTTON
@@ -179,11 +172,6 @@ public class SortElementsActivity extends BaseActivity
         returnResult(RESULT_OK);
     }
     //endregion
-
-    private void decorateHelpOverlay()
-    {
-        super.setHelpOverlayMessage(getText(R.string.help_text_sort_elements));
-    }
 
     //region ACTION DIALOG
     private void createActionDialog()

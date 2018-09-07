@@ -32,15 +32,32 @@ public class HelpOverlayFragment extends Fragment
 
     public HelpOverlayFragment() {}
 
-    public static HelpOverlayFragment newInstance()
+    public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
         Log.i(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: creating instance...");
-        return new HelpOverlayFragment();
+
+        HelpOverlayFragment fragment = new HelpOverlayFragment();
+        Bundle args = new Bundle();
+        args.putCharSequence(Constants.FRAGMENT_ARG_1, helpTitle);
+        args.putCharSequence(Constants.FRAGMENT_ARG_2, helpMessage);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        if (getArguments() != null)
+        {
+            this.helpTitle = getArguments().getString(Constants.FRAGMENT_ARG_1);
+            if(this.helpTitle == null)
+            {
+                this.helpTitle = getString(R.string.title_help);
+            }
+
+            this.helpMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_2);
+        }
+
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
         this.textViewHelpTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
         this.textViewHelpMessage = linearLayout.findViewById(R.id.textViewHelp_Message);
@@ -56,11 +73,6 @@ public class HelpOverlayFragment extends Fragment
         {
             this.helpTitle = savedInstanceState.getString(Constants.KEY_HELP_TITLE);
             this.helpMessage = savedInstanceState.getCharSequence(Constants.KEY_HELP_MESSAGE);
-        }
-        else
-        {
-            this.helpTitle = getString(R.string.title_help);
-            this.helpMessage = "";
         }
 
         this.setHelpTitle(this.helpTitle);
@@ -116,9 +128,11 @@ public class HelpOverlayFragment extends Fragment
     public void onDetach()
     {
         super.onDetach();
-
-        this.helpOverlayFragmentInteractionListener = null;
+        this.helpTitle = null;
         this.helpMessage = null;
+        this.textViewHelpTitle = null;
+        this.textViewHelpMessage = null;
+        this.helpOverlayFragmentInteractionListener = null;
     }
 
     public interface HelpOverlayFragmentInteractionListener

@@ -47,19 +47,12 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         super.onCreate(savedInstanceState);
         super.addToolbar();
         super.addConfirmDialog();
-        super.addHelpOverlay();
+        super.addHelpOverlay(null, this.getText(R.string.help_text_add_location));
+
         this.initializeContent();
 
-        this.createEditText();
-    }
-
-
-    @Override
-    protected void onResume()
-    {
         this.decorateToolbar();
-        this.decorateHelpOverlay();
-        super.onResume();
+        this.createEditText();
     }
 
     @Override
@@ -137,11 +130,6 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     private void decorateToolbar()
     {
         super.setToolbarTitleAndSubtitle(getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()));
-    }
-
-    private void decorateHelpOverlay()
-    {
-        super.setHelpOverlayMessage(getText(R.string.help_text_add_location));
     }
 
     //region EDIT TEXT

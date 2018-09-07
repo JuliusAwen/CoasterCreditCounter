@@ -151,23 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
     }
 
-    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
-    {
-        if(getSupportActionBar() != null)
-        {
-            if(title != null && !title.trim().isEmpty())
-            {
-                getSupportActionBar().setTitle(title);
-            }
-
-            if(subtitle != null && !subtitle.trim().isEmpty())
-            {
-                getSupportActionBar().setSubtitle(subtitle);
-            }
-        }
-    }
-
-    protected void setToolbarHomeButton()
+    protected void addToolbarHomeButton()
     {
         if (getSupportActionBar() != null)
         {
@@ -183,6 +167,22 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 }
 
             });
+        }
+    }
+
+    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
+    {
+        if(getSupportActionBar() != null)
+        {
+            if(title != null && !title.trim().isEmpty())
+            {
+                getSupportActionBar().setTitle(title);
+            }
+
+            if(subtitle != null && !subtitle.trim().isEmpty())
+            {
+                getSupportActionBar().setSubtitle(subtitle);
+            }
         }
     }
 
@@ -232,14 +232,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //endregion
 
     //region HELP OVERLAY
-    protected void addHelpOverlay()
+    protected void addHelpOverlay(String helpTitle, CharSequence helpMessage)
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating fragment...");
 
         if (this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpTitle, helpMessage);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.hide(this.helpOverlayFragment);
             fragmentTransaction.commit();

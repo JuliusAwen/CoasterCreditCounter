@@ -63,22 +63,16 @@ public class ShowLocationsActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         super.addToolbar();
         super.addFloatingActionButton();
-        super.addHelpOverlay();
+        super.addHelpOverlay(null, getString(R.string.title_show_locations));
+
         this.initializeContent();
-
-        this.updateNavigationBar();
-        this.createContentRecyclerView();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        Log.e(Constants.LOG_TAG, "onStart()");
 
         this.decorateToolbar();
         this.decorateFloatingActionButton();
 
-        super.onStart();
+
+        this.updateNavigationBar();
+        this.createContentRecyclerView();
     }
 
     @Override
@@ -86,9 +80,6 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.e(Constants.LOG_TAG, "onResume()");
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
-
-
-        this.decorateHelpOverlay();
 
         this.updateContentRecyclerAdapter();
         this.updateNavigationBar();
@@ -208,7 +199,6 @@ public class ShowLocationsActivity extends BaseActivity
     private void decorateToolbar()
     {
         super.setToolbarTitleAndSubtitle(getString(R.string.title_show_locations), null);
-        super.setToolbarHomeButton();
     }
 
     //region FLOATING ACTION BUTTON
@@ -270,12 +260,6 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
     //endregion
-
-    private void decorateHelpOverlay()
-    {
-        super.setHelpOverlayMessage(getText(R.string.help_text_show_locations));
-    }
-
 
     //region NAVIGATION BAR
     private void updateNavigationBar()
@@ -486,7 +470,18 @@ public class ShowLocationsActivity extends BaseActivity
                 builder = new AlertDialog.Builder(ShowLocationsActivity.this);
 
                 builder.setTitle(R.string.alert_dialog_remove_element_title);
-                builder.setMessage(getString(R.string.alert_dialog_remove_element_message, this.longClickedElement.getName(), this.longClickedElement.getParent().getName()));
+
+                String alertMessage;
+                if(this.longClickedElement.getParent().equals(super.content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
+                {
+                    alertMessage = getString(R.string.alert_dialog_remove_element_message_parent_is_root, this.longClickedElement.getName(), this.longClickedElement.getParent().getName());
+                }
+                else
+                {
+                    alertMessage = getString(R.string.alert_dialog_remove_element_message, this.longClickedElement.getName(), this.longClickedElement.getParent().getName());
+                }
+
+                builder.setMessage(alertMessage);
 
                 builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
                 {

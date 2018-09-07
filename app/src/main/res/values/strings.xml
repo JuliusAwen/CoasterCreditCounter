@@ -56,6 +56,11 @@
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
     <string name="alert_dialog_remove_element_title">REMOVE</string>
     <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
+    <string name="alert_dialog_remove_element_message_parent_is_root">
+        Do you really want to remove %1$s? \n\n
+        WARNING: \n
+        As locations parent is root location %2$s you have to assign new parents to children parks manually!
+    </string>
 
 
     <!--descriptions-->
@@ -87,9 +92,7 @@
 
     <!--help texts-->
     <string name="help_text_show_locations">
-        <b><big>Manage Locations</big></b>
-        \n\n <b>Toolbar</b>
-        \n <li>Click back arrow to return to previous activity.</li>
+        <b><big>Locations</big></b>
         \n\n <b>Options Menu</b>
         \n <li><i>close icon:</i> change to browsing mode.</li>
         \n <li><i>rename root:</i> edit root locations name (available only on root level).</li>
