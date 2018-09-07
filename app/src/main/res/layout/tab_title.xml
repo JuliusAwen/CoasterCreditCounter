@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/standard_bar_layout"
+    android:gravity="center">
+
+    <ImageView
+        style="@style/standard_image_holder"
+        android:id="@+id/imageViewTabTitle"
+        android:contentDescription="@string/description_tab_titles_show_park"/>
+
+</LinearLayout>

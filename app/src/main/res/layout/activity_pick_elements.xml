@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayoutPickElements"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".presentation.activities.elements.PickElementsActivity">
 
     <include
         layout="@layout/floating_action_button" />
 
-</FrameLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPickElements_SelectAll"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:orientation="horizontal"
+            android:elevation="6dp"
+            android:visibility="gone" >
+
+            <TextView
+                style="@style/standard_text_view"
+                android:id="@+id/textViewPickElements_SelectAll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/radioButtonPickElements_SelectAll"
+                android:buttonTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|center_vertical|center_horizontal"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewPickElements"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

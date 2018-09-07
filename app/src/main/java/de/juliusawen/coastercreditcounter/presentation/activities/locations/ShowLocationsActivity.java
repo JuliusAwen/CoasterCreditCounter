@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
@@ -58,11 +57,8 @@ public class ShowLocationsActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_locations);
-        CoordinatorLayout coordinatorLayoutActivity = findViewById(R.id.coordinatorLayoutShowLocations);
-        View showLocationsView = getLayoutInflater().inflate(R.layout.layout_show_locations, coordinatorLayoutActivity, false);
-        coordinatorLayoutActivity.addView(showLocationsView);
-
         super.onCreate(savedInstanceState);
+
         super.addToolbar();
         super.addFloatingActionButton();
         super.addHelpOverlay(null, getString(R.string.title_show_locations));
@@ -71,7 +67,6 @@ public class ShowLocationsActivity extends BaseActivity
 
         this.decorateToolbar();
         this.decorateFloatingActionButton();
-
 
         this.updateNavigationBar();
         this.createContentRecyclerView();

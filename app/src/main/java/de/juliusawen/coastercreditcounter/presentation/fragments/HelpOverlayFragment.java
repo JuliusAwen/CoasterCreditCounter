@@ -38,8 +38,8 @@ public class HelpOverlayFragment extends Fragment
 
         HelpOverlayFragment fragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
-        args.putCharSequence(Constants.FRAGMENT_ARG_1, helpTitle);
-        args.putCharSequence(Constants.FRAGMENT_ARG_2, helpMessage);
+        args.putCharSequence(Constants.FRAGMENT_ARG_HELP_TITLE, helpTitle);
+        args.putCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE, helpMessage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,13 +49,13 @@ public class HelpOverlayFragment extends Fragment
     {
         if (getArguments() != null)
         {
-            this.helpTitle = getArguments().getString(Constants.FRAGMENT_ARG_1);
+            this.helpTitle = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
             if(this.helpTitle == null)
             {
                 this.helpTitle = getString(R.string.title_help);
             }
 
-            this.helpMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_2);
+            this.helpMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
         }
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);

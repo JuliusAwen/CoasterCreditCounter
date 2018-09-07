@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import java.util.Collections;
@@ -42,10 +41,8 @@ public class SortElementsActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "SortElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_sort_elements);
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutSortElements);
-        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_sort_elements, frameLayoutActivity, false));
-
         super.onCreate(savedInstanceState);
+
         super.addToolbar();
         super.addFloatingActionButton();
         super.addHelpOverlay(null, getText(R.string.help_text_sort_elements));

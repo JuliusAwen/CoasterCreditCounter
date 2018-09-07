@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,10 +41,8 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "AddLocationsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_add_location);
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutAddLocation);
-        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_add_location, frameLayoutActivity, false));
-
         super.onCreate(savedInstanceState);
+
         super.addToolbar();
         super.addConfirmDialog();
         super.addHelpOverlay(null, this.getText(R.string.help_text_add_location));

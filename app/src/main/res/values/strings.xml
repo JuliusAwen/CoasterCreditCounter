@@ -18,15 +18,10 @@
     <string name="subtitle_add_location_add_to">to %1$s</string>
 
 
-    <!--tab labels-->
-    <string name="tab_label_show_park_overview">Overview</string>
-    <string name="tab_label_show_park_attractions">Attractions</string>
-    <string name="tab_label_show_park_visits">Visits</string>
-
-    <string name="section_format">SECTION FORMAT %1$d</string>
-
-
-
+    <!--tab titles-->
+    <string name="tab_title_show_park_overview">Overview</string>
+    <string name="tab_title_show_park_attractions">Attractions</string>
+    <string name="tab_title_show_park_visits">Visits</string>
 
     <!--options menu entries-->
     <string name="selection_rename_root">rename root</string>
@@ -81,6 +76,7 @@
     <string name="description_cancel">@string/text_cancel</string>
     <string name="description_close">@string/text_close</string>
     <string name="description_expand_toggle">expand/collapse toggle</string>
+    <string name="description_tab_titles_show_park">overview/attractions/visits</string>
 
 
     <!--action texts -->

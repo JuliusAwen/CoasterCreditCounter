@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -43,10 +42,8 @@ public class PickElementsActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "PickElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_pick_elements);
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutPickElements);
-        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_pick_elements, frameLayoutActivity, false));
-
         super.onCreate(savedInstanceState);
+
         super.addToolbar();
         super.addFloatingActionButton();
         super.addHelpOverlay(null, getText(R.string.help_text_pick_elements));
@@ -55,6 +52,7 @@ public class PickElementsActivity extends BaseActivity
 
         this.decorateToolbar();
         this.decorateFloatingActionButton();
+
         this.addSelectOrDeselectAllBar();
         this.addSelectableRecyclerView();
     }

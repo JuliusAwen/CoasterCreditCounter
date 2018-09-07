@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.UUID;
@@ -30,10 +29,8 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "EditLocationActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_edit_location);
-        FrameLayout frameLayoutActivity = findViewById(R.id.frameLayoutEditLocation);
-        frameLayoutActivity.addView(getLayoutInflater().inflate(R.layout.layout_edit_location, frameLayoutActivity, false));
-
         super.onCreate(savedInstanceState);
+
         super.addToolbar();
         super.addConfirmDialog();
         super.addHelpOverlay(null, getText(R.string.help_text_edit_location));
