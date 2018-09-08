@@ -2,20 +2,19 @@
 
     <!--activity titles-->
     <string name="title_app_name">CoasterCreditCounter</string>
-    <string name="title_show_locations">Locations</string>
-    <string name="title_sort_elements">Sort</string>
-    <string name="title_pick_elements">Pick</string>
-    <string name="title_add_location">Add</string>
-    <string name="title_edit_location">Edit</string>
 
-    <string name="title_show_park">Park</string>
-
-    <string name="title_help">Help</string>
+    <string name="title_help">Help: %1$s</string>
 
 
     <!--activity subtitles-->
-    <string name="subtitle_pick_add_children_to_new_location">children to add to new location</string>
-    <string name="subtitle_add_location_add_to">to %1$s</string>
+    <string name="subtitle_sort_elements">sort elements</string>
+    <string name="subtitle_add_location">add location</string>
+    <string name="subtitle_edit_location">edit location</string>
+    <string name="subtitle_show_locations">browse/manage locations</string>
+    <string name="subtitle_show_park">show park</string>
+
+    <string name="subtitle_pick_elements">pick elements</string>
+    <string name="subtitle_pick_locations_description">pick children to add to new location</string>
 
 
     <!--tab titles-->
@@ -58,10 +57,13 @@
     <string name="text_deselect_all">deselect all</string>
     <string name="add_children">add children</string>
 
+    <string name="root_element">root</string>
+
 
     <!--dialog texts-->
     <string name="alert_dialog_delete_element_title">DELETE</string>
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
+
     <string name="alert_dialog_remove_element_title">REMOVE</string>
     <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
     <string name="alert_dialog_remove_element_message_parent_is_root">
@@ -69,6 +71,9 @@
         WARNING: \n
         As locations parent is root location %2$s you have to assign new parents to children parks manually!
     </string>
+
+    <string name="alert_dialog_relocate_locations_parks_title">LOCATION CONTAINS PARKS</string>
+    <string name="alert_dialog_relocate_locations_parks_message">Do you want to relocate %1$s\'s child parks to %2$s?</string>
 
 
     <!--descriptions-->
@@ -101,8 +106,7 @@
 
     <!--help texts-->
     <string name="help_text_show_locations">
-        <b><big>Locations</big></b>
-        \n\n <b>Options Menu</b>
+        \n<b>Options Menu</b>
         \n <li><i>close icon:</i> change to browsing mode.</li>
         \n <li><i>rename root:</i> edit root locations name (available only on root level).</li>
         \n <li><i>sort:</i> change list entries order (only available if list contains multiple entries).</li>
@@ -122,28 +126,24 @@
     </string>
 
     <string name="help_text_sort_elements">
-        <b><big>Sort</big></b>
-        \n <li>Select entry and use up or down button to move selection. Accept changes with floating action button.</li>
+        \n<li>Select entry and use up or down button to move selection. Accept changes with floating action button.</li>
         \n\n <b>Options Menu</b>
         \n <li><i>sort a-z:</i> order list alphabetically.</li>
         \n <li><i>help:</i> show this.</li>
     </string>
 
     <string name="help_text_pick_elements">
-        <b><big>Pick</big></b>
         \n <li>Select entries and confirm.</li>
         \n <li><i>select/deselect all:</i> select/deselect all entries.</li>
     </string>
 
     <string name="help_text_add_location">
-        <b><big>Add</big></b>
         \n <li>Name new location and confirm.</li>
         \n <li><i>add children:</i> check to choose which current locations children to add under new location
         (is automatically added if single child).</li>
     </string>
 
     <string name="help_text_edit_location">
-        <b><big>Edit</big></b>
         \n <li>Rename location and confirm.</li>
     </string>
 

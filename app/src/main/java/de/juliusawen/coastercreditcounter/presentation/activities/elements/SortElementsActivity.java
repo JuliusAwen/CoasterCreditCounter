@@ -43,11 +43,11 @@ public class SortElementsActivity extends BaseActivity
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
 
+        this.initializeContent();
+
         super.addToolbar();
         super.addFloatingActionButton();
-        super.addHelpOverlay(null, getText(R.string.help_text_sort_elements));
-
-        this.initializeContent();
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_sort_elements)), getText(R.string.help_text_sort_elements));
 
         this.decorateToolbar();
         this.decorateFloatingActionButton();
@@ -144,7 +144,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_sort_elements), elementsToSort.get(0).getParent().getName());
+        super.setToolbarTitleAndSubtitle(elementsToSort.get(0).getParent().getName(), getString(R.string.subtitle_sort_elements));
         super.addToolbarHomeButton();
     }
 

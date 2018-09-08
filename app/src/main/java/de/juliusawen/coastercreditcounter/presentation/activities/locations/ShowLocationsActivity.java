@@ -59,11 +59,11 @@ public class ShowLocationsActivity extends BaseActivity
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
 
+        this.initializeContent();
+
         super.addToolbar();
         super.addFloatingActionButton();
-        super.addHelpOverlay(null, getString(R.string.title_show_locations));
-
-        this.initializeContent();
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
 
         this.decorateToolbar();
         this.decorateFloatingActionButton();
@@ -78,9 +78,7 @@ public class ShowLocationsActivity extends BaseActivity
         Log.e(Constants.LOG_TAG, "onResume()");
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
 
-        this.updateContentRecyclerAdapter();
-        this.updateNavigationBar();
-
+        this.updateActivityView();
         super.onResume();
     }
 
@@ -89,7 +87,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         menu.clear();
 
-        if(this.currentElement.getParent() == null)
+        if(this.currentElement.isRootElement())
         {
             menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root);
         }
@@ -142,9 +140,6 @@ public class ShowLocationsActivity extends BaseActivity
 
         this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
-
-        this.updateContentRecyclerAdapter();
-        this.updateNavigationBar();
     }
 
     @Override
@@ -193,9 +188,16 @@ public class ShowLocationsActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement%s", this.currentElement));
     }
 
+    private void updateActivityView()
+    {
+        this.decorateToolbar();
+        this.updateContentRecyclerAdapter();
+        this.updateNavigationBar();
+    }
+
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_show_locations), null);
+        super.setToolbarTitleAndSubtitle(this.currentElement.getName(), null);
     }
 
     //region FLOATING ACTION BUTTON
@@ -263,59 +265,58 @@ public class ShowLocationsActivity extends BaseActivity
     {
         View view = this.findViewById(android.R.id.content).getRootView();
 
+        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
+        linearLayoutNavigationBar.invalidate();
+        linearLayoutNavigationBar.removeAllViews();
+
         if(!this.recentElements.contains(this.currentElement))
         {
             this.recentElements.add(this.currentElement);
         }
 
-        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
-        linearLayoutNavigationBar.invalidate();
-        linearLayoutNavigationBar.removeAllViews();
-
         for (Element recentElement : this.recentElements)
         {
-            View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
-
-            Button button = buttonView.findViewById(R.id.buttonNavigationBar);
-
-            if(this.recentElements.indexOf(recentElement) != 0)
+            if(this.recentElements.indexOf(recentElement) != this.recentElements.size() -1 || recentElement.isRootElement())
             {
-                Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_left));
-                button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-            }
+                View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
 
-            if(this.recentElements.indexOf(recentElement) != this.recentElements.size() -1)
-            {
-                button.setText(recentElement.getName());
-            }
-            else
-            {
-                button.setText(StringTool.getSpannableString(recentElement.getName(), Typeface.BOLD_ITALIC));
-            }
+                Button button = buttonView.findViewById(R.id.buttonNavigationBar);
 
-            button.setId(ButtonFunction.BACK.ordinal());
-            button.setTag(recentElement);
-            button.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
+                if(this.currentElement.isRootElement() && recentElement.isRootElement())
                 {
-                    onClickNavigationBar(view);
+                    button.setText(StringTool.getSpannableString(getString(R.string.root_element), Typeface.BOLD_ITALIC));
                 }
-            });
-
-            linearLayoutNavigationBar.addView(buttonView);
-
-            final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
-            horizontalScrollView.post(new Runnable()
-            {
-                @Override
-                public void run()
+                else
                 {
-                    horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
+                    Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_right));
+                    button.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                    button.setText(recentElement.getName());
                 }
-            });
+
+                button.setId(ButtonFunction.BACK.ordinal());
+                button.setTag(recentElement);
+                button.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        onClickNavigationBar(view);
+                    }
+                });
+
+                linearLayoutNavigationBar.addView(buttonView);
+            }
         }
+
+        final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
+        horizontalScrollView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
+            }
+        });
     }
 
     private void onClickNavigationBar(View view)
@@ -339,8 +340,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
 
         this.currentElement = element;
-        updateContentRecyclerAdapter();
-        updateNavigationBar();
+        this.updateActivityView();
     }
     //endregion
 
@@ -378,8 +378,8 @@ public class ShowLocationsActivity extends BaseActivity
         if(element.isInstance(Location.class))
         {
             this.currentElement = element;
-            updateContentRecyclerAdapter();
-            updateNavigationBar();
+            this.updateActivityView();
+
         }
         else if(element.isInstance(Park.class))
         {
@@ -438,7 +438,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case DELETE_ELEMENT:
-                builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+                builder = new AlertDialog.Builder(this);
 
                 builder.setTitle(R.string.alert_dialog_delete_element_title);
                 builder.setMessage(getString(R.string.alert_dialog_delete_element_message, this.longClickedElement.getName()));
@@ -647,7 +647,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void onClickAlertDialogNegativeButton(DialogInterface dialog)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: canceled");
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickAlertDialogNegativeButton:: canceled");
         dialog.dismiss();
     }
 

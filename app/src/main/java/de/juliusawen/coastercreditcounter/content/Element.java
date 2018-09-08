@@ -36,7 +36,16 @@ public abstract class Element
 
     public String getFullName()
     {
-        return String.format(Locale.getDefault(), "[%s \"%s\" (%s)]", this.getClass().getSimpleName(), this.getName(), this.getUuid());
+        return String.format(Locale.getDefault(),
+                "[%s \"%s\" (%s) #[%d] children: #[%d] locations, #[%d] parks, #[%d] attractions]",
+                this.getClass().getSimpleName(),
+                this.getName(),
+                this.getUuid(),
+                this.getChildCount(),
+                this.getChildCountOfInstance(Location.class),
+                this.getChildCountOfInstance(Park.class),
+                this.getChildCountOfInstance(Attraction.class)
+        );
     }
 
     public String getName()
@@ -68,7 +77,7 @@ public abstract class Element
 
     public Element getRootElement()
     {
-        if(this.parent != null)
+        if(!this.isRootElement())
         {
             Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent", this));
             return this.parent.getRootElement();
@@ -77,6 +86,11 @@ public abstract class Element
         {
             return this;
         }
+    }
+
+    public boolean isRootElement()
+    {
+        return this.getParent() == null;
     }
 
     public void addChildren(List<Element> children)
@@ -91,13 +105,16 @@ public abstract class Element
     {
         Log.d(Constants.LOG_TAG, String.format("Element.addChildren:: called with #[%d] children", children.size()));
 
-        int increment = -1;
+        int increment = 0;
 
         for (Element child : children)
         {
-            increment ++;
-            this.addChild(index + increment, child);
-            child.setParent(this);
+            if(this.addChild(index + increment, child))
+            {
+                child.setParent(this);
+                increment ++;
+            }
+
         }
     }
 
@@ -106,22 +123,31 @@ public abstract class Element
         this.addChild(this.getChildCount(), child);
     }
 
-    private void addChild(int index, Element child)
+    private boolean addChild(int index, Element child)
     {
-        child.setParent(this);
+        if(!this.containsChild(child))
+        {
+            child.setParent(this);
 
-        Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added", this, child));
-        this.children.add(index, child);
+            Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added", this, child));
+            this.children.add(index, child);
+            return true;
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already contains child [%s]", this, child));
+            return false;
+        }
     }
 
     public boolean containsChild(Element child)
     {
-        return this.children.contains(child);
+        return this.getChildren().contains(child);
     }
 
     public int indexOfChild(Element child)
     {
-        return this.children.indexOf(child);
+        return this.getChildren().indexOf(child);
     }
 
     public boolean hasChildren()
@@ -198,15 +224,21 @@ public abstract class Element
         this.parent = parent;
     }
 
-    public void insertElement(Element newElement, List<Element> children)
+    public void insertElements(Element newElement, List<Element> children)
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.insertElement:: inserting %s into %s", newElement, this));
+        Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
 
         newElement.addChildren(new ArrayList<>(children));
 
         this.deleteChildren(children);
 
-        this.addChild(this.getChildCount(), newElement);
+        this.addChild(newElement);
+    }
+
+    public void relocateElement(Element newParent)
+    {
+        this.getParent().getChildren().remove(this);
+        newParent.addChild(this);
     }
 
     public boolean deleteElementAndChildren()

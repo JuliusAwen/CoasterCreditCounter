@@ -63,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.onPrepareOptionsMenu:: OptionsMenu in this or child activity prepared");
+        Log.d(Constants.LOG_TAG, "BaseActivity.onPrepareOptionsMenu:: OptionsMenu prepared");
 
         if(helpOverlayFragment != null)
         {

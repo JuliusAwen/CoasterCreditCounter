@@ -19,16 +19,6 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public void fetchContent(Content content)
     {
-
-//        try
-//        {
-//            Thread.sleep(5000);
-//        }
-//        catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-
         Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: fetchContent called.");
 
         // create Nodes
@@ -68,7 +58,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park heidePark = Park.createPark("Heide Park Resort");
         Park cedarPoint = Park.createPark("Cedar Point");
         Park sixFlagsMagicMountain = Park.createPark("Six Flags Magic Mountain");
-        Park testPark = Park.createPark("Test Park");
 
         Coaster taron = Coaster.createCoaster("Taron");
         Attraction hollywoodTour = Attraction.createAttraction("Hollywood Tour");
@@ -85,7 +74,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         heidePark.addChild(scream);
 
         bruehl.addChild(phantasialand);
-        bruehl.addChild(testPark);
         soltau.addChild(heidePark);
 
         northRhineWestphalia.addChild(bruehl);
@@ -107,5 +95,24 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(usa);
 
         content.addElement(taron);
+
+
+
+        Location testLocationParent = Location.createLocation("TestParent 2L 2P");
+        Location testLocationChild1 = Location.createLocation("TestChild#1 1L 1P");
+        Location testLocationChild2 = Location.createLocation("TestChild#2 0L 0P");
+        Location testLocationGrandChild = Location.createLocation("TestGrandchild 0L 0P");
+        Park testPark1 = Park.createPark("Test Park#1");
+        Park testPark2 = Park.createPark("Test Park#2");
+        Park testPark3 = Park.createPark("Test Park#3");
+
+        testLocationChild1.addChild(testLocationGrandChild);
+        testLocationChild1.addChild(testPark3);
+        testLocationParent.addChild(testLocationChild1);
+        testLocationParent.addChild(testLocationChild2);
+        testLocationParent.addChild(testPark1);
+        testLocationParent.addChild(testPark2);
+
+        earth.addChild(testLocationParent);
     }
 }

@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_baseline_local_activity" />
-                            <entry key="sourceFile" value="D:\_Downloads\baseline-local_activity.svg" />
+                            <entry key="outputName" value="ic_baseline_notification_important" />
+                            <entry key="sourceFile" value="D:\_Downloads\baseline-notification_important.svg" />
                           </map>
                         </option>
                       </PersistentState>

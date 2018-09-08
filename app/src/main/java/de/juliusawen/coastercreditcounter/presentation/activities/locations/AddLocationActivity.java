@@ -1,7 +1,9 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.locations;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +21,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
@@ -43,11 +46,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_add_location);
         super.onCreate(savedInstanceState);
 
+        this.initializeContent();
+
         super.addToolbar();
         super.addConfirmDialog();
-        super.addHelpOverlay(null, this.getText(R.string.help_text_add_location));
-
-        this.initializeContent();
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_add_location)), this.getText(R.string.help_text_add_location));
 
         this.decorateToolbar();
         this.createEditText();
@@ -101,7 +104,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
@@ -113,8 +116,12 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 List<Element> pickedChildren = super.content.fetchElementsFromUuidStrings(uuidStrings);
                 pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
-                this.parentLocation.insertElement(this.newLocation, new ArrayList<>(pickedChildren));
-                this.returnResult(resultCode);
+                this.parentLocation.insertElements(this.newLocation, new ArrayList<>(pickedChildren));
+
+                if(this.parentLocation.hasChildrenOfInstance(Park.class))
+                {
+                    this.showAlertDialogRelocateChildrenParks();
+                }
             }
          }
     }
@@ -127,7 +134,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_add_location), getString(R.string.subtitle_add_location_add_to, this.parentLocation.getName()));
+        super.setToolbarTitleAndSubtitle(this.parentLocation.getName(), getString(R.string.subtitle_add_location));
     }
 
     //region EDIT TEXT
@@ -135,7 +142,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     {
         View contentView = this.findViewById(android.R.id.content);
 
-        if(this.parentLocation.hasChildren())
+        if(this.parentLocation.hasChildrenOfInstance(Location.class))
         {
             LinearLayout linearLayoutAddChildren = contentView.findViewById(R.id.linearLayoutAddLocation_AddChildren);
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
@@ -175,30 +182,50 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void handleOnEditorActionDone()
     {
+        Log.d(Constants.LOG_TAG, String.format(
+                "AddLocationsActivity.handleOnEditorActionDone:: %s has #[%d] child locations and #[%d] child parks",
+                this.parentLocation, this.parentLocation.getChildCountOfInstance(Location.class), this.parentLocation.getChildCountOfInstance(Park.class)));
+
         if(this.handleLocationCreation())
         {
             if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
-                Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren[%S]", this.checkBoxAddChildren.isChecked()));
+                Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S]", this.checkBoxAddChildren.isChecked()));
 
-                if (this.parentLocation.getChildCount() > 1)
+                if (this.parentLocation.getChildCountOfInstance(Location.class) > 1)
                 {
+                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: add children chosen - starting PickLocationsActivity for%s...", this.parentLocation));
                     Intent intent = new Intent(getApplicationContext(), PickElementsActivity.class);
-                    Log.i(Constants.LOG_TAG, "AddLocationsActivity.handleOnEditorActionDone:: starting PickLocationsActivity...");
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.parentLocation.getUuid().toString());
                     startActivityForResult(intent, Constants.REQUEST_PICK_ELEMENTS);
                 }
                 else
                 {
-                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: %s has only one child -> inserting in %s", this.parentLocation, this.newLocation));
-                    this.parentLocation.insertElement(this.newLocation, this.parentLocation.getChildren());
-                    returnResult(RESULT_OK);
+                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: %s has only one child location -> inserting in %s", this.parentLocation, this.newLocation));
+                    this.parentLocation.insertElements(this.newLocation, this.parentLocation.getChildrenOfInstance(Location.class));
+
+                    if(this.parentLocation.hasChildrenOfInstance(Park.class))
+                    {
+                        this.showAlertDialogRelocateChildrenParks();
+                    }
+                    else
+                    {
+                        this.returnResult(RESULT_OK);
+                    }
                 }
             }
             else
             {
                 this.parentLocation.addChild(this.newLocation);
-                this.returnResult(RESULT_OK);
+
+                if(this.parentLocation.hasChildrenOfInstance(Park.class))
+                {
+                    this.showAlertDialogRelocateChildrenParks();
+                }
+                else
+                {
+                    this.returnResult(RESULT_OK);
+                }
             }
         }
         else
@@ -206,6 +233,63 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
         }
     }
+
+    private void showAlertDialogRelocateChildrenParks()
+    {
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+
+        builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.alert_dialog_relocate_locations_parks_title);
+        builder.setMessage(getString(R.string.alert_dialog_relocate_locations_parks_message, this.parentLocation.getName(), this.newLocation.getName()));
+        builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                onClickAlertDialogPositiveButtonRelocateChildrenParks(dialog);
+            }
+        });
+
+        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                onClickAlertDialogNegativeButton(dialog);
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.setIcon(R.drawable.ic_baseline_notification_important);
+
+        alertDialog.show();
+    }
+
+    private void onClickAlertDialogPositiveButtonRelocateChildrenParks(DialogInterface dialog)
+    {
+        Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickAlertDialogNegativeButton:: accepted");
+        dialog.dismiss();
+        this.relocateChildrenParks();
+        this.returnResult(RESULT_OK);
+
+    }
+    private void onClickAlertDialogNegativeButton(DialogInterface dialog)
+    {
+        Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickAlertDialogNegativeButton:: canceled");
+        dialog.dismiss();
+        this.returnResult(RESULT_OK);
+    }
+
+    private void relocateChildrenParks()
+    {
+        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.relocateChildrenParks:: relocating children parks of%s to %s...", this.parentLocation, this.newLocation));
+
+        for(Element park : this.parentLocation.getChildrenOfInstance(Park.class))
+        {
+            park.relocateElement(this.newLocation);
+        }
+    }
+
 
     private boolean handleLocationCreation()
     {

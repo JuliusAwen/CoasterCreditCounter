@@ -31,11 +31,11 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
 
+        this.initializeContent();
+
         super.addToolbar();
         super.addConfirmDialog();
-        super.addHelpOverlay(null, getText(R.string.help_text_edit_location));
-
-        this.initializeContent();
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_edit_location)), getText(R.string.help_text_edit_location));
 
         this.decorateToolbar();
         this.createEditText();
@@ -83,7 +83,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_edit_location), this.locationToEdit.getName());
+        super.setToolbarTitleAndSubtitle(this.locationToEdit.getName(), getString(R.string.subtitle_edit_location));
     }
 
     //region EDIT TEXT
