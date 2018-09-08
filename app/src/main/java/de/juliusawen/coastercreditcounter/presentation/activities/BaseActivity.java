@@ -46,20 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         this.content = Content.getInstance();
     }
 
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-    }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -248,22 +234,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         else
         {
             this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-        }
-    }
-
-    protected void setHelpOverlayTitle(String helpTitle)
-    {
-        if(this.helpOverlayFragment != null)
-        {
-            this.helpOverlayFragment.setHelpTitle(helpTitle);
-        }
-    }
-
-    protected void setHelpOverlayMessage(CharSequence helpText)
-    {
-        if(this.helpOverlayFragment != null)
-        {
-            this.helpOverlayFragment.setHelpMessage(helpText);
         }
     }
 

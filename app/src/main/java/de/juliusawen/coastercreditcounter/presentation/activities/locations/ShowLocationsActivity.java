@@ -53,7 +53,6 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.e(Constants.LOG_TAG, "onCreate()");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_locations);
@@ -75,7 +74,6 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        Log.e(Constants.LOG_TAG, "onResume()");
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
 
         this.updateActivityView();
@@ -124,7 +122,6 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        Log.e(Constants.LOG_TAG, "onSaveInstanceState()");
         super.onSaveInstanceState(outState);
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.recentElements));
@@ -134,8 +131,6 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
-        Log.e(Constants.LOG_TAG, "onRestoreInstanceState()");
-
         super.onRestoreInstanceState(savedInstanceState);
 
         this.recentElements = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
@@ -396,7 +391,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.longClickedElement.isInstance(Location.class))
         {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+            PopupMenu popupMenu = new PopupMenu(this, view);
 
             popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
             popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
@@ -465,7 +460,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case REMOVE_ELEMENT:
-                builder = new AlertDialog.Builder(ShowLocationsActivity.this);
+                builder = new AlertDialog.Builder(this);
 
                 builder.setTitle(R.string.alert_dialog_remove_element_title);
 
@@ -557,8 +552,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void onClickSnackbarUndoDeleteElement()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s]...",
-                this.longClickedElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s]...", this.longClickedElement));
 
         if(this.longClickedElement.undoPossible && this.longClickedElement.undoDeleteElementAndChildren())
         {
@@ -571,9 +565,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s] failed!",
-                    this.longClickedElement));
-
+            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s] failed!", this.longClickedElement));
             Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
         }
     }
@@ -605,8 +597,7 @@ public class ShowLocationsActivity extends BaseActivity
         {
             Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
 
-            String errorMessage = String.format(
-                    "ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s from content failed!", this.longClickedElement);
+            String errorMessage = String.format("ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s from content failed!", this.longClickedElement);
 
             Log.e(Constants.LOG_TAG, errorMessage);
             throw new IllegalStateException(errorMessage);
@@ -639,8 +630,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: undo remove [%s] failed!",
-                    this.longClickedElement));
+            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: undo remove [%s] failed!", this.longClickedElement));
             Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_undo_not_possible));
         }
     }
