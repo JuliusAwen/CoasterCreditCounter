@@ -70,7 +70,7 @@ public abstract class Element
         return this.uuid;
     }
 
-    public <T> boolean isInstance(Class<T> type)
+    public <T extends Element> boolean isInstance(Class<T> type)
     {
         return type.isInstance(this);
     }
@@ -155,7 +155,7 @@ public abstract class Element
         return !this.getChildren().isEmpty();
     }
 
-    public <T> boolean hasChildrenOfInstance(Class<T> type)
+    public <T extends Element> boolean hasChildrenOfInstance(Class<T> type)
     {
         return !this.getChildrenOfInstance(type).isEmpty();
     }
@@ -165,7 +165,7 @@ public abstract class Element
         return this.getChildren().size();
     }
 
-    public <T> int getChildCountOfInstance(Class<T> type)
+    public <T extends Element> int getChildCountOfInstance(Class<T> type)
     {
         return this.getChildrenOfInstance(type).size();
     }
@@ -175,7 +175,7 @@ public abstract class Element
         return this.children;
     }
 
-    public <T> List<Element> getChildrenOfInstance(Class<T> type)
+    public <T extends Element> List<Element> getChildrenOfInstance(Class<T> type)
     {
         List<Element> children = new ArrayList<>();
 

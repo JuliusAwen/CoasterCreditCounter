@@ -25,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    public Content content;
+    public static Content content;
 
     private Bundle savedInstanceState;
 
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         this.savedInstanceState = savedInstanceState;
-        this.content = Content.getInstance();
+        content = Content.getInstance();
     }
 
     @Override

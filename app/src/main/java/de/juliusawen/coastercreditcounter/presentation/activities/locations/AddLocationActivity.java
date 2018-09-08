@@ -100,7 +100,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-        this.parentLocation = (Location) super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentLocation = (Location) content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             if(resultCode == RESULT_OK)
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> pickedChildren = super.content.fetchElementsFromUuidStrings(uuidStrings);
+                List<Element> pickedChildren = content.fetchElementsFromUuidStrings(uuidStrings);
 
                 Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult<PickElements>:: #[%d] elements returned - sorting list...", pickedChildren.size()));
                 pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
@@ -132,7 +132,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void initializeContent()
     {
-        this.parentLocation = (Location) super.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.parentLocation = (Location) content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void decorateToolbar()
@@ -301,7 +301,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
         if(this.newLocation != null)
         {
-            super.content.addElement(this.newLocation);
+            content.addElement(this.newLocation);
             success = true;
         }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.content.Attraction;
@@ -12,6 +13,7 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.content.Visit;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public final class DatabaseMock implements IDatabaseWrapper
@@ -65,6 +67,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster krake = Coaster.createCoaster("Krake");
         Attraction scream = Attraction.createAttraction("Scream");
 
+        Coaster steelVengeance = Coaster.createCoaster("Steel Vengeance");
+        Coaster valravn = Coaster.createCoaster("Valravn");
+        Coaster maverick = Coaster.createCoaster("Maverick");
+        Coaster gatekeeper = Coaster.createCoaster("Gatekeeper");
+
+        Calendar calendar = Calendar.getInstance();
+        Visit visit = Visit.createVisit(calendar, cedarPoint);
+
 
         // build tree
         phantasialand.addChild(taron);
@@ -88,6 +98,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         europe.addChild(germany);
         europe.addChild(netherlands);
 
+        cedarPoint.addChild(steelVengeance);
+        cedarPoint.addChild(valravn);
+        cedarPoint.addChild(maverick);
+        cedarPoint.addChild(gatekeeper);
+
+        cedarPoint.addChild(visit);
+
+
         usa.addChild(cedarPoint);
         usa.addChild(sixFlagsMagicMountain);
 
@@ -97,22 +115,25 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElement(taron);
 
 
+        boolean useTestLocations = false;
+        if(useTestLocations)
+        {
+            Location testLocationParent = Location.createLocation("TestParent 2L 2P");
+            Location testLocationChild1 = Location.createLocation("TestChild#1 1L 1P");
+            Location testLocationChild2 = Location.createLocation("TestChild#2 0L 0P");
+            Location testLocationGrandChild = Location.createLocation("TestGrandchild 0L 0P");
+            Park testPark1 = Park.createPark("Test Park#1");
+            Park testPark2 = Park.createPark("Test Park#2");
+            Park testPark3 = Park.createPark("Test Park#3");
 
-        Location testLocationParent = Location.createLocation("TestParent 2L 2P");
-        Location testLocationChild1 = Location.createLocation("TestChild#1 1L 1P");
-        Location testLocationChild2 = Location.createLocation("TestChild#2 0L 0P");
-        Location testLocationGrandChild = Location.createLocation("TestGrandchild 0L 0P");
-        Park testPark1 = Park.createPark("Test Park#1");
-        Park testPark2 = Park.createPark("Test Park#2");
-        Park testPark3 = Park.createPark("Test Park#3");
+            testLocationChild1.addChild(testLocationGrandChild);
+            testLocationChild1.addChild(testPark3);
+            testLocationParent.addChild(testLocationChild1);
+            testLocationParent.addChild(testLocationChild2);
+            testLocationParent.addChild(testPark1);
+            testLocationParent.addChild(testPark2);
 
-        testLocationChild1.addChild(testLocationGrandChild);
-        testLocationChild1.addChild(testPark3);
-        testLocationParent.addChild(testLocationChild1);
-        testLocationParent.addChild(testLocationChild2);
-        testLocationParent.addChild(testPark1);
-        testLocationParent.addChild(testPark2);
-
-        earth.addChild(testLocationParent);
+            earth.addChild(testLocationParent);
+        }
     }
 }

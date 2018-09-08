@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     private RecyclerView recyclerView;
 
     private static Set<Element> elementsToExpand = new HashSet<>();
-    private List<Element> elements;
+    private List<Element> elements = new ArrayList<>();
     private RecyclerOnClickListener.OnClickListener onClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder
@@ -53,7 +54,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
     public ExpandableRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
-        Log.i(Constants.LOG_TAG, "ExpandableRecyclerAdapter.Constructor:: creating instance...");
+        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.Constructor:: creating instance with #[%d] elements...", elements.size()));
 
         this.elements = elements;
         this.onClickListener = onClickListener;
@@ -76,6 +77,20 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
 
         notifyDataSetChanged();
+    }
+
+    public void smoothScrollToElement(Element element)
+    {
+        if(this.elements.contains(element))
+        {
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: scrolling to element %s", element));
+            int position = this.elements.indexOf(element);
+            this.recyclerView.smoothScrollToPosition(position);
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: element %s not found", element));
+        }
     }
 
     @Override
@@ -101,21 +116,21 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
         RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
 
-        this.removeChildViews(viewHolder);
+        this.handleExpandToggle(viewHolder, element);
+
+        if(element.isInstance(Location.class))
+        {
+            this.removeChildViews(viewHolder);
+
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
+            this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
+        }
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
         viewHolder.textView.setTag(element);
         viewHolder.textView.setOnClickListener(recyclerOnClickListener);
         viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
         viewHolder.textView.setVisibility(View.VISIBLE);
-
-        this.handleExpandToggle(viewHolder, element);
-
-        if(element.isInstance(Location.class))
-        {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
-            this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
-        }
     }
 
     private void removeChildViews(ViewHolder viewHolder)
@@ -175,9 +190,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             elementsToExpand.add(element);
             notifyDataSetChanged();
 
-            int layoutPosition = viewHolder.getLayoutPosition();
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onClickExpandToggle:: smooth scrolling to layout position #[%d]", layoutPosition));
-            this.recyclerView.smoothScrollToPosition(layoutPosition);
+            this.smoothScrollToElement(element);
         }
     }
 

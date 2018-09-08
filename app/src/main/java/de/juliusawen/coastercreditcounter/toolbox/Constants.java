@@ -21,7 +21,7 @@ public abstract class Constants
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
     public static final String FRAGMENT_ARG_HELP_MESSAGE = "de.juliusawen.coding.fragment_arg_help_message";
-    public static final String FRAGMENT_ARG_SECTION_NUMBER = "de.juliusawen.coding.fragment_arg_section_number";
+    public static final String FRAGMENT_ARG_PARK_UUID = "de.juliusawen.coding.fragment_arg_park_uuid";
 
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.tag_help_overlay_fragment";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.tag_confirm_dialog_fragment";

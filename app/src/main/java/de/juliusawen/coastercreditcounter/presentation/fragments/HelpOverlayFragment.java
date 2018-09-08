@@ -34,7 +34,7 @@ public class HelpOverlayFragment extends Fragment
 
     public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
-        Log.i(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: creating instance...");
+        Log.i(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: creating fragment...");
 
         HelpOverlayFragment fragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
