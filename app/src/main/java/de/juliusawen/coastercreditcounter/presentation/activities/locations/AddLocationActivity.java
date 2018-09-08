@@ -114,8 +114,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> pickedChildren = super.content.fetchElementsFromUuidStrings(uuidStrings);
+
+                Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult<PickElements>:: #[%d] elements returned - sorting list...", pickedChildren.size()));
                 pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
 
+                Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult<PickElements>:: inserting #[%d] elements...", pickedChildren.size()));
                 this.parentLocation.insertElements(this.newLocation, new ArrayList<>(pickedChildren));
 
                 if(this.parentLocation.hasChildrenOfInstance(Park.class))

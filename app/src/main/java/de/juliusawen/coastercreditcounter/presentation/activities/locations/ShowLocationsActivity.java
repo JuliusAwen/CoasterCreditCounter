@@ -149,7 +149,7 @@ public class ShowLocationsActivity extends BaseActivity
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = super.content.fetchElementFromUuidString(uuidString);
                 this.currentElement = resultElement;
-
+                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<AddElement>:: scrolling to result element %s...", resultElement));
                 this.smoothScrollToElement(resultElement);
             }
         }
@@ -165,11 +165,17 @@ public class ShowLocationsActivity extends BaseActivity
                 parentElement.addChildren(resultElements);
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element selectedElement = super.content.fetchElementFromUuidString(selectedElementUuidString);
-                if(selectedElement != null)
+                if(selectedElementUuidString != null)
                 {
+                    Element selectedElement = super.content.fetchElementFromUuidString(selectedElementUuidString);
+                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
                     this.smoothScrollToElement(selectedElement);
                 }
+                else
+                {
+                    Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
+                }
+
             }
         }
     }
@@ -198,7 +204,6 @@ public class ShowLocationsActivity extends BaseActivity
     //region FLOATING ACTION BUTTON
     private void decorateFloatingActionButton()
     {
-        Log.e(Constants.LOG_TAG, "decorateFAB()");
         super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
@@ -279,7 +284,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                 if(this.currentElement.isRootElement() && recentElement.isRootElement())
                 {
-                    button.setText(StringTool.getSpannableString(getString(R.string.root_element), Typeface.BOLD_ITALIC));
+                    button.setText(StringTool.getSpannableString(getString(R.string.root_location), Typeface.BOLD_ITALIC));
                 }
                 else
                 {

@@ -42,7 +42,6 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     }
 
-
     @Override
     public void onConfirmDialogFragmentInteraction(View view)
     {

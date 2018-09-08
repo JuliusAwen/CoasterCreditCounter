@@ -19,12 +19,15 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRecyclerAdapter.ViewHolder>
 {
+    private RecyclerView recyclerView;
+
     private static Set<Element> elementsToExpand = new HashSet<>();
     private List<Element> elements;
     private RecyclerOnClickListener.OnClickListener onClickListener;
@@ -75,6 +78,13 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
+    {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
     @NonNull
     @Override
     public ExpandableRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -101,18 +111,25 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
         this.handleExpandToggle(viewHolder, element);
 
-        if(element.hasChildrenOfInstance(Park.class))
+        if(element.isInstance(Location.class))
         {
             Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
-
-            viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: ExpandToggle for %s is <VISIBLE>", element));
+            this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
         }
-        else
+    }
+
+    private void removeChildViews(ViewHolder viewHolder)
+    {
+        if(viewHolder.childCount > 0)
         {
-            viewHolder.imageViewExpandToggle.setVisibility(View.INVISIBLE);
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: ExpandToggle for %s is <INVISIBLE>", element));
+            for (int i = 0; i < viewHolder.childCount; i++)
+            {
+                viewHolder.linearLayout.removeView(viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + i));
+            }
+
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.removeChildViews:: #[%d] ChildViews removed", viewHolder.childCount));
+
+            viewHolder.childCount = 0;
         }
     }
 
@@ -145,35 +162,37 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
     private void onClickExpandToggle(ViewHolder viewHolder, Element element)
     {
-        if(!viewHolder.isExpanded)
+        if(viewHolder.isExpanded)
         {
-
-            elementsToExpand.add(element);
-            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: expanded %s", element));
-
+            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onClickExpandToggle:: collapsing %s...", element));
+            elementsToExpand.remove(element);
             notifyDataSetChanged();
         }
         else
         {
-            elementsToExpand.remove(element);
-            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle.OnClick:: collapsed %s", element));
+            Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onClickExpandToggle:: expanding %s...", element));
 
+            elementsToExpand.add(element);
             notifyDataSetChanged();
+
+            int layoutPosition = viewHolder.getLayoutPosition();
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onClickExpandToggle:: smooth scrolling to layout position #[%d]", layoutPosition));
+            this.recyclerView.smoothScrollToPosition(layoutPosition);
         }
     }
 
-    private void removeChildViews(ViewHolder viewHolder)
+    private void handleChildViewCreation(ViewHolder viewHolder, List<Element> elements, RecyclerOnClickListener recyclerOnClickListener)
     {
-        if(viewHolder.childCount > 0)
+        if(!elements.isEmpty())
         {
-            for (int i = 0; i < viewHolder.childCount; i++)
-            {
-                viewHolder.linearLayout.removeView(viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + i));
-            }
-
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.removeChildViews:: #[%d] ChildViews removed", viewHolder.childCount));
-
-            viewHolder.childCount = 0;
+            this.addChildViews(viewHolder, elements, recyclerOnClickListener);
+            viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleChildViewCreation:: ExpandToggle for %s is <VISIBLE>", elements.get(0)));
+        }
+        else
+        {
+            viewHolder.imageViewExpandToggle.setVisibility(View.INVISIBLE);
+            Log.v(Constants.LOG_TAG, "ExpandableRecyclerAdapter.handleChildViewCreation:: ExpandToggle is <INVISIBLE>");
         }
     }
 
@@ -187,13 +206,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             if(viewHolder.isExpanded)
             {
                 childView.setVisibility(View.VISIBLE);
-
                 Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.addChildViews:: View %s is <VISIBLE>", element));
             }
             else
             {
                 childView.setVisibility(View.GONE);
-
                 Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.addChildViews:: View %s is <GONE>", element));
             }
 
@@ -209,7 +226,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
         if(childView == null)
         {
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.createChildView:: creating View %s...", element));
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.createChildView:: creating child view %s...", element));
 
             LayoutInflater layoutInflater = (LayoutInflater) viewHolder.linearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

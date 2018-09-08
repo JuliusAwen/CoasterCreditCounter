@@ -57,7 +57,7 @@
     <string name="text_deselect_all">deselect all</string>
     <string name="add_children">add children</string>
 
-    <string name="root_element">root</string>
+    <string name="root_location">root location</string>
 
 
     <!--dialog texts-->
