@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.content;
 
 import android.util.Log;
 
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class TemporaryElement extends Element
 {

@@ -28,17 +28,17 @@ import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
-import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class ShowLocationsActivity extends BaseActivity
 {
@@ -225,7 +225,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getActiveFloatingActionButton());
 
-        popupMenu.getMenu().add(0, Selection.ADD_ELEMENT.ordinal(), Menu.NONE, R.string.selection_add_location);
+        popupMenu.getMenu().add(0, Selection.ADD_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
         popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
@@ -247,7 +247,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         switch (selection)
         {
-            case ADD_ELEMENT:
+            case ADD_LOCATION:
                 this.startActivityAddLocation();
                 return true;
 
@@ -488,7 +488,7 @@ public class ShowLocationsActivity extends BaseActivity
                 builder.setTitle(R.string.alert_dialog_remove_element_title);
 
                 String alertMessage;
-                if(this.longClickedElement.getParent().equals(super.content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
+                if(this.longClickedElement.getParent().equals(content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
                 {
                     alertMessage = getString(R.string.alert_dialog_remove_element_message_parent_is_root, this.longClickedElement.getName(), this.longClickedElement.getParent().getName());
                 }
@@ -667,7 +667,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateLocationRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateLocationRecyclerView:: updating RecyclerView...");
-        this.LocationRecyclerAdapter.updateList(new ArrayList<>(this.currentElement.getChildrenOfInstance(Location.class)));
+        this.LocationRecyclerAdapter.updateList(this.currentElement.getChildrenOfInstance(Location.class));
     }
     //endregion
 

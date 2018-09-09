@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
 

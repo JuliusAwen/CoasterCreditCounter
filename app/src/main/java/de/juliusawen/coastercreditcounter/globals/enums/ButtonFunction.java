@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.toolbox.enums;
+package de.juliusawen.coastercreditcounter.globals.enums;
 
 public enum ButtonFunction
 {

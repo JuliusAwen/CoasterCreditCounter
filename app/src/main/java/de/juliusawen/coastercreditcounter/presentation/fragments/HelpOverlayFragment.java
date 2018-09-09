@@ -16,9 +16,9 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class HelpOverlayFragment extends Fragment
 {

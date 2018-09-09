@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,9 +24,12 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
 import de.juliusawen.coastercreditcounter.content.YearHeader;
+import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Settings;
+import de.juliusawen.coastercreditcounter.globals.enums.Selection;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
@@ -61,6 +65,8 @@ public class ShowParkVisitsFragment extends Fragment
         }
 
         this.createVisitsRecyclerAdapter();
+
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,6 +97,27 @@ public class ShowParkVisitsFragment extends Fragment
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Selection selection = Selection.values()[item.getItemId()];
+        Log.i(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.onOptionItemSelected:: [%S] selected", selection));
+
+        switch(selection)
+        {
+            case SORT_ASCENDING:
+                this.expandableRecyclerAdapter.updateList(this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class))));
+                return true;
+
+            case SORT_DESCENDING:
+                this.expandableRecyclerAdapter.updateList(this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class))));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onDetach()
     {
         super.onDetach();
@@ -114,7 +141,11 @@ public class ShowParkVisitsFragment extends Fragment
             }
         };
 
-        List<Element> preparedVisitsList = this.prepareVisitsList(this.park.getChildrenOfInstance(Visit.class));
+        List<Element> preparedVisitsList = this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class)));
+        if(Settings.defaultSortOrderVisits == SortOrder.ASCENDING)
+        {
+            preparedVisitsList = this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class)));
+        }
 
         Element firstElement = null;
         if(!preparedVisitsList.isEmpty())
@@ -130,50 +161,47 @@ public class ShowParkVisitsFragment extends Fragment
         }
     }
 
-    private List<Element> prepareVisitsList(List<Element> visits)
+    private void onClickRecyclerView(View view)
+    {
+
+    }
+
+    private List<Element> prepareVisitsList(List<Element> elements)
     {
         Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.prepareVisitsList:: preparing list...");
 
+        List<Visit> visits = Visit.convertToVisits(elements);
         List<Element> preparedVisits = new ArrayList<>();
+
         DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
 
-        for(Element element : visits)
+        for(Visit visit : visits)
         {
-            if(element.isInstance(Visit.class))
+            String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
+
+            Element existingYearHeader = null;
+            for(Element yearHeader : preparedVisits)
             {
-                Visit visit = (Visit) element;
-                String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
-
-
-                Element existingYearHeader = null;
-                for(Element yearHeader : preparedVisits)
+                if(yearHeader.getName().equals(year))
                 {
-                    if(yearHeader.getName().equals(year))
-                    {
-                        existingYearHeader = yearHeader;
-                    }
+                    existingYearHeader = yearHeader;
                 }
+            }
 
-                if(existingYearHeader != null)
-                {
-                    existingYearHeader.addChild(element);
-                }
-                else
-                {
-                    YearHeader yearHeader = YearHeader.createYearHeader(year);
-                    yearHeader.addChild(element);
-                    preparedVisits.add(yearHeader);
-                }
+            if(existingYearHeader != null)
+            {
+                existingYearHeader.addChild(visit);
             }
             else
             {
-                String errorMessage = String.format(Locale.getDefault(), "element %s is not instance of Visit", element);
-                Log.e(Constants.LOG_TAG, errorMessage);
-                throw new IllegalStateException(errorMessage);
+                YearHeader yearHeader = YearHeader.createYearHeader(year);
+                yearHeader.addChild(visit);
+                preparedVisits.add(yearHeader);
             }
+
         }
 
-        Element.sortYearsDescending(preparedVisits);
+//        YearHeader.sortYearsDescending(YearHeader.convertToYearHeaders(preparedVisits));
 
         return preparedVisits;
     }

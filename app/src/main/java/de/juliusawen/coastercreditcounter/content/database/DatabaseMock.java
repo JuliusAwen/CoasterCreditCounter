@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -71,12 +71,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster maverick = Coaster.createCoaster("Maverick");
         Coaster gatekeeper = Coaster.createCoaster("Gatekeeper");
 
-        Visit visit1 = Visit.createVisit(2018, 1, 1);
-        Visit visit2 = Visit.createVisit(2018, 2, 2);
-        Visit visit3 = Visit.createVisit(2018, 3, 3);
-        Visit visit4 = Visit.createVisit(2017, 4, 4);
-        Visit visit5 = Visit.createVisit(2017, 5, 5);
-        Visit visit6 = Visit.createVisit(2016, 6, 6);
+        Visit visit1 = Visit.createVisit(2018, 0, 1);
+        Visit visit2 = Visit.createVisit(2018, 1, 2);
+        Visit visit3 = Visit.createVisit(2018, 2, 3);
+        Visit visit4 = Visit.createVisit(2017, 3, 4);
+        Visit visit5 = Visit.createVisit(2017, 4, 5);
+        Visit visit6 = Visit.createVisit(2016, 5, 6);
 
 
 

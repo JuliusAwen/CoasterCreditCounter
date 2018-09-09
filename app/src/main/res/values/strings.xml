@@ -23,9 +23,11 @@
 
     <!--options menu entries-->
     <string name="selection_rename_root_location">rename root location</string>
+
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
     <string name="selection_sort_attractions">sort attractions</string>
+
     <string name="selection_help">help</string>
 
     <string name="selection_sort_ascending">sort ascending</string>

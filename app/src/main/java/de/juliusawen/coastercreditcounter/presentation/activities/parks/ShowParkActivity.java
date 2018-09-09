@@ -22,14 +22,15 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkVisitsFragment;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
-import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class ShowParkActivity extends BaseActivity
 {
@@ -69,6 +70,12 @@ public class ShowParkActivity extends BaseActivity
         if(this.currentTab == ATTRACTIONS && this.park.getChildCountOfInstance(Attraction.class) > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
+        }
+
+        if(this.currentTab == VISITS && this.park.getChildCountOfInstance(Visit.class) > 1)
+        {
+            menu.add(Menu.NONE, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
+            menu.add(Menu.NONE, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -192,7 +199,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Toaster.makeToast(getApplicationContext(), "fab interaction for VISITS not yet implemented");
+
             }
         });
     }

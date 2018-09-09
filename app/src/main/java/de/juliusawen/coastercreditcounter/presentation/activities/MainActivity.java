@@ -10,8 +10,8 @@ import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Content;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.locations.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
 
 public class MainActivity extends AppCompatActivity
 {

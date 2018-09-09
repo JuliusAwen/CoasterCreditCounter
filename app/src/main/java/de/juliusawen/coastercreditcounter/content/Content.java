@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.content.database.DatabaseMock;
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Content
 {

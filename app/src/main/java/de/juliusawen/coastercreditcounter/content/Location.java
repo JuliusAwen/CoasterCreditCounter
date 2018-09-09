@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Location extends Element
 {

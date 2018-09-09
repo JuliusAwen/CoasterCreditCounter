@@ -2,9 +2,6 @@ package de.juliusawen.coastercreditcounter.content;
 
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class Element
 {
@@ -391,26 +388,6 @@ public abstract class Element
             public int compare(Element element1, Element element2)
             {
                 return element2.getName().compareToIgnoreCase(element1.getName());
-            }
-        });
-    }
-
-    public static void sortYearsDescending(List<? extends Element> list)
-    {
-        Collections.sort(list, new Comparator<Element>()
-        {
-            DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
-            @Override
-            public int compare(Element element1, Element element2)
-            {
-                try
-                {
-                    return simpleDateFormat.parse(element2.getName()).compareTo(simpleDateFormat.parse(element1.getName()));
-                }
-                catch (ParseException e)
-                {
-                    throw new IllegalArgumentException(e);
-                }
             }
         });
     }
