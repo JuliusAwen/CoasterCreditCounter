@@ -88,12 +88,12 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.currentElement.isRootElement())
         {
-            menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root_location);
+            menu.add(Menu.NONE, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root_location);
         }
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
         {
-            menu.add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
+            menu.add(Menu.NONE, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -161,6 +161,8 @@ public class ShowLocationsActivity extends BaseActivity
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
                 Element parentElement = resultElements.get(0).getParent();
+
+                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s", parentElement));
 
                 parentElement.deleteChildren(resultElements);
                 parentElement.addChildren(resultElements);
@@ -679,7 +681,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void startSortElementsActivity(List<Element> elementsToSort)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onOptionsItemSelected:: starting SortElementsActivity...");
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startSortElementsActivity:: starting SortElementsActivity...");
         Intent intent = new Intent(this, SortElementsActivity.class);
         intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
         startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);

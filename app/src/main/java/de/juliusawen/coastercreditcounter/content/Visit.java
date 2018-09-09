@@ -21,16 +21,12 @@ public class Visit extends Element
 
     public static Visit createVisit(int year, int month, int day)
     {
-        Visit visit = null;
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_FULL_PATTERN, Locale.getDefault());
-        visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
-        Log.e(Constants.LOG_TAG,  String.format("Visit.createVisit:: %s created.", visit.getFullName()));
-
+        Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
+        Log.v(Constants.LOG_TAG,  String.format("Visit.createVisit:: %s created.", visit.getFullName()));
 
         return visit;
     }

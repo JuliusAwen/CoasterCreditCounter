@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,14 +38,19 @@ import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkV
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
+import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 public class ShowParkActivity extends BaseActivity
 {
     private Park park;
+
     private static final int OVERVIEW = 0;
     private static final int ATTRACTIONS = 1;
     private static final int VISITS = 2;
+
     private int currentTab = OVERVIEW;
+
+    private ExpandableRecyclerAdapter attractionsRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,6 +72,19 @@ public class ShowParkActivity extends BaseActivity
         this.createTabPagerAdapter();
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+        if(this.currentTab == ATTRACTIONS && this.park.getChildCountOfInstance(Attraction.class) > 1)
+        {
+            menu.add(Menu.NONE, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     private void initializeContent()
     {
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
@@ -82,7 +101,8 @@ public class ShowParkActivity extends BaseActivity
 
     private void createTabPagerAdapter()
     {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.buildAttractionsRecyclerAdapter(), this.buildVisitsRecyclerAdapter());
+        this.attractionsRecyclerAdapter = this.buildAttractionsRecyclerAdapter();
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.attractionsRecyclerAdapter, this.buildVisitsRecyclerAdapter());
 
         ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
         viewPager.setAdapter(tabPagerAdapter);
@@ -289,7 +309,7 @@ public class ShowParkActivity extends BaseActivity
         return preparedVisits;
     }
 
-    public class TabPagerAdapter extends FragmentPagerAdapter
+     public class TabPagerAdapter extends FragmentPagerAdapter
     {
         ShowParkOverviewFragment showParkOverviewFragment;
         ShowParkAttractionsFragment showParkAttractionsFragment;
@@ -351,10 +371,12 @@ public class ShowParkActivity extends BaseActivity
                 case ATTRACTIONS:
                     this.showParkAttractionsFragment = (ShowParkAttractionsFragment) createdFragment;
                     this.showParkAttractionsFragment.setExpandableRecyclerAdapter(this.attractionsRecyclerAdapter);
+                    this.showParkAttractionsFragment.setHasOptionsMenu(true);
                     break;
                 case VISITS:
                     this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;
                     this.showParkVisitsFragment.setExpandableRecyclerView(this.visitsRecyclerAdapter);
+                    this.showParkVisitsFragment.setHasOptionsMenu(true);
                     break;
             }
 

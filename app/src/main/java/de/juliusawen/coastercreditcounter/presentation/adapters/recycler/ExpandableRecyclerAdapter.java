@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +31,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     private RecyclerView recyclerView;
 
     private static Set<Element> elementsToExpand = new HashSet<>();
-    private List<Element> elements = new ArrayList<>();
+    private List<Element> elements;
     private RecyclerOnClickListener.OnClickListener onClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder
@@ -79,6 +78,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
 
         notifyDataSetChanged();
+    }
+
+    public List<Element> getElements()
+    {
+        return this.elements;
     }
 
     public void smoothScrollToElement(Element element)

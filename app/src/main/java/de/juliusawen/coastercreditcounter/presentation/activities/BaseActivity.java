@@ -55,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         {
             if(menu.findItem(Selection.HELP.ordinal()) == null)
             {
-                menu.add(0, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
+                menu.add(Menu.NONE, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
             }
         }
 
