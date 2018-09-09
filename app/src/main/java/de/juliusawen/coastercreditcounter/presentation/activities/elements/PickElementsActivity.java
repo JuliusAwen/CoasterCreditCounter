@@ -46,11 +46,12 @@ public class PickElementsActivity extends BaseActivity
 
         this.initializeContent();
 
-        super.addToolbar();
-        super.addFloatingActionButton();
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_pick_elements)), getText(R.string.help_text_pick_elements));
 
+        super.addToolbar();
         this.decorateToolbar();
+
+        super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
         this.addSelectOrDeselectAllBar();

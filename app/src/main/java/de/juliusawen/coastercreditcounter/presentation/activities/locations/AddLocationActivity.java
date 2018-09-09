@@ -48,11 +48,13 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
         this.initializeContent();
 
-        super.addToolbar();
         super.addConfirmDialog();
+
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_add_location)), this.getText(R.string.help_text_add_location));
 
+        super.addToolbar();
         this.decorateToolbar();
+
         this.createEditText();
     }
 

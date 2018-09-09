@@ -14,7 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -52,8 +53,12 @@ public class ShowParkActivity extends BaseActivity
 
         this.initializeContent();
 
+        super.addHelpOverlay(null, null);
+
         super.addToolbar();
         this.decorateToolbar();
+
+        super.addFloatingActionButton();
 
         this.createTabsPagerAdapter();
     }
@@ -68,7 +73,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(park.getName(), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_show_park), null);
         super.addToolbarHomeButton();
     }
 
@@ -109,18 +114,76 @@ public class ShowParkActivity extends BaseActivity
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(this.viewPager));
 
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.createTabsPagerAdapter:: adapter created for #[%d] tabs", tabLayout.getTabCount()));
+        this.viewPager.setCurrentItem(0);
+        this.onPageSelectedViewPager(0);
+
+        Log.i(Constants.LOG_TAG, String.format(
+                "ShowParkActivity.createTabsPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), 0));
     }
 
     private void onPageSelectedViewPager(int position)
     {
-        Toaster.makeToast(getApplicationContext(), String.format(Locale.getDefault(), "tab %d selected", position));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab %d selected", position));
 
         switch(position)
         {
             case 0:
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_overview));
+                this.decorateFloatingActionButtonShowParkOverview();
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_overview)), getText(R.string.help_text_show_park_overview));
+                break;
+
+            case 1:
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_attractions));
+                this.decorateFloatingActionButtonShowParkAttractions();
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_attractions)), getText(R.string.help_text_show_park_attractions));
+                break;
+
+            case 2:
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_visits));
+                this.decorateFloatingActionButtonShowParkVisits();
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_visits)), getText(R.string.help_text_show_park_visits));
                 break;
         }
+    }
+
+    private void decorateFloatingActionButtonShowParkOverview()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_comment)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
+    }
+
+    private void decorateFloatingActionButtonShowParkAttractions()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
+    }
+
+    private void decorateFloatingActionButtonShowParkVisits()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
     }
 
     private ExpandableRecyclerAdapter buildAttractionsRecyclerAdapter()
@@ -158,7 +221,16 @@ public class ShowParkActivity extends BaseActivity
             }
         };
 
-        return new ExpandableRecyclerAdapter(this.park.getChildrenOfInstance(Visit.class), recyclerOnClickListener);
+        return new ExpandableRecyclerAdapter(this.prepareVisitsList(this.park.getChildrenOfInstance(Visit.class)), recyclerOnClickListener);
+    }
+
+    private List<Element> prepareVisitsList(List<Element> visits)
+    {
+        List<Element> preparedVisits = new ArrayList<>();
+
+        preparedVisits.addAll(visits);
+
+        return preparedVisits;
     }
 
     public class TabsPagerAdapter extends FragmentPagerAdapter

@@ -33,11 +33,13 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
         this.initializeContent();
 
-        super.addToolbar();
         super.addConfirmDialog();
+
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_edit_location)), getText(R.string.help_text_edit_location));
 
+        super.addToolbar();
         this.decorateToolbar();
+
         this.createEditText();
 
     }

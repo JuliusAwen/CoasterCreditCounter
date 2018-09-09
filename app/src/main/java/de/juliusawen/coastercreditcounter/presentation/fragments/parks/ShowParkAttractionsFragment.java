@@ -36,7 +36,7 @@ public  class ShowParkAttractionsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.e(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
         View rootView = inflater.inflate(R.layout.tab_show_park_attractions, container, false);
 
         if(this.expandableRecyclerAdapter != null)

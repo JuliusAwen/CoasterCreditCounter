@@ -142,6 +142,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         if (getSupportActionBar() != null)
         {
+            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: adding home button to toolbar...");
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -161,6 +163,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         if(getSupportActionBar() != null)
         {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
+
             if(title != null && !title.trim().isEmpty())
             {
                 getSupportActionBar().setTitle(title);
@@ -213,20 +217,21 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         if(this.floatingActionButton != null)
         {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: isVisible[%s]", isVisible));
             floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
     //endregion
 
     //region HELP OVERLAY
-    protected void addHelpOverlay(String helpTitle, CharSequence helpMessage)
+    protected void addHelpOverlay(String title, CharSequence message)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating fragment...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: adding help overlay...");
 
         if (this.savedInstanceState == null)
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(helpTitle, helpMessage);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
             fragmentTransaction.hide(this.helpOverlayFragment);
             fragmentTransaction.commit();
@@ -237,10 +242,24 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    protected void setHelpOverlayTitleAndMessage(String title, CharSequence message)
+    {
+        if(this.helpOverlayFragment != null)
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
+            fragmentTransaction.replace(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.hide(this.helpOverlayFragment);
+            fragmentTransaction.commit();
+        }
+    }
+
     protected void setHelpOverlayVisibility(boolean isVisible)
     {
         if(this.helpOverlayFragment != null)
         {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: isVisible[%s]", isVisible));
+
             if(isVisible)
             {
                 this.showFragment(this.helpOverlayFragment);

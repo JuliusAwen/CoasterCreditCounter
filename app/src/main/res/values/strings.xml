@@ -4,6 +4,7 @@
     <string name="title_app_name">CoasterCreditCounter</string>
 
     <string name="title_help">Help: %1$s</string>
+    <string name="title_show_park">show park</string>
 
 
     <!--activity subtitles-->
@@ -11,10 +12,13 @@
     <string name="subtitle_add_location">add location</string>
     <string name="subtitle_edit_location">edit location</string>
     <string name="subtitle_show_locations">browse/manage locations</string>
-    <string name="subtitle_show_park">show park</string>
 
     <string name="subtitle_pick_elements">pick elements</string>
     <string name="subtitle_pick_locations_description">pick children to add to new location</string>
+
+    <string name="subtitle_show_park_overview">OVERVIEW</string>
+    <string name="subtitle_show_park_attractions">ATTRACTIONS</string>
+    <string name="subtitle_show_park_visits">VISITS</string>
 
 
     <!--tab titles-->
@@ -105,6 +109,8 @@
 
 
     <!--help texts-->
+    <string name="help_text_not_available">...not available</string>
+
     <string name="help_text_show_locations">
         \n<b>Options Menu</b>
         \n <li><i>close icon:</i> change to browsing mode.</li>
@@ -147,7 +153,16 @@
         \n <li>Rename location and confirm.</li>
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="help_text_show_park_overview">
+        \n <li>ShowOverview help not yet available...</li>
+    </string>
+
+    <string name="help_text_show_park_attractions">
+        \n <li>ShowAttractions help not yet available...</li>
+    </string>
+
+    <string name="help_text_show_park_visits">
+        \n <li>ShowVisits help not yet available...</li>
+    </string>
 
 </resources>

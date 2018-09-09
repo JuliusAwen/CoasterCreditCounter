@@ -61,11 +61,12 @@ public class ShowLocationsActivity extends BaseActivity
 
         this.initializeContent();
 
-        super.addToolbar();
-        super.addFloatingActionButton();
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
 
+        super.addToolbar();
         this.decorateToolbar();
+
+        super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
         this.updateNavigationBar();

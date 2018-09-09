@@ -23,7 +23,7 @@ public class ShowParkVisitsFragment extends Fragment
 
     public static ShowParkVisitsFragment newInstance()
     {
-        Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.newInstance:: creating fragment");
+        Log.i(Constants.LOG_TAG, "ShowParkVisitsFragment.newInstance:: creating fragment");
 
         return new ShowParkVisitsFragment();
     }
@@ -37,7 +37,6 @@ public class ShowParkVisitsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: creating view...");
-
         View rootView = inflater.inflate(R.layout.tab_show_park_visits, container, false);
 
         if(this.expandableRecyclerAdapter != null)

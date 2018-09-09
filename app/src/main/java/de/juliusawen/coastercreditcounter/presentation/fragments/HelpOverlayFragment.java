@@ -22,11 +22,11 @@ import de.juliusawen.coastercreditcounter.toolbox.enums.ButtonFunction;
 
 public class HelpOverlayFragment extends Fragment
 {
-    private String helpTitle;
-    private CharSequence helpMessage;
+    private String title;
+    private CharSequence message;
 
-    private TextView textViewHelpTitle;
-    private TextView textViewHelpMessage;
+    private TextView textViewTitle;
+    private TextView textViewMessage;
 
     private HelpOverlayFragmentInteractionListener helpOverlayFragmentInteractionListener;
 
@@ -49,18 +49,22 @@ public class HelpOverlayFragment extends Fragment
     {
         if (getArguments() != null)
         {
-            this.helpTitle = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
-            if(this.helpTitle == null)
+            this.title = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
+            if(this.title == null)
             {
-                this.helpTitle = getString(R.string.title_help);
+                this.title = getString(R.string.title_help, "");
             }
 
-            this.helpMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
+            this.message = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
+            if(this.message == null)
+            {
+                this.message = getString(R.string.help_text_not_available);
+            }
         }
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
-        this.textViewHelpTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
-        this.textViewHelpMessage = linearLayout.findViewById(R.id.textViewHelp_Message);
+        this.textViewTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
+        this.textViewMessage = linearLayout.findViewById(R.id.textViewHelp_Message);
         return linearLayout;
     }
 
@@ -71,12 +75,12 @@ public class HelpOverlayFragment extends Fragment
 
         if(savedInstanceState != null)
         {
-            this.helpTitle = savedInstanceState.getString(Constants.KEY_HELP_TITLE);
-            this.helpMessage = savedInstanceState.getCharSequence(Constants.KEY_HELP_MESSAGE);
+            this.title = savedInstanceState.getString(Constants.KEY_HELP_TITLE);
+            this.message = savedInstanceState.getCharSequence(Constants.KEY_HELP_MESSAGE);
         }
 
-        this.setHelpTitle(this.helpTitle);
-        this.setHelpMessage(this.helpMessage);
+        this.textViewTitle.setText(this.title);
+        this.textViewMessage.setText(this.message);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()), getContext().getDrawable(R.drawable.ic_baseline_close));
@@ -103,8 +107,8 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState)
     {
-        outState.putString(Constants.KEY_HELP_TITLE, this.helpTitle);
-        outState.putCharSequence(Constants.KEY_HELP_MESSAGE, this.helpMessage);
+        outState.putString(Constants.KEY_HELP_TITLE, this.title);
+        outState.putCharSequence(Constants.KEY_HELP_MESSAGE, this.message);
 
         super.onSaveInstanceState(outState);
     }
@@ -128,31 +132,15 @@ public class HelpOverlayFragment extends Fragment
     public void onDetach()
     {
         super.onDetach();
-        this.helpTitle = null;
-        this.helpMessage = null;
-        this.textViewHelpTitle = null;
-        this.textViewHelpMessage = null;
+        this.title = null;
+        this.message = null;
+        this.textViewTitle = null;
+        this.textViewMessage = null;
         this.helpOverlayFragmentInteractionListener = null;
     }
 
     public interface HelpOverlayFragmentInteractionListener
     {
         void onHelpOverlayFragmentInteraction(View view);
-    }
-
-    public void setHelpTitle(String helpTitle)
-    {
-        this.helpTitle = helpTitle;
-        this.textViewHelpTitle.setText(helpTitle);
-
-        Log.d(Constants.LOG_TAG, String.format("HelpOverlayFragment.setHelpTitle:: helpTitle set to [%s]", helpTitle));
-    }
-
-    public void setHelpMessage(CharSequence helpMessage)
-    {
-        this.helpMessage = helpMessage;
-        this.textViewHelpMessage.setText(helpMessage);
-
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.setHelpMessage:: message set");
     }
 }

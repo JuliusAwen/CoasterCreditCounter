@@ -26,7 +26,6 @@ public class ShowParkOverviewFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onCreateView:: creating view...");
-
         View rootView = inflater.inflate(R.layout.tab_show_park_overview, container, false);
 
 

@@ -7,6 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context=".presentation.activities.parks.ShowParkActivity">
 
+    <include
+        layout="@layout/floating_action_button"/>
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
