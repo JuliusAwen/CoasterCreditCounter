@@ -30,9 +30,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private Bundle savedInstanceState;
 
     private Toolbar toolbar;
-    private FloatingActionButton activeFloatingActionButton;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
+    private FloatingActionButton activeFloatingActionButton;
+    private View.OnClickListener onClickListenerFloatingActionButton;
 
     //region @OVERRIDE
     @Override
@@ -210,6 +211,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if(this.activeFloatingActionButton != null)
         {
             this.activeFloatingActionButton.setOnClickListener(onClickListener);
+            this.onClickListenerFloatingActionButton = onClickListener;
         }
     }
 
@@ -244,6 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
             newFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
         }
 
+        newFloatingActionButton.setOnClickListener(this.onClickListenerFloatingActionButton);
         newFloatingActionButton.setImageDrawable(icon != null ? icon : this.activeFloatingActionButton.getDrawable());
         this.activeFloatingActionButton = newFloatingActionButton;
         this.activeFloatingActionButton.show();
