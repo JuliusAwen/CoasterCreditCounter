@@ -15,65 +15,93 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 import de.juliusawen.coastercreditcounter.toolbox.enums.Selection;
 
 import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
 
 public  class ShowParkAttractionsFragment extends Fragment
 {
+    private Park park;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
 
     public ShowParkAttractionsFragment() {}
 
-    public static ShowParkAttractionsFragment newInstance()
+    public static ShowParkAttractionsFragment newInstance(String parkUuid)
     {
-        Log.i(Constants.LOG_TAG, "ShowParkAttractionsFragment.newInstance:: creating fragment");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowParkAttractionsFragment.newInstance:: instantiating fragment...");
 
-        return new ShowParkAttractionsFragment();
+        ShowParkAttractionsFragment showParkAttractionsFragment =  new ShowParkAttractionsFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.FRAGMENT_ARG_PARK_UUID, parkUuid);
+        showParkAttractionsFragment.setArguments(args);
+
+        return showParkAttractionsFragment;
     }
 
-    public void setExpandableRecyclerAdapter(ExpandableRecyclerAdapter expandableRecyclerAdapter)
+    @Override
+    public void onCreate (Bundle savedInstanceState)
     {
-        this.expandableRecyclerAdapter = expandableRecyclerAdapter;
+        super.onCreate(savedInstanceState);
+
+        this.setHasOptionsMenu(true);
+
+        if (getArguments() != null)
+        {
+            this.park = (Park) content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+        }
+
+        this.createAttractionsRecyclerAdapter();
+
+        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onCreate:: created fragment for %s", this.park));
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
-        View rootView = inflater.inflate(R.layout.tab_show_park_attractions, container, false);
+        Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
+        return inflater.inflate(R.layout.tab_show_park_attractions, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
+    {
+        Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: decorating view...");
 
         if(this.expandableRecyclerAdapter != null)
         {
-            RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewTabShowPark_Attractions);
-            recyclerView.addItemDecoration(new DividerItemDecoration(rootView.getContext(), LinearLayoutManager.VERTICAL));
-            recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+            Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: creating RecyclerView...");
+
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Attractions);
+            recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
             recyclerView.setAdapter(this.expandableRecyclerAdapter);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: ExpandedRecyclerAdapter not set");
+            Log.e(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: ExpandedRecyclerAdapter not set");
         }
-
-        return rootView;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.onOptionItemSelected:: [%S] selected", selection));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onOptionItemSelected:: [%S] selected", selection));
 
         switch(selection)
         {
-
             case SORT_ELEMENTS:
                 this.startSortElementsActivity(this.expandableRecyclerAdapter.getElements());
                 return true;
@@ -87,6 +115,7 @@ public  class ShowParkAttractionsFragment extends Fragment
     public void onDetach()
     {
         super.onDetach();
+        this.park = null;
         this.expandableRecyclerAdapter = null;
     }
 
@@ -94,35 +123,53 @@ public  class ShowParkAttractionsFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(requestCode == Constants.REQUEST_SORT_ELEMENTS)
         {
             if(resultCode == Activity.RESULT_OK)
             {
-                Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.onActivityResult<SortElements>:: replacing children with sorted children");
+                Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: replacing children with sorted children");
 
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
-                Element parentElement = resultElements.get(0).getParent();
 
-                parentElement.deleteChildren(resultElements);
-                parentElement.addChildren(resultElements);
+                this.park.deleteChildren(resultElements);
+                this.park.addChildren(resultElements);
                 this.expandableRecyclerAdapter.updateList(resultElements);
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = content.fetchElementFromUuidString(selectedElementUuidString);
-                    Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
+                    Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
                     this.expandableRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, "ShowParkActivity.onActivityResult<SortElements>:: no selected element returned");
+                    Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: no selected element returned");
                 }
             }
         }
+    }
+
+    private void createAttractionsRecyclerAdapter()
+    {
+        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view, int position)
+            {
+                Toaster.makeToast(getContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
+            }
+
+            @Override
+            public void onLongClick(final View view, int position)
+            {
+            }
+        };
+
+        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(this.park.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
     }
 
     private void startSortElementsActivity(List<Element> elementsToSort)

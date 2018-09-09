@@ -15,23 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Attraction;
-import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.content.Visit;
-import de.juliusawen.coastercreditcounter.content.YearHeader;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkVisitsFragment;
@@ -49,8 +39,6 @@ public class ShowParkActivity extends BaseActivity
     private static final int VISITS = 2;
 
     private int currentTab = OVERVIEW;
-
-    private ExpandableRecyclerAdapter attractionsRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,8 +89,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void createTabPagerAdapter()
     {
-        this.attractionsRecyclerAdapter = this.buildAttractionsRecyclerAdapter();
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.attractionsRecyclerAdapter, this.buildVisitsRecyclerAdapter());
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.park.getUuid().toString());
 
         ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
         viewPager.setAdapter(tabPagerAdapter);
@@ -179,7 +166,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-
+                Toaster.makeToast(getApplicationContext(), "fab interaction for OVERVIEW not yet implemented");
             }
         });
     }
@@ -192,11 +179,10 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-
+                Toaster.makeToast(getApplicationContext(), "fab interaction for ATTRACTIONS not yet implemented");
             }
         });
     }
-
     private void decorateFloatingActionButtonShowParkVisits()
     {
         super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
@@ -205,118 +191,21 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-
+                Toaster.makeToast(getApplicationContext(), "fab interaction for VISITS not yet implemented");
             }
         });
     }
 
-    private ExpandableRecyclerAdapter buildAttractionsRecyclerAdapter()
-    {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
-        {
-            @Override
-            public void onClick(View view, int position)
-            {
-                Toaster.makeToast(getApplicationContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
-            }
-
-            @Override
-            public void onLongClick(final View view, int position)
-            {
-            }
-        };
-
-        return new ExpandableRecyclerAdapter(this.park.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
-    }
-
-    private ExpandableRecyclerAdapter buildVisitsRecyclerAdapter()
-    {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
-        {
-            @Override
-            public void onClick(View view, int position)
-            {
-                Toaster.makeToast(getApplicationContext(), String.format("ShowVisits not yet implemented %s", (Element) view.getTag()));
-            }
-
-            @Override
-            public void onLongClick(final View view, int position)
-            {
-            }
-        };
-
-        List<Element> preparedVisitsList = this.prepareVisitsList(this.park.getChildrenOfInstance(Visit.class));
-
-        Element firstElement = null;
-        if(!preparedVisitsList.isEmpty())
-        {
-             firstElement = preparedVisitsList.get(0);
-        }
-
-        ExpandableRecyclerAdapter expandableRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisitsList, recyclerOnClickListener);
-
-        if(firstElement != null)
-        {
-            expandableRecyclerAdapter.expandElement(firstElement);
-        }
-
-        return expandableRecyclerAdapter;
-    }
-
-    private List<Element> prepareVisitsList(List<Element> visits)
-    {
-        List<Element> preparedVisits = new ArrayList<>();
-        DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
-
-        for(Element element : visits)
-        {
-            if(element.isInstance(Visit.class))
-            {
-                Visit visit = (Visit) element;
-                String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
 
 
-                Element existingYearHeader = null;
-                for(Element yearHeader : preparedVisits)
-                {
-                    if(yearHeader.getName().equals(year))
-                    {
-                        existingYearHeader = yearHeader;
-                    }
-                }
 
-                if(existingYearHeader != null)
-                {
-                    existingYearHeader.addChild(element);
-                }
-                else
-                {
-                    YearHeader yearHeader = YearHeader.createYearHeader(year);
-                    yearHeader.addChild(element);
-                    preparedVisits.add(yearHeader);
-                }
-            }
-            else
-            {
-                String errorMessage = String.format(Locale.getDefault(), "element %s is not instance of Visit", element);
-                Log.e(Constants.LOG_TAG, errorMessage);
-                throw new IllegalStateException(errorMessage);
-            }
-        }
-
-        Element.sortYearsDescending(preparedVisits);
-
-        return preparedVisits;
-    }
-
-     public class TabPagerAdapter extends FragmentPagerAdapter
+    public class TabPagerAdapter extends FragmentPagerAdapter
     {
         ShowParkOverviewFragment showParkOverviewFragment;
         ShowParkAttractionsFragment showParkAttractionsFragment;
         ShowParkVisitsFragment showParkVisitsFragment;
 
-        private ExpandableRecyclerAdapter attractionsRecyclerAdapter;
-        private ExpandableRecyclerAdapter visitsRecyclerAdapter;
+        private String parkUuid;
 
         private Drawable tabTitleDrawables[] = new Drawable[]
                 {
@@ -325,11 +214,11 @@ public class ShowParkActivity extends BaseActivity
                         DrawableTool.setTintToWhite(getApplicationContext(), getDrawable(R.drawable.ic_baseline_local_activity))
                 };
 
-        TabPagerAdapter(FragmentManager fragmentManager, ExpandableRecyclerAdapter attractionsRecyclerAdapter, ExpandableRecyclerAdapter visitsRecyclerAdapter)
+        TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
         {
             super(fragmentManager);
-            this.attractionsRecyclerAdapter = attractionsRecyclerAdapter;
-            this.visitsRecyclerAdapter = visitsRecyclerAdapter;
+            Log.d(Constants.LOG_TAG, "ShowParkActivity.TabPagerAdapter.Constructor:: instantiating adapter...");
+            this.parkUuid = parkUuid;
         }
 
         @Override
@@ -341,15 +230,15 @@ public class ShowParkActivity extends BaseActivity
             {
                 case(0):
                 {
-                    return ShowParkOverviewFragment.newInstance();
+                    return ShowParkOverviewFragment.newInstance(this.parkUuid);
                 }
                 case(1):
                 {
-                    return ShowParkAttractionsFragment.newInstance();
+                    return ShowParkAttractionsFragment.newInstance(this.parkUuid);
                 }
                 case(2):
                 {
-                    return ShowParkVisitsFragment.newInstance();
+                    return ShowParkVisitsFragment.newInstance(this.parkUuid);
                 }
                 default:
                     Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
@@ -370,13 +259,9 @@ public class ShowParkActivity extends BaseActivity
                     break;
                 case ATTRACTIONS:
                     this.showParkAttractionsFragment = (ShowParkAttractionsFragment) createdFragment;
-                    this.showParkAttractionsFragment.setExpandableRecyclerAdapter(this.attractionsRecyclerAdapter);
-                    this.showParkAttractionsFragment.setHasOptionsMenu(true);
                     break;
                 case VISITS:
                     this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;
-                    this.showParkVisitsFragment.setExpandableRecyclerView(this.visitsRecyclerAdapter);
-                    this.showParkVisitsFragment.setHasOptionsMenu(true);
                     break;
             }
 

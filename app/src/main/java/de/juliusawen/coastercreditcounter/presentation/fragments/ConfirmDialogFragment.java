@@ -22,21 +22,21 @@ public class ConfirmDialogFragment extends Fragment
 
     public static ConfirmDialogFragment newInstance()
     {
-        Log.i(Constants.LOG_TAG, "ConfirmDialogFragment.newInstance:: creating fragment...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ConfirmDialogFragment.newInstance:: instantiating fragment...");
         return new ConfirmDialogFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ConfirmDialogFragment.onCreateView:: creating view...");
+        Log.d(Constants.LOG_TAG, "ConfirmDialogFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ConfirmDialogFragment.onViewCreated:: view created...");
+        Log.d(Constants.LOG_TAG, "ConfirmDialogFragment.onViewCreated:: decorating view...");
         super.onViewCreated(view, savedInstanceState);
 
         Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);

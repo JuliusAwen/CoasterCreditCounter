@@ -197,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         return this.floatingActionButton;
     }
 
-    protected void setFloatingActionButtonIcon(Drawable icon)
+    public void setFloatingActionButtonIcon(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
@@ -205,7 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
-    protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         if(this.floatingActionButton != null)
         {

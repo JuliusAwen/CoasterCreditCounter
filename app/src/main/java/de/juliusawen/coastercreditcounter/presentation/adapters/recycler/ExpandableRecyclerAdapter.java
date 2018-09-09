@@ -55,7 +55,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
     public ExpandableRecyclerAdapter(List<Element> elements, RecyclerOnClickListener.OnClickListener onClickListener)
     {
-        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.Constructor:: creating instance with #[%d] elements...", elements.size()));
+        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.Constructor:: instantiating RecyclerAdapter with #[%d] elements...", elements.size()));
 
         this.elements = elements;
         this.onClickListener = onClickListener;

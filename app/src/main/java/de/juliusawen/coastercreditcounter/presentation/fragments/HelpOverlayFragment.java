@@ -34,19 +34,21 @@ public class HelpOverlayFragment extends Fragment
 
     public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
-        Log.i(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: creating fragment...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "HelpOverlayFragment.newInstance:: instantiating fragment...");
 
-        HelpOverlayFragment fragment = new HelpOverlayFragment();
+        HelpOverlayFragment helpOverlayFragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
         args.putCharSequence(Constants.FRAGMENT_ARG_HELP_TITLE, helpTitle);
         args.putCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE, helpMessage);
-        fragment.setArguments(args);
-        return fragment;
+        helpOverlayFragment.setArguments(args);
+        return helpOverlayFragment;
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public void onCreate (Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         if (getArguments() != null)
         {
             this.title = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
@@ -61,6 +63,12 @@ public class HelpOverlayFragment extends Fragment
                 this.message = getString(R.string.help_text_not_available);
             }
         }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onCreateView:: creating view...");
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
         this.textViewTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
@@ -71,6 +79,8 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onViewCreated:: decorating view...");
+
         super.onViewCreated(view, savedInstanceState);
 
         if(savedInstanceState != null)

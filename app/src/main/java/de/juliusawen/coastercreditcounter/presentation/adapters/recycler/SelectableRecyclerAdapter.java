@@ -53,14 +53,16 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple)
     {
-        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: creating instance - selectMultiple[%S]...", selectMultiple));
+        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: instantiating RecyclerAdapter with #[%d] elements and selectMultiple[%S]...",
+                elementsToSelectFrom.size(), selectMultiple));
         this.elementsToSelectFrom = elementsToSelectFrom;
         this.selectMultiple = selectMultiple;
     }
 
     public SelectableRecyclerAdapter(List<Element> elementsToSelectFrom, boolean selectMultiple, RecyclerOnClickListener.OnClickListener onClickListener)
     {
-        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: creating instance - selectMultiple[%S]...", selectMultiple));
+        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.Constructor:: instantiating RecyclerAdapter with #[%d] elements and selectMultiple[%S]...",
+                elementsToSelectFrom.size(), selectMultiple));
 
         this.elementsToSelectFrom = elementsToSelectFrom;
         this.selectMultiple = selectMultiple;
