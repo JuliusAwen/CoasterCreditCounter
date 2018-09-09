@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private Bundle savedInstanceState;
 
     private Toolbar toolbar;
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton activeFloatingActionButton;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
 
@@ -189,38 +189,66 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
 
-        this.floatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
+        this.activeFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
     }
 
-    protected FloatingActionButton getFloatingActionButton()
+    protected FloatingActionButton getActiveFloatingActionButton()
     {
-        return this.floatingActionButton;
+        return this.activeFloatingActionButton;
     }
 
     public void setFloatingActionButtonIcon(Drawable icon)
     {
-        if(this.floatingActionButton != null)
+        if(this.activeFloatingActionButton != null)
         {
-            this.floatingActionButton.setImageDrawable(icon);
+            this.activeFloatingActionButton.setImageDrawable(icon);
         }
     }
 
     public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
-        if(this.floatingActionButton != null)
+        if(this.activeFloatingActionButton != null)
         {
-            this.floatingActionButton.setOnClickListener(onClickListener);
+            this.activeFloatingActionButton.setOnClickListener(onClickListener);
         }
     }
 
     protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        if(this.floatingActionButton != null)
+        if(this.activeFloatingActionButton != null)
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: isVisible[%s]", isVisible));
-            floatingActionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+            if(isVisible)
+            {
+                this.activeFloatingActionButton.show();
+            }
+            else
+            {
+                this.activeFloatingActionButton.hide();
+            }
         }
     }
+
+    protected void animateFloatingActionButton(Drawable icon)
+    {
+        this.activeFloatingActionButton.hide();
+
+        FloatingActionButton newFloatingActionButton;
+        if(this.activeFloatingActionButton.getId() == R.id.floatingActionButton)
+        {
+            newFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton_Animation);
+        }
+        else
+        {
+            newFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
+        }
+
+        newFloatingActionButton.setImageDrawable(icon != null ? icon : this.activeFloatingActionButton.getDrawable());
+        this.activeFloatingActionButton = newFloatingActionButton;
+        this.activeFloatingActionButton.show();
+    }
+
     //endregion
 
     //region HELP OVERLAY

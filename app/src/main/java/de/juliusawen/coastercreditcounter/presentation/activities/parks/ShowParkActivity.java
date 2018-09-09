@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -160,7 +161,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkOverview()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_comment)));
+        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_comment)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -173,7 +174,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkAttractions()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -185,7 +186,7 @@ public class ShowParkActivity extends BaseActivity
     }
     private void decorateFloatingActionButtonShowParkVisits()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -195,9 +196,6 @@ public class ShowParkActivity extends BaseActivity
             }
         });
     }
-
-
-
 
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
@@ -263,6 +261,10 @@ public class ShowParkActivity extends BaseActivity
                 case VISITS:
                     this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;
                     break;
+                default:
+                    String errorMessage = String.format(Locale.getDefault(), "ShowParkActivity.TabPagerAdapter.instantiateItem:: tab position [%d] does not exist", position);
+                    Log.e(Constants.LOG_TAG, errorMessage);
+                    throw new IllegalStateException(errorMessage);
             }
 
             return createdFragment;

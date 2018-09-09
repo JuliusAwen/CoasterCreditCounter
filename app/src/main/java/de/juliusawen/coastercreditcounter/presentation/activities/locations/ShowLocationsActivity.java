@@ -194,6 +194,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void updateActivityView()
     {
+        super.animateFloatingActionButton(null);
         this.decorateToolbar();
         this.updateLocationRecyclerView();
         this.updateNavigationBar();
@@ -222,7 +223,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton::");
 
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getFloatingActionButton());
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getActiveFloatingActionButton());
 
         popupMenu.getMenu().add(0, Selection.ADD_ELEMENT.ordinal(), Menu.NONE, R.string.selection_add_location);
         popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
