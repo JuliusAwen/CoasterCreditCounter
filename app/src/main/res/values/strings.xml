@@ -4,34 +4,30 @@
     <string name="title_app_name">CoasterCreditCounter</string>
 
     <string name="title_help">Help: %1$s</string>
-    <string name="title_show_park">show park</string>
+    <string name="title_show_park">Show Park</string>
 
 
     <!--activity subtitles-->
-    <string name="subtitle_sort_elements">sort elements</string>
-    <string name="subtitle_add_location">add location</string>
-    <string name="subtitle_edit_location">edit location</string>
-    <string name="subtitle_show_locations">browse/manage locations</string>
+    <string name="subtitle_sort_elements">SORT ELEMENTS</string>
+    <string name="subtitle_add_location">ADD LOCATION</string>
+    <string name="subtitle_edit_location">EDIT LOCATION</string>
+    <string name="subtitle_show_locations">BROWSE/MANAGE LOCATIONS</string>
 
-    <string name="subtitle_pick_elements">pick elements</string>
-    <string name="subtitle_pick_locations_description">pick children to add to new location</string>
+    <string name="subtitle_pick_elements">PICK ELEMENTS</string>
+    <string name="subtitle_pick_locations_description">Pick children to add to new location</string>
 
     <string name="subtitle_show_park_overview">OVERVIEW</string>
     <string name="subtitle_show_park_attractions">ATTRACTIONS</string>
     <string name="subtitle_show_park_visits">VISITS</string>
 
 
-    <!--tab titles-->
-    <string name="tab_title_show_park_overview">Overview</string>
-    <string name="tab_title_show_park_attractions">Attractions</string>
-    <string name="tab_title_show_park_visits">Visits</string>
-
     <!--options menu entries-->
     <string name="selection_rename_root">rename root</string>
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
     <string name="selection_help">help</string>
-    <string name="selection_sort_a_to_z">sort a-z</string>
+    <string name="selection_sort_ascending">sort ascending</string>
+    <string name="selection_sort_descending">sort descending</string>
     <string name="selection_switch_mode">switch mode</string>
     <string name="selection_locations">locations</string>
 

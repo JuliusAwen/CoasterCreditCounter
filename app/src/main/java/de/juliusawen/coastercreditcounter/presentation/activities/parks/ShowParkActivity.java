@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -24,6 +27,7 @@ import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.content.YearHeader;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
@@ -37,11 +41,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ShowParkActivity extends BaseActivity
 {
     private Park park;
-
-    private ExpandableRecyclerAdapter attractionsRecyclerAdapter;
-    private ExpandableRecyclerAdapter visitsRecyclerAdapter;
-
-    private ViewPager viewPager;
+    private static final int OVERVIEW = 0;
+    private static final int ATTRACTIONS = 1;
+    private static final int VISITS = 2;
+    private int currentTab = OVERVIEW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,7 +63,7 @@ public class ShowParkActivity extends BaseActivity
 
         super.addFloatingActionButton();
 
-        this.createTabsPagerAdapter();
+        this.createTabPagerAdapter();
     }
 
     private void initializeContent()
@@ -77,15 +80,12 @@ public class ShowParkActivity extends BaseActivity
         super.addToolbarHomeButton();
     }
 
-    private void createTabsPagerAdapter()
+    private void createTabPagerAdapter()
     {
-        this.attractionsRecyclerAdapter = this.buildAttractionsRecyclerAdapter();
-        this.visitsRecyclerAdapter = this.buildVisitsRecyclerAdapter();
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.buildAttractionsRecyclerAdapter(), this.buildVisitsRecyclerAdapter());
 
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), this.attractionsRecyclerAdapter, this.visitsRecyclerAdapter);
-
-        this.viewPager = findViewById(R.id.viewPagerShowPark);
-        this.viewPager.setAdapter(tabsPagerAdapter);
+        ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
+        viewPager.setAdapter(tabPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayoutShowPark);
         tabLayout.setupWithViewPager(viewPager);
@@ -93,11 +93,11 @@ public class ShowParkActivity extends BaseActivity
         for (int i = 0; i < tabLayout.getTabCount(); i++)
         {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
-            Objects.requireNonNull(tab).setCustomView(tabsPagerAdapter.getTabTitleView(i));
+            Objects.requireNonNull(tab).setCustomView(tabPagerAdapter.getTabTitleView(i));
         }
 
-        this.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -112,39 +112,43 @@ public class ShowParkActivity extends BaseActivity
             public void onPageScrollStateChanged(int state) {}
         });
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(this.viewPager));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-        this.viewPager.setCurrentItem(0);
-        this.onPageSelectedViewPager(0);
+        viewPager.setCurrentItem(currentTab);
+        this.onPageSelectedViewPager(currentTab);
 
-        Log.i(Constants.LOG_TAG, String.format(
-                "ShowParkActivity.createTabsPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), 0));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), currentTab));
     }
 
     private void onPageSelectedViewPager(int position)
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab %d selected", position));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab position %d selected", position));
 
         switch(position)
         {
-            case 0:
+            case OVERVIEW:
                 super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_overview));
                 this.decorateFloatingActionButtonShowParkOverview();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_overview)), getText(R.string.help_text_show_park_overview));
                 break;
 
-            case 1:
+            case ATTRACTIONS:
                 super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_attractions)), getText(R.string.help_text_show_park_attractions));
                 break;
 
-            case 2:
+            case VISITS:
                 super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_visits)), getText(R.string.help_text_show_park_visits));
                 break;
+
+            default:
+                Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab position [%d] does not exist", position));
         }
+
+        this.currentTab = position;
     }
 
     private void decorateFloatingActionButtonShowParkOverview()
@@ -221,19 +225,71 @@ public class ShowParkActivity extends BaseActivity
             }
         };
 
-        return new ExpandableRecyclerAdapter(this.prepareVisitsList(this.park.getChildrenOfInstance(Visit.class)), recyclerOnClickListener);
+        List<Element> preparedVisitsList = this.prepareVisitsList(this.park.getChildrenOfInstance(Visit.class));
+
+        Element firstElement = null;
+        if(!preparedVisitsList.isEmpty())
+        {
+             firstElement = preparedVisitsList.get(0);
+        }
+
+        ExpandableRecyclerAdapter expandableRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisitsList, recyclerOnClickListener);
+
+        if(firstElement != null)
+        {
+            expandableRecyclerAdapter.expandElement(firstElement);
+        }
+
+        return expandableRecyclerAdapter;
     }
 
     private List<Element> prepareVisitsList(List<Element> visits)
     {
         List<Element> preparedVisits = new ArrayList<>();
+        DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
 
-        preparedVisits.addAll(visits);
+        for(Element element : visits)
+        {
+            if(element.isInstance(Visit.class))
+            {
+                Visit visit = (Visit) element;
+                String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
+
+
+                Element existingYearHeader = null;
+                for(Element yearHeader : preparedVisits)
+                {
+                    if(yearHeader.getName().equals(year))
+                    {
+                        existingYearHeader = yearHeader;
+                    }
+                }
+
+                if(existingYearHeader != null)
+                {
+                    existingYearHeader.addChild(element);
+                }
+                else
+                {
+                    YearHeader yearHeader = YearHeader.createYearHeader(year);
+                    yearHeader.addChild(element);
+                    preparedVisits.add(yearHeader);
+                }
+            }
+            else
+            {
+                String errorMessage = String.format(Locale.getDefault(), "element %s is not instance of Visit", element);
+                Log.e(Constants.LOG_TAG, errorMessage);
+                throw new IllegalStateException(errorMessage);
+            }
+        }
+
+        Element.sortYearsDescending(preparedVisits);
 
         return preparedVisits;
     }
 
-    public class TabsPagerAdapter extends FragmentPagerAdapter
+    public class TabPagerAdapter extends FragmentPagerAdapter
     {
         ShowParkOverviewFragment showParkOverviewFragment;
         ShowParkAttractionsFragment showParkAttractionsFragment;
@@ -249,7 +305,7 @@ public class ShowParkActivity extends BaseActivity
                         DrawableTool.setTintToWhite(getApplicationContext(), getDrawable(R.drawable.ic_baseline_local_activity))
                 };
 
-        TabsPagerAdapter(FragmentManager fragmentManager, ExpandableRecyclerAdapter attractionsRecyclerAdapter, ExpandableRecyclerAdapter visitsRecyclerAdapter)
+        TabPagerAdapter(FragmentManager fragmentManager, ExpandableRecyclerAdapter attractionsRecyclerAdapter, ExpandableRecyclerAdapter visitsRecyclerAdapter)
         {
             super(fragmentManager);
             this.attractionsRecyclerAdapter = attractionsRecyclerAdapter;
@@ -259,7 +315,7 @@ public class ShowParkActivity extends BaseActivity
         @Override
         public Fragment getItem(int position)
         {
-            Log.d(Constants.LOG_TAG, String.format("TabsPagerAdapter.getItem:: tab position [%d] selected", position));
+            Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] selected", position));
 
             switch(position)
             {
@@ -276,7 +332,7 @@ public class ShowParkActivity extends BaseActivity
                     return ShowParkVisitsFragment.newInstance();
                 }
                 default:
-                    Log.e(Constants.LOG_TAG, String.format("TabsPagerAdapter.getItem:: tab position [%d] does not exist", position));
+                    Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
                     return null;
             }
         }
@@ -289,14 +345,14 @@ public class ShowParkActivity extends BaseActivity
 
             switch (position)
             {
-                case 0:
+                case OVERVIEW:
                     this.showParkOverviewFragment = (ShowParkOverviewFragment) createdFragment;
                     break;
-                case 1:
+                case ATTRACTIONS:
                     this.showParkAttractionsFragment = (ShowParkAttractionsFragment) createdFragment;
                     this.showParkAttractionsFragment.setExpandableRecyclerAdapter(this.attractionsRecyclerAdapter);
                     break;
-                case 2:
+                case VISITS:
                     this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;
                     this.showParkVisitsFragment.setExpandableRecyclerView(this.visitsRecyclerAdapter);
                     break;

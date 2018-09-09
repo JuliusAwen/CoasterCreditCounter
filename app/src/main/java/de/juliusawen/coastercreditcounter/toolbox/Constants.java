@@ -25,6 +25,9 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.tag_help_overlay_fragment";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.tag_confirm_dialog_fragment";
 
+    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM YYYY";
+    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "YYYY";
+
     public static final int VIEW_TYPE_CHILD = 10000;
 
     public static final int REQUEST_ADD_ELEMENT = Request.ADD_ELEMENT.ordinal();

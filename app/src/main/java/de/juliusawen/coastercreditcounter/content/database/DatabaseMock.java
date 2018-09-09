@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.content.Attraction;
@@ -72,8 +71,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster maverick = Coaster.createCoaster("Maverick");
         Coaster gatekeeper = Coaster.createCoaster("Gatekeeper");
 
-        Calendar calendar = Calendar.getInstance();
-        Visit visit = Visit.createVisit(calendar, cedarPoint);
+        Visit visit1 = Visit.createVisit(2018, 1, 1);
+        Visit visit2 = Visit.createVisit(2018, 2, 2);
+        Visit visit3 = Visit.createVisit(2018, 3, 3);
+        Visit visit4 = Visit.createVisit(2017, 4, 4);
+        Visit visit5 = Visit.createVisit(2017, 5, 5);
+        Visit visit6 = Visit.createVisit(2016, 6, 6);
+
 
 
         // build tree
@@ -103,7 +107,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(maverick);
         cedarPoint.addChild(gatekeeper);
 
-        cedarPoint.addChild(visit);
+        cedarPoint.addChild(visit6);
+        cedarPoint.addChild(visit5);
+        cedarPoint.addChild(visit4);
+        cedarPoint.addChild(visit3);
+        cedarPoint.addChild(visit2);
+        cedarPoint.addChild(visit1);
 
 
         usa.addChild(cedarPoint);
@@ -115,8 +124,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElement(taron);
 
 
-        boolean useTestLocations = false;
-        if(useTestLocations)
+        if(false)
         {
             Location testLocationParent = Location.createLocation("TestParent 2L 2P");
             Location testLocationChild1 = Location.createLocation("TestChild#1 1L 1P");

@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +51,7 @@ public class SortElementsActivity extends BaseActivity
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
-        
+
         this.createActionDialog();
         this.createContentRecyclerView();
     }
@@ -61,7 +60,8 @@ public class SortElementsActivity extends BaseActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(0, Selection.SORT_A_TO_Z.ordinal(), Menu.NONE, R.string.selection_sort_a_to_z);
+        menu.add(0, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
+        menu.add(0, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -74,16 +74,13 @@ public class SortElementsActivity extends BaseActivity
 
         switch (selection)
         {
-            case SORT_A_TO_Z:
-                Collections.sort(this.elementsToSort, new Comparator<Element>()
-                {
-                    @Override
-                    public int compare(Element element1, Element element2)
-                    {
-                        return element1.getName().compareToIgnoreCase(element2.getName());
-                    }
-                });
+            case SORT_ASCENDING:
+                Element.sortListByNameAscending(this.elementsToSort);
+                this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+                return true;
 
+            case SORT_DESCENDING:
+                Element.sortListByNameDescending(this.elementsToSort);
                 this.selectableRecyclerAdapter.updateList(this.elementsToSort);
                 return true;
 
@@ -113,7 +110,7 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.elementsToSort = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToSort = content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
         if(selectedElementString != null && selectedElementString.isEmpty())
@@ -122,7 +119,7 @@ public class SortElementsActivity extends BaseActivity
         }
         else
         {
-            Element element = super.content.getElementByUuid(UUID.fromString(selectedElementString));
+            Element element = content.getElementByUuid(UUID.fromString(selectedElementString));
             this.selectableRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
@@ -140,7 +137,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void initializeContent()
     {
-        this.elementsToSort = super.content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        this.elementsToSort = content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: fetched #[%d] elements from extra", this.elementsToSort.size()));
     }
 

@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.content;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.UUID;
@@ -13,7 +14,7 @@ public class Park extends Element
         super(name, uuid);
     }
 
-    public static Park createPark(String name)
+    public static Park createPark(@NonNull String name)
     {
         Park park = null;
 

@@ -2,7 +2,12 @@ package de.juliusawen.coastercreditcounter.content;
 
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -22,7 +27,7 @@ public abstract class Element
     private String name;
     private UUID uuid;
 
-    Element(String name, UUID uuid)
+    protected Element(String name, UUID uuid)
     {
         this.setName(name);
         this.uuid = uuid;
@@ -32,20 +37,6 @@ public abstract class Element
     public String toString()
     {
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
-    }
-
-    public String getFullName()
-    {
-        return String.format(Locale.getDefault(),
-                "[%s \"%s\" (%s) #[%d] children: #[%d] locations, #[%d] parks, #[%d] attractions]",
-                this.getClass().getSimpleName(),
-                this.getName(),
-                this.getUuid(),
-                this.getChildCount(),
-                this.getChildCountOfInstance(Location.class),
-                this.getChildCountOfInstance(Park.class),
-                this.getChildCountOfInstance(Attraction.class)
-        );
     }
 
     public String getName()
@@ -63,6 +54,21 @@ public abstract class Element
         {
             Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
         }
+    }
+
+    public String getFullName()
+    {
+        return String.format(Locale.getDefault(),
+                "[%s \"%s\" (%s) #[%d]c, #[%d]l, #[%d]p, #[%d]a] #[%d]v]",
+                this.getClass().getSimpleName(),
+                this.getName(),
+                this.getUuid(),
+                this.getChildCount(),
+                this.getChildCountOfInstance(Location.class),
+                this.getChildCountOfInstance(Park.class),
+                this.getChildCountOfInstance(Attraction.class),
+                this.getChildCountOfInstance(Visit.class)
+        );
     }
 
     public UUID getUuid()
@@ -363,5 +369,49 @@ public abstract class Element
 
         Log.i(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
         return success;
+    }
+
+    public static void sortListByNameAscending(List<? extends Element> list)
+    {
+        Collections.sort(list, new Comparator<Element>()
+        {
+            @Override
+            public int compare(Element element1, Element element2)
+            {
+                return element1.getName().compareToIgnoreCase(element2.getName());
+            }
+        });
+    }
+
+    public static void sortListByNameDescending(List<? extends Element> list)
+    {
+        Collections.sort(list, new Comparator<Element>()
+        {
+            @Override
+            public int compare(Element element1, Element element2)
+            {
+                return element2.getName().compareToIgnoreCase(element1.getName());
+            }
+        });
+    }
+
+    public static void sortYearsDescending(List<? extends Element> list)
+    {
+        Collections.sort(list, new Comparator<Element>()
+        {
+            DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
+            @Override
+            public int compare(Element element1, Element element2)
+            {
+                try
+                {
+                    return simpleDateFormat.parse(element2.getName()).compareTo(simpleDateFormat.parse(element1.getName()));
+                }
+                catch (ParseException e)
+                {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
     }
 }

@@ -22,6 +22,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.content.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
@@ -93,6 +95,13 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
     }
 
+    public void expandElement(Element element)
+    {
+        Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.expandElement:: expanding element %s", element));
+        elementsToExpand.add(element);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
     {
@@ -124,6 +133,19 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
             Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
             this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
+        }
+
+        this.removeChildViews(viewHolder);
+
+        if(element.isInstance(Location.class))
+        {
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
+            this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
+        }
+        else if(element.isInstance(YearHeader.class))
+        {
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child visits", element, element.getChildCountOfInstance(Visit.class)));
+            this.handleChildViewCreation(viewHolder, element.getChildrenOfInstance(Visit.class), recyclerOnClickListener);
         }
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));

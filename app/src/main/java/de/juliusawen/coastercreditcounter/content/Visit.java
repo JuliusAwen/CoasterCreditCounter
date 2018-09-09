@@ -19,14 +19,24 @@ public class Visit extends Element
         this.calendar = calendar;
     }
 
-    public static Visit createVisit(Calendar calendar, Park park)
+    public static Visit createVisit(int year, int month, int day)
     {
-        Visit visit;
+        Visit visit = null;
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd. MMMM YYYY", Locale.getDefault());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_FULL_PATTERN, Locale.getDefault());
         visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
         Log.e(Constants.LOG_TAG,  String.format("Visit.createVisit:: %s created.", visit.getFullName()));
 
+
         return visit;
+    }
+
+    public Calendar getCalendar()
+    {
+        return this.calendar;
     }
 }

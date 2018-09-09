@@ -10,8 +10,7 @@ public enum Selection
     ADD_PARK,
 
     RENAME,
-    SORT_ELEMENTS,
-    SORT_A_TO_Z,
+    SORT_ELEMENTS, SORT_ASCENDING, SORT_DESCENDING,
     HELP,
 
     SWITCH_MODE,
