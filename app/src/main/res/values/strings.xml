@@ -22,7 +22,7 @@
 
 
     <!--options menu entries-->
-    <string name="selection_rename_root">rename root</string>
+    <string name="selection_rename_root_location">rename root location</string>
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
     <string name="selection_help">help</string>
@@ -42,12 +42,6 @@
 
 
     <!--general texts-->
-    <string name="text_minus">-</string>
-    <string name="text_plus">+</string>
-
-    <string name="text_up">&#708;</string>
-    <string name="text_down">&#709;</string>
-
     <string name="text_ok">OK</string>
     <string name="text_accept">Accept</string>
     <string name="text_close">Close</string>

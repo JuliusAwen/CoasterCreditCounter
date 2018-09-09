@@ -88,7 +88,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.currentElement.isRootElement())
         {
-            menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root);
+            menu.add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root_location);
         }
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)

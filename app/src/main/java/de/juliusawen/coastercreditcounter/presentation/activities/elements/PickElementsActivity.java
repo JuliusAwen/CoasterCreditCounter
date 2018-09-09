@@ -38,7 +38,6 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.e(Constants.LOG_TAG, "onCreate()");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "PickElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_pick_elements);
