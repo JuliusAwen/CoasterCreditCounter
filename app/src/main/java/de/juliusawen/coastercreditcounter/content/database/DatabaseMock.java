@@ -8,12 +8,12 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Coaster;
-import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Content;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {

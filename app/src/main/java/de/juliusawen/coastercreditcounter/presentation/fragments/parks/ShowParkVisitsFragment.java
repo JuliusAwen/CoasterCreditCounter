@@ -132,7 +132,7 @@ public class ShowParkVisitsFragment extends Fragment
             @Override
             public void onClick(View view, int position)
             {
-                Toaster.makeToast(getContext(), String.format("ShowVisits not yet implemented %s", (Element) view.getTag()));
+                Toaster.makeToast(getContext(), String.format("ShowVisit not yet implemented %s", (Element) view.getTag()));
             }
 
             @Override
@@ -142,22 +142,17 @@ public class ShowParkVisitsFragment extends Fragment
         };
 
         List<Element> preparedVisitsList = this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class)));
-        if(Settings.defaultSortOrderVisits == SortOrder.ASCENDING)
+
+        if(Settings.sortOrderVisits.equals(SortOrder.ASCENDING))
         {
             preparedVisitsList = this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class)));
         }
 
-        Element firstElement = null;
-        if(!preparedVisitsList.isEmpty())
-        {
-            firstElement = preparedVisitsList.get(0);
-        }
-
         this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisitsList, recyclerOnClickListener);
 
-        if(firstElement != null)
+        if(Settings.expandFirstYearInListByDefault && !preparedVisitsList.isEmpty())
         {
-            this.expandableRecyclerAdapter.expandElement(firstElement);
+            this.expandableRecyclerAdapter.expandElement(preparedVisitsList.get(0));
         }
     }
 

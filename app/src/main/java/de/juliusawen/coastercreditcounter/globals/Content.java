@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.content;
+package de.juliusawen.coastercreditcounter.globals;
 
 import android.util.Log;
 
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.database.DatabaseMock;
-import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Content
 {

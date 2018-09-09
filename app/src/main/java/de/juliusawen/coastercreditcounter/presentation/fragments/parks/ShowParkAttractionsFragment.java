@@ -19,10 +19,10 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Attraction;
-import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;

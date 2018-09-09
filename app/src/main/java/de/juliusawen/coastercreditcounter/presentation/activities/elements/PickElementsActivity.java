@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;

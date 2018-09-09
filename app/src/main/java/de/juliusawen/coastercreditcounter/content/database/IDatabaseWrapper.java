@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.content.database;
 
-import de.juliusawen.coastercreditcounter.content.Content;
+import de.juliusawen.coastercreditcounter.globals.Content;
 
 public interface IDatabaseWrapper
 {

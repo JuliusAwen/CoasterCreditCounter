@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Content;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;

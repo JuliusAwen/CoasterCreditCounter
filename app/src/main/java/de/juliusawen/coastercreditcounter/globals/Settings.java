@@ -4,5 +4,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public abstract class Settings
 {
-    public static SortOrder defaultSortOrderVisits = SortOrder.DESCENDING;
+//    ShowParks - Visits
+    public static SortOrder sortOrderVisits = SortOrder.DESCENDING;
+    public static boolean expandFirstYearInListByDefault = true;
 }
