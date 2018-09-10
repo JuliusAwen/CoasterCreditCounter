@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +65,7 @@ public class ShowLocationsActivity extends BaseActivity
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
 
         super.addToolbar();
+        super.addToolbarHomeButton();
         this.decorateToolbar();
 
         super.addFloatingActionButton();
@@ -149,7 +151,6 @@ public class ShowLocationsActivity extends BaseActivity
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = content.fetchElementFromUuidString(uuidString);
-                this.currentElement = resultElement;
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<AddElement>:: scrolling to result element %s...", resultElement));
                 this.LocationRecyclerAdapter.smoothScrollToElement(resultElement);
             }
@@ -160,12 +161,11 @@ public class ShowLocationsActivity extends BaseActivity
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
-                Element parentElement = resultElements.get(0).getParent();
 
-                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s", parentElement));
-
-                parentElement.deleteChildren(resultElements);
-                parentElement.addChildren(resultElements);
+                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", this.currentElement));
+                this.currentElement.deleteChildren(resultElements);
+                this.currentElement.addChildren(resultElements);
+                this.updateLocationRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
@@ -178,10 +178,33 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
                 }
-
             }
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        switch(keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+                if(this.currentElement.isRootElement())
+                {
+                    this.onBackPressed();
+                }
+                else
+                {
+                    Element previousElement = this.recentElements.get(this.recentElements.size() - 2);
+                    this.recentElements.remove(this.currentElement);
+                    this.recentElements.remove(previousElement);
+                    this.currentElement = previousElement;
+                    this.updateActivityView();
+                }
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     //endregion
 
     private void initializeContent()
@@ -281,14 +304,16 @@ public class ShowLocationsActivity extends BaseActivity
     //region NAVIGATION BAR
     private void updateNavigationBar()
     {
-        View view = this.findViewById(android.R.id.content).getRootView();
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating...");
 
-        LinearLayout linearLayoutNavigationBar = view.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
+        View rootView = this.findViewById(android.R.id.content).getRootView();
+        LinearLayout linearLayoutNavigationBar = rootView.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
         if(!this.recentElements.contains(this.currentElement))
         {
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding CurrentElement %s to RecentElements...", this.currentElement));
             this.recentElements.add(this.currentElement);
         }
 
@@ -296,12 +321,14 @@ public class ShowLocationsActivity extends BaseActivity
         {
             if(this.recentElements.indexOf(recentElement) != this.recentElements.size() -1 || recentElement.isRootElement())
             {
-                View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
+                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding element %s to RecentElements...", recentElement));
 
+                View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
                 Button button = buttonView.findViewById(R.id.buttonNavigationBar);
 
                 if(this.currentElement.isRootElement() && recentElement.isRootElement())
                 {
+                    Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: current element %s is root element - applying special treatment", recentElement));
                     button.setText(StringTool.getSpannableString(getString(R.string.root_location), Typeface.BOLD_ITALIC));
                 }
                 else
@@ -326,7 +353,7 @@ public class ShowLocationsActivity extends BaseActivity
             }
         }
 
-        final HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
+        final HorizontalScrollView horizontalScrollView = rootView.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
         horizontalScrollView.post(new Runnable()
         {
             @Override
@@ -335,6 +362,8 @@ public class ShowLocationsActivity extends BaseActivity
                 horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
             }
         });
+
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.recentElements.size()));
     }
 
     private void onClickNavigationBar(View view)

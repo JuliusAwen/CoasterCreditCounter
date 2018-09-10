@@ -129,7 +129,7 @@ public  class ShowParkAttractionsFragment extends Fragment
         {
             if(resultCode == Activity.RESULT_OK)
             {
-                Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: replacing children with sorted children");
+                Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: replacing <children> with <sorted children>...");
 
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);

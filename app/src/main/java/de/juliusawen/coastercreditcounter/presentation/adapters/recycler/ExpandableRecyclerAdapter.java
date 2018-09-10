@@ -95,7 +95,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: element %s not found", element));
+            Log.e(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: element %s not found", element));
         }
     }
 
