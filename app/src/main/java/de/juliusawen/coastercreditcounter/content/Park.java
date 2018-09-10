@@ -27,7 +27,7 @@ public class Park extends Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Park.createPark:: invalid name[%s] - park not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Park.createPark:: invalid name[%s] - park not created.", name));
         }
 
         return park;

@@ -69,9 +69,9 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         this.onClickListener = onClickListener;
     }
 
-    public void updateList(List<Element> elements)
+    public void updateElements(List<Element> elements)
     {
-        Log.v(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateList:: updating list with #[%d] elements...", elements.size()));
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updating list with #[%d] elements...", elements.size()));
 
         this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
@@ -165,7 +165,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         if(view.isSelected())
         {
             this.selectedViewsByElement.remove(element);
-            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s deselected", element));
+            Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s deselected", element));
         }
         else
         {
@@ -180,7 +180,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             }
 
             this.selectedViewsByElement.put(element, view);
-            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s selected", element));
+            Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s selected", element));
         }
 
         view.setSelected(!view.isSelected());

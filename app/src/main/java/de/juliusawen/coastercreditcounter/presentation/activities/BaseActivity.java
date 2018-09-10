@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
 
@@ -289,7 +289,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         if(this.helpOverlayFragment != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: isVisible[%s]", isVisible));
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: isVisible[%s]", isVisible));
 
             if(isVisible)
             {
@@ -309,7 +309,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //region CONFIRM DIALOG
     protected void addConfirmDialog()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating fragment...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: adding dialog...");
 
         if(this.savedInstanceState == null)
         {

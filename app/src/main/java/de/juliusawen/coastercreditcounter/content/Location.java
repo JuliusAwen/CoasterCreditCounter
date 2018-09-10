@@ -26,7 +26,7 @@ public class Location extends Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Location.createLocation:: invalid name[%s] - location not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Location.createLocation:: invalid name[%s] - location not created.", name));
         }
 
         return location;

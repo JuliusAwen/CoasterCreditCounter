@@ -76,12 +76,12 @@ public class SortElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
                 Element.sortListByNameAscending(this.elementsToSort);
-                this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+                this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
             case SORT_DESCENDING:
                 Element.sortListByNameDescending(this.elementsToSort);
-                this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+                this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
             default:
@@ -124,7 +124,7 @@ public class SortElementsActivity extends BaseActivity
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
 
-        this.selectableRecyclerAdapter.updateList(this.elementsToSort);
+        this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class SortElementsActivity extends BaseActivity
     private void initializeContent()
     {
         this.elementsToSort = content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-        Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: fetched #[%d] elements from extra", this.elementsToSort.size()));
+        Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: initialized with #[%d] elements", this.elementsToSort.size()));
     }
 
     private void decorateToolbar()
@@ -164,8 +164,8 @@ public class SortElementsActivity extends BaseActivity
 
     private void onClickFloatingActionButton()
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: accepted - return code <OK>...");
-        returnResult(RESULT_OK);
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: accepted - return code <OK>...");
+        this.returnResult(RESULT_OK);
     }
     //endregion
 
@@ -203,7 +203,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void onClickActionDialogButtonDown()
     {
-        Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
+        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
 
         if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -211,7 +211,7 @@ public class SortElementsActivity extends BaseActivity
 
             if(position < this.elementsToSort.size() - 1)
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
+                Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
 
                 Collections.swap(this.elementsToSort, position, position + 1);
                 this.selectableRecyclerAdapter.notifyDataSetChanged();
@@ -228,18 +228,18 @@ public class SortElementsActivity extends BaseActivity
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
+                Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
             }
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
+            Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
         }
     }
 
     private void onClickActionDialogButtonUp()
     {
-        Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
+        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
 
         if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -247,7 +247,7 @@ public class SortElementsActivity extends BaseActivity
 
             if(position > 0)
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
+                Log.d(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
 
                 Collections.swap(this.elementsToSort, position, position - 1);
                 this.selectableRecyclerAdapter.notifyDataSetChanged();

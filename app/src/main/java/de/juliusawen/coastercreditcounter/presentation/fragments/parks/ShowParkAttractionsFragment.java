@@ -136,7 +136,7 @@ public  class ShowParkAttractionsFragment extends Fragment
 
                 this.park.deleteChildren(resultElements);
                 this.park.addChildren(resultElements);
-                this.expandableRecyclerAdapter.updateList(resultElements);
+                this.expandableRecyclerAdapter.updateElements(resultElements);
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)

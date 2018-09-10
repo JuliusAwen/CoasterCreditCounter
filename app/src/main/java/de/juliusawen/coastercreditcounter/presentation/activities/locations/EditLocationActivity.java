@@ -92,7 +92,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
     {
         this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
 
-        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: edit %s", this.locationToEdit));
+        Log.d(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: edit %s", this.locationToEdit));
         this.editText.append(this.locationToEdit.getName());
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -100,18 +100,21 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                return onClickEditorAction(actionId);
+                boolean handled = onClickEditorAction(actionId);
+                finish();
+                return handled;
             }
         });
     }
 
     private boolean onClickEditorAction(int actionId)
     {
+        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.onClickEditorAction:: actionId[%d]", actionId));
+
         boolean handled = false;
 
         if (actionId == EditorInfo.IME_ACTION_DONE)
         {
-            Log.i(Constants.LOG_TAG, "EditLocationActivity.onClickEditorAction:: IME_ACTION_DONE");
             this.handleOnEditorActionDone();
 
             handled = true;
@@ -121,9 +124,8 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     private void handleOnEditorActionDone()
     {
-        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: changing name of %s to [%s]", this.locationToEdit, this.editText.getText().toString()));
+        Log.d(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: changing name of %s to [%s]", this.locationToEdit, this.editText.getText().toString()));
         locationToEdit.setName(this.editText.getText().toString());
-        finish();
     }
     //endregion
 }

@@ -47,6 +47,8 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onCreate:: creating fragment...");
+
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null)
@@ -79,7 +81,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onViewCreated:: decorating view...");
+        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onViewCreated:: decorating view...");
 
         super.onViewCreated(view, savedInstanceState);
 

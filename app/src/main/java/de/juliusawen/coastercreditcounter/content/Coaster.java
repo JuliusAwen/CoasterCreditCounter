@@ -26,7 +26,7 @@ public class Coaster extends Attraction
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: invalid name[%s] - coaster not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: invalid name[%s] - coaster not created.", name));
         }
 
         return coaster;

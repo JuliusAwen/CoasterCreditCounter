@@ -37,6 +37,7 @@ import static de.juliusawen.coastercreditcounter.presentation.activities.BaseAct
 public class ShowParkVisitsFragment extends Fragment
 {
     private Park park;
+    private List<YearHeader> yearHeaders = new ArrayList<>();
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
 
     public ShowParkVisitsFragment() {}
@@ -105,11 +106,11 @@ public class ShowParkVisitsFragment extends Fragment
         switch(selection)
         {
             case SORT_ASCENDING:
-                this.expandableRecyclerAdapter.updateList(this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class))));
+                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class))));
                 return true;
 
             case SORT_DESCENDING:
-                this.expandableRecyclerAdapter.updateList(this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class))));
+                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class))));
                 return true;
 
             default:
@@ -122,6 +123,7 @@ public class ShowParkVisitsFragment extends Fragment
     {
         super.onDetach();
         this.park = null;
+        this.yearHeaders = null;
         this.expandableRecyclerAdapter = null;
     }
 
@@ -189,15 +191,31 @@ public class ShowParkVisitsFragment extends Fragment
             }
             else
             {
-                YearHeader yearHeader = YearHeader.createYearHeader(year);
+                YearHeader yearHeader = this.getYearHeader(year);
                 yearHeader.addChild(visit);
                 preparedVisits.add(yearHeader);
             }
 
         }
 
-//        YearHeader.sortYearsDescending(YearHeader.convertToYearHeaders(preparedVisits));
-
         return preparedVisits;
+    }
+
+    private YearHeader getYearHeader(String year)
+    {
+        for(YearHeader yearHeader : this.yearHeaders)
+        {
+            if(yearHeader.getName().equals(year))
+            {
+                Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: reusing %s", yearHeader));
+                yearHeader.getChildren().clear();
+                return yearHeader;
+            }
+        }
+
+        YearHeader yearHeader = YearHeader.createYearHeader(year);
+        this.yearHeaders.add(yearHeader);
+        Log.d(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: created new %s", yearHeader));
+        return yearHeader;
     }
 }

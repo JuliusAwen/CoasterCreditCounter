@@ -106,7 +106,7 @@ public abstract class Element
 
     private void addChildren(int index, List<Element> children)
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.addChildren:: called with #[%d] children", children.size()));
+        Log.v(Constants.LOG_TAG, String.format("Element.addChildren:: called with #[%d] children", children.size()));
 
         int increment = 0;
 
@@ -261,7 +261,7 @@ public abstract class Element
             return true;
         }
 
-        Log.w(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
+        Log.e(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
         return false;
     }
 
@@ -283,7 +283,7 @@ public abstract class Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to restore %s -" +
+            Log.e(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to restore %s -" +
                             " undoPossible[%s]," +
                             " backupChildrenCount[%d]," +
                             " backupParent[%s]," +
@@ -300,7 +300,7 @@ public abstract class Element
         this.undoIndex = -1;
         this.undoPossible = false;
 
-        Log.i(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: restore %s success[%s]", this, success));
+        Log.d(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: restore %s success[%s]", this, success));
         return success;
     }
 
@@ -323,7 +323,7 @@ public abstract class Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element", this));
+            Log.e(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element", this));
             return false;
         }
     }
@@ -347,7 +347,7 @@ public abstract class Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to restore %s -" +
+            Log.e(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to restore %s -" +
                             " undoPossible[%s]," +
                             " backupChildrenCount[%d]," +
                             " backupParent[%s]," +
@@ -364,7 +364,7 @@ public abstract class Element
         this.undoIndex = -1;
         this.undoPossible = false;
 
-        Log.i(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
+        Log.d(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
         return success;
     }
 

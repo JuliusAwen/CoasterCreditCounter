@@ -77,11 +77,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 {
                     if(content.deleteElement(this.newLocation))
                     {
-                        Log.i(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.newLocation));
+                        Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.newLocation));
                     }
                     else
                     {
-                        Log.e(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> not able to remove remove %s", this.newLocation));
+                        Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> not able to remove remove %s", this.newLocation));
                     }
                 }
 
@@ -129,7 +129,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.parentLocation.hasChildrenOfInstance(Park.class))
                 {
-                    Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.onActivityResult<PickElements>:: parent element %s has #[%d] children parks - ask to relocate...",
+                    Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.onActivityResult<PickElements>:: parent element %s has #[%d] children parks - asking to relocate...",
                             this.parentLocation, this.parentLocation.getChildCountOfInstance(Park.class)));
 
                     this.showAlertDialogRelocateChildrenParks();
@@ -195,7 +195,6 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         switch (actionId)
         {
             case EditorInfo.IME_ACTION_DONE:
-                Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickEditorAction:: IME_ACTION_DONE");
                 handleOnEditorActionDone();
                 handled = true;
                 break;
@@ -214,7 +213,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         {
             if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
-                Log.i(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S] - parent %s has #[%d] children<Location>",
+                Log.d(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S] - parent %s has #[%d] children<Location>",
                         this.checkBoxAddChildren.isChecked(), this.parentLocation, this.parentLocation.getChildCountOfInstance(Location.class)));
 
 
@@ -227,7 +226,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 }
                 else
                 {
-                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has only one child<Location> -> inserting in new %s",
+                    Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has only one child<Location> -> inserting in new %s",
                             this.parentLocation, this.newLocation));
                     this.parentLocation.insertElements(this.newLocation, this.parentLocation.getChildrenOfInstance(Location.class));
 
@@ -246,7 +245,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             }
             else
             {
-                Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> - adding child %s",
+                Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> - adding child %s",
                         this.parentLocation, this.newLocation));
                 this.parentLocation.addChild(this.newLocation);
 
@@ -305,7 +304,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void onClickAlertDialogPositiveButtonRelocateChildrenParks(DialogInterface dialog)
     {
-        Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickAlertDialogNegativeButton:: accepted");
+        Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickAlertDialogPositiveButtonRelocateChildrenParks:: accepted");
         dialog.dismiss();
         this.relocateChildrenParks();
         this.returnResult(RESULT_OK);
@@ -320,7 +319,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void relocateChildrenParks()
     {
-        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.relocateChildrenParks:: relocating children<Park> of parent %s to new %s...", this.parentLocation, this.newLocation));
+        Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.relocateChildrenParks:: relocating children<Park> of parent %s to new %s...", this.parentLocation, this.newLocation));
 
         for(Element park : this.parentLocation.getChildrenOfInstance(Park.class))
         {
@@ -340,7 +339,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             success = true;
         }
 
-        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create %s success[%S]", this.editText.getText().toString(), success));
+        Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create %s success[%S]", this.editText.getText().toString(), success));
 
         return success;
     }

@@ -78,7 +78,7 @@ public class ShowLocationsActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: called with CurrentElement%s", this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: CurrentElement %s", this.currentElement));
         this.updateActivityView();
         super.onResume();
     }
@@ -151,7 +151,7 @@ public class ShowLocationsActivity extends BaseActivity
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = content.fetchElementFromUuidString(uuidString);
-                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<AddElement>:: scrolling to result element %s...", resultElement));
+                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<AddElement>:: scrolling to result element %s...", resultElement));
                 this.LocationRecyclerAdapter.smoothScrollToElement(resultElement);
             }
         }
@@ -171,7 +171,7 @@ public class ShowLocationsActivity extends BaseActivity
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = content.fetchElementFromUuidString(selectedElementUuidString);
-                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
+                    Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
                     this.LocationRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
@@ -188,6 +188,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch(keyCode)
         {
             case KeyEvent.KEYCODE_BACK:
+                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onActonKeyDown:: hardware back button pressed");
                 if(this.currentElement.isRootElement())
                 {
                     this.onBackPressed();
@@ -199,6 +200,7 @@ public class ShowLocationsActivity extends BaseActivity
                     this.recentElements.remove(previousElement);
                     this.currentElement = previousElement;
                     this.updateActivityView();
+                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
                 }
                 return true;
         }
@@ -212,7 +214,7 @@ public class ShowLocationsActivity extends BaseActivity
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
         this.currentElement = elementUuid != null ? content.getElementByUuid(UUID.fromString(elementUuid)) : content.getRootElement();
 
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement%s", this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement %s", this.currentElement));
     }
 
     private void updateActivityView()
@@ -244,7 +246,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void onClickFloatingActionButton()
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton::");
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getActiveFloatingActionButton());
 
@@ -363,7 +365,7 @@ public class ShowLocationsActivity extends BaseActivity
             }
         });
 
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.recentElements.size()));
+        Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.recentElements.size()));
     }
 
     private void onClickNavigationBar(View view)
@@ -573,7 +575,6 @@ public class ShowLocationsActivity extends BaseActivity
                 Log.e(Constants.LOG_TAG, String.format(
                         "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s and children failed - restoring content...",
                         longClickedElement));
-
                 content.addElementAndChildren(longClickedElement);
                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
             }
@@ -585,7 +586,6 @@ public class ShowLocationsActivity extends BaseActivity
             String errorMessage = String.format(
                     "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: removing %s and children from content failed!",
                     this.longClickedElement);
-
             Log.e(Constants.LOG_TAG, errorMessage);
             throw new IllegalStateException(errorMessage);
         }
@@ -640,7 +640,6 @@ public class ShowLocationsActivity extends BaseActivity
                 Log.e(Constants.LOG_TAG, String.format(
                         "ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s failed - restoring content...",
                         this.longClickedElement));
-
                 content.addElementAndChildren(this.longClickedElement);
                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
             }
@@ -650,7 +649,6 @@ public class ShowLocationsActivity extends BaseActivity
             Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
 
             String errorMessage = String.format("ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s from content failed!", this.longClickedElement);
-
             Log.e(Constants.LOG_TAG, errorMessage);
             throw new IllegalStateException(errorMessage);
         }
@@ -696,7 +694,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateLocationRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateLocationRecyclerView:: updating RecyclerView...");
-        this.LocationRecyclerAdapter.updateList(this.currentElement.getChildrenOfInstance(Location.class));
+        this.LocationRecyclerAdapter.updateElements(this.currentElement.getChildrenOfInstance(Location.class));
     }
     //endregion
 

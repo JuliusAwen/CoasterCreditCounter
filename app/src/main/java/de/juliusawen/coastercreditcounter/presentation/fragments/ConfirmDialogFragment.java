@@ -36,7 +36,7 @@ public class ConfirmDialogFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ConfirmDialogFragment.onViewCreated:: decorating view...");
+        Log.v(Constants.LOG_TAG, "ConfirmDialogFragment.onViewCreated:: decorating view...");
         super.onViewCreated(view, savedInstanceState);
 
         Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);

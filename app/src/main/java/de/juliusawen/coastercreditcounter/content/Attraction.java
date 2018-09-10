@@ -26,7 +26,7 @@ public class Attraction extends Element
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: invalid name[%s] - attraction not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.createAttraction:: invalid name[%s] - attraction not created.", name));
         }
 
         return attraction;

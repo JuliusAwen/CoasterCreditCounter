@@ -82,10 +82,10 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.parentElement = super.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentElement = content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.elementsToPickFrom = super.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.selectableRecyclerAdapter.updateList(this.elementsToPickFrom);
+        this.elementsToPickFrom = content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.selectableRecyclerAdapter.updateElements(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
         if(selectedElementStrings != null && selectedElementStrings.isEmpty())
@@ -94,7 +94,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            List<Element> selectedElements = super.content.fetchElementsFromUuidStrings(selectedElementStrings);
+            List<Element> selectedElements = content.fetchElementsFromUuidStrings(selectedElementStrings);
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 
@@ -104,7 +104,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void initializeContent()
     {
-        this.parentElement = super.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.parentElement = content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
 
         if(this.parentElement.isInstance(Location.class))
         {
@@ -221,7 +221,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void changeRadioButtonToSelectAll()
     {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToSelectAll:: changing RadioButton");
+        Log.v(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToSelectAll:: changing RadioButton");
 
         this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);
@@ -229,7 +229,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void changeRadioButtonToDeselectAll()
     {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToDeselectAll:: changing RadioButton");
+        Log.v(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToDeselectAll:: changing RadioButton");
 
         this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);

@@ -118,7 +118,7 @@ public class Content
         }
         else
         {
-            Log.i(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid));
+            Log.w(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid));
             return null;
         }
     }
@@ -166,7 +166,7 @@ public class Content
 
     public static List<Element> sortElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
     {
-        Log.d(Constants.LOG_TAG, "Content.sortElementListByCompareList:: sort list...");
+        Log.v(Constants.LOG_TAG, "Content.sortElementListByCompareList:: sorting list...");
 
         ArrayList<Element> orderedList = new ArrayList<>();
 
