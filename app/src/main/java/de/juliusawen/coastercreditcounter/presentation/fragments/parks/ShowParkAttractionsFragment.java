@@ -64,34 +64,25 @@ public  class ShowParkAttractionsFragment extends Fragment
 
         this.createAttractionsRecyclerAdapter();
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onCreate:: created fragment for %s", this.park));
+        Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onCreate:: created fragment for %s", this.park));
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.tab_show_park_attractions, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: decorating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: decorating view...");
 
-        if(this.expandableRecyclerAdapter != null)
-        {
-            Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: creating RecyclerView...");
-
-            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Attractions);
-            recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
-            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            recyclerView.setAdapter(this.expandableRecyclerAdapter);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: ExpandedRecyclerAdapter not set");
-        }
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Attractions);
+        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.expandableRecyclerAdapter);
     }
 
     @Override

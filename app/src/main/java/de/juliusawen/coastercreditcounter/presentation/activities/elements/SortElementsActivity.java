@@ -75,12 +75,12 @@ public class SortElementsActivity extends BaseActivity
         switch (selection)
         {
             case SORT_ASCENDING:
-                Element.sortListByNameAscending(this.elementsToSort);
+                Element.sortElementsByNameAscending(this.elementsToSort);
                 this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
             case SORT_DESCENDING:
-                Element.sortListByNameDescending(this.elementsToSort);
+                Element.sortElementByNameDescending(this.elementsToSort);
                 this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
@@ -211,7 +211,7 @@ public class SortElementsActivity extends BaseActivity
 
             if(position < this.elementsToSort.size() - 1)
             {
-                Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
+                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
 
                 Collections.swap(this.elementsToSort, position, position + 1);
                 this.selectableRecyclerAdapter.notifyDataSetChanged();
@@ -233,7 +233,7 @@ public class SortElementsActivity extends BaseActivity
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
+            Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
         }
     }
 
@@ -264,7 +264,7 @@ public class SortElementsActivity extends BaseActivity
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
+                Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
             }
         }
         else
@@ -287,7 +287,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 

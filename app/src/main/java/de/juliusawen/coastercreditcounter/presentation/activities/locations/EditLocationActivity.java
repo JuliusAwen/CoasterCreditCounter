@@ -16,6 +16,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class EditLocationActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
@@ -54,6 +55,7 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
         {
             case OK:
                 handleOnEditorActionDone();
+                finish();
                 break;
 
             case CANCEL:
@@ -109,14 +111,12 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     private boolean onClickEditorAction(int actionId)
     {
-        Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.onClickEditorAction:: actionId[%d]", actionId));
-
         boolean handled = false;
 
         if (actionId == EditorInfo.IME_ACTION_DONE)
         {
+            Log.d(Constants.LOG_TAG, "EditLocationActivity.onClickEditorAction<IME_ACTION_DONE>:: ");
             this.handleOnEditorActionDone();
-
             handled = true;
         }
         return handled;
@@ -124,8 +124,16 @@ public class EditLocationActivity extends BaseActivity implements ConfirmDialogF
 
     private void handleOnEditorActionDone()
     {
-        Log.d(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: changing name of %s to [%s]", this.locationToEdit, this.editText.getText().toString()));
-        locationToEdit.setName(this.editText.getText().toString());
+        String editText = this.editText.getText().toString();
+        if(!this.locationToEdit.getName().equals(editText))
+        {
+            if(!this.locationToEdit.setName(editText))
+            {
+                Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
+            }
+            Log.i(Constants.LOG_TAG, String.format("EditLocationActivity.createEditText:: name of %s changed to [%s]", this.locationToEdit, editText));
+        }
+        Log.v(Constants.LOG_TAG, "EditLocationActivity.createEditText:: name has not changed");
     }
     //endregion
 }

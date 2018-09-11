@@ -144,14 +144,13 @@ public class ShowLocationsActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
-
         if(requestCode == Constants.REQUEST_ADD_ELEMENT)
         {
             if(resultCode == RESULT_OK)
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = content.fetchElementFromUuidString(uuidString);
-                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<AddElement>:: scrolling to result element %s...", resultElement));
+                updateLocationRecyclerView();
                 this.LocationRecyclerAdapter.smoothScrollToElement(resultElement);
             }
         }
@@ -171,7 +170,7 @@ public class ShowLocationsActivity extends BaseActivity
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = content.fetchElementFromUuidString(selectedElementUuidString);
-                    Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
+                    updateLocationRecyclerView();
                     this.LocationRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
@@ -196,11 +195,11 @@ public class ShowLocationsActivity extends BaseActivity
                 else
                 {
                     Element previousElement = this.recentElements.get(this.recentElements.size() - 2);
+                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
                     this.recentElements.remove(this.currentElement);
                     this.recentElements.remove(previousElement);
                     this.currentElement = previousElement;
                     this.updateActivityView();
-                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
                 }
                 return true;
         }
@@ -306,7 +305,7 @@ public class ShowLocationsActivity extends BaseActivity
     //region NAVIGATION BAR
     private void updateNavigationBar()
     {
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating...");
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating NavigationBar...");
 
         View rootView = this.findViewById(android.R.id.content).getRootView();
         LinearLayout linearLayoutNavigationBar = rootView.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
@@ -315,7 +314,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(!this.recentElements.contains(this.currentElement))
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding CurrentElement %s to RecentElements...", this.currentElement));
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding current element %s to RecentElements...", this.currentElement));
             this.recentElements.add(this.currentElement);
         }
 

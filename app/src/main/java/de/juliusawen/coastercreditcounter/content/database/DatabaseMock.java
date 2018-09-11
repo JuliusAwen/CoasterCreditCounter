@@ -20,7 +20,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public void fetchContent(Content content)
     {
-        Log.v(Constants.LOG_TAG, this.getClass().toString() + ":: fetchContent called.");
+        Log.v(Constants.LOG_TAG, "DatabaseMock.fetchContent:: creating mock data");
 
         // create Nodes
         Location earth = Location.createLocation("Earth");
@@ -40,7 +40,6 @@ public final class DatabaseMock implements IDatabaseWrapper
                 Location.createLocation("Bavaria"),
                 Location.createLocation("Berlin"),
                 Location.createLocation("Brandenburg"),
-                Location.createLocation("Bremen"),
                 Location.createLocation("Hamburg"),
                 Location.createLocation("Hesse"),
                 Location.createLocation("Mecklenburg-Vorpommern"),
@@ -54,11 +53,13 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         Location bruehl = Location.createLocation("Brühl");
         Location soltau = Location.createLocation("Soltau");
+        Location bremen = Location.createLocation("Bremen");
 
         Park phantasialand = Park.createPark("Phantasialand");
         Park heidePark = Park.createPark("Heide Park Resort");
         Park cedarPoint = Park.createPark("Cedar Point");
         Park sixFlagsMagicMountain = Park.createPark("Six Flags Magic Mountain");
+        Park freimarkt = Park.createPark("Freimarkt");
 
         Coaster taron = Coaster.createCoaster("Taron");
         Attraction hollywoodTour = Attraction.createAttraction("Hollywood Tour");
@@ -78,24 +79,38 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit visit5 = Visit.createVisit(2017, 4, 5);
         Visit visit6 = Visit.createVisit(2016, 5, 6);
 
+        String parkTypeAmusementPark = "Amusement Park";
+        String parkTypeThemePark = "Theme Park";
+        String parkTypeFair = "Fair";
+
+        Park.types.add(parkTypeAmusementPark);
+        Park.types.add(parkTypeThemePark);
+        Park.types.add(parkTypeFair);
+
 
 
         // build tree
         phantasialand.addChild(taron);
         phantasialand.addChild(hollywoodTour);
+        phantasialand.setType(parkTypeThemePark);
 
         heidePark.addChild(krake);
         heidePark.addChild(scream);
+        heidePark.setType(parkTypeThemePark);
+
+        freimarkt.setType(parkTypeFair);
 
         bruehl.addChild(phantasialand);
         soltau.addChild(heidePark);
 
         northRhineWestphalia.addChild(bruehl);
         lowerSaxony.addChild(soltau);
+        bremen.addChild(freimarkt);
 
         germany.addChild(northRhineWestphalia);
         germany.addChild(lowerSaxony);
         germany.addChildren(new ArrayList<Element>(states));
+        germany.addChild(bremen);
 
         netherlands.addChild(limburg);
 
@@ -113,6 +128,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(visit3);
         cedarPoint.addChild(visit2);
         cedarPoint.addChild(visit1);
+
+        cedarPoint.setType(parkTypeAmusementPark);
+
+        sixFlagsMagicMountain.setType(parkTypeThemePark);
 
 
         usa.addChild(cedarPoint);

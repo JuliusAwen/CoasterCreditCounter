@@ -63,8 +63,6 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
     public void updateElements(List<Element> elements)
     {
-        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: updating list with #[%d] elements...", elements.size()));
-
         this.elements = elements;
 
         Set<Element> orphanedElements = new HashSet<>(elementsToExpand);
@@ -74,10 +72,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         {
             elementsToExpand.removeAll(orphanedElements);
 
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: #[%d] orphaned elements removed", orphanedElements.size()));
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: #[%d] orphaned elements removed", orphanedElements.size()));
         }
 
         notifyDataSetChanged();
+        Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: updated with #[%d] elements...", elements.size()));
     }
 
     public List<Element> getElements()
@@ -125,7 +124,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
         final Element element = elements.get(position);
-        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s)", element));
+        Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s)", element));
 
         RecyclerOnClickListener recyclerOnClickListener = new RecyclerOnClickListener(viewHolder, this.onClickListener);
 
@@ -171,14 +170,14 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             viewHolder.isExpanded = true;
             viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
 
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <EXPANDED>", element));
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <EXPANDED>", element));
         }
         else
         {
             viewHolder.isExpanded = false;
             viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
 
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <COLLAPSED>", element));
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <COLLAPSED>", element));
         }
 
         viewHolder.imageViewExpandToggle.setOnClickListener(new View.OnClickListener()
@@ -216,12 +215,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         {
             this.handleChildViewCreation(viewHolder, elements, recyclerOnClickListener);
             viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.addChildViews:: ExpandToggle for %s is <VISIBLE>", elements.get(0)));
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.addChildViews:: ExpandToggle for %s is <VISIBLE>", elements.get(0)));
         }
         else
         {
             viewHolder.imageViewExpandToggle.setVisibility(View.INVISIBLE);
-            Log.d(Constants.LOG_TAG, "ExpandableRecyclerAdapter.addChildViews:: ExpandToggle is <INVISIBLE>");
         }
     }
 
@@ -235,7 +233,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             if(viewHolder.isExpanded)
             {
                 childView.setVisibility(View.VISIBLE);
-                Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleChildViewCreation:: View %s is <VISIBLE>", element));
+                Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.handleChildViewCreation:: View %s is <VISIBLE>", element));
             }
             else
             {

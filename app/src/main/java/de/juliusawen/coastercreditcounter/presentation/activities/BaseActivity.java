@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
 
@@ -50,8 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.onPrepareOptionsMenu:: OptionsMenu prepared");
-
         if(helpOverlayFragment != null)
         {
             if(menu.findItem(Selection.HELP.ordinal()) == null)
@@ -70,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         switch (selection)
         {
             case HELP:
-                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%S] selected", selection));
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%S] selected", selection));
                 this.setHelpOverlayVisibility(true);
                 return true;
 
@@ -132,7 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //region TOOLBAR
     protected void addToolbar()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: creating toolbar...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
 
         this.toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
         this.toolbar.setVisibility(View.VISIBLE);
@@ -188,7 +186,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //region FLOATING ACTION BUTTON
     protected void addFloatingActionButton()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.addFloatingActionButton:: creating floating action button...");
 
         this.activeFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
     }

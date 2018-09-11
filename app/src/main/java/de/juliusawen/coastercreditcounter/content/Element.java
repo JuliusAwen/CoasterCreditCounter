@@ -41,15 +41,17 @@ public abstract class Element
         return this.name;
     }
 
-    public void setName(String name)
+    public boolean setName(String name)
     {
         if(!name.trim().isEmpty())
         {
             this.name = name.trim();
+            return true;
         }
         else
         {
             Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
+            return false;
         }
     }
 
@@ -368,9 +370,9 @@ public abstract class Element
         return success;
     }
 
-    public static void sortListByNameAscending(List<? extends Element> list)
+    public static void sortElementsByNameAscending(List<? extends Element> elements)
     {
-        Collections.sort(list, new Comparator<Element>()
+        Collections.sort(elements, new Comparator<Element>()
         {
             @Override
             public int compare(Element element1, Element element2)
@@ -378,11 +380,12 @@ public abstract class Element
                 return element1.getName().compareToIgnoreCase(element2.getName());
             }
         });
+        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: #[%s] elements sorted", elements.size()));
     }
 
-    public static void sortListByNameDescending(List<? extends Element> list)
+    public static void sortElementByNameDescending(List<? extends Element> elements)
     {
-        Collections.sort(list, new Comparator<Element>()
+        Collections.sort(elements, new Comparator<Element>()
         {
             @Override
             public int compare(Element element1, Element element2)
@@ -390,5 +393,6 @@ public abstract class Element
                 return element2.getName().compareToIgnoreCase(element1.getName());
             }
         });
+        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementByNameDescending:: #[%s] elements sorted", elements.size()));
     }
 }

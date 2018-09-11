@@ -71,10 +71,9 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public void updateElements(List<Element> elements)
     {
-        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updating list with #[%d] elements...", elements.size()));
-
         this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
+        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updated with #[%d] elements...", elements.size()));
     }
 
     public List<Element> getElementsToSelectFrom()
@@ -132,7 +131,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     {
         Element element = elementsToSelectFrom.get(position);
 
-        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s (position[%d])", element, position));
+        Log.v(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onBindViewHolder:: binding ViewHolder %s (position[%d])", element, position));
 
         if(this.selectedViewsByElement.containsKey(element))
         {
@@ -165,7 +164,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         if(view.isSelected())
         {
             this.selectedViewsByElement.remove(element);
-            Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s deselected", element));
+            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s deselected", element));
         }
         else
         {
@@ -180,7 +179,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             }
 
             this.selectedViewsByElement.put(element, view);
-            Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s selected", element));
+            Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.onClickItemView:: %s selected", element));
         }
 
         view.setSelected(!view.isSelected());

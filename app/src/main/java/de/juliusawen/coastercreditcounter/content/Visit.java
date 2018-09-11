@@ -72,7 +72,9 @@ public class Visit extends Element
 
         for(Visit visit : visits)
         {
-            visitsByDateString.put(simpleDateFormat.format(visit.getCalendar().getTime()), visit);
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: parsed date [%s] from name [%s]", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -83,6 +85,8 @@ public class Visit extends Element
         {
             sortedVisits.add(visitsByDateString.get(dateString));
         }
+
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: #[%d] visits sorted", elements.size()));
 
         return sortedVisits;
     }
@@ -97,7 +101,9 @@ public class Visit extends Element
 
         for(Visit visit : visits)
         {
-            visitsByDateString.put(simpleDateFormat.format(visit.getCalendar().getTime()), visit);
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: parsed date [%s] from name [%s]", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -108,6 +114,8 @@ public class Visit extends Element
         {
             sortedVisits.add(0, visitsByDateString.get(dateString));
         }
+
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDateAscending:: #[%d] visits sorted", elements.size()));
 
         return sortedVisits;
     }

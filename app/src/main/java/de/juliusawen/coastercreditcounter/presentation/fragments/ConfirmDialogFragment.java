@@ -29,7 +29,7 @@ public class ConfirmDialogFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ConfirmDialogFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ConfirmDialogFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.fragment_confirm_dialog, container, false);
     }
 

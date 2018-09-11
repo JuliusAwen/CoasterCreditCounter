@@ -44,7 +44,7 @@ public class ShowParkOverviewFragment extends Fragment
             this.park = (Park) content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
         }
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.onCreate:: created fragment for %s", this.park));
+        Log.v(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.onCreate:: created fragment for %s", this.park));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ShowParkOverviewFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkOverviewFragment.onViewCreated:: decorating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onViewCreated:: decorating view...");
     }
 
     @Override

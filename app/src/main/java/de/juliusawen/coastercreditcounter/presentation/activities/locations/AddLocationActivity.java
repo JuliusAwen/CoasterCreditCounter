@@ -339,7 +339,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create %s success[%S]", this.editText.getText().toString(), success));
+        Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleLocationCreation:: create %s success[%S]", this.newLocation, success));
 
         return success;
     }

@@ -57,7 +57,7 @@ public class ShowParkVisitsFragment extends Fragment
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: creating view...");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null)
@@ -73,14 +73,14 @@ public class ShowParkVisitsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.tab_show_park_visits, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: decorating view...");
+        Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: decorating view...");
 
         if(this.expandableRecyclerAdapter != null)
         {
@@ -165,7 +165,7 @@ public class ShowParkVisitsFragment extends Fragment
 
     private List<Element> prepareVisitsList(List<Element> elements)
     {
-        Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.prepareVisitsList:: preparing list...");
+        Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.prepareVisitsList:: preparing list...");
 
         List<Visit> visits = Visit.convertToVisits(elements);
         List<Element> preparedVisits = new ArrayList<>();
@@ -215,7 +215,7 @@ public class ShowParkVisitsFragment extends Fragment
 
         YearHeader yearHeader = YearHeader.createYearHeader(year);
         this.yearHeaders.add(yearHeader);
-        Log.d(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: created new %s", yearHeader));
+        Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: created new %s", yearHeader));
         return yearHeader;
     }
 }

@@ -86,7 +86,7 @@ public class ShowParkActivity extends BaseActivity
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
         this.park = (Park) content.getElementByUuid(UUID.fromString(elementUuid));
 
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.initializeContent:: initialized with %s", this.park));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.initializeContent:: initialized with %s and current tab[%d] selected", this.park, this.currentTab));
     }
 
     private void decorateToolbar()
@@ -132,12 +132,12 @@ public class ShowParkActivity extends BaseActivity
         viewPager.setCurrentItem(currentTab);
         this.onPageSelectedViewPager(currentTab);
 
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), currentTab));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), currentTab));
     }
 
     private void onPageSelectedViewPager(int position)
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab position %d selected", position));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: selected position [%d]", position));
 
         switch(position)
         {
@@ -229,7 +229,7 @@ public class ShowParkActivity extends BaseActivity
         @Override
         public Fragment getItem(int position)
         {
-            Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] selected", position));
+            Log.v(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: returning fragment for position [%d]", position));
 
             switch(position)
             {

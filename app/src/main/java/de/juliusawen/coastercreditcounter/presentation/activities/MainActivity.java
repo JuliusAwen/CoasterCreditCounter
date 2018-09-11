@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private void startHubActivity()
     {
         Log.i(Constants.LOG_TAG, "MainActivity.startHubActivity:: starting activty...");
+        Log.e(Constants.LOG_TAG, "MainActivity.startHubActivity:: HubActivity is not available - starting ShowLocationsActivity instead...");
 
         Intent intent = new Intent(MainActivity.this, ShowLocationsActivity.class);
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.content.getRootElement().getUuid().toString());

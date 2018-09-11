@@ -34,7 +34,7 @@ public class HelpOverlayFragment extends Fragment
 
     public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "HelpOverlayFragment.newInstance:: instantiating fragment...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "HelpOverlayFragment.newInstance:: instantiating fragment...");
 
         HelpOverlayFragment helpOverlayFragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
@@ -47,7 +47,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onCreate:: creating fragment...");
+        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onCreate:: creating fragment...");
 
         super.onCreate(savedInstanceState);
 
@@ -70,7 +70,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onCreateView:: creating view...");
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
         this.textViewTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
