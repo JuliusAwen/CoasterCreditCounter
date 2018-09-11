@@ -11,7 +11,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Park extends Element
 {
-    public static List<String> types = new ArrayList<>();
+    private static List<String> types = new ArrayList<>();
     private String type;
 
     private Park(String name, UUID uuid)
@@ -19,24 +19,46 @@ public class Park extends Element
         super(name, uuid);
     }
 
-    public static Park createPark(@NonNull String name)
+    public static Park create(@NonNull String name)
     {
         Park park = null;
-
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
             park = new Park(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("Park.createPark:: %s created", park.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("Park.create:: %s created", park.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Park.createPark:: invalid name[%s] - park not created", name));
+            Log.e(Constants.LOG_TAG,  String.format("Park.create:: invalid name[%s] - park not created", name));
         }
-
         return park;
     }
+
+    public static List<String> getTypes()
+    {
+        return Park.types;
+    }
+
+    public static void setTypes(List<String> types)
+    {
+        Park.types = types;
+        Log.v(Constants.LOG_TAG,  String.format("Park.setTypes:: #[%d] types set", types.size()));
+    }
+
+    public static void addType(String type)
+    {
+        if(!Park.types.contains(type))
+        {
+            Park.types.add(type);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Park.addType:: type [%s] already exists", type));
+        }
+    }
+
 
     public String getType()
     {

@@ -12,9 +12,8 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-
-import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
 
 public class ShowParkOverviewFragment extends Fragment
 {
@@ -41,7 +40,7 @@ public class ShowParkOverviewFragment extends Fragment
 
         if (getArguments() != null)
         {
-            this.park = (Park) content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            this.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
         }
 
         Log.v(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.onCreate:: created fragment for %s", this.park));

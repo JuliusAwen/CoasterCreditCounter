@@ -24,15 +24,13 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
 import de.juliusawen.coastercreditcounter.content.YearHeader;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Settings;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
-
-import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
 
 public class ShowParkVisitsFragment extends Fragment
 {
@@ -62,7 +60,7 @@ public class ShowParkVisitsFragment extends Fragment
 
         if (getArguments() != null)
         {
-            this.park = (Park) content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            this.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
         }
 
         this.createVisitsRecyclerAdapter();
@@ -106,11 +104,11 @@ public class ShowParkVisitsFragment extends Fragment
         switch(selection)
         {
             case SORT_ASCENDING:
-                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class))));
+                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDatesAscending(this.park.getChildrenOfInstance(Visit.class))));
                 return true;
 
             case SORT_DESCENDING:
-                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class))));
+                this.expandableRecyclerAdapter.updateElements(this.prepareVisitsList(Visit.sortDatesDescending(this.park.getChildrenOfInstance(Visit.class))));
                 return true;
 
             default:
@@ -143,16 +141,16 @@ public class ShowParkVisitsFragment extends Fragment
             }
         };
 
-        List<Element> preparedVisitsList = this.prepareVisitsList(Visit.sortDateDescending(this.park.getChildrenOfInstance(Visit.class)));
+        List<Element> preparedVisitsList = this.prepareVisitsList(Visit.sortDatesDescending(this.park.getChildrenOfInstance(Visit.class)));
 
-        if(Settings.sortOrderVisits.equals(SortOrder.ASCENDING))
+        if(App.settings.getSortOrderVisits().equals(SortOrder.ASCENDING))
         {
-            preparedVisitsList = this.prepareVisitsList(Visit.sortDateAscending(this.park.getChildrenOfInstance(Visit.class)));
+            preparedVisitsList = this.prepareVisitsList(Visit.sortDatesAscending(this.park.getChildrenOfInstance(Visit.class)));
         }
 
         this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisitsList, recyclerOnClickListener);
 
-        if(Settings.expandFirstYearInListByDefault && !preparedVisitsList.isEmpty())
+        if(App.settings.getExpandLatestYearInListByDefault() && !preparedVisitsList.isEmpty())
         {
             this.expandableRecyclerAdapter.expandElement(preparedVisitsList.get(0));
         }
@@ -168,7 +166,7 @@ public class ShowParkVisitsFragment extends Fragment
         Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.prepareVisitsList:: preparing list...");
 
         List<Visit> visits = Visit.convertToVisits(elements);
-        List<Element> preparedVisits = new ArrayList<>();
+        List<Element> preparedElements = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
 
@@ -177,7 +175,7 @@ public class ShowParkVisitsFragment extends Fragment
             String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
 
             Element existingYearHeader = null;
-            for(Element yearHeader : preparedVisits)
+            for(Element yearHeader : preparedElements)
             {
                 if(yearHeader.getName().equals(year))
                 {
@@ -193,12 +191,11 @@ public class ShowParkVisitsFragment extends Fragment
             {
                 YearHeader yearHeader = this.getYearHeader(year);
                 yearHeader.addChild(visit);
-                preparedVisits.add(yearHeader);
+                preparedElements.add(yearHeader);
             }
-
         }
 
-        return preparedVisits;
+        return preparedElements;
     }
 
     private YearHeader getYearHeader(String year)
@@ -213,7 +210,7 @@ public class ShowParkVisitsFragment extends Fragment
             }
         }
 
-        YearHeader yearHeader = YearHeader.createYearHeader(year);
+        YearHeader yearHeader = YearHeader.create(year);
         this.yearHeaders.add(yearHeader);
         Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: created new %s", yearHeader));
         return yearHeader;

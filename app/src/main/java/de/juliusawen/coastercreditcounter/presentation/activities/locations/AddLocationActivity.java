@@ -21,8 +21,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.PickElementsActivity;
@@ -75,7 +75,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.newLocation != null)
                 {
-                    if(content.deleteElement(this.newLocation))
+                    if(App.content.deleteElement(this.newLocation))
                     {
                         Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.newLocation));
                     }
@@ -102,7 +102,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-        this.parentLocation = (Location) content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentLocation = (Location) App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
     @Override
@@ -115,13 +115,13 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             if(resultCode == RESULT_OK)
             {
                 List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> pickedChildren = content.fetchElementsFromUuidStrings(uuidStrings);
+                List<Element> pickedChildren = App.content.fetchElementsFromUuidStrings(uuidStrings);
                 Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult<PickElements>:: #[%d] elements returned", pickedChildren.size()));
 
                 if(pickedChildren.size() > 1)
                 {
                     Log.v(Constants.LOG_TAG, "AddLocationsActivity.onActivityResult<PickElements>:: sorting list...");
-                    pickedChildren = Content.sortElementListByCompareList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
+                    pickedChildren = Element.sortElementsBasedOnComparisonList(new ArrayList<>(pickedChildren), new ArrayList<>(parentLocation.getChildren()));
                 }
 
                 Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.onActivityResult<PickElements>:: inserting #[%d] elements...", pickedChildren.size()));
@@ -147,7 +147,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void initializeContent()
     {
-        this.parentLocation = (Location) content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.parentLocation = (Location) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
     }
 
     private void decorateToolbar()
@@ -331,11 +331,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     private boolean handleLocationCreation()
     {
         boolean success = false;
-        this.newLocation = Location.createLocation(this.editText.getText().toString());
+        this.newLocation = Location.create(this.editText.getText().toString());
 
         if(this.newLocation != null)
         {
-            content.addElement(this.newLocation);
+            App.content.addElement(this.newLocation);
             success = true;
         }
 

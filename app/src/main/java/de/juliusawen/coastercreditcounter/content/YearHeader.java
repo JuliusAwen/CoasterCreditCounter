@@ -2,31 +2,31 @@ package de.juliusawen.coastercreditcounter.content;
 
 import android.util.Log;
 
+import java.util.UUID;
+
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class YearHeader extends TemporaryElement
+public class YearHeader extends Element
 {
-    private YearHeader(String name)
+    private YearHeader(String name, UUID uuid)
     {
-        super(name);
+        super(name, uuid);
     }
 
-    public static YearHeader createYearHeader(String name)
+    public static YearHeader create(String name)
     {
         YearHeader yearHeader = null;
-
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
-            yearHeader = new YearHeader(name);
-            Log.v(Constants.LOG_TAG,  String.format("YearHeader.createYearHeader:: %s created.", yearHeader));
+            yearHeader = new YearHeader(name, UUID.randomUUID());
+            Log.v(Constants.LOG_TAG,  String.format("YearHeader.create:: %s created.", yearHeader));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("YearHeader.createYearHeader:: invalid name[%s] - yearHeader not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("YearHeader.create:: invalid name[%s] - yearHeader not created.", name));
         }
-
         return yearHeader;
     }
 }

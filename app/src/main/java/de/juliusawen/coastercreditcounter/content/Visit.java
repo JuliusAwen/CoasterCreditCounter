@@ -24,14 +24,14 @@ public class Visit extends Element
         this.calendar = calendar;
     }
 
-    public static Visit createVisit(int year, int month, int day)
+    public static Visit create(int year, int month, int day)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_FULL_PATTERN, Locale.getDefault());
         Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
-        Log.v(Constants.LOG_TAG,  String.format("Visit.createVisit:: %s created.", visit.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
 
         return visit;
     }
@@ -44,7 +44,6 @@ public class Visit extends Element
     public static List<Visit> convertToVisits(List<? extends Element> elements)
     {
         List<Visit> visits = new ArrayList<>();
-
         for(Element element : elements)
         {
             if(element.isInstance(Visit.class))
@@ -53,28 +52,25 @@ public class Visit extends Element
             }
             else
             {
-                String errorMessage = String.format("Visit.convertToVisits:: type mismatch - %s is not of type Visit", element);
+                String errorMessage = String.format("Visit.convertToVisits:: type mismatch - %s is not of type <Visit>", element);
                 Log.e(Constants.LOG_TAG, errorMessage);
                 throw new IllegalStateException(errorMessage);
             }
         }
-
         return visits;
     }
 
-    public static List<Element> sortDateDescending(List<Element> elements)
+    public static List<Element> sortDatesDescending(List<Element> elements)
     {
         List<Visit> visits = Visit.convertToVisits(elements);
-
         DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
         HashMap<String, Visit> visitsByDateString = new HashMap<>();
-
         for(Visit visit : visits)
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: parsed date [%s] from name [%s]", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDatesDescending:: parsed date [%s] from name [%s]", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -86,12 +82,11 @@ public class Visit extends Element
             sortedVisits.add(visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: #[%d] visits sorted", elements.size()));
-
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDatesDescending:: #[%d] visits sorted", elements.size()));
         return sortedVisits;
     }
 
-    public static List<Element> sortDateAscending(List<Element> elements)
+    public static List<Element> sortDatesAscending(List<Element> elements)
     {
         List<Visit> visits = Visit.convertToVisits(elements);
 
@@ -103,7 +98,7 @@ public class Visit extends Element
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDateDescending:: parsed date [%s] from name [%s]", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDatesDescending:: parsed date [%s] from name [%s]", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -115,7 +110,7 @@ public class Visit extends Element
             sortedVisits.add(0, visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDateAscending:: #[%d] visits sorted", elements.size()));
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDatesAscending:: #[%d] visits sorted", elements.size()));
 
         return sortedVisits;
     }

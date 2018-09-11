@@ -8,22 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.content.AttractionCategory;
 import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.database.DatabaseMock;
 
 public class Content
 {
-    public static class ContentState
-    {
-        public static boolean isInitialized = false;
-    }
-
     private Element rootElement;
-    private Map<UUID, Element> elements;
+    private Map<UUID, Element> elements = new HashMap<>();
+    private Map<UUID, Element> attractionCategories = new HashMap<>();
 
     private static final Content instance = new Content();
 
-    public static Content getInstance()
+    static Content getInstance()
     {
         return instance;
     }
@@ -32,11 +28,8 @@ public class Content
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
 
-        this.elements = new HashMap<>();
-
         Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         new DatabaseMock().fetchContent(this);
-        Log.d(Constants.LOG_TAG, "Content.Constructor:: content fetched");
 
         if(!this.elements.isEmpty())
         {
@@ -48,9 +41,6 @@ public class Content
 
             Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             this.flattenContentTree(this.rootElement);
-            Log.d(Constants.LOG_TAG, "Content.Constructor:: content tree flattened");
-
-            ContentState.isInitialized = true;
         }
         else
         {
@@ -112,7 +102,11 @@ public class Content
 
     public Element getElementByUuid(UUID uuid)
     {
-        if(this.elements.containsKey(uuid))
+        if(this.attractionCategories.containsKey(uuid))
+        {
+            return this.attractionCategories.get(uuid);
+        }
+        else if(this.elements.containsKey(uuid))
         {
             return this.elements.get(uuid);
         }
@@ -146,38 +140,56 @@ public class Content
         return this.deleteElement(element);
     }
 
+    public void addElements(List<? extends Element> elements)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElements:: adding #[%d] elements", elements.size()));
+
+        for(Element element : elements)
+        {
+            this.addElement(element);
+        }
+    }
 
     public void addElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-        this.elements.put(element.getUuid(), element);
+
+        if(element.isInstance(AttractionCategory.class))
+        {
+            this.attractionCategories.put(element.getUuid(), element);
+        }
+        else
+        {
+            this.elements.put(element.getUuid(), element);
+        }
+    }
+
+    public boolean deleteElements(List<Element> elements)
+    {
+        for(Element element : elements)
+        {
+            if(!this.deleteElement(element))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean deleteElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
-        if(this.elements.containsKey(element.getUuid()))
+        if(this.attractionCategories.containsKey(element.getUuid()))
+        {
+            this.attractionCategories.remove(element.getUuid());
+            return true;
+        }
+        else if(this.elements.containsKey(element.getUuid()))
         {
             this.elements.remove(element.getUuid());
             return true;
         }
-        else return false;
-    }
 
-    public static List<Element> sortElementListByCompareList(ArrayList<Element> listToOrder, ArrayList<Element> listToCompare)
-    {
-        Log.v(Constants.LOG_TAG, "Content.sortElementListByCompareList:: sorting list...");
-
-        ArrayList<Element> orderedList = new ArrayList<>();
-
-        for(Element element : listToCompare)
-        {
-            if(listToOrder.contains(element))
-            {
-                orderedList.add(listToOrder.get(listToOrder.indexOf(element)));
-            }
-        }
-
-        return orderedList;
+        return false;
     }
 }

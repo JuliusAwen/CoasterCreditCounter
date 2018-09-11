@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -69,7 +70,7 @@ public class ShowParkActivity extends BaseActivity
 
         if(this.currentTab == ATTRACTIONS && this.park.getChildCountOfInstance(Attraction.class) > 1)
         {
-            menu.add(Menu.NONE, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
+            menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_categories);
         }
 
         if(this.currentTab == VISITS && this.park.getChildCountOfInstance(Visit.class) > 1)
@@ -84,7 +85,7 @@ public class ShowParkActivity extends BaseActivity
     private void initializeContent()
     {
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        this.park = (Park) content.getElementByUuid(UUID.fromString(elementUuid));
+        this.park = (Park) App.content.getElementByUuid(UUID.fromString(elementUuid));
 
         Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.initializeContent:: initialized with %s and current tab[%d] selected", this.park, this.currentTab));
     }

@@ -58,15 +58,11 @@ public abstract class Element
     public String getFullName()
     {
         return String.format(Locale.getDefault(),
-                "[%s \"%s\" (%s) #[%d]c, #[%d]l, #[%d]p, #[%d]a] #[%d]v]",
+                "[%s \"%s\" (%s) - #[%d] children]",
                 this.getClass().getSimpleName(),
                 this.getName(),
                 this.getUuid(),
-                this.getChildCount(),
-                this.getChildCountOfInstance(Location.class),
-                this.getChildCountOfInstance(Park.class),
-                this.getChildCountOfInstance(Attraction.class),
-                this.getChildCountOfInstance(Visit.class)
+                this.getChildCount()
         );
     }
 
@@ -119,7 +115,6 @@ public abstract class Element
                 child.setParent(this);
                 increment ++;
             }
-
         }
     }
 
@@ -383,7 +378,7 @@ public abstract class Element
         Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: #[%s] elements sorted", elements.size()));
     }
 
-    public static void sortElementByNameDescending(List<? extends Element> elements)
+    public static void sortElementsByNameDescending(List<? extends Element> elements)
     {
         Collections.sort(elements, new Comparator<Element>()
         {
@@ -393,6 +388,21 @@ public abstract class Element
                 return element2.getName().compareToIgnoreCase(element1.getName());
             }
         });
-        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementByNameDescending:: #[%s] elements sorted", elements.size()));
+        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: #[%s] elements sorted", elements.size()));
+    }
+
+    public static List<Element> sortElementsBasedOnComparisonList(List<Element> elementsToSort, List<Element> comparisonList)
+    {
+        Log.d(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
+                elementsToSort.size(), comparisonList.size()));
+        List<Element> sortedElements = new ArrayList<>();
+        for(Element element : comparisonList)
+        {
+            if(elementsToSort.contains(element))
+            {
+                sortedElements.add(elementsToSort.get(elementsToSort.indexOf(element)));
+            }
+        }
+        return sortedElements;
     }
 }

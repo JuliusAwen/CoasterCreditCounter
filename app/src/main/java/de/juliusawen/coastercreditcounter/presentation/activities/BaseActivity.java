@@ -15,7 +15,6 @@ import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
@@ -25,14 +24,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    public static Content content;
-
     private Bundle savedInstanceState;
 
     private Toolbar toolbar;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
-    private FloatingActionButton activeFloatingActionButton;
+    private FloatingActionButton floatingActionButton;
     private View.OnClickListener onClickListenerFloatingActionButton;
 
     //region @OVERRIDE
@@ -44,7 +41,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         this.savedInstanceState = savedInstanceState;
-        content = Content.getInstance();
     }
 
     @Override
@@ -131,8 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void addToolbar()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
-
-        this.toolbar = this.findViewById(android.R.id.content).findViewById(R.id.toolbar);
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
     }
@@ -186,68 +181,68 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //region FLOATING ACTION BUTTON
     protected void addFloatingActionButton()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.addFloatingActionButton:: creating floating action button...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
 
-        this.activeFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
+        this.floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
-    protected FloatingActionButton getActiveFloatingActionButton()
+    protected FloatingActionButton getFloatingActionButton()
     {
-        return this.activeFloatingActionButton;
+        return this.floatingActionButton;
     }
 
     public void setFloatingActionButtonIcon(Drawable icon)
     {
-        if(this.activeFloatingActionButton != null)
+        if(this.floatingActionButton != null)
         {
-            this.activeFloatingActionButton.setImageDrawable(icon);
+            this.floatingActionButton.setImageDrawable(icon);
         }
     }
 
     public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
-        if(this.activeFloatingActionButton != null)
+        if(this.floatingActionButton != null)
         {
-            this.activeFloatingActionButton.setOnClickListener(onClickListener);
+            this.floatingActionButton.setOnClickListener(onClickListener);
             this.onClickListenerFloatingActionButton = onClickListener;
         }
     }
 
     protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
-        if(this.activeFloatingActionButton != null)
+        if(this.floatingActionButton != null)
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: isVisible[%s]", isVisible));
 
             if(isVisible)
             {
-                this.activeFloatingActionButton.show();
+                this.floatingActionButton.show();
             }
             else
             {
-                this.activeFloatingActionButton.hide();
+                this.floatingActionButton.hide();
             }
         }
     }
 
     protected void animateFloatingActionButton(Drawable icon)
     {
-        this.activeFloatingActionButton.hide();
+        this.floatingActionButton.hide();
 
         FloatingActionButton newFloatingActionButton;
-        if(this.activeFloatingActionButton.getId() == R.id.floatingActionButton)
+        if(this.floatingActionButton.getId() == R.id.floatingActionButton)
         {
-            newFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton_Animation);
+            newFloatingActionButton = findViewById(R.id.floatingActionButton_Animation);
         }
         else
         {
-            newFloatingActionButton = this.findViewById(android.R.id.content).getRootView().findViewById(R.id.floatingActionButton);
+            newFloatingActionButton = findViewById(R.id.floatingActionButton);
         }
 
         newFloatingActionButton.setOnClickListener(this.onClickListenerFloatingActionButton);
-        newFloatingActionButton.setImageDrawable(icon != null ? icon : this.activeFloatingActionButton.getDrawable());
-        this.activeFloatingActionButton = newFloatingActionButton;
-        this.activeFloatingActionButton.show();
+        newFloatingActionButton.setImageDrawable(icon != null ? icon : this.floatingActionButton.getDrawable());
+        this.floatingActionButton = newFloatingActionButton;
+        this.floatingActionButton.show();
     }
 
     //endregion

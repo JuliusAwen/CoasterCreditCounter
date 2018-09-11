@@ -22,12 +22,14 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -56,17 +58,16 @@ public class ShowLocationsActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
 
         this.initializeContent();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
-
         super.addToolbar();
         super.addToolbarHomeButton();
         this.decorateToolbar();
+
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
@@ -95,7 +96,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
         {
-            menu.add(Menu.NONE, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
+            menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -113,7 +114,7 @@ public class ShowLocationsActivity extends BaseActivity
                 this.startEditLocationActivity(this.currentElement);
                 return true;
 
-            case SORT_ELEMENTS:
+            case SORT_LOCATIONS:
                 this.startSortElementsActivity(this.currentElement.getChildrenOfInstance(Location.class));
                 return true;
 
@@ -136,8 +137,8 @@ public class ShowLocationsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.recentElements = content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentElement = content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.recentElements = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.currentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
     @Override
@@ -149,28 +150,28 @@ public class ShowLocationsActivity extends BaseActivity
             if(resultCode == RESULT_OK)
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element resultElement = content.fetchElementFromUuidString(uuidString);
+                Element resultElement = App.content.fetchElementFromUuidString(uuidString);
                 updateLocationRecyclerView();
                 this.LocationRecyclerAdapter.smoothScrollToElement(resultElement);
             }
         }
-        else if(requestCode == Constants.REQUEST_SORT_ELEMENTS)
+        else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
         {
             if(resultCode == RESULT_OK)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+                List<Element> resultElements = App.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
 
-                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", this.currentElement));
-                this.currentElement.deleteChildren(resultElements);
-                this.currentElement.addChildren(resultElements);
+                Element parent = resultElements.get(0).getParent();
+                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
+                parent.deleteChildren(resultElements);
+                parent.addChildren(resultElements);
                 this.updateLocationRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    Element selectedElement = content.fetchElementFromUuidString(selectedElementUuidString);
-                    updateLocationRecyclerView();
+                    Element selectedElement = App.content.fetchElementFromUuidString(selectedElementUuidString);
                     this.LocationRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
@@ -211,7 +212,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void initializeContent()
     {
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        this.currentElement = elementUuid != null ? content.getElementByUuid(UUID.fromString(elementUuid)) : content.getRootElement();
+        this.currentElement = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootElement();
 
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement %s", this.currentElement));
     }
@@ -247,7 +248,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getActiveFloatingActionButton());
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), super.getFloatingActionButton());
 
         popupMenu.getMenu().add(0, Selection.ADD_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
         popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
@@ -307,8 +308,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating NavigationBar...");
 
-        View rootView = this.findViewById(android.R.id.content).getRootView();
-        LinearLayout linearLayoutNavigationBar = rootView.findViewById(R.id.linearLayoutShowLocations_NavigationBar);
+        LinearLayout linearLayoutNavigationBar = findViewById(R.id.linearLayoutShowLocations_NavigationBar);
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
@@ -354,7 +354,7 @@ public class ShowLocationsActivity extends BaseActivity
             }
         }
 
-        final HorizontalScrollView horizontalScrollView = rootView.findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
+        final HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
         horizontalScrollView.post(new Runnable()
         {
             @Override
@@ -456,7 +456,7 @@ public class ShowLocationsActivity extends BaseActivity
 
             if(this.longClickedElement.getChildCountOfInstance(Park.class) > 1)
             {
-                popupMenu.getMenu().add(0, Selection.SORT_ELEMENTS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
+                popupMenu.getMenu().add(0, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
             }
 
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
@@ -518,7 +518,7 @@ public class ShowLocationsActivity extends BaseActivity
                 builder.setTitle(R.string.alert_dialog_remove_element_title);
 
                 String alertMessage;
-                if(this.longClickedElement.getParent().equals(content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
+                if(this.longClickedElement.getParent().equals(App.content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
                 {
                     alertMessage = getString(R.string.alert_dialog_remove_element_message_parent_is_root, this.longClickedElement.getName(), this.longClickedElement.getParent().getName());
                 }
@@ -549,7 +549,7 @@ public class ShowLocationsActivity extends BaseActivity
                 alertDialog.show();
                 return true;
 
-            case SORT_ELEMENTS:
+            case SORT_PARKS:
                 startSortElementsActivity(this.longClickedElement.getChildrenOfInstance(Park.class));
 
             default:
@@ -563,7 +563,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         dialog.dismiss();
 
-        if(content.deleteElementAndChildren(this.longClickedElement))
+        if(App.content.deleteElementAndChildren(this.longClickedElement))
         {
             if(this.longClickedElement.deleteElementAndChildren())
             {
@@ -574,7 +574,7 @@ public class ShowLocationsActivity extends BaseActivity
                 Log.e(Constants.LOG_TAG, String.format(
                         "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s and children failed - restoring content...",
                         longClickedElement));
-                content.addElementAndChildren(longClickedElement);
+                App.content.addElementAndChildren(longClickedElement);
                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
             }
         }
@@ -607,7 +607,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.longClickedElement.undoPossible && this.longClickedElement.undoDeleteElementAndChildren())
         {
-            content.addElementAndChildren(this.longClickedElement);
+            App.content.addElementAndChildren(this.longClickedElement);
             updateLocationRecyclerView();
 
             Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
@@ -627,7 +627,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         dialog.dismiss();
 
-        if(content.deleteElement(this.longClickedElement))
+        if(App.content.deleteElement(this.longClickedElement))
         {
             if(this.longClickedElement.removeElement())
             {
@@ -639,7 +639,7 @@ public class ShowLocationsActivity extends BaseActivity
                 Log.e(Constants.LOG_TAG, String.format(
                         "ShowLocationsActivity.onClickAlertDialogPositiveButtonRemoveElement:: removing %s failed - restoring content...",
                         this.longClickedElement));
-                content.addElementAndChildren(this.longClickedElement);
+                App.content.addElementAndChildren(this.longClickedElement);
                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_remove_failed));
             }
         }
@@ -670,7 +670,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
         {
-            content.addElement(this.longClickedElement);
+            App.content.addElement(this.longClickedElement);
             updateLocationRecyclerView();
 
             Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
@@ -708,10 +708,24 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void startSortElementsActivity(List<Element> elementsToSort)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startSortElementsActivity:: starting SortElementsActivity...");
         Intent intent = new Intent(this, SortElementsActivity.class);
         intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
-        startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.startEditLocationActivity:: starting activty [%s]...",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        Element element = elementsToSort.get(0);
+        if(element.isInstance(Location.class))
+        {
+            startActivityForResult(intent, Constants.REQUEST_SORT_LOCATIONS);
+        }
+        else if(element.isInstance(Park.class))
+        {
+            startActivityForResult(intent, Constants.REQUEST_SORT_PARKS);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.startSortElementsActivity:: unhandled type [%s]", element.getClass().getSimpleName()));
+        }
     }
     //endregion
 }

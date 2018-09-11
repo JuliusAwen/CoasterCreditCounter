@@ -18,6 +18,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -82,9 +83,9 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.parentElement = content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.elementsToPickFrom = content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToPickFrom = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.selectableRecyclerAdapter.updateElements(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
@@ -94,7 +95,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            List<Element> selectedElements = content.fetchElementsFromUuidStrings(selectedElementStrings);
+            List<Element> selectedElements = App.content.fetchElementsFromUuidStrings(selectedElementStrings);
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 
@@ -104,7 +105,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void initializeContent()
     {
-        this.parentElement = content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        this.parentElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
 
         if(this.parentElement.isInstance(Location.class))
         {

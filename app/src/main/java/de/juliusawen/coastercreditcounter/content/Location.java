@@ -13,22 +13,20 @@ public class Location extends Element
         super(name, uuid);
     }
 
-    public static Location createLocation(String name)
+    public static Location create(String name)
     {
         Location location = null;
-
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
             location = new Location(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("Location.createLocation:: %s created.", location.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Location.createLocation:: invalid name[%s] - location not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
         }
-
         return location;
     }
 }

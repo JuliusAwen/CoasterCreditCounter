@@ -12,4 +12,15 @@ public abstract class StringTool
 
         return spannableString;
     }
+
+    public static String parseActivityName(String componentShortClassName)
+    {
+        int lastIndexOfDot = componentShortClassName.lastIndexOf(".");
+
+        if(lastIndexOfDot != -1)
+        {
+            componentShortClassName.substring(lastIndexOfDot + 1);
+        }
+        return componentShortClassName;
+    }
 }

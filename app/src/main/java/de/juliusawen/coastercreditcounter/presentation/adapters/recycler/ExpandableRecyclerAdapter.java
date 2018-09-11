@@ -18,6 +18,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.content.Attraction;
+import de.juliusawen.coastercreditcounter.content.AttractionCategory;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.content.Park;
@@ -88,7 +90,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     {
         if(this.elements.contains(element))
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: scrolling to element %s", element));
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: scrolling to element %s", element));
             int position = this.elements.indexOf(element);
             this.recyclerView.smoothScrollToPosition(position);
         }
@@ -140,6 +142,11 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
         {
             Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child visits", element, element.getChildCountOfInstance(Visit.class)));
             this.addChildViews(viewHolder, element.getChildrenOfInstance(Visit.class), recyclerOnClickListener);
+        }
+        else if(element.isInstance(AttractionCategory.class))
+        {
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child attractions", element, element.getChildCountOfInstance(Visit.class)));
+            this.addChildViews(viewHolder, element.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
         }
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));

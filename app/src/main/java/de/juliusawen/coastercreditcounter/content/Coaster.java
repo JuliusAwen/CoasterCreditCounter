@@ -13,22 +13,20 @@ public class Coaster extends Attraction
         super(name, uuid);
     }
 
-    public static Coaster createCoaster(String name)
+    public static Coaster create(String name)
     {
         Coaster coaster = null;
-
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
             coaster = new Coaster(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: %s created.", coaster.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("Coaster.create:: %s created.", coaster.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Coaster.createCoaster:: invalid name[%s] - coaster not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Coaster.create:: invalid name[%s] - coaster not created.", name));
         }
-
         return coaster;
     }
 }

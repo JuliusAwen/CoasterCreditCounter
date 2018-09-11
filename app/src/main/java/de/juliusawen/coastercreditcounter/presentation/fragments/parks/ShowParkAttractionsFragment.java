@@ -14,22 +14,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Attraction;
+import de.juliusawen.coastercreditcounter.content.AttractionCategory;
 import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
-
-import static de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity.content;
 
 public  class ShowParkAttractionsFragment extends Fragment
 {
@@ -59,7 +63,7 @@ public  class ShowParkAttractionsFragment extends Fragment
 
         if (getArguments() != null)
         {
-            this.park = (Park) content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            this.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
         }
 
         this.createAttractionsRecyclerAdapter();
@@ -93,8 +97,8 @@ public  class ShowParkAttractionsFragment extends Fragment
 
         switch(selection)
         {
-            case SORT_ELEMENTS:
-                this.startSortElementsActivity(this.expandableRecyclerAdapter.getElements());
+            case SORT_ATTRACTION_CATEGORIES:
+                this.startSortElementsActivity(new ArrayList<Element>(Attraction.getCategories()));
                 return true;
 
             default:
@@ -110,29 +114,33 @@ public  class ShowParkAttractionsFragment extends Fragment
         this.expandableRecyclerAdapter = null;
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
-        if(requestCode == Constants.REQUEST_SORT_ELEMENTS)
+        if(resultCode == Activity.RESULT_OK)
         {
-            if(resultCode == Activity.RESULT_OK)
+            List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+            List<Element> resultElements = App.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+
+            if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
                 Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: replacing <children> with <sorted children>...");
 
-                List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+                Element parent = resultElements.get(0).getParent();
+                if(parent != null)
+                {
+                    this.park.deleteChildren(resultElements);
+                    this.park.addChildren(resultElements);
+                }
 
-                this.park.deleteChildren(resultElements);
-                this.park.addChildren(resultElements);
-                this.expandableRecyclerAdapter.updateElements(resultElements);
+                this.updateExpandableRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    Element selectedElement = content.fetchElementFromUuidString(selectedElementUuidString);
+                    Element selectedElement = App.content.fetchElementFromUuidString(selectedElementUuidString);
                     Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
                     this.expandableRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
@@ -140,6 +148,12 @@ public  class ShowParkAttractionsFragment extends Fragment
                 {
                     Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: no selected element returned");
                 }
+            }
+            else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
+            {
+                Collections.reverse(resultElements);
+                Attraction.setCategories(AttractionCategory.convertToAttractionCategories(resultElements));
+                this.updateExpandableRecyclerView();
             }
         }
     }
@@ -151,23 +165,81 @@ public  class ShowParkAttractionsFragment extends Fragment
             @Override
             public void onClick(View view, int position)
             {
-                Toaster.makeToast(getContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
+                Element element = (Element) view.getTag();
+
+                if(element.isInstance(Attraction.class))
+                {
+                    Toaster.makeToast(getContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
+                }
             }
 
             @Override
             public void onLongClick(final View view, int position)
             {
+                Element element = (Element) view.getTag();
+
+                if(element.isInstance(AttractionCategory.class))
+                {
+                    Toaster.makeToast(getContext(), String.format("SortAttractions not yet implemented %s", (Element) view.getTag()));
+                }
             }
         };
 
-        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(this.park.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
+        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
+    }
+
+    private void updateExpandableRecyclerView()
+    {
+        List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+        this.expandableRecyclerAdapter.updateElements(preparedAttractions);
+    }
+
+    private List<Element> addAttractionCategoryHeaders(List<Element> elements)
+    {
+        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
+
+        AttractionCategory.removeAllChildren(Attraction.getCategories());
+
+        List<Attraction> attractions = Attraction.convertToAttractions(elements);
+        List<Element> preparedElements = new ArrayList<>();
+
+        for(Attraction attraction : attractions)
+        {
+            Element existingCategory = null;
+            for(Element attractionCategory : preparedElements)
+            {
+                if(attractionCategory.equals(attraction.getCategory()))
+                {
+                    existingCategory = attractionCategory;
+                }
+            }
+
+            if(existingCategory != null)
+            {
+                existingCategory.addChild(attraction);
+            }
+            else
+            {
+                Element attractionCategoryHeader = attraction.getCategory();
+                attractionCategoryHeader.addChild(attraction);
+                preparedElements.add(attractionCategoryHeader);
+            }
+        }
+
+        preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
+
+        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
+
+        return preparedElements;
     }
 
     private void startSortElementsActivity(List<Element> elementsToSort)
     {
-        Log.i(Constants.LOG_TAG, "ShowParkAttractionsFragment.startSortElementsActivity:: starting SortElementsActivity...");
         Intent intent = new Intent(getContext(), SortElementsActivity.class);
         intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
-        startActivityForResult(intent, Constants.REQUEST_SORT_ELEMENTS);
+        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.startSortElementsActivity:: starting activty [%s]...",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTION_CATEGORIES);
     }
 }

@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -80,7 +81,7 @@ public class SortElementsActivity extends BaseActivity
                 return true;
 
             case SORT_DESCENDING:
-                Element.sortElementByNameDescending(this.elementsToSort);
+                Element.sortElementsByNameDescending(this.elementsToSort);
                 this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
@@ -110,7 +111,7 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.elementsToSort = content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToSort = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
 
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
         if(selectedElementString != null && selectedElementString.isEmpty())
@@ -119,7 +120,7 @@ public class SortElementsActivity extends BaseActivity
         }
         else
         {
-            Element element = content.getElementByUuid(UUID.fromString(selectedElementString));
+            Element element = App.content.getElementByUuid(UUID.fromString(selectedElementString));
             this.selectableRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
@@ -137,13 +138,22 @@ public class SortElementsActivity extends BaseActivity
 
     private void initializeContent()
     {
-        this.elementsToSort = content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        this.elementsToSort = App.content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: initialized with #[%d] elements", this.elementsToSort.size()));
     }
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(elementsToSort.get(0).getParent().getName(), getString(R.string.subtitle_sort_elements));
+        Element parent = elementsToSort.get(0).getParent();
+        if(parent != null)
+        {
+            super.setToolbarTitleAndSubtitle(parent.getName(), getString(R.string.subtitle_sort_elements));
+        }
+        else
+        {
+            super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_sort_elements), null);
+        }
+
         super.addToolbarHomeButton();
     }
 
