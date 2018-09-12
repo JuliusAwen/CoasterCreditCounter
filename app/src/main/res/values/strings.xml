@@ -6,27 +6,37 @@
     <string name="title_help">Help: %1$s</string>
     <string name="title_show_park">Show Park</string>
 
+    <string name="title_sort_locations">Sort Locations</string>
+    <string name="title_sort_parks">Sort Parks</string>
+    <string name="title_sort_attraction_categories">Sort Attraction Categories</string>
+    <string name="title_sort_attractions">Sort Attractions</string>
+
+
 
     <!--activity subtitles-->
-    <string name="subtitle_sort_elements">SORT ELEMENTS</string>
-    <string name="subtitle_add_location">ADD LOCATION</string>
-    <string name="subtitle_edit_location">EDIT LOCATION</string>
-    <string name="subtitle_show_locations">BROWSE/MANAGE LOCATIONS</string>
+    <string name="subtitle_add_location">Add Location</string>
 
-    <string name="subtitle_pick_elements">PICK ELEMENTS</string>
+    <string name="subtitle_edit_location">Edit Location</string>
+    <string name="subtitle_edit_root_location">Edit Root Location</string>
+    <string name="subtitle_edit_attraction_category">Edit Attraction Category</string>
+
+
+    <string name="subtitle_show_locations">Browse/Manage Locations</string>
+
+    <string name="subtitle_pick_elements">Pick Elements</string>
     <string name="subtitle_pick_locations_description">Pick children to add to new location</string>
 
-    <string name="subtitle_show_park_overview">OVERVIEW</string>
-    <string name="subtitle_show_park_attractions">ATTRACTIONS</string>
-    <string name="subtitle_show_park_visits">VISITS</string>
+    <string name="subtitle_show_park_overview">Overview</string>
+    <string name="subtitle_show_park_attractions">Attractions</string>
+    <string name="subtitle_show_park_visits">Visits</string>
 
 
     <!--options menu entries-->
-    <string name="selection_rename_root_location">rename root location</string>
+    <string name="selection_edit_root_location">edit root location</string>
 
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
-    <string name="selection_sort_categories">sort categories</string>
+    <string name="selection_sort_attraction_categories">sort attraction categories</string>
     <string name="selection_sort_attractions">sort attractions</string>
 
     <string name="selection_help">help</string>
@@ -39,7 +49,8 @@
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
 
-    <string name="selection_edit_element">edit</string>
+    <string name="selection_edit_location">edit</string>
+    <string name="selection_edit_attraction_category">edit</string>
     <string name="selection_delete_element">delete</string>
     <string name="selection_remove_element">remove</string>
 

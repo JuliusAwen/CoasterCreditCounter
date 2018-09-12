@@ -10,9 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +31,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
+import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
@@ -38,7 +41,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public  class ShowParkAttractionsFragment extends Fragment
 {
     private Park park;
-    private ExpandableRecyclerAdapter expandableRecyclerAdapter;
+    private ExpandableRecyclerAdapter attractionsRecyclerAdapter;
 
     public ShowParkAttractionsFragment() {}
 
@@ -83,10 +86,29 @@ public  class ShowParkAttractionsFragment extends Fragment
     {
         Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: decorating view...");
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Attractions);
-        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.expandableRecyclerAdapter);
+        if(this.attractionsRecyclerAdapter != null)
+        {
+            Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: creating RecyclerView...");
+
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Attractions);
+            recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+            recyclerView.setAdapter(this.attractionsRecyclerAdapter);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "ShowParkAttractionsFragment.onViewCreated:: AttractionsRecyclerAdapter not set");
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onResume:: updating RecyclerView");
+        this.updateAttractionsRecyclerView();
+
     }
 
     @Override
@@ -111,7 +133,7 @@ public  class ShowParkAttractionsFragment extends Fragment
     {
         super.onDetach();
         this.park = null;
-        this.expandableRecyclerAdapter = null;
+        this.attractionsRecyclerAdapter = null;
     }
 
     @Override
@@ -123,6 +145,7 @@ public  class ShowParkAttractionsFragment extends Fragment
         {
             List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
             List<Element> resultElements = App.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+            Collections.reverse(resultElements);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
@@ -135,14 +158,14 @@ public  class ShowParkAttractionsFragment extends Fragment
                     this.park.addChildren(resultElements);
                 }
 
-                this.updateExpandableRecyclerView();
+                this.updateAttractionsRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = App.content.fetchElementFromUuidString(selectedElementUuidString);
                     Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
-                    this.expandableRecyclerAdapter.smoothScrollToElement(selectedElement);
+                    this.attractionsRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
                 {
@@ -151,9 +174,8 @@ public  class ShowParkAttractionsFragment extends Fragment
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
-                Collections.reverse(resultElements);
                 Attraction.setCategories(AttractionCategory.convertToAttractionCategories(resultElements));
-                this.updateExpandableRecyclerView();
+                this.updateAttractionsRecyclerView();
             }
         }
     }
@@ -176,23 +198,69 @@ public  class ShowParkAttractionsFragment extends Fragment
             @Override
             public void onLongClick(final View view, int position)
             {
-                Element element = (Element) view.getTag();
-
-                if(element.isInstance(AttractionCategory.class))
-                {
-                    Toaster.makeToast(getContext(), String.format("SortAttractions not yet implemented %s", (Element) view.getTag()));
-                }
+                onLongClickAttractionsRecyclerView(view);
             }
         };
 
-        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
-        this.updateExpandableRecyclerView();
+        this.attractionsRecyclerAdapter = new ExpandableRecyclerAdapter(this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
+    }
+
+    private void onLongClickAttractionsRecyclerView(final View view)
+    {
+        final Element longClickedElement = (Element) view.getTag();
+
+        if(longClickedElement.isInstance(AttractionCategory.class))
+        {
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+
+            popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit_attraction_category);
+
+            if(longClickedElement.getChildCountOfInstance(Attraction.class) > 1)
+            {
+                popupMenu.getMenu().add(0, Selection.SORT_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
+            }
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem item)
+                {
+                    return onClickMenuItemPopupMenuLongClickAttractionsRecyclerView(item, longClickedElement);
+                }
+            });
+            popupMenu.show();
+        }
+    }
+
+    private boolean onClickMenuItemPopupMenuLongClickAttractionsRecyclerView(MenuItem item, Element longClickedElement)
+    {
+        Selection selection = Selection.values()[item.getItemId()];
+        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onClickMenuItemPopupMenuLongClickAttractionsRecyclerView:: [%S] selected", selection));
+
+        switch (selection)
+        {
+            case EDIT_ATTRACTION_CATEGORY:
+                startEditLocationActivity(longClickedElement);
+                return true;
+
+            case SORT_ATTRACTIONS:
+                startSortElementsActivity(longClickedElement.getChildrenOfInstance(Attraction.class));
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     private List<Element> addAttractionCategoryHeaders(List<Element> elements)
     {
-        Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
+        if(elements.isEmpty())
+        {
+            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.addAttractionCategoryHeaders:: no elements found");
+            return elements;
+        }
 
+        Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
         AttractionCategory.removeAllChildren(Attraction.getCategories());
 
         List<Attraction> attractions = Attraction.convertToAttractions(elements);
@@ -216,7 +284,7 @@ public  class ShowParkAttractionsFragment extends Fragment
             else
             {
                 Element attractionCategoryHeader = attraction.getCategory();
-                attractionCategoryHeader.addChild(attraction);
+                attractionCategoryHeader.putChildWithoutSettingChildsParent(attraction);
                 preparedElements.add(attractionCategoryHeader);
             }
         }
@@ -227,20 +295,39 @@ public  class ShowParkAttractionsFragment extends Fragment
         return preparedElements;
     }
 
-    private void updateExpandableRecyclerView()
+    private void updateAttractionsRecyclerView()
     {
-        List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
-        this.expandAttractionsCategoriesAccordingToSettings();
-        this.expandableRecyclerAdapter.updateElements(preparedAttractions);
+        if(this.park.getChildCountOfInstance(Attraction.class) > 0)
+        {
+            List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+            this.expandAttractionsCategoriesAccordingToSettings();
+            this.attractionsRecyclerAdapter.updateElements(preparedAttractions);
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.updateAttractionsRecyclerView:: no elements to update");
+        }
     }
 
     private void expandAttractionsCategoriesAccordingToSettings()
     {
         for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
         {
-            Log.e(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
-            this.expandableRecyclerAdapter.expandElement(attractionCategory);
+            Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
+            this.attractionsRecyclerAdapter.expandElement(attractionCategory);
         }
+    }
+
+    private void startEditLocationActivity(Element elementToEdit)
+    {
+        Intent intent = new Intent(getContext(), EditElementActivity.class);
+        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.startSortElementsActivity:: starting activty [%s]...",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_attraction_category));
+
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
+        startActivity(intent);
     }
 
     private void startSortElementsActivity(List<Element> elementsToSort)
@@ -250,6 +337,16 @@ public  class ShowParkAttractionsFragment extends Fragment
         Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.startSortElementsActivity:: starting activty [%s]...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
-        startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTION_CATEGORIES);
+        Element element = elementsToSort.get(0);
+        if(element.isInstance(Attraction.class))
+        {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_attractions));
+            startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTIONS);
+        }
+        else if(element.isInstance(AttractionCategory.class))
+        {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_attraction_categories));
+            startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTION_CATEGORIES);
+        }
     }
 }

@@ -341,7 +341,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
         attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
-        attractionCategoriesExpandedByDefault.add(this.attractionCategoryWaterRides);
+        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
         settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
 
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);

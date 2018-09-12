@@ -33,6 +33,7 @@ public class SortElementsActivity extends BaseActivity
     private List<Element> elementsToSort;
     private SelectableRecyclerAdapter selectableRecyclerAdapter;
     private RecyclerView recyclerView;
+    private String toolbarTitle;
 
     //region @OVERRIDE
     @Override
@@ -45,9 +46,10 @@ public class SortElementsActivity extends BaseActivity
 
         this.initializeContent();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_sort_elements)), getText(R.string.help_text_sort_elements));
+        super.addHelpOverlay(getString(R.string.title_help, this.toolbarTitle), getText(R.string.help_text_sort_elements));
 
         super.addToolbar();
+        super.addToolbarHomeButton();
         this.decorateToolbar();
 
         super.addFloatingActionButton();
@@ -72,7 +74,6 @@ public class SortElementsActivity extends BaseActivity
     {
         Selection selection = Selection.values()[item.getItemId()];
         Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.onOptionItemSelected:: [%S] selected", selection));
-
         switch (selection)
         {
             case SORT_ASCENDING:
@@ -94,7 +95,6 @@ public class SortElementsActivity extends BaseActivity
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToSort));
         if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -104,15 +104,14 @@ public class SortElementsActivity extends BaseActivity
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
         }
+        outState.putString(Constants.EXTRA_TOOLBAR_TITLE, this.toolbarTitle);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-
         this.elementsToSort = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
         if(selectedElementString != null && selectedElementString.isEmpty())
         {
@@ -124,7 +123,7 @@ public class SortElementsActivity extends BaseActivity
             this.selectableRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
-
+        this.toolbarTitle = savedInstanceState.getString(Constants.EXTRA_TOOLBAR_TITLE);
         this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
     }
 
@@ -139,22 +138,13 @@ public class SortElementsActivity extends BaseActivity
     private void initializeContent()
     {
         this.elementsToSort = App.content.fetchElementsFromUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        this.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
         Log.v(Constants.LOG_TAG, String.format("SortElementsActivity.initializeContent:: initialized with #[%d] elements", this.elementsToSort.size()));
     }
 
     private void decorateToolbar()
     {
-        Element parent = elementsToSort.get(0).getParent();
-        if(parent != null)
-        {
-            super.setToolbarTitleAndSubtitle(parent.getName(), getString(R.string.subtitle_sort_elements));
-        }
-        else
-        {
-            super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_sort_elements), null);
-        }
-
-        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.toolbarTitle, null);
     }
 
     //region FLOATING ACTION BUTTON
@@ -214,7 +204,6 @@ public class SortElementsActivity extends BaseActivity
     private void onClickActionDialogButtonDown()
     {
         Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
-
         if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             int position = this.elementsToSort.indexOf(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
@@ -222,7 +211,6 @@ public class SortElementsActivity extends BaseActivity
             if(position < this.elementsToSort.size() - 1)
             {
                 Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
-
                 Collections.swap(this.elementsToSort, position, position + 1);
                 this.selectableRecyclerAdapter.notifyDataSetChanged();
 
@@ -287,7 +275,6 @@ public class SortElementsActivity extends BaseActivity
     private void createContentRecyclerView()
     {
         this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false);
-
         this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -298,9 +285,7 @@ public class SortElementsActivity extends BaseActivity
     private void returnResult(int resultCode)
     {
         Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: resultCode[%d]", resultCode));
-
         Intent intent = new Intent();
-
         if(resultCode == RESULT_OK)
         {
             Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result", this.selectableRecyclerAdapter.getElementsToSelectFrom().size()));
@@ -313,9 +298,7 @@ public class SortElementsActivity extends BaseActivity
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, lastSelectedElement.getUuid().toString());
             }
         }
-
         setResult(resultCode, intent);
-
         finish();
     }
 }

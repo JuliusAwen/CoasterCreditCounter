@@ -23,7 +23,7 @@
             android:name=".presentation.activities.locations.AddLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.activities.locations.EditLocationActivity"
+            android:name=".presentation.activities.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".presentation.activities.elements.PickElementsActivity" />
         <activity android:name=".presentation.activities.parks.ShowParkActivity" />

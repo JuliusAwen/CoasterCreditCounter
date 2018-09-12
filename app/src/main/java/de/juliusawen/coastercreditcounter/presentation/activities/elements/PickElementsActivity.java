@@ -49,6 +49,7 @@ public class PickElementsActivity extends BaseActivity
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_pick_elements)), getText(R.string.help_text_pick_elements));
 
         super.addToolbar();
+        super.addToolbarHomeButton();
         this.decorateToolbar();
 
         super.addFloatingActionButton();
@@ -116,7 +117,6 @@ public class PickElementsActivity extends BaseActivity
     private void decorateToolbar()
     {
         super.setToolbarTitleAndSubtitle(this.parentElement.getName(), getString(R.string.subtitle_pick_locations_description));
-        super.addToolbarHomeButton();
     }
 
     //region FLOATING ACTION BUTTON

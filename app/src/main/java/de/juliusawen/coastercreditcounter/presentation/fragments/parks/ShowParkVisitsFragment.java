@@ -36,7 +36,7 @@ public class ShowParkVisitsFragment extends Fragment
 {
     private Park park;
     private List<YearHeader> yearHeaders = new ArrayList<>();
-    private ExpandableRecyclerAdapter expandableRecyclerAdapter;
+    private ExpandableRecyclerAdapter visitsRecyclerAdapter;
     private SortOrder sortOrder = SortOrder.DESCENDING;
 
     public ShowParkVisitsFragment() {}
@@ -81,19 +81,28 @@ public class ShowParkVisitsFragment extends Fragment
     {
         Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: decorating view...");
 
-        if(this.expandableRecyclerAdapter != null)
+        if(this.visitsRecyclerAdapter != null)
         {
             Log.d(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: creating RecyclerView...");
 
             RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Visits);
             recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
             recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            recyclerView.setAdapter(this.expandableRecyclerAdapter);
+            recyclerView.setAdapter(this.visitsRecyclerAdapter);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: ExpandedRecyclerAdapter not set");
+            Log.e(Constants.LOG_TAG, "ShowParkVisitsFragment.onViewCreated:: VisitsRecyclerAdapter not set");
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.onResume:: updating RecyclerView");
+        this.updateVisitsRecyclerView();
     }
 
     @Override
@@ -106,12 +115,12 @@ public class ShowParkVisitsFragment extends Fragment
         {
             case SORT_ASCENDING:
                 this.sortOrder = SortOrder.ASCENDING;
-                this.updateExpandableRecyclerView();
+                this.updateVisitsRecyclerView();
                 return true;
 
             case SORT_DESCENDING:
                 this.sortOrder = SortOrder.DESCENDING;
-                this.updateExpandableRecyclerView();
+                this.updateVisitsRecyclerView();
                 return true;
 
             default:
@@ -125,7 +134,7 @@ public class ShowParkVisitsFragment extends Fragment
         super.onDetach();
         this.park = null;
         this.yearHeaders = null;
-        this.expandableRecyclerAdapter = null;
+        this.visitsRecyclerAdapter = null;
         this.sortOrder = null;
     }
 
@@ -146,15 +155,18 @@ public class ShowParkVisitsFragment extends Fragment
         };
 
         List<Element> preparedVisits = this.addYearHeaders(this.park.getChildrenOfInstance(Visit.class));
-        this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisits, recyclerOnClickListener);
-        this.expandLatestYearHeaderAccordingToSettings(preparedVisits);
-        this.expandableRecyclerAdapter.notifyDataSetChanged();
+        this.visitsRecyclerAdapter = new ExpandableRecyclerAdapter(preparedVisits, recyclerOnClickListener);
     }
 
     private List<Element> addYearHeaders(List<Element> elements)
     {
-        Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.addYearHeaders:: adding headers for #[%d] elements...", elements.size()));
+        if(elements.isEmpty())
+        {
+            Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.addYearHeaders:: no elements found");
+            return elements;
+        }
 
+        Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.addYearHeaders:: adding headers for #[%d] elements...", elements.size()));
         elements = this.sortVisitsByDate(elements);
 
         List<Visit> visits = Visit.convertToVisits(elements);
@@ -225,11 +237,18 @@ public class ShowParkVisitsFragment extends Fragment
         return visits;
     }
 
-    private void updateExpandableRecyclerView()
+    private void updateVisitsRecyclerView()
     {
-        List<Element> preparedVisits = this.addYearHeaders(this.park.getChildrenOfInstance(Visit.class));
-        this.expandLatestYearHeaderAccordingToSettings(preparedVisits);
-        this.expandableRecyclerAdapter.updateElements(preparedVisits);
+        if(this.park.getChildCountOfInstance(Visit.class) > 0)
+        {
+            List<Element> preparedVisits = this.addYearHeaders(this.park.getChildrenOfInstance(Visit.class));
+            this.expandLatestYearHeaderAccordingToSettings(preparedVisits);
+            this.visitsRecyclerAdapter.updateElements(preparedVisits);
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "ShowParkVisitsFragment.updateVisitsRecyclerView:: no elements to update");
+        }
     }
 
     private void expandLatestYearHeaderAccordingToSettings(List<Element> yearHeaders)
@@ -238,7 +257,7 @@ public class ShowParkVisitsFragment extends Fragment
         {
             YearHeader latestYearHeader = YearHeader.getLatestYearHeader(yearHeaders);
             Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.expandLatestYearHeaderAccordingToSettings:: expanding latest %s according to settings", latestYearHeader));
-            this.expandableRecyclerAdapter.expandElement(latestYearHeader);
+            this.visitsRecyclerAdapter.expandElement(latestYearHeader);
         }
     }
 }

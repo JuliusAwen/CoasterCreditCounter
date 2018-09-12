@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
@@ -90,7 +91,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.currentElement.isRootElement())
         {
-            menu.add(Menu.NONE, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_rename_root_location);
+            menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_root_location);
         }
 
         if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
@@ -109,7 +110,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         switch(selection)
         {
-            case EDIT_ELEMENT:
+            case EDIT_LOCATION:
                 this.startEditLocationActivity(this.currentElement);
                 return true;
 
@@ -439,7 +440,7 @@ public class ShowLocationsActivity extends BaseActivity
         {
             PopupMenu popupMenu = new PopupMenu(this, view);
 
-            popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
+            popupMenu.getMenu().add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_location);
             popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete_element);
 
             if(this.longClickedElement.hasChildren())
@@ -474,7 +475,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         switch (selection)
         {
-            case EDIT_ELEMENT:
+            case EDIT_LOCATION:
                 startEditLocationActivity(this.longClickedElement);
                 return true;
 
@@ -544,6 +545,7 @@ public class ShowLocationsActivity extends BaseActivity
 
             case SORT_PARKS:
                 startSortElementsActivity(this.longClickedElement.getChildrenOfInstance(Park.class));
+                return true;
 
             default:
                 return false;
@@ -693,8 +695,18 @@ public class ShowLocationsActivity extends BaseActivity
     //region START ACTIVITIES
     private void startEditLocationActivity(Element elementToEdit)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.startEditLocationActivity:: starting EditLocationsActivity...");
-        Intent intent = new Intent(getApplicationContext(), EditLocationActivity.class);
+        Intent intent = new Intent(this, EditElementActivity.class);
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.startSortElementsActivity:: starting activty [%s]...",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        if(elementToEdit.isRootElement())
+        {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_root_location));
+        }
+        else
+        {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_location));
+        }
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
         startActivity(intent);
     }
@@ -709,10 +721,12 @@ public class ShowLocationsActivity extends BaseActivity
         Element element = elementsToSort.get(0);
         if(element.isInstance(Location.class))
         {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_locations));
             startActivityForResult(intent, Constants.REQUEST_SORT_LOCATIONS);
         }
         else if(element.isInstance(Park.class))
         {
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_parks));
             startActivityForResult(intent, Constants.REQUEST_SORT_PARKS);
         }
         else

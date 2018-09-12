@@ -55,7 +55,7 @@ public class ShowParkActivity extends BaseActivity
         super.addHelpOverlay(null, null);
 
         super.addToolbar();
-        this.decorateToolbar();
+        super.addToolbarHomeButton();
 
         super.addFloatingActionButton();
 
@@ -69,7 +69,7 @@ public class ShowParkActivity extends BaseActivity
 
         if(this.currentTab == ATTRACTIONS && this.park.getAttractionCategoryCount() > 1)
         {
-            menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_categories);
+            menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
         }
 
         if(this.currentTab == VISITS && this.park.getChildCountOfInstance(Visit.class) > 1)
@@ -87,12 +87,6 @@ public class ShowParkActivity extends BaseActivity
         this.park = (Park) App.content.getElementByUuid(UUID.fromString(elementUuid));
 
         Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.initializeContent:: initialized with %s and current tab[%d] selected", this.park, this.currentTab));
-    }
-
-    private void decorateToolbar()
-    {
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_show_park), null);
-        super.addToolbarHomeButton();
     }
 
     private void createTabPagerAdapter()

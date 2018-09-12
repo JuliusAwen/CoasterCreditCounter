@@ -66,17 +66,6 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     public void updateElements(List<Element> elements)
     {
         this.elements = elements;
-
-        Set<Element> orphanedElements = new HashSet<>(elementsToExpand);
-        orphanedElements.removeAll(elements);
-
-        if(!orphanedElements.isEmpty())
-        {
-            elementsToExpand.removeAll(orphanedElements);
-
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: #[%d] orphaned elements removed", orphanedElements.size()));
-        }
-
         notifyDataSetChanged();
         Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: updated with #[%d] elements", elements.size()));
     }

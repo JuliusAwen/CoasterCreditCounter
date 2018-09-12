@@ -18,6 +18,7 @@ public abstract class Constants
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_RADIO_BUTTON_STATE = "de.juliusawen.coding.extra_radio_button_state";
+    public static final String EXTRA_TOOLBAR_TITLE = "de.juliusawen.coding.extra_toolbar_title";
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
     public static final String FRAGMENT_ARG_HELP_MESSAGE = "de.juliusawen.coding.fragment_arg_help_message";

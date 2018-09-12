@@ -140,6 +140,12 @@ public abstract class Element
         }
     }
 
+    public void putChildWithoutSettingChildsParent(Element child)
+    {
+        this.getChildren().add(child);
+        Log.v(Constants.LOG_TAG,  String.format("Element.putChildWithoutSettingChildsParent:: %s -> child %s put", this, child));
+    }
+
     public boolean containsChild(Element child)
     {
         return this.getChildren().contains(child);
