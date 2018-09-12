@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class YearHeader extends Element
+public class YearHeader extends TemporaryElement
 {
     private YearHeader(String name, UUID uuid)
     {

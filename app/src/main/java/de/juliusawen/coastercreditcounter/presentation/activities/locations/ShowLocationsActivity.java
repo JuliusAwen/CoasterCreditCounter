@@ -600,7 +600,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoDeleteElement:: undo delete [%s]...", this.longClickedElement));
 
-        if(this.longClickedElement.undoPossible && this.longClickedElement.undoDeleteElementAndChildren())
+        if(this.longClickedElement.undoIsPossible && this.longClickedElement.undoDeleteElementAndChildren())
         {
             App.content.addElementAndChildren(this.longClickedElement);
             updateLocationRecyclerView();
@@ -663,7 +663,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickSnackbarUndoRemoveElement:: undo remove [%s]...", this.longClickedElement));
 
-        if(this.longClickedElement.undoPossible && longClickedElement.undoRemoveElement())
+        if(this.longClickedElement.undoIsPossible && longClickedElement.undoRemoveElement())
         {
             App.content.addElement(this.longClickedElement);
             updateLocationRecyclerView();

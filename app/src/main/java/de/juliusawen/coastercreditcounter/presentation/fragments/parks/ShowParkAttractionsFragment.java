@@ -165,7 +165,7 @@ public  class ShowParkAttractionsFragment extends Fragment
                 {
                     Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
                     Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
-                    this.attractionsRecyclerAdapter.smoothScrollToElement(selectedElement);
+                    this.attractionsRecyclerAdapter.smoothScrollToElement(((Attraction)selectedElement).getCategory());
                 }
                 else
                 {

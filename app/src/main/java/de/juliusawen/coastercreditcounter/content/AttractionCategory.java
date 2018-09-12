@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class AttractionCategory extends Element
+public class AttractionCategory extends TemporaryElement
 {
     private AttractionCategory(String name, UUID uuid)
     {

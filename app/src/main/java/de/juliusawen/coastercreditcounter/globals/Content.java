@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.content.AttractionCategory;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.content.TemporaryElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
     private Element rootElement;
     private Map<UUID, Element> elements = new HashMap<>();
-    private Map<UUID, Element> attractionCategories = new HashMap<>();
+    private Map<UUID, Element> temporaryElements = new HashMap<>();
 
     private static final Content instance = new Content();
 
@@ -75,7 +75,6 @@ public class Content
     private void flattenContentTree(Element element)
     {
         this.addElement(element);
-
         for (Element child : element.getChildren())
         {
             this.flattenContentTree(child);
@@ -85,12 +84,10 @@ public class Content
     public static ArrayList<String> getUuidStringsFromElements(List<Element> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
-
         for(Element element : elements)
         {
             uuidStrings.add(element.getUuid().toString());
         }
-
         return uuidStrings;
     }
 
@@ -100,7 +97,6 @@ public class Content
         stopwatch.start();
 
         List<Element> elements = new ArrayList<>();
-
         for(String uuidString : uuidStrings)
         {
             elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
@@ -108,7 +104,6 @@ public class Content
 
         stopwatch.stop();
         Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching #[%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.elapsedTimeInMs));
-
         return elements;
     }
 
@@ -119,13 +114,13 @@ public class Content
 
     public Element getElementByUuid(UUID uuid)
     {
-        if(this.attractionCategories.containsKey(uuid))
-        {
-            return this.attractionCategories.get(uuid);
-        }
-        else if(this.elements.containsKey(uuid))
+        if(this.elements.containsKey(uuid))
         {
             return this.elements.get(uuid);
+        }
+        else if(this.temporaryElements.containsKey(uuid))
+        {
+            return this.temporaryElements.get(uuid);
         }
         else
         {
@@ -140,7 +135,6 @@ public class Content
         {
             this.addElementAndChildren(child);
         }
-
         this.addElement(element);
     }
 
@@ -153,14 +147,12 @@ public class Content
                 return false;
             }
         }
-
         return this.deleteElement(element);
     }
 
     public void addElements(List<? extends Element> elements)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElements:: adding #[%d] elements", elements.size()));
-
         for(Element element : elements)
         {
             this.addElement(element);
@@ -170,14 +162,13 @@ public class Content
     public void addElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-
-        if(element.isInstance(AttractionCategory.class))
+        if(!element.isInstance(TemporaryElement.class))
         {
-            this.attractionCategories.put(element.getUuid(), element);
+            this.elements.put(element.getUuid(), element);
         }
         else
         {
-            this.elements.put(element.getUuid(), element);
+            this.temporaryElements.put(element.getUuid(), element);
         }
     }
 
@@ -196,9 +187,9 @@ public class Content
     public boolean deleteElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
-        if(this.attractionCategories.containsKey(element.getUuid()))
+        if(this.temporaryElements.containsKey(element.getUuid()))
         {
-            this.attractionCategories.remove(element.getUuid());
+            this.temporaryElements.remove(element.getUuid());
             return true;
         }
         else if(this.elements.containsKey(element.getUuid()))
@@ -206,7 +197,6 @@ public class Content
             this.elements.remove(element.getUuid());
             return true;
         }
-
         return false;
     }
 }
