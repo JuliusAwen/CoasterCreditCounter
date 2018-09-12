@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.TemporaryElement;
+import de.juliusawen.coastercreditcounter.content.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -162,7 +162,7 @@ public class Content
     public void addElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-        if(!element.isInstance(TemporaryElement.class))
+        if(!element.isInstance(OrphanElement.class))
         {
             this.elements.put(element.getUuid(), element);
         }

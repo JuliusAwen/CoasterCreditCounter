@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class AttractionCategory extends TemporaryElement
+public class AttractionCategory extends OrphanElement
 {
     private AttractionCategory(String name, UUID uuid)
     {
@@ -43,20 +43,11 @@ public class AttractionCategory extends TemporaryElement
             }
             else
             {
-                String errorMessage = String.format("Attraction.convertToAttractionCategories:: type mismatch - %s is not of type <AttractionCategory>", element);
-                Log.e(Constants.LOG_TAG, errorMessage);
+                String errorMessage = String.format("type mismatch: %s is not of type <AttractionCategory>", element);
+                Log.e(Constants.LOG_TAG, "Attraction.convertToAttractionCategories:: " + errorMessage);
                 throw new IllegalStateException(errorMessage);
             }
         }
         return attractionCategories;
-    }
-
-    public static void removeAllChildren(List<AttractionCategory> attractionCategories)
-    {
-        for(AttractionCategory attractionCategory : attractionCategories)
-        {
-            attractionCategory.getChildren().clear();
-        }
-        Log.v(Constants.LOG_TAG,  String.format("AttractionCategory.removeAllChildren::children removed from #[%d] categories.", attractionCategories.size()));
     }
 }

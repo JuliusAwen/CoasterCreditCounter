@@ -52,8 +52,8 @@ public class Visit extends Element
             }
             else
             {
-                String errorMessage = String.format("Visit.convertToVisits:: type mismatch - %s is not of type <Visit>", element);
-                Log.e(Constants.LOG_TAG, errorMessage);
+                String errorMessage = String.format("type mismatch: %s is not of type <Visit>", element);
+                Log.e(Constants.LOG_TAG, "Visit.convertToVisits:: " + errorMessage);
                 throw new IllegalStateException(errorMessage);
             }
         }

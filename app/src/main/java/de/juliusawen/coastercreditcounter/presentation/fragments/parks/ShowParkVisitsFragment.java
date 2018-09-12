@@ -167,6 +167,7 @@ public class ShowParkVisitsFragment extends Fragment
         }
 
         Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.addYearHeaders:: adding headers for #[%d] elements...", elements.size()));
+        YearHeader.removeAllChildren(this.yearHeaders);
         elements = this.sortVisitsByDate(elements);
 
         List<Visit> visits = Visit.convertToVisits(elements);
@@ -189,12 +190,12 @@ public class ShowParkVisitsFragment extends Fragment
 
             if(existingYearHeader != null)
             {
-                existingYearHeader.addChild(visit);
+                existingYearHeader.addChildToOrphanElement(visit);
             }
             else
             {
                 YearHeader yearHeader = this.getYearHeader(year);
-                yearHeader.addChild(visit);
+                yearHeader.addChildToOrphanElement(visit);
                 preparedElements.add(yearHeader);
             }
         }
@@ -210,7 +211,6 @@ public class ShowParkVisitsFragment extends Fragment
             if(yearHeader.getName().equals(year))
             {
                 Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.getYearHeader:: reusing %s", yearHeader));
-                yearHeader.getChildren().clear();
                 return yearHeader;
             }
         }

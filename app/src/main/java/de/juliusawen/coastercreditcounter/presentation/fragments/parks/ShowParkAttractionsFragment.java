@@ -279,12 +279,12 @@ public  class ShowParkAttractionsFragment extends Fragment
 
             if(existingCategory != null)
             {
-                existingCategory.addChild(attraction);
+                existingCategory.addChildToOrphanElement(attraction);
             }
             else
             {
                 Element attractionCategoryHeader = attraction.getCategory();
-                attractionCategoryHeader.putChildWithoutSettingChildsParent(attraction);
+                attractionCategoryHeader.addChildToOrphanElement(attraction);
                 preparedElements.add(attractionCategoryHeader);
             }
         }

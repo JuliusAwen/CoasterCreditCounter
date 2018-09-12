@@ -124,25 +124,44 @@ public abstract class Element
 
     private boolean addChild(int index, Element child)
     {
-        if(!this.containsChild(child))
+        if(!this.isInstance(OrphanElement.class))
         {
-            child.setParent(this);
+            if(!this.containsChild(child))
+            {
+                child.setParent(this);
 
-            Log.v(Constants.LOG_TAG,  String.format("Element.addChild:: %s -> child %s added", this, child));
-            this.children.add(index, child);
-            return true;
+                Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
+                this.children.add(index, child);
+                return true;
+            }
+            else
+            {
+                Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already contains child [%s]", this, child));
+                return false;
+            }
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already contains child [%s]", this, child));
-            return false;
+            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is instance of <OrphanElement> - adding not possible", child);
+            Log.e(Constants.LOG_TAG, "Element.addChild:: " + errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
+
     }
 
-    public void putChildWithoutSettingChildsParent(Element child)
+    public void addChildToOrphanElement(Element child)
     {
-        this.getChildren().add(child);
-        Log.v(Constants.LOG_TAG,  String.format("Element.putChildWithoutSettingChildsParent:: %s -> child %s put", this, child));
+        if(this.isInstance(OrphanElement.class))
+        {
+            this.getChildren().add(child);
+            Log.v(Constants.LOG_TAG, String.format("Element.addChildToOrphanElement:: %s -> child %s put", this, child));
+        }
+        else
+        {
+            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is not instance of <OrphanElement>", child);
+            Log.e(Constants.LOG_TAG, "Element.addChildToOrphanElement:: " + errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
     }
 
     public boolean containsChild(Element child)
@@ -346,42 +365,65 @@ public abstract class Element
 
     public static void sortElementsByNameAscending(List<? extends Element> elements)
     {
-        Collections.sort(elements, new Comparator<Element>()
+        if(elements.size() > 1)
         {
-            @Override
-            public int compare(Element element1, Element element2)
+            Collections.sort(elements, new Comparator<Element>()
             {
-                return element1.getName().compareToIgnoreCase(element2.getName());
-            }
-        });
-        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: #[%s] elements sorted", elements.size()));
+                @Override
+                public int compare(Element element1, Element element2)
+                {
+                    return element1.getName().compareToIgnoreCase(element2.getName());
+                }
+            });
+            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: #[%s] elements sorted", elements.size()));
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG,  "Element.sortElementsByNameAscending:: not sorted - list contains only one element");
+        }
     }
 
     public static void sortElementsByNameDescending(List<? extends Element> elements)
     {
-        Collections.sort(elements, new Comparator<Element>()
+        if(elements.size() > 1)
         {
-            @Override
-            public int compare(Element element1, Element element2)
+            Collections.sort(elements, new Comparator<Element>()
             {
-                return element2.getName().compareToIgnoreCase(element1.getName());
-            }
-        });
-        Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: #[%s] elements sorted", elements.size()));
+                @Override
+                public int compare(Element element1, Element element2)
+                {
+                    return element2.getName().compareToIgnoreCase(element1.getName());
+                }
+            });
+            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: #[%s] elements sorted", elements.size()));
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG,  "Element.sortElementsByNameDescending:: not sorted - list contains only one element");
+        }
+
     }
 
     public static List<Element> sortElementsBasedOnComparisonList(List<Element> elementsToSort, List<Element> comparisonList)
     {
-        Log.d(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
-                elementsToSort.size(), comparisonList.size()));
-        List<Element> sortedElements = new ArrayList<>();
-        for(Element element : comparisonList)
+        if(elementsToSort.size() > 1)
         {
-            if(elementsToSort.contains(element))
+            Log.d(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
+                    elementsToSort.size(), comparisonList.size()));
+            List<Element> sortedElements = new ArrayList<>();
+            for(Element element : comparisonList)
             {
-                sortedElements.add(elementsToSort.get(elementsToSort.indexOf(element)));
+                if(elementsToSort.contains(element))
+                {
+                    sortedElements.add(elementsToSort.get(elementsToSort.indexOf(element)));
+                }
             }
+            return sortedElements;
         }
-        return sortedElements;
+        else
+        {
+            Log.v(Constants.LOG_TAG,"Element.sortElementsBasedOnComparisonList:: not sorted - list contains only one element");
+            return elementsToSort;
+        }
     }
 }
