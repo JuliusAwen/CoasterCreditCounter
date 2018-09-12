@@ -29,7 +29,7 @@ public class Content
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
 
         Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
-        new DatabaseMock().fetchContent(this);
+        DatabaseMock.getInstance().fetchContent(this);
 
         if(!this.elements.isEmpty())
         {

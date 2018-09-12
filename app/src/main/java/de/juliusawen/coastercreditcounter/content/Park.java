@@ -59,7 +59,6 @@ public class Park extends Element
         }
     }
 
-
     public String getType()
     {
         return this.type;
@@ -76,5 +75,19 @@ public class Park extends Element
         {
             Log.e(Constants.LOG_TAG,  String.format("Park.setType:: invalid type [%s]", type));
         }
+    }
+
+    public int getAttractionCategoryCount()
+    {
+        List<AttractionCategory> attractionCategories = new ArrayList<>();
+        for(Attraction attraction : Attraction.convertToAttractions(getChildrenOfInstance(Attraction.class)))
+        {
+            if(!attractionCategories.contains(attraction.getCategory()))
+            {
+                attractionCategories.add(attraction.getCategory());
+            }
+        }
+        Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount:: #[%d] different AttractionCategories found", attractionCategories.size()));
+        return attractionCategories.size();
     }
 }

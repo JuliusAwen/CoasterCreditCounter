@@ -23,7 +23,7 @@ public class AttractionCategory extends Element
             name = name.trim();
 
             attractionCategory = new AttractionCategory(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("AttractionCategory.create:: %s created.", attractionCategory));
+            Log.e(Constants.LOG_TAG,  String.format("AttractionCategory.create:: %s created.", attractionCategory));
         }
         else
         {

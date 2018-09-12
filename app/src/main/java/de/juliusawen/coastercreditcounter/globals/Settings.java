@@ -8,18 +8,16 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public class Settings
 {
-    private static final Settings instance = new Settings();
-
-
-
-    //ShowPark - Attractions
-    private List<AttractionCategory> categoriesExpandedByDefault = new ArrayList<>();
+   //ShowPark - Attractions
+    private List<AttractionCategory> attractionCategoriesToExpandByDefault = new ArrayList<>();
 
     //ShowPark - Visits
-    private SortOrder sortOrderVisits;
+    private SortOrder defaultSortOrderParkVisits;
     private boolean expandLatestYearInListByDefault;
 
 
+
+    private static final Settings instance = new Settings();
 
     static Settings getInstance()
     {
@@ -28,27 +26,27 @@ public class Settings
 
     private Settings()
     {
-        new DatabaseMock().fetchSettings(this);
+        DatabaseMock.getInstance().fetchSettings(this);
     }
 
-    public List<AttractionCategory> getCategoriesExpandedByDefault()
+    public List<AttractionCategory> getAttractionCategoriesToExpandByDefault()
     {
-        return categoriesExpandedByDefault;
+        return attractionCategoriesToExpandByDefault;
     }
 
-    void setCategoriesExpandedByDefault(List<AttractionCategory> categoriesExpandedByDefault)
+    void setAttractionCategoriesToExpandByDefault(List<AttractionCategory> attractionCategoriesToExpandByDefault)
     {
-        this.categoriesExpandedByDefault = categoriesExpandedByDefault;
+        this.attractionCategoriesToExpandByDefault = attractionCategoriesToExpandByDefault;
     }
 
-    public SortOrder getSortOrderVisits()
+    public SortOrder getDefaultSortOrderParkVisits()
     {
-        return sortOrderVisits;
+        return defaultSortOrderParkVisits;
     }
 
-    void setSortOrderVisits(SortOrder sortOrderVisits)
+    void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
     {
-        this.sortOrderVisits = sortOrderVisits;
+        this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
     }
 
     public boolean getExpandLatestYearInListByDefault()

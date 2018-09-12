@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Attraction;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.content.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -68,7 +67,7 @@ public class ShowParkActivity extends BaseActivity
     {
         menu.clear();
 
-        if(this.currentTab == ATTRACTIONS && this.park.getChildCountOfInstance(Attraction.class) > 1)
+        if(this.currentTab == ATTRACTIONS && this.park.getAttractionCategoryCount() > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_categories);
         }

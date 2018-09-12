@@ -17,13 +17,23 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
-    private AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
-    private AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
+    private AttractionCategory attractionCategoryThrillRides;
+    private AttractionCategory attractionCategoryFamilyRides;
+    private AttractionCategory attractionCategoryRollerCoasters;
+    private AttractionCategory attractionCategoryNonRollerCoasters;
+    private AttractionCategory attractionCategoryWaterRides;
+
+    private static final DatabaseMock instance = new DatabaseMock();
+
+    public static DatabaseMock getInstance()
+    {
+        return instance;
+    }
+
+    private DatabaseMock() {}
 
     @Override
-    public void fetchContent(Content content)
-    {
-        Log.v(Constants.LOG_TAG, "DatabaseMock.fetchContent:: creating mock data");
+    public void fetchContent(Content content) {
 
         //initialize static lists
         String parkTypeAmusementPark = "Amusement Park";
@@ -35,15 +45,19 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park.addType(parkTypeFair);
 
 
-        AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
-        AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
-        AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
+        this.attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
+        this.attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
+        this.attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
+        this.attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
+        this.attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
 
-        Attraction.addCategory(this.attractionCategoryRollerCoasters);
+        Attraction.addCategory(attractionCategoryRollerCoasters);
         Attraction.addCategory(attractionCategoryThrillRides);
         Attraction.addCategory(attractionCategoryFamilyRides);
         Attraction.addCategory(attractionCategoryWaterRides);
-        Attraction.addCategory(this.attractionCategoryNonRollerCoasters);
+        Attraction.addCategory(attractionCategoryNonRollerCoasters);
+
+
 
         // create Nodes
         Location earth = Location.create("Earth");
@@ -105,14 +119,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster taron = Coaster.create("Taron");
         Attraction hollywoodTour = Attraction.create("Hollywood Tour");
 
-        taron.setCategory(this.attractionCategoryRollerCoasters);
+        taron.setCategory(attractionCategoryRollerCoasters);
         hollywoodTour.setCategory(attractionCategoryWaterRides);
 
 
         Coaster krake = Coaster.create("Krake");
         Attraction scream = Attraction.create("Scream");
 
-        krake.setCategory(this.attractionCategoryRollerCoasters);
+        krake.setCategory(attractionCategoryRollerCoasters);
         scream.setCategory(attractionCategoryThrillRides);
 
 
@@ -122,11 +136,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster gatekeeper = Coaster.create("Gatekeeper");
         Attraction dodgem = Attraction.create("Dodgem");
 
-        steelVengeance.setCategory(this.attractionCategoryRollerCoasters);
-        valravn.setCategory(this.attractionCategoryRollerCoasters);
-        maverick.setCategory(this.attractionCategoryRollerCoasters);
-        gatekeeper.setCategory(this.attractionCategoryRollerCoasters);
-        dodgem.setCategory(this.attractionCategoryNonRollerCoasters);
+        steelVengeance.setCategory(attractionCategoryRollerCoasters);
+        valravn.setCategory(attractionCategoryRollerCoasters);
+        maverick.setCategory(attractionCategoryRollerCoasters);
+        gatekeeper.setCategory(attractionCategoryRollerCoasters);
+        dodgem.setCategory(attractionCategoryNonRollerCoasters);
 
         Coaster drako = Coaster.create("Drako");
         Coaster elCondor = Coaster.create("El Condor");
@@ -136,13 +150,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster goliath = Coaster.create("Goliath");
         Coaster lostGravity = Coaster.create("Lost Gravity");
 
-        drako.setCategory(this.attractionCategoryRollerCoasters);
-        elCondor.setCategory(this.attractionCategoryRollerCoasters);
-        robinHood.setCategory(this.attractionCategoryRollerCoasters);
-        speedOfSound.setCategory(this.attractionCategoryRollerCoasters);
-        xpressPlatform13.setCategory(this.attractionCategoryRollerCoasters);
-        goliath.setCategory(this.attractionCategoryRollerCoasters);
-        lostGravity.setCategory(this.attractionCategoryRollerCoasters);
+        drako.setCategory(attractionCategoryRollerCoasters);
+        elCondor.setCategory(attractionCategoryRollerCoasters);
+        robinHood.setCategory(attractionCategoryRollerCoasters);
+        speedOfSound.setCategory(attractionCategoryRollerCoasters);
+        xpressPlatform13.setCategory(attractionCategoryRollerCoasters);
+        goliath.setCategory(attractionCategoryRollerCoasters);
+        lostGravity.setCategory(attractionCategoryRollerCoasters);
 
         Attraction excalibur = Attraction.create("Excalibur");
         Attraction gForce = Attraction.create("G-Force");
@@ -293,6 +307,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
+
+        //add tree to content
         content.addElement(earth);
         content.addElements(Attraction.getCategories());
 
@@ -321,12 +337,14 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public void fetchSettings(Settings settings)
     {
+        Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
+
         List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
         attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
-        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
-        settings.setCategoriesExpandedByDefault(attractionCategoriesExpandedByDefault);
+        attractionCategoriesExpandedByDefault.add(this.attractionCategoryWaterRides);
+        settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
 
-        settings.setSortOrderVisits(SortOrder.DESCENDING);
+        settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
         settings.setExpandLatestYearInListByDefault(true);
     }

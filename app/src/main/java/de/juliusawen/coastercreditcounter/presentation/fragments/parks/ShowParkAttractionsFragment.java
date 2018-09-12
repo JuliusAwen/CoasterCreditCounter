@@ -186,17 +186,12 @@ public  class ShowParkAttractionsFragment extends Fragment
         };
 
         this.expandableRecyclerAdapter = new ExpandableRecyclerAdapter(this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
-    }
-
-    private void updateExpandableRecyclerView()
-    {
-        List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
-        this.expandableRecyclerAdapter.updateElements(preparedAttractions);
+        this.updateExpandableRecyclerView();
     }
 
     private List<Element> addAttractionCategoryHeaders(List<Element> elements)
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
+        Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
 
         AttractionCategory.removeAllChildren(Attraction.getCategories());
 
@@ -229,8 +224,23 @@ public  class ShowParkAttractionsFragment extends Fragment
         preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
 
         Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
-
         return preparedElements;
+    }
+
+    private void updateExpandableRecyclerView()
+    {
+        List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+        this.expandAttractionsCategoriesAccordingToSettings();
+        this.expandableRecyclerAdapter.updateElements(preparedAttractions);
+    }
+
+    private void expandAttractionsCategoriesAccordingToSettings()
+    {
+        for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
+        {
+            Log.e(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
+            this.expandableRecyclerAdapter.expandElement(attractionCategory);
+        }
     }
 
     private void startSortElementsActivity(List<Element> elementsToSort)

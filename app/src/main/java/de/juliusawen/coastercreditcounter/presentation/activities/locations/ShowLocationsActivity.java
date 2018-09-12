@@ -72,7 +72,6 @@ public class ShowLocationsActivity extends BaseActivity
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        this.updateNavigationBar();
         this.createLocationRecyclerAdapter();
     }
 
@@ -320,25 +319,15 @@ public class ShowLocationsActivity extends BaseActivity
 
         for (Element recentElement : this.recentElements)
         {
-            if(this.recentElements.indexOf(recentElement) != this.recentElements.size() -1 || recentElement.isRootElement())
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding element %s to RecentElements...", recentElement));
+            View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
+            Button button = buttonView.findViewById(R.id.buttonNavigationBar);
+
+            if(this.recentElements.indexOf(recentElement) != this.recentElements.size() -1)
             {
-                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding element %s to RecentElements...", recentElement));
-
-                View buttonView = getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
-                Button button = buttonView.findViewById(R.id.buttonNavigationBar);
-
-                if(this.currentElement.isRootElement() && recentElement.isRootElement())
-                {
-                    Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: current element %s is root element - applying special treatment", recentElement));
-                    button.setText(StringTool.getSpannableString(getString(R.string.root_location), Typeface.BOLD_ITALIC));
-                }
-                else
-                {
-                    Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_right));
-                    button.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-                    button.setText(recentElement.getName());
-                }
-
+                Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_right));
+                button.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                button.setText(recentElement.getName());
                 button.setId(ButtonFunction.BACK.ordinal());
                 button.setTag(recentElement);
                 button.setOnClickListener(new View.OnClickListener()
@@ -349,9 +338,13 @@ public class ShowLocationsActivity extends BaseActivity
                         onClickNavigationBar(view);
                     }
                 });
-
-                linearLayoutNavigationBar.addView(buttonView);
             }
+            else
+            {
+                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: current element %s is root element - applying special treatment", recentElement));
+                button.setText(StringTool.getSpannableString(recentElement.getName(), Typeface.BOLD_ITALIC));
+            }
+            linearLayoutNavigationBar.addView(buttonView);
         }
 
         final HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
