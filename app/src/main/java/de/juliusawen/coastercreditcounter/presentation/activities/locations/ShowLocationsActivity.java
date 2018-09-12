@@ -137,7 +137,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.recentElements = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.recentElements = App.content.fetchElementsByUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.currentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
@@ -150,7 +150,7 @@ public class ShowLocationsActivity extends BaseActivity
             if(resultCode == RESULT_OK)
             {
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element resultElement = App.content.fetchElementFromUuidString(uuidString);
+                Element resultElement = App.content.fetchElementByUuidString(uuidString);
                 updateLocationRecyclerView();
                 this.LocationRecyclerAdapter.smoothScrollToElement(resultElement);
             }
@@ -160,7 +160,7 @@ public class ShowLocationsActivity extends BaseActivity
             if(resultCode == RESULT_OK)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = App.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+                List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
 
                 Element parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
@@ -171,7 +171,7 @@ public class ShowLocationsActivity extends BaseActivity
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    Element selectedElement = App.content.fetchElementFromUuidString(selectedElementUuidString);
+                    Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
                     this.LocationRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }
                 else
@@ -212,7 +212,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void initializeContent()
     {
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        this.currentElement = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootElement();
+        this.currentElement = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
 
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement %s", this.currentElement));
     }
@@ -512,7 +512,7 @@ public class ShowLocationsActivity extends BaseActivity
                 builder.setTitle(R.string.alert_dialog_remove_element_title);
 
                 String alertMessage;
-                if(this.longClickedElement.getParent().equals(App.content.getRootElement()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
+                if(this.longClickedElement.getParent().equals(App.content.getRootLocation()) && this.longClickedElement.hasChildrenOfInstance(Park.class))
                 {
                     alertMessage = getString(R.string.alert_dialog_remove_element_message_parent_is_root, this.longClickedElement.getName(), this.longClickedElement.getParent().getName());
                 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.content.AttractionCategory;
 import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
@@ -26,6 +27,9 @@ public class Content
 
     private Content()
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
+
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
 
         Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
@@ -33,31 +37,38 @@ public class Content
 
         if(!this.elements.isEmpty())
         {
-            Log.d(Constants.LOG_TAG, "Content.Constructor:: searching for root element...");
+            Log.d(Constants.LOG_TAG, "Content.Constructor:: searching for root location...");
             Element rootElement = ((Element) this.elements.values().toArray()[0]).getRootElement();
-            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root element %s found", rootElement));
+            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootElement));
 
-            this.setRootElement(rootElement);
+            this.setRootLocation(rootElement);
 
             Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
+            Stopwatch stopwatchFlattenContentTree = new Stopwatch();
+            stopwatchFlattenContentTree.start();
             this.flattenContentTree(this.rootElement);
+            stopwatchFlattenContentTree.stop();
+            Log.d(Constants.LOG_TAG,  String.format("Content.flattenContentTree:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.elapsedTimeInMs));
         }
         else
         {
-            String errorMessage = "Content.Constructor:: no elements fetched - unable to find root element";
+            String errorMessage = "Content.Constructor:: no elements fetched - unable to find root location";
             Log.e(Constants.LOG_TAG, errorMessage);
             throw new IllegalStateException(errorMessage);
         }
+
+        stopwatch.stop();
+        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatch.elapsedTimeInMs));
     }
 
-    public Element getRootElement()
+    public Element getRootLocation()
     {
         return this.rootElement;
     }
 
-    private void setRootElement(Element element)
+    private void setRootLocation(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootElement:: %s set as root element", element));
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", element));
         this.rootElement = element;
     }
 
@@ -83,8 +94,11 @@ public class Content
         return uuidStrings;
     }
 
-    public List<Element> fetchElementsFromUuidStrings(List<String> uuidStrings)
+    public List<Element> fetchElementsByUuidStrings(List<String> uuidStrings)
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
+
         List<Element> elements = new ArrayList<>();
 
         for(String uuidString : uuidStrings)
@@ -92,10 +106,13 @@ public class Content
             elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
         }
 
+        stopwatch.stop();
+        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching #[%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.elapsedTimeInMs));
+
         return elements;
     }
 
-    public Element fetchElementFromUuidString(String uuidString)
+    public Element fetchElementByUuidString(String uuidString)
     {
         return this.getElementByUuid(UUID.fromString(uuidString));
     }

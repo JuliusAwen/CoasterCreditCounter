@@ -80,7 +80,7 @@ public abstract class App
 
             Log.i(Constants.LOG_TAG, String.format("App.InitializeApp.onPostExecute:: starting activty [%s]...",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-            App.intent.putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootElement().getUuid().toString());
+            App.intent.putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootLocation().getUuid().toString());
             App.context.startActivity(App.intent);
 
             App.context = null;

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
         if(App.isInitialized)
         {
-            getIntent().putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootElement().getUuid().toString());
+            getIntent().putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootLocation().getUuid().toString());
             Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: starting activty [%s]...",
                     StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
             startActivity(getIntent());

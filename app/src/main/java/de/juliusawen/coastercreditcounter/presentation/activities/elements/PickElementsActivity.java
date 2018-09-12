@@ -86,7 +86,7 @@ public class PickElementsActivity extends BaseActivity
 
         this.parentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
-        this.elementsToPickFrom = App.content.fetchElementsFromUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
+        this.elementsToPickFrom = App.content.fetchElementsByUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.selectableRecyclerAdapter.updateElements(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
@@ -96,7 +96,7 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            List<Element> selectedElements = App.content.fetchElementsFromUuidStrings(selectedElementStrings);
+            List<Element> selectedElements = App.content.fetchElementsByUuidStrings(selectedElementStrings);
             this.selectableRecyclerAdapter.selectElements(selectedElements);
         }
 

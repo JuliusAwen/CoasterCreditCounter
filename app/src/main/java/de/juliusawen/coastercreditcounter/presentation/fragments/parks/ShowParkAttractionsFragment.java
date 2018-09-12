@@ -144,7 +144,7 @@ public  class ShowParkAttractionsFragment extends Fragment
         if(resultCode == Activity.RESULT_OK)
         {
             List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-            List<Element> resultElements = App.content.fetchElementsFromUuidStrings(resultElementsUuidStrings);
+            List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
             Collections.reverse(resultElements);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
@@ -163,7 +163,7 @@ public  class ShowParkAttractionsFragment extends Fragment
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    Element selectedElement = App.content.fetchElementFromUuidString(selectedElementUuidString);
+                    Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
                     Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
                     this.attractionsRecyclerAdapter.smoothScrollToElement(selectedElement);
                 }

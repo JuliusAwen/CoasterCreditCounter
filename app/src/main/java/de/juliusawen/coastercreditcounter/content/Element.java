@@ -80,7 +80,7 @@ public abstract class Element
     {
         if(!this.isRootElement())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Element.getRootElement:: %s is not root element - calling parent", this));
+            Log.v(Constants.LOG_TAG,  String.format("Element.getRootLocation:: %s is not root element - calling parent", this));
             return this.parent.getRootElement();
         }
         else
