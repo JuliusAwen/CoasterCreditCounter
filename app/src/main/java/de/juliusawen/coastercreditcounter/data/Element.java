@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.content;
+package de.juliusawen.coastercreditcounter.data;
 
 import android.util.Log;
 

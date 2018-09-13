@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.content.Attraction;
-import de.juliusawen.coastercreditcounter.content.AttractionCategory;
-import de.juliusawen.coastercreditcounter.content.Coaster;
-import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.Location;
-import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.data.Attraction;
+import de.juliusawen.coastercreditcounter.data.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.Coaster;
+import de.juliusawen.coastercreditcounter.data.Element;
+import de.juliusawen.coastercreditcounter.data.Location;
+import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
@@ -182,7 +182,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Attraction pavillonDeThe = Attraction.create("Pavillon de Thè");
         Attraction spaceKidz = Attraction.create("Space Kidz");
         Attraction superSwing = Attraction.create("Super Swing");
-        Attraction squadsStuntFlight = Attraction.create("Squad's Stund Flight");
+        Attraction squadsStuntFlight = Attraction.create("Squad's Stunt Flight");
         Attraction tequillaTaxis = Attraction.create("Tequilla Taxi's");
         Attraction wabWorldTour = Attraction.create("WAB World Tour");
         Attraction walibiExpress = Attraction.create("Walibi Express");

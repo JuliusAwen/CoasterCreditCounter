@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Element;
+import de.juliusawen.coastercreditcounter.data.Element;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapter.ViewHolder>

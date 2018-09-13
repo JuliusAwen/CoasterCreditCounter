@@ -21,8 +21,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.content.Visit;
+import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;

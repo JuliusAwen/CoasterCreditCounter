@@ -23,10 +23,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Attraction;
-import de.juliusawen.coastercreditcounter.content.AttractionCategory;
-import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.Park;
+import de.juliusawen.coastercreditcounter.data.Attraction;
+import de.juliusawen.coastercreditcounter.data.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.Element;
+import de.juliusawen.coastercreditcounter.data.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;

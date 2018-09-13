@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.globals;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.content.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public class Settings

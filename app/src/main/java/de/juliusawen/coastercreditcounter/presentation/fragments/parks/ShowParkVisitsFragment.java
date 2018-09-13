@@ -20,10 +20,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.Park;
-import de.juliusawen.coastercreditcounter.content.Visit;
-import de.juliusawen.coastercreditcounter.content.YearHeader;
+import de.juliusawen.coastercreditcounter.data.Element;
+import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.Visit;
+import de.juliusawen.coastercreditcounter.data.YearHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;

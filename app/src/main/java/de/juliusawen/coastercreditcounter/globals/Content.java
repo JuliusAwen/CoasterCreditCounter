@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.content.Element;
-import de.juliusawen.coastercreditcounter.content.OrphanElement;
+import de.juliusawen.coastercreditcounter.data.Element;
+import de.juliusawen.coastercreditcounter.data.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
