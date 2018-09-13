@@ -34,7 +34,6 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -64,7 +63,6 @@ public class ShowLocationsActivity extends BaseActivity
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        this.decorateToolbar();
 
         super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
 
@@ -109,11 +107,11 @@ public class ShowLocationsActivity extends BaseActivity
         switch(selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startEditElementActivity(this, this.currentElement, getString(R.string.subtitle_edit_root_location));
+                ActivityTool.startActivityEditElement(this, this.currentElement, getString(R.string.subtitle_edit_root_location));
                 return true;
 
             case SORT_LOCATIONS:
-                ActivityTool.startSortElementsActivity(
+                ActivityTool.startActivitySortElements(
                         this,
                         Constants.REQUEST_SORT_LOCATIONS,
                         this.currentElement.getChildrenOfInstance(Location.class),
@@ -147,7 +145,7 @@ public class ShowLocationsActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
-        if(requestCode == Constants.REQUEST_ADD_ELEMENT)
+        if(requestCode == Constants.REQUEST_ADD_LOCATION)
         {
             if(resultCode == RESULT_OK)
             {
@@ -275,11 +273,11 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case ADD_LOCATION:
-                this.startActivityAddLocation();
+                ActivityTool.startActivityAddLocation(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
                 return true;
 
             case ADD_PARK:
-                this.startActivityAddPark();
+                Toaster.makeToast(this, "AddPark not yet implemented");
                 return true;
 
             default:
@@ -287,22 +285,6 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private void startActivityAddLocation()
-    {
-        Intent intent = new Intent(getApplicationContext(), AddLocationActivity.class);
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentElement.getUuid().toString());
-        startActivityForResult(intent, Constants.REQUEST_ADD_ELEMENT);
-    }
-
-    private void startActivityAddPark()
-    {
-        //Todo: implement add park activity
-        Toaster.makeToast(getApplicationContext(), "AddPark not yet implemented");
-
-//        Intent intent = new Intent(getApplicationContext(), AddParkActivity.class);
-//        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentElement.getUuid().toString());
-//        startActivityForResult(intent, Constants.REQUEST_ADD_PARK);
-    }
     //endregion
 
     //region NAVIGATION BAR
@@ -382,7 +364,6 @@ public class ShowLocationsActivity extends BaseActivity
                 this.recentElements.remove(i);
             }
         }
-
         this.currentElement = element;
         this.updateActivityView();
     }
@@ -427,9 +408,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
         else if(element.isInstance(Park.class))
         {
-            Intent intent = new Intent(this, ShowParkActivity.class);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
-            startActivity(intent);
+            ActivityTool.startActivityShowPark(this, element);
         }
     }
 
@@ -478,7 +457,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startEditElementActivity(this, this.longClickedElement, getString(R.string.subtitle_edit_location));
+                ActivityTool.startActivityEditElement(this, this.longClickedElement, getString(R.string.subtitle_edit_location));
                 return true;
 
             case DELETE_ELEMENT:
@@ -546,7 +525,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_PARKS:
-                ActivityTool.startSortElementsActivity(
+                ActivityTool.startActivitySortElements(
                         this,
                         Constants.REQUEST_SORT_PARKS,
                         this.longClickedElement.getChildrenOfInstance(Park.class),

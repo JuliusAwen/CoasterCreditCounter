@@ -117,7 +117,7 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch(selection)
         {
             case SORT_ATTRACTION_CATEGORIES:
-                ActivityTool.startSortElementsActivity(
+                ActivityTool.startActivitySortElements(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
                         new ArrayList<Element>(Attraction.getCategories()),
@@ -241,11 +241,11 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch (selection)
         {
             case EDIT_ATTRACTION_CATEGORY:
-                ActivityTool.startEditElementActivity(Objects.requireNonNull(getActivity()), longClickedElement, getString(R.string.subtitle_edit_attraction_category));
+                ActivityTool.startActivityEditElement(Objects.requireNonNull(getActivity()), longClickedElement, getString(R.string.subtitle_edit_attraction_category));
                 return true;
 
             case SORT_ATTRACTIONS:
-                ActivityTool.startSortElementsActivity(
+                ActivityTool.startActivitySortElements(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTIONS,
                         longClickedElement.getChildrenOfInstance(Attraction.class),

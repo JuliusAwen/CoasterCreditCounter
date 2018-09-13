@@ -32,7 +32,9 @@ public abstract class Constants
 
     public static final int VIEW_TYPE_CHILD = 10000;
 
-    public static final int REQUEST_ADD_ELEMENT = Request.ADD_ELEMENT.ordinal();
+    public static final int REQUEST_ADD_LOCATION = Request.ADD_LOCATION.ordinal();
+    public static final int REQUEST_ADD_VISIT = Request.ADD_VISIT.ordinal();
+
     public static final int REQUEST_SORT_LOCATIONS = Request.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_SORT_PARKS = Request.SORT_PARKS.ordinal();
     public static final int REQUEST_SORT_ATTRACTIONS = Request.SORT_ATTRACTIONS.ordinal();
@@ -42,8 +44,10 @@ public abstract class Constants
 
 enum Request
 {
-    ADD_ELEMENT,
     PICK_ELEMENTS,
+
+    ADD_LOCATION,
+    ADD_VISIT,
 
     SORT_LOCATIONS,
     SORT_PARKS,

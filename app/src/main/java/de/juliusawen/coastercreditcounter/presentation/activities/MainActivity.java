@@ -7,13 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import java.util.Objects;
-
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.locations.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.toolbox.StringTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -35,21 +33,17 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-
         setIntent(new Intent(MainActivity.this, ShowLocationsActivity.class));
 
         Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
         if(App.isInitialized)
         {
-            getIntent().putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootLocation().getUuid().toString());
-            Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: starting activty [%s]...",
-                    StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
-            startActivity(getIntent());
+            ActivityTool.startActivityShowLocations(this, App.content.getRootLocation());
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: initializing app...");
-            App.initialize(this, this);
+            App.initialize(this);
+            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: initialization triggered");
         }
     }
 }

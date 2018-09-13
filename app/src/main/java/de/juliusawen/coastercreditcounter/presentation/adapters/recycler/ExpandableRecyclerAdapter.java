@@ -67,7 +67,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     {
         this.elements = elements;
         notifyDataSetChanged();
-        Log.i(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: updated with #[%d] elements", elements.size()));
+        Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.updateElements:: updated with #[%d] elements", elements.size()));
     }
 
     public List<Element> getElements()
