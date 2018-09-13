@@ -10,7 +10,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Attraction extends Element
 {
-    public static List<AttractionCategory> categories = new ArrayList<>();
+    private static List<AttractionCategory> categories = new ArrayList<>();
     private AttractionCategory category = null;
 
     Attraction(String name, UUID uuid)

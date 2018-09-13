@@ -154,7 +154,7 @@ public abstract class Element
         if(this.isInstance(OrphanElement.class))
         {
             this.getChildren().add(child);
-            Log.v(Constants.LOG_TAG, String.format("Element.addChildToOrphanElement:: %s -> child %s put", this, child));
+            Log.v(Constants.LOG_TAG, String.format("Element.addChildToOrphanElement:: %s -> child %s added", this, child));
         }
         else
         {

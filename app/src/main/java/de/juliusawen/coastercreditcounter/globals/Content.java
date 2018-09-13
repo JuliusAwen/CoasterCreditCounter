@@ -16,7 +16,7 @@ public class Content
 {
     private Element rootElement;
     private Map<UUID, Element> elements = new HashMap<>();
-    private Map<UUID, Element> temporaryElements = new HashMap<>();
+    private Map<UUID, Element> orphanElements = new HashMap<>();
 
     private static final Content instance = new Content();
 
@@ -27,25 +27,26 @@ public class Content
 
     private Content()
     {
-        Stopwatch stopwatch = new Stopwatch(true);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: <Content> instantiated");
+        Stopwatch stopwatchInitializeContent = new Stopwatch(true);
 
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
-
-        Log.d(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
+        Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
+        Stopwatch stopwatchFetchContent = new Stopwatch(true);
         DatabaseMock.getInstance().fetchContent(this);
+        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
         if(!this.elements.isEmpty())
         {
-            Log.d(Constants.LOG_TAG, "Content.Constructor:: searching for root location...");
+            Log.i(Constants.LOG_TAG, "Content.Constructor:: searching for root location...");
             Element rootElement = ((Element) this.elements.values().toArray()[0]).getRootElement();
-            Log.d(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootElement));
+            Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootElement));
 
             this.setRootLocation(rootElement);
 
-            Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
+            Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
             this.flattenContentTree(this.rootElement);
-            Log.d(Constants.LOG_TAG,  String.format("Content.flattenContentTree:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
+            Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
         }
         else
         {
@@ -54,7 +55,7 @@ public class Content
             throw new IllegalStateException(errorMessage);
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
     }
 
     public Element getRootLocation()
@@ -112,9 +113,11 @@ public class Content
         {
             return this.elements.get(uuid);
         }
-        else if(this.temporaryElements.containsKey(uuid))
+        else if(this.orphanElements.containsKey(uuid))
         {
-            return this.temporaryElements.get(uuid);
+            Element orphanElement = this.orphanElements.get(uuid);
+            Log.e(Constants.LOG_TAG,  String.format("Content.getElementByUuid:: %s is orphan element", orphanElement));
+            return orphanElement;
         }
         else
         {
@@ -122,6 +125,19 @@ public class Content
             return null;
         }
     }
+
+//    public <T extends Element> List<Element> getOrphanElementsOfInstance(Class<T> type)
+//    {
+//        List<Element> orphanElements = new ArrayList<>();
+//        for(Element orphanElement : this.orphanElements.values())
+//        {
+//            if(orphanElement.isInstance(type))
+//            {
+//                orphanElements.add(orphanElement);
+//            }
+//        }
+//        return orphanElements;
+//    }
 
     public void addElementAndChildren(Element element)
     {
@@ -156,13 +172,14 @@ public class Content
     public void addElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-        if(!element.isInstance(OrphanElement.class))
+        if(element.isInstance(OrphanElement.class))
         {
-            this.elements.put(element.getUuid(), element);
+            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s is orphan element", element));
+            this.orphanElements.put(element.getUuid(), element);
         }
         else
         {
-            this.temporaryElements.put(element.getUuid(), element);
+            this.elements.put(element.getUuid(), element);
         }
     }
 
@@ -181,9 +198,9 @@ public class Content
     public boolean deleteElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
-        if(this.temporaryElements.containsKey(element.getUuid()))
+        if(this.orphanElements.containsKey(element.getUuid()))
         {
-            this.temporaryElements.remove(element.getUuid());
+            this.orphanElements.remove(element.getUuid());
             return true;
         }
         else if(this.elements.containsKey(element.getUuid()))

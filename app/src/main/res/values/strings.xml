@@ -11,6 +11,8 @@
     <string name="title_sort_attraction_categories">Sort Attraction Categories</string>
     <string name="title_sort_attractions">Sort Attractions</string>
 
+    <string name="title_create_visit">Create Visit</string>
+
 
     <!--activity subtitles-->
     <string name="subtitle_add_location">Add Location</string>

@@ -153,6 +153,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    protected void onToolbarHomeButtonBackClicked()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
+        finish();
+    }
+
     protected void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
         if(getSupportActionBar() != null)
@@ -169,12 +175,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 getSupportActionBar().setSubtitle(subtitle);
             }
         }
-    }
-
-    protected void onToolbarHomeButtonBackClicked()
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
-        finish();
     }
     //endregion
 

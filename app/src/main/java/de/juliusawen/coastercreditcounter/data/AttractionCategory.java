@@ -39,7 +39,7 @@ public class AttractionCategory extends OrphanElement
         {
             if(element.isInstance(AttractionCategory.class))
             {
-                attractionCategories.add(0, (AttractionCategory) element);
+                attractionCategories.add((AttractionCategory) element);
             }
             else
             {
@@ -49,5 +49,51 @@ public class AttractionCategory extends OrphanElement
             }
         }
         return attractionCategories;
+    }
+
+
+    public static List<Element> addAttractionCategoryHeaders(List<? extends Element> elements)
+    {
+        if(elements.isEmpty())
+        {
+            Log.v(Constants.LOG_TAG, "AttractionCategory.addAttractionCategoryHeaders:: no attractions found");
+            return new ArrayList<>(elements);
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategory.addAttractionCategoryHeaders:: adding headers for #[%d] attractions...", elements.size()));
+            AttractionCategory.removeAllChildren(Attraction.getCategories());
+
+            List<Attraction> attractions = Attraction.convertToAttractions(elements);
+            List<Element> preparedElements = new ArrayList<>();
+
+            for(Attraction attraction : attractions)
+            {
+                Element existingCategory = null;
+                for(Element attractionCategory : preparedElements)
+                {
+                    if(attractionCategory.equals(attraction.getCategory()))
+                    {
+                        existingCategory = attractionCategory;
+                    }
+                }
+
+                if(existingCategory != null)
+                {
+                    existingCategory.addChildToOrphanElement(attraction);
+                }
+                else
+                {
+                    Element attractionCategoryHeader = attraction.getCategory();
+                    attractionCategoryHeader.addChildToOrphanElement(attraction);
+                    preparedElements.add(attractionCategoryHeader);
+                }
+            }
+
+            preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
+
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategory.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
+            return preparedElements;
+        }
     }
 }

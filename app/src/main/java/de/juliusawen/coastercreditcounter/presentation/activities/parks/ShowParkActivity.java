@@ -30,6 +30,7 @@ import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkVisitsFragment;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -91,6 +92,13 @@ public class ShowParkActivity extends BaseActivity
         {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    protected void onToolbarHomeButtonBackClicked()
+    {
+        Log.i(Constants.LOG_TAG, "ShowParkActivity.onToolbarHomeButtonBackClicked:: staring ShowLocationActivity");
+        ActivityTool.startActivityShow(this, this.park.getParent().getParent());
     }
 
     private void initializeContent()
@@ -205,9 +213,14 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-
+                onClickFloatingActionButtonShoWparkVisits();
             }
         });
+    }
+
+    private void onClickFloatingActionButtonShoWparkVisits()
+    {
+        ActivityTool.startCreateVisitActivity(this, this.park);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

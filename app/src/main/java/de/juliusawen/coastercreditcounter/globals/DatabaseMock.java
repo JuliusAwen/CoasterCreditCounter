@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.data.Attraction;
@@ -56,7 +57,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         Attraction.addCategory(attractionCategoryFamilyRides);
         Attraction.addCategory(attractionCategoryWaterRides);
         Attraction.addCategory(attractionCategoryNonRollerCoasters);
-
 
 
         // create Nodes
@@ -222,6 +222,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit visit5 = Visit.create(2017, 4, 5);
         Visit visit6 = Visit.create(2016, 5, 6);
 
+        Visit visitToday = Visit.create(Calendar.getInstance());
+        walibiHolland.addChild(visitToday);
+        Visit.setOpenVisit(visitToday);
 
 
         // build tree
@@ -312,32 +315,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElement(earth);
         content.addElements(Attraction.getCategories());
 
-
-        if(false)
-        {
-            Location testLocationParent = Location.create("TestParent 2L 2P");
-            Location testLocationChild1 = Location.create("TestChild#1 1L 1P");
-            Location testLocationChild2 = Location.create("TestChild#2 0L 0P");
-            Location testLocationGrandChild = Location.create("TestGrandchild 0L 0P");
-            Park testPark1 = Park.create("Test Park#1");
-            Park testPark2 = Park.create("Test Park#2");
-            Park testPark3 = Park.create("Test Park#3");
-
-            testLocationChild1.addChild(testLocationGrandChild);
-            testLocationChild1.addChild(testPark3);
-            testLocationParent.addChild(testLocationChild1);
-            testLocationParent.addChild(testLocationChild2);
-            testLocationParent.addChild(testPark1);
-            testLocationParent.addChild(testPark2);
-
-            earth.addChild(testLocationParent);
-        }
     }
 
     @Override
     public void fetchSettings(Settings settings)
     {
         Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
+
+        settings.setGoToOpenVisitWhenOpeningApp(false);
 
         List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
         attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
@@ -347,5 +332,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
         settings.setExpandLatestYearInListByDefault(true);
+
+        settings.setFirstDayOfTheWeek(Calendar.MONDAY);
     }
 }

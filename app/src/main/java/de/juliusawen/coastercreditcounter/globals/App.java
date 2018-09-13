@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public abstract class App
@@ -33,15 +34,15 @@ public abstract class App
         App.progressBar = activity.getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
         viewGroup.addView(App.progressBar);
 
-        new InitializeApp().execute();
+        new Initialize().execute();
     }
 
-    private static class InitializeApp extends AsyncTask<Void, Void, Void>
+    private static class Initialize extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected void onPreExecute()
         {
-            Log.i(Constants.LOG_TAG, "App.InitializeApp.onPreExecute:: preparing initialization...");
+            Log.i(Constants.LOG_TAG, "App.Initialize.onPreExecute:: preparing initialization...");
 
             super.onPreExecute();
             App.progressBar.setVisibility(View.VISIBLE);
@@ -50,15 +51,16 @@ public abstract class App
         @Override
         protected Void doInBackground(Void... params)
         {
-            Log.i(Constants.LOG_TAG, "App.InitializeApp.doInBackground:: getting instances of <Content> and <Settings>...");
-
+            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Content>...");
             App.content = Content.getInstance();
+
+            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
             App.settings = Settings.getInstance();
 
             //Todo: remove sleep when tested
             try
             {
-                Log.e(Constants.LOG_TAG, "App.InitializeApp.doInBackground:: sleeping for 1000ms in order to test progress bar...");
+                Log.e(Constants.LOG_TAG, "App.Initialize.doInBackground:: sleeping for 1000ms in order to test progress bar...");
                 Thread.sleep(1000);
             }
             catch (InterruptedException e)
@@ -72,15 +74,27 @@ public abstract class App
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            Log.i(Constants.LOG_TAG, "App.InitializeApp.onPostExecute:: finishing initialization...");
+            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: finishing initialization...");
 
             super.onPostExecute(aVoid);
 
             App.progressBar.setVisibility(View.GONE);
-            ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
-            App.activity = null;
             App.progressBar = null;
 
+            Visit.sortOrder = App.settings.getDefaultSortOrderParkVisits();
+
+            if(Visit.validateOpenVisit() && App.settings.goToOpenVisitWhenOpeningApp())
+            {
+                Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
+                ActivityTool.startActivityShow(App.activity, Visit.getOpenVisit());
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
+                ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
+            }
+
+            App.activity = null;
             App.isInitialized = true;
         }
 

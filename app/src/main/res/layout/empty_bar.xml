@@ -3,6 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:theme="@style/standard_bar_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent">
+
+
+</LinearLayout>
 
 

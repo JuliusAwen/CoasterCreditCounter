@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,8 +29,8 @@ import de.juliusawen.coastercreditcounter.data.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.recycler.ExpandableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -157,7 +156,6 @@ public  class ShowParkAttractionsFragment extends Fragment
 
             List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
             List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
-            Collections.reverse(resultElements);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
@@ -216,7 +214,8 @@ public  class ShowParkAttractionsFragment extends Fragment
             }
         };
 
-        this.attractionsRecyclerAdapter = new ExpandableRecyclerAdapter(Park.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
+        this.attractionsRecyclerAdapter =
+                new ExpandableRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
     }
 
     private void onLongClickAttractionsRecyclerView(final View view)
@@ -272,7 +271,7 @@ public  class ShowParkAttractionsFragment extends Fragment
     {
         if(this.park.getChildCountOfInstance(Attraction.class) > 0)
         {
-            List<Element> preparedAttractions = Park.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
             this.expandAttractionsCategoriesAccordingToSettings();
             this.attractionsRecyclerAdapter.updateElements(preparedAttractions);
         }

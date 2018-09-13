@@ -35,12 +35,14 @@ public class MainActivity extends AppCompatActivity
         Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
         if(App.isInitialized)
         {
+            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting HubActivity");
+            Log.e(Constants.LOG_TAG, "MainActivity.onResume:: HubActivity not available atm - staring ShowLocationsActivity<root> instead");
             ActivityTool.startActivityShow(this, App.content.getRootLocation());
         }
         else
         {
+            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: app needs to initialize");
             App.initialize(this);
-            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: initialization triggered");
         }
     }
 }

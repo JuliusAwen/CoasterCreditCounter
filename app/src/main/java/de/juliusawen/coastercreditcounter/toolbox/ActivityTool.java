@@ -15,6 +15,7 @@ import de.juliusawen.coastercreditcounter.data.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.Element;
 import de.juliusawen.coastercreditcounter.data.Location;
 import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
@@ -22,6 +23,7 @@ import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortE
 import de.juliusawen.coastercreditcounter.presentation.activities.locations.AddLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.locations.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
+import de.juliusawen.coastercreditcounter.presentation.activities.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
 {
@@ -37,6 +39,10 @@ public abstract class ActivityTool
         {
             type = ShowParkActivity.class;
         }
+        else if(element.isInstance(Visit.class))
+        {
+            type = ShowVisitActivity.class;
+        }
 
         if(type != null)
         {
@@ -44,7 +50,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             activity.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started activity [%s] for %s...",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started activity [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
         }
         else
@@ -61,6 +67,10 @@ public abstract class ActivityTool
         {
             type = AddLocationActivity.class;
         }
+        else if(parent.isInstance(Visit.class))
+        {
+            type = Visit.class;
+        }
 
         if(type != null)
         {
@@ -75,6 +85,16 @@ public abstract class ActivityTool
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityAdd:: unable to start activity: unknown type %s", parent));
         }
+    }
+
+    public static void startCreateVisitActivity(Activity activity, Element park)
+    {
+        Intent intent = new Intent(activity.getApplicationContext(), ShowVisitActivity.class);
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, park.getUuid().toString());
+        activity.startActivity(intent);
+
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAdd:: started activity [%s] for parent %s - create visit",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), park));
     }
 
     public static void startActivitySort(Activity activity, int requestId, List<Element> elementsToSort)
@@ -107,7 +127,7 @@ public abstract class ActivityTool
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
             activity.startActivityForResult(intent, requestId);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySort:: started activity [%s] for #[%d] elements...",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySort:: started activity [%s] for #[%d] elements",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToSort.size()));
         }
         else
@@ -148,7 +168,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
             activity.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEdit:: started activity [%s] for %s...",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEdit:: started activity [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementToEdit));
         }
         else

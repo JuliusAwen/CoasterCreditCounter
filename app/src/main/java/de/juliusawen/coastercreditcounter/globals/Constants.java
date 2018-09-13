@@ -33,7 +33,6 @@ public abstract class Constants
     public static final int VIEW_TYPE_CHILD = 10000;
 
     public static final int REQUEST_ADD_LOCATION = Request.ADD_LOCATION.ordinal();
-    public static final int REQUEST_ADD_VISIT = Request.ADD_VISIT.ordinal();
 
     public static final int REQUEST_SORT_LOCATIONS = Request.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_SORT_PARKS = Request.SORT_PARKS.ordinal();

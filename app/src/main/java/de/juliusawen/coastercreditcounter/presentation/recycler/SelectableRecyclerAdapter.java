@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.adapters.recycler;
+package de.juliusawen.coastercreditcounter.presentation.recycler;
 
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;

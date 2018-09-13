@@ -25,8 +25,8 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.recycler.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
@@ -34,7 +34,7 @@ import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 public class SortElementsActivity extends BaseActivity
 {
     private List<Element> elementsToSort;
-    private SelectableRecyclerAdapter selectableRecyclerAdapter;
+    private SelectableRecyclerAdapter contentRecyclerAdapter;
     private RecyclerView recyclerView;
     private String toolbarTitle;
 
@@ -65,7 +65,7 @@ public class SortElementsActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        this.selectableRecyclerAdapter.notifyDataSetChanged();
+        this.contentRecyclerAdapter.notifyDataSetChanged();
         super.onResume();
     }
 
@@ -88,12 +88,12 @@ public class SortElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
                 Element.sortElementsByNameAscending(this.elementsToSort);
-                this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
+                this.contentRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
             case SORT_DESCENDING:
                 Element.sortElementsByNameDescending(this.elementsToSort);
-                this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
+                this.contentRecyclerAdapter.updateElements(this.elementsToSort);
                 return true;
 
             default:
@@ -106,13 +106,13 @@ public class SortElementsActivity extends BaseActivity
     {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToSort));
-        if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        if(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, "");
         }
         else
         {
-            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
+            outState.putString(Constants.KEY_SELECTED_ELEMENT, this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
         }
         outState.putString(Constants.EXTRA_TOOLBAR_TITLE, this.toolbarTitle);
     }
@@ -125,16 +125,16 @@ public class SortElementsActivity extends BaseActivity
         String selectedElementString = savedInstanceState.getString(Constants.KEY_SELECTED_ELEMENT);
         if(selectedElementString != null && selectedElementString.isEmpty())
         {
-            this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
+            this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
         }
         else
         {
             Element element = App.content.getElementByUuid(UUID.fromString(selectedElementString));
-            this.selectableRecyclerAdapter.selectElement(element);
+            this.contentRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
         this.toolbarTitle = savedInstanceState.getString(Constants.EXTRA_TOOLBAR_TITLE);
-        this.selectableRecyclerAdapter.updateElements(this.elementsToSort);
+        this.contentRecyclerAdapter.updateElements(this.elementsToSort);
     }
 
     @Override
@@ -192,12 +192,12 @@ public class SortElementsActivity extends BaseActivity
                 return true;
             }
         };
-        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false, recyclerOnClickListener);
+        this.contentRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false, recyclerOnClickListener);
         this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setHasFixedSize(true);
-        this.recyclerView.setAdapter(this.selectableRecyclerAdapter);
+        this.recyclerView.setAdapter(this.contentRecyclerAdapter);
     }
 
     private void onLongClickContentRecyclerView(View view)
@@ -261,15 +261,15 @@ public class SortElementsActivity extends BaseActivity
     private void onClickActionDialogButtonDown()
     {
         Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
-        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        if(!this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
-            int position = this.elementsToSort.indexOf(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
+            int position = this.elementsToSort.indexOf(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
 
             if(position < this.elementsToSort.size() - 1)
             {
                 Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
                 Collections.swap(this.elementsToSort, position, position + 1);
-                this.selectableRecyclerAdapter.notifyDataSetChanged();
+                this.contentRecyclerAdapter.notifyDataSetChanged();
 
                 int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
                 if(this.elementsToSort.size() > position + 1 + scrollMargin)
@@ -296,16 +296,16 @@ public class SortElementsActivity extends BaseActivity
     {
         Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
 
-        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        if(!this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
-            int position = this.elementsToSort.indexOf(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
+            int position = this.elementsToSort.indexOf(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0));
 
             if(position > 0)
             {
                 Log.d(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
 
                 Collections.swap(this.elementsToSort, position, position - 1);
-                this.selectableRecyclerAdapter.notifyDataSetChanged();
+                this.contentRecyclerAdapter.notifyDataSetChanged();
 
                 int scrollMargin = ViewTool.getScrollMarginForRecyclerView(this.recyclerView);
                 if(position - 1 - scrollMargin >= 0)
@@ -335,13 +335,13 @@ public class SortElementsActivity extends BaseActivity
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
         {
-            Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result", this.selectableRecyclerAdapter.getElementsToSelectFrom().size()));
+            Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result", this.contentRecyclerAdapter.getElementsToSelectFrom().size()));
 
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(this.selectableRecyclerAdapter.getElementsToSelectFrom()));
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(this.contentRecyclerAdapter.getElementsToSelectFrom()));
 
-            if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+            if(!this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
             {
-                Element lastSelectedElement = this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().size() - 1);
+                Element lastSelectedElement = this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().size() - 1);
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, lastSelectedElement.getUuid().toString());
             }
         }
