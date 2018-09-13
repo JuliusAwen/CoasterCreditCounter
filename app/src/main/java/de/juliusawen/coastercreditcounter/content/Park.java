@@ -95,13 +95,13 @@ public class Park extends Element
     {
         if(elements.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.addAttractionCategoryHeaders:: no attractions found");
+            Log.v(Constants.LOG_TAG, "Park.addAttractionCategoryHeaders:: no attractions found");
             return new ArrayList<>(elements);
         }
         else
         {
 
-            Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] attractions...", elements.size()));
+            Log.v(Constants.LOG_TAG, String.format("Park.addAttractionCategoryHeaders:: adding headers for #[%d] attractions...", elements.size()));
             AttractionCategory.removeAllChildren(Attraction.getCategories());
 
             List<Attraction> attractions = Attraction.convertToAttractions(elements);
@@ -132,7 +132,7 @@ public class Park extends Element
 
             preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
 
-            Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
+            Log.v(Constants.LOG_TAG, String.format("Park.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
             return preparedElements;
         }
     }

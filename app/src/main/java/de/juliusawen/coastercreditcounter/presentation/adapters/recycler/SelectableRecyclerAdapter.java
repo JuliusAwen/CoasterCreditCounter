@@ -73,7 +73,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     {
         this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
-        Log.i(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updated with #[%d] elements...", elements.size()));
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updated with #[%d] elements...", elements.size()));
     }
 
     public List<Element> getElementsToSelectFrom()

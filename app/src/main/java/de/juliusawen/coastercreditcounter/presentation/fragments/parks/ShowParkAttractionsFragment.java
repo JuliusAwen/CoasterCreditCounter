@@ -143,13 +143,25 @@ public  class ShowParkAttractionsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
+            String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+            Element selectedElement = null;
+            if(selectedElementUuidString != null)
+            {
+                selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
+                Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<OK>:: selected element %s returned", selectedElement));
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<OK>:: no selected element returned");
+            }
+
             List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
             List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
             Collections.reverse(resultElements);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
-                Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: replacing <children> with <sorted children>...");
+                Log.d(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortAttractions>:: replacing <children> with <sorted children>...");
 
                 Element parent = resultElements.get(0).getParent();
                 if(parent != null)
@@ -160,22 +172,23 @@ public  class ShowParkAttractionsFragment extends Fragment
 
                 this.updateAttractionsRecyclerView();
 
-                String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                if(selectedElementUuidString != null)
+                if(selectedElement != null)
                 {
-                    Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
-                    Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortElements>:: scrolling to selected element %s...", selectedElement));
+                    Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
                     this.attractionsRecyclerAdapter.smoothScrollToElement(((Attraction)selectedElement).getCategory());
                 }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.onActivityResult<SortElements>:: no selected element returned");
-                }
+
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
                 Attraction.setCategories(AttractionCategory.convertToAttractionCategories(resultElements));
                 this.updateAttractionsRecyclerView();
+
+                if(selectedElement != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...", selectedElement));
+                    this.attractionsRecyclerAdapter.smoothScrollToElement(selectedElement);
+                }
             }
         }
     }
@@ -254,8 +267,6 @@ public  class ShowParkAttractionsFragment extends Fragment
                 return false;
         }
     }
-
-
 
     private void updateAttractionsRecyclerView()
     {

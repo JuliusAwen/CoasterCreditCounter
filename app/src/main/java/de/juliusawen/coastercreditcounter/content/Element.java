@@ -408,7 +408,7 @@ public abstract class Element
     {
         if(elementsToSort.size() > 1)
         {
-            Log.d(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
+            Log.v(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
                     elementsToSort.size(), comparisonList.size()));
             List<Element> sortedElements = new ArrayList<>();
             for(Element element : comparisonList)
