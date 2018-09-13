@@ -22,7 +22,6 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -35,11 +34,10 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -111,11 +109,15 @@ public class ShowLocationsActivity extends BaseActivity
         switch(selection)
         {
             case EDIT_LOCATION:
-                this.startEditLocationActivity(this.currentElement);
+                ActivityTool.startEditElementActivity(this, this.currentElement, getString(R.string.subtitle_edit_root_location));
                 return true;
 
             case SORT_LOCATIONS:
-                this.startSortElementsActivity(this.currentElement.getChildrenOfInstance(Location.class));
+                ActivityTool.startSortElementsActivity(
+                        this,
+                        Constants.REQUEST_SORT_LOCATIONS,
+                        this.currentElement.getChildrenOfInstance(Location.class),
+                        getString(R.string.title_sort_locations));
                 return true;
 
             default:
@@ -476,7 +478,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case EDIT_LOCATION:
-                startEditLocationActivity(this.longClickedElement);
+                ActivityTool.startEditElementActivity(this, this.longClickedElement, getString(R.string.subtitle_edit_location));
                 return true;
 
             case DELETE_ELEMENT:
@@ -544,7 +546,11 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_PARKS:
-                startSortElementsActivity(this.longClickedElement.getChildrenOfInstance(Park.class));
+                ActivityTool.startSortElementsActivity(
+                        this,
+                        Constants.REQUEST_SORT_PARKS,
+                        this.longClickedElement.getChildrenOfInstance(Park.class),
+                        getString(R.string.title_sort_parks));
                 return true;
 
             default:
@@ -689,50 +695,6 @@ public class ShowLocationsActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateLocationRecyclerView:: updating RecyclerView...");
         this.LocationRecyclerAdapter.updateElements(this.currentElement.getChildrenOfInstance(Location.class));
-    }
-    //endregion
-
-    //region START ACTIVITIES
-    private void startEditLocationActivity(Element elementToEdit)
-    {
-        Intent intent = new Intent(this, EditElementActivity.class);
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.startSortElementsActivity:: starting activty [%s]...",
-                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-
-        if(elementToEdit.isRootElement())
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_root_location));
-        }
-        else
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_location));
-        }
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
-        startActivity(intent);
-    }
-
-    private void startSortElementsActivity(List<Element> elementsToSort)
-    {
-        Intent intent = new Intent(this, SortElementsActivity.class);
-        intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.startEditLocationActivity:: starting activty [%s]...",
-                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-
-        Element element = elementsToSort.get(0);
-        if(element.isInstance(Location.class))
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_locations));
-            startActivityForResult(intent, Constants.REQUEST_SORT_LOCATIONS);
-        }
-        else if(element.isInstance(Park.class))
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_parks));
-            startActivityForResult(intent, Constants.REQUEST_SORT_PARKS);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.startSortElementsActivity:: unhandled type [%s]", element.getClass().getSimpleName()));
-        }
     }
     //endregion
 }

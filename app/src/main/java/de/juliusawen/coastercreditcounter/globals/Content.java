@@ -27,8 +27,7 @@ public class Content
 
     private Content()
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.start();
+        Stopwatch stopwatch = new Stopwatch(true);
 
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: creating instance...");
 
@@ -44,11 +43,9 @@ public class Content
             this.setRootLocation(rootElement);
 
             Log.d(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
-            Stopwatch stopwatchFlattenContentTree = new Stopwatch();
-            stopwatchFlattenContentTree.start();
+            Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
             this.flattenContentTree(this.rootElement);
-            stopwatchFlattenContentTree.stop();
-            Log.d(Constants.LOG_TAG,  String.format("Content.flattenContentTree:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.elapsedTimeInMs));
+            Log.d(Constants.LOG_TAG,  String.format("Content.flattenContentTree:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
         }
         else
         {
@@ -57,8 +54,7 @@ public class Content
             throw new IllegalStateException(errorMessage);
         }
 
-        stopwatch.stop();
-        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatch.elapsedTimeInMs));
+        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatch.stop()));
     }
 
     public Element getRootLocation()
@@ -93,8 +89,7 @@ public class Content
 
     public List<Element> fetchElementsByUuidStrings(List<String> uuidStrings)
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.start();
+        Stopwatch stopwatch = new Stopwatch(true);
 
         List<Element> elements = new ArrayList<>();
         for(String uuidString : uuidStrings)
@@ -102,8 +97,7 @@ public class Content
             elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
         }
 
-        stopwatch.stop();
-        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching #[%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.elapsedTimeInMs));
+        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching #[%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
         return elements;
     }
 

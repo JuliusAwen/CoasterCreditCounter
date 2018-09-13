@@ -19,8 +19,11 @@ public abstract class StringTool
 
         if(lastIndexOfDot != -1)
         {
-            componentShortClassName.substring(lastIndexOfDot + 1);
+            return componentShortClassName.substring(lastIndexOfDot + 1);
         }
-        return componentShortClassName;
+        else
+        {
+            return componentShortClassName;
+        }
     }
 }

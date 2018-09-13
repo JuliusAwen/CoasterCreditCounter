@@ -29,13 +29,10 @@ import de.juliusawen.coastercreditcounter.content.Element;
 import de.juliusawen.coastercreditcounter.content.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.toolbox.StringTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public  class ShowParkAttractionsFragment extends Fragment
@@ -120,7 +117,11 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch(selection)
         {
             case SORT_ATTRACTION_CATEGORIES:
-                this.startSortElementsActivity(new ArrayList<Element>(Attraction.getCategories()));
+                ActivityTool.startSortElementsActivity(
+                        Objects.requireNonNull(getActivity()),
+                        Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
+                        new ArrayList<Element>(Attraction.getCategories()),
+                        getString(R.string.title_sort_attraction_categories));
                 return true;
 
             default:
@@ -240,11 +241,15 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch (selection)
         {
             case EDIT_ATTRACTION_CATEGORY:
-                startEditLocationActivity(longClickedElement);
+                ActivityTool.startEditElementActivity(Objects.requireNonNull(getActivity()), longClickedElement, getString(R.string.subtitle_edit_attraction_category));
                 return true;
 
             case SORT_ATTRACTIONS:
-                startSortElementsActivity(longClickedElement.getChildrenOfInstance(Attraction.class));
+                ActivityTool.startSortElementsActivity(
+                        Objects.requireNonNull(getActivity()),
+                        Constants.REQUEST_SORT_ATTRACTIONS,
+                        longClickedElement.getChildrenOfInstance(Attraction.class),
+                        getString(R.string.title_sort_attractions));
                 return true;
 
             default:
@@ -315,38 +320,6 @@ public  class ShowParkAttractionsFragment extends Fragment
         {
             Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
             this.attractionsRecyclerAdapter.expandElement(attractionCategory);
-        }
-    }
-
-    private void startEditLocationActivity(Element elementToEdit)
-    {
-        Intent intent = new Intent(getContext(), EditElementActivity.class);
-        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.startSortElementsActivity:: starting activty [%s]...",
-                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-
-        intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.subtitle_edit_attraction_category));
-
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
-        startActivity(intent);
-    }
-
-    private void startSortElementsActivity(List<Element> elementsToSort)
-    {
-        Intent intent = new Intent(getContext(), SortElementsActivity.class);
-        intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(elementsToSort));
-        Log.i(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.startSortElementsActivity:: starting activty [%s]...",
-                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-
-        Element element = elementsToSort.get(0);
-        if(element.isInstance(Attraction.class))
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_attractions));
-            startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTIONS);
-        }
-        else if(element.isInstance(AttractionCategory.class))
-        {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_sort_attraction_categories));
-            startActivityForResult(intent, Constants.REQUEST_SORT_ATTRACTION_CATEGORIES);
         }
     }
 }

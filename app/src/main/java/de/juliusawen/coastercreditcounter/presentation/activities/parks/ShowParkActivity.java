@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.parks;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,6 +80,17 @@ public class ShowParkActivity extends BaseActivity
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        for (Fragment fragment : getSupportFragmentManager().getFragments())
+        {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void initializeContent()
