@@ -148,7 +148,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
             activity.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShowPark:: started activity [%s] for %s...",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEdit:: started activity [%s] for %s...",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementToEdit));
         }
         else
