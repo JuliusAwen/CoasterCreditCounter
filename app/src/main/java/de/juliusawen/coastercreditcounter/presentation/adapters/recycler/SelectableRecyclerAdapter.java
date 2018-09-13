@@ -149,7 +149,21 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             @Override
             public void onClick(View view)
             {
-                onClickItemView(viewHolder, view);
+                onClickItemView(view);
+
+                if(onClickListener != null)
+                {
+                    onClickListener.onClick(view, viewHolder.getAdapterPosition());
+                }
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return onClickListener != null && onClickListener.onLongClick(view, viewHolder.getAdapterPosition());
             }
         });
 
@@ -157,7 +171,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         viewHolder.textView.setVisibility(View.VISIBLE);
     }
 
-    private void onClickItemView(ViewHolder viewHolder, View view)
+    private void onClickItemView(View view)
     {
         Element element = (Element) view.getTag();
 
@@ -183,11 +197,6 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         view.setSelected(!view.isSelected());
-
-        if(this.onClickListener != null)
-        {
-            this.onClickListener.onClick(view, viewHolder.getAdapterPosition());
-        }
 
         notifyDataSetChanged();
     }

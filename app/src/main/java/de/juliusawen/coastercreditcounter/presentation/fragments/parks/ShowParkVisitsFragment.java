@@ -149,8 +149,9 @@ public class ShowParkVisitsFragment extends Fragment
             }
 
             @Override
-            public void onLongClick(final View view, int position)
+            public boolean onLongClick(final View view, int position)
             {
+                return false;
             }
         };
 

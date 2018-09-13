@@ -77,7 +77,7 @@ public abstract class App
             super.onPostExecute(aVoid);
 
             App.progressBar.setVisibility(View.GONE);
-            ActivityTool.startActivityShowLocations(App.activity, App.content.getRootLocation());
+            ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
             App.activity = null;
             App.progressBar = null;
 

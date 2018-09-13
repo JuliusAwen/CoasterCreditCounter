@@ -24,14 +24,13 @@ public class RecyclerOnClickListener implements View.OnClickListener, View.OnLon
     @Override
     public boolean onLongClick(View view)
     {
-        this.onClickListener.onLongClick(view, this.viewHolder.getLayoutPosition());
-        return true;
+        return this.onClickListener.onLongClick(view, this.viewHolder.getLayoutPosition());
     }
 
     public interface OnClickListener
     {
         void onClick(View view, int position);
 
-        void onLongClick(View view, int position);
+        boolean onLongClick(View view, int position);
     }
 }

@@ -6,8 +6,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -21,9 +24,11 @@ import de.juliusawen.coastercreditcounter.content.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
+import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -33,7 +38,7 @@ public class PickElementsActivity extends BaseActivity
     private List<Element> elementsToPickFrom;
     private RadioButton radioButtonSelectOrDeselectAll;
     private TextView textViewSelectOrDeselectAll;
-    private SelectableRecyclerAdapter selectableRecyclerAdapter;
+    private SelectableRecyclerAdapter selectableContentRecyclerAdapter;
 
     //region @OVERRIDE
     @Override
@@ -56,7 +61,14 @@ public class PickElementsActivity extends BaseActivity
         this.decorateFloatingActionButton();
 
         this.addSelectOrDeselectAllBar();
-        this.addSelectableRecyclerView();
+        this.addSelectableContentRecyclerView();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        this.selectableContentRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -67,13 +79,13 @@ public class PickElementsActivity extends BaseActivity
         outState.putString(Constants.KEY_ELEMENT, this.parentElement.getUuid().toString());
         outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToPickFrom));
 
-        if(this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        if(this.selectableContentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, new ArrayList<String>());
         }
         else
         {
-            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getUuidStringsFromElements(selectableContentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         outState.putString(Constants.EXTRA_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
@@ -87,17 +99,17 @@ public class PickElementsActivity extends BaseActivity
         this.parentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
         this.elementsToPickFrom = App.content.fetchElementsByUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.selectableRecyclerAdapter.updateElements(this.elementsToPickFrom);
+        this.selectableContentRecyclerAdapter.updateElements(this.elementsToPickFrom);
 
         List<String> selectedElementStrings = savedInstanceState.getStringArrayList(Constants.KEY_SELECTED_ELEMENTS);
         if(selectedElementStrings != null && selectedElementStrings.isEmpty())
         {
-            this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
+            this.selectableContentRecyclerAdapter.getSelectedElementsInOrderOfSelection().clear();
         }
         else
         {
             List<Element> selectedElements = App.content.fetchElementsByUuidStrings(selectedElementStrings);
-            this.selectableRecyclerAdapter.selectElements(selectedElements);
+            this.selectableContentRecyclerAdapter.selectElements(selectedElements);
         }
 
         this.textViewSelectOrDeselectAll.setText(savedInstanceState.getString(Constants.EXTRA_RADIO_BUTTON_STATE));
@@ -136,7 +148,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void onClickFloatingActionButton()
     {
-        if(!this.selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+        if(!this.selectableContentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
             returnResult(RESULT_OK);
@@ -150,9 +162,9 @@ public class PickElementsActivity extends BaseActivity
     //endregion
 
     //region SELECTABLE RECYCLER VIEW
-    private void addSelectableRecyclerView()
+    private void addSelectableContentRecyclerView()
     {
-        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
+        this.selectableContentRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToPickFrom, true, new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -161,19 +173,23 @@ public class PickElementsActivity extends BaseActivity
             }
 
             @Override
-            public void onLongClick(View view, int position) {}
+            public boolean onLongClick(View view, int position)
+            {
+                onLongClickSelectableContentRecyclerView(view);
+                return true;
+            }
         });
 
         RecyclerView recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewPickElements);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.selectableRecyclerAdapter);
+        recyclerView.setAdapter(this.selectableContentRecyclerAdapter);
     }
 
     private void onClickSelectableRecyclerView(View view)
     {
-        if(view.isSelected() && selectableRecyclerAdapter.isAllSelected())
+        if(view.isSelected() && selectableContentRecyclerAdapter.isAllSelected())
         {
             this.changeRadioButtonToDeselectAll();
         }
@@ -181,6 +197,30 @@ public class PickElementsActivity extends BaseActivity
         {
             this.changeRadioButtonToSelectAll();
         }
+    }
+
+    private void onLongClickSelectableContentRecyclerView(View view)
+    {
+        final Element longClickedElement = (Element) view.getTag();
+
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                onMenuItemClickLongClickSelectableContentRecyclerView(longClickedElement);
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void onMenuItemClickLongClickSelectableContentRecyclerView(Element longClickedElement)
+    {
+        ActivityTool.startActivityEdit(this, longClickedElement);
     }
     //endregion
 
@@ -210,12 +250,12 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
         {
-            this.selectableRecyclerAdapter.selectAllElements();
+            this.selectableContentRecyclerAdapter.selectAllElements();
             changeRadioButtonToDeselectAll();
         }
         else if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
         {
-            this.selectableRecyclerAdapter.deselectAllElements();
+            this.selectableContentRecyclerAdapter.deselectAllElements();
             changeRadioButtonToSelectAll();
         }
     }
@@ -245,7 +285,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(selectableRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(selectableContentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         setResult(resultCode, intent);

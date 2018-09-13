@@ -107,15 +107,14 @@ public class ShowLocationsActivity extends BaseActivity
         switch(selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startActivityEditElement(this, this.currentElement, getString(R.string.subtitle_edit_root_location));
+                ActivityTool.startActivityEdit(this, this.currentElement);
                 return true;
 
             case SORT_LOCATIONS:
-                ActivityTool.startActivitySortElements(
+                ActivityTool.startActivitySort(
                         this,
                         Constants.REQUEST_SORT_LOCATIONS,
-                        this.currentElement.getChildrenOfInstance(Location.class),
-                        getString(R.string.title_sort_locations));
+                        this.currentElement.getChildrenOfInstance(Location.class));
                 return true;
 
             default:
@@ -273,7 +272,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case ADD_LOCATION:
-                ActivityTool.startActivityAddLocation(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
+                ActivityTool.startActivityAdd(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
                 return true;
 
             case ADD_PARK:
@@ -381,9 +380,10 @@ public class ShowLocationsActivity extends BaseActivity
             }
 
             @Override
-            public void onLongClick(final View view, int position)
+            public boolean onLongClick(final View view, int position)
             {
                 onLongClickLocationRecyclerView(view);
+                return true;
             }
         };
 
@@ -408,7 +408,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
         else if(element.isInstance(Park.class))
         {
-            ActivityTool.startActivityShowPark(this, element);
+            ActivityTool.startActivityShow(this, element);
         }
     }
 
@@ -457,7 +457,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startActivityEditElement(this, this.longClickedElement, getString(R.string.subtitle_edit_location));
+                ActivityTool.startActivityEdit(this, this.longClickedElement);
                 return true;
 
             case DELETE_ELEMENT:
@@ -525,11 +525,10 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_PARKS:
-                ActivityTool.startActivitySortElements(
+                ActivityTool.startActivitySort(
                         this,
                         Constants.REQUEST_SORT_PARKS,
-                        this.longClickedElement.getChildrenOfInstance(Park.class),
-                        getString(R.string.title_sort_parks));
+                        this.longClickedElement.getChildrenOfInstance(Park.class));
                 return true;
 
             default:

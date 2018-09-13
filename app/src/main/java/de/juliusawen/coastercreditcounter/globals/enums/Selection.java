@@ -8,6 +8,7 @@ public enum Selection
     DELETE_ELEMENT,
     REMOVE_ELEMENT,
 
+    EDIT_ELEMENT,
     EDIT_LOCATION,
     EDIT_ATTRACTION_CATEGORY,
 

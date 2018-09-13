@@ -117,11 +117,10 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch(selection)
         {
             case SORT_ATTRACTION_CATEGORIES:
-                ActivityTool.startActivitySortElements(
+                ActivityTool.startActivitySort(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
-                        new ArrayList<Element>(Attraction.getCategories()),
-                        getString(R.string.title_sort_attraction_categories));
+                        new ArrayList<Element>(Attraction.getCategories()));
                 return true;
 
             default:
@@ -197,13 +196,14 @@ public  class ShowParkAttractionsFragment extends Fragment
             }
 
             @Override
-            public void onLongClick(final View view, int position)
+            public boolean onLongClick(final View view, int position)
             {
                 onLongClickAttractionsRecyclerView(view);
+                return true;
             }
         };
 
-        this.attractionsRecyclerAdapter = new ExpandableRecyclerAdapter(this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
+        this.attractionsRecyclerAdapter = new ExpandableRecyclerAdapter(Park.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
     }
 
     private void onLongClickAttractionsRecyclerView(final View view)
@@ -213,7 +213,6 @@ public  class ShowParkAttractionsFragment extends Fragment
         if(longClickedElement.isInstance(AttractionCategory.class))
         {
             PopupMenu popupMenu = new PopupMenu(getContext(), view);
-
             popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit_attraction_category);
 
             if(longClickedElement.getChildCountOfInstance(Attraction.class) > 1)
@@ -241,15 +240,14 @@ public  class ShowParkAttractionsFragment extends Fragment
         switch (selection)
         {
             case EDIT_ATTRACTION_CATEGORY:
-                ActivityTool.startActivityEditElement(Objects.requireNonNull(getActivity()), longClickedElement, getString(R.string.subtitle_edit_attraction_category));
+                ActivityTool.startActivityEdit(Objects.requireNonNull(getActivity()), longClickedElement);
                 return true;
 
             case SORT_ATTRACTIONS:
-                ActivityTool.startActivitySortElements(
+                ActivityTool.startActivitySort(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTIONS,
-                        longClickedElement.getChildrenOfInstance(Attraction.class),
-                        getString(R.string.title_sort_attractions));
+                        longClickedElement.getChildrenOfInstance(Attraction.class));
                 return true;
 
             default:
@@ -257,54 +255,13 @@ public  class ShowParkAttractionsFragment extends Fragment
         }
     }
 
-    private List<Element> addAttractionCategoryHeaders(List<Element> elements)
-    {
-        if(elements.isEmpty())
-        {
-            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.addAttractionCategoryHeaders:: no elements found");
-            return elements;
-        }
 
-        Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] elements...", elements.size()));
-        AttractionCategory.removeAllChildren(Attraction.getCategories());
-
-        List<Attraction> attractions = Attraction.convertToAttractions(elements);
-        List<Element> preparedElements = new ArrayList<>();
-
-        for(Attraction attraction : attractions)
-        {
-            Element existingCategory = null;
-            for(Element attractionCategory : preparedElements)
-            {
-                if(attractionCategory.equals(attraction.getCategory()))
-                {
-                    existingCategory = attractionCategory;
-                }
-            }
-
-            if(existingCategory != null)
-            {
-                existingCategory.addChildToOrphanElement(attraction);
-            }
-            else
-            {
-                Element attractionCategoryHeader = attraction.getCategory();
-                attractionCategoryHeader.addChildToOrphanElement(attraction);
-                preparedElements.add(attractionCategoryHeader);
-            }
-        }
-
-        preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
-
-        Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
-        return preparedElements;
-    }
 
     private void updateAttractionsRecyclerView()
     {
         if(this.park.getChildCountOfInstance(Attraction.class) > 0)
         {
-            List<Element> preparedAttractions = this.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+            List<Element> preparedAttractions = Park.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
             this.expandAttractionsCategoriesAccordingToSettings();
             this.attractionsRecyclerAdapter.updateElements(preparedAttractions);
         }

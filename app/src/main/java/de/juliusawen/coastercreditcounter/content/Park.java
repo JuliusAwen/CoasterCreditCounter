@@ -90,4 +90,50 @@ public class Park extends Element
         Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount:: #[%d] different AttractionCategories found", attractionCategories.size()));
         return attractionCategories.size();
     }
+
+    public static List<Element> addAttractionCategoryHeaders(List<? extends Element> elements)
+    {
+        if(elements.isEmpty())
+        {
+            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.addAttractionCategoryHeaders:: no attractions found");
+            return new ArrayList<>(elements);
+        }
+        else
+        {
+
+            Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: adding headers for #[%d] attractions...", elements.size()));
+            AttractionCategory.removeAllChildren(Attraction.getCategories());
+
+            List<Attraction> attractions = Attraction.convertToAttractions(elements);
+            List<Element> preparedElements = new ArrayList<>();
+
+            for(Attraction attraction : attractions)
+            {
+                Element existingCategory = null;
+                for(Element attractionCategory : preparedElements)
+                {
+                    if(attractionCategory.equals(attraction.getCategory()))
+                    {
+                        existingCategory = attractionCategory;
+                    }
+                }
+
+                if(existingCategory != null)
+                {
+                    existingCategory.addChildToOrphanElement(attraction);
+                }
+                else
+                {
+                    Element attractionCategoryHeader = attraction.getCategory();
+                    attractionCategoryHeader.addChildToOrphanElement(attraction);
+                    preparedElements.add(attractionCategoryHeader);
+                }
+            }
+
+            preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
+
+            Log.d(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
+            return preparedElements;
+        }
+    }
 }

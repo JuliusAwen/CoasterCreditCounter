@@ -48,8 +48,10 @@
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
 
+    <string name="selection_edit_element">edit</string>
     <string name="selection_edit_location">edit</string>
     <string name="selection_edit_attraction_category">edit</string>
+
     <string name="selection_delete_element">delete</string>
     <string name="selection_remove_element">remove</string>
 
@@ -112,7 +114,7 @@
 
 
     <!--help texts-->
-    <string name="help_text_not_available">...not available</string>
+    <string name="help_text_not_available">…not available</string>
 
     <string name="help_text_show_locations">
         \n<b>Options Menu</b>

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,9 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
+import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.adapters.recycler.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 
@@ -57,6 +60,13 @@ public class SortElementsActivity extends BaseActivity
 
         this.createActionDialog();
         this.createContentRecyclerView();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        this.selectableRecyclerAdapter.notifyDataSetChanged();
+        super.onResume();
     }
 
     @Override
@@ -167,6 +177,53 @@ public class SortElementsActivity extends BaseActivity
         Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: accepted - return code <OK>...");
         this.returnResult(RESULT_OK);
     }
+
+    private void createContentRecyclerView()
+    {
+        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view, int position) {}
+
+            @Override
+            public boolean onLongClick(View view, int position)
+            {
+                onLongClickContentRecyclerView(view);
+                return true;
+            }
+        };
+        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false, recyclerOnClickListener);
+        this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
+        this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setHasFixedSize(true);
+        this.recyclerView.setAdapter(this.selectableRecyclerAdapter);
+    }
+
+    private void onLongClickContentRecyclerView(View view)
+    {
+        final Element longClickedElement = (Element) view.getTag();
+
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                onMenuItemClickLongClickContentRecyclerView(longClickedElement);
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void onMenuItemClickLongClickContentRecyclerView(Element longClickedElement)
+    {
+        ActivityTool.startActivityEdit(this, longClickedElement);
+    }
+
     //endregion
 
     //region ACTION DIALOG
@@ -271,16 +328,6 @@ public class SortElementsActivity extends BaseActivity
         }
     }
     //endregion
-
-    private void createContentRecyclerView()
-    {
-        this.selectableRecyclerAdapter = new SelectableRecyclerAdapter(this.elementsToSort, false);
-        this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
-        this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setHasFixedSize(true);
-        this.recyclerView.setAdapter(this.selectableRecyclerAdapter);
-    }
 
     private void returnResult(int resultCode)
     {
