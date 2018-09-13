@@ -30,7 +30,7 @@ public class Attraction extends Element
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.create:: invalid name[%s] - attraction not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.create:: invalid name [%s] - attraction not created.", name));
         }
         return attraction;
     }
@@ -51,11 +51,11 @@ public class Attraction extends Element
         if(!Attraction.categories.contains(category))
         {
             Attraction.categories.add(category);
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.addCategory:: [%s] added", category));
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s added", category));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.addCategory:: [%s] already exists", category));
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s already exists", category));
         }
     }
 
@@ -69,11 +69,11 @@ public class Attraction extends Element
         if(Attraction.categories.contains(category))
         {
             this.category = category;
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set [%s] to %s", category, this));
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s to %s", category, this));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.setCategory:: invalid [%s]", category));
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.setCategory:: invalid %s", category));
         }
     }
 
@@ -84,7 +84,7 @@ public class Attraction extends Element
         {
             if(element.isInstance(Attraction.class) || element.isInstance(Coaster.class))
             {
-                attractions.add(0, (Attraction) element);
+                attractions.add((Attraction) element);
             }
             else
             {

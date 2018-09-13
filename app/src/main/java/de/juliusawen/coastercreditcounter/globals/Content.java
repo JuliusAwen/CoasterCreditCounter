@@ -115,9 +115,7 @@ public class Content
         }
         else if(this.orphanElements.containsKey(uuid))
         {
-            Element orphanElement = this.orphanElements.get(uuid);
-            Log.e(Constants.LOG_TAG,  String.format("Content.getElementByUuid:: %s is orphan element", orphanElement));
-            return orphanElement;
+            return this.orphanElements.get(uuid);
         }
         else
         {
@@ -171,14 +169,14 @@ public class Content
 
     public void addElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
         if(element.isInstance(OrphanElement.class))
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s is orphan element", element));
+            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added to orphan elements", element));
             this.orphanElements.put(element.getUuid(), element);
         }
         else
         {
+            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
             this.elements.put(element.getUuid(), element);
         }
     }
