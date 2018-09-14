@@ -8,27 +8,13 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayoutShowVisit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonShowVisit_DatePickerDialog"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:visibility="gone"/>
-
         <include
             layout="@layout/toolbar"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewShowVisit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
 
     </LinearLayout>
 

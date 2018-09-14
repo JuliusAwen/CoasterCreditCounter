@@ -107,12 +107,12 @@ public class ShowParkVisitsFragment extends Fragment
         switch(selection)
         {
             case SORT_ASCENDING:
-                Visit.sortOrder = SortOrder.ASCENDING;
+                Visit.setSortOrder(SortOrder.ASCENDING);
                 this.updateVisitsRecyclerView();
                 return true;
 
             case SORT_DESCENDING:
-                Visit.sortOrder = SortOrder.DESCENDING;
+                Visit.setSortOrder(SortOrder.DESCENDING);
                 this.updateVisitsRecyclerView();
                 return true;
 

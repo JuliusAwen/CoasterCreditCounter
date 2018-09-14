@@ -21,7 +21,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Element;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -105,7 +104,7 @@ public class SortElementsActivity extends BaseActivity
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToSort));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, App.content.getUuidStringsFromElements(this.elementsToSort));
         if(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, "");
@@ -114,7 +113,6 @@ public class SortElementsActivity extends BaseActivity
         {
             outState.putString(Constants.KEY_SELECTED_ELEMENT, this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().get(0).getUuid().toString());
         }
-        outState.putString(Constants.EXTRA_TOOLBAR_TITLE, this.toolbarTitle);
     }
 
     @Override
@@ -133,7 +131,6 @@ public class SortElementsActivity extends BaseActivity
             this.contentRecyclerAdapter.selectElement(element);
             this.recyclerView.smoothScrollToPosition(elementsToSort.indexOf(element));
         }
-        this.toolbarTitle = savedInstanceState.getString(Constants.EXTRA_TOOLBAR_TITLE);
         this.contentRecyclerAdapter.updateElements(this.elementsToSort);
     }
 
@@ -337,7 +334,7 @@ public class SortElementsActivity extends BaseActivity
         {
             Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning #[%d] elements as result", this.contentRecyclerAdapter.getElementsToSelectFrom().size()));
 
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(this.contentRecyclerAdapter.getElementsToSelectFrom()));
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.contentRecyclerAdapter.getElementsToSelectFrom()));
 
             if(!this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
             {

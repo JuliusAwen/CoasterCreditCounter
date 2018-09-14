@@ -214,19 +214,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         elRioGrande.setCategory(attractionCategoryWaterRides);
         splashBattle.setCategory(attractionCategoryWaterRides);
 
-
-        Visit visit1 = Visit.create(2018, 0, 1);
-        Visit visit2 = Visit.create(2018, 1, 2);
-        Visit visit3 = Visit.create(2018, 2, 3);
-        Visit visit4 = Visit.create(2017, 3, 4);
-        Visit visit5 = Visit.create(2017, 4, 5);
-        Visit visit6 = Visit.create(2016, 5, 6);
-
-        Visit visitToday = Visit.create(Calendar.getInstance());
-        walibiHolland.addChild(visitToday);
-        Visit.setOpenVisit(visitToday);
-
-
         // build tree
         phantasialand.addChild(taron);
         phantasialand.addChild(hollywoodTour);
@@ -297,19 +284,29 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(maverick);
         cedarPoint.addChild(gatekeeper);
 
-        cedarPoint.addChild(visit6);
-        cedarPoint.addChild(visit5);
-        cedarPoint.addChild(visit4);
-        cedarPoint.addChild(visit3);
-        cedarPoint.addChild(visit2);
-        cedarPoint.addChild(visit1);
-
         usa.addChild(cedarPoint);
         usa.addChild(sixFlagsMagicMountain);
 
         earth.addChild(europe);
         earth.addChild(usa);
 
+        Visit visit1 = Visit.create(2018, 0, 1);
+        Visit visit2 = Visit.create(2018, 1, 2);
+        Visit visit3 = Visit.create(2018, 2, 3);
+        Visit visit4 = Visit.create(2017, 3, 4);
+        Visit visit5 = Visit.create(2017, 4, 5);
+        Visit visit6 = Visit.create(2016, 5, 6);
+
+        Visit visitToday = Visit.create(Calendar.getInstance());
+        heidePark.addChild(visitToday);
+        Visit.setOpenVisit(visitToday);
+
+        cedarPoint.addChild(visit6);
+        cedarPoint.addChild(visit5);
+        cedarPoint.addChild(visit4);
+        cedarPoint.addChild(visit3);
+        cedarPoint.addChild(visit2);
+        cedarPoint.addChild(visit1);
 
         //add tree to content
         content.addElement(earth);

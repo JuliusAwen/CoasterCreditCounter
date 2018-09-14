@@ -35,7 +35,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         {
             super(linearLayout);
 
-            this.textView = linearLayout.findViewById(R.id.textViewSelectableElementsContentHolder);
+            this.textView = linearLayout.findViewById(R.id.textViewContentHolderSelectable);
         }
     }
 
@@ -71,9 +71,10 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
     public void updateElements(List<Element> elements)
     {
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updating with #[%d] elements...", elements.size()));
         this.elementsToSelectFrom = elements;
         notifyDataSetChanged();
-        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updated with #[%d] elements...", elements.size()));
+        Log.d(Constants.LOG_TAG, String.format("SelectableRecyclerAdapter.updateElements:: updated with #[%d] elements", elements.size()));
     }
 
     public List<Element> getElementsToSelectFrom()
@@ -122,7 +123,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     @Override
     public SelectableRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.selectable_elements_content_holder, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_selectable, parent, false);
         return new ViewHolder(linearLayout);
     }
 

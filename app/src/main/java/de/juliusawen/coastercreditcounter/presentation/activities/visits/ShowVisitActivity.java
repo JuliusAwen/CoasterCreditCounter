@@ -1,40 +1,37 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.visits;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 import android.widget.DatePicker;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Attraction;
-import de.juliusawen.coastercreditcounter.data.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.Element;
 import de.juliusawen.coastercreditcounter.data.Park;
 import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.recycler.CountableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.fragments.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitActivity extends BaseActivity
 {
     private Visit visit = null;
-    private Element parentPark;
+    private Park parentPark;
 
     private DatePickerDialog datePickerDialog;
-    private CountableRecyclerAdapter attractionsRecyclerAdapter;
+    private ShowAttractionsFragment showAttractionsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +45,8 @@ public class ShowVisitActivity extends BaseActivity
 
         super.addToolbar();
         super.addToolbarHomeButton();
+
+        addShowAttractionFragment();
     }
 
     @Override
@@ -58,26 +57,49 @@ public class ShowVisitActivity extends BaseActivity
         this.decorateToolbar();
         if(this.visit == null)
         {
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.onResume:: creating visit...");
             this.createVisit();
         }
         else
         {
-            if(this.attractionsRecyclerAdapter == null)
+            if(!this.showAttractionsFragment.isInitialized)
             {
-                this.createAttractionsRecyclerAdapter();
-            }
-            else
-            {
-                this.updateAttractionsRecyclerView();
+                Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onResume:: initializing ShowAttractionsFragment with %s...", this.visit));
+                this.showAttractionsFragment.initializeForVisit(this.visit);
             }
         }
     }
 
     @Override
-    protected void onToolbarHomeButtonBackClicked()
+    public void onSaveInstanceState(Bundle outState)
     {
-        Log.i(Constants.LOG_TAG, "ShowVisitActivity.onToolbarHomeButtonBackClicked:: staring ShowParkActivity");
-        ActivityTool.startActivityShow(this, this.parentPark);
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.KEY_ELEMENT, this.visit.getUuid().toString());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        this.visit = (Visit) App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.parentPark = (Park) visit.getParent();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
+        if(resultCode == Activity.RESULT_OK)
+        {
+            if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
+            {
+                List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+                this.visit.addAttractions(selectedElements);
+                this.showAttractionsFragment.initializeForVisit(this.visit);
+            }
+        }
     }
 
     private void initializeContent()
@@ -86,20 +108,17 @@ public class ShowVisitActivity extends BaseActivity
         if(passedElement.isInstance(Visit.class))
         {
             this.visit = (Visit) passedElement;
-            this.parentPark = visit.getParent();
+            this.parentPark = (Park) visit.getParent();
         }
         else if(passedElement.isInstance(Park.class))
         {
-            this.parentPark = passedElement;
+            this.parentPark = (Park) passedElement;
         }
     }
 
     private void createVisit()
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.createVisit:: creating visit for %s", this.parentPark));
-
-        View view = findViewById(R.id.buttonShowVisit_DatePickerDialog);
-        view.setVisibility(View.VISIBLE);
 
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -113,87 +132,100 @@ public class ShowVisitActivity extends BaseActivity
             {
                 calendar.set(year, month, day);
                 onDateSetCreateVisit(calendar);
+                showPickAttractionsDialog();
+
             }
         }, year, month, day);
+
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_cancel), new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int position)
+            {
+                if (position == DialogInterface.BUTTON_NEGATIVE)
+                {
+                    finish();
+                }
+            }
+        });
+
         datePickerDialog.getDatePicker().setFirstDayOfWeek(App.settings.getFirstDayOfTheWeek());
+        datePickerDialog.setCancelable(false);
+        datePickerDialog.setCanceledOnTouchOutside(false);
         datePickerDialog.show();
     }
 
     private void onDateSetCreateVisit(Calendar calendar)
     {
         this.datePickerDialog.dismiss();
-        View view = findViewById(R.id.buttonShowVisit_DatePickerDialog);
-        view.setVisibility(View.GONE);
 
         this.visit = Visit.create(calendar);
         this.parentPark.addChild(this.visit);
-        this.visit.initialize();
-        Visit.setOpenVisit(this.visit);
         App.content.addElement(this.visit);
 
+        if(Visit.isSameDay(this.visit.getCalendar(), Calendar.getInstance()))
+        {
+            Log.i(Constants.LOG_TAG, "ShowVisitActivity.onViewCreated:: created visit is today - set as open visit");
+            Visit.setOpenVisit(this.visit);
+        }
+
         this.decorateToolbar();
-        this.createAttractionsRecyclerAdapter();
+    }
+
+    private void showPickAttractionsDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog;
+
+        builder.setTitle(R.string.alert_dialog_add_attractions_to_visit_title);
+        builder.setMessage(getString(R.string.alert_dialog_add_attractions_to_visit_message));
+        builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                onClickAlertDialogPositivePickAttractions(dialog);
+            }
+        });
+
+        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                dialog.dismiss();
+                showAttractionsFragment.initializeForVisit(visit);
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.setIcon(R.drawable.ic_baseline_notification_important);
+
+        alertDialog.show();
+    }
+
+    private void onClickAlertDialogPositivePickAttractions(DialogInterface dialog)
+    {
+        dialog.dismiss();
+        ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_ATTRACTIONS, this.parentPark.getChildrenOfInstance(Attraction.class));
     }
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.visit != null ? this.parentPark.getName() : getString(R.string.title_create_visit), this.visit != null ? this.visit.getName() : null);
+        super.setToolbarTitleAndSubtitle(this.visit != null ? this.visit.getName() : getString(R.string.title_visit_create), this.visit != null ? this.parentPark.getName() : null);
     }
 
-    private void createAttractionsRecyclerAdapter()
+    protected void addShowAttractionFragment()
     {
-        Log.d(Constants.LOG_TAG, "ShowVisitActivity.onViewCreated:: creating RecyclerView...");
+        Log.d(Constants.LOG_TAG, "ShowVisitActivity.addShowAttractionFragment:: adding fragment...");
 
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        if(this.showAttractionsFragment == null || super.savedInstanceState == null)
         {
-            @Override
-            public void onClick(View view, int position)
-            {
-                Element element = (Element) view.getTag();
-
-                if(element.isInstance(Attraction.class))
-                {
-                    Toaster.makeToast(getApplicationContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
-                }
-            }
-
-            @Override
-            public boolean onLongClick(final View view, int position)
-            {
-                return true;
-            }
-        };
-
-        this.attractionsRecyclerAdapter =
-                new CountableRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(new ArrayList<>(this.visit.getRideCountByAttraction().keySet())), recyclerOnClickListener);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.expandAttractionsCategoriesAccordingToSettings();
-        recyclerView.setAdapter(this.attractionsRecyclerAdapter);
-    }
-
-    private void updateAttractionsRecyclerView()
-    {
-        if(this.parentPark.getChildCountOfInstance(Attraction.class) > 0)
-        {
-            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.parentPark.getChildrenOfInstance(Attraction.class));
-            this.expandAttractionsCategoriesAccordingToSettings();
-            this.attractionsRecyclerAdapter.updateElements(preparedAttractions);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.showAttractionsFragment = ShowAttractionsFragment.newInstance();
+            fragmentTransaction.add(R.id.linearLayoutShowVisit, this.showAttractionsFragment, Constants.FRAGMENT_TAG_SHOW_VISIT_ATTRACTIONS);
+            fragmentTransaction.commit();
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "ShowParkAttractionsFragment.updateAttractionsRecyclerView:: no elements to update");
-        }
-    }
-
-    private void expandAttractionsCategoriesAccordingToSettings()
-    {
-        for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
-        {
-            Log.v(Constants.LOG_TAG, String.format("ShowParkAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
-            this.attractionsRecyclerAdapter.expandElement(attractionCategory);
+            this.showAttractionsFragment = (ShowAttractionsFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_SHOW_VISIT_ATTRACTIONS);
         }
     }
 }

@@ -5,7 +5,7 @@
 
     <TextView
         style="@style/standard_text_view"
-        android:id="@+id/textViewSelectableElementsContentHolder"
+        android:id="@+id/textViewContentHolderSelectable"
         android:gravity="center_vertical|start"
         android:paddingStart="64dp"
         android:paddingEnd="64dp"

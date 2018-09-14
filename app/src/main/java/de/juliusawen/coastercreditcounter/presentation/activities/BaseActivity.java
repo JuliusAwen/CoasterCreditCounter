@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
         ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private Bundle savedInstanceState;
+    protected Bundle savedInstanceState;
 
     private Toolbar toolbar;
     private HelpOverlayFragment helpOverlayFragment;
@@ -39,7 +40,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
-
         this.savedInstanceState = savedInstanceState;
     }
 
@@ -96,8 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         if(getSupportActionBar() != null)
         {
-            outState.putString(Constants.KEY_TITLE, getSupportActionBar().getTitle() != null ? getSupportActionBar().getTitle().toString() : "");
-            outState.putString(Constants.KEY_SUBTITLE, getSupportActionBar().getSubtitle() != null ? getSupportActionBar().getSubtitle().toString() : "");
+            outState.putString(Constants.KEY_TOOLBAR_TITLE, getSupportActionBar().getTitle() != null ? getSupportActionBar().getTitle().toString() : "");
+            outState.putString(Constants.KEY_TOOLBAR_SUBTITLE, getSupportActionBar().getSubtitle() != null ? getSupportActionBar().getSubtitle().toString() : "");
         }
 
         if(this.helpOverlayFragment != null)
@@ -113,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         if(getSupportActionBar() != null)
         {
-            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TITLE), savedInstanceState.getString(Constants.KEY_SUBTITLE));
+            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TOOLBAR_TITLE), savedInstanceState.getString(Constants.KEY_TOOLBAR_SUBTITLE));
         }
 
         if(this.helpOverlayFragment != null)
@@ -151,6 +151,18 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
             });
         }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        switch(keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: hardware back button pressed");
+                this.onToolbarHomeButtonBackClicked();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     protected void onToolbarHomeButtonBackClicked()
@@ -308,7 +320,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
-            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+            fragmentTransaction.add(findViewById(android.R.id.content).getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
             fragmentTransaction.commit();
         }
         else

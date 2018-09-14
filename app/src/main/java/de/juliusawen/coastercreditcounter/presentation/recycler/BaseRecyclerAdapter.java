@@ -28,7 +28,7 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapte
         {
             super(linearLayout);
 
-            this.textView = linearLayout.findViewById(R.id.textViewShowLocationsContentHolder_Parent);
+            this.textView = linearLayout.findViewById(R.id.textViewContentHolderExpandable_Parent);
             this.linearLayout = linearLayout;
         }
     }
@@ -49,7 +49,7 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapte
     @Override
     public BaseRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.show_locations_content_holder, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_expandable, parent, false);
         return new ViewHolder(linearLayout);
     }
 

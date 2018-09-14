@@ -1,35 +1,41 @@
 <resources>
 
-    <!--activity titles-->
+    <!--activity titles & subtitles-->
     <string name="title_app_name">CoasterCreditCounter</string>
 
     <string name="title_help">Help: %1$s</string>
-    <string name="title_show_park">Show Park</string>
 
-    <string name="title_sort_locations">Sort Locations</string>
-    <string name="title_sort_parks">Sort Parks</string>
-    <string name="title_sort_attraction_categories">Sort Attraction Categories</string>
-    <string name="title_sort_attractions">Sort Attractions</string>
-
-    <string name="title_create_visit">Create Visit</string>
-
-
-    <!--activity subtitles-->
-    <string name="subtitle_add_location">Add Location</string>
-
-    <string name="subtitle_edit_location">Edit Location</string>
-    <string name="subtitle_edit_root_location">Edit Root Location</string>
-    <string name="subtitle_edit_attraction_category">Edit Attraction Category</string>
+    <string name="title_locations_sort">Sort Locations</string>
+    <string name="title_locations_pick">Pick Locations</string>
+    <string name="subtitle_locations_pick_description">to add to the new location</string>
+    <string name="subtitle_locations_show">Browse/Manage Locations</string>
+    <string name="subtitle_location_add">Add Location</string>
+    <string name="subtitle_location_edit">Edit Location</string>
 
 
-    <string name="subtitle_show_locations">Browse/Manage Locations</string>
 
-    <string name="subtitle_pick_elements">Pick Elements</string>
-    <string name="subtitle_pick_locations_description">Pick children to add to new location</string>
+    <string name="subtitle_root_location_edit">Edit Root Location</string>
 
-    <string name="subtitle_show_park_overview">Overview</string>
-    <string name="subtitle_show_park_attractions">Attractions</string>
-    <string name="subtitle_show_park_visits">Visits</string>
+
+    <string name="title_parks_sort">Sort Parks</string>
+    <string name="title_parks_pick">Pick Parks</string>
+    <string name="subtitle_parks_pick_description">to add to the new location</string>
+    <string name="subtitle_park_show_overview">Overview</string>
+    <string name="subtitle_park_show_attractions">Attractions</string>
+    <string name="subtitle_park_show_visits">Visits</string>
+
+
+
+    <string name="title_attractions_sort">Sort Attractions</string>
+    <string name="title_attractions_pick">Pick Attractions</string>
+    <string name="subtitle_attractions_description_pick">to add to your vist</string>
+
+
+    <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
+    <string name="subtitle_attraction_category_edit">Edit Attraction Category</string>
+
+
+    <string name="title_visit_create">Create Visit</string>
 
 
     <!--options menu entries-->
@@ -83,8 +89,11 @@
         As locations parent is root location %2$s you have to assign new parents to children parks manually!
     </string>
 
-    <string name="alert_dialog_relocate_locations_parks_title">LOCATION CONTAINS PARKS</string>
-    <string name="alert_dialog_relocate_locations_parks_message">Do you want to relocate %1$s\'s child parks to %2$s?</string>
+    <string name="alert_dialog_relocate_children_parks_title">LOCATION CONTAINS PARKS</string>
+    <string name="alert_dialog_relocate_children_parks_message">Do you want to relocate (some of) %1$s\'s child park(s) to %2$s?</string>
+
+    <string name="alert_dialog_add_attractions_to_visit_title">ADD ATTRACTIONS</string>
+    <string name="alert_dialog_add_attractions_to_visit_message">Do you want to add attractions to your visit?</string>
 
 
     <!--descriptions-->
@@ -93,6 +102,8 @@
     <string name="description_close">@string/text_close</string>
     <string name="description_expand_toggle">expand/collapse toggle</string>
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
+    <string name="description_decrease">decrease</string>
+    <string name="description_increase">increase</string>
 
 
     <!--action texts -->

@@ -78,7 +78,7 @@ public class Content
         }
     }
 
-    public static ArrayList<String> getUuidStringsFromElements(List<Element> elements)
+    public ArrayList<String> getUuidStringsFromElements(List<Element> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
         for(Element element : elements)

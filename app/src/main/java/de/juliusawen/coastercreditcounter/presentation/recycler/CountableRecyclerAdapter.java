@@ -21,12 +21,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Attraction;
 import de.juliusawen.coastercreditcounter.data.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Location;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
-import de.juliusawen.coastercreditcounter.data.YearHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecyclerAdapter.ViewHolder>
 {
@@ -38,20 +35,21 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
-        private LinearLayout linearLayout;
-        private TextView textView;
+        private LinearLayout rootLinearLayout;
+        private TextView textView_parent;
         private ImageView imageViewExpandToggle;
+        private int ArchievementCounter;
 
         private int childCount = 0;
         private boolean isExpanded = false;
 
-        ViewHolder(LinearLayout linearLayout)
+        ViewHolder(LinearLayout rootLinearLayout)
         {
-            super(linearLayout);
+            super(rootLinearLayout);
 
-            this.linearLayout = linearLayout;
-            this.textView = linearLayout.findViewById(R.id.textViewShowLocationsContentHolder_Parent);
-            this.imageViewExpandToggle = linearLayout.findViewById(R.id.imageViewShowLocationsContentHolder_ExpandToggle);
+            this.rootLinearLayout = rootLinearLayout;
+            this.textView_parent = rootLinearLayout.findViewById(R.id.textViewContentHolderExpandable_Parent);
+            this.imageViewExpandToggle = rootLinearLayout.findViewById(R.id.imageViewContentHolderExpandable_ExpandToggle);
         }
     }
 
@@ -65,6 +63,7 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
 
     public void updateElements(List<Element> elements)
     {
+        Log.d(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.updateElements:: updating with #[%d] elements...", elements.size()));
         this.elements = elements;
         notifyDataSetChanged();
         Log.d(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.updateElements:: updated with #[%d] elements", elements.size()));
@@ -128,7 +127,7 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
     @Override
     public CountableRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.show_locations_content_holder, parent, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.content_holder_expandable, parent, false);
         return new ViewHolder(linearLayout);
     }
 
@@ -143,27 +142,17 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
         this.handleExpandToggle(viewHolder, element);
         this.removeChildViews(viewHolder);
 
-        if(element.isInstance(Location.class))
-        {
-            Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
-        }
-        else if(element.isInstance(YearHeader.class))
-        {
-            Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child visits", element, element.getChildCountOfInstance(Visit.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Visit.class), recyclerOnClickListener);
-        }
-        else if(element.isInstance(AttractionCategory.class))
+        if(element.isInstance(AttractionCategory.class))
         {
             Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child attractions", element, element.getChildCountOfInstance(Attraction.class)));
             this.addChildViews(viewHolder, element.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
         }
 
-        viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
-        viewHolder.textView.setTag(element);
-        viewHolder.textView.setOnClickListener(recyclerOnClickListener);
-        viewHolder.textView.setOnLongClickListener(recyclerOnClickListener);
-        viewHolder.textView.setVisibility(View.VISIBLE);
+        viewHolder.textView_parent.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));
+        viewHolder.textView_parent.setTag(element);
+        viewHolder.textView_parent.setOnClickListener(recyclerOnClickListener);
+        viewHolder.textView_parent.setOnLongClickListener(recyclerOnClickListener);
+        viewHolder.textView_parent.setVisibility(View.VISIBLE);
     }
 
     private void removeChildViews(ViewHolder viewHolder)
@@ -172,7 +161,7 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
         {
             for (int i = 0; i < viewHolder.childCount; i++)
             {
-                viewHolder.linearLayout.removeView(viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + i));
+                viewHolder.rootLinearLayout.removeView(viewHolder.rootLinearLayout.findViewById(Constants.VIEW_TYPE_CHILD + i));
             }
 
             Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.removeChildViews:: #[%d] ChildViews removed", viewHolder.childCount));
@@ -185,14 +174,14 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
         if(elementsToExpand.contains(element))
         {
             viewHolder.isExpanded = true;
-            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.rootLinearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
 
             Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <EXPANDED>", element));
         }
         else
         {
             viewHolder.isExpanded = false;
-            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.linearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+            viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.rootLinearLayout.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
 
             Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.handleExpandToggle:: ViewHolder %s is <COLLAPSED>", element));
         }
@@ -260,28 +249,92 @@ public class CountableRecyclerAdapter extends RecyclerView.Adapter<CountableRecy
         Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.handleChildViewCreation:: #[%d] ChildViews added.", increment));
     }
 
-    private View createChildView(ViewHolder viewHolder, Element element, int increment, RecyclerOnClickListener recyclerOnClickListener)
+    private View createChildView(final ViewHolder viewHolder, Element element, int increment, RecyclerOnClickListener recyclerOnClickListener)
     {
-        View childView = viewHolder.linearLayout.findViewById(Constants.VIEW_TYPE_CHILD + increment);
+        View childView = viewHolder.rootLinearLayout.findViewById(Constants.VIEW_TYPE_CHILD + increment);
 
         if(childView == null)
         {
             Log.v(Constants.LOG_TAG, String.format("CountableRecyclerAdapter.createChildView:: creating ChildViews %s...", element));
 
-            LayoutInflater layoutInflater = (LayoutInflater) viewHolder.linearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) viewHolder.rootLinearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.show_locations_content_holder, viewHolder.linearLayout, false);
-            childView.findViewById(R.id.linearLayoutShowLocationsContentHolder).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.content_holder_expandable, viewHolder.rootLinearLayout, false);
+            childView.findViewById(R.id.linearLayoutContentHolderExpandable).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
             childView.setId(Constants.VIEW_TYPE_CHILD + increment);
             childView.setTag(element);
-            childView.setOnClickListener(recyclerOnClickListener);
-            childView.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
-            TextView textView = childView.findViewById(R.id.textViewShowLocationsContentHolder_Child);
-            textView.setText(element.getName());
-            textView.setVisibility(View.VISIBLE);
+            LinearLayout linearLayout = childView.findViewById(R.id.linearLayoutContentHolderCountableChild);
+            linearLayout.setVisibility(View.VISIBLE);
 
-            viewHolder.linearLayout.addView(childView);
+
+            final TextView textViewName = childView.findViewById(R.id.textViewContentHolder_CountableChildName);
+            textViewName.setText(element.getName());
+
+            final TextView textViewCount = childView.findViewById(R.id.textViewContentHolder_CountableChildCount);
+            textViewCount.setText(StringTool.getSpannableString(String.valueOf(0), Typeface.BOLD));
+
+            ImageView imageViewDecrease = childView.findViewById(R.id.imageViewContentHolderCountableChild_Decrease);
+            imageViewDecrease.setImageDrawable(viewHolder.rootLinearLayout.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+            imageViewDecrease.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    int count = Integer.parseInt(textViewCount.getText().toString()) - 1;
+
+                    if(count >= 0)
+                    {
+                        textViewCount.setText(StringTool.getSpannableString(String.valueOf(count), Typeface.BOLD));
+                    }
+                }
+            });
+
+            ImageView imageViewIncrease = childView.findViewById(R.id.imageViewContentHolderCountableChild_Increase);
+            imageViewIncrease.setImageDrawable(viewHolder.rootLinearLayout.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
+            imageViewIncrease.setTag(0);
+            imageViewIncrease.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    int count = Integer.parseInt(textViewCount.getText().toString()) + 1;
+                    textViewCount.setText(StringTool.getSpannableString(String.valueOf(count), Typeface.BOLD));
+
+                    if(count == 3 && viewHolder.ArchievementCounter == 0)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Errungenschaft: 3x ist Bremer Recht!");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                    else if(count == 7 && viewHolder.ArchievementCounter == 1)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Errungenschaft:Die Glorreichen Sieben");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                    else if(count == 12 && viewHolder.ArchievementCounter == 2)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Errungenschaft: Im Dutzend billiger");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                    else if(count == 27 && viewHolder.ArchievementCounter == 3)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Du kannst jetzt aufhören den Knopf zu drücken...");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                    else if(count == 50 && viewHolder.ArchievementCounter == 4)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Ehrlich: es kommt nichts mehr!");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                    else if(count == 100 && viewHolder.ArchievementCounter == 5)
+                    {
+                        Toaster.makeToast(viewHolder.rootLinearLayout.getContext(),"Du hast ja 'nen Knall! xD");
+                        viewHolder.ArchievementCounter ++;
+                    }
+                }
+            });
+
+            viewHolder.rootLinearLayout.addView(childView);
             viewHolder.childCount++;
         }
 

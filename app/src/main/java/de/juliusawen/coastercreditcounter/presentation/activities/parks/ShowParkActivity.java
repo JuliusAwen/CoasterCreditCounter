@@ -27,7 +27,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkAttractionsFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkVisitsFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -156,21 +156,21 @@ public class ShowParkActivity extends BaseActivity
         switch(position)
         {
             case OVERVIEW:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_overview));
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_overview));
                 this.decorateFloatingActionButtonShowParkOverview();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_overview)), getText(R.string.help_text_show_park_overview));
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_overview)), getText(R.string.help_text_show_park_overview));
                 break;
 
             case ATTRACTIONS:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_attractions));
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_attractions)), getText(R.string.help_text_show_park_attractions));
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_attractions)), getText(R.string.help_text_show_park_attractions));
                 break;
 
             case VISITS:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_show_park_visits));
+                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_show_park_visits)), getText(R.string.help_text_show_park_visits));
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_visits)), getText(R.string.help_text_show_park_visits));
                 break;
 
             default:
@@ -226,7 +226,7 @@ public class ShowParkActivity extends BaseActivity
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
         ShowParkOverviewFragment showParkOverviewFragment;
-        ShowParkAttractionsFragment showParkAttractionsFragment;
+        ShowAttractionsFragment showAttractionsFragment;
         ShowParkVisitsFragment showParkVisitsFragment;
 
         private String parkUuid;
@@ -258,7 +258,7 @@ public class ShowParkActivity extends BaseActivity
                 }
                 case(1):
                 {
-                    return ShowParkAttractionsFragment.newInstance(this.parkUuid);
+                    return ShowAttractionsFragment.newInstance(this.parkUuid);
                 }
                 case(2):
                 {
@@ -272,7 +272,7 @@ public class ShowParkActivity extends BaseActivity
 
         @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position)
+        public Object instantiateItem(@NonNull ViewGroup container, int position)
         {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
 
@@ -282,7 +282,7 @@ public class ShowParkActivity extends BaseActivity
                     this.showParkOverviewFragment = (ShowParkOverviewFragment) createdFragment;
                     break;
                 case ATTRACTIONS:
-                    this.showParkAttractionsFragment = (ShowParkAttractionsFragment) createdFragment;
+                    this.showAttractionsFragment = (ShowAttractionsFragment) createdFragment;
                     break;
                 case VISITS:
                     this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;

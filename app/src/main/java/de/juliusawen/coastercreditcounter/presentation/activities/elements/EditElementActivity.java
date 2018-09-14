@@ -84,7 +84,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
     private void initializeContent()
     {
         this.elementToEdit = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
+        this.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
     }
 
     private void decorateToolbar()

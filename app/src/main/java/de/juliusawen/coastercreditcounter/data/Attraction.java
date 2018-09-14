@@ -95,4 +95,18 @@ public class Attraction extends Element
         }
         return attractions;
     }
+
+    public static boolean containsAttractionOfCategory(List<Attraction> attractions, AttractionCategory attractionCategory)
+    {
+        for(Attraction attraction : attractions)
+        {
+            if(attraction.getCategory().equals(attractionCategory))
+            {
+                Log.v(Constants.LOG_TAG,  String.format("Attraction.containsAttractionOfCategory:: %s is of %s", attraction, attractionCategory));
+                return true;
+            }
+        }
+        Log.v(Constants.LOG_TAG,  String.format("Attraction.containsAttractionOfCategory:: no attraction of %s found", attractionCategory));
+        return false;
+    }
 }

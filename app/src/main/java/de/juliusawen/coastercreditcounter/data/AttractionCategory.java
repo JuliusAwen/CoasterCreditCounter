@@ -51,7 +51,6 @@ public class AttractionCategory extends OrphanElement
         return attractionCategories;
     }
 
-
     public static List<Element> addAttractionCategoryHeaders(List<? extends Element> elements)
     {
         if(elements.isEmpty())

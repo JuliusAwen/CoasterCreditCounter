@@ -30,7 +30,6 @@ import de.juliusawen.coastercreditcounter.data.Location;
 import de.juliusawen.coastercreditcounter.data.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -63,7 +62,7 @@ public class ShowLocationsActivity extends BaseActivity
         super.addToolbar();
         super.addToolbarHomeButton();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_show_locations)), getString(R.string.help_text_show_locations));
+        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_locations_show)), getString(R.string.help_text_show_locations));
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
@@ -110,7 +109,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_LOCATIONS:
-                ActivityTool.startActivitySort(
+                ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_LOCATIONS,
                         this.currentElement.getChildrenOfInstance(Location.class));
@@ -126,7 +125,7 @@ public class ShowLocationsActivity extends BaseActivity
     {
         super.onSaveInstanceState(outState);
 
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.recentElements));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, App.content.getUuidStringsFromElements(this.recentElements));
         outState.putString(Constants.KEY_ELEMENT, this.currentElement.getUuid().toString());
     }
 
@@ -186,7 +185,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch(keyCode)
         {
             case KeyEvent.KEYCODE_BACK:
-                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onActonKeyDown:: hardware back button pressed");
+                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onKeyDown<BACK>:: hardware back button pressed");
                 if(this.currentElement.isRootElement())
                 {
                     this.onToolbarHomeButtonBackClicked();
@@ -279,7 +278,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case ADD_LOCATION:
-                ActivityTool.startActivityAdd(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
+                ActivityTool.startActivityAddForResult(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
                 return true;
 
             case ADD_PARK:
@@ -497,7 +496,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        onClickAlertDialogPositiveButtonDeleteElement(dialog, view);
+                        onClickAlertDialogPositiveDeleteElement(dialog, view);
                     }
                 });
 
@@ -505,7 +504,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        onClickAlertDialogNegativeButton(dialog);
+                        onClickAlertDialogNegative(dialog);
                     }
                 });
 
@@ -544,7 +543,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        onClickAlertDialogNegativeButton(dialog);
+                        onClickAlertDialogNegative(dialog);
                     }
                 });
                 alertDialog = builder.create();
@@ -553,7 +552,7 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
 
             case SORT_PARKS:
-                ActivityTool.startActivitySort(
+                ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_PARKS,
                         this.longClickedElement.getChildrenOfInstance(Park.class));
@@ -564,9 +563,9 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private void onClickAlertDialogPositiveButtonDeleteElement(DialogInterface dialog, View view)
+    private void onClickAlertDialogPositiveDeleteElement(DialogInterface dialog, View view)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s...", longClickedElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickAlertDialogPositiveDeleteElement:: deleting %s...", longClickedElement));
 
         dialog.dismiss();
 
@@ -579,7 +578,7 @@ public class ShowLocationsActivity extends BaseActivity
             else
             {
                 Log.e(Constants.LOG_TAG, String.format(
-                        "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: deleting %s and children failed - restoring content...",
+                        "ShowLocationsActivity.onClickAlertDialogPositiveDeleteElement:: deleting %s and children failed - restoring content...",
                         longClickedElement));
                 App.content.addElementAndChildren(longClickedElement);
                 Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
@@ -590,7 +589,7 @@ public class ShowLocationsActivity extends BaseActivity
             Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_delete_failed));
 
             String errorMessage = String.format(
-                    "ShowLocationsActivity.onClickAlertDialogPositiveButtonDeleteElement:: removing %s and children from content failed!",
+                    "ShowLocationsActivity.onClickAlertDialogPositiveDeleteElement:: removing %s and children from content failed!",
                     this.longClickedElement);
             Log.e(Constants.LOG_TAG, errorMessage);
             throw new IllegalStateException(errorMessage);
@@ -691,9 +690,9 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private void onClickAlertDialogNegativeButton(DialogInterface dialog)
+    private void onClickAlertDialogNegative(DialogInterface dialog)
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickAlertDialogNegativeButton:: canceled");
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickAlertDialogNegative:: canceled");
         dialog.dismiss();
     }
 

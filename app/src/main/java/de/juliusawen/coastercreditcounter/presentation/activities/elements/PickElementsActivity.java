@@ -16,14 +16,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
@@ -34,8 +31,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class PickElementsActivity extends BaseActivity
 {
-    private Element parentElement;
     private List<Element> elementsToPickFrom;
+    private String toolbarTitle;
+    private String toolbarSubtitle;
+
     private RadioButton radioButtonSelectOrDeselectAll;
     private TextView textViewSelectOrDeselectAll;
     private SelectableRecyclerAdapter contentRecyclerAdapter;
@@ -51,7 +50,7 @@ public class PickElementsActivity extends BaseActivity
 
         this.initializeContent();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_pick_elements)), getText(R.string.help_text_pick_elements));
+        super.addHelpOverlay(getString(R.string.title_help, this.toolbarTitle), getText(R.string.help_text_pick_elements));
 
         super.addToolbar();
         super.addToolbarHomeButton();
@@ -76,8 +75,7 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onSaveInstanceState(outState);
 
-        outState.putString(Constants.KEY_ELEMENT, this.parentElement.getUuid().toString());
-        outState.putStringArrayList(Constants.KEY_ELEMENTS, Content.getUuidStringsFromElements(this.elementsToPickFrom));
+        outState.putStringArrayList(Constants.KEY_ELEMENTS, App.content.getUuidStringsFromElements(this.elementsToPickFrom));
 
         if(this.contentRecyclerAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
         {
@@ -85,18 +83,16 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, Content.getUuidStringsFromElements(contentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            outState.putStringArrayList(Constants.KEY_SELECTED_ELEMENTS, App.content.getUuidStringsFromElements(contentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
-        outState.putString(Constants.EXTRA_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
+        outState.putString(Constants.KEY_RADIO_BUTTON_STATE, this.textViewSelectOrDeselectAll.getText().toString());
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-
-        this.parentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
 
         this.elementsToPickFrom = App.content.fetchElementsByUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
         this.contentRecyclerAdapter.updateElements(this.elementsToPickFrom);
@@ -112,23 +108,22 @@ public class PickElementsActivity extends BaseActivity
             this.contentRecyclerAdapter.selectElements(selectedElements);
         }
 
-        this.textViewSelectOrDeselectAll.setText(savedInstanceState.getString(Constants.EXTRA_RADIO_BUTTON_STATE));
+        this.textViewSelectOrDeselectAll.setText(savedInstanceState.getString(Constants.KEY_RADIO_BUTTON_STATE));
+
     }
     //endregion
 
     private void initializeContent()
     {
-        this.parentElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-
-        if(this.parentElement.isInstance(Location.class))
-        {
-            this.elementsToPickFrom = new ArrayList<>(this.parentElement.getChildrenOfInstance(Location.class));
-        }
+        this.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        this.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
+        this.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
+        Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.initializeContent:: initialized with #[%d] elements", this.elementsToPickFrom.size()));
     }
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.parentElement.getName(), getString(R.string.subtitle_pick_locations_description));
+        super.setToolbarTitleAndSubtitle(this.toolbarTitle, this.toolbarSubtitle);
     }
 
     //region FLOATING ACTION BUTTON
@@ -195,7 +190,10 @@ public class PickElementsActivity extends BaseActivity
         }
         else
         {
-            this.changeRadioButtonToSelectAll();
+            if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+            {
+                this.changeRadioButtonToSelectAll();
+            }
         }
     }
 
@@ -285,7 +283,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, Content.getUuidStringsFromElements(contentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(contentRecyclerAdapter.getSelectedElementsInOrderOfSelection()));
         }
 
         setResult(resultCode, intent);

@@ -18,9 +18,8 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public class Visit extends Element
 {
-    public static SortOrder sortOrder = SortOrder.DESCENDING;
-
     private static Visit openVisit;
+    private static SortOrder sortOrder = SortOrder.DESCENDING;
 
     private Calendar calendar;
     private Map<Element, Integer> rideCountByAttractions = new HashMap<>();
@@ -29,6 +28,20 @@ public class Visit extends Element
     {
         super(name, uuid);
         this.calendar = calendar;
+    }
+
+    @Override
+    public String toString()
+    {
+        if(this.getParent() != null)
+        {
+            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
+        }
+        else
+        {
+            return super.toString();
+        }
+
     }
 
     public static Visit create(int year, int month, int day)
@@ -49,8 +62,6 @@ public class Visit extends Element
         Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
 
         Log.v(Constants.LOG_TAG,  String.format("Visit.createInstance:: %s created.", visit.getFullName()));
-
-
         return visit;
     }
 
@@ -59,22 +70,29 @@ public class Visit extends Element
         return this.calendar;
     }
 
-    public void initialize()
+    public List<Element> getAttractions()
     {
-        for(Element element : this.getParent().getChildrenOfInstance(Attraction.class))
+        return new ArrayList<>(this.rideCountByAttractions.keySet());
+    }
+
+    public void addAttractions(List<Element> elements)
+    {
+        for(Element element : elements)
         {
-            this.rideCountByAttractions.put(element, 0);
+            this.addAttraction(element);
         }
     }
 
-    public void updateAttractions()
+    public void addAttraction(Element element)
     {
-        for(Element element : this.getParent().getChildrenOfInstance(Attraction.class))
+        if(!this.rideCountByAttractions.containsKey(element))
         {
-            if(!this.rideCountByAttractions.containsKey(element))
-            {
-                this.rideCountByAttractions.put(element, 0);
-            }
+            Log.v(Constants.LOG_TAG, String.format("Visit.addAttraction:: added %s", element));
+            this.rideCountByAttractions.put(element, 0);
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("Visit.addAttraction:: %s already exisiting", element));
         }
     }
 
@@ -87,12 +105,12 @@ public class Visit extends Element
     {
         if(visit != null)
         {
-            Log.i(Constants.LOG_TAG, String.format("Visit.setOpenVisit:: %s@%s set as open visit", visit, visit.getParent()));
+            Log.i(Constants.LOG_TAG, String.format("Visit.setOpenVisit:: %s set as open visit", visit));
             Visit.openVisit = (Visit) visit;
         }
         else
         {
-            Log.i(Constants.LOG_TAG,"Visit.setOpenVisit:: open visit reset");
+            Log.i(Constants.LOG_TAG,"Visit.setOpenVisit:: open visit cleared");
             Visit.openVisit = null;
         }
     }
@@ -121,11 +139,7 @@ public class Visit extends Element
             Calendar calendar = Calendar.getInstance();
             Calendar visitCalender = Visit.openVisit.getCalendar();
 
-            boolean sameDay = visitCalender.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH);
-            boolean sameMonth =  visitCalender.get(Calendar.MONTH) == calendar.get(Calendar.MONTH);
-            boolean sameYear = visitCalender.get(Calendar.YEAR) == calendar.get(Calendar.YEAR);
-
-            if(sameDay && sameMonth && sameYear)
+            if(Visit.isSameDay(calendar, visitCalender))
             {
                 return true;
             }
@@ -135,6 +149,11 @@ public class Visit extends Element
             }
         }
         return false;
+    }
+
+    public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)
+    {
+        return calendar.get(Calendar.YEAR) == compareCalendar.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == compareCalendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public static List<Visit> convertToVisits(List<? extends Element> elements)
@@ -156,17 +175,28 @@ public class Visit extends Element
         return visits;
     }
 
+    public static SortOrder getSortOrder()
+    {
+        return Visit.sortOrder;
+    }
+
+    public static void setSortOrder(SortOrder sortOrder)
+    {
+        Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to #[%s]", sortOrder.toString()));
+        Visit.sortOrder = sortOrder;
+    }
+
     public static List<Element> sortVisitsByDateAccordingToSortOrder(List<Element> visits)
     {
-        if(Visit.sortOrder.equals(SortOrder.ASCENDING))
+        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
         {
             visits = Visit.sortAscendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
         }
-        else if(Visit.sortOrder.equals(SortOrder.DESCENDING))
+        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
         {
             visits = Visit.sortDescendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("ShowParkVisitsFragment.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
         }
 
         return visits;

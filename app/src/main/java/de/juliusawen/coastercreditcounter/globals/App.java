@@ -81,7 +81,7 @@ public abstract class App
             App.progressBar.setVisibility(View.GONE);
             App.progressBar = null;
 
-            Visit.sortOrder = App.settings.getDefaultSortOrderParkVisits();
+            Visit.setSortOrder(App.settings.getDefaultSortOrderParkVisits());
 
             if(Visit.validateOpenVisit() && App.settings.goToOpenVisitWhenOpeningApp())
             {
