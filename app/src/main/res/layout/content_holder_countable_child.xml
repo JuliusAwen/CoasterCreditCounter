@@ -18,11 +18,10 @@
 
         <ImageView
             style="@style/standard_image_holder"
-            android:id="@+id/imageViewContentHolderCountableChild_Decrease"
+            android:id="@+id/imageViewRecyclerViewContentItemHolder_ExpandToggle"
             android:layout_height="32dp"
             android:background="@color/white"
-            android:layout_gravity="center"
-            android:contentDescription="@string/description_decrease"/>
+            android:layout_gravity="center"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -33,14 +32,14 @@
 
             <TextView
                 style="@style/standard_text_view"
-                android:id="@+id/textViewContentHolder_CountableChildName"
+                android:id="@+id/textViewRecyclerViewContentCountableItem_Name"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="bottom|center_horizontal"/>
 
             <TextView
                 style="@style/standard_text_view"
-                android:id="@+id/textViewContentHolder_CountableChildCount"
+                android:id="@+id/textViewRecyclerViewContentCountableItem_Count"
                 android:textSize="28sp"
                 android:layout_gravity="center"
                 android:gravity="center" />
@@ -50,11 +49,10 @@
 
         <ImageView
             style="@style/standard_image_holder"
-            android:id="@+id/imageViewContentHolderCountableChild_Increase"
+            android:id="@+id/imageViewRecyclerViewContentItemHolder_Right"
             android:layout_height="32dp"
             android:background="@color/white"
-            android:layout_gravity="center"
-            android:contentDescription="@string/description_increase"/>
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

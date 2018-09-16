@@ -16,4 +16,12 @@ public abstract class DrawableTool
 
         return drawable;
     }
+
+    public static Drawable setTintToColor(Context context,Drawable drawable, int colorId)
+    {
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, colorId));
+
+        return drawable;
+    }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -55,51 +56,6 @@ public class YearHeader extends OrphanElement
         return latestYearHeader;
     }
 
-    public static List<Element> addYearHeaders(List<Element> elements)
-    {
-        if(elements.isEmpty())
-        {
-            Log.v(Constants.LOG_TAG, "YearHeader.addYearHeaders:: no elements found");
-            return elements;
-        }
-
-        Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: adding headers for #[%d] elements...", elements.size()));
-
-        List<Visit> visits = Visit.convertToVisits(elements);
-        List<Element> preparedElements = new ArrayList<>();
-
-        DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
-
-        for(Visit visit : visits)
-        {
-            String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
-
-            Element existingYearHeader = null;
-            for(Element yearHeader : preparedElements)
-            {
-                if(yearHeader.getName().equals(year))
-                {
-                    existingYearHeader = yearHeader;
-                }
-            }
-
-            if(existingYearHeader != null)
-            {
-                existingYearHeader.addChildToOrphanElement(visit);
-            }
-            else
-            {
-                YearHeader yearHeader = YearHeader.create(year);
-                yearHeader.addChildToOrphanElement(visit);
-                preparedElements.add(yearHeader);
-                Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: created new %s", yearHeader));
-            }
-        }
-
-        Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: #[%d] headers added", preparedElements.size()));
-        return preparedElements;
-    }
-
     public static List<YearHeader> convertToYearHeader(List<? extends Element> elements)
     {
         List<YearHeader> yearHeaders = new ArrayList<>();
@@ -117,5 +73,50 @@ public class YearHeader extends OrphanElement
             }
         }
         return yearHeaders;
+    }
+
+    public static LinkedHashMap<Element, List<Element>> getVisitsByYearHeaders(List<Visit> visits)
+    {
+        LinkedHashMap<Element, List<Element>> visitsByYearHeader = new LinkedHashMap<>();
+
+        if(visits.isEmpty())
+        {
+            Log.e(Constants.LOG_TAG, "YearHeader.getVisitsByYearHeader:: no visits found to prepare");
+            return visitsByYearHeader;
+        }
+
+        Log.v(Constants.LOG_TAG, String.format("YearHeader.getVisitsByYearHeader:: adding headers for #[%d] visits...", visits.size()));
+
+        DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
+
+        for(Visit visit : visits)
+        {
+            String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
+
+            Element existingYearHeader = null;
+            for(Element yearHeader : visitsByYearHeader.keySet())
+            {
+                if(yearHeader.getName().equals(year))
+                {
+                    existingYearHeader = yearHeader;
+                }
+            }
+
+            if(existingYearHeader != null)
+            {
+                visitsByYearHeader.get(existingYearHeader).add(visit);
+            }
+            else
+            {
+                YearHeader yearHeader = YearHeader.create(year);
+                List<Element> preparedVisits = new ArrayList<>();
+                preparedVisits.add(visit);
+                visitsByYearHeader.put(yearHeader, preparedVisits);
+                Log.v(Constants.LOG_TAG, String.format("YearHeader.getVisitsByYearHeader:: created new %s", yearHeader));
+            }
+        }
+
+        Log.d(Constants.LOG_TAG, String.format("YearHeader.getVisitsByYearHeader:: #[%d] headers added", visitsByYearHeader.size()));
+        return visitsByYearHeader;
     }
 }

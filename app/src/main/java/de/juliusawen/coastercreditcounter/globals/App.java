@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Visit;
+import de.juliusawen.coastercreditcounter.presentation.activities.TestActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public abstract class App
@@ -81,18 +83,28 @@ public abstract class App
             App.progressBar.setVisibility(View.GONE);
             App.progressBar = null;
 
+
             Visit.setSortOrder(App.settings.getDefaultSortOrderParkVisits());
 
-            if(Visit.validateOpenVisit() && App.settings.goToOpenVisitWhenOpeningApp())
+            if(Settings.jumpToTestActivityOnStart)
             {
-                Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
-                ActivityTool.startActivityShow(App.activity, Visit.getOpenVisit());
+                Log.e(Constants.LOG_TAG, "App.Initialize.onPostExecute:: starting TestActivity");
+                activity.startActivity(new Intent(activity, TestActivity.class));
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
-                ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
+                if(Visit.validateOpenVisit() && App.settings.jumpToOpenVisitOnStart())
+                {
+                    Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
+                    ActivityTool.startActivityShow(App.activity, Visit.getOpenVisit());
+                }
+                else
+                {
+                    Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
+                    ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
+                }
             }
+
 
             App.activity = null;
             App.isInitialized = true;

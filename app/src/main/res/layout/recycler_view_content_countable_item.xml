@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        style="@style/standard_image_holder"
+        android:id="@+id/imageViewRecyclerViewContentItemHolder_ExpandToggle"
+        android:contentDescription="@string/description_decrease"
+        android:layout_height="32dp"
+        android:background="@color/white"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_error_outline"/>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            style="@style/standard_text_view"
+            android:id="@+id/textViewRecyclerViewContentCountableItem_Name"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/standard_text_view"
+            android:id="@+id/textViewRecyclerViewContentCountableItem_Count"
+            android:textSize="28sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        style="@style/standard_image_holder"
+        android:id="@+id/imageViewRecyclerViewContentItemHolder_Right"
+        android:contentDescription="@string/description_increase"
+        android:layout_height="32dp"
+        android:background="@color/white"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_error_outline"/>
+
+</LinearLayout>
+

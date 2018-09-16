@@ -28,7 +28,7 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyclerAdapte
         {
             super(linearLayout);
 
-            this.textView = linearLayout.findViewById(R.id.textViewContentHolderExpandable_Parent);
+            this.textView = linearLayout.findViewById(R.id.textViewRevyclerViewContentHolderParent);
             this.linearLayout = linearLayout;
         }
     }

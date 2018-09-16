@@ -30,7 +30,7 @@ import de.juliusawen.coastercreditcounter.data.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
-import de.juliusawen.coastercreditcounter.presentation.recycler.CountableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recycler.ContentRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.recycler.ExpandableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -45,7 +45,7 @@ public  class ShowAttractionsFragment extends Fragment
 
     private RecyclerView recyclerView;
     private ExpandableRecyclerAdapter expandableRecyclerAdapter;
-    private CountableRecyclerAdapter countableRecyclerAdapter;
+    private ContentRecyclerAdapter contentRecyclerAdapter;
 
     public ShowAttractionsFragment() {}
 
@@ -87,7 +87,7 @@ public  class ShowAttractionsFragment extends Fragment
         Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.initializeForVisit:: initializing fragment for %s...", visit));
         this.visit = visit;
         this.createCountableRecyclerAdapter();
-        this.recyclerView.setAdapter(this.countableRecyclerAdapter);
+        this.recyclerView.setAdapter(this.contentRecyclerAdapter);
         this.isInitialized = true;
     }
 
@@ -161,7 +161,7 @@ public  class ShowAttractionsFragment extends Fragment
         this.visit = null;
         this.recyclerView = null;
         this.expandableRecyclerAdapter = null;
-        this.countableRecyclerAdapter = null;
+        this.contentRecyclerAdapter = null;
     }
 
     @Override
@@ -328,40 +328,40 @@ public  class ShowAttractionsFragment extends Fragment
             }
         };
 
-        this.countableRecyclerAdapter =
-                new CountableRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(new ArrayList<>(this.visit.getRideCountByAttraction().keySet())), recyclerOnClickListener);
+//        this.contentRecyclerAdapter =
+//                new ContentRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(new ArrayList<>(this.visit.getRideCountByAttraction().keySet())), recyclerOnClickListener);
     }
 
     public void updateCountableRecyclerView()
     {
-        if(this.visit.getAttractions().size() > 0)
-        {
-            this.expandAttractionsCategoriesAccordingToSettings(this.visit.getAttractions());
-            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.visit.getAttractions());
-            this.countableRecyclerAdapter.updateElements(preparedAttractions);
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "ShowAttractionsFragment.updateCountableRecyclerView:: no elements to update");
-        }
+//        if(this.visit.getAttractions().size() > 0)
+//        {
+//            this.expandAttractionsCategoriesAccordingToSettings(this.visit.getAttractions());
+//            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.visit.getAttractions());
+//            this.contentRecyclerAdapter.updateElements(preparedAttractions);
+//        }
+//        else
+//        {
+//            Log.v(Constants.LOG_TAG, "ShowAttractionsFragment.updateCountableRecyclerView:: no elements to update");
+//        }
     }
 
     private void expandAttractionsCategoriesAccordingToSettings(List<Element> attractions)
     {
-        for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
-        {
-            if(Attraction.containsAttractionOfCategory(Attraction.convertToAttractions(attractions), attractionCategory))
-            {
-                Log.v(Constants.LOG_TAG, String.format("ShowAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
-                if(this.expandableRecyclerAdapter != null)
-                {
-                    this.expandableRecyclerAdapter.expandElement(attractionCategory);
-                }
-                else if(this.countableRecyclerAdapter != null)
-                {
-                    this.countableRecyclerAdapter.expandElement(attractionCategory);
-                }
-            }
-        }
+//        for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
+//        {
+//            if(Attraction.containsAttractionOfCategory(Attraction.convertToAttractions(attractions), attractionCategory))
+//            {
+//                Log.v(Constants.LOG_TAG, String.format("ShowAttractionsFragment.expandAttractionsCategoriesAccordingToSettings:: expanding #[%s] according to settings...", attractionCategory));
+//                if(this.expandableRecyclerAdapter != null)
+//                {
+//                    this.expandableRecyclerAdapter.expandElement(attractionCategory);
+//                }
+//                else if(this.contentRecyclerAdapter != null)
+//                {
+//                    this.contentRecyclerAdapter.expandElement(attractionCategory);
+//                }
+//            }
+//        }
     }
 }

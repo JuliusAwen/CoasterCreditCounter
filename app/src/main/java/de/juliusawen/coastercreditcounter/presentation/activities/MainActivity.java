@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.view.View;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Settings;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class MainActivity extends AppCompatActivity
@@ -35,9 +37,17 @@ public class MainActivity extends AppCompatActivity
         Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
         if(App.isInitialized)
         {
-            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting HubActivity");
-            Log.e(Constants.LOG_TAG, "MainActivity.onResume:: HubActivity not available atm - staring ShowLocationsActivity<root> instead");
-            ActivityTool.startActivityShow(this, App.content.getRootLocation());
+            if(Settings.jumpToTestActivityOnStart)
+            {
+                Log.e(Constants.LOG_TAG, "MainActivity.onResume:: starting TestActivity");
+                startActivity(new Intent(this, TestActivity.class));
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting HubActivity");
+                Log.e(Constants.LOG_TAG, "MainActivity.onResume:: HubActivity not available atm - staring ShowLocationsActivity<root> instead");
+                ActivityTool.startActivityShow(this, App.content.getRootLocation());
+            }
         }
         else
         {

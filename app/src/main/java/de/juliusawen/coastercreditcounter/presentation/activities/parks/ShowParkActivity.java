@@ -29,7 +29,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
-import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkVisitsFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowVisitsFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -227,7 +227,7 @@ public class ShowParkActivity extends BaseActivity
     {
         ShowParkOverviewFragment showParkOverviewFragment;
         ShowAttractionsFragment showAttractionsFragment;
-        ShowParkVisitsFragment showParkVisitsFragment;
+        ShowVisitsFragment showVisitsFragment;
 
         private String parkUuid;
 
@@ -262,7 +262,7 @@ public class ShowParkActivity extends BaseActivity
                 }
                 case(2):
                 {
-                    return ShowParkVisitsFragment.newInstance(this.parkUuid);
+                    return ShowVisitsFragment.newInstance(this.parkUuid);
                 }
                 default:
                     Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
@@ -285,7 +285,7 @@ public class ShowParkActivity extends BaseActivity
                     this.showAttractionsFragment = (ShowAttractionsFragment) createdFragment;
                     break;
                 case VISITS:
-                    this.showParkVisitsFragment = (ShowParkVisitsFragment) createdFragment;
+                    this.showVisitsFragment = (ShowVisitsFragment) createdFragment;
                     break;
                 default:
                     String errorMessage = String.format(Locale.getDefault(), "ShowParkActivity.TabPagerAdapter.instantiateItem:: tab position [%d] does not exist", position);

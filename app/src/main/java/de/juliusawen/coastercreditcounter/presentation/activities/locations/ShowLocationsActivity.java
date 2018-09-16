@@ -28,12 +28,13 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Element;
 import de.juliusawen.coastercreditcounter.data.Location;
 import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.requests.GetContentRecyclerAdapterRequest;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.recycler.ExpandableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.recycler.ContentRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
@@ -42,10 +43,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity
 {
-    private Element currentElement;
+    private Element currentLocation;
     private List<Element> recentElements = new ArrayList<>();
 
-    private ExpandableRecyclerAdapter locationsRecyclerAdapter;
+    private ContentRecyclerAdapter contentRecyclerAdapter;
     private Element longClickedElement;
 
 
@@ -67,13 +68,13 @@ public class ShowLocationsActivity extends BaseActivity
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        this.createLocationRecyclerAdapter();
+        this.createContentRecyclerAdapter();
     }
 
     @Override
     protected void onResume()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: CurrentElement %s", this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onResume:: CurrentElement %s", this.currentLocation));
         this.updateActivityView();
         super.onResume();
     }
@@ -83,12 +84,12 @@ public class ShowLocationsActivity extends BaseActivity
     {
         menu.clear();
 
-        if(this.currentElement.isRootElement())
+        if(this.currentLocation.isRootElement())
         {
             menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_root_location);
         }
 
-        if(this.currentElement.getChildCountOfInstance(Location.class) > 1)
+        if(this.currentLocation.getChildCountOfInstance(Location.class) > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
         }
@@ -105,14 +106,14 @@ public class ShowLocationsActivity extends BaseActivity
         switch(selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startActivityEdit(this, this.currentElement);
+                ActivityTool.startActivityEdit(this, this.currentLocation);
                 return true;
 
             case SORT_LOCATIONS:
                 ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_LOCATIONS,
-                        this.currentElement.getChildrenOfInstance(Location.class));
+                        this.currentLocation.getChildrenOfInstance(Location.class));
                 return true;
 
             default:
@@ -126,7 +127,7 @@ public class ShowLocationsActivity extends BaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putStringArrayList(Constants.KEY_ELEMENTS, App.content.getUuidStringsFromElements(this.recentElements));
-        outState.putString(Constants.KEY_ELEMENT, this.currentElement.getUuid().toString());
+        outState.putString(Constants.KEY_ELEMENT, this.currentLocation.getUuid().toString());
     }
 
     @Override
@@ -135,7 +136,7 @@ public class ShowLocationsActivity extends BaseActivity
         super.onRestoreInstanceState(savedInstanceState);
 
         this.recentElements = App.content.fetchElementsByUuidStrings(savedInstanceState.getStringArrayList(Constants.KEY_ELEMENTS));
-        this.currentElement = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+        this.currentLocation = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
     }
 
     @Override
@@ -149,7 +150,7 @@ public class ShowLocationsActivity extends BaseActivity
                 String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = App.content.fetchElementByUuidString(uuidString);
                 updateLocationRecyclerView();
-                this.locationsRecyclerAdapter.smoothScrollToElement(resultElement);
+                this.contentRecyclerAdapter.smoothScrollToParent(resultElement);
             }
         }
         else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
@@ -169,7 +170,7 @@ public class ShowLocationsActivity extends BaseActivity
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
-                    this.locationsRecyclerAdapter.smoothScrollToElement(selectedElement);
+                    this.contentRecyclerAdapter.smoothScrollToParent(selectedElement);
                 }
                 else
                 {
@@ -186,7 +187,7 @@ public class ShowLocationsActivity extends BaseActivity
         {
             case KeyEvent.KEYCODE_BACK:
                 Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onKeyDown<BACK>:: hardware back button pressed");
-                if(this.currentElement.isRootElement())
+                if(this.currentLocation.isRootElement())
                 {
                     this.onToolbarHomeButtonBackClicked();
                 }
@@ -194,9 +195,9 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     Element previousElement = this.recentElements.get(this.recentElements.size() - 2);
                     Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
-                    this.recentElements.remove(this.currentElement);
+                    this.recentElements.remove(this.currentLocation);
                     this.recentElements.remove(previousElement);
-                    this.currentElement = previousElement;
+                    this.currentLocation = previousElement;
                     this.updateActivityView();
                 }
                 return true;
@@ -217,9 +218,9 @@ public class ShowLocationsActivity extends BaseActivity
     private void initializeContent()
     {
         String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        this.currentElement = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+        this.currentLocation = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
 
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentElement %s", this.currentElement));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.initializeContent:: initialized with currentLocation %s", this.currentLocation));
     }
 
     private void updateActivityView()
@@ -232,7 +233,7 @@ public class ShowLocationsActivity extends BaseActivity
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.currentElement.getName(), null);
+        super.setToolbarTitleAndSubtitle(this.currentLocation.getName(), null);
     }
 
     //region FLOATING ACTION BUTTON
@@ -278,7 +279,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch (selection)
         {
             case ADD_LOCATION:
-                ActivityTool.startActivityAddForResult(this, Constants.REQUEST_ADD_LOCATION, this.currentElement);
+                ActivityTool.startActivityAddForResult(this, Constants.REQUEST_ADD_LOCATION, this.currentLocation);
                 return true;
 
             case ADD_PARK:
@@ -301,17 +302,17 @@ public class ShowLocationsActivity extends BaseActivity
         linearLayoutNavigationBar.invalidate();
         linearLayoutNavigationBar.removeAllViews();
 
-        if(this.recentElements.isEmpty() && !this.currentElement.isRootElement())
+        if(this.recentElements.isEmpty() && !this.currentLocation.isRootElement())
         {
             Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing navigation bar");
             this.recentElements.clear();
-            this.constructNavigationBar(this.currentElement.getParent());
+            this.constructNavigationBar(this.currentLocation.getParent());
         }
 
-        if(!this.recentElements.contains(this.currentElement))
+        if(!this.recentElements.contains(this.currentLocation))
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding current element %s to recent elements...", this.currentElement));
-            this.recentElements.add(this.currentElement);
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding current element %s to recent elements...", this.currentLocation));
+            this.recentElements.add(this.currentLocation);
         }
 
         for (Element recentElement : this.recentElements)
@@ -391,13 +392,13 @@ public class ShowLocationsActivity extends BaseActivity
                 this.recentElements.remove(i);
             }
         }
-        this.currentElement = element;
+        this.currentLocation = element;
         this.updateActivityView();
     }
     //endregion
 
     //region CONTENT RECYCLER VIEW
-    private void createLocationRecyclerAdapter()
+    private void createContentRecyclerAdapter()
     {
         RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
         {
@@ -415,11 +416,17 @@ public class ShowLocationsActivity extends BaseActivity
             }
         };
 
-        this.locationsRecyclerAdapter = new ExpandableRecyclerAdapter(new ArrayList<>(this.currentElement.getChildrenOfInstance(Location.class)), recyclerOnClickListener);
+        GetContentRecyclerAdapterRequest request = new GetContentRecyclerAdapterRequest();
+        request.childrenByParents = Location.getParksByLocations((Location) this.currentLocation);
+        request.onParentClickListener = recyclerOnClickListener;
+        request.onChildClickListener = recyclerOnClickListener;
+        request.parentsAreExpandable = true;
+
+        this.contentRecyclerAdapter = new ContentRecyclerAdapter(request);
         RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewShowLocations);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.locationsRecyclerAdapter);
+        recyclerView.setAdapter(this.contentRecyclerAdapter);
     }
 
     private void onClickLocationRecyclerView(View view)
@@ -430,7 +437,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(element.isInstance(Location.class))
         {
-            this.currentElement = element;
+            this.currentLocation = element;
             this.updateActivityView();
         }
         else if(element.isInstance(Park.class))
@@ -618,7 +625,7 @@ public class ShowLocationsActivity extends BaseActivity
 
             Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
-            this.locationsRecyclerAdapter.smoothScrollToElement(this.longClickedElement);
+            this.contentRecyclerAdapter.smoothScrollToParent(this.longClickedElement);
         }
         else
         {
@@ -637,7 +644,7 @@ public class ShowLocationsActivity extends BaseActivity
         {
             if(this.longClickedElement.removeElement())
             {
-                this.currentElement = this.longClickedElement.getParent();
+                this.currentLocation = this.longClickedElement.getParent();
                 updateLocationRecyclerView();
             }
             else
@@ -681,7 +688,7 @@ public class ShowLocationsActivity extends BaseActivity
 
             Toaster.makeToast(getApplicationContext(), getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
-            this.locationsRecyclerAdapter.smoothScrollToElement(this.longClickedElement);
+            this.contentRecyclerAdapter.smoothScrollToParent(this.longClickedElement);
         }
         else
         {
@@ -699,7 +706,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateLocationRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateLocationRecyclerView:: updating RecyclerView...");
-        this.locationsRecyclerAdapter.updateElements(this.currentElement.getChildrenOfInstance(Location.class));
+        this.contentRecyclerAdapter.updateDataSet(Location.getParksByLocations((Location) this.currentLocation));
     }
     //endregion
 }

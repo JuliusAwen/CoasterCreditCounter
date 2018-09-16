@@ -12,8 +12,9 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 public class Settings
 {
     //App
-    private boolean goToOpenVisitWhenOpeningApp;
+    public static boolean jumpToTestActivityOnStart = false;
 
+    private boolean jumpToOpenVisitOnStart;
 
     //ShowPark - Attractions
     private List<AttractionCategory> attractionCategoriesToExpandByDefault = new ArrayList<>();
@@ -80,14 +81,14 @@ public class Settings
         this.firstDayOfTheWeek = firstDayOfTheWeek;
     }
 
-    public boolean goToOpenVisitWhenOpeningApp()
+    public boolean jumpToOpenVisitOnStart()
     {
-        return this.goToOpenVisitWhenOpeningApp;
+        return this.jumpToOpenVisitOnStart;
     }
 
-    void setGoToOpenVisitWhenOpeningApp(boolean goToOpenVisitWhenOpeningApp)
+    void setJumpToOpenVisitOnStart(boolean jumpToOpenVisitOnStart)
     {
-        this.goToOpenVisitWhenOpeningApp = goToOpenVisitWhenOpeningApp;
+        this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
     }
 
 }

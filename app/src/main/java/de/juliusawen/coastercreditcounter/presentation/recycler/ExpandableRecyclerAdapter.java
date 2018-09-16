@@ -50,8 +50,8 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             super(linearLayout);
 
             this.linearLayout = linearLayout;
-            this.textView = linearLayout.findViewById(R.id.textViewContentHolderExpandable_Parent);
-            this.imageViewExpandToggle = linearLayout.findViewById(R.id.imageViewContentHolderExpandable_ExpandToggle);
+            this.textView = linearLayout.findViewById(R.id.textViewRevyclerViewContentHolderParent);
+            this.imageViewExpandToggle = linearLayout.findViewById(R.id.imageViewRecyclerViewContentHolderParent_ExpandToggle);
         }
     }
 
@@ -108,13 +108,13 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     {
         if(elementsToExpand.contains(element))
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.collapseElement:: collapsing %s", element));
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.collapseParent:: collapsing %s", element));
             elementsToExpand.remove(element);
             notifyDataSetChanged();
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.collapseElement:: %s already collapsed", element));
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.collapseParent:: %s already collapsed", element));
         }
     }
 
@@ -272,7 +272,7 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
             LayoutInflater layoutInflater = (LayoutInflater) viewHolder.linearLayout.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             childView = Objects.requireNonNull(layoutInflater).inflate(R.layout.content_holder_expandable, viewHolder.linearLayout, false);
-            childView.findViewById(R.id.linearLayoutContentHolderExpandable).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            childView.findViewById(R.id.linearLayoutRecyclerViewContentHolderParent).getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
             childView.setId(Constants.VIEW_TYPE_CHILD + increment);
             childView.setTag(element);
             childView.setOnClickListener(recyclerOnClickListener);

@@ -2,6 +2,9 @@ package de.juliusawen.coastercreditcounter.data;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -28,6 +31,16 @@ public class Location extends Element
             Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
         }
         return location;
+    }
+
+    public static LinkedHashMap<Element, List<Element>> getParksByLocations(Location location)
+    {
+        LinkedHashMap<Element, List<Element>> preparedContent = new LinkedHashMap<>();
+        for(Element parentLocation : location.getChildrenOfInstance(Location.class))
+        {
+            preparedContent.put(parentLocation, new ArrayList<>(parentLocation.getChildrenOfInstance(Park.class)));
+        }
+        return preparedContent;
     }
 }
 

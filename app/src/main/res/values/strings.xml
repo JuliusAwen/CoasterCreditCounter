@@ -13,7 +13,6 @@
     <string name="subtitle_location_edit">Edit Location</string>
 
 
-
     <string name="subtitle_root_location_edit">Edit Root Location</string>
 
 
@@ -23,7 +22,6 @@
     <string name="subtitle_park_show_overview">Overview</string>
     <string name="subtitle_park_show_attractions">Attractions</string>
     <string name="subtitle_park_show_visits">Visits</string>
-
 
 
     <string name="title_attractions_sort">Sort Attractions</string>
@@ -100,10 +98,11 @@
     <string name="description_ok">@string/text_close</string>
     <string name="description_cancel">@string/text_cancel</string>
     <string name="description_close">@string/text_close</string>
-    <string name="description_expand_toggle">expand/collapse toggle</string>
+    <string name="description_expand_toggle">expand/collapse item</string>
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
-    <string name="description_decrease">decrease</string>
-    <string name="description_increase">increase</string>
+    <string name="description_decrease">decrease count</string>
+    <string name="description_increase">increase count</string>
+
 
 
     <!--action texts -->
