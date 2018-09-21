@@ -27,9 +27,8 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".presentation.activities.elements.PickElementsActivity" />
         <activity android:name=".presentation.activities.parks.ShowParkActivity" />
-        <activity android:name=".presentation.activities.visits.AddVisitActivity" />
         <activity android:name=".presentation.activities.visits.ShowVisitActivity" />
-        <activity android:name=".presentation.activities.TestActivity"></activity>
+        <activity android:name=".presentation.activities.TestActivity"/>
     </application>
 
 </manifest>

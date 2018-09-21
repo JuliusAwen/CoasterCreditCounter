@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.recycler;
+package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -18,13 +18,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Attraction;
-import de.juliusawen.coastercreditcounter.data.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Location;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
-import de.juliusawen.coastercreditcounter.data.YearHeader;
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
@@ -146,18 +146,18 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
 
         if(element.isInstance(Location.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfInstance(Park.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Park.class), recyclerOnClickListener);
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child parks", element, element.getChildCountOfType(Park.class)));
+            this.addChildViews(viewHolder, element.getChildrenOfType(Park.class), recyclerOnClickListener);
         }
         else if(element.isInstance(YearHeader.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child visits", element, element.getChildCountOfInstance(Visit.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Visit.class), recyclerOnClickListener);
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child visits", element, element.getChildCountOfType(Visit.class)));
+            this.addChildViews(viewHolder, element.getChildrenOfType(Visit.class), recyclerOnClickListener);
         }
         else if(element.isInstance(AttractionCategory.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child attractions", element, element.getChildCountOfInstance(Attraction.class)));
-            this.addChildViews(viewHolder, element.getChildrenOfInstance(Attraction.class), recyclerOnClickListener);
+            Log.v(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.onBindViewHolder:: %s has #[%d] child attractions", element, element.getChildCountOfType(Attraction.class)));
+            this.addChildViews(viewHolder, element.getChildrenOfType(Attraction.class), recyclerOnClickListener);
         }
 
         viewHolder.textView.setText(StringTool.getSpannableString(element.getName(), Typeface.BOLD));

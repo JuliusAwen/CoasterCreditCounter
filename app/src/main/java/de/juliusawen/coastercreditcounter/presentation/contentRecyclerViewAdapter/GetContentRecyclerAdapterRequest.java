@@ -1,10 +1,9 @@
-package de.juliusawen.coastercreditcounter.data.requests;
+package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 
 public class GetContentRecyclerAdapterRequest
 {

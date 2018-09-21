@@ -1,20 +1,20 @@
 package de.juliusawen.coastercreditcounter.presentation.activities;
 
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Location;
-import de.juliusawen.coastercreditcounter.data.requests.GetContentRecyclerAdapterRequest;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.presentation.recycler.ContentRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class TestActivity extends BaseActivity
@@ -54,53 +54,32 @@ public class TestActivity extends BaseActivity
 
     private void createContentRecyclerAdapter()
     {
-        RecyclerOnClickListener.OnClickListener onParentClickListener = new RecyclerOnClickListener.OnClickListener()
+        RecyclerOnClickListener.OnClickListener onClickListener = new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
             {
-                Toaster.makeToast(getApplicationContext(), String.format("Parent %s clicked", (Element) view.getTag()));
+                Toaster.makeToast(TestActivity.this, String.format("%s clicked", (Element) view.getTag()));
             }
 
             @Override
             public boolean onLongClick(final View view, int position)
             {
-                Toaster.makeToast(getApplicationContext(), String.format("Parent %s long clicked", (Element) view.getTag()));
+                Toaster.makeToast(TestActivity.this, String.format("%s long clicked", (Element) view.getTag()));
                 return true;
             }
         };
 
-        RecyclerOnClickListener.OnClickListener onChildClickListener = new RecyclerOnClickListener.OnClickListener()
-        {
-            @Override
-            public void onClick(View view, int position)
-            {
-                Toaster.makeToast(getApplicationContext(), String.format("Child %s clicked", (Element) view.getTag()));
-            }
+//        ContentRecyclerViewAdapter contentRecyclerViewAdapter =
+//                ContentRecyclerViewAdapterProvider.getBasicContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), onClickListener);
 
-            @Override
-            public boolean onLongClick(final View view, int position)
-            {
-                Toaster.makeToast(getApplicationContext(), String.format("Child %s long clicked", (Element) view.getTag()));
-                return true;
-            }
-        };
-
-        GetContentRecyclerAdapterRequest request = new GetContentRecyclerAdapterRequest();
-        request.childrenByParents = Location.getParksByLocations(this.location);
-        request.onParentClickListener = onParentClickListener;
-        request.onChildClickListener = onChildClickListener;
-        request.parentsAreExpandable = true;
-        request.parentsAreSelectable = true;
-        request.selectMultipleParentsIsPossible = true;
-        request.childrenAreSelectable = true;
-        request.selectMultipleChildrenIsPossible = true;
-
-        ContentRecyclerAdapter contentRecyclerAdapter = new ContentRecyclerAdapter(request);
+        ContentRecyclerViewAdapter contentRecyclerViewAdapter =
+                ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), Park.class, onClickListener);
 
         RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewTest);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(contentRecyclerAdapter);
+        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+        recyclerView.setAdapter(contentRecyclerViewAdapter);
     }
 }

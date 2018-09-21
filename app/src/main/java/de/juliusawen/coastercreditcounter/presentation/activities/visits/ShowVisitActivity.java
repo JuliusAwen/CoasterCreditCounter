@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Attraction;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -204,7 +204,7 @@ public class ShowVisitActivity extends BaseActivity
     private void onClickAlertDialogPositivePickAttractions(DialogInterface dialog)
     {
         dialog.dismiss();
-        ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_ATTRACTIONS, this.parentPark.getChildrenOfInstance(Attraction.class));
+        ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_ATTRACTIONS, this.parentPark.getChildrenOfType(Attraction.class));
     }
 
     private void decorateToolbar()

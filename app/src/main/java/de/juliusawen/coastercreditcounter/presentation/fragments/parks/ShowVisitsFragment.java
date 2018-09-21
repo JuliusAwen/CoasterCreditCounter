@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.presentation.fragments.parks;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,28 +12,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
-import de.juliusawen.coastercreditcounter.data.YearHeader;
-import de.juliusawen.coastercreditcounter.data.requests.GetContentRecyclerAdapterRequest;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.presentation.recycler.ContentRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class ShowVisitsFragment extends Fragment
 {
     private Park park;
-    private ContentRecyclerAdapter contentRecyclerAdapter;
+    private ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     public ShowVisitsFragment() {}
 
@@ -77,14 +75,18 @@ public class ShowVisitsFragment extends Fragment
     {
         Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: decorating view...");
 
-        if(this.contentRecyclerAdapter != null)
+        if(this.contentRecyclerViewAdapter != null)
         {
             Log.d(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: creating RecyclerView...");
 
             RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Visits);
-            recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
             recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            recyclerView.setAdapter(this.contentRecyclerAdapter);
+            recyclerView.setAdapter(this.contentRecyclerViewAdapter);
+
+            if(savedInstanceState != null)
+            {
+                this.contentRecyclerViewAdapter.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.KEY_RECYCLER_STATE));
+            }
         }
         else
         {
@@ -96,9 +98,10 @@ public class ShowVisitsFragment extends Fragment
     public void onResume()
     {
         super.onResume();
-
         Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onResume:: updating RecyclerView");
-        this.updateContentRecyclerView();
+
+//        this.updateContentRecyclerView();
+
     }
 
     @Override
@@ -125,11 +128,18 @@ public class ShowVisitsFragment extends Fragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.KEY_RECYCLER_STATE, this.contentRecyclerViewAdapter.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
     public void onDetach()
     {
         super.onDetach();
         this.park = null;
-        this.contentRecyclerAdapter = null;
+        this.contentRecyclerViewAdapter = null;
     }
 
     private void createContentRecyclerAdapter()
@@ -149,21 +159,27 @@ public class ShowVisitsFragment extends Fragment
             }
         };
 
-        GetContentRecyclerAdapterRequest request = new GetContentRecyclerAdapterRequest();
-        request.childrenByParents = this.getSortedVisitsByYearHeaders(this.park);
-        request.onChildClickListener = recyclerOnClickListener;
-        request.parentsAreExpandable = true;
+        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
 
-        this.contentRecyclerAdapter = new ContentRecyclerAdapter(request);
-    }
+        if(App.settings.getExpandLatestYearInListByDefault())
+        {
+            List<Element> elementsToExpandInitially = new ArrayList<>();
+            elementsToExpandInitially.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
+            this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(sortedYearHeaders, elementsToExpandInitially, Visit.class, recyclerOnClickListener);
+        }
+        else
+        {
+            this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(sortedYearHeaders, Visit.class, recyclerOnClickListener);
+        }
+}
 
     private void updateContentRecyclerView()
     {
-        if(this.park.getChildCountOfInstance(Visit.class) > 0)
+        if(this.park.getChildCountOfType(Visit.class) > 0)
         {
-            LinkedHashMap<Element, List<Element>> sortedVisitsByYearHeaders = this.getSortedVisitsByYearHeaders(this.park);
-            this.expandLatestYearHeaderAccordingToSettings(new ArrayList<>(sortedVisitsByYearHeaders.keySet()));
-            this.contentRecyclerAdapter.updateDataSet(sortedVisitsByYearHeaders);
+            List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
+
+            this.contentRecyclerViewAdapter.updateDataSet(sortedYearHeaders);
         }
         else
         {
@@ -171,18 +187,9 @@ public class ShowVisitsFragment extends Fragment
         }
     }
 
-    private void expandLatestYearHeaderAccordingToSettings(List<Element> yearHeaders)
-    {
-        if(App.settings.getExpandLatestYearInListByDefault())
-        {
-            YearHeader latestYearHeader = YearHeader.getLatestYearHeader(yearHeaders);
-            Log.v(Constants.LOG_TAG, String.format("ShowVisitsFragment.expandLatestYearHeaderAccordingToSettings:: expanding latest %s according to settings", latestYearHeader));
-            this.contentRecyclerAdapter.expandParent(latestYearHeader);
-        }
-    }
 
-    private LinkedHashMap<Element, List<Element>> getSortedVisitsByYearHeaders(Park park)
+    private List<Element> getSortedYearHeadersForParkVisits(Park park)
     {
-        return YearHeader.getVisitsByYearHeaders(Visit.convertToVisits(Visit.sortVisitsByDateAccordingToSortOrder(park.getChildrenOfInstance(Visit.class))));
+        return YearHeader.addYearHeaders(Visit.sortVisitsByDateAccordingToSortOrder(this.park.getChildrenOfType(Visit.class)));
     }
 }

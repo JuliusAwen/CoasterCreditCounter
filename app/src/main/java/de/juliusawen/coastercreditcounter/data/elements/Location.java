@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.data;
+package de.juliusawen.coastercreditcounter.data.elements;
 
 import android.util.Log;
 
@@ -36,9 +36,9 @@ public class Location extends Element
     public static LinkedHashMap<Element, List<Element>> getParksByLocations(Location location)
     {
         LinkedHashMap<Element, List<Element>> preparedContent = new LinkedHashMap<>();
-        for(Element parentLocation : location.getChildrenOfInstance(Location.class))
+        for(Element parentLocation : location.getChildrenOfType(Location.class))
         {
-            preparedContent.put(parentLocation, new ArrayList<>(parentLocation.getChildrenOfInstance(Park.class)));
+            preparedContent.put(parentLocation, new ArrayList<>(parentLocation.getChildrenOfType(Park.class)));
         }
         return preparedContent;
     }

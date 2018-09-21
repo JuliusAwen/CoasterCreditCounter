@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.OrphanElement;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -169,29 +169,31 @@ public class Content
 
     public void addElement(Element element)
     {
-        if(element.isInstance(OrphanElement.class))
+
+        if(!element.isInstance(OrphanElement.class))
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
+            this.elements.put(element.getUuid(), element);
+
+        }
+        else
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added to orphan elements", element));
             this.orphanElements.put(element.getUuid(), element);
         }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-            this.elements.put(element.getUuid(), element);
-        }
     }
 
-    public boolean deleteElements(List<Element> elements)
-    {
-        for(Element element : elements)
-        {
-            if(!this.deleteElement(element))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+//    public boolean deleteElements(List<Element> elements)
+//    {
+//        for(Element element : elements)
+//        {
+//            if(!this.deleteElement(element))
+//            {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     public boolean deleteElement(Element element)
     {

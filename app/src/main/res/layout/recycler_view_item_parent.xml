@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/standard_bar_layout"
+    android:orientation="horizontal">
+
+    <ImageView
+        style="@style/standard_image_holder"
+        android:id="@+id/imageViewRecyclerViewItemExpandableParent"
+        android:contentDescription="@string/description_expand_toggle"
+        android:background="@color/default_color"/>
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/textViewRecyclerViewItemExpandableParent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|start"
+        android:paddingStart="8dp"
+        android:paddingEnd="64dp"
+        android:textStyle="bold"
+        android:layout_weight="1"/>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.data;
+package de.juliusawen.coastercreditcounter.data.orphanElements;
 
 import android.util.Log;
 
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AttractionCategory extends OrphanElement
@@ -89,6 +91,7 @@ public class AttractionCategory extends OrphanElement
                 }
             }
 
+            //Todo: Do this when creating/updating RecyclerView -> PrincipleOfLeastAstonishment
             preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
 
             Log.v(Constants.LOG_TAG, String.format("AttractionCategory.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));

@@ -102,6 +102,7 @@
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
     <string name="description_decrease">decrease count</string>
     <string name="description_increase">increase count</string>
+    <string name="description_placeholder">&#32;</string>
 
 
 

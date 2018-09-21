@@ -22,17 +22,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Attraction;
-import de.juliusawen.coastercreditcounter.data.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
-import de.juliusawen.coastercreditcounter.presentation.recycler.ContentRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recycler.ExpandableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ExpandableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -244,7 +244,7 @@ public  class ShowAttractionsFragment extends Fragment
         };
 
         this.expandableRecyclerAdapter =
-                new ExpandableRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class)), recyclerOnClickListener);
+                new ExpandableRecyclerAdapter(AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfType(Attraction.class)), recyclerOnClickListener);
     }
 
     private void onLongClickExpandableRecyclerView(final View view)
@@ -256,7 +256,7 @@ public  class ShowAttractionsFragment extends Fragment
             PopupMenu popupMenu = new PopupMenu(getContext(), view);
             popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit_attraction_category);
 
-            if(longClickedElement.getChildCountOfInstance(Attraction.class) > 1)
+            if(longClickedElement.getChildCountOfType(Attraction.class) > 1)
             {
                 popupMenu.getMenu().add(0, Selection.SORT_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
             }
@@ -288,7 +288,7 @@ public  class ShowAttractionsFragment extends Fragment
                 ActivityTool.startActivitySortForResult(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTIONS,
-                        longClickedElement.getChildrenOfInstance(Attraction.class));
+                        longClickedElement.getChildrenOfType(Attraction.class));
                 return true;
 
             default:
@@ -298,10 +298,10 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateExpandableRecyclerView()
     {
-        if(this.park.getChildCountOfInstance(Attraction.class) > 0)
+        if(this.park.getChildCountOfType(Attraction.class) > 0)
         {
-            this.expandAttractionsCategoriesAccordingToSettings(this.park.getChildrenOfInstance(Attraction.class));
-            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfInstance(Attraction.class));
+            this.expandAttractionsCategoriesAccordingToSettings(this.park.getChildrenOfType(Attraction.class));
+            List<Element> preparedAttractions = AttractionCategory.addAttractionCategoryHeaders(this.park.getChildrenOfType(Attraction.class));
             this.expandableRecyclerAdapter.updateElements(preparedAttractions);
         }
         else

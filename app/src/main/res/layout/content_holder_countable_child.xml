@@ -19,9 +19,10 @@
         <ImageView
             style="@style/standard_image_holder"
             android:id="@+id/imageViewRecyclerViewContentItemHolder_ExpandToggle"
+            android:contentDescription="@string/description_decrease"
             android:layout_height="32dp"
             android:background="@color/white"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -50,6 +51,7 @@
         <ImageView
             style="@style/standard_image_holder"
             android:id="@+id/imageViewRecyclerViewContentItemHolder_Right"
+            android:contentDescription="@string/description_increase"
             android:layout_height="32dp"
             android:background="@color/white"
             android:layout_gravity="center"/>

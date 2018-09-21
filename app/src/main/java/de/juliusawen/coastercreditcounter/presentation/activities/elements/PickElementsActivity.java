@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.recycler.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.presentation.recycler.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.SelectableRecyclerAdapter;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -151,7 +151,7 @@ public class PickElementsActivity extends BaseActivity
         else
         {
             Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no parentElement selected");
-            Toaster.makeToast(getApplicationContext(), getString(R.string.error_text_no_entry_selected));
+            Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_text_no_entry_selected));
         }
     }
     //endregion

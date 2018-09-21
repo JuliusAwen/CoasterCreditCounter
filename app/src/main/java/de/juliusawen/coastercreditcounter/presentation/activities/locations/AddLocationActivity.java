@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.Location;
-import de.juliusawen.coastercreditcounter.data.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -130,7 +130,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 if(this.parentLocation.hasChildrenOfInstance(Park.class))
                 {
                     Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.onActivityResult<PickLocations>:: parent element %s has #[%d] children parks - asking to relocate...",
-                            this.parentLocation, this.parentLocation.getChildCountOfInstance(Park.class)));
+                            this.parentLocation, this.parentLocation.getChildCountOfType(Park.class)));
 
                     this.showAlertDialogRelocateChildrenParks();
                 }
@@ -170,7 +170,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         {
             Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.createEditText: parent %s has #[%d] children<Park> - offering add location option...",
                     this.parentLocation,
-                    this.parentLocation.getChildCountOfInstance(Park.class)));
+                    this.parentLocation.getChildCountOfType(Park.class)));
 
             LinearLayout linearLayoutAddChildren = contentView.findViewById(R.id.linearLayoutAddLocation_AddChildren);
             linearLayoutAddChildren.setVisibility(View.VISIBLE);
@@ -213,31 +213,31 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
     {
         Log.d(Constants.LOG_TAG, String.format(
                 "AddLocationsActivity.handleOnEditorActionDone:: %s has #[%d] children<Location> and #[%d] children<Park>",
-                this.parentLocation, this.parentLocation.getChildCountOfInstance(Location.class), this.parentLocation.getChildCountOfInstance(Park.class)));
+                this.parentLocation, this.parentLocation.getChildCountOfType(Location.class), this.parentLocation.getChildCountOfType(Park.class)));
 
         if(this.handleLocationCreation())
         {
             if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
                 Log.d(Constants.LOG_TAG, String .format("AddLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S] - parent %s has #[%d] children<Location>",
-                        this.checkBoxAddChildren.isChecked(), this.parentLocation, this.parentLocation.getChildCountOfInstance(Location.class)));
+                        this.checkBoxAddChildren.isChecked(), this.parentLocation, this.parentLocation.getChildCountOfType(Location.class)));
 
 
-                if (this.parentLocation.getChildCountOfInstance(Location.class) > 1)
+                if (this.parentLocation.getChildCountOfType(Location.class) > 1)
                 {
                     Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: add children chosen - starting PickElementsActivity for %s...", this.parentLocation));
-                    ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_LOCATIONS, this.parentLocation.getChildrenOfInstance(Location.class));
+                    ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_LOCATIONS, this.parentLocation.getChildrenOfType(Location.class));
                 }
                 else
                 {
                     Log.d(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has only one child<Location> -> inserting in new %s",
                             this.parentLocation, this.newLocation));
-                    this.parentLocation.insertElements(this.newLocation, this.parentLocation.getChildrenOfInstance(Location.class));
+                    this.parentLocation.insertElements(this.newLocation, this.parentLocation.getChildrenOfType(Location.class));
 
                     if(this.parentLocation.hasChildrenOfInstance(Park.class))
                     {
                         Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.handleOnEditorActionDone:: parent %s has #[%d] children<Park> - asking to relocate...",
-                                this.parentLocation, this.parentLocation.getChildCountOfInstance(Park.class)));
+                                this.parentLocation, this.parentLocation.getChildCountOfType(Park.class)));
                         this.showAlertDialogRelocateChildrenParks();
                     }
                     else
@@ -256,7 +256,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
                 if(this.parentLocation.hasChildrenOfInstance(Park.class))
                 {
                     Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> and #[%d] children<Park> - asking to relocate...",
-                            this.parentLocation, this.parentLocation.getChildCountOfInstance(Park.class)));
+                            this.parentLocation, this.parentLocation.getChildCountOfType(Park.class)));
 
                     this.showAlertDialogRelocateChildrenParks();
                 }
@@ -318,13 +318,13 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         Log.i(Constants.LOG_TAG, "AddLocationsActivity.onClickAlertDialogPositiveButtonRelocateChildrenParks:: accepted");
         dialog.dismiss();
 
-        if(this.parentLocation.getChildCountOfInstance(Park.class) > 1)
+        if(this.parentLocation.getChildCountOfType(Park.class) > 1)
         {
-            ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_PARKS, this.parentLocation.getChildrenOfInstance(Park.class));
+            ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_PARKS, this.parentLocation.getChildrenOfType(Park.class));
         }
         else
         {
-            this.relocateChildrenParks(this.parentLocation.getChildrenOfInstance(Park.class));
+            this.relocateChildrenParks(this.parentLocation.getChildrenOfType(Park.class));
             this.returnResult(RESULT_OK);
         }
     }

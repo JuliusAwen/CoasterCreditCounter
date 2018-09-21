@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.data;
+package de.juliusawen.coastercreditcounter.data.elements;
 
 import android.util.Log;
 
@@ -122,14 +122,7 @@ public class Visit extends Element
 
     private boolean isOpenVisit()
     {
-        if(Visit.getOpenVisit() != null)
-        {
-            return this.equals(Visit.getOpenVisit());
-        }
-        else
-        {
-            return false;
-        }
+        return Visit.getOpenVisit() != null && this.equals(Visit.getOpenVisit());
     }
 
     public static boolean validateOpenVisit()

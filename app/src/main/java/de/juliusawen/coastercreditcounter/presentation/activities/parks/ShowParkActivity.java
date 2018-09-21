@@ -21,8 +21,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Park;
-import de.juliusawen.coastercreditcounter.data.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -74,7 +74,7 @@ public class ShowParkActivity extends BaseActivity
             menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
         }
 
-        if(this.currentTab == VISITS && this.park.getChildCountOfInstance(Visit.class) > 1)
+        if(this.currentTab == VISITS && this.park.getChildCountOfType(Visit.class) > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
             menu.add(Menu.NONE, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
@@ -188,7 +188,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Toaster.makeToast(getApplicationContext(), "fab interaction for OVERVIEW not yet implemented");
+                Toaster.makeToast(ShowParkActivity.this, "fab interaction for OVERVIEW not yet implemented");
             }
         });
     }
@@ -201,7 +201,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Toaster.makeToast(getApplicationContext(), "fab interaction for ATTRACTIONS not yet implemented");
+                Toaster.makeToast(ShowParkActivity.this, "fab interaction for ATTRACTIONS not yet implemented");
             }
         });
     }
@@ -233,9 +233,9 @@ public class ShowParkActivity extends BaseActivity
 
         private Drawable tabTitleDrawables[] = new Drawable[]
                 {
-                        DrawableTool.setTintToWhite(getApplicationContext(), getDrawable(R.drawable.ic_baseline_home)),
-                        DrawableTool.setTintToWhite(getApplicationContext(), getDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra)),
-                        DrawableTool.setTintToWhite(getApplicationContext(), getDrawable(R.drawable.ic_baseline_local_activity))
+                        DrawableTool.setTintToWhite(ShowParkActivity.this, getDrawable(R.drawable.ic_baseline_home)),
+                        DrawableTool.setTintToWhite(ShowParkActivity.this, getDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra)),
+                        DrawableTool.setTintToWhite(ShowParkActivity.this, getDrawable(R.drawable.ic_baseline_local_activity))
                 };
 
         TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
@@ -304,7 +304,7 @@ public class ShowParkActivity extends BaseActivity
 
         View getTabTitleView(int position)
         {
-            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_title, null);
+            View view = LayoutInflater.from(ShowParkActivity.this).inflate(R.layout.tab_title, null);
             ImageView imageView = view.findViewById(R.id.imageViewTabTitle);
             imageView.setImageDrawable(tabTitleDrawables[position]);
             return view;

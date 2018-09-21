@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.data;
+package de.juliusawen.coastercreditcounter.data.elements;
 
 import android.util.Log;
 
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class Element
@@ -25,10 +26,40 @@ public abstract class Element
     private List<Element> backupChildren = new ArrayList<>();
     private int undoIndex = -1;
 
+    private long itemId;
+
     protected Element(String name, UUID uuid)
     {
         this.setName(name);
         this.uuid = uuid;
+        this.itemId = uuid.getMostSignificantBits() & Long.MAX_VALUE;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == this)
+        {
+            return true;
+        }
+
+        if (!(obj instanceof Element))
+        {
+            return false;
+        }
+
+        Element element = (Element) obj;
+
+        if(element.getUuid() != null && element.getUuid().equals(this.getUuid()))
+        {
+            return true;
+        }
+        else if(element.getName() != null && element.getName().equals(this.getName()))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -75,6 +106,11 @@ public abstract class Element
     public <T extends Element> boolean isInstance(Class<T> type)
     {
         return type.isInstance(this);
+    }
+
+    public long getItemId()
+    {
+        return this.itemId;
     }
 
     public Element getRootElement()
@@ -181,7 +217,7 @@ public abstract class Element
 
     public <T extends Element> boolean hasChildrenOfInstance(Class<T> type)
     {
-        return !this.getChildrenOfInstance(type).isEmpty();
+        return !this.getChildrenOfType(type).isEmpty();
     }
 
     public int getChildCount()
@@ -189,9 +225,9 @@ public abstract class Element
         return this.getChildren().size();
     }
 
-    public <T extends Element> int getChildCountOfInstance(Class<T> type)
+    public <T extends Element> int getChildCountOfType(Class<T> type)
     {
-        return this.getChildrenOfInstance(type).size();
+        return this.getChildrenOfType(type).size();
     }
 
     public List<Element> getChildren()
@@ -199,7 +235,7 @@ public abstract class Element
         return this.children;
     }
 
-    public <T extends Element> List<Element> getChildrenOfInstance(Class<T> type)
+    public <T extends Element> List<Element> getChildrenOfType(Class<T> type)
     {
         List<Element> children = new ArrayList<>();
         for(Element element : this.getChildren())

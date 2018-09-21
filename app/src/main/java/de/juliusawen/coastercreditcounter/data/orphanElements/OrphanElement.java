@@ -1,15 +1,16 @@
-package de.juliusawen.coastercreditcounter.data;
+package de.juliusawen.coastercreditcounter.data.orphanElements;
 
 import android.util.Log;
 
 import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class OrphanElement extends Element
 {
-    OrphanElement(String name, UUID uuid)
+    public OrphanElement(String name, UUID uuid)
     {
         super(name, uuid);
     }

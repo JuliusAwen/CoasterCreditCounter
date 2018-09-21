@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.recycler;
+package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -22,8 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.Element;
-import de.juliusawen.coastercreditcounter.data.requests.GetContentRecyclerAdapterRequest;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
