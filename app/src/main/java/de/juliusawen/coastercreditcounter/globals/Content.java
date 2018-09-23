@@ -20,8 +20,10 @@ public class Content
 
 
     private Element rootElement;
-    private Map<String, Element> elementByKey;
-    private Map<String, List<Element>> elementsByKey;
+
+    private Map<String, Element> elementsByKey;
+    private Map<String, List<Element>> elementListsByKey;
+    private Map<String, Element> orphanElementsByName = new HashMap<>();
 
     private static final Content instance = new Content();
 
@@ -74,11 +76,6 @@ public class Content
         this.rootElement = element;
     }
 
-    public Element getElementByKey(String key)
-    {
-        return this.elementByKey.get(key);
-    }
-
 //    public void putElementByKeyForActivity(Class<? extends Activity> activity, String key, Element element)
 //    {
 //        if(!this.elementByKeyForActivity.containsKey(activity))
@@ -104,6 +101,47 @@ public class Content
 //            this.elementsByKeyByActivity.put(type, elementsByKeys);
 //        }
 //    }
+
+    public Element getOrphanElement(String name)
+    {
+        if(this.orphanElementsByName.containsKey(name))
+        {
+            return this.orphanElementsByName.get(name);
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No OrphanElement found for name[%s]", name));
+            return null;
+        }
+    }
+
+    public <T extends OrphanElement> List<T> getOrphanElementsOfType(Class<T> type)
+    {
+        List<T> orphanElementsOfType = new ArrayList<>();
+        for(Element orphanElement : this.orphanElementsByName.values())
+        {
+            if(orphanElement.isInstance(type))
+            {
+                orphanElementsOfType.add(type.cast(orphanElement));
+            }
+        }
+        return orphanElementsOfType;
+    }
+
+    public void addOrphanElements(List<? extends OrphanElement> orphanElements)
+    {
+        for(OrphanElement orphanElement : orphanElements)
+        {
+            this.addOrphanElement(orphanElement);
+        }
+    }
+
+    public void addOrphanElement(OrphanElement orphanElement)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
+        this.orphanElementsByName.put(orphanElement.getName(), orphanElement);
+        this.addElement(orphanElement);
+    }
 
 
 
@@ -179,19 +217,6 @@ public class Content
         }
     }
 
-//    public <T extends Element> List<Element> getOrphanElementsOfInstance(Class<T> type)
-//    {
-//        List<Element> orphanElements = new ArrayList<>();
-//        for(Element orphanElement : this.orphanElements.values())
-//        {
-//            if(orphanElement.isInstance(type))
-//            {
-//                orphanElements.add(orphanElement);
-//            }
-//        }
-//        return orphanElements;
-//    }
-
     @Deprecated
     public void addElementAndChildren(Element element)
     {
@@ -237,34 +262,19 @@ public class Content
         }
         else
         {
-            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added to orphan elements", element));
+            //Todo: remove when new way to pass elements around is implemented
             this.orphanElements.put(element.getUuid(), element);
+            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
+
         }
     }
-
-//    public boolean deleteElements(List<Element> elements)
-//    {
-//        for(Element element : elements)
-//        {
-//            if(!this.deleteElement(element))
-//            {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     @Deprecated
     public boolean deleteElement(Element element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
-        if(this.orphanElements.containsKey(element.getUuid()))
+        if(this.elements.containsKey(element.getUuid()))
         {
-            this.orphanElements.remove(element.getUuid());
-            return true;
-        }
-        else if(this.elements.containsKey(element.getUuid()))
-        {
+            Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
             this.elements.remove(element.getUuid());
             return true;
         }

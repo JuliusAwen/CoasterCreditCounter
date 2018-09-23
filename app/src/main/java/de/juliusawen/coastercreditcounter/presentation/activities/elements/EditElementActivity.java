@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.elements;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,7 +22,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class EditElementActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private EditElementViewModel viewModel;
+    private EditElementActivityViewModel viewModel;
 
     private EditText editText;
 
@@ -33,7 +34,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(EditElementViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
 
         if(this.viewModel.elementToEdit == null)
         {
@@ -65,11 +66,11 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         {
             case OK:
                 handleOnEditorActionDone();
-                finish();
+                returnResult(RESULT_OK);
                 break;
 
             case CANCEL:
-                finish();
+                returnResult(RESULT_CANCELED);
                 break;
         }
     }
@@ -87,7 +88,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 boolean handled = onClickEditorAction(actionId);
-                finish();
+                returnResult(RESULT_OK);
                 return handled;
             }
         });
@@ -121,5 +122,21 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         {
             Log.v(Constants.LOG_TAG, "EditElementActivity.createEditText:: name has not changed");
         }
+    }
+
+    private void returnResult(int resultCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: resultCode[%d]", resultCode));
+
+        Intent intent = new Intent();
+
+        if(resultCode == RESULT_OK)
+        {
+            Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.elementToEdit.getUuid().toString());
+        }
+
+        setResult(resultCode, intent);
+        finish();
     }
 }

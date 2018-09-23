@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class Visit extends Element
     private static SortOrder sortOrder = SortOrder.DESCENDING;
 
     private Calendar calendar;
-    private Map<Element, Integer> rideCountByAttractions = new HashMap<>();
+    private Map<Element, Integer> rideCountByAttractions = new LinkedHashMap<>();
 
     private Visit(String name, UUID uuid, Calendar calendar)
     {
@@ -70,36 +71,39 @@ public class Visit extends Element
         return this.calendar;
     }
 
-    public List<Element> getAttractions()
+    public String getRideCount(Attraction attraction)
     {
-        return new ArrayList<>(this.rideCountByAttractions.keySet());
-    }
-
-    public void addAttractions(List<Element> elements)
-    {
-        for(Element element : elements)
+        if(this.rideCountByAttractions.containsKey(attraction))
         {
-            this.addAttraction(element);
-        }
-    }
-
-    public void addAttraction(Element element)
-    {
-        if(!this.rideCountByAttractions.containsKey(element))
-        {
-            Log.v(Constants.LOG_TAG, String.format("Visit.addAttraction:: added %s", element));
-            this.rideCountByAttractions.put(element, 0);
+            return String.valueOf(this.rideCountByAttractions.get(attraction));
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Visit.addAttraction:: %s already exisiting", element));
+            this.rideCountByAttractions.put(attraction, 0);
+            return "0";
         }
     }
 
-    public Map<Element, Integer> getRideCountByAttraction()
-    {
-        return this.rideCountByAttractions;
-    }
+//    public void addAttractions(List<Element> elements)
+//    {
+//        for(Element element : elements)
+//        {
+//            this.addAttraction(element);
+//        }
+//    }
+//
+//    public void addAttraction(Element element)
+//    {
+//        if(!this.rideCountByAttractions.containsKey(element))
+//        {
+//            Log.v(Constants.LOG_TAG, String.format("Visit.addAttraction:: added %s", element));
+//            this.rideCountByAttractions.put(element, 0);
+//        }
+//        else
+//        {
+//            Log.w(Constants.LOG_TAG, String.format("Visit.addAttraction:: %s already exisiting", element));
+//        }
+//    }
 
     public static void setOpenVisit(Element visit)
     {
@@ -179,7 +183,7 @@ public class Visit extends Element
         Visit.sortOrder = sortOrder;
     }
 
-    public static List<Element> sortVisitsByDateAccordingToSortOrder(List<Element> visits)
+    public static List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
     {
         if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
         {
@@ -195,9 +199,8 @@ public class Visit extends Element
         return visits;
     }
 
-    private static List<Element> sortDescendingByDate(List<Element> elements)
+    private static List<Visit> sortDescendingByDate(List<Visit> visits)
     {
-        List<Visit> visits = Visit.convertToVisits(elements);
         DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
         HashMap<String, Visit> visitsByDateString = new HashMap<>();
@@ -211,41 +214,39 @@ public class Visit extends Element
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
         Collections.sort(dateStrings);
 
-        List<Element> sortedVisits = new ArrayList<>();
-        for(String dateString : dateStrings)
-        {
-            sortedVisits.add(visitsByDateString.get(dateString));
-        }
-
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: #[%d] visits sorted", elements.size()));
-        return sortedVisits;
-    }
-
-    private static List<Element> sortAscendingByDate(List<Element> elements)
-    {
-        List<Visit> visits = Visit.convertToVisits(elements);
-
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name [%s]", dateString, visit));
-        }
-
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        List<Element> sortedVisits = new ArrayList<>();
+        List<Visit> sortedVisits = new ArrayList<>();
         for(String dateString : dateStrings)
         {
             sortedVisits.add(0, visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: #[%d] visits sorted", elements.size()));
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: #[%d] visits sorted", visits.size()));
+        return sortedVisits;
+    }
+
+    private static List<Visit> sortAscendingByDate(List<Visit> visits)
+    {
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+        HashMap<String, Visit> visitsByDateString = new HashMap<>();
+
+        for(Visit visit : visits)
+        {
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name [%s]", dateString, visit));
+        }
+
+        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        Collections.sort(dateStrings);
+
+        List<Visit> sortedVisits = new ArrayList<>();
+        for(String dateString : dateStrings)
+        {
+            sortedVisits.add(visitsByDateString.get(dateString));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: #[%d] visits sorted", visits.size()));
 
         return sortedVisits;
     }

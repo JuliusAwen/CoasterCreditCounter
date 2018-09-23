@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class YearHeader extends OrphanElement
@@ -53,7 +54,7 @@ public class YearHeader extends OrphanElement
             }
         }
 
-        Log.v(Constants.LOG_TAG,  String.format("YearHeader.getLatestYearHeader:: [%s] to be found latest YearHeader in a list of #[%d]", latestYearHeader, yearHeaders.size()));
+        Log.v(Constants.LOG_TAG,  String.format("YearHeader.getLatestYearHeader:: [%s] to be found latest YearHeader in a list of [%d]", latestYearHeader, yearHeaders.size()));
         return latestYearHeader;
     }
 
@@ -76,17 +77,20 @@ public class YearHeader extends OrphanElement
 //        return yearHeaders;
 //    }
 
-    public static List<Element> addYearHeaders(List<Element> elements)
+    public static List<Element> addYearHeaders(List<Visit> visits)
     {
-        if(elements.isEmpty())
+        if(visits.isEmpty())
         {
             Log.v(Constants.LOG_TAG, "YearHeader.addYearHeaders:: no elements found");
-            return elements;
+            return new ArrayList<Element>(visits);
         }
 
-        Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: adding headers for #[%d] elements...", elements.size()));
+        Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: adding YearHeaders to [%d] elements...", visits.size()));
 
-        List<Visit> visits = Visit.convertToVisits(elements);
+        //Todo: remove children from all YearHeaders
+        OrphanElement.removeAllChildren(App.content.getOrphanElementsOfType(YearHeader.class));
+
+//        List<Visit> visits = Visit.convertToVisits(elements);
         List<Element> preparedElements = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
@@ -110,14 +114,21 @@ public class YearHeader extends OrphanElement
             }
             else
             {
-                YearHeader yearHeader = YearHeader.create(year);
+                YearHeader yearHeader;
+                yearHeader = (YearHeader) App.content.getOrphanElement(year);
+                if(yearHeader == null)
+                {
+                    yearHeader = YearHeader.create(year);
+                    App.content.addOrphanElement(yearHeader);
+                    Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: created new %s", yearHeader));
+                }
+
                 yearHeader.addChildToOrphanElement(visit);
                 preparedElements.add(yearHeader);
-                Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: created new %s", yearHeader));
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: #[%d] headers added", preparedElements.size()));
+        Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: [%d] YearHeaders added", preparedElements.size()));
         return preparedElements;
     }
 }

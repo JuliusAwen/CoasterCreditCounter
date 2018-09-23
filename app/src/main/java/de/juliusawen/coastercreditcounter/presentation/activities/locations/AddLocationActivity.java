@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class AddLocationActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    AddLocationViewModel viewModel;
+    AddLocationActivityViewModel viewModel;
 
     public Location newLocation;
 
@@ -47,7 +47,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_add_location);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(AddLocationViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(AddLocationActivityViewModel.class);
 
         if(this.viewModel.parentLocation == null)
         {

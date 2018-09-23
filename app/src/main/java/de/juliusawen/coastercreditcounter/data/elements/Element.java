@@ -215,7 +215,7 @@ public abstract class Element
         return !this.getChildren().isEmpty();
     }
 
-    public <T extends Element> boolean hasChildrenOfInstance(Class<T> type)
+    public boolean hasChildrenOfInstance(Class<? extends Element> type)
     {
         return !this.getChildrenOfType(type).isEmpty();
     }
@@ -225,7 +225,7 @@ public abstract class Element
         return this.getChildren().size();
     }
 
-    public <T extends Element> int getChildCountOfType(Class<T> type)
+    public int getChildCountOfType(Class<? extends Element> type)
     {
         return this.getChildrenOfType(type).size();
     }
@@ -235,7 +235,7 @@ public abstract class Element
         return this.children;
     }
 
-    public <T extends Element> List<Element> getChildrenOfType(Class<T> type)
+    public List<Element> getChildrenOfType(Class<? extends Element> type)
     {
         List<Element> children = new ArrayList<>();
         for(Element element : this.getChildren())
@@ -243,6 +243,19 @@ public abstract class Element
             if(element.isInstance(type))
             {
                 children.add(element);
+            }
+        }
+        return children;
+    }
+
+    public <T extends Element> List<T> getChildrenAsType(Class<T> type)
+    {
+        List<T> children = new ArrayList<>();
+        for(Element element : this.getChildren())
+        {
+            if(element.isInstance(type))
+            {
+                children.add(type.cast(element));
             }
         }
         return children;

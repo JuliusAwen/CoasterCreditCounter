@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Attraction extends Element
 {
-    private static List<AttractionCategory> categories = new ArrayList<>();
     private AttractionCategory category = null;
 
     Attraction(String name, UUID uuid)
@@ -36,47 +35,7 @@ public class Attraction extends Element
         return attraction;
     }
 
-    public static List<AttractionCategory> getCategories()
-    {
-        return Attraction.categories;
-    }
 
-    public static void setCategories(List<AttractionCategory> categories)
-    {
-        Attraction.categories = categories;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategories:: #[%d] categories set", categories.size()));
-    }
-
-    public static void addCategory(AttractionCategory category)
-    {
-        if(!Attraction.categories.contains(category))
-        {
-            Attraction.categories.add(category);
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s added", category));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s already exists", category));
-        }
-    }
-
-    public AttractionCategory getCategory()
-    {
-        return this.category;
-    }
-
-    public void setCategory(AttractionCategory category)
-    {
-        if(Attraction.categories.contains(category))
-        {
-            this.category = category;
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s to %s", category, this));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.setCategory:: invalid %s", category));
-        }
-    }
 
     public static List<Attraction> convertToAttractions(List<? extends Element> elements)
     {
@@ -95,6 +54,38 @@ public class Attraction extends Element
             }
         }
         return attractions;
+    }
+
+
+    public static void addCategory(AttractionCategory category)
+    {
+        if(!AttractionCategory.getAttractionCategories().contains(category))
+        {
+            AttractionCategory.getAttractionCategories().add(category);
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s added", category));
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.addCategory:: %s already exists", category));
+        }
+    }
+
+    public AttractionCategory getCategory()
+    {
+        return this.category;
+    }
+
+    public void setCategory(AttractionCategory category)
+    {
+        if(AttractionCategory.getAttractionCategories().contains(category))
+        {
+            this.category = category;
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s to %s", category, this));
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.setCategory:: invalid %s", category));
+        }
     }
 
     public static boolean containsAttractionOfCategory(List<Attraction> attractions, AttractionCategory attractionCategory)

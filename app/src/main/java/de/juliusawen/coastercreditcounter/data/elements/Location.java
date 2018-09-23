@@ -29,15 +29,5 @@ public class Location extends Element
         }
         return location;
     }
-
-//    public static LinkedHashMap<Element, List<Element>> getParksByLocations(Location location)
-//    {
-//        LinkedHashMap<Element, List<Element>> preparedContent = new LinkedHashMap<>();
-//        for(Element parentLocation : location.getChildrenOfType(Location.class))
-//        {
-//            preparedContent.put(parentLocation, new ArrayList<>(parentLocation.getChildrenOfType(Park.class)));
-//        }
-//        return preparedContent;
-//    }
 }
 

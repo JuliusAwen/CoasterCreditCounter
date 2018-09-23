@@ -25,14 +25,14 @@ public abstract class ContentRecyclerViewAdapterProvider
     public static ContentRecyclerViewAdapter getExpandableContentRecyclerViewAdapter(
             List<Element> parentElements,
             Set<Element> initiallyExpandedElements,
-            Class<? extends Element> childTypeToExtend,
+            Class<? extends Element> childTypeToExpand,
             RecyclerOnClickListener.OnClickListener onChildClickListener)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.EXPANDABLE;
         request.elements = parentElements;
         request.initiallyExpandedElements = initiallyExpandedElements;
-        request.childType = childTypeToExtend;
+        request.childType = childTypeToExpand;
         request.onClickListener = onChildClickListener;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
@@ -76,11 +76,15 @@ public abstract class ContentRecyclerViewAdapterProvider
 
     public static ContentRecyclerViewAdapter getExpandableCountableContentRecyclerViewAdapter(
             List<Element> parentElements,
+            Set<Element> initiallyExpandedElements,
+            Class<? extends Element> childTypeToExpand,
             RecyclerOnClickListener.OnClickListener onChildClickListener)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.COUNTABLE;
         request.elements = parentElements;
+        request.initiallyExpandedElements = initiallyExpandedElements;
+        request.childType = childTypeToExpand;
         request.onClickListener = onChildClickListener;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);

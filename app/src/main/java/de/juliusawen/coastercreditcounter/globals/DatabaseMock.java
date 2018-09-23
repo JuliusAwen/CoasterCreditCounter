@@ -37,15 +37,6 @@ public final class DatabaseMock implements IDatabaseWrapper
     public void fetchContent(Content content) {
 
         //initialize static lists
-        String parkTypeAmusementPark = "Amusement Park";
-        String parkTypeThemePark = "Theme Park";
-        String parkTypeFair = "Fair";
-
-        Park.addType(parkTypeAmusementPark);
-        Park.addType(parkTypeThemePark);
-        Park.addType(parkTypeFair);
-
-
         this.attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
         this.attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
         this.attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
@@ -67,9 +58,6 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         Location germany = Location.create("Germany");
         Location netherlands = Location.create("Netherlands");
-
-        Location limburg = Location.create("Limburg");
-        Location flevoland = Location.create("Flevoland");
 
         Location northRhineWestphalia = Location.create("North Rhine-Westphalia");
         Location lowerSaxony = Location.create("Lower Saxony");
@@ -104,16 +92,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park sixFlagsMagicMountain = Park.create("Six Flags Magic Mountain");
 
         Park walibiHolland = Park.create("Walibi Holland");
-
-        phantasialand.setType(parkTypeThemePark);
-        heidePark.setType(parkTypeThemePark);
-        freimarkt.setType(parkTypeFair);
-        osterwiese.setType(parkTypeFair);
-
-        cedarPoint.setType(parkTypeAmusementPark);
-        sixFlagsMagicMountain.setType(parkTypeThemePark);
-
-        walibiHolland.setType(parkTypeAmusementPark);
 
 
         Coaster taron = Coaster.create("Taron");
@@ -266,15 +244,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         northRhineWestphalia.addChild(bruehl);
         lowerSaxony.addChild(soltau);
 
-        flevoland.addChild(biddinghuizen);
 
         germany.addChild(northRhineWestphalia);
         germany.addChild(lowerSaxony);
         germany.addChildren(new ArrayList<Element>(germanStates));
         germany.addChild(bremen);
 
-        netherlands.addChild(limburg);
-        netherlands.addChild(flevoland);
+        netherlands.addChild(biddinghuizen);
 
         europe.addChild(germany);
         europe.addChild(netherlands);
@@ -308,10 +284,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(visit2);
         cedarPoint.addChild(visit1);
 
-        //add tree to content
+        //add tree to content (one element is enough - content is searching for root on its own)
         content.addElement(earth);
-        content.addElements(Attraction.getCategories());
-
+        content.addElements(AttractionCategory.getAttractionCategories());
     }
 
     @Override
@@ -322,14 +297,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         Settings.jumpToTestActivityOnStart = false;
         settings.setJumpToOpenVisitOnStart(false);
 
-        List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
-        attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
-        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
-        settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
+//        List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
+//        attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
+//        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
+//        settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
 
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
-        settings.setExpandLatestYearInListByDefault(true);
+        settings.setExpandLatestYearInListByDefault(false);
 
         settings.setFirstDayOfTheWeek(Calendar.MONDAY);
     }

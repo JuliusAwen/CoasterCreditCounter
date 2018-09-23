@@ -12,9 +12,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Park extends Element
 {
-    private static List<String> types = new ArrayList<>();
-    private String type;
-
     private Park(String name, UUID uuid)
     {
         super(name, uuid);
@@ -37,47 +34,6 @@ public class Park extends Element
         return park;
     }
 
-    public static List<String> getTypes()
-    {
-        return Park.types;
-    }
-
-    public static void setTypes(List<String> types)
-    {
-        Park.types = types;
-        Log.v(Constants.LOG_TAG,  String.format("Park.setTypes:: #[%d] types set", types.size()));
-    }
-
-    public static void addType(String type)
-    {
-        if(!Park.types.contains(type))
-        {
-            Park.types.add(type);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Park.addType:: type [%s] already exists", type));
-        }
-    }
-
-    public String getType()
-    {
-        return this.type;
-    }
-
-    public void setType(String type)
-    {
-        if(Park.types.contains(type))
-        {
-            this.type = type;
-            Log.v(Constants.LOG_TAG,  String.format("Park.setType:: set type [%s] to %s", type, this));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Park.setType:: invalid type [%s]", type));
-        }
-    }
-
     public int getAttractionCategoryCount()
     {
         List<AttractionCategory> attractionCategories = new ArrayList<>();
@@ -88,7 +44,7 @@ public class Park extends Element
                 attractionCategories.add(attraction.getCategory());
             }
         }
-        Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount:: #[%d] different AttractionCategories found", attractionCategories.size()));
+        Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount::#[%d] different AttractionCategories found", attractionCategories.size()));
         return attractionCategories.size();
     }
 }

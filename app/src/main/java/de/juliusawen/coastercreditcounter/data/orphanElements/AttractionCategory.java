@@ -8,10 +8,13 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AttractionCategory extends OrphanElement
 {
+    private static List<AttractionCategory> attractionCategories = new ArrayList<>();
+
     private AttractionCategory(String name, UUID uuid)
     {
         super(name, uuid);
@@ -33,6 +36,18 @@ public class AttractionCategory extends OrphanElement
         }
         return attractionCategory;
     }
+
+    public static List<AttractionCategory> getAttractionCategories()
+    {
+        return AttractionCategory.attractionCategories;
+    }
+
+    public static void setAttractionCategories(List<AttractionCategory> attractionCategories)
+    {
+        AttractionCategory.attractionCategories = attractionCategories;
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategories:: #[%d] attractionCategories set", attractionCategories.size()));
+    }
+
 
     public static List<AttractionCategory> convertToAttractionCategories(List<? extends Element> elements)
     {
@@ -63,7 +78,7 @@ public class AttractionCategory extends OrphanElement
         else
         {
             Log.v(Constants.LOG_TAG, String.format("AttractionCategory.addAttractionCategoryHeaders:: adding headers for #[%d] attractions...", elements.size()));
-            AttractionCategory.removeAllChildren(Attraction.getCategories());
+            AttractionCategory.removeAllChildren(AttractionCategory.getAttractionCategories());
 
             List<Attraction> attractions = Attraction.convertToAttractions(elements);
             List<Element> preparedElements = new ArrayList<>();
@@ -88,11 +103,13 @@ public class AttractionCategory extends OrphanElement
                     Element attractionCategoryHeader = attraction.getCategory();
                     attractionCategoryHeader.addChildToOrphanElement(attraction);
                     preparedElements.add(attractionCategoryHeader);
+
+                    //Todo: remove when new way to pass elements around is implemented
+                    App.content.addElement(attractionCategoryHeader);
                 }
             }
 
-            //Todo: Do this when creating/updating RecyclerView -> PrincipleOfLeastAstonishment
-            preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(Attraction.getCategories()));
+            preparedElements = Element.sortElementsBasedOnComparisonList(preparedElements, new ArrayList<Element>(AttractionCategory.getAttractionCategories()));
 
             Log.v(Constants.LOG_TAG, String.format("AttractionCategory.addAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
             return preparedElements;

@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.fragments.parks;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class ShowParkOverviewFragment extends Fragment
 {
-    private Park park;
+    private ShowParkOverviewFragmentViewModel viewModel;
 
     public ShowParkOverviewFragment() {}
 
@@ -38,12 +39,15 @@ public class ShowParkOverviewFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null)
-        {
-            this.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
-        }
+        this.viewModel = ViewModelProviders.of(this).get(ShowParkOverviewFragmentViewModel.class);
 
-        Log.v(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.onCreate:: created fragment for %s", this.park));
+        if(this.viewModel.park == null)
+        {
+            if (getArguments() != null)
+            {
+                this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            }
+        }
     }
 
     @Override
@@ -63,6 +67,6 @@ public class ShowParkOverviewFragment extends Fragment
     public void onDetach()
     {
         super.onDetach();
-        this.park = null;
+        this.viewModel = null;
     }
 }

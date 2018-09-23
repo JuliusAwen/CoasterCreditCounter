@@ -25,13 +25,12 @@ import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.SelectableRecyclerAdapter;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ViewTool;
 
 public class SortElementsActivity extends BaseActivity
 {
-    private SortElementsViewModel viewModel;
+    private SortElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
 
     @Override
@@ -42,7 +41,7 @@ public class SortElementsActivity extends BaseActivity
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(SortElementsViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
         
         if(this.viewModel.elementsToSort == null)
         {
@@ -172,16 +171,10 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                onMenuItemClickLongClickContentRecyclerView(longClickedElement);
-                return true;
+                return false;
             }
         });
         popupMenu.show();
-    }
-
-    private void onMenuItemClickLongClickContentRecyclerView(Element longClickedElement)
-    {
-        ActivityTool.startActivityEdit(this, longClickedElement);
     }
 
     private void createActionDialog()

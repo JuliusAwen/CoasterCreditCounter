@@ -28,7 +28,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.fragments.ShowAttractionsFragment;
+import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowVisitsFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -41,7 +41,7 @@ public class ShowParkActivity extends BaseActivity
     private static final int ATTRACTIONS = 1;
     private static final int VISITS = 2;
     
-    ShowParkViewModel viewModel;
+    ShowParkActivityViewModel viewModel;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,7 +51,7 @@ public class ShowParkActivity extends BaseActivity
         setContentView(R.layout.activity_show_park);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowParkViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(ShowParkActivityViewModel.class);
         
         if(this.viewModel.park == null)
         {
@@ -145,9 +145,8 @@ public class ShowParkActivity extends BaseActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         viewPager.setCurrentItem(this.viewModel.currentTab);
-        this.onPageSelectedViewPager(this.viewModel.currentTab);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default",
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%d]",
                 tabLayout.getTabCount(), this.viewModel.currentTab));
     }
 
@@ -215,14 +214,9 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                onClickFloatingActionButtonShoWparkVisits();
+                ActivityTool.startAddVisitActivityForResult(ShowParkActivity.this, Constants.REQUEST_ADD_VISIT, viewModel.park);
             }
         });
-    }
-
-    private void onClickFloatingActionButtonShoWparkVisits()
-    {
-        ActivityTool.startCreateVisitActivity(this, this.viewModel.park);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

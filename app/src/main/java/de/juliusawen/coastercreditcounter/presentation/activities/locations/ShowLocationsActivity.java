@@ -43,7 +43,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity
 {
-    private ShowLocationsViewModel viewModel;
+    private ShowLocationsActivityViewModel viewModel;
 
     private Element longClickedElement;
 
@@ -54,7 +54,7 @@ public class ShowLocationsActivity extends BaseActivity
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowLocationsViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
 
         if(this.viewModel.currentElement == null)
         {
@@ -66,7 +66,7 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
+            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
             Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onCreate:: ContentRecyclerViewAdapter %s set in ViewModel", this.viewModel.currentElement));
         }
         RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewShowLocations);
@@ -111,7 +111,7 @@ public class ShowLocationsActivity extends BaseActivity
         switch(selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startActivityEdit(this, this.viewModel.currentElement);
+                ActivityTool.startActivityEditForResult(this, Constants.REQUEST_EDIT_ELEMENT, this.viewModel.currentElement);
                 return true;
 
             case SORT_LOCATIONS:
@@ -130,20 +130,19 @@ public class ShowLocationsActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
-        if(requestCode == Constants.REQUEST_ADD_LOCATION)
+        if(resultCode == RESULT_OK)
         {
-            if(resultCode == RESULT_OK)
+            if(requestCode == Constants.REQUEST_ADD_LOCATION)
             {
+
                 //Todo: scroll to returned element
-//                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-//                Element resultElement = App.content.fetchElementByUuidString(uuidString);
+                //                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                //                Element resultElement = App.content.fetchElementByUuidString(uuidString);
                 updateContentRecyclerView();
-//                this.contentRecyclerViewAdapter.smoothScrollToElement(resultElement);
+                //                this.contentRecyclerViewAdapter.smoothScrollToElement(resultElement);
+
             }
-        }
-        else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
-        {
-            if(resultCode == RESULT_OK)
+            else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
                 List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
@@ -164,6 +163,14 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
                 }
+
+            }
+            else if(requestCode == Constants.REQUEST_EDIT_ELEMENT)
+            {
+                Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                this.updateActivityView();
+                this.updateContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(editedElement);
             }
         }
     }
@@ -351,7 +358,7 @@ public class ShowLocationsActivity extends BaseActivity
         }
     }
 
-    private ContentRecyclerViewAdapter createContentRecyclerAdapter()
+    private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
         RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
         {
@@ -411,7 +418,7 @@ public class ShowLocationsActivity extends BaseActivity
                             switch (selection)
                             {
                                 case EDIT_LOCATION:
-                                    ActivityTool.startActivityEdit(ShowLocationsActivity.this, longClickedElement);
+                                    ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_ELEMENT, longClickedElement);
                                     return true;
 
                                 case DELETE_ELEMENT:
@@ -614,7 +621,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.currentElement.getChildrenOfType(Location.class));
+        this.viewModel.contentRecyclerViewAdapter.updateDataSet(this.viewModel.currentElement.getChildrenOfType(Location.class));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

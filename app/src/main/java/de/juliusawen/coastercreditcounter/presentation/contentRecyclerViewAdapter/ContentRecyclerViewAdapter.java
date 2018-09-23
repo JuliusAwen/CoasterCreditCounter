@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +17,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
@@ -74,9 +77,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     static class ViewHolderCountableChild extends RecyclerView.ViewHolder
     {
+        TextView textViewName;
+        TextView textViewCount;
+        ImageView imageViewDecrease;
+        ImageView imageViewIncrease;
+
         ViewHolderCountableChild(View view)
         {
             super(view);
+
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Name);
+            this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Count);
+            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemCountableChild_Decrease);
+            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemCountableChild_Increase);
         }
     }
 
@@ -115,7 +128,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void initializeParents(List<Element> parents)
     {
-        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
 
         for(Element parent : parents)
         {
@@ -157,10 +170,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder = new ViewHolderChild(view);
                 break;
 
-//            case COUNTABLE_CHILD:
-//                view = layoutInflater.inflate(R.layout.recycler_view_content_item_holder, viewGroup, false);
-//                viewHolder = new ViewHolderCountableChild(view);
-//                break;
+            case COUNTABLE_CHILD:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_countable_child, viewGroup, false);
+                viewHolder = new ViewHolderCountableChild(view);
+                break;
 
             case ITEM_DIVIDER:
                 view = layoutInflater.inflate(R.layout.recycler_view_item_divider, viewGroup, false);
@@ -344,7 +357,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void bindViewHolderCountableChild(ViewHolderCountableChild viewHolder, int position)
     {
+        Context context = viewHolder.itemView.getContext();
+        Attraction child = (Attraction) this.content.get(position);
 
+        viewHolder.textViewName.setText(child.getName());
+        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child));
+        viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+        viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
     }
 
     private void setImagePlaceholder(ImageView imageView)
@@ -369,9 +388,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return content;
     }
 
-    public void updateContent(List<Element> elements)
+    public void updateDataSet(List<Element> elements)
     {
-        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
+        Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateDataSet:: updating with [%d] elements...", elements.size()));
 
         this.content.clear();
         this.initializeParents(elements);

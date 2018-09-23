@@ -1,5 +1,8 @@
 package de.juliusawen.coastercreditcounter.presentation.fragments.parks;
 
+import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -32,8 +35,7 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class ShowVisitsFragment extends Fragment
 {
-    private Park park;
-    private ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    private ShowVisitsFragmentViewModel viewModel;
 
     public ShowVisitsFragment() {}
 
@@ -52,58 +54,43 @@ public class ShowVisitsFragment extends Fragment
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreateView:: creating view...");
+        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreate:: creating fragment...");
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null)
+        this.viewModel = ViewModelProviders.of(this).get(ShowVisitsFragmentViewModel.class);
+
+        if(this.viewModel.park == null)
         {
-            this.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            if (getArguments() != null)
+            {
+                this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            }
         }
 
-        this.createContentRecyclerAdapter();
+        if(this.viewModel.contentRecyclerViewAdapter == null)
+        {
+            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
+        }
+
+
         this.setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.tab_show_park_visits, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: decorating view...");
-
-        if(this.contentRecyclerViewAdapter != null)
-        {
-            Log.d(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: creating RecyclerView...");
-
-            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Visits);
-            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            recyclerView.setAdapter(this.contentRecyclerViewAdapter);
-
-            if(savedInstanceState != null)
-            {
-                this.contentRecyclerViewAdapter.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.KEY_RECYCLER_SCROLL_POSITION));
-            }
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: VisitsRecyclerAdapter not set");
-        }
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTabShowPark_Visits);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: RecyclerView initialized");
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onResume:: updating RecyclerView");
-
-//        this.updateContentRecyclerView();
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -129,21 +116,27 @@ public class ShowVisitsFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.KEY_RECYCLER_SCROLL_POSITION, this.contentRecyclerViewAdapter.getLayoutManager().onSaveInstanceState());
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
+        if(resultCode == Activity.RESULT_OK)
+        {
+            if(requestCode == Constants.REQUEST_ADD_VISIT)
+            {
+                this.updateContentRecyclerView();
+            }
+        }
     }
 
     @Override
     public void onDetach()
     {
         super.onDetach();
-        this.park = null;
-        this.contentRecyclerViewAdapter = null;
+        this.viewModel = null;
     }
 
-    private void createContentRecyclerAdapter()
+    private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
         RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
         {
@@ -160,7 +153,7 @@ public class ShowVisitsFragment extends Fragment
             }
         };
 
-        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
+        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
         Set<Element> initiallyExpandedElements = new HashSet<>();
 
         if(App.settings.getExpandLatestYearInListByDefault())
@@ -168,7 +161,7 @@ public class ShowVisitsFragment extends Fragment
             initiallyExpandedElements.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
         }
 
-        this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 sortedYearHeaders,
                 initiallyExpandedElements,
                 Visit.class,
@@ -177,12 +170,12 @@ public class ShowVisitsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
-        if(this.park.getChildCountOfType(Visit.class) > 0)
+        if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
         {
-            List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
+            List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
 
-            this.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
-            this.contentRecyclerViewAdapter.notifyDataSetChanged();
+            this.viewModel.contentRecyclerViewAdapter.updateDataSet(sortedYearHeaders);
+            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
         else
         {
@@ -191,8 +184,8 @@ public class ShowVisitsFragment extends Fragment
     }
 
 
-    private List<Element> getSortedYearHeadersForParkVisits(Park park)
+    private List<Element> getSortedYearHeadersForParkVisits()
     {
-        return YearHeader.addYearHeaders(Visit.sortVisitsByDateAccordingToSortOrder(this.park.getChildrenOfType(Visit.class)));
+        return YearHeader.addYearHeaders(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
     }
 }
