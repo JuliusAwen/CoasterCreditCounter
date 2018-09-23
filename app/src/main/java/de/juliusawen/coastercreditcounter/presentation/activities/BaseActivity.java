@@ -22,8 +22,7 @@ import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFr
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
 public abstract class BaseActivity extends AppCompatActivity implements
-        HelpOverlayFragment.HelpOverlayFragmentInteractionListener,
-        ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
+        HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     protected Bundle savedInstanceState;
 
@@ -33,7 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener onClickListenerFloatingActionButton;
 
-    //region @OVERRIDE
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -87,9 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConfirmDialogFragmentInteraction(View view) {}
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -111,19 +106,17 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        if(getSupportActionBar() != null)
-        {
-            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TOOLBAR_TITLE), savedInstanceState.getString(Constants.KEY_TOOLBAR_SUBTITLE));
-        }
+//        if(getSupportActionBar() != null)
+//        {
+//            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TOOLBAR_TITLE), savedInstanceState.getString(Constants.KEY_TOOLBAR_SUBTITLE));
+//        }
 
         if(this.helpOverlayFragment != null)
         {
             this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE));
         }
     }
-    //endregion
 
-    //region TOOLBAR
     protected void addToolbar()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
@@ -188,9 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
             }
         }
     }
-    //endregion
 
-    //region FLOATING ACTION BUTTON
     protected void addFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
@@ -257,15 +248,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
         this.floatingActionButton.show();
     }
 
-    //endregion
-
-    //region HELP OVERLAY
     protected void addHelpOverlay(String title, CharSequence message)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: adding help overlay...");
-
         if (this.savedInstanceState == null)
         {
+            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: creating help overlay...");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
@@ -275,6 +262,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         else
         {
             this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: re-using help overlay...");
         }
     }
 
@@ -309,15 +297,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
             this.setConfirmDialogVisibility(!isVisible);
         }
     }
-    //endregion
 
-    //region CONFIRM DIALOG
     protected void addConfirmDialog()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: adding dialog...");
-
         if(this.savedInstanceState == null)
         {
+            Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating confirm dialog fragment...");
+
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
             fragmentTransaction.add(findViewById(android.R.id.content).getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
@@ -326,6 +312,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         else
         {
             this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+            Log.v(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: re-using confirm dialog fragment...");
         }
     }
 
@@ -343,7 +330,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
             }
         }
     }
-    //endregion
 
     private void showFragment(Fragment fragment)
     {

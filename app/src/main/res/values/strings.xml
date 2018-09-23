@@ -5,10 +5,10 @@
 
     <string name="title_help">Help: %1$s</string>
 
+    <string name="title_locations_show">Locations</string>
     <string name="title_locations_sort">Sort Locations</string>
     <string name="title_locations_pick">Pick Locations</string>
     <string name="subtitle_locations_pick_description">to add to the new location</string>
-    <string name="subtitle_locations_show">Browse/Manage Locations</string>
     <string name="subtitle_location_add">Add Location</string>
     <string name="subtitle_location_edit">Edit Location</string>
 

@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.elements;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -21,11 +21,10 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class EditElementActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private Element elementToEdit;
-    private EditText editText;
-    private String toolbarSubtitle;
+    private EditElementViewModel viewModel;
 
-    //region @OVERRIDE
+    private EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -34,14 +33,24 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
 
-        this.initializeContent();
+        this.viewModel = ViewModelProviders.of(this).get(EditElementViewModel.class);
 
+        if(this.viewModel.elementToEdit == null)
+        {
+            this.viewModel.elementToEdit = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+        
+        if(this.viewModel.toolbarSubtitle == null)
+        {
+            this.viewModel.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
+        }
+        
         super.addConfirmDialog();
 
-        super.addHelpOverlay(getString(R.string.title_help, this.toolbarSubtitle), getText(R.string.help_text_edit_location));
+        super.addHelpOverlay(getString(R.string.title_help, this.viewModel.toolbarSubtitle), getText(R.string.help_text_edit_location));
 
         super.addToolbar();
-        this.decorateToolbar();
+        super.setToolbarTitleAndSubtitle(this.viewModel.elementToEdit.getName(), this.viewModel.toolbarSubtitle);
 
         this.createEditText();
     }
@@ -65,39 +74,12 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        outState.putString(Constants.KEY_ELEMENT, this.elementToEdit.getUuid().toString());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-        this.elementToEdit = App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
-    }
-    //endregion
-
-    private void initializeContent()
-    {
-        this.elementToEdit = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        this.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
-    }
-
-    private void decorateToolbar()
-    {
-        super.setToolbarTitleAndSubtitle(this.elementToEdit.getName(), this.toolbarSubtitle);
-    }
-
-    //region EDIT TEXT
     private void createEditText()
     {
         this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
 
-        Log.d(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: edit %s", this.elementToEdit));
-        this.editText.append(this.elementToEdit.getName());
+        Log.d(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: edit %s", this.viewModel.elementToEdit));
+        this.editText.append(this.viewModel.elementToEdit.getName());
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -127,18 +109,17 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
     private void handleOnEditorActionDone()
     {
         String editText = this.editText.getText().toString();
-        if(!this.elementToEdit.getName().equals(editText))
+        if(!this.viewModel.elementToEdit.getName().equals(editText))
         {
-            if(!this.elementToEdit.setName(editText))
+            if(!this.viewModel.elementToEdit.setName(editText))
             {
                 Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
             }
-            Log.i(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: name of %s changed to [%s]", this.elementToEdit, editText));
+            Log.i(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
         }
         else
         {
             Log.v(Constants.LOG_TAG, "EditElementActivity.createEditText:: name has not changed");
         }
     }
-    //endregion
 }

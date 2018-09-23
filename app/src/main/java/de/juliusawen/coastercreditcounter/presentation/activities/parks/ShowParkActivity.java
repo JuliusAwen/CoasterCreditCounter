@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.activities.parks;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,14 +37,12 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowParkActivity extends BaseActivity
 {
-    private Park park;
-
     private static final int OVERVIEW = 0;
     private static final int ATTRACTIONS = 1;
     private static final int VISITS = 2;
-
-    private int currentTab = OVERVIEW;
-
+    
+    ShowParkViewModel viewModel;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -52,16 +51,26 @@ public class ShowParkActivity extends BaseActivity
         setContentView(R.layout.activity_show_park);
         super.onCreate(savedInstanceState);
 
-        this.initializeContent();
+        this.viewModel = ViewModelProviders.of(this).get(ShowParkViewModel.class);
+        
+        if(this.viewModel.park == null)
+        {
+            this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+        
+        if(this.viewModel.currentTab == -1)
+        {
+            this.viewModel.currentTab = OVERVIEW;
+        }
 
-        super.addHelpOverlay(null, null);
+        this.createTabPagerAdapter();
 
         super.addToolbar();
         super.addToolbarHomeButton();
 
         super.addFloatingActionButton();
 
-        this.createTabPagerAdapter();
+        super.addHelpOverlay(null, null);
     }
 
     @Override
@@ -69,12 +78,12 @@ public class ShowParkActivity extends BaseActivity
     {
         menu.clear();
 
-        if(this.currentTab == ATTRACTIONS && this.park.getAttractionCategoryCount() > 1)
+        if(this.viewModel.currentTab == ATTRACTIONS && this.viewModel.park.getAttractionCategoryCount() > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
         }
 
-        if(this.currentTab == VISITS && this.park.getChildCountOfType(Visit.class) > 1)
+        if(this.viewModel.currentTab == VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
             menu.add(Menu.NONE, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
@@ -98,20 +107,12 @@ public class ShowParkActivity extends BaseActivity
     protected void onToolbarHomeButtonBackClicked()
     {
         Log.i(Constants.LOG_TAG, "ShowParkActivity.onToolbarHomeButtonBackClicked:: staring ShowLocationActivity");
-        ActivityTool.startActivityShow(this, this.park.getParent().getParent());
-    }
-
-    private void initializeContent()
-    {
-        String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        this.park = (Park) App.content.getElementByUuid(UUID.fromString(elementUuid));
-
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.initializeContent:: initialized with %s and current tab[%d] selected", this.park, this.currentTab));
+        ActivityTool.startActivityShow(this, this.viewModel.park.getParent().getParent());
     }
 
     private void createTabPagerAdapter()
     {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.park.getUuid().toString());
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
 
         ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
         viewPager.setAdapter(tabPagerAdapter);
@@ -143,10 +144,11 @@ public class ShowParkActivity extends BaseActivity
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-        viewPager.setCurrentItem(currentTab);
-        this.onPageSelectedViewPager(currentTab);
+        viewPager.setCurrentItem(this.viewModel.currentTab);
+        this.onPageSelectedViewPager(this.viewModel.currentTab);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default", tabLayout.getTabCount(), currentTab));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created for #[%d] tabs, selected position[%d] by default",
+                tabLayout.getTabCount(), this.viewModel.currentTab));
     }
 
     private void onPageSelectedViewPager(int position)
@@ -156,19 +158,19 @@ public class ShowParkActivity extends BaseActivity
         switch(position)
         {
             case OVERVIEW:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_overview));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_overview));
                 this.decorateFloatingActionButtonShowParkOverview();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_overview)), getText(R.string.help_text_show_park_overview));
                 break;
 
             case ATTRACTIONS:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_attractions));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_attractions)), getText(R.string.help_text_show_park_attractions));
                 break;
 
             case VISITS:
-                super.setToolbarTitleAndSubtitle(this.park.getName(), getString(R.string.subtitle_park_show_visits));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_visits)), getText(R.string.help_text_show_park_visits));
                 break;
@@ -177,7 +179,7 @@ public class ShowParkActivity extends BaseActivity
                 Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab position [%d] does not exist", position));
         }
 
-        this.currentTab = position;
+        this.viewModel.currentTab = position;
     }
 
     private void decorateFloatingActionButtonShowParkOverview()
@@ -220,7 +222,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void onClickFloatingActionButtonShoWparkVisits()
     {
-        ActivityTool.startCreateVisitActivity(this, this.park);
+        ActivityTool.startCreateVisitActivity(this, this.viewModel.park);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

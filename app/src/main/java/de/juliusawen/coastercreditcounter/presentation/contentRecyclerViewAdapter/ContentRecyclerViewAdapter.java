@@ -104,7 +104,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.childType = request.childType;
         this.recyclerOnClickListener = request.onClickListener;
         this.selectMultiple = request.selectMultiple;
-        this.expandedParents = request.initiallyExpandedElements;
+
+        if(request.initiallyExpandedElements != null)
+        {
+            this.expandedParents = request.initiallyExpandedElements;
+        }
+
         this.initializeParents(request.elements);
     }
 
