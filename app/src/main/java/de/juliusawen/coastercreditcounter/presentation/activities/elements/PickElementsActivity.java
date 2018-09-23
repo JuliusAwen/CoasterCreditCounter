@@ -66,8 +66,6 @@ public class PickElementsActivity extends BaseActivity
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(this.viewModel.contentRecyclerAdapter);
 
-        this.addSelectOrDeselectAllBar();
-
         super.addToolbar();
         super.addToolbarHomeButton();
         super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
@@ -76,6 +74,8 @@ public class PickElementsActivity extends BaseActivity
         this.decorateFloatingActionButton();
 
         super.addHelpOverlay(getString(R.string.title_help, this.viewModel.toolbarTitle), getText(R.string.help_text_pick_elements));
+
+        this.addSelectOrDeselectAllBar();
     }
 
     private void decorateFloatingActionButton()

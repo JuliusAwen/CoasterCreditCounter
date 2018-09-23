@@ -63,14 +63,14 @@ public class ShowParkActivity extends BaseActivity
             this.viewModel.currentTab = OVERVIEW;
         }
 
-        this.createTabPagerAdapter();
-
         super.addToolbar();
         super.addToolbarHomeButton();
 
         super.addFloatingActionButton();
 
         super.addHelpOverlay(null, null);
+
+        this.createTabPagerAdapter();
     }
 
     @Override

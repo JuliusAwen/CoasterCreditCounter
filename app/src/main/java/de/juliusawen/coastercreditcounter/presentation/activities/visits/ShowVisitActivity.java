@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities.visits;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,11 +28,9 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class ShowVisitActivity extends BaseActivity
 {
-    private Visit visit = null;
-    private Park parentPark;
-
-    private DatePickerDialog datePickerDialog;
+    private ShowVisitViewModel viewModel;
     private ShowAttractionsFragment showAttractionsFragment;
+    private DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +40,21 @@ public class ShowVisitActivity extends BaseActivity
         setContentView(R.layout.activity_show_visit);
         super.onCreate(savedInstanceState);
 
-        this.initializeContent();
+        this.viewModel = ViewModelProviders.of(this).get(ShowVisitViewModel.class);
+
+        if(this.viewModel.parentPark == null)
+        {
+            Element passedElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            if(passedElement.isInstance(Visit.class))
+            {
+                this.viewModel.visit = (Visit) passedElement;
+                this.viewModel.parentPark = (Park) this.viewModel.visit.getParent();
+            }
+            else if(passedElement.isInstance(Park.class))
+            {
+                this.viewModel.parentPark = (Park) passedElement;
+            }
+        }
 
         super.addToolbar();
         super.addToolbarHomeButton();
@@ -55,7 +68,7 @@ public class ShowVisitActivity extends BaseActivity
         super.onResume();
 
         this.decorateToolbar();
-        if(this.visit == null)
+        if(this.viewModel.visit == null)
         {
             Log.d(Constants.LOG_TAG, "ShowVisitActivity.onResume:: creating visit...");
             this.createVisit();
@@ -64,27 +77,27 @@ public class ShowVisitActivity extends BaseActivity
         {
             if(!this.showAttractionsFragment.isInitialized)
             {
-                Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onResume:: initializing ShowAttractionsFragment with %s...", this.visit));
-                this.showAttractionsFragment.initializeForVisit(this.visit);
+                Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onResume:: initializing ShowAttractionsFragment with %s...", this.viewModel.visit));
+                this.showAttractionsFragment.initializeForVisit(this.viewModel.visit);
             }
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        outState.putString(Constants.KEY_ELEMENT, this.visit.getUuid().toString());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        this.visit = (Visit) App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
-        this.parentPark = (Park) visit.getParent();
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState)
+//    {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(Constants.KEY_ELEMENT, this.viewModel.visit.getUuid().toString());
+//    }
+//
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState)
+//    {
+//        super.onRestoreInstanceState(savedInstanceState);
+//
+//        this.viewModel.visit = (Visit) App.content.getElementByUuid(UUID.fromString(savedInstanceState.getString(Constants.KEY_ELEMENT)));
+//        this.viewModel.parentPark = (Park) this.viewModel.visit.getParent();
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -96,29 +109,15 @@ public class ShowVisitActivity extends BaseActivity
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
                 List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-                this.visit.addAttractions(selectedElements);
-                this.showAttractionsFragment.initializeForVisit(this.visit);
+                this.viewModel.visit.addAttractions(selectedElements);
+                this.showAttractionsFragment.initializeForVisit(this.viewModel.visit);
             }
-        }
-    }
-
-    private void initializeContent()
-    {
-        Element passedElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        if(passedElement.isInstance(Visit.class))
-        {
-            this.visit = (Visit) passedElement;
-            this.parentPark = (Park) visit.getParent();
-        }
-        else if(passedElement.isInstance(Park.class))
-        {
-            this.parentPark = (Park) passedElement;
         }
     }
 
     private void createVisit()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.createVisit:: creating visit for %s", this.parentPark));
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.createVisit:: creating visit for %s", this.viewModel.parentPark));
 
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -158,14 +157,14 @@ public class ShowVisitActivity extends BaseActivity
     {
         this.datePickerDialog.dismiss();
 
-        this.visit = Visit.create(calendar);
-        this.parentPark.addChild(this.visit);
-        App.content.addElement(this.visit);
+        this.viewModel.visit = Visit.create(calendar);
+        this.viewModel.parentPark.addChild(this.viewModel.visit);
+        App.content.addElement(this.viewModel.visit);
 
-        if(Visit.isSameDay(this.visit.getCalendar(), Calendar.getInstance()))
+        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
             Log.i(Constants.LOG_TAG, "ShowVisitActivity.onViewCreated:: created visit is today - set as open visit");
-            Visit.setOpenVisit(this.visit);
+            Visit.setOpenVisit(this.viewModel.visit);
         }
 
         this.decorateToolbar();
@@ -191,7 +190,7 @@ public class ShowVisitActivity extends BaseActivity
             public void onClick(DialogInterface dialog, int id)
             {
                 dialog.dismiss();
-                showAttractionsFragment.initializeForVisit(visit);
+                showAttractionsFragment.initializeForVisit(viewModel.visit);
             }
         });
 
@@ -204,12 +203,14 @@ public class ShowVisitActivity extends BaseActivity
     private void onClickAlertDialogPositivePickAttractions(DialogInterface dialog)
     {
         dialog.dismiss();
-        ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_ATTRACTIONS, this.parentPark.getChildrenOfType(Attraction.class));
+        ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_ATTRACTIONS, this.viewModel.parentPark.getChildrenOfType(Attraction.class));
     }
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.visit != null ? this.visit.getName() : getString(R.string.title_visit_create), this.visit != null ? this.parentPark.getName() : null);
+        super.setToolbarTitleAndSubtitle(
+                this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create),
+                this.viewModel.visit != null ? this.viewModel.parentPark.getName() : null);
     }
 
     protected void addShowAttractionFragment()
