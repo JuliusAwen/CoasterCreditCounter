@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
@@ -14,9 +15,13 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
-    private Element rootElement;
     private Map<UUID, Element> elements = new HashMap<>();
     private Map<UUID, Element> orphanElements = new HashMap<>();
+
+
+    private Element rootElement;
+    private Map<String, Element> elementByKey;
+    private Map<String, List<Element>> elementsByKey;
 
     private static final Content instance = new Content();
 
@@ -69,6 +74,41 @@ public class Content
         this.rootElement = element;
     }
 
+    public Element getElementByKey(String key)
+    {
+        return this.elementByKey.get(key);
+    }
+
+//    public void putElementByKeyForActivity(Class<? extends Activity> activity, String key, Element element)
+//    {
+//        if(!this.elementByKeyForActivity.containsKey(activity))
+//        {
+//            Map<String, Element> elementByKey = new HashMap<>();
+//            elementByKey.put(key, element);
+//            this.elementByKeyForActivity.put(activity, elementByKey);
+//        }
+//        else
+//        {
+//            this.elementByKeyForActivity.get(activity).put(key, element);
+//        }
+//    }
+//
+//    public List<Element> getElements(Class)
+//
+//    private void putElements(Class type, String key,List<Element> elements)
+//    {
+//        if(!this.elementsByKeyByActivity.containsKey(type))
+//        {
+//            Map<String, List<Element>> elementsByKeys = new LinkedHashMap<>();
+//            elementsByKeys.put(key, elements);
+//            this.elementsByKeyByActivity.put(type, elementsByKeys);
+//        }
+//    }
+
+
+
+
+    @Deprecated
     private void flattenContentTree(Element element)
     {
         this.addElement(element);
@@ -78,6 +118,18 @@ public class Content
         }
     }
 
+    @Deprecated
+    public ArrayList<String> getUuidStringsFromElements(Set<Element> elements)
+    {
+        ArrayList<String> uuidStrings = new ArrayList<>();
+        for(Element element : elements)
+        {
+            uuidStrings.add(element.getUuid().toString());
+        }
+        return uuidStrings;
+    }
+
+    @Deprecated
     public ArrayList<String> getUuidStringsFromElements(List<Element> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
@@ -88,6 +140,7 @@ public class Content
         return uuidStrings;
     }
 
+    @Deprecated
     public List<Element> fetchElementsByUuidStrings(List<String> uuidStrings)
     {
         Stopwatch stopwatch = new Stopwatch(true);
@@ -98,15 +151,17 @@ public class Content
             elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
         }
 
-        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching #[%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
+        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
         return elements;
     }
 
+    @Deprecated
     public Element fetchElementByUuidString(String uuidString)
     {
         return this.getElementByUuid(UUID.fromString(uuidString));
     }
 
+    @Deprecated
     public Element getElementByUuid(UUID uuid)
     {
         if(this.elements.containsKey(uuid))
@@ -137,6 +192,7 @@ public class Content
 //        return orphanElements;
 //    }
 
+    @Deprecated
     public void addElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
@@ -146,6 +202,7 @@ public class Content
         this.addElement(element);
     }
 
+    @Deprecated
     public boolean deleteElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
@@ -158,6 +215,7 @@ public class Content
         return this.deleteElement(element);
     }
 
+    @Deprecated
     public void addElements(List<? extends Element> elements)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElements:: adding #[%d] elements", elements.size()));
@@ -167,6 +225,7 @@ public class Content
         }
     }
 
+    @Deprecated
     public void addElement(Element element)
     {
 
@@ -195,6 +254,7 @@ public class Content
 //        return true;
 //    }
 
+    @Deprecated
     public boolean deleteElement(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));

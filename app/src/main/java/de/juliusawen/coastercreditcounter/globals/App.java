@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,18 +23,17 @@ public abstract class App
 
     @SuppressLint("StaticFieldLeak")
     private static View progressBar;
-
     @SuppressLint("StaticFieldLeak")
-    private static Activity activity;
+    private static Context context;
 
-    public static void initialize(Activity activity)
+    public static void initialize(Context context)
     {
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing app...");
 
-        App.activity = activity;
+        App.context = context;
 
-        ViewGroup viewGroup = activity.findViewById(android.R.id.content);
-        App.progressBar = activity.getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
+        ViewGroup viewGroup = ((Activity)context).findViewById(android.R.id.content);
+        App.progressBar = ((Activity)context).getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
         viewGroup.addView(App.progressBar);
 
         new Initialize().execute();
@@ -59,16 +59,16 @@ public abstract class App
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
             App.settings = Settings.getInstance();
 
-            //Todo: remove sleep when tested
-            try
-            {
-                Log.e(Constants.LOG_TAG, "App.Initialize.doInBackground:: sleeping for 1000ms in order to test progress bar...");
-                Thread.sleep(1000);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            //Todo: remove
+//            try
+//            {
+//                Log.e(Constants.LOG_TAG, "App.Initialize.doInBackground:: sleeping for 1000ms in order to test progress bar...");
+//                Thread.sleep(1000);
+//            }
+//            catch (InterruptedException e)
+//            {
+//                e.printStackTrace();
+//            }
 
             return null;
         }
@@ -80,33 +80,31 @@ public abstract class App
 
             super.onPostExecute(aVoid);
 
-            App.progressBar.setVisibility(View.GONE);
-            App.progressBar = null;
-
-
             Visit.setSortOrder(App.settings.getDefaultSortOrderParkVisits());
 
             if(Settings.jumpToTestActivityOnStart)
             {
                 Log.e(Constants.LOG_TAG, "App.Initialize.onPostExecute:: starting TestActivity");
-                activity.startActivity(new Intent(activity, TestActivity.class));
+                context.startActivity(new Intent(context, TestActivity.class));
             }
             else
             {
                 if(Visit.validateOpenVisit() && App.settings.jumpToOpenVisitOnStart())
                 {
                     Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
-                    ActivityTool.startActivityShow(App.activity, Visit.getOpenVisit());
+                    ActivityTool.startActivityShow(App.context, Visit.getOpenVisit());
                 }
                 else
                 {
                     Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
-                    ActivityTool.startActivityShow(App.activity, App.content.getRootLocation());
+                    ActivityTool.startActivityShow(App.context, App.content.getRootLocation());
                 }
             }
 
+            App.progressBar.setVisibility(View.GONE);
 
-            App.activity = null;
+            App.progressBar = null;
+            App.context = null;
             App.isInitialized = true;
         }
 

@@ -30,13 +30,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private RecyclerView recyclerView;
 
     private AdapterType adapterType;
-    private List<Element> content;
+
+    private List<Element> content = new ArrayList<>();
+    private Set<Element> expandedParents = new HashSet<>();
+
     private Class<? extends Element> childType;
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
     private boolean selectMultiple;
 
-    private Set<Element> expandedElements;
 
     enum ViewType
     {
@@ -48,17 +50,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     static class ViewHolderParent extends RecyclerView.ViewHolder
     {
+        ImageView imageViewExpandToggle;
+        TextView textViewName;
+
         ViewHolderParent(View view)
         {
             super(view);
+            this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItemExpandableParent);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemExpandableParent);
         }
     }
 
     static class ViewHolderChild extends RecyclerView.ViewHolder
     {
+        TextView textViewName;
+
         ViewHolderChild(View view)
         {
             super(view);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemChild);
         }
     }
 
@@ -88,48 +98,26 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
 
-
-
-
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
         this.adapterType = request.adapterType;
         this.childType = request.childType;
         this.recyclerOnClickListener = request.onClickListener;
         this.selectMultiple = request.selectMultiple;
-        this.initializeExpandedParents(request.initiallyExpandedElements);
+        this.expandedParents = request.initiallyExpandedElements;
         this.initializeParents(request.elements);
-    }
-
-    private void initializeExpandedParents(List<Element> initiallyExpandedParents)
-    {
-        if(this.expandedElements == null)
-        {
-            this.expandedElements = new HashSet<>();
-        }
-
-        if(initiallyExpandedParents != null)
-        {
-            this.expandedElements.addAll(initiallyExpandedParents);
-        }
     }
 
     private void initializeParents(List<Element> parents)
     {
         Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
 
-        if(this.content == null)
-        {
-            this.content = new ArrayList<>();
-        }
-
         for(Element parent : parents)
         {
             this.content.add(parent);
-            if(this.expandedElements.contains(parent))
+            if(this.expandedParents.contains(parent))
             {
-                Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.initializeParents:: expanding parent %s...", parent));
-                this.expandElement(parent);
+                this.expandParent(parent);
             }
             this.content.add(new ItemDivider());
         }
@@ -265,55 +253,44 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Element parent = this.content.get(position);
 
-        ImageView imageViewExpandToggle = viewHolder.itemView.findViewById(R.id.imageViewRecyclerViewItemExpandableParent);
-        this.decorateExpandToggle(imageViewExpandToggle, parent);
+        this.decorateExpandToggle(viewHolder, parent);
 
-        final TextView textView = viewHolder.itemView.findViewById(R.id.textViewRecyclerViewItemExpandableParent);
-        textView.setText(parent.getName());
-        textView.setTag(parent);
-        textView.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
-        textView.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+        viewHolder.textViewName.setText(parent.getName());
+        viewHolder.textViewName.setTag(parent);
+        viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+        viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
     }
 
-    private void decorateExpandToggle(ImageView imageViewExpandToggle, Element parent)
+    private void decorateExpandToggle(ViewHolderParent viewHolder,  Element parent)
     {
-        imageViewExpandToggle.setTag(parent);
+        viewHolder.imageViewExpandToggle.setTag(parent);
 
         if(!this.adapterType.equals(BASIC) && parent.getChildCountOfType(this.childType) > 0)
         {
-            if(this.expandedElements.contains(parent))
+            if(this.expandedParents.contains(parent))
             {
-                imageViewExpandToggle.setImageDrawable(imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+                viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
             }
             else
             {
-                imageViewExpandToggle.setImageDrawable(imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+                viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
 
-            imageViewExpandToggle.setOnClickListener(new View.OnClickListener()
+            viewHolder.imageViewExpandToggle.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
                     final Element parent = (Element) view.getTag();
 
-                    if(!expandedElements.contains(parent))
+                    if(!expandedParents.contains(parent))
                     {
-                        expandElement(parent);
-//                        smoothScrollToElement(content.get(content.indexOf(parent) + parent.getChildCountOfType(childType)));
-
-                        view.postDelayed(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                smoothScrollToElement(content.get(content.indexOf(parent) + parent.getChildCountOfType(childType)));
-                            }
-                        }, 500);
+                        expandParent(parent);
+//                        recyclerView.smoothScrollToPosition(content.indexOf(parent) + parent.getChildCountOfType(childType) + 1);
                     }
                     else
                     {
-                        collapseElement(parent);
+                        collapseParent(parent);
 //                        smoothScrollToElement(parent);
                     }
                 }
@@ -321,36 +298,39 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         else
         {
-            this.setImagePlaceholder(imageViewExpandToggle);
+            this.setImagePlaceholder(viewHolder.imageViewExpandToggle);
         }
     }
 
-    private void expandElement(Element parent)
+    private void expandParent(Element parent)
     {
-        this.expandedElements.add(parent);
-        notifyItemChanged(content.indexOf(parent));
+        if(this.content.contains(parent))
+        {
+            this.expandedParents.add(parent);
+            notifyItemChanged(this.content.indexOf(parent));
 
-        this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-        notifyItemRangeInserted(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+            this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+            notifyItemRangeChanged(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+        }
     }
 
-    private void collapseElement(Element parent)
+    private void collapseParent(Element parent)
     {
-        this.expandedElements.remove(parent);
-        notifyItemChanged(content.indexOf(parent));
+        if(this.expandedParents.contains(parent))
+        {
+            this.expandedParents.remove(parent);
+            notifyItemChanged(content.indexOf(parent));
 
-        this.content.removeAll(parent.getChildrenOfType(this.childType));
-        notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
-
-        this.smoothScrollToElement(parent);
+            this.content.removeAll(parent.getChildrenOfType(this.childType));
+            notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+        }
     }
 
     private void bindViewHolderChild(ViewHolderChild viewHolder, int position)
     {
         Element child = this.content.get(position);
 
-        TextView textView = viewHolder.itemView.findViewById(R.id.textViewRecyclerViewItemChild);
-        textView.setText(child.getName());
+        viewHolder.textViewName.setText(child.getName());
 
         viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
         viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
@@ -370,13 +350,47 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
 
-
-
-    public void updateDataSet(List<Element> elements)
+    public List<Element> getContent()
     {
+        List<Element> content = new ArrayList<>();
+        for(Element element : this.content)
+        {
+            if(!element.isInstance(ItemDivider.class))
+            {
+                content.add(element);
+            }
+        }
+
+        return content;
+    }
+
+    public void updateContent(List<Element> elements)
+    {
+        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
+
         this.content.clear();
         this.initializeParents(elements);
-        notifyDataSetChanged();
+    }
+
+    public Set<Element> getExpandedElements()
+    {
+        return this.expandedParents;
+    }
+
+    public void expandElements(List<Element> elements)
+    {
+        for(Element element : elements)
+        {
+            this.expandElement(element);
+        }
+    }
+
+    public void expandElement(Element element)
+    {
+        if(!this.expandedParents.contains(element))
+        {
+            this.expandParent(element);
+        }
     }
 
     public void smoothScrollToElement(Element element)

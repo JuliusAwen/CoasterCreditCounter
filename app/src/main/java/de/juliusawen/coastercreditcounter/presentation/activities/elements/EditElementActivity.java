@@ -44,7 +44,6 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         this.decorateToolbar();
 
         this.createEditText();
-
     }
 
     @Override

@@ -7,6 +7,13 @@ public abstract class Constants
 
     public static final String KEY_ELEMENT = "de.juliusawen.coding.key_element";
     public static final String KEY_ELEMENTS = "de.juliusawen.coding.key_elements";
+    public static final String KEY_CURRENT_ELEMENT = "de.juliusawen.coding.key_current_element";
+    public static final String KEY_RECENT_ELEMENTS = "de.juliusawen.coding.key_recent_elements";
+
+    public static final String KEY_RECYCLER_SCROLL_POSITION = "de.juliusawen.coding.extra_recycler_scroll_position";
+    public static final String KEY_RECYCLER_EXPANDED_ELEMENTS = "de.juliusawen.coding.key_recycler_expanded_elements";
+
+
     public static final String KEY_SELECTED_ELEMENT = "de.juliusawen.coding.key_selected_element";
     public static final String KEY_SELECTED_ELEMENTS = "de.juliusawen.coding.key_selected_elements";
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
@@ -15,7 +22,7 @@ public abstract class Constants
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
     public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";
     public static final String KEY_RADIO_BUTTON_STATE = "de.juliusawen.coding.extra_radio_button_state";
-    public static final String KEY_RECYCLER_STATE = "de.juliusawen.coding.extra_recycler_state";
+
 
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";

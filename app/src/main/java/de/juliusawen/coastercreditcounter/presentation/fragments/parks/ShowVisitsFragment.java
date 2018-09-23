@@ -11,8 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -85,7 +86,7 @@ public class ShowVisitsFragment extends Fragment
 
             if(savedInstanceState != null)
             {
-                this.contentRecyclerViewAdapter.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.KEY_RECYCLER_STATE));
+                this.contentRecyclerViewAdapter.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.KEY_RECYCLER_SCROLL_POSITION));
             }
         }
         else
@@ -131,7 +132,7 @@ public class ShowVisitsFragment extends Fragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.KEY_RECYCLER_STATE, this.contentRecyclerViewAdapter.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(Constants.KEY_RECYCLER_SCROLL_POSITION, this.contentRecyclerViewAdapter.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -160,17 +161,18 @@ public class ShowVisitsFragment extends Fragment
         };
 
         List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
+        Set<Element> initiallyExpandedElements = new HashSet<>();
 
         if(App.settings.getExpandLatestYearInListByDefault())
         {
-            List<Element> elementsToExpandInitially = new ArrayList<>();
-            elementsToExpandInitially.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
-            this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(sortedYearHeaders, elementsToExpandInitially, Visit.class, recyclerOnClickListener);
+            initiallyExpandedElements.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
         }
-        else
-        {
-            this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(sortedYearHeaders, Visit.class, recyclerOnClickListener);
-        }
+
+        this.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                sortedYearHeaders,
+                initiallyExpandedElements,
+                Visit.class,
+                recyclerOnClickListener);
 }
 
     private void updateContentRecyclerView()
@@ -179,7 +181,8 @@ public class ShowVisitsFragment extends Fragment
         {
             List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits(this.park);
 
-            this.contentRecyclerViewAdapter.updateDataSet(sortedYearHeaders);
+            this.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
+            this.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
         else
         {

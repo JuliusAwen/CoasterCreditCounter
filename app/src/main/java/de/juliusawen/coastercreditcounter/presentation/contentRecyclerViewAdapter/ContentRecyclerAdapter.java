@@ -82,10 +82,10 @@ public class ContentRecyclerAdapter extends RecyclerView.Adapter<ContentRecycler
 
     public void updateDataSet(LinkedHashMap<Element, List<Element>> childrenByParents)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerAdapter.updateDataSet:: updating with #[%d] parents...", childrenByParents.size()));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerAdapter.updateContent:: updating with #[%d] parents...", childrenByParents.size()));
         this.childrenByParents = childrenByParents;
         notifyDataSetChanged();
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerAdapter.updateDataSet:: updated with #[%d] parents", childrenByParents.size()));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerAdapter.updateContent:: updated with #[%d] parents", childrenByParents.size()));
     }
 
     public void expandParent(Element parent)

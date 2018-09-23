@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.util.HashSet;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
@@ -74,7 +76,7 @@ public class TestActivity extends BaseActivity
 //                ContentRecyclerViewAdapterProvider.getBasicContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), onClickListener);
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter =
-                ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), Park.class, onClickListener);
+                ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), new HashSet<Element>(), Park.class, onClickListener);
 
         RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewTest);
 //        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
