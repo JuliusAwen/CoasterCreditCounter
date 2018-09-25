@@ -145,9 +145,9 @@ public class ShowParkActivity extends BaseActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         viewPager.setCurrentItem(this.viewModel.currentTab);
+        this.onPageSelectedViewPager(this.viewModel.currentTab);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%d]",
-                tabLayout.getTabCount(), this.viewModel.currentTab));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%d]", tabLayout.getTabCount(), this.viewModel.currentTab));
     }
 
     private void onPageSelectedViewPager(int position)
@@ -183,7 +183,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkOverview()
     {
-        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_comment)));
+        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_comment)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -196,7 +196,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkAttractions()
     {
-        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -208,7 +208,7 @@ public class ShowParkActivity extends BaseActivity
     }
     private void decorateFloatingActionButtonShowParkVisits()
     {
-        super.animateFloatingActionButton(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -36,6 +36,8 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     public Location newLocation;
 
+    private LinearLayout linearLayoutAddChildren;
+    private TextView textViewAddChildren;
     private EditText editText;
     private CheckBox checkBoxAddChildren;
 
@@ -46,6 +48,11 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
         setContentView(R.layout.activity_add_location);
         super.onCreate(savedInstanceState);
+
+        this.linearLayoutAddChildren = findViewById(R.id.linearLayoutAddLocation_AddChildren);
+        this.textViewAddChildren = this.linearLayoutAddChildren.findViewById(R.id.textViewAddLocation_AddChildren);
+        this.editText = findViewById(R.id.editTextAddLocation);
+        this.checkBoxAddChildren = this.linearLayoutAddChildren.findViewById(R.id.checkBoxAddLocation_AddChildren);
 
         this.viewModel = ViewModelProviders.of(this).get(AddLocationActivityViewModel.class);
 
@@ -144,49 +151,36 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
     private void createEditText()
     {
-        View contentView = this.findViewById(android.R.id.content);
-
         if(this.viewModel.parentLocation.hasChildrenOfInstance(Location.class))
         {
             Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.createEditText: parent %s has #[%d] children<Park> - offering add location option...",
                     this.viewModel.parentLocation,
                     this.viewModel.parentLocation.getChildCountOfType(Park.class)));
 
-            LinearLayout linearLayoutAddChildren = contentView.findViewById(R.id.linearLayoutAddLocation_AddChildren);
-            linearLayoutAddChildren.setVisibility(View.VISIBLE);
-
-            TextView textViewAddChildren = linearLayoutAddChildren.findViewById(R.id.textViewAddLocation_AddChildren);
-            textViewAddChildren.setText(R.string.add_children);
-
-            this.checkBoxAddChildren = linearLayoutAddChildren.findViewById(R.id.checkBoxAddLocation_AddChildren);
+            this.linearLayoutAddChildren.setVisibility(View.VISIBLE);
+            this.textViewAddChildren.setText(R.string.add_children);
         }
 
-        this.editText = contentView.findViewById(R.id.editTextAddLocation);
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                return onClickEditorAction(actionId);
+                Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.onClickEditorAction:: actionId[%d]", actionId));
+
+                boolean handled = false;
+
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_DONE:
+                        handleOnEditorActionDone();
+                        handled = true;
+                        break;
+                }
+
+                return handled;
             }
         });
-    }
-
-    private boolean onClickEditorAction(int actionId)
-    {
-        Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.onClickEditorAction:: actionId[%d]", actionId));
-
-        boolean handled = false;
-
-        switch (actionId)
-        {
-            case EditorInfo.IME_ACTION_DONE:
-                handleOnEditorActionDone();
-                handled = true;
-                break;
-        }
-
-        return handled;
     }
 
     private void handleOnEditorActionDone()
@@ -205,7 +199,9 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if (this.viewModel.parentLocation.getChildCountOfType(Location.class) > 1)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: add children chosen - starting PickElementsActivity for %s...", this.viewModel.parentLocation));
+                    Log.i(Constants.LOG_TAG, String.format(
+                            "AddLocationsActivity.handleOnEditorActionDone:: add children chosen - starting PickElementsActivity for %s...", this.viewModel.parentLocation));
+
                     ActivityTool.startActivityPickForResult(this, Constants.REQUEST_PICK_LOCATIONS, this.viewModel.parentLocation.getChildrenOfType(Location.class));
                 }
                 else
@@ -216,13 +212,15 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                     if(this.viewModel.parentLocation.hasChildrenOfInstance(Park.class))
                     {
-                        Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.handleOnEditorActionDone:: parent %s has #[%d] children<Park> - asking to relocate...",
+                        Log.v(Constants.LOG_TAG, String.format("AddLocationsActivity.handleOnEditorActionDone:: parent %s has #[%d] children<Park> - asking to relocate...",
                                 this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
                         this.showAlertDialogRelocateChildrenParks();
                     }
                     else
                     {
-                        Log.v(Constants.LOG_TAG, String.format( "AddLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
+                        Log.v(Constants.LOG_TAG, String.format(
+                                "AddLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
+
                         this.returnResult(RESULT_OK);
                     }
                 }

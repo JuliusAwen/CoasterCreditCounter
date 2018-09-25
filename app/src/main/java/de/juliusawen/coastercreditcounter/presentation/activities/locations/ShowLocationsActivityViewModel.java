@@ -10,7 +10,7 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 
 public class ShowLocationsActivityViewModel extends ViewModel
 {
-    public Element currentElement;
-    public List<Element> recentElements = new ArrayList<>();
+    Element currentElement;
+    List<Element> recentElements = new ArrayList<>();
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

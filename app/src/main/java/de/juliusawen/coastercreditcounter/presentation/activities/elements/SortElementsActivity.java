@@ -32,6 +32,8 @@ public class SortElementsActivity extends BaseActivity
 {
     private SortElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
+    private ImageButton buttonDown;
+    private ImageButton buttonUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,6 +42,10 @@ public class SortElementsActivity extends BaseActivity
 
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
+
+        this.buttonDown = findViewById(R.id.buttonActionDialogUpDown_MoveSelectionDown);
+        this.buttonUp = findViewById(R.id.buttonActionDialogUpDown_MoveSelectionUp);
+        this.recyclerView = findViewById(R.id.recyclerViewSortElements);
 
         this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
         
@@ -57,7 +63,6 @@ public class SortElementsActivity extends BaseActivity
         {
             this.viewModel.contentRecyclerAdapter = this.createContentRecyclerView();
         }
-        this.recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewSortElements);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setHasFixedSize(true);
@@ -179,13 +184,11 @@ public class SortElementsActivity extends BaseActivity
 
     private void createActionDialog()
     {
-        View contentView = this.findViewById(android.R.id.content);
 
-        ImageButton buttonDown = contentView.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionDown);
         Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward));
-        buttonDown.setImageDrawable(drawable);
-        buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
-        buttonDown.setOnClickListener(new View.OnClickListener()
+        this.buttonDown.setImageDrawable(drawable);
+        this.buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
+        this.buttonDown.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -223,11 +226,10 @@ public class SortElementsActivity extends BaseActivity
             }
         });
 
-        ImageButton buttonUp = contentView.findViewById(R.id.buttonActionDialogUpDown_MoveSelectionUp);
         drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward));
-        buttonUp.setImageDrawable(drawable);
-        buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
-        buttonUp.setOnClickListener(new View.OnClickListener()
+        this.buttonUp.setImageDrawable(drawable);
+        this.buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
+        this.buttonUp.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)

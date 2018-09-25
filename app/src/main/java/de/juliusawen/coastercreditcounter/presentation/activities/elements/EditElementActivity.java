@@ -34,6 +34,8 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
 
+        this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
+
         this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
 
         if(this.viewModel.elementToEdit == null)
@@ -77,8 +79,6 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
 
     private void createEditText()
     {
-        this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
-
         Log.d(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: edit %s", this.viewModel.elementToEdit));
         this.editText.append(this.viewModel.elementToEdit.getName());
 

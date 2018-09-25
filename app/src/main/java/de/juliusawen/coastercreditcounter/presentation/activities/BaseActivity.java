@@ -21,8 +21,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 
-public abstract class BaseActivity extends AppCompatActivity implements
-        HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     protected Bundle savedInstanceState;
 
@@ -89,12 +88,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     {
         super.onSaveInstanceState(outState);
 
-        if(getSupportActionBar() != null)
-        {
-            outState.putString(Constants.KEY_TOOLBAR_TITLE, getSupportActionBar().getTitle() != null ? getSupportActionBar().getTitle().toString() : "");
-            outState.putString(Constants.KEY_TOOLBAR_SUBTITLE, getSupportActionBar().getSubtitle() != null ? getSupportActionBar().getSubtitle().toString() : "");
-        }
-
         if(this.helpOverlayFragment != null)
         {
             outState.putBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE, this.helpOverlayFragment.isVisible());
@@ -105,11 +98,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-
-//        if(getSupportActionBar() != null)
-//        {
-//            this.setToolbarTitleAndSubtitle(savedInstanceState.getString(Constants.KEY_TOOLBAR_TITLE), savedInstanceState.getString(Constants.KEY_TOOLBAR_SUBTITLE));
-//        }
 
         if(this.helpOverlayFragment != null)
         {
@@ -228,7 +216,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
-    protected void animateFloatingActionButton(Drawable icon)
+    protected void animateFloatingActionButtonTransition(Drawable icon)
     {
         this.floatingActionButton.hide();
 

@@ -80,30 +80,10 @@ public class Visit extends Element
         else
         {
             this.rideCountByAttractions.put(attraction, 0);
+            Log.v(Constants.LOG_TAG,  String.format("Visit.getRideCount:: initializing ride count for %s with 0.", attraction));
             return "0";
         }
     }
-
-//    public void addAttractions(List<Element> elements)
-//    {
-//        for(Element element : elements)
-//        {
-//            this.addAttraction(element);
-//        }
-//    }
-//
-//    public void addAttraction(Element element)
-//    {
-//        if(!this.rideCountByAttractions.containsKey(element))
-//        {
-//            Log.v(Constants.LOG_TAG, String.format("Visit.addAttraction:: added %s", element));
-//            this.rideCountByAttractions.put(element, 0);
-//        }
-//        else
-//        {
-//            Log.w(Constants.LOG_TAG, String.format("Visit.addAttraction:: %s already exisiting", element));
-//        }
-//    }
 
     public static void setOpenVisit(Element visit)
     {
@@ -151,25 +131,6 @@ public class Visit extends Element
     public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)
     {
         return calendar.get(Calendar.YEAR) == compareCalendar.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == compareCalendar.get(Calendar.DAY_OF_YEAR);
-    }
-
-    public static List<Visit> convertToVisits(List<? extends Element> elements)
-    {
-        List<Visit> visits = new ArrayList<>();
-        for(Element element : elements)
-        {
-            if(element.isInstance(Visit.class))
-            {
-                visits.add(0, (Visit)element);
-            }
-            else
-            {
-                String errorMessage = String.format("type mismatch: %s is not of type <Visit>", element);
-                Log.e(Constants.LOG_TAG, "Visit.convertToVisits:: " + errorMessage);
-                throw new IllegalStateException(errorMessage);
-            }
-        }
-        return visits;
     }
 
     public static SortOrder getSortOrder()

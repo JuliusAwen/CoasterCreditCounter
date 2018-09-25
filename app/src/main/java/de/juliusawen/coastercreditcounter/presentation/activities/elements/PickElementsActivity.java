@@ -42,16 +42,6 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
         
-        if(this.viewModel.toolbarTitle == null)
-        {
-            this.viewModel.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        }
-        
-        if(this.viewModel.toolbarSubtitle == null)
-        {
-            this.viewModel.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
-        }
-        
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
@@ -64,6 +54,14 @@ public class PickElementsActivity extends BaseActivity
 
         super.addToolbar();
         super.addToolbarHomeButton();
+        if(this.viewModel.toolbarTitle == null)
+        {
+            this.viewModel.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
+        }
+        if(this.viewModel.toolbarSubtitle == null)
+        {
+            this.viewModel.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
+        }
         super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
 
         super.addFloatingActionButton();

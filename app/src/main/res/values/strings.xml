@@ -41,7 +41,7 @@
 
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
-    <string name="selection_sort_attraction_categories">sort attraction attractionCategories</string>
+    <string name="selection_sort_attraction_categories">sort attraction categories</string>
     <string name="selection_sort_attractions">sort attractions</string>
 
     <string name="selection_help">help</string>
