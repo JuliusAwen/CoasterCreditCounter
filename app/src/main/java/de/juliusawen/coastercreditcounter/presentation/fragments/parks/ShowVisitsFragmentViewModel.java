@@ -1,7 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation.fragments.parks;
 
-import android.arch.lifecycle.ViewModel;
-
+import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 

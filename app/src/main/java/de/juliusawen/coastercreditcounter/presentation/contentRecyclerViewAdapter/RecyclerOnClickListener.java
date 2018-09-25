@@ -1,7 +1,8 @@
 package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerOnClickListener implements View.OnClickListener, View.OnLongClickListener
 {

@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapt
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
