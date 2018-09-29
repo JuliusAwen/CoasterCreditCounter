@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,8 +26,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
-import static de.juliusawen.coastercreditcounter.globals.enums.AdapterType.BASIC;
-import static de.juliusawen.coastercreditcounter.globals.enums.AdapterType.COUNTABLE;
+
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -35,7 +35,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private AdapterType adapterType;
 
     private List<Element> content = new ArrayList<>();
+
     private Set<Element> expandedParents = new HashSet<>();
+    private View.OnClickListener expansionOnClickListener;
+
+    private List<Element> selectedElementsInOrderOfSelection = new ArrayList<>();
+    private  View.OnClickListener selectionOnClickListener;
 
     private Class<? extends Element> childType;
 
@@ -115,7 +120,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         this.adapterType = request.adapterType;
         this.childType = request.childType;
-        this.recyclerOnClickListener = request.onClickListener;
         this.selectMultiple = request.selectMultiple;
 
         if(request.initiallyExpandedElements != null)
@@ -124,21 +128,86 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         this.initializeParents(request.elements);
+
+        this.expansionOnClickListener = this.getExpansionOnClickListener();
+        this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
     private void initializeParents(List<Element> parents)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
 
         for(Element parent : parents)
         {
             this.content.add(parent);
             if(this.expandedParents.contains(parent))
             {
-                this.expandParent(parent);
+                this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeParents:: [%d] children added", parent.getChildCountOfType(this.childType)));
             }
             this.content.add(new ItemDivider());
         }
+    }
+
+    private View.OnClickListener getExpansionOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                final Element parent = (Element) view.getTag();
+
+                if(!expandedParents.contains(parent))
+                {
+                    expandParent(parent);
+//                        recyclerView.smoothScrollToPosition(content.indexOf(parent) + parent.getChildCountOfType(childType) + 1);
+                }
+                else
+                {
+                    collapseParent(parent);
+//                        smoothScrollToElement(parent);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener getSelectionOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                final Element selectedElement = (Element) view.getTag();
+
+                if(!selectedElementsInOrderOfSelection.contains(selectedElement))
+                {
+                    view.setSelected(true);
+
+                    if(selectMultiple)
+                    {
+                        selectedElementsInOrderOfSelection.add(0, selectedElement);
+                        notifyItemChanged(content.indexOf(selectedElement));
+                    }
+                    else
+                    {
+                        Element previouslySelectedElement = getLastSelectedElement();
+                        selectedElementsInOrderOfSelection.remove(previouslySelectedElement);
+                        notifyItemChanged(content.indexOf(previouslySelectedElement));
+
+                        selectedElementsInOrderOfSelection.add(selectedElement);
+                        notifyItemChanged(content.indexOf(selectedElement));
+                    }
+                }
+                else
+                {
+                    selectedElementsInOrderOfSelection.remove(selectedElement);
+                    view.setSelected(false);
+                    notifyItemChanged(content.indexOf(selectedElement));
+                }
+            }
+        };
     }
 
     @Override
@@ -196,11 +265,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return ViewType.PARENT.ordinal();
         }
-        else if(this.isChild(element) && !this.adapterType.equals(COUNTABLE))
+        else if(this.isChild(element) && !this.adapterType.equals(AdapterType.COUNTABLE))
         {
             return ViewType.CHILD.ordinal();
         }
-        else if(this.isChild(element) && this.adapterType.equals(COUNTABLE))
+        else if(this.isChild(element) && this.adapterType.equals(AdapterType.COUNTABLE))
         {
             return ViewType.COUNTABLE_CHILD.ordinal();
         }
@@ -270,20 +339,51 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void bindViewHolderParent(final ViewHolderParent viewHolder, int position)
     {
         Element parent = this.content.get(position);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderParent:: binding %s for position [%d]...", parent, position));
+
 
         this.decorateExpandToggle(viewHolder, parent);
 
+
         viewHolder.textViewName.setText(parent.getName());
         viewHolder.textViewName.setTag(parent);
-        viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
-        viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+
+        viewHolder.itemView.setTag(parent);
+
+        if(this.selectedElementsInOrderOfSelection.contains(parent))
+        {
+            viewHolder.itemView.setSelected(true);
+        }
+        else
+        {
+            viewHolder.itemView.setSelected(false);
+        }
+
+        if(this.adapterType == AdapterType.SELECTABLE || this.adapterType == AdapterType.EXPANDABLE_SELECTABLE)
+        {
+            viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
+        }
+        else
+        {
+            if(this.recyclerOnClickListener != null)
+            {
+                viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+                viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+            }
+            else
+            {
+                String errorMessage = "RecyclerOnClickListener.OnClickListener not set";
+                Log.e(Constants.LOG_TAG, "ContentRecayclerViewAdapter.bindViewHolderParent:: " + errorMessage);
+                throw new IllegalStateException(errorMessage);
+            }
+        }
     }
 
     private void decorateExpandToggle(ViewHolderParent viewHolder,  Element parent)
     {
         viewHolder.imageViewExpandToggle.setTag(parent);
 
-        if(!this.adapterType.equals(BASIC) && parent.getChildCountOfType(this.childType) > 0)
+        if(this.adapterType != AdapterType.BASIC && (this.childType != null && parent.getChildCountOfType(this.childType) > 0))
         {
             if(this.expandedParents.contains(parent))
             {
@@ -294,25 +394,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
 
-            viewHolder.imageViewExpandToggle.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    final Element parent = (Element) view.getTag();
-
-                    if(!expandedParents.contains(parent))
-                    {
-                        expandParent(parent);
-//                        recyclerView.smoothScrollToPosition(content.indexOf(parent) + parent.getChildCountOfType(childType) + 1);
-                    }
-                    else
-                    {
-                        collapseParent(parent);
-//                        smoothScrollToElement(parent);
-                    }
-                }
-            });
+            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
         }
         else
         {
@@ -329,6 +411,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
             notifyItemRangeChanged(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
         }
     }
 
@@ -341,17 +425,30 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             this.content.removeAll(parent.getChildrenOfType(this.childType));
             notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
         }
     }
 
     private void bindViewHolderChild(ViewHolderChild viewHolder, int position)
     {
         Element child = this.content.get(position);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderChild:: binding %s for position [%d]", child, position));
 
         viewHolder.textViewName.setText(child.getName());
 
-        viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
-        viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+        if(this.recyclerOnClickListener != null)
+        {
+            viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+            viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+        }
+        else
+        {
+            String errorMessage = "RecyclerOnClickListener.OnClickListener not set";
+            Log.e(Constants.LOG_TAG, "ContentRecayclerViewAdapter.bindViewHolderChild:: " + errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
+
         viewHolder.itemView.setTag(child);
     }
 
@@ -359,6 +456,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Context context = viewHolder.itemView.getContext();
         Attraction child = (Attraction) this.content.get(position);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderCountableChild:: binding %s for position [%d]", child, position));
 
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child));
@@ -388,6 +486,33 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return content;
     }
 
+    public void swapElements(Element element1, Element element2)
+    {
+        int index1 = this.content.indexOf(element1);
+        int index2 = this.content.indexOf(element2);
+
+        Collections.swap(this.content, index1, index2);
+        notifyItemChanged(index1);
+        notifyItemChanged(index2);
+    }
+
+    public List<Element> getSelectedElementsInOrderOfSelection()
+    {
+        return this.selectedElementsInOrderOfSelection;
+    }
+
+    public Element getLastSelectedElement()
+    {
+        if(!this.selectedElementsInOrderOfSelection.isEmpty())
+        {
+            return this.selectedElementsInOrderOfSelection.get(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public void updateDataSet(List<Element> elements)
     {
         Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateDataSet:: updating with [%d] elements...", elements.size()));
@@ -396,25 +521,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.initializeParents(elements);
     }
 
+    public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
+    {
+        this.recyclerOnClickListener = onClickListener;
+    }
+
     public Set<Element> getExpandedElements()
     {
         return this.expandedParents;
-    }
-
-    public void expandElements(List<Element> elements)
-    {
-        for(Element element : elements)
-        {
-            this.expandElement(element);
-        }
-    }
-
-    public void expandElement(Element element)
-    {
-        if(!this.expandedParents.contains(element))
-        {
-            this.expandParent(element);
-        }
     }
 
     public void smoothScrollToElement(Element element)

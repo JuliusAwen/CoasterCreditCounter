@@ -10,10 +10,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -33,7 +33,6 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -46,6 +45,7 @@ public class ShowLocationsActivity extends BaseActivity
     private ShowLocationsActivityViewModel viewModel;
     private Element longClickedElement;
 
+    private View.OnClickListener onClickListenerNavigationBar;
     private LinearLayout linearLayoutNavigationBar;
     private HorizontalScrollView horizontalScrollViewNavigationBar;
 
@@ -70,19 +70,25 @@ public class ShowLocationsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                    this.viewModel.currentElement.getChildrenOfType(Location.class),
+                    new HashSet<Element>(),
+                    Park.class);
         }
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
         super.addToolbar();
         super.addToolbarHomeButton();
-//        super.setToolbarTitleAndSubtitle(getString(R.string.title_locations_show), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_locations_show), null);
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.title_locations_show)), getString(R.string.help_text_show_locations));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations_show)), getString(R.string.help_text_show_locations));
+
+        this.onClickListenerNavigationBar = this.getNavigationBarOnClickListener();
 
         this.updateActivityView();
     }
@@ -141,7 +147,7 @@ public class ShowLocationsActivity extends BaseActivity
                 //Todo: scroll to returned element
                 //                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 //                Element resultElement = App.content.fetchElementByUuidString(uuidString);
-                updateContentRecyclerView();
+                updateContentRecyclerViewAdapter();
                 //                this.contentRecyclerViewAdapter.smoothScrollToElement(resultElement);
 
             }
@@ -154,7 +160,7 @@ public class ShowLocationsActivity extends BaseActivity
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
                 parent.deleteChildren(resultElements);
                 parent.addChildren(resultElements);
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerViewAdapter();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
@@ -172,7 +178,7 @@ public class ShowLocationsActivity extends BaseActivity
             {
                 Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerViewAdapter();
                 this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(editedElement);
             }
         }
@@ -197,7 +203,7 @@ public class ShowLocationsActivity extends BaseActivity
                     this.viewModel.recentElements.remove(previousElement);
                     this.viewModel.currentElement = previousElement;
                     this.updateActivityView();
-                    this.updateContentRecyclerView();
+                    this.updateContentRecyclerViewAdapter();
                 }
                 return true;
         }
@@ -215,7 +221,6 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateActivityView()
     {
         super.animateFloatingActionButtonTransition(null);
-        super.setToolbarTitleAndSubtitle(this.viewModel.currentElement.getName(), null);
         this.updateNavigationBar();
     }
 
@@ -263,6 +268,39 @@ public class ShowLocationsActivity extends BaseActivity
         });
     }
 
+    private View.OnClickListener getNavigationBarOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClick:: LinearLayout[%s]", linearLayoutNavigationBar));
+
+                Element element = (Element) view.getTag();
+
+                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
+
+                int length = viewModel.recentElements.size() - 1;
+                for (int i = length; i >= 0; i--)
+                {
+                    if(viewModel.recentElements.get(i).equals(element))
+                    {
+                        viewModel.recentElements.remove(i);
+                        break;
+                    }
+                    else
+                    {
+                        viewModel.recentElements.remove(i);
+                    }
+                }
+                viewModel.currentElement = element;
+                updateActivityView();
+                updateContentRecyclerViewAdapter();
+            }
+        };
+    }
+
     private void updateNavigationBar()
     {
         Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating NavigationBar...");
@@ -277,50 +315,24 @@ public class ShowLocationsActivity extends BaseActivity
 
         for (Element recentElement : this.viewModel.recentElements)
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating button for recent element %s...", recentElement));
-            Button button = (Button) getLayoutInflater().inflate(R.layout.button_navigation_bar, linearLayoutNavigationBar, false);
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating textView for recent element %s...", recentElement));
+            TextView textView = (TextView) getLayoutInflater().inflate(R.layout.text_view_navigation_bar, linearLayoutNavigationBar, false);
 
             if(this.viewModel.recentElements.indexOf(recentElement) != this.viewModel.recentElements.size() -1)
             {
                 Drawable drawable = DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_chevron_right));
-                button.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-                button.setText(recentElement.getName());
-                button.setTag(recentElement);
-                button.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Element element = (Element) view.getTag();
-
-                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
-
-                        int length = viewModel.recentElements.size() - 1;
-                        for (int i = length; i >= 0; i--)
-                        {
-                            if(viewModel.recentElements.get(i).equals(element))
-                            {
-                                viewModel.recentElements.remove(i);
-                                break;
-                            }
-                            else
-                            {
-                                viewModel.recentElements.remove(i);
-                            }
-                        }
-                        viewModel.currentElement = element;
-                        updateActivityView();
-                        updateContentRecyclerView();
-                    }
-                });
+                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                textView.setText(recentElement.getName());
+                textView.setTag(recentElement);
+                textView.setOnClickListener(this.onClickListenerNavigationBar);
             }
             else
             {
                 Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: %s is current element - applying special treatment", recentElement));
-                button.setText(StringTool.getSpannableString(recentElement.getName(), Typeface.BOLD_ITALIC));
+                textView.setText(StringTool.getSpannableString(recentElement.getName(), Typeface.BOLD_ITALIC));
             }
 
-            this.linearLayoutNavigationBar.addView(button);
+            this.linearLayoutNavigationBar.addView(textView);
         }
 
         this.linearLayoutNavigationBar.invalidate();
@@ -337,9 +349,9 @@ public class ShowLocationsActivity extends BaseActivity
         Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.viewModel.recentElements.size()));
     }
 
-    private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -352,7 +364,7 @@ public class ShowLocationsActivity extends BaseActivity
                 {
                     viewModel.currentElement = element;
                     updateActivityView();
-                    updateContentRecyclerView();
+                    updateContentRecyclerViewAdapter();
                 }
                 else if(element.isInstance(Park.class))
                 {
@@ -417,7 +429,7 @@ public class ShowLocationsActivity extends BaseActivity
                                             {
                                                 if(longClickedElement.deleteElementAndChildren())
                                                 {
-                                                    updateContentRecyclerView();
+                                                    updateContentRecyclerViewAdapter();
                                                 }
                                                 else
                                                 {
@@ -450,11 +462,11 @@ public class ShowLocationsActivity extends BaseActivity
                                                     if(longClickedElement.undoIsPossible && longClickedElement.undoDeleteElementAndChildren())
                                                     {
                                                         App.content.addElementAndChildren(longClickedElement);
-                                                        updateContentRecyclerView();
+                                                        updateContentRecyclerViewAdapter();
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
-//                                                        contentRecyclerViewAdapter.smoothScrollToElement(longClickedElement);
+                                                        //                                                        contentRecyclerViewAdapter.smoothScrollToElement(longClickedElement);
                                                     }
                                                     else
                                                     {
@@ -512,7 +524,7 @@ public class ShowLocationsActivity extends BaseActivity
                                                 if(longClickedElement.removeElement())
                                                 {
                                                     viewModel.currentElement = longClickedElement.getParent();
-                                                    updateContentRecyclerView();
+                                                    updateContentRecyclerViewAdapter();
                                                 }
                                                 else
                                                 {
@@ -542,7 +554,7 @@ public class ShowLocationsActivity extends BaseActivity
                                                     if(longClickedElement.undoIsPossible && longClickedElement.undoRemoveElement())
                                                     {
                                                         App.content.addElement(longClickedElement);
-                                                        updateContentRecyclerView();
+                                                        updateContentRecyclerViewAdapter();
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
@@ -589,17 +601,11 @@ public class ShowLocationsActivity extends BaseActivity
                 return true;
             }
         };
-
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                        this.viewModel.currentElement.getChildrenOfType(Location.class),
-                        new HashSet<Element>(),
-                        Park.class,
-                        recyclerOnClickListener);
     }
 
-    private void updateContentRecyclerView()
+    private void updateContentRecyclerViewAdapter()
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: updating RecyclerView...");
+        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerViewAdapter:: updating RecyclerView...");
         this.viewModel.contentRecyclerViewAdapter.updateDataSet(this.viewModel.currentElement.getChildrenOfType(Location.class));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }

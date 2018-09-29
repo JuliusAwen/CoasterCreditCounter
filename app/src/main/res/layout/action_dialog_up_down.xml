@@ -1,34 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/standard_bar_layout"
     android:id="@+id/linearLayoutActionDialogUpDown"
-    android:layout_width="match_parent"
-    android:layout_height="?android:attr/actionBarSize"
     android:background="?android:attr/colorPrimary"
     android:elevation="6dp"
     android:orientation="horizontal">
 
+    <FrameLayout
+        android:id="@+id/frameLayoutDialogUpDown_Down"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground">
+
     <ImageButton
         style="@style/standard_image_holder"
-        android:id="@+id/buttonActionDialogUpDown_MoveSelectionDown"
+        android:id="@+id/buttonActionDialogUpDown_Down"
         android:contentDescription="@string/description_ok"
-        android:paddingTop="16sp"
-        android:paddingBottom="16dp"
-        android:layout_weight="1" />
+        android:layout_height="28dp"
+        android:layout_width="28dp"
+        android:background="@android:color/transparent"
+        android:clickable="false" />
+
+    </FrameLayout>
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
-    <ImageButton
-        style="@style/standard_image_holder"
-        android:id="@+id/buttonActionDialogUpDown_MoveSelectionUp"
-        android:contentDescription="@string/description_cancel"
-        android:paddingTop="16sp"
-        android:paddingBottom="16dp"
-        android:layout_weight="1" />
+    <FrameLayout
+        android:id="@+id/frameLayoutDialogUpDown_Up"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground">
+
+        <ImageButton
+            style="@style/standard_image_holder"
+            android:id="@+id/buttonActionDialogUpDown_Up"
+            android:contentDescription="@string/description_cancel"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
+            android:background="@android:color/transparent"
+            android:clickable="false" />
+
+    </FrameLayout>
 
 </LinearLayout>

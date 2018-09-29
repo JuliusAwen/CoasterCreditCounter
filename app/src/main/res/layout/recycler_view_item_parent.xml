@@ -5,10 +5,9 @@
     android:orientation="horizontal">
 
     <ImageView
-        style="@style/standard_image_holder"
+        style="@style/selectable_image_holder"
         android:id="@+id/imageViewRecyclerViewItemExpandableParent"
-        android:contentDescription="@string/description_expand_toggle"
-        android:background="@color/default_color"/>
+        android:contentDescription="@string/description_expand_toggle"/>
 
     <TextView
         style="@style/standard_text_view"

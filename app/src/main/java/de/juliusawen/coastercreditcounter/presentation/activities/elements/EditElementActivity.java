@@ -48,9 +48,9 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
             this.viewModel.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
         }
         
-        super.addConfirmDialog();
+        super.addConfirmDialogFragment();
 
-        super.addHelpOverlay(getString(R.string.title_help, this.viewModel.toolbarSubtitle), getText(R.string.help_text_edit_location));
+        super.addHelpOverlayFragment(getString(R.string.title_help, this.viewModel.toolbarSubtitle), getText(R.string.help_text_edit_location));
 
         super.addToolbar();
         super.setToolbarTitleAndSubtitle(this.viewModel.elementToEdit.getName(), this.viewModel.toolbarSubtitle);

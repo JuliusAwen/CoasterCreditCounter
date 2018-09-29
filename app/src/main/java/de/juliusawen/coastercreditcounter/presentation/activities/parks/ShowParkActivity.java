@@ -69,7 +69,7 @@ public class ShowParkActivity extends BaseActivity
 
         super.addFloatingActionButton();
 
-        super.addHelpOverlay(null, null);
+        super.addHelpOverlayFragment(null, null);
 
         this.createTabPagerAdapter();
     }

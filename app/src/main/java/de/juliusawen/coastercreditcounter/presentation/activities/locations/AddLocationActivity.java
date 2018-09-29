@@ -61,9 +61,9 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
             this.viewModel.parentLocation = (Location) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.addConfirmDialog();
+        super.addConfirmDialogFragment();
 
-        super.addHelpOverlay(getString(R.string.title_help, getString(R.string.subtitle_location_add)), this.getText(R.string.help_text_add_location));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_add)), this.getText(R.string.help_text_add_location));
 
         super.addToolbar();
         super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_add));

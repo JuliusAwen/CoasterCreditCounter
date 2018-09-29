@@ -69,17 +69,40 @@ public  class ShowAttractionsFragment extends Fragment
             if (getArguments() != null)
             {
                 this.viewModel.element = App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
-
-                if(this.viewModel.element.isInstance(Park.class))
-                {
-                    this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapterForPark();
-                }
-                else if(this.viewModel.element.isInstance(Visit.class))
-                {
-                    this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapterForVisit();
-                }
+            }
+            else
+            {
+                String errorMessage = "missing argument<Park>";
+                Log.e(Constants.LOG_TAG, "ShowAttractionsFragment.onCreate:: " + errorMessage);
+                throw new IllegalStateException(errorMessage);
             }
         }
+
+        RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+        if(this.viewModel.element.isInstance(Park.class))
+        {
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapterForPark();
+            }
+            recyclerOnClickListener = this.getContentRecyclerViewAdapterOnClickListenerForPark();
+        }
+        else if(this.viewModel.element.isInstance(Visit.class))
+        {
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapterForVisit();
+            }
+            recyclerOnClickListener = this.getContentRecyclerViewAdapterOnClickListenerForVisit();
+        }
+        else
+        {
+            String errorMessage = String.format("unknown type[%s]", this.viewModel.element.getClass().getSimpleName());
+            Log.e(Constants.LOG_TAG, "ShowAttractionsFragment.onCreate:: " + errorMessage);
+            throw new IllegalStateException(errorMessage);
+        }
+
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(recyclerOnClickListener);
 
         this.setHasOptionsMenu(true);
     }
@@ -96,7 +119,6 @@ public  class ShowAttractionsFragment extends Fragment
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-        Log.v(Constants.LOG_TAG, "ShowAttractionsFragment.onViewCreated:: RecyclerView initialized");
     }
 
     @Override
@@ -193,7 +215,16 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapterForPark()
     {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        List<Element> attractions = this.viewModel.element.getChildrenOfType(Attraction.class);
+        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                AttractionCategory.addAttractionCategoryHeaders(attractions),
+                this.getAttractionCategoriesToExpandAccordingToSettings(attractions),
+                Attraction.class);
+    }
+
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListenerForPark()
+    {
+        return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -252,18 +283,20 @@ public  class ShowAttractionsFragment extends Fragment
                 return true;
             }
         };
-
-        List<Element> attractions = this.viewModel.element.getChildrenOfType(Attraction.class);
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                AttractionCategory.addAttractionCategoryHeaders(attractions),
-                this.getAttractionCategoriesToExpandAccordingToSettings(attractions),
-                Attraction.class,
-                recyclerOnClickListener);
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapterForVisit()
     {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new  RecyclerOnClickListener.OnClickListener()
+        List<Element> attractions = this.viewModel.element.getChildrenOfType(Attraction.class);
+        return ContentRecyclerViewAdapterProvider.getExpandableCountableContentRecyclerViewAdapter(
+                AttractionCategory.addAttractionCategoryHeaders(attractions),
+                this.getAttractionCategoriesToExpandAccordingToSettings(attractions),
+                Attraction.class);
+    }
+
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListenerForVisit()
+    {
+        return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -277,13 +310,6 @@ public  class ShowAttractionsFragment extends Fragment
                 return true;
             }
         };
-
-        List<Element> attractions = this.viewModel.element.getChildrenOfType(Attraction.class);
-        return ContentRecyclerViewAdapterProvider.getExpandableCountableContentRecyclerViewAdapter(
-                AttractionCategory.addAttractionCategoryHeaders(attractions),
-                this.getAttractionCategoriesToExpandAccordingToSettings(attractions),
-                Attraction.class,
-                recyclerOnClickListener);
     }
 
     private Set<Element> getAttractionCategoriesToExpandAccordingToSettings(List<Element> attractions)

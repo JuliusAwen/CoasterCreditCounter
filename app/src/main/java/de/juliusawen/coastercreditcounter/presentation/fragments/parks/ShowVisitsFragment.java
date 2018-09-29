@@ -71,6 +71,7 @@ public class ShowVisitsFragment extends Fragment
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
         }
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
 
 
         this.setHasOptionsMenu(true);
@@ -138,7 +139,23 @@ public class ShowVisitsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        RecyclerOnClickListener.OnClickListener recyclerOnClickListener = new RecyclerOnClickListener.OnClickListener()
+        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
+        Set<Element> initiallyExpandedElements = new HashSet<>();
+
+        if(App.settings.getExpandLatestYearInListByDefault())
+        {
+            initiallyExpandedElements.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
+        }
+
+        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                sortedYearHeaders,
+                initiallyExpandedElements,
+                Visit.class);
+    }
+
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
+    {
+        return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
             public void onClick(View view, int position)
@@ -152,21 +169,7 @@ public class ShowVisitsFragment extends Fragment
                 return false;
             }
         };
-
-        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
-        Set<Element> initiallyExpandedElements = new HashSet<>();
-
-        if(App.settings.getExpandLatestYearInListByDefault())
-        {
-            initiallyExpandedElements.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
-        }
-
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                sortedYearHeaders,
-                initiallyExpandedElements,
-                Visit.class,
-                recyclerOnClickListener);
-}
+    }
 
     private void updateContentRecyclerView()
     {

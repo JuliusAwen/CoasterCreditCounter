@@ -33,6 +33,8 @@ public class ShowVisitActivity extends BaseActivity
     private ShowAttractionsFragment showAttractionsFragment;
     private DatePickerDialog datePickerDialog;
 
+    private boolean createAddShowAttractionsFragmentOnResume = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -45,15 +47,15 @@ public class ShowVisitActivity extends BaseActivity
 
         if(this.viewModel.parentPark == null)
         {
-            Element passedElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            if(passedElement.isInstance(Visit.class))
+            Element receivedElement = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            if(receivedElement.isInstance(Visit.class))
             {
-                this.viewModel.visit = (Visit) passedElement;
+                this.viewModel.visit = (Visit) receivedElement;
                 this.viewModel.parentPark = (Park) this.viewModel.visit.getParent();
             }
-            else if(passedElement.isInstance(Park.class))
+            else if(receivedElement.isInstance(Park.class))
             {
-                this.viewModel.parentPark = (Park) passedElement;
+                this.viewModel.parentPark = (Park) receivedElement;
             }
         }
 
@@ -61,16 +63,23 @@ public class ShowVisitActivity extends BaseActivity
         super.addToolbarHomeButton();
         this.decorateToolbar();
 
-
         if(this.viewModel.visit == null)
         {
-            Log.d(Constants.LOG_TAG, "ShowVisitActivity.onResume:: creating visit...");
             this.createVisit();
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onResume:: initializing ShowAttractionsFragment with %s...", this.viewModel.visit));
-            addShowAttractionsFragment();
+            this.createAddShowAttractionsFragmentOnResume = true;
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        if(this.createAddShowAttractionsFragmentOnResume)
+        {
+            this.addShowAttractionsFragment();
         }
     }
 
@@ -85,7 +94,7 @@ public class ShowVisitActivity extends BaseActivity
             {
                 List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
                 this.viewModel.visit.addChildren(selectedElements);
-                addShowAttractionsFragment();
+                this.createAddShowAttractionsFragmentOnResume = true;
             }
         }
     }
@@ -208,17 +217,17 @@ public class ShowVisitActivity extends BaseActivity
 
     protected void addShowAttractionsFragment()
     {
-        Log.d(Constants.LOG_TAG, "ShowVisitActivity.addShowAttractionsFragment:: adding fragment...");
-
-        if(this.showAttractionsFragment == null || super.savedInstanceState == null)
+        if(super.savedInstanceState == null)
         {
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.addShowAttractionsFragment:: adding fragment...");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.showAttractionsFragment = ShowAttractionsFragment.newInstance(this.viewModel.visit.getUuid().toString());
             fragmentTransaction.add(R.id.linearLayoutShowVisit, this.showAttractionsFragment, Constants.FRAGMENT_TAG_SHOW_VISIT_ATTRACTIONS);
-            fragmentTransaction.commitAllowingStateLoss();
+            fragmentTransaction.commit();
         }
         else
         {
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.addShowAttractionsFragment:: re-using fragment...");
             this.showAttractionsFragment = (ShowAttractionsFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_SHOW_VISIT_ATTRACTIONS);
         }
     }

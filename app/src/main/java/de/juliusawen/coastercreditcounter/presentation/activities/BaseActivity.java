@@ -237,11 +237,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         this.floatingActionButton.show();
     }
 
-    protected void addHelpOverlay(String title, CharSequence message)
+    protected void addHelpOverlayFragment(String title, CharSequence message)
     {
         if (this.savedInstanceState == null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: creating help overlay...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: creating fragment...");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
@@ -250,8 +250,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
+            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using fragment...");
             this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlay:: re-using help overlay...");
         }
     }
 
@@ -287,11 +287,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
-    protected void addConfirmDialog()
+    protected void addConfirmDialogFragment()
     {
         if(this.savedInstanceState == null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: creating confirm dialog fragment...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating confirm dialog fragment...");
 
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
@@ -300,8 +300,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
+            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using fragment...");
             this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-            Log.v(Constants.LOG_TAG, "BaseActivity.createConfimDialogFragment:: re-using confirm dialog fragment...");
         }
     }
 

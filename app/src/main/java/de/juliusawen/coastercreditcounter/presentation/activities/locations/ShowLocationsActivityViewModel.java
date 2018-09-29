@@ -11,5 +11,5 @@ public class ShowLocationsActivityViewModel extends ViewModel
 {
     Element currentElement;
     List<Element> recentElements = new ArrayList<>();
-    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

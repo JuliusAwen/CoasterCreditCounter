@@ -14,6 +14,5 @@ class GetContentRecyclerViewAdapterRequest
     public List<Element> elements = new ArrayList<>();
     public Set<Element> initiallyExpandedElements = new HashSet<>();
     public Class<? extends Element> childType;
-    public RecyclerOnClickListener.OnClickListener onClickListener;
     public boolean selectMultiple;
 }
