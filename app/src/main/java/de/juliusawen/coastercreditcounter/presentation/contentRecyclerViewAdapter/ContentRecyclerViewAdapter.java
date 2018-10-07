@@ -103,14 +103,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         ViewHolderItemDivider(View view)
         {
             super(view);
+            view.setClickable(false);
         }
     }
 
     private class ItemDivider extends OrphanElement
     {
-        private ItemDivider(String name)
+        private ItemDivider()
         {
-            super(name, UUID.randomUUID());
+            super("ItemDivider", UUID.randomUUID());
         }
     }
 
@@ -146,7 +147,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: [%d] children added", parent.getChildCountOfType(this.childType)));
             }
-            this.content.add(new ItemDivider(parent.getName()));
+            this.content.add(new ItemDivider());
         }
     }
 
@@ -162,12 +163,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(!expandedParents.contains(parent))
                 {
                     expandParent(parent);
-//                        recyclerView.smoothScrollToPosition(content.indexOf(parent) + parent.getChildCountOfType(childType) + 1);
+                    recyclerView.scrollToPosition(content.indexOf(parent) + parent.getChildCountOfType(childType) + 1);
                 }
                 else
                 {
                     collapseParent(parent);
-//                        scrollToElement(parent);
+                    recyclerView.scrollToPosition(content.indexOf(parent));
                 }
             }
         };

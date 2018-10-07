@@ -143,12 +143,10 @@ public class ShowLocationsActivity extends BaseActivity
         {
             if(requestCode == Constants.REQUEST_ADD_LOCATION)
             {
-
-                //Todo: scroll to returned element
-                //                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                //                Element resultElement = App.content.fetchElementByUuidString(uuidString);
+                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                Element resultElement = App.content.fetchElementByUuidString(uuidString);
                 updateContentRecyclerViewAdapter();
-                //                this.contentRecyclerViewAdapter.scrollToElement(resultElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
             }
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
@@ -485,10 +483,9 @@ public class ShowLocationsActivity extends BaseActivity
                                                     {
                                                         App.content.addElementAndChildren(longClickedElement);
                                                         updateContentRecyclerViewAdapter();
+                                                        viewModel.contentRecyclerViewAdapter.scrollToElement(longClickedElement);
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                        //                                                        contentRecyclerViewAdapter.scrollToElement(longClickedElement);
                                                     }
                                                     else
                                                     {
@@ -577,10 +574,9 @@ public class ShowLocationsActivity extends BaseActivity
                                                     {
                                                         App.content.addElement(longClickedElement);
                                                         updateContentRecyclerViewAdapter();
+                                                        viewModel.contentRecyclerViewAdapter.scrollToElement(longClickedElement);
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
-
-                                                        //            this.contentRecyclerViewAdapter.scrollToElement(this.longClickedElement);
                                                     }
                                                     else
                                                     {

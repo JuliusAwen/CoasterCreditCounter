@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class ShowLocationsActivityViewModel extends ViewModel
+class ShowLocationsActivityViewModel extends ViewModel
 {
     Element currentElement;
     List<Element> recentElements = new ArrayList<>();

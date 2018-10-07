@@ -156,7 +156,7 @@ public  class ShowAttractionsFragment extends Fragment
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS || requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element selectedElement;
+                Element selectedElement = null;
                 if(selectedElementUuidString != null)
                 {
                     selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
@@ -182,11 +182,11 @@ public  class ShowAttractionsFragment extends Fragment
 
                     this.updateContentRecyclerView();
 
-                    //                if(selectedElement != null)
-                    //                {
-                    //                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                    //                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
-                    //                }
+                    if(selectedElement != null)
+                    {
+                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
+                    }
 
                 }
                 else
@@ -194,11 +194,11 @@ public  class ShowAttractionsFragment extends Fragment
                     AttractionCategory.setAttractionCategories(AttractionCategory.convertToAttractionCategories(resultElements));
                     this.updateContentRecyclerView();
 
-                    //                if(selectedElement != null)
-                    //                {
-                    //                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...", selectedElement));
-                    //                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
-                    //                }
+                    if(selectedElement != null)
+                    {
+                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...", selectedElement));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
+                    }
                 }
             }
         }
