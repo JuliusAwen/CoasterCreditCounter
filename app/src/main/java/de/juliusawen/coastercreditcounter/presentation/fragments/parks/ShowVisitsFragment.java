@@ -179,7 +179,7 @@ public class ShowVisitsFragment extends Fragment
         {
             List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
 
-            this.viewModel.contentRecyclerViewAdapter.updateDataSet(sortedYearHeaders);
+            this.viewModel.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
         else

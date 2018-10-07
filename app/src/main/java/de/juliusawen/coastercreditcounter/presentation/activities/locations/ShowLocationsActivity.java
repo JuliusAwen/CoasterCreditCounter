@@ -624,7 +624,7 @@ public class ShowLocationsActivity extends BaseActivity
     private void updateContentRecyclerViewAdapter()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerViewAdapter:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.updateDataSet(this.viewModel.currentElement.getChildrenOfType(Location.class));
+        this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.currentElement.getChildrenOfType(Location.class));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

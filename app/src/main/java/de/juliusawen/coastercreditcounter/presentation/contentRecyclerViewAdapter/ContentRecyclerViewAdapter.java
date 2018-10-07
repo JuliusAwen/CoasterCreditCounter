@@ -542,9 +542,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void updateDataSet(List<Element> elements)
+    public void updateContent(List<Element> elements)
     {
-        Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateDataSet:: updating with [%d] elements...", elements.size()));
+        Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
 
         this.content.clear();
         this.initializeContent(elements);

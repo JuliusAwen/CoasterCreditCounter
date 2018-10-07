@@ -98,13 +98,13 @@ public class SortElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
                 Element.sortElementsByNameAscending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateDataSet(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             case SORT_DESCENDING:
                 Element.sortElementsByNameDescending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateDataSet(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
