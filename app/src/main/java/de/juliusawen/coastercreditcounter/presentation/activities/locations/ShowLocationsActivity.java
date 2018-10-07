@@ -374,7 +374,7 @@ public class ShowLocationsActivity extends BaseActivity
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
 
@@ -393,7 +393,7 @@ public class ShowLocationsActivity extends BaseActivity
             }
 
             @Override
-            public boolean onLongClick(final View view, int position)
+            public boolean onLongClick(final View view)
             {
                 longClickedElement = (Element) view.getTag();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickLocationRecyclerView:: %s long clicked", longClickedElement));

@@ -63,13 +63,13 @@ public class TestActivity extends BaseActivity
         contentRecyclerViewAdapter.setOnClickListener(new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view)
             {
                 Toaster.makeToast(TestActivity.this, String.format("%s clicked", (Element) view.getTag()));
             }
 
             @Override
-            public boolean onLongClick(final View view, int position)
+            public boolean onLongClick(final View view)
             {
                 Toaster.makeToast(TestActivity.this, String.format("%s long clicked", (Element) view.getTag()));
                 return true;

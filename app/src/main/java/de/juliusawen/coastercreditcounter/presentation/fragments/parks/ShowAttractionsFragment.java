@@ -225,7 +225,7 @@ public  class ShowAttractionsFragment extends Fragment
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
 
@@ -236,7 +236,7 @@ public  class ShowAttractionsFragment extends Fragment
             }
 
             @Override
-            public boolean onLongClick(final View view, int position)
+            public boolean onLongClick(final View view)
             {
                 final Element longClickedElement = (Element) view.getTag();
 
@@ -297,13 +297,13 @@ public  class ShowAttractionsFragment extends Fragment
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view)
             {
 
             }
 
             @Override
-            public boolean onLongClick(final View view, int position)
+            public boolean onLongClick(final View view)
             {
                 return true;
             }

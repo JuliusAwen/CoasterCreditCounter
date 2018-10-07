@@ -159,13 +159,13 @@ public class ShowVisitsFragment extends Fragment
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position)
+            public void onClick(View view)
             {
                 ActivityTool.startActivityShow(getActivity(), (Element) view.getTag());
             }
 
             @Override
-            public boolean onLongClick(final View view, int position)
+            public boolean onLongClick(final View view)
             {
                 Toaster.makeToast(getContext(), "not yet implemented");
                 return false;

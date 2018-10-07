@@ -140,10 +140,10 @@ public class SortElementsActivity extends BaseActivity
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view, int position) {}
+            public void onClick(View view) {}
 
             @Override
-            public boolean onLongClick(View view, int position)
+            public boolean onLongClick(View view)
             {
                 onLongClickContentRecyclerView(view);
                 return true;

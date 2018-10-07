@@ -208,6 +208,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     view.setSelected(false);
                     notifyItemChanged(content.indexOf(selectedElement));
                 }
+
+                if(recyclerOnClickListener != null)
+                {
+                    recyclerOnClickListener.onClick(view);
+                }
             }
         };
     }
@@ -367,8 +372,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if(this.recyclerOnClickListener != null)
             {
-                viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
-                viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+                viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
             }
             else
             {
@@ -439,8 +444,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if(this.recyclerOnClickListener != null)
         {
-            viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
-            viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(viewHolder, this.recyclerOnClickListener));
+            viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
         }
         else
         {

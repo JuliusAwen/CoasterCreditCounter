@@ -2,36 +2,31 @@ package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapt
 
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 public class RecyclerOnClickListener implements View.OnClickListener, View.OnLongClickListener
 {
-    private RecyclerView.ViewHolder viewHolder;
-
     private OnClickListener onClickListener;
 
-    RecyclerOnClickListener(RecyclerView.ViewHolder viewHolder, final OnClickListener onClickListener)
+    RecyclerOnClickListener(final OnClickListener onClickListener)
     {
-        this.viewHolder = viewHolder;
         this.onClickListener = onClickListener;
     }
 
     @Override
     public void onClick(View view)
     {
-        this.onClickListener.onClick(view, this.viewHolder.getLayoutPosition());
+        this.onClickListener.onClick(view);
     }
 
     @Override
     public boolean onLongClick(View view)
     {
-        return this.onClickListener.onLongClick(view, this.viewHolder.getLayoutPosition());
+        return this.onClickListener.onLongClick(view);
     }
 
     public interface OnClickListener
     {
-        void onClick(View view, int position);
+        void onClick(View view);
 
-        boolean onLongClick(View view, int position);
+        boolean onLongClick(View view);
     }
 }

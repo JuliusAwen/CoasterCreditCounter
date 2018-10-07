@@ -50,6 +50,11 @@ public abstract class Element
 
         Element element = (Element) obj;
 
+        if(!element.isInstance(this.getClass()))
+        {
+            return false;
+        }
+
         if(element.getUuid() != null && element.getUuid().equals(this.getUuid()))
         {
             return true;

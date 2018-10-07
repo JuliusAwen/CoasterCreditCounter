@@ -16,6 +16,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -44,6 +45,7 @@ public class PickElementsActivity extends BaseActivity
         {
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, true);
         }
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -120,6 +122,34 @@ public class PickElementsActivity extends BaseActivity
                 }
             }
         });
+    }
+
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
+    {
+        return new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
+                {
+                    changeRadioButtonToDeselectAll();
+                }
+                else
+                {
+                    if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+                    {
+                        changeRadioButtonToSelectAll();
+                    }
+                }
+            }
+
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return false;
+            }
+        };
     }
 
     private void changeRadioButtonToSelectAll()
