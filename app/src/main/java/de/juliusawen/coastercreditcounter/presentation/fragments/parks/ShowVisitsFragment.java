@@ -32,6 +32,7 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitsFragment extends Fragment
 {
@@ -166,6 +167,7 @@ public class ShowVisitsFragment extends Fragment
             @Override
             public boolean onLongClick(final View view, int position)
             {
+                Toaster.makeToast(getContext(), "not yet implemented");
                 return false;
             }
         };

@@ -88,11 +88,13 @@
     </string>
 
     <string name="alert_dialog_relocate_children_parks_title">LOCATION CONTAINS PARKS</string>
-    <string name="alert_dialog_relocate_children_parks_message">Do you want to relocate (some of) %1$s\'s child park(s) to %2$s?</string>
+    <string name="alert_dialog_relocate_children_parks_message">Do you want to relocate %1$s\'s child parks to %2$s?</string>
 
     <string name="alert_dialog_add_attractions_to_visit_title">ADD ATTRACTIONS</string>
     <string name="alert_dialog_add_attractions_to_visit_message">Do you want to add attractions to your visit?</string>
 
+    <string name="alert_dialog_visit_already_exists_title">VISIT ALREADY EXISTS</string>
+    <string name="alert_dialog_visit_already_exists_message">Do you want to override existing visit? \n(existing data will be lost)</string>
 
     <!--descriptions-->
     <string name="description_ok">@string/text_close</string>

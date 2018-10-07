@@ -304,7 +304,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
-        settings.setExpandLatestYearInListByDefault(false);
+        settings.setExpandLatestYearInListByDefault(true);
 
         settings.setFirstDayOfTheWeek(Calendar.MONDAY);
     }

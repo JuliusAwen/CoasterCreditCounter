@@ -134,9 +134,15 @@ public class ShowVisitActivity extends BaseActivity
             public void onDateSet(DatePicker view, int year, int month, int day)
             {
                 calendar.set(year, month, day);
-                onDateSetCreateVisit(calendar);
-                showPickAttractionsDialog();
-
+                if(isExistingVisit(calendar))
+                {
+                    showVisitAlreadyExistsDialog(calendar);
+                }
+                else
+                {
+                    onDateSetCreateVisit(calendar);
+                    showPickAttractionsDialog();
+                }
             }
         }, year, month, day);
 
@@ -155,6 +161,51 @@ public class ShowVisitActivity extends BaseActivity
         datePickerDialog.setCancelable(false);
         datePickerDialog.setCanceledOnTouchOutside(false);
         datePickerDialog.show();
+    }
+
+    private boolean isExistingVisit(Calendar calendar)
+    {
+        for(Visit visit : viewModel.parentPark.getChildrenAsType(Visit.class))
+        {
+            if(Visit.isSameDay(visit.getCalendar(), calendar))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showVisitAlreadyExistsDialog(final Calendar calendar)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog;
+
+        builder.setTitle(R.string.alert_dialog_visit_already_exists_title);
+        builder.setMessage(getString(R.string.alert_dialog_visit_already_exists_message));
+        builder.setPositiveButton(R.string.text_accept, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                dialog.dismiss();
+
+                onDateSetCreateVisit(calendar);
+                showPickAttractionsDialog();
+            }
+        });
+
+        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.setIcon(R.drawable.ic_baseline_warning);
+
+        alertDialog.show();
     }
 
     private void onDateSetCreateVisit(Calendar calendar)
