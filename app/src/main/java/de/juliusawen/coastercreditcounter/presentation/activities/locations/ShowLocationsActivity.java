@@ -307,6 +307,13 @@ public class ShowLocationsActivity extends BaseActivity
 
         this.linearLayoutNavigationBar.removeAllViews();
 
+        if(this.viewModel.recentElements.isEmpty() && !this.viewModel.currentElement.isRootElement())
+        {
+            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing navigation bar");
+            this.viewModel.recentElements.clear();
+            this.constructNavigationBar(this.viewModel.currentElement.getParent());
+        }
+
         if(!this.viewModel.recentElements.contains(this.viewModel.currentElement))
         {
             Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding CurrentElement %s to RecentElements...", this.viewModel.currentElement));
@@ -347,6 +354,21 @@ public class ShowLocationsActivity extends BaseActivity
         });
 
         Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.viewModel.recentElements.size()));
+    }
+
+    private void constructNavigationBar(Element element)
+    {
+        Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.constructNavigationBar:: adding %s to recent elements...", element));
+
+        if(!element.isRootElement())
+        {
+            this.viewModel.recentElements.add(0, element);
+            this.constructNavigationBar(element.getParent());
+        }
+        else
+        {
+            this.viewModel.recentElements.add(0, element);
+        }
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
