@@ -148,7 +148,7 @@ public class ShowLocationsActivity extends BaseActivity
                 //                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 //                Element resultElement = App.content.fetchElementByUuidString(uuidString);
                 updateContentRecyclerViewAdapter();
-                //                this.contentRecyclerViewAdapter.smoothScrollToElement(resultElement);
+                //                this.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
             }
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
@@ -166,7 +166,7 @@ public class ShowLocationsActivity extends BaseActivity
                 if(selectedElementUuidString != null)
                 {
                     Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
-                    this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(selectedElement);
+                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
                 else
                 {
@@ -179,7 +179,7 @@ public class ShowLocationsActivity extends BaseActivity
                 Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.updateContentRecyclerViewAdapter();
-                this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(editedElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToElement(editedElement);
             }
         }
     }
@@ -488,7 +488,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
-                                                        //                                                        contentRecyclerViewAdapter.smoothScrollToElement(longClickedElement);
+                                                        //                                                        contentRecyclerViewAdapter.scrollToElement(longClickedElement);
                                                     }
                                                     else
                                                     {
@@ -580,7 +580,7 @@ public class ShowLocationsActivity extends BaseActivity
 
                                                         Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_element_restored_text, longClickedElement.getName()));
 
-                                                        //            this.contentRecyclerViewAdapter.smoothScrollToElement(this.longClickedElement);
+                                                        //            this.contentRecyclerViewAdapter.scrollToElement(this.longClickedElement);
                                                     }
                                                     else
                                                     {

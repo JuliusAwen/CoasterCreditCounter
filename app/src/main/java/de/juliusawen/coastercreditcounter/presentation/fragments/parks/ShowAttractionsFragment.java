@@ -150,14 +150,13 @@ public  class ShowAttractionsFragment extends Fragment
         {
             if(requestCode == Constants.REQUEST_EDIT_ELEMENT)
             {
-                Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(editedElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToElement(App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID))));
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS || requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element selectedElement = null;
+                Element selectedElement;
                 if(selectedElementUuidString != null)
                 {
                     selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
@@ -173,13 +172,12 @@ public  class ShowAttractionsFragment extends Fragment
 
                 if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
                 {
-                    Log.d(Constants.LOG_TAG, "ShowAttractionsFragment.onActivityResult<SortAttractions>:: replacing <children> with <sorted children>...");
-
                     Element parent = resultElements.get(0).getParent();
                     if(parent != null)
                     {
                         this.viewModel.element.deleteChildren(resultElements);
                         this.viewModel.element.addChildren(resultElements);
+                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.element));
                     }
 
                     this.updateContentRecyclerView();
@@ -187,7 +185,7 @@ public  class ShowAttractionsFragment extends Fragment
                     //                if(selectedElement != null)
                     //                {
                     //                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                    //                    this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(((Attraction)selectedElement).getCategory());
+                    //                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
                     //                }
 
                 }
@@ -199,7 +197,7 @@ public  class ShowAttractionsFragment extends Fragment
                     //                if(selectedElement != null)
                     //                {
                     //                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...", selectedElement));
-                    //                    this.viewModel.contentRecyclerViewAdapter.smoothScrollToElement(selectedElement);
+                    //                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                     //                }
                 }
             }

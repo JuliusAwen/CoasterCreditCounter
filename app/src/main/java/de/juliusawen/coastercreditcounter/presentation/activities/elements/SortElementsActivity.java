@@ -201,17 +201,17 @@ public class SortElementsActivity extends BaseActivity
                         viewModel.contentRecyclerViewAdapter.swapElements(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position +1));
                         Collections.swap(viewModel.elementsToSort, position, position +1);
 
-//                        viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.elementsToSort.get(position + 1));
+//                        viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.elementsToSort.get(position + 1));
 
 
 //                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
 //                        if(viewModel.contentRecyclerViewAdapter.getContent().size() > position + 1 + scrollMargin)
 //                        {
-//                            viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(position + 1 + scrollMargin));
+//                            viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(position + 1 + scrollMargin));
 //                        }
 //                        else
 //                        {
-//                            viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(viewModel.contentRecyclerViewAdapter.getContent().size() - 1));
+//                            viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(viewModel.contentRecyclerViewAdapter.getContent().size() - 1));
 //                        }
                     }
                     else
@@ -247,16 +247,16 @@ public class SortElementsActivity extends BaseActivity
                         viewModel.contentRecyclerViewAdapter.swapElements(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position -1));
                         Collections.swap(viewModel.elementsToSort, position, position -1);
 
-//                        viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.elementsToSort.get(position -1));
+//                        viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.elementsToSort.get(position -1));
 
 //                        int scrollMargin = ViewTool.getScrollMarginForRecyclerView(recyclerView);
 //                        if(position - 1 - scrollMargin >= 0)
 //                        {
-//                            viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.elementsToSort.get(position));
+//                            viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.elementsToSort.get(position));
 //                        }
 //                        else
 //                        {
-//                            viewModel.contentRecyclerViewAdapter.smoothScrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(0));
+//                            viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.contentRecyclerViewAdapter.getContent().get(0));
 //                        }
                     }
                     else

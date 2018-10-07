@@ -166,7 +166,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 else
                 {
                     collapseParent(parent);
-//                        smoothScrollToElement(parent);
+//                        scrollToElement(parent);
                 }
             }
         };
@@ -341,9 +341,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Element parent = this.content.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderParent:: binding %s for position [%d]...", parent, position));
 
-
         this.decorateExpandToggle(viewHolder, parent);
-
 
         viewHolder.textViewName.setText(parent.getName());
         viewHolder.textViewName.setTag(parent);
@@ -494,6 +492,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Collections.swap(this.content, index1, index2);
         notifyItemChanged(index1);
         notifyItemChanged(index2);
+
+        this.scrollToElement(element1);
     }
 
     public List<Element> getSelectedElementsInOrderOfSelection()
@@ -517,6 +517,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateDataSet:: updating with [%d] elements...", elements.size()));
 
+
+
         this.content.clear();
         this.initializeParents(elements);
     }
@@ -531,11 +533,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this.expandedParents;
     }
 
-    public void smoothScrollToElement(Element element)
+    public void scrollToElement(Element element)
     {
         if(this.content.contains(element) && this.recyclerView != null)
         {
-            recyclerView.smoothScrollToPosition(content.indexOf(element));
+            recyclerView.scrollToPosition(content.indexOf(element));
         }
     }
 

@@ -80,13 +80,13 @@ public class ExpandableRecyclerAdapter extends RecyclerView.Adapter<ExpandableRe
     {
         if(this.elements.contains(element))
         {
-            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: scrolling to %s", element));
+            Log.d(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.scrollToElement:: scrolling to %s", element));
             int position = this.elements.indexOf(element);
             this.recyclerView.smoothScrollToPosition(position);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.smoothScrollToElement:: %s not found", element));
+            Log.e(Constants.LOG_TAG, String.format("ExpandableRecyclerAdapter.scrollToElement:: %s not found", element));
         }
     }
 
