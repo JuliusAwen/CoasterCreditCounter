@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.presentation.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class TestActivity extends BaseActivity
@@ -36,7 +38,8 @@ public class TestActivity extends BaseActivity
 
         super.addHelpOverlayFragment(getString(R.string.title_help, "Test"), "Test");
 
-        this.createContentRecyclerAdapter();
+//        this.createContentRecyclerAdapter();
+        this.createLoremIpsum();
     }
 
     @Override
@@ -73,8 +76,14 @@ public class TestActivity extends BaseActivity
             }
         });
 
-        RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewTest);
+        RecyclerView recyclerView = findViewById(android.R.id.content).findViewById(R.id.recyclerViewTestActivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(contentRecyclerViewAdapter);
+    }
+
+    private void createLoremIpsum()
+    {
+        TextView textView = findViewById(R.id.textViewTestActivity);
+        textView.setText(StringTool.getLoremIpsum(501));
     }
 }
