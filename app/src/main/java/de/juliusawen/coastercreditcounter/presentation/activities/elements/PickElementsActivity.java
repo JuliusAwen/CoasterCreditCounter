@@ -9,15 +9,13 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -41,13 +39,12 @@ public class PickElementsActivity extends BaseActivity
         {
             this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
-        
+
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, true);
         }
-        RecyclerView recyclerView = this.findViewById(android.R.id.content).findViewById(R.id.recyclerViewPickElements);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
@@ -80,54 +77,19 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                onClickFloatingActionButton();
-            }
-        });
-        super.setFloatingActionButtonVisibility(true);
-    }
-
-    private void onClickFloatingActionButton()
-    {
-        if(!this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
-        {
-            Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
-            returnResult(RESULT_OK);
-        }
-        else
-        {
-            Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no parentElement selected");
-            Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_text_no_entry_selected));
-        }
-    }
-
-    private SelectableRecyclerAdapter createContentRecyclerView()
-    {
-        RecyclerOnClickListener.OnClickListener onClickListener = new RecyclerOnClickListener.OnClickListener()
-        {
-            @Override
-            public void onClick(View view, int position)
-            {
-                if(view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
+                if(!viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
                 {
-                    changeRadioButtonToDeselectAll();
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
+                    returnResult(RESULT_OK);
                 }
                 else
                 {
-                    if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
-                    {
-                        changeRadioButtonToSelectAll();
-                    }
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no parentElement selected");
+                    Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_text_no_entry_selected));
                 }
             }
-
-            @Override
-            public boolean onLongClick(View view, int position)
-            {
-                return false;
-            }
-        };
-
-        return new SelectableRecyclerAdapter(this.viewModel.elementsToPickFrom, true, onClickListener);
+        });
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private void addSelectOrDeselectAllBar()

@@ -4,12 +4,12 @@ import java.util.List;
 
 import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.SelectableRecyclerAdapter;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
 public class PickElementsActivityViewModel extends ViewModel
 {
-    public List<Element> elementsToPickFrom;
-    public String toolbarTitle;
-    public String toolbarSubtitle;
-    public SelectableRecyclerAdapter contentRecyclerViewAdapter;
+    List<Element> elementsToPickFrom;
+    String toolbarTitle;
+    String toolbarSubtitle;
+    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

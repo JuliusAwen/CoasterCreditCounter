@@ -189,7 +189,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                     if(selectMultiple)
                     {
-                        selectedElementsInOrderOfSelection.add(0, selectedElement);
+                        selectedElementsInOrderOfSelection.add(selectedElement);
                         notifyItemChanged(content.indexOf(selectedElement));
                     }
                     else
@@ -495,6 +495,29 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyItemMoved(index1, index2);
 
         this.scrollToElement(element1);
+    }
+
+    public boolean isAllSelected()
+    {
+        List<Element> content = new ArrayList<>(this.getContent());
+        content.removeAll(this.selectedElementsInOrderOfSelection);
+        return content.size() <= 0;
+    }
+
+    public void selectAllElements()
+    {
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllElements:: selecting all elements...");
+
+        this.selectedElementsInOrderOfSelection.clear();
+        this.selectedElementsInOrderOfSelection.addAll(this.getContent());
+        notifyDataSetChanged();
+    }
+
+    public void deselectAllElements()
+    {
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllElements:: deselecting all elements...");
+        this.selectedElementsInOrderOfSelection.clear();
+        notifyDataSetChanged();
     }
 
     public List<Element> getSelectedElementsInOrderOfSelection()
