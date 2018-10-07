@@ -108,9 +108,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private class ItemDivider extends OrphanElement
     {
-        private ItemDivider()
+        private ItemDivider(String name)
         {
-            super("ItemDivider", UUID.randomUUID());
+            super(name, UUID.randomUUID());
         }
     }
 
@@ -127,15 +127,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.expandedParents = request.initiallyExpandedElements;
         }
 
-        this.initializeParents(request.elements);
+        this.initializeContent(request.elements);
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
-    private void initializeParents(List<Element> parents)
+    private void initializeContent(List<Element> parents)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeParents:: initializing [%d] parents...", parents.size()));
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: initializing [%d] parents...", parents.size()));
+        this.content.clear();
 
         for(Element parent : parents)
         {
@@ -143,9 +144,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             if(this.expandedParents.contains(parent))
             {
                 this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeParents:: [%d] children added", parent.getChildCountOfType(this.childType)));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: [%d] children added", parent.getChildCountOfType(this.childType)));
             }
-            this.content.add(new ItemDivider());
+            this.content.add(new ItemDivider(parent.getName()));
         }
     }
 
@@ -408,7 +409,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             notifyItemChanged(this.content.indexOf(parent));
 
             this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-            notifyItemRangeChanged(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+            notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
 
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
         }
@@ -490,8 +491,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         int index2 = this.content.indexOf(element2);
 
         Collections.swap(this.content, index1, index2);
-        notifyItemChanged(index1);
-        notifyItemChanged(index2);
+        notifyItemMoved(index1, index2);
 
         this.scrollToElement(element1);
     }
@@ -517,20 +517,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateDataSet:: updating with [%d] elements...", elements.size()));
 
-
-
         this.content.clear();
-        this.initializeParents(elements);
+        this.initializeContent(elements);
     }
+
 
     public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.recyclerOnClickListener = onClickListener;
-    }
-
-    public Set<Element> getExpandedElements()
-    {
-        return this.expandedParents;
     }
 
     public void scrollToElement(Element element)
