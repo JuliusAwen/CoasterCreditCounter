@@ -58,7 +58,7 @@ public class TestActivity extends BaseActivity
     {
         ContentRecyclerViewAdapter contentRecyclerViewAdapter =
                 ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.location.getChildrenOfType(Location.class), true);
+                        this.location.getChildrenOfType(Location.class), null, true);
 
         contentRecyclerViewAdapter.setOnClickListener(new RecyclerOnClickListener.OnClickListener()
         {

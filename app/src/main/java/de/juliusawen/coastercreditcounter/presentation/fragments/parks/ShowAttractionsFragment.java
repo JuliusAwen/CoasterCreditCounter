@@ -286,7 +286,7 @@ public  class ShowAttractionsFragment extends Fragment
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapterForVisit()
     {
         List<Element> attractions = this.viewModel.element.getChildrenOfType(Attraction.class);
-        return ContentRecyclerViewAdapterProvider.getExpandableCountableContentRecyclerViewAdapter(
+        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 AttractionCategory.addAttractionCategoryHeaders(attractions),
                 this.getAttractionCategoriesToExpandAccordingToSettings(attractions),
                 Attraction.class);

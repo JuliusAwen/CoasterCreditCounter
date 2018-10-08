@@ -192,12 +192,11 @@ public abstract class ActivityTool
             toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
         }
-        else if(firstElement.isInstance(Attraction.class))
+        else if(firstElement.isInstance(Attraction.class) || firstElement.isInstance(AttractionCategory.class))
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
         }
-
 
         if(toolbarTitle != null)
         {

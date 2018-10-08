@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -43,7 +45,16 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, true);
+            if(this.viewModel.elementsToPickFrom.get(0).isInstance(Attraction.class))
+            {
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                AttractionCategory.addAttractionCategoryHeaders(this.viewModel.elementsToPickFrom), Attraction.class, true);
+            }
+            else
+            {
+                this.viewModel.contentRecyclerViewAdapter =
+                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
+            }
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
@@ -131,7 +142,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
+                if(!view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
                 {
                     changeRadioButtonToDeselectAll();
                 }
