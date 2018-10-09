@@ -462,34 +462,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private void expandParent(Element parent)
-    {
-        if(this.childType != null && this.content.contains(parent))
-        {
-            this.expandedParents.add(parent);
-            notifyItemChanged(this.content.indexOf(parent));
-
-            this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-            notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
-
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
-        }
-    }
-
-    private void collapseParent(Element parent)
-    {
-        if(this.childType != null && this.expandedParents.contains(parent))
-        {
-            this.expandedParents.remove(parent);
-            notifyItemChanged(content.indexOf(parent));
-
-            this.content.removeAll(parent.getChildrenOfType(this.childType));
-            notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
-
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
-        }
-    }
-
     private void bindViewHolderChild(ViewHolderChild viewHolder, int position)
     {
         Element child = this.content.get(position);
@@ -554,6 +526,34 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         return content;
+    }
+
+    public void expandParent(Element parent)
+    {
+        if(this.childType != null && this.content.contains(parent))
+        {
+            this.expandedParents.add(parent);
+            notifyItemChanged(this.content.indexOf(parent));
+
+            this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+            notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
+        }
+    }
+
+    public void collapseParent(Element parent)
+    {
+        if(this.childType != null && this.expandedParents.contains(parent))
+        {
+            this.expandedParents.remove(parent);
+            notifyItemChanged(content.indexOf(parent));
+
+            this.content.removeAll(parent.getChildrenOfType(this.childType));
+            notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
+        }
     }
 
     public void swapElements(Element element1, Element element2)
