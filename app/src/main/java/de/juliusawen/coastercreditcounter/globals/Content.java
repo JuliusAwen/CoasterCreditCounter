@@ -263,9 +263,11 @@ public class Content
         else
         {
             //Todo: remove when new way to pass elements around is implemented
-            this.orphanElements.put(element.getUuid(), element);
-            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
-
+            if(!this.orphanElements.containsValue(element))
+            {
+                this.orphanElements.put(element.getUuid(), element);
+                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
+            }
         }
     }
 
