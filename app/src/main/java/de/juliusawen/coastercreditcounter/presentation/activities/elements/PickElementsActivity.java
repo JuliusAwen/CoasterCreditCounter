@@ -8,12 +8,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
@@ -97,7 +102,7 @@ public class PickElementsActivity extends BaseActivity
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no parentElement selected");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no element selected");
                     Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_text_no_entry_selected));
                 }
             }
@@ -195,7 +200,15 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection()));
+            List<Element> selectedElementsWithoutOrphanElements = new ArrayList<>();
+            for(Element element : this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection())
+            {
+                if(!element.isInstance(OrphanElement.class))
+                {
+                    selectedElementsWithoutOrphanElements.add(element);
+                }
+            }
+            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
         }
 
         setResult(resultCode, intent);

@@ -184,7 +184,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibisFunRecorder.setCategory(attractionCategoryFamilyRides);
         zensGraffityShuttle.setCategory(attractionCategoryFamilyRides);
 
-        Coaster crazyRiver = Coaster.create("Crazy River");
+        Attraction crazyRiver = Attraction.create("Crazy River");
         Attraction elRioGrande = Attraction.create("El Rio Grande");
         Attraction splashBattle = Attraction.create("SplashBattle");
 

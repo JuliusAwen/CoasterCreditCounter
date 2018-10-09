@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 
 import java.util.Collections;
 
@@ -22,9 +21,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -54,7 +51,6 @@ public class SortElementsActivity extends BaseActivity
         {
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
         }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -133,43 +129,6 @@ public class SortElementsActivity extends BaseActivity
             }
         });
         super.setFloatingActionButtonVisibility(true);
-    }
-
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
-    {
-        return new RecyclerOnClickListener.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {}
-
-            @Override
-            public boolean onLongClick(View view)
-            {
-                onLongClickContentRecyclerView(view);
-                return true;
-            }
-        };
-    }
-
-    private void onLongClickContentRecyclerView(View view)
-    {
-        //Todo: do something (remove it or make it work - but DO something...!)
-
-        final Element longClickedElement = (Element) view.getTag();
-
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        popupMenu.getMenu().add(0, Selection.EDIT_ELEMENT.ordinal(), Menu.NONE, R.string.selection_edit_element);
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                Toaster.makeToast(SortElementsActivity.this, String.format("not yet implemented - %s", longClickedElement.getName()));
-                return false;
-            }
-        });
-        popupMenu.show();
     }
 
     private void createActionDialog()

@@ -436,12 +436,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder.textViewName.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
                 viewHolder.textViewName.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
             }
-            else
-            {
-                String errorMessage = "RecyclerOnClickListener.OnClickListener not set";
-                Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderParent:: " + errorMessage);
-                throw new IllegalStateException(errorMessage);
-            }
         }
     }
 
@@ -522,12 +516,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
                 viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-            }
-            else
-            {
-                String errorMessage = "RecyclerOnClickListener.OnClickListener not set";
-                Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderChild:: " + errorMessage);
-                throw new IllegalStateException(errorMessage);
             }
         }
 
@@ -613,28 +601,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public List<Element> getSelectedElementsInOrderOfSelection()
     {
-        List<Element> selectedElements = new ArrayList<>();
-        for(Element element : this.selectedElementsInOrderOfSelection)
-        {
-            if(!element.isInstance(OrphanElement.class))
-            {
-                selectedElements.add(element);
-            }
-        }
-        return selectedElements;
+        return this.selectedElementsInOrderOfSelection;
     }
 
     public Element getLastSelectedElement()
     {
         if(!this.selectedElementsInOrderOfSelection.isEmpty())
         {
-            for(Element element : this.selectedElementsInOrderOfSelection)
-            {
-                if(!element.isInstance(OrphanElement.class))
-                {
-                    return element;
-                }
-            }
+            return this.selectedElementsInOrderOfSelection.get(0);
         }
 
         return null;
