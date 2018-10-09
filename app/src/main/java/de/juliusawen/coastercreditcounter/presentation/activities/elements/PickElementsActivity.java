@@ -111,7 +111,15 @@ public class PickElementsActivity extends BaseActivity
         linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
         this.textViewSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
-        this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
+
+        if(this.viewModel.contentRecyclerViewAdapter.isAllSelected())
+        {
+            this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
+        }
+        else
+        {
+            this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
+        }
 
         this.radioButtonSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
         this.radioButtonSelectOrDeselectAll.setOnClickListener(new View.OnClickListener()
