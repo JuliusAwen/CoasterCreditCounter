@@ -7,5 +7,5 @@ import de.juliusawen.coastercreditcounter.data.elements.Visit;
 public class ShowVisitActivityViewModel extends ViewModel
 {
     public Visit visit;
-    public Park parentPark;
+    Park parentPark;
 }

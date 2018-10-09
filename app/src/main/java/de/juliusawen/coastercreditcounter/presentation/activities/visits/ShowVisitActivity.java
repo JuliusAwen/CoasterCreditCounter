@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.DatePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.parks.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class ShowVisitActivity extends BaseActivity
 {
@@ -34,7 +37,7 @@ public class ShowVisitActivity extends BaseActivity
     private ShowAttractionsFragment showAttractionsFragment;
     private DatePickerDialog datePickerDialog;
 
-    private boolean createAddShowAttractionsFragmentOnResume = false;
+    private boolean addShowAttractionsFragmentOnResume = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,13 +67,16 @@ public class ShowVisitActivity extends BaseActivity
         super.addToolbarHomeButton();
         this.decorateToolbar();
 
+        super.addFloatingActionButton();
+        this.decorateFloatingActionButton();
+
         if(this.viewModel.visit == null)
         {
             this.createVisit();
         }
         else
         {
-            this.createAddShowAttractionsFragmentOnResume = true;
+            this.addShowAttractionsFragmentOnResume = true;
         }
     }
 
@@ -78,10 +84,41 @@ public class ShowVisitActivity extends BaseActivity
     protected void onResume()
     {
         super.onResume();
-        if(this.createAddShowAttractionsFragmentOnResume)
+        if(this.addShowAttractionsFragmentOnResume)
         {
             this.addShowAttractionsFragment();
+            this.addShowAttractionsFragmentOnResume = false;
         }
+
+        if(!this.allAttractionsAdded())
+        {
+            super.setFloatingActionButtonVisibility(true);
+        }
+        else
+        {
+            super.setFloatingActionButtonVisibility(false);
+        }
+    }
+
+    private void decorateFloatingActionButton()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+
+                List<Element> attractions = new ArrayList<>(viewModel.parentPark.getChildrenOfType(Attraction.class));
+                attractions.removeAll(viewModel.visit.getChildrenOfType(Attraction.class));
+
+                ActivityTool.startActivityPickForResult(
+                        ShowVisitActivity.this,
+                        Constants.REQUEST_PICK_ATTRACTIONS,
+                        AttractionCategory.addAttractionCategoryHeaders(attractions));
+            }
+        });
     }
 
     @Override
@@ -95,7 +132,15 @@ public class ShowVisitActivity extends BaseActivity
             {
                 List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
                 this.viewModel.visit.addChildren(selectedElements);
-                this.createAddShowAttractionsFragmentOnResume = true;
+
+                if(this.showAttractionsFragment == null)
+                {
+                    this.addShowAttractionsFragmentOnResume = true;
+                }
+                else
+                {
+                    this.showAttractionsFragment.updateContentRecyclerView();
+                }
             }
         }
     }
@@ -298,5 +343,20 @@ public class ShowVisitActivity extends BaseActivity
 
         setResult(resultCode, intent);
         finish();
+    }
+
+    private boolean allAttractionsAdded()
+    {
+        if(this.viewModel.visit != null)
+        {
+            List<Element> addedAttractions = new ArrayList<>(this.viewModel.parentPark.getChildrenOfType(Attraction.class));
+            addedAttractions.removeAll(this.viewModel.visit.getChildrenOfType(Attraction.class));
+
+            return addedAttractions.size() <= 0;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

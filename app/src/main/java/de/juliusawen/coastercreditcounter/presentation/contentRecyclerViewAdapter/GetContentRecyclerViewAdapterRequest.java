@@ -10,9 +10,9 @@ import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 
 class GetContentRecyclerViewAdapterRequest
 {
-    public AdapterType adapterType;
+    AdapterType adapterType;
     public List<Element> elements = new ArrayList<>();
-    public Set<Element> initiallyExpandedElements = new HashSet<>();
-    public Class<? extends Element> childType;
-    public boolean selectMultiple;
+    Set<Element> initiallyExpandedElements = new HashSet<>();
+    Class<? extends Element> childType;
+    boolean selectMultiple;
 }

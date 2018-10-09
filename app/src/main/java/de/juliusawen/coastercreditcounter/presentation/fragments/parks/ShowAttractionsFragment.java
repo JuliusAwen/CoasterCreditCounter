@@ -323,7 +323,7 @@ public  class ShowAttractionsFragment extends Fragment
         return attractionCategoriesToExpand;
     }
 
-    private void updateContentRecyclerView()
+    public void updateContentRecyclerView()
     {
         this.viewModel.contentRecyclerViewAdapter.updateContent(AttractionCategory.addAttractionCategoryHeaders(this.viewModel.element.getChildrenAsType(Attraction.class)));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
