@@ -530,15 +530,22 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void expandParent(Element parent)
     {
-        if(this.childType != null && this.content.contains(parent))
+        if(!this.expandedParents.contains(parent))
         {
-            this.expandedParents.add(parent);
-            notifyItemChanged(this.content.indexOf(parent));
+            if(this.childType != null && this.content.contains(parent))
+            {
+                this.expandedParents.add(parent);
+                notifyItemChanged(this.content.indexOf(parent));
 
-            this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-            notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+                this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+                notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
 
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
+            }
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: parent %s already expanded", parent));
         }
     }
 
@@ -616,7 +623,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void updateContent(List<Element> elements)
     {
-        Log.v(Constants.LOG_TAG, Constants.LOG_DIVIDER + String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
 
         this.content.clear();
         this.initializeContent(elements);

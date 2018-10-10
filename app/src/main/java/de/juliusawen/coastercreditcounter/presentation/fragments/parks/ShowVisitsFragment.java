@@ -74,7 +74,6 @@ public class ShowVisitsFragment extends Fragment
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
 
-
         this.setHasOptionsMenu(true);
     }
 
