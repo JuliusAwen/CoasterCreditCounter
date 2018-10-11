@@ -26,6 +26,8 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -87,6 +89,14 @@ public  class ShowAttractionsFragment extends Fragment
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        this.updateContentRecyclerView();
     }
 
     @Override
@@ -183,8 +193,9 @@ public  class ShowAttractionsFragment extends Fragment
     {
         List<Element> attractions = this.viewModel.park.getChildrenOfType(Attraction.class);
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                AttractionCategory.addAttractionCategoryHeaders(attractions),
-                AttractionCategory.getAttractionCategoriesToExpandAccordingToSettings(attractions),
+                this.getAttractionsWithCategoryHeaders(attractions),
+//                AttractionCategory.getAttractionCategoriesToExpandAccordingToSettings(attractions),
+                null,
                 Attraction.class);
     }
 
@@ -208,7 +219,7 @@ public  class ShowAttractionsFragment extends Fragment
             {
                 final Element longClickedElement = (Element) view.getTag();
 
-                if(longClickedElement.isInstance(AttractionCategory.class))
+                if(longClickedElement.isInstance(AttractionCategoryHeader.class))
                 {
                     PopupMenu popupMenu = new PopupMenu(getContext(), view);
                     popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit_attraction_category);
@@ -229,7 +240,10 @@ public  class ShowAttractionsFragment extends Fragment
                             switch (selection)
                             {
                                 case EDIT_ATTRACTION_CATEGORY:
-                                    ActivityTool.startActivityEditForResult(Objects.requireNonNull(getActivity()), Constants.REQUEST_EDIT_ELEMENT, longClickedElement);
+                                    ActivityTool.startActivityEditForResult(
+                                            Objects.requireNonNull(getActivity()),
+                                            Constants.REQUEST_EDIT_ELEMENT,
+                                            ((AttractionCategoryHeader)longClickedElement).getAttractionCategory());
                                     return true;
 
                                 case SORT_ATTRACTIONS:
@@ -253,7 +267,17 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
-        this.viewModel.contentRecyclerViewAdapter.updateContent(AttractionCategory.addAttractionCategoryHeaders(this.viewModel.park.getChildrenAsType(Attraction.class)));
+        this.viewModel.contentRecyclerViewAdapter.updateContent(this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class)));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
+    {
+        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
+        {
+            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
+        }
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeaders(attractions);
+        return this.viewModel.attractionCategoryHeaders;
     }
 }

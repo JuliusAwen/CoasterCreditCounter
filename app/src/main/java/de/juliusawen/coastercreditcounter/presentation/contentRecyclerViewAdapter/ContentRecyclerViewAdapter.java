@@ -23,6 +23,8 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
@@ -197,21 +199,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                         if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
                         {
-                            Element category = ((Attraction)selectedElement).getCategory();
-                            List<Element> children = new ArrayList<>(category.getChildren());
+                            AttractionCategoryHeader attractionCategoryHeader = getAttractionCategoryHeaderByAttractionCategory(((Attraction)selectedElement).getCategory());
 
-                            for(Element child : category.getChildren())
+                            if(attractionCategoryHeader != null)
                             {
-                                if(selectedElementsInOrderOfSelection.contains(child))
+                                List<Element> children = new ArrayList<>(attractionCategoryHeader.getChildren());
+
+                                for(Element child : attractionCategoryHeader.getChildren())
                                 {
-                                    children.remove(child);
+                                    if(selectedElementsInOrderOfSelection.contains(child))
+                                    {
+                                        children.remove(child);
+                                    }
                                 }
-                            }
 
-                            if(children.size() <= 0)
-                            {
-                                selectedElementsInOrderOfSelection.add(category);
-                                notifyItemChanged(content.indexOf(category));
+                                if(children.size() <= 0)
+                                {
+                                    selectedElementsInOrderOfSelection.add(attractionCategoryHeader);
+                                    notifyItemChanged(content.indexOf(attractionCategoryHeader));
+                                }
                             }
                         }
                     }
@@ -247,6 +253,22 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         };
+    }
+
+    private AttractionCategoryHeader getAttractionCategoryHeaderByAttractionCategory(AttractionCategory attractionCategory)
+    {
+        for(Element element : this.content)
+        {
+            if(element.isInstance(AttractionCategoryHeader.class))
+            {
+                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
+                {
+                    return (AttractionCategoryHeader) element;
+                }
+            }
+        }
+
+        return null;
     }
 
     private void selectAllChildren(Element element)

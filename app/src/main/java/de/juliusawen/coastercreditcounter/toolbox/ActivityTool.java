@@ -16,6 +16,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
@@ -193,7 +194,7 @@ public abstract class ActivityTool
             toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
         }
-        else if(firstElement.isInstance(Attraction.class) || firstElement.isInstance(AttractionCategory.class))
+        else if(firstElement.isInstance(Attraction.class) || firstElement.isInstance(AttractionCategory.class) || firstElement.isInstance(AttractionCategoryHeader.class))
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);

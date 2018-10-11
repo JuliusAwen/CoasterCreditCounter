@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -18,12 +18,11 @@ public class Content
     private Map<UUID, Element> elements = new HashMap<>();
     private Map<UUID, Element> orphanElements = new HashMap<>();
 
+    private Map<String, YearHeader> yearHeadersByName = new HashMap<>();
 
     private Element rootElement;
 
-    private Map<String, Element> elementsByKey;
-    private Map<String, List<Element>> elementListsByKey;
-    private Map<String, Element> orphanElementsByName = new HashMap<>();
+
 
     private static final Content instance = new Content();
 
@@ -102,15 +101,15 @@ public class Content
 //        }
 //    }
 
-    public Element getOrphanElement(String name)
+    public Element getYearHeader(String name)
     {
-        if(this.orphanElementsByName.containsKey(name))
+        if(this.yearHeadersByName.containsKey(name))
         {
-            return this.orphanElementsByName.get(name);
+            return this.yearHeadersByName.get(name);
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No OrphanElement found for name[%s]", name));
+            Log.v(Constants.LOG_TAG, String.format("Content.getYearHeader:: No YearHeader found with name[%s]", name));
             return null;
         }
     }
@@ -118,7 +117,7 @@ public class Content
     public <T extends OrphanElement> List<T> getOrphanElementsOfType(Class<T> type)
     {
         List<T> orphanElementsOfType = new ArrayList<>();
-        for(Element orphanElement : this.orphanElementsByName.values())
+        for(Element orphanElement : this.orphanElements.values())
         {
             if(orphanElement.isInstance(type))
             {
@@ -128,25 +127,72 @@ public class Content
         return orphanElementsOfType;
     }
 
-    public void addOrphanElements(List<? extends OrphanElement> orphanElements)
+    public void addOrphanElement(Element orphanElement)
     {
+        if(orphanElement.isInstance(OrphanElement.class))
+        {
+            if(orphanElement.isInstance(YearHeader.class))
+            {
+                this.yearHeadersByName.put(orphanElement.getName(), (YearHeader)orphanElement);
+                Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElement:: %s added to YearHeadersByName", orphanElement));
+            }
+
+            if(!this.orphanElements.containsKey(orphanElement.getUuid()))
+            {
+                this.orphanElements.put(orphanElement.getUuid(), orphanElement);
+                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s allready exists", orphanElement));
+            }
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s is not of type <OrphanElement>", orphanElement));
+        }
+
+    }
+
+    public void removeOrphanElements(List<? extends OrphanElement> orphanElements)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElements:: removing [%d] orphan elements", orphanElements.size()));
+
         for(OrphanElement orphanElement : orphanElements)
         {
-            this.addOrphanElement(orphanElement);
+            this.removeOrphanElement(orphanElement);
         }
     }
 
-    public void addOrphanElement(OrphanElement orphanElement)
+    private void removeOrphanElement(OrphanElement orphanElement)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
-        this.orphanElementsByName.put(orphanElement.getName(), orphanElement);
-        this.addElement(orphanElement);
+        if(orphanElement.isInstance(YearHeader.class))
+        {
+            if(this.yearHeadersByName.containsKey(orphanElement.getName()))
+            {
+                this.yearHeadersByName.remove(orphanElement.getName());
+                Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from YearHeadersByName", orphanElement));
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found", orphanElement));
+            }
+        }
+
+        if(this.orphanElements.containsValue(orphanElement))
+        {
+            this.orphanElements.remove(orphanElement.getUuid());
+            Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from orphan elements", orphanElement));
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found", orphanElement));
+        }
     }
 
 
 
 
-    @Deprecated
     private void flattenContentTree(Element element)
     {
         this.addElement(element);
@@ -156,18 +202,6 @@ public class Content
         }
     }
 
-    @Deprecated
-    public ArrayList<String> getUuidStringsFromElements(Set<Element> elements)
-    {
-        ArrayList<String> uuidStrings = new ArrayList<>();
-        for(Element element : elements)
-        {
-            uuidStrings.add(element.getUuid().toString());
-        }
-        return uuidStrings;
-    }
-
-    @Deprecated
     public ArrayList<String> getUuidStringsFromElements(List<Element> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
@@ -178,7 +212,6 @@ public class Content
         return uuidStrings;
     }
 
-    @Deprecated
     public List<Element> fetchElementsByUuidStrings(List<String> uuidStrings)
     {
         Stopwatch stopwatch = new Stopwatch(true);
@@ -193,13 +226,11 @@ public class Content
         return elements;
     }
 
-    @Deprecated
     public Element fetchElementByUuidString(String uuidString)
     {
         return this.getElementByUuid(UUID.fromString(uuidString));
     }
 
-    @Deprecated
     public Element getElementByUuid(UUID uuid)
     {
         if(this.elements.containsKey(uuid))
@@ -217,7 +248,6 @@ public class Content
         }
     }
 
-    @Deprecated
     public void addElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
@@ -227,7 +257,6 @@ public class Content
         this.addElement(element);
     }
 
-    @Deprecated
     public boolean deleteElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
@@ -240,7 +269,6 @@ public class Content
         return this.deleteElement(element);
     }
 
-    @Deprecated
     public void addElements(List<? extends Element> elements)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.addElements:: adding #[%d] elements", elements.size()));
@@ -250,28 +278,25 @@ public class Content
         }
     }
 
-    @Deprecated
     public void addElement(Element element)
     {
-
         if(!element.isInstance(OrphanElement.class))
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
             this.elements.put(element.getUuid(), element);
-
         }
         else
         {
+            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: adding %s requested -- DEPRECATED: use AddOrphanElement", element));
             //Todo: remove when new way to pass elements around is implemented
             if(!this.orphanElements.containsValue(element))
             {
                 this.orphanElements.put(element.getUuid(), element);
-                Log.w(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
+                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s added -- DEPRECATED: use AddOrphanElement", element));
             }
         }
     }
 
-    @Deprecated
     public boolean deleteElement(Element element)
     {
         if(this.elements.containsKey(element.getUuid()))

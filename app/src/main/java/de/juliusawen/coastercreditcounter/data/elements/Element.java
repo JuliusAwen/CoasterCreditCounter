@@ -59,12 +59,8 @@ public abstract class Element
         {
             return true;
         }
-        else if(element.getName() != null && element.getName().equals(this.getName()))
-        {
-            return true;
-        }
+        else return element.getName() != null && element.getName().equals(this.getName());
 
-        return false;
     }
 
     @Override
@@ -483,5 +479,18 @@ public abstract class Element
             Log.v(Constants.LOG_TAG,"Element.sortElementsBasedOnComparisonList:: not sorted - list contains only one element");
             return elementsToSort;
         }
+    }
+
+    public static <T extends Element> List<T> convertElementsToType(List<? extends Element> elements, Class<T> type)
+    {
+        List<T> returnList = new ArrayList<>();
+        for(Element element : elements)
+        {
+            if(element.isInstance(type))
+            {
+                returnList.add(type.cast(element));
+            }
+        }
+        return returnList;
     }
 }

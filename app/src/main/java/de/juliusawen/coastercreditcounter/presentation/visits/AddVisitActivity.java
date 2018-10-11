@@ -19,7 +19,8 @@ import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
@@ -115,7 +116,15 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 {
                     viewModel.datePickerDialog.dismiss();
                     onDateSetCreateVisit(viewModel.calendar);
-                    showPickAttractionsDialog();
+
+                    if(viewModel.park.getChildCountOfType(Attraction.class) > 0)
+                    {
+                        showPickAttractionsDialog();
+                    }
+                    else
+                    {
+                        returnResult(Activity.RESULT_OK);
+                    }
                 }
             }
         }, year, month, day);
@@ -206,7 +215,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                     ActivityTool.startActivityPickForResult(
                             AddVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            AttractionCategory.addAttractionCategoryHeaders(viewModel.park.getChildrenOfType(Attraction.class)));
+                            this.getAttractionsWithCategoryHeaders(viewModel.park.getChildrenOfType(Attraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
@@ -218,7 +227,15 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     onDateSetCreateVisit(viewModel.calendar);
-                    showPickAttractionsDialog();
+
+                    if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
+                    {
+                        showPickAttractionsDialog();
+                    }
+                    else
+                    {
+                        returnResult(Activity.RESULT_OK);
+                    }
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
@@ -241,5 +258,15 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
         setResult(resultCode, intent);
         finish();
+    }
+
+    private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
+    {
+        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
+        {
+            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
+        }
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeaders(attractions);
+        return this.viewModel.attractionCategoryHeaders;
     }
 }

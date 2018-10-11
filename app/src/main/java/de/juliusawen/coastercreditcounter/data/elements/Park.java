@@ -44,7 +44,7 @@ public class Park extends Element
                 attractionCategories.add(attraction.getCategory());
             }
         }
-        Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount::#[%d] different AttractionCategories found", attractionCategories.size()));
+        Log.v(Constants.LOG_TAG,  String.format("Park.getAttractionCategoryCount::#[%d] distinct AttractionCategories found", attractionCategories.size()));
         return attractionCategories.size();
     }
 }

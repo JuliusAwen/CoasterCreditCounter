@@ -102,10 +102,42 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         Coaster krake = Coaster.create("Krake");
+        Coaster flugDerDaemonen = Coaster.create("Flug der Dämonen");
+        Coaster desertRace = Coaster.create("Desert Race");
+        Coaster bigLoop = Coaster.create("Big Loop");
+        Coaster limit = Coaster.create("Limit");
+        Coaster grottenblitz = Coaster.create("Grottenblitz");
+        Coaster indyBlitz = Coaster.create("Indy-Blitz");
+        Coaster bobbahn = Coaster.create("Bobbahn");
+        Coaster colossos = Coaster.create("Colossos");
+
         Attraction scream = Attraction.create("Scream");
+        Attraction mountainRafting = Attraction.create("Mountain Rafting");
+        Attraction wildwasserbahn = Attraction.create("Wildwasserbahn");
+        Attraction ghostbusters5D = Attraction.create("Ghostbusters 5D");
+        Attraction monorail = Attraction.create("Monorail");
+        Attraction screamie = Attraction.create("Screamie");
+        Attraction bounty = Attraction.create("Bounty");
 
         krake.setCategory(attractionCategoryRollerCoasters);
+        flugDerDaemonen.setCategory(attractionCategoryRollerCoasters);
+        desertRace.setCategory(attractionCategoryRollerCoasters);
+        bigLoop.setCategory(attractionCategoryRollerCoasters);
+        limit.setCategory(attractionCategoryRollerCoasters);
+        grottenblitz.setCategory(attractionCategoryRollerCoasters);
+        indyBlitz.setCategory(attractionCategoryRollerCoasters);
+        bobbahn.setCategory(attractionCategoryRollerCoasters);
+        colossos.setCategory(attractionCategoryRollerCoasters);
+
         scream.setCategory(attractionCategoryThrillRides);
+
+        mountainRafting.setCategory(attractionCategoryWaterRides);
+        wildwasserbahn.setCategory(attractionCategoryWaterRides);
+
+        ghostbusters5D.setCategory(attractionCategoryFamilyRides);
+        monorail.setCategory(attractionCategoryFamilyRides);
+        screamie.setCategory(attractionCategoryFamilyRides);
+        bounty.setCategory(attractionCategoryFamilyRides);
 
 
         Coaster steelVengeance = Coaster.create("Steel Vengeance");
@@ -196,7 +228,22 @@ public final class DatabaseMock implements IDatabaseWrapper
         phantasialand.addChild(taron);
         phantasialand.addChild(hollywoodTour);
 
+
         heidePark.addChild(krake);
+        heidePark.addChild(flugDerDaemonen);
+        heidePark.addChild(desertRace);
+        heidePark.addChild(bigLoop);
+        heidePark.addChild(limit);
+        heidePark.addChild(grottenblitz);
+        heidePark.addChild(indyBlitz);
+        heidePark.addChild(bobbahn);
+        heidePark.addChild(colossos);
+        heidePark.addChild(monorail);
+        heidePark.addChild(mountainRafting);
+        heidePark.addChild(wildwasserbahn);
+        heidePark.addChild(ghostbusters5D);
+        heidePark.addChild(screamie);
+        heidePark.addChild(bounty);
         heidePark.addChild(scream);
 
         walibiHolland.addChild(drako);
@@ -266,6 +313,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(europe);
         earth.addChild(usa);
 
+        Visit visit0 = Visit.create(2018, 2, 30);
         Visit visit1 = Visit.create(2018, 0, 1);
         Visit visit2 = Visit.create(2018, 1, 2);
         Visit visit3 = Visit.create(2018, 2, 3);
@@ -274,7 +322,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit visit6 = Visit.create(2016, 5, 6);
 
         Visit visitToday = Visit.create(Calendar.getInstance());
-        heidePark.addChild(visitToday);
+        freimarkt.addChild(visitToday);
         Visit.setOpenVisit(visitToday);
 
         cedarPoint.addChild(visit6);
@@ -283,6 +331,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(visit3);
         cedarPoint.addChild(visit2);
         cedarPoint.addChild(visit1);
+
+        heidePark.addChild(visit0);
 
         //add tree to content (one element is enough - content is searching for root on its own)
         content.addElement(earth);
