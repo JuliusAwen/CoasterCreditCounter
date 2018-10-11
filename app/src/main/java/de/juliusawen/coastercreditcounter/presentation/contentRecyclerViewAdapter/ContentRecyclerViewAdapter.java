@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
@@ -497,11 +498,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void bindViewHolderCountableChild(ViewHolderCountableChild viewHolder, int position)
     {
         Context context = viewHolder.itemView.getContext();
-        Attraction child = (Attraction) this.content.get(position);
+        CountableAttraction child = (CountableAttraction) this.content.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderCountableChild:: binding %s for position [%d]", child, position));
 
         viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child));
+        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child.getAttraction()));
+
         viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
         viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
     }
@@ -624,8 +626,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void updateContent(List<Element> elements)
     {
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
-
-        this.content.clear();
         this.initializeContent(elements);
     }
 

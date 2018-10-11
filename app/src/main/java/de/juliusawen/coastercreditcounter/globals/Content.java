@@ -266,7 +266,7 @@ public class Content
             if(!this.orphanElements.containsValue(element))
             {
                 this.orphanElements.put(element.getUuid(), element);
-                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
+                Log.w(Constants.LOG_TAG,  String.format("Content.addElement:: %s - DEPRECATED!!", element));
             }
         }
     }

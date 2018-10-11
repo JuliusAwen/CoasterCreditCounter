@@ -10,25 +10,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".presentation.activities.MainActivity">
+        <activity android:name=".presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.activities.locations.ShowLocationsActivity" />
-        <activity android:name=".presentation.activities.elements.SortElementsActivity" />
+        <activity android:name=".presentation.locations.ShowLocationsActivity" />
+        <activity android:name=".presentation.elements.SortElementsActivity" />
         <activity
-            android:name=".presentation.activities.locations.AddLocationActivity"
+            android:name=".presentation.locations.AddLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.activities.elements.EditElementActivity"
+            android:name=".presentation.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.activities.elements.PickElementsActivity" />
-        <activity android:name=".presentation.activities.parks.ShowParkActivity" />
-        <activity android:name=".presentation.activities.visits.ShowVisitActivity" />
-        <activity android:name=".presentation.activities.TestActivity"/>
+        <activity android:name=".presentation.elements.PickElementsActivity" />
+        <activity android:name=".presentation.parks.ShowParkActivity" />
+        <activity android:name=".presentation.visits.ShowVisitActivity" />
+        <activity android:name=".presentation.TestActivity" />
+        <activity android:name=".presentation.visits.AddVisitActivity"></activity>
     </application>
 
 </manifest>

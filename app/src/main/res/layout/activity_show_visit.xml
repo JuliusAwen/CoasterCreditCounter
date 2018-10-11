@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.activities.visits.ShowVisitActivity">
+    tools:context=".presentation.visits.ShowVisitActivity">
 
     <include
         layout="@layout/floating_action_button"/>
@@ -18,6 +18,12 @@
 
         <include
             layout="@layout/toolbar"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewShowVisit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 

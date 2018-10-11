@@ -94,7 +94,6 @@ public class YearHeader extends OrphanElement
         //Todo: remove children from all YearHeaders
         OrphanElement.removeAllChildren(App.content.getOrphanElementsOfType(YearHeader.class));
 
-//        List<Visit> visits = Visit.convertToVisits(elements);
         List<Element> preparedElements = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());

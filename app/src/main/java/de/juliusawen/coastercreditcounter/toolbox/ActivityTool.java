@@ -18,13 +18,14 @@ import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.EditElementActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.PickElementsActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.elements.SortElementsActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.locations.AddLocationActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.locations.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.parks.ShowParkActivity;
-import de.juliusawen.coastercreditcounter.presentation.activities.visits.ShowVisitActivity;
+import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
+import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActivity;
+import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
+import de.juliusawen.coastercreditcounter.presentation.locations.AddLocationActivity;
+import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
+import de.juliusawen.coastercreditcounter.presentation.visits.AddVisitActivity;
+import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
 {
@@ -62,7 +63,7 @@ public abstract class ActivityTool
 
     public static void startAddVisitActivityForResult(Context context, int requestCode, Element park)
     {
-        Intent intent = new Intent(context, ShowVisitActivity.class);
+        Intent intent = new Intent(context, AddVisitActivity.class);
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, park.getUuid().toString());
         ((Activity)context).startActivityForResult(intent, requestCode);
 

@@ -26,16 +26,14 @@ public class Attraction extends Element
             name = name.trim();
 
             attraction = new Attraction(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.create:: %s created.", attraction.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.create:: %s created", attraction.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Attraction.create:: invalid name [%s] - attraction not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Attraction.create:: invalid name [%s] - attraction not created", name));
         }
         return attraction;
     }
-
-
 
     public static List<Attraction> convertToAttractions(List<? extends Element> elements)
     {

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.presentation.activities.TestActivity;
+import de.juliusawen.coastercreditcounter.presentation.TestActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public abstract class App
