@@ -8,7 +8,6 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -146,15 +145,6 @@ public class ShowVisitActivity extends BaseActivity
         List<Element> categorizedCountableAttractions = this.getAttractionsWithCategoryHeaders(new ArrayList<>(this.viewModel.visit.getChildrenOfType(CountableAttraction.class)));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedCountableAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
-
-        Set<Element> attractionCategoryHeadersToExpand = AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedCountableAttractions);
-        if(!attractionCategoryHeadersToExpand.isEmpty())
-        {
-            for(Element attractionCategoryHeader : attractionCategoryHeadersToExpand)
-            {
-                this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
-            }
-        }
     }
 
     private boolean allAttractionsAdded()

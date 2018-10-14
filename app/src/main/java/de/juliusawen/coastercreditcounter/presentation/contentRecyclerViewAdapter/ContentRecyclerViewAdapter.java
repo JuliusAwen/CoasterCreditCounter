@@ -143,12 +143,36 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         for(Element parent : parents)
         {
             this.content.add(parent);
-            if(this.childType != null && this.expandedParents.contains(parent))
+            if(this.childType != null && this.expandedParentsContainsParent(parent))
             {
                 this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: [%d] children added", parent.getChildCountOfType(this.childType)));
             }
             this.content.add(new ItemDivider());
+        }
+    }
+
+    private boolean expandedParentsContainsParent(Element parent)
+    {
+        if(parent.isInstance(AttractionCategoryHeader.class))
+        {
+            for(Element expandedParent : this.expandedParents)
+            {
+                if(expandedParent.isInstance(AttractionCategoryHeader.class))
+                {
+                    if(expandedParent.getName().equals(parent.getName()))
+                    {
+                        this.expandedParents.remove(expandedParent);
+                        this.expandedParents.add(parent);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return this.expandedParents.contains(parent);
         }
     }
 

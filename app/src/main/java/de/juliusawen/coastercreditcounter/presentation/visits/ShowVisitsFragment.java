@@ -9,9 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -142,17 +141,11 @@ public class ShowVisitsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
-        Set<Element> initiallyExpandedElements = new HashSet<>();
-
-        if(App.settings.getExpandLatestYearInListByDefault())
-        {
-            initiallyExpandedElements.add(YearHeader.getLatestYearHeader(sortedYearHeaders));
-        }
+        List<Element> categorizedVisits = this.fetchCategorizedVisits();
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                sortedYearHeaders,
-                initiallyExpandedElements,
+                categorizedVisits,
+                App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((Element)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
                 Visit.class);
     }
 
@@ -179,15 +172,10 @@ public class ShowVisitsFragment extends Fragment
     {
         if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
         {
-            List<Element> sortedYearHeaders = this.getSortedYearHeadersForParkVisits();
+            List<Element> sortedYearHeaders = this.fetchCategorizedVisits();
 
             this.viewModel.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
-
-            if(App.settings.getExpandLatestYearInListByDefault())
-            {
-                this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(sortedYearHeaders));
-            }
         }
         else
         {
@@ -196,7 +184,7 @@ public class ShowVisitsFragment extends Fragment
     }
 
 
-    private List<Element> getSortedYearHeadersForParkVisits()
+    private List<Element> fetchCategorizedVisits()
     {
         return YearHeader.fetchYearHeadersFromVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
     }

@@ -11,6 +11,6 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 public class ShowAttractionsFragmentViewModel extends ViewModel
 {
     public Park park;
-    List<Element> attractionCategoryHeaders = new ArrayList<>();
+    List<Element> categorizedAttractions = new ArrayList<>();
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

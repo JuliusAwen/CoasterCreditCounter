@@ -40,6 +40,24 @@ public abstract class ContentRecyclerViewAdapterProvider
         return contentRecyclerViewAdapter;
     }
 
+    public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
+            List<Element> elements,
+            Set<Element> initiallyExpandedElements,
+            Class<? extends Element> childType,
+            boolean selectMultiple)
+    {
+        GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
+        request.adapterType = AdapterType.SELECTABLE;
+        request.elements = elements;
+        request.initiallyExpandedElements = initiallyExpandedElements;
+        request.childType = childType;
+        request.selectMultiple = selectMultiple;
+
+        ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
+        contentRecyclerViewAdapter.setHasStableIds(true);
+        return contentRecyclerViewAdapter;
+    }
+
     public static ContentRecyclerViewAdapter getCountableContentRecyclerViewAdapter(
             List<Element> parentElements,
             Set<Element> initiallyExpandedElements,

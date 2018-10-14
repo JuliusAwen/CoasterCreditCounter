@@ -14,7 +14,6 @@ import android.widget.PopupMenu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -192,7 +191,7 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-        List<Element> categorizedAttractions = this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class));
+        List<Element> categorizedAttractions = this.fetchCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedAttractions,
                 AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions),
@@ -267,27 +266,18 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
-        List<Element> categorizedAttractions = this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class));
+        List<Element> categorizedAttractions = this.fetchCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
-
-        Set<Element> attractionCategoryHeadersToExpand = AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions);
-        if(!attractionCategoryHeadersToExpand.isEmpty())
-        {
-            for(Element attractionCategoryHeader : attractionCategoryHeadersToExpand)
-            {
-                this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
-            }
-        }
     }
 
-    private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
+    private List<Element> fetchCategorizedAttractions(List<Element> attractions)
     {
-        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
+        if(!this.viewModel.categorizedAttractions.isEmpty())
         {
-            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
+            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.categorizedAttractions, OrphanElement.class));
         }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
-        return this.viewModel.attractionCategoryHeaders;
+        this.viewModel.categorizedAttractions = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
+        return this.viewModel.categorizedAttractions;
     }
 }
