@@ -126,6 +126,9 @@ public class ShowVisitsFragment extends Fragment
             if(requestCode == Constants.REQUEST_ADD_VISIT)
             {
                 this.updateContentRecyclerView();
+
+                Element visit = App.content.fetchElementByUuidString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID));
+                ActivityTool.startActivityShow(getActivity(), visit);
             }
         }
     }
