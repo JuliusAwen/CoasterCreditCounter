@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -18,7 +19,9 @@ public class Content
     private Map<UUID, Element> elements = new HashMap<>();
 
     private Map<UUID, Element> orphanElements = new HashMap<>();
+
     private Map<String, YearHeader> yearHeadersByName = new HashMap<>();
+    private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
     private Element rootElement;
 
@@ -73,31 +76,32 @@ public class Content
         this.rootElement = element;
     }
 
-//    public void putElementByKeyForActivity(Class<? extends Activity> activity, String key, Element element)
-//    {
-//        if(!this.elementByKeyForActivity.containsKey(activity))
-//        {
-//            Map<String, Element> elementByKey = new HashMap<>();
-//            elementByKey.put(key, element);
-//            this.elementByKeyForActivity.put(activity, elementByKey);
-//        }
-//        else
-//        {
-//            this.elementByKeyForActivity.get(activity).put(key, element);
-//        }
-//    }
-//
-//    public List<Element> getElements(Class)
-//
-//    private void putElements(Class type, String key,List<Element> elements)
-//    {
-//        if(!this.elementsByKeyByActivity.containsKey(type))
-//        {
-//            Map<String, List<Element>> elementsByKeys = new LinkedHashMap<>();
-//            elementsByKeys.put(key, elements);
-//            this.elementsByKeyByActivity.put(type, elementsByKeys);
-//        }
-//    }
+    public void addAttractionCategory(AttractionCategory attractionCategory)
+    {
+        this.attractionCategories.add(attractionCategory);
+        Log.v(Constants.LOG_TAG,  String.format("Content.addAttractionCategory:: %s added", attractionCategory));
+
+        this.addOrphanElement(attractionCategory);
+    }
+
+    public void removeAttractionCategory(AttractionCategory attractionCategory)
+    {
+        this.attractionCategories.remove(attractionCategory);
+        Log.v(Constants.LOG_TAG,  String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
+
+        this.removeOrphanElement(attractionCategory);
+    }
+
+    public List<AttractionCategory> getAttractionCategories()
+    {
+        return this.attractionCategories;
+    }
+
+    public void setAttractionCategories(List<AttractionCategory> attractionCategories)
+    {
+        this.attractionCategories = attractionCategories;
+        Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: #[%d] attractionCategories set", attractionCategories.size()));
+    }
 
     public Element getYearHeader(String name)
     {
@@ -123,6 +127,16 @@ public class Content
             }
         }
         return orphanElementsOfType;
+    }
+
+    public void addOrphanElements(List<? extends OrphanElement> orphanElements)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElements:: adding [%d] orphan elements", orphanElements.size()));
+
+        for(OrphanElement orphanElement : orphanElements)
+        {
+            this.addOrphanElement(orphanElement);
+        }
     }
 
     public void addOrphanElement(Element orphanElement)
@@ -255,16 +269,16 @@ public class Content
         this.addElement(element);
     }
 
-    public boolean deleteElementAndChildren(Element element)
+    public boolean removeElementAndChildren(Element element)
     {
         for(Element child : element.getChildren())
         {
-            if(!this.deleteElementAndChildren(child))
+            if(!this.removeElementAndChildren(child))
             {
                 return false;
             }
         }
-        return this.deleteElement(element);
+        return this.removeElement(element);
     }
 
     public void addElements(List<? extends Element> elements)
@@ -285,21 +299,22 @@ public class Content
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: adding %s requested -- DEPRECATED: use AddOrphanElement", element));
-            //Todo: remove when new way to pass elements around is implemented
+            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: adding %s requested -- DEPRECATED: use AddOrphanElement(s)", element));
+
+            //Todo: remove when addOrphanElement(s) is used everywhere
             if(!this.orphanElements.containsValue(element))
             {
                 this.orphanElements.put(element.getUuid(), element);
-                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s added -- DEPRECATED: use AddOrphanElement", element));
+                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s added -- DEPRECATED: use AddOrphanElement(s)", element));
             }
         }
     }
 
-    public boolean deleteElement(Element element)
+    public boolean removeElement(Element element)
     {
         if(this.elements.containsKey(element.getUuid()))
         {
-            Log.v(Constants.LOG_TAG,  String.format("Content.deleteElement:: %s removed", element));
+            Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: %s removed", element));
             this.elements.remove(element.getUuid());
             return true;
         }

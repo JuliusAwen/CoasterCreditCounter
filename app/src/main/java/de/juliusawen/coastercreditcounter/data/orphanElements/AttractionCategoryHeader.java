@@ -3,7 +3,9 @@ package de.juliusawen.coastercreditcounter.data.orphanElements;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
@@ -37,30 +39,11 @@ public class AttractionCategoryHeader extends OrphanElement
         return attractionCategoryHeader;
     }
 
-    public static List<AttractionCategoryHeader> convertToAttractionCategoryHeaders(List<? extends Element> elements)
-    {
-        List<AttractionCategoryHeader> attractionCategoryHeaders = new ArrayList<>();
-        for(Element element : elements)
-        {
-            if(element.isInstance(AttractionCategoryHeader.class))
-            {
-                attractionCategoryHeaders.add((AttractionCategoryHeader) element);
-            }
-            else
-            {
-                String errorMessage = String.format("type mismatch: %s is not of type <AttractionCategoryHeader>", element);
-                Log.e(Constants.LOG_TAG, "AttractionCategoryHeader.convertToAttractionCategoryHeaders:: " + errorMessage);
-                throw new IllegalStateException(errorMessage);
-            }
-        }
-        return attractionCategoryHeaders;
-    }
-
-    public static List<Element> fetchAttractionCategoryHeaders(List<? extends Element> elements)
+    public static List<Element> fetchAttractionCategoryHeadersFromElements(List<? extends Element> elements)
     {
         if(elements.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "AttractionCategoryHeader.fetchAttractionCategoryHeaders:: no attractions");
+            Log.v(Constants.LOG_TAG, "AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: no attractions");
             return new ArrayList<>(elements);
         }
 
@@ -68,8 +51,8 @@ public class AttractionCategoryHeader extends OrphanElement
 
         if(elements.get(0).isInstance(Attraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeaders:: fetching headers for #[%d] attractions...", elements.size()));
-            List<Attraction> attractions = Attraction.convertToAttractions(elements);
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: fetching headers for #[%d] attractions...", elements.size()));
+            List<Attraction> attractions = Element.convertElementsToType(elements, Attraction.class);
 
             for(Attraction attraction : attractions)
             {
@@ -89,10 +72,7 @@ public class AttractionCategoryHeader extends OrphanElement
                 else
                 {
                     Element attractionCategoryHeader = AttractionCategoryHeader.create(attraction.getCategory());
-
-                    //Todo: remove when new way to pass elements around is implemented
                     App.content.addOrphanElement(attractionCategoryHeader);
-
                     attractionCategoryHeader.addChildToOrphanElement(attraction);
                     preparedElements.add(attractionCategoryHeader);
                 }
@@ -100,8 +80,8 @@ public class AttractionCategoryHeader extends OrphanElement
         }
         else if(elements.get(0).isInstance(CountableAttraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeaders:: adding headers for #[%d] countable attractions...", elements.size()));
-            List<CountableAttraction> countableAttractions = CountableAttraction.convertToCountableAttractions(elements);
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: adding headers for #[%d] countable attractions...", elements.size()));
+            List<CountableAttraction> countableAttractions = Element.convertElementsToType(elements, CountableAttraction.class);
 
             for(CountableAttraction countableAttraction : countableAttractions)
             {
@@ -121,10 +101,7 @@ public class AttractionCategoryHeader extends OrphanElement
                 else
                 {
                     Element attractionCategoryHeader = AttractionCategoryHeader.create(countableAttraction.getAttraction().getCategory());
-
-                    //Todo: remove when new way to pass elements around is implemented
                     App.content.addOrphanElement(attractionCategoryHeader);
-
                     attractionCategoryHeader.addChildToOrphanElement(countableAttraction);
                     preparedElements.add(attractionCategoryHeader);
                 }
@@ -132,9 +109,9 @@ public class AttractionCategoryHeader extends OrphanElement
         }
 
         preparedElements = new ArrayList<Element>(
-                AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(AttractionCategoryHeader.convertToAttractionCategoryHeaders(preparedElements)));
+                AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(Element.convertElementsToType(preparedElements, AttractionCategoryHeader.class)));
 
-        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeaders:: #[%d] headers added", preparedElements.size()));
+        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: #[%d] headers added", preparedElements.size()));
         return preparedElements;
     }
 
@@ -143,7 +120,7 @@ public class AttractionCategoryHeader extends OrphanElement
         if(attractionCategoryHeaders.size() > 1)
         {
             List<AttractionCategoryHeader> sortedAttractionCategoryHeaders = new ArrayList<>();
-            List<AttractionCategory> attractionCategories = AttractionCategory.getAttractionCategories();
+            List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
 
             Log.v(Constants.LOG_TAG,  String.format("AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder::" +
                             " sorting #[%d] AttractionCategoryHeaders based on #[%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
@@ -167,5 +144,37 @@ public class AttractionCategoryHeader extends OrphanElement
             Log.v(Constants.LOG_TAG,"Element.sortElementsBasedOnComparisonList:: not sorted - list contains less than two elements");
             return attractionCategoryHeaders;
         }
+    }
+
+    public static AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromElements(List<? extends Element> elements, AttractionCategory attractionCategory)
+    {
+        for(Element element : elements)
+        {
+            if(element.isInstance(AttractionCategoryHeader.class))
+            {
+                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
+                {
+                    return (AttractionCategoryHeader) element;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static Set<Element> getAttractionCategoryHeadersToExpandAccordingToSettings(List<? extends Element> attractionCategoryHeaders)
+    {
+        Set<Element> attractionCategoryHeadersToExpand = new HashSet<>();
+        for(Element attractionCategoryHeader : attractionCategoryHeaders)
+        {
+            if(attractionCategoryHeader.isInstance(AttractionCategoryHeader.class))
+            {
+                if(App.settings.getAttractionCategoriesToExpandByDefault().contains(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory()))
+                {
+                    attractionCategoryHeadersToExpand.add(attractionCategoryHeader);
+                }
+            }
+        }
+        return attractionCategoryHeadersToExpand;
     }
 }

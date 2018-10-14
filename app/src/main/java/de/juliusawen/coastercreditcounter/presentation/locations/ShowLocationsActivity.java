@@ -504,7 +504,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedElement));
 
-                    if(App.content.deleteElementAndChildren(viewModel.longClickedElement))
+                    if(App.content.removeElementAndChildren(viewModel.longClickedElement))
                     {
                         if(viewModel.longClickedElement.deleteElementAndChildren())
                         {
@@ -560,7 +560,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: removing [%s]...", viewModel.longClickedElement));
 
-                    if(App.content.deleteElement(viewModel.longClickedElement))
+                    if(App.content.removeElement(viewModel.longClickedElement))
                     {
                         if(viewModel.longClickedElement.removeElement())
                         {

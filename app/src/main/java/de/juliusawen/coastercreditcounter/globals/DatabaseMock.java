@@ -34,20 +34,20 @@ public final class DatabaseMock implements IDatabaseWrapper
     private DatabaseMock() {}
 
     @Override
-    public void fetchContent(Content content) {
-
-        //initialize static lists
+    public void fetchContent(Content content)
+    {
         this.attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
         this.attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
         this.attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
         this.attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
         this.attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
 
-        Attraction.addCategory(attractionCategoryRollerCoasters);
-        Attraction.addCategory(attractionCategoryThrillRides);
-        Attraction.addCategory(attractionCategoryFamilyRides);
-        Attraction.addCategory(attractionCategoryWaterRides);
-        Attraction.addCategory(attractionCategoryNonRollerCoasters);
+        List<AttractionCategory> attractionCategories = new ArrayList<>();
+        attractionCategories.add(attractionCategoryRollerCoasters);
+        attractionCategories.add(attractionCategoryThrillRides);
+        attractionCategories.add(attractionCategoryFamilyRides);
+        attractionCategories.add(attractionCategoryWaterRides);
+        attractionCategories.add(attractionCategoryNonRollerCoasters);
 
 
         // create Nodes
@@ -336,7 +336,10 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         //add tree to content (one element is enough - content is searching for root on its own)
         content.addElement(earth);
-        content.addElements(AttractionCategory.getAttractionCategories());
+
+        content.setAttractionCategories(attractionCategories);
+        content.addOrphanElements(content.getAttractionCategories());
+
     }
 
     @Override
@@ -347,10 +350,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         Settings.jumpToTestActivityOnStart = false;
         settings.setJumpToOpenVisitOnStart(false);
 
-//        List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
-//        attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
-//        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
-//        settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
+        List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
+        attractionCategoriesExpandedByDefault.add(this.attractionCategoryRollerCoasters);
+        attractionCategoriesExpandedByDefault.add(this.attractionCategoryNonRollerCoasters);
+        settings.setAttractionCategoriesToExpandByDefault(attractionCategoriesExpandedByDefault);
 
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 

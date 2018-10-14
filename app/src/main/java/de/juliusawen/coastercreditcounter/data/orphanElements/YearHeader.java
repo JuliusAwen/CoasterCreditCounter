@@ -62,34 +62,15 @@ public class YearHeader extends OrphanElement
         return latestYearHeader;
     }
 
-//    public static List<YearHeader> convertToYearHeader(List<? extends Element> elements)
-//    {
-//        List<YearHeader> yearHeaders = new ArrayList<>();
-//        for(Element element : elements)
-//        {
-//            if(element.isInstance(YearHeader.class))
-//            {
-//                yearHeaders.add((YearHeader) element);
-//            }
-//            else
-//            {
-//                String errorMessage = String.format("type mismatch: %s is not of type <YearHeader>", element);
-//                Log.e(Constants.LOG_TAG, "YearHeader.convertToYearHeader:: " + errorMessage);
-//                throw new IllegalStateException(errorMessage);
-//            }
-//        }
-//        return yearHeaders;
-//    }
-
-    public static List<Element> addYearHeaders(List<Visit> visits)
+    public static List<Element> fetchYearHeadersFromVisits(List<Visit> visits)
     {
         if(visits.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "YearHeader.addYearHeaders:: no elements found");
+            Log.v(Constants.LOG_TAG, "YearHeader.fetchYearHeadersFromVisits:: no elements found");
             return new ArrayList<Element>(visits);
         }
 
-        Log.v(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: adding YearHeaders to [%d] elements...", visits.size()));
+        Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: adding YearHeaders to [%d] elements...", visits.size()));
 
         OrphanElement.removeAllChildren(App.content.getOrphanElementsOfType(YearHeader.class));
 
@@ -122,7 +103,7 @@ public class YearHeader extends OrphanElement
                 {
                     yearHeader = YearHeader.create(year);
                     App.content.addOrphanElement(yearHeader);
-                    Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: created new %s", yearHeader));
+                    Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: created new %s", yearHeader));
                 }
 
                 yearHeader.addChildToOrphanElement(visit);
@@ -130,7 +111,7 @@ public class YearHeader extends OrphanElement
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("YearHeader.addYearHeaders:: [%d] YearHeaders added", preparedElements.size()));
+        Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: [%d] YearHeaders added", preparedElements.size()));
         return preparedElements;
     }
 }

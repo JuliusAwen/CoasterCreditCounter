@@ -33,25 +33,6 @@ public class CountableAttraction extends Element
         return attraction;
     }
 
-    public static List<CountableAttraction> convertToCountableAttractions(List<? extends Element> elements)
-    {
-        List<CountableAttraction> countableAttractions = new ArrayList<>();
-        for(Element element : elements)
-        {
-            if(element.isInstance(CountableAttraction.class))
-            {
-                countableAttractions.add((CountableAttraction) element);
-            }
-            else
-            {
-                String errorMessage = String.format("CountableAttraction.convertToCountableAttractions:: type mismatch - %s is not of type <CountableAttraction>", element);
-                Log.e(Constants.LOG_TAG, errorMessage);
-                throw new IllegalStateException(errorMessage);
-            }
-        }
-        return countableAttractions;
-    }
-
     public static List<Attraction> getAttractions(List<CountableAttraction> countableAttractions)
     {
         List<Attraction> attractions = new ArrayList<>();

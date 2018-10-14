@@ -37,7 +37,7 @@ public class Park extends Element
     public int getAttractionCategoryCount()
     {
         List<AttractionCategory> attractionCategories = new ArrayList<>();
-        for(Attraction attraction : Attraction.convertToAttractions(getChildrenOfType(Attraction.class)))
+        for(Attraction attraction : getChildrenAsType(Attraction.class))
         {
             if(!attractionCategories.contains(attraction.getCategory()))
             {

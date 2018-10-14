@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -111,7 +112,7 @@ public  class ShowAttractionsFragment extends Fragment
                 ActivityTool.startActivitySortForResult(
                         Objects.requireNonNull(getActivity()),
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
-                        new ArrayList<Element>(AttractionCategory.getAttractionCategories()));
+                        new ArrayList<Element>(App.content.getAttractionCategories()));
                 return true;
 
             default:
@@ -169,8 +170,7 @@ public  class ShowAttractionsFragment extends Fragment
                 }
                 else
                 {
-//                    AttractionCategory.setAttractionCategories(AttractionCategory.convertToAttractionCategories(resultElements));
-                    AttractionCategory.setAttractionCategories((Element.convertElementsToType(resultElements, AttractionCategory.class)));
+                    App.content.setAttractionCategories((Element.convertElementsToType(resultElements, AttractionCategory.class)));
                     this.updateContentRecyclerView();
 
                     if(selectedElement != null)
@@ -192,11 +192,10 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-        List<Element> attractions = this.viewModel.park.getChildrenOfType(Attraction.class);
+        List<Element> categorizedAttractions = this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.getAttractionsWithCategoryHeaders(attractions),
-//                AttractionCategory.getAttractionCategoriesToExpandAccordingToSettings(attractions),
-                null,
+                categorizedAttractions,
+                AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions),
                 Attraction.class);
     }
 
@@ -268,8 +267,18 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
-        this.viewModel.contentRecyclerViewAdapter.updateContent(this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class)));
+        List<Element> categorizedAttractions = this.getAttractionsWithCategoryHeaders(this.viewModel.park.getChildrenOfType(Attraction.class));
+        this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+
+        Set<Element> attractionCategoryHeadersToExpand = AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions);
+        if(!attractionCategoryHeadersToExpand.isEmpty())
+        {
+            for(Element attractionCategoryHeader : attractionCategoryHeadersToExpand)
+            {
+                this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
+            }
+        }
     }
 
     private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
@@ -278,7 +287,7 @@ public  class ShowAttractionsFragment extends Fragment
         {
             App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
         }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeaders(attractions);
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
         return this.viewModel.attractionCategoryHeaders;
     }
 }

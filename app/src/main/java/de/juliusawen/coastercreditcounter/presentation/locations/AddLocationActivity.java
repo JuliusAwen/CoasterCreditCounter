@@ -88,7 +88,7 @@ public class AddLocationActivity extends BaseActivity implements ConfirmDialogFr
 
                 if(this.viewModel.newLocation != null)
                 {
-                    if(App.content.deleteElement(this.viewModel.newLocation))
+                    if(App.content.removeElement(this.viewModel.newLocation))
                     {
                         Log.d(Constants.LOG_TAG, String.format("AddLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newLocation));
                     }

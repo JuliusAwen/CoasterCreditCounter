@@ -316,7 +316,7 @@ public abstract class Element
 
     public boolean deleteElementAndChildren()
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: deleting %s and children", this));
+        Log.d(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: deleting %s and children", this));
         if (this.parent != null)
         {
             this.backupChildren = new ArrayList<>(this.getChildren());
@@ -327,7 +327,7 @@ public abstract class Element
             this.deleteChildren(this.backupChildren);
             return true;
         }
-        Log.e(Constants.LOG_TAG, String.format("Element.deleteElementAndChildren:: unable to delete %s as it is the root element", this));
+        Log.e(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: unable to delete %s as it is the root element", this));
         return false;
     }
 

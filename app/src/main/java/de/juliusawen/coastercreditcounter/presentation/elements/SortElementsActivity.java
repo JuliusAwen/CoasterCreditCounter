@@ -49,7 +49,8 @@ public class SortElementsActivity extends BaseActivity
         
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+            this.viewModel.contentRecyclerViewAdapter =
+                    ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
         }
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -198,6 +198,6 @@ public class ShowVisitsFragment extends Fragment
 
     private List<Element> getSortedYearHeadersForParkVisits()
     {
-        return YearHeader.addYearHeaders(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
+        return YearHeader.fetchYearHeadersFromVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
     }
 }

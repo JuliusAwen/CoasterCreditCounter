@@ -202,7 +202,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         Log.d(Constants.LOG_TAG, String.format("AddVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
 
         this.viewModel.park.deleteChild(this.viewModel.existingVisit);
-        App.content.deleteElement(this.viewModel.existingVisit);
+        App.content.removeElement(this.viewModel.existingVisit);
         this.viewModel.existingVisit = null;
     }
 
@@ -282,7 +282,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         {
             App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
         }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeaders(attractions);
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
         return this.viewModel.attractionCategoryHeaders;
     }
 }

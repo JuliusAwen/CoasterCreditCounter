@@ -23,7 +23,6 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -42,7 +41,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private View.OnClickListener expansionOnClickListener;
 
     private List<Element> selectedElementsInOrderOfSelection = new ArrayList<>();
-    private  View.OnClickListener selectionOnClickListener;
+    private View.OnClickListener selectionOnClickListener;
 
     private Class<? extends Element> childType;
 
@@ -199,7 +198,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                         if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
                         {
-                            AttractionCategoryHeader attractionCategoryHeader = getAttractionCategoryHeaderByAttractionCategory(((Attraction)selectedElement).getCategory());
+                            AttractionCategoryHeader attractionCategoryHeader =
+                                    AttractionCategoryHeader.getAttractionCategoryHeaderForAttractionCategoryFromElements(content, ((Attraction)selectedElement).getCategory());
 
                             if(attractionCategoryHeader != null)
                             {
@@ -242,8 +242,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                     else if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
                     {
-                        selectedElementsInOrderOfSelection.remove(((Attraction)selectedElement).getCategory());
-                        notifyItemChanged(content.indexOf(((Attraction)selectedElement).getCategory()));
+                        AttractionCategoryHeader attractionCategoryHeader =
+                                AttractionCategoryHeader.getAttractionCategoryHeaderForAttractionCategoryFromElements(content, ((Attraction)selectedElement).getCategory());
+
+                        selectedElementsInOrderOfSelection.remove(attractionCategoryHeader);
+                        notifyItemChanged(content.indexOf(attractionCategoryHeader));
                     }
                 }
 
@@ -255,21 +258,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         };
     }
 
-    private AttractionCategoryHeader getAttractionCategoryHeaderByAttractionCategory(AttractionCategory attractionCategory)
-    {
-        for(Element element : this.content)
-        {
-            if(element.isInstance(AttractionCategoryHeader.class))
-            {
-                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
-                {
-                    return (AttractionCategoryHeader) element;
-                }
-            }
-        }
 
-        return null;
-    }
 
     private void selectAllChildren(Element element)
     {
