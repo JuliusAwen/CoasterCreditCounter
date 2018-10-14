@@ -85,7 +85,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         }
         else if(resultCode == Activity.RESULT_CANCELED)
         {
-            returnResult(Activity.RESULT_CANCELED);
+            returnResult(Activity.RESULT_OK);
         }
     }
 
