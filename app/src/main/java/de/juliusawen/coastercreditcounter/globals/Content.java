@@ -16,13 +16,11 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 public class Content
 {
     private Map<UUID, Element> elements = new HashMap<>();
-    private Map<UUID, Element> orphanElements = new HashMap<>();
 
+    private Map<UUID, Element> orphanElements = new HashMap<>();
     private Map<String, YearHeader> yearHeadersByName = new HashMap<>();
 
     private Element rootElement;
-
-
 
     private static final Content instance = new Content();
 
@@ -186,7 +184,7 @@ public class Content
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found", orphanElement));
+            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found in OrphanElements", orphanElement));
         }
     }
 

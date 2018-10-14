@@ -169,7 +169,8 @@ public  class ShowAttractionsFragment extends Fragment
                 }
                 else
                 {
-                    AttractionCategory.setAttractionCategories(AttractionCategory.convertToAttractionCategories(resultElements));
+//                    AttractionCategory.setAttractionCategories(AttractionCategory.convertToAttractionCategories(resultElements));
+                    AttractionCategory.setAttractionCategories((Element.convertElementsToType(resultElements, AttractionCategory.class)));
                     this.updateContentRecyclerView();
 
                     if(selectedElement != null)

@@ -31,7 +31,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 {
     private AddVisitActivityViewModel viewModel;
 
-    private static final int ALERT_DIALOG_ADD_ATTRACTIONS = 0;
+    private static final int ALERT_DIALOG_PICK_ATTRACTIONS = 0;
     private static final int ALERT_DIALOG_VISIT_ALREADY_EXISTS = 1;
 
     @Override
@@ -55,14 +55,13 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
         if(!this.viewModel.datePicked)
         {
-            this.createVisit();
+            this.pickDate();
         }
     }
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(
-                this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create), this.viewModel.park.getName());
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create), this.viewModel.park.getName());
     }
 
     @Override
@@ -90,9 +89,9 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         }
     }
 
-    private void createVisit()
+    private void pickDate()
     {
-        Log.i(Constants.LOG_TAG, String.format("AddVisitActivity.createVisit:: creating visit for %s", this.viewModel.park));
+        Log.i(Constants.LOG_TAG, String.format("AddVisitActivity.pickDate:: picking date for visit in %s", this.viewModel.park));
 
         this.viewModel.calendar = Calendar.getInstance();
         int year = this.viewModel.calendar.get(Calendar.YEAR);
@@ -107,15 +106,16 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
 
-                if(isExistingVisit(viewModel.calendar))
+                viewModel.existingVisit = getExistingVisit(viewModel.calendar);
+                if(viewModel.existingVisit != null)
                 {
                     viewModel.datePickerDialog.dismiss();
-                    showVisitAlreadyExistsDialog(viewModel.calendar);
+                    showVisitAlreadyExistsDialog();
                 }
                 else
                 {
                     viewModel.datePickerDialog.dismiss();
-                    onDateSetCreateVisit(viewModel.calendar);
+                    createVisit(viewModel.calendar);
 
                     if(viewModel.park.getChildCountOfType(Attraction.class) > 0)
                     {
@@ -148,19 +148,20 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
     }
 
-    private boolean isExistingVisit(Calendar calendar)
+    private Visit getExistingVisit(Calendar calendar)
     {
-        for(Visit visit : viewModel.park.getChildrenAsType(Visit.class))
+        for(Visit exisingVisit : viewModel.park.getChildrenAsType(Visit.class))
         {
-            if(Visit.isSameDay(visit.getCalendar(), calendar))
+            if(Visit.isSameDay(exisingVisit.getCalendar(), calendar))
             {
-                return true;
+                Log.v(Constants.LOG_TAG, String.format("AddVisitActivity.getExistingVisit:: %s already exists", exisingVisit));
+                return exisingVisit;
             }
         }
-        return false;
+        return null;
     }
 
-    private void showVisitAlreadyExistsDialog(final Calendar calendar)
+    private void showVisitAlreadyExistsDialog()
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 R.drawable.ic_baseline_warning,
@@ -174,19 +175,35 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         alertDialogFragment.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
-    private void onDateSetCreateVisit(Calendar calendar)
+    private void createVisit(Calendar calendar)
     {
+        Log.d(Constants.LOG_TAG, String.format("AddVisitActivity.createVisit:: creating visit for %s", this.viewModel.park));
+
+        if(this.viewModel.existingVisit != null)
+        {
+            this.deleteExistingVisit();
+        }
+
         this.viewModel.visit = Visit.create(calendar);
         this.viewModel.park.addChild(this.viewModel.visit);
         App.content.addElement(this.viewModel.visit);
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
-            Log.i(Constants.LOG_TAG, "AddVisitActivity.onDateSetCreateVisit:: created visit is today - set as open visit");
+            Log.i(Constants.LOG_TAG, "AddVisitActivity.pickDate:: created visit is today - set as open visit");
             Visit.setOpenVisit(this.viewModel.visit);
         }
 
         this.decorateToolbar();
+    }
+
+    private void deleteExistingVisit()
+    {
+        Log.d(Constants.LOG_TAG, String.format("AddVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
+
+        this.viewModel.park.deleteChild(this.viewModel.existingVisit);
+        App.content.deleteElement(this.viewModel.existingVisit);
+        this.viewModel.existingVisit = null;
     }
 
     private void showPickAttractionsDialog()
@@ -196,8 +213,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 getString(R.string.alert_dialog_add_attractions_to_visit_title),
                 getString(R.string.alert_dialog_add_attractions_to_visit_message),
                 getString(R.string.text_accept),
-                getString(R.string.text_cancel),
-                ALERT_DIALOG_ADD_ATTRACTIONS
+                getString(R.string.text_cancel), ALERT_DIALOG_PICK_ATTRACTIONS
         );
         alertDialogFragment.setCancelable(false);
         alertDialogFragment.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
@@ -209,7 +225,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         dialog.dismiss();
         switch(requestCode)
         {
-            case ALERT_DIALOG_ADD_ATTRACTIONS:
+            case ALERT_DIALOG_PICK_ATTRACTIONS:
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     ActivityTool.startActivityPickForResult(
@@ -226,7 +242,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
             case ALERT_DIALOG_VISIT_ALREADY_EXISTS:
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    onDateSetCreateVisit(viewModel.calendar);
+                    this.createVisit(viewModel.calendar);
 
                     if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
                     {
@@ -239,7 +255,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    returnResult(Activity.RESULT_CANCELED);
+                    returnResult(Activity.RESULT_OK);
                 }
                 break;
         }

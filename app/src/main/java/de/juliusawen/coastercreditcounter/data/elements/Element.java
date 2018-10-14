@@ -274,7 +274,7 @@ public abstract class Element
         }
     }
 
-    private void deleteChild(Element child)
+    public void deleteChild(Element child)
     {
         if(this.containsChild(child))
         {
@@ -481,14 +481,36 @@ public abstract class Element
         }
     }
 
+    public static <T extends Element> T convertElementToType(Element element, Class<T> type)
+    {
+        try
+        {
+            return type.cast(element);
+        }
+        catch(ClassCastException e)
+        {
+            String errorMessage = String.format("%s is not of type <%s>", element, type);
+            Log.v(Constants.LOG_TAG, "Element.convertElementToType:: " + errorMessage);
+            throw new IllegalStateException(errorMessage + "\n" + e);
+        }
+    }
+
     public static <T extends Element> List<T> convertElementsToType(List<? extends Element> elements, Class<T> type)
     {
+        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type));
+
         List<T> returnList = new ArrayList<>();
         for(Element element : elements)
         {
-            if(element.isInstance(type))
+            try
             {
                 returnList.add(type.cast(element));
+            }
+            catch(ClassCastException e)
+            {
+                String errorMessage = String.format("%s is not of type <%s>", element, type);
+                Log.v(Constants.LOG_TAG, "Element.convertElementsToType:: " + errorMessage);
+                throw new IllegalStateException(errorMessage + "\n" + e);
             }
         }
         return returnList;

@@ -15,6 +15,7 @@ class AddVisitActivityViewModel extends ViewModel
 {
     Park park;
     Visit visit;
+    Visit existingVisit;
     List<Element> attractionCategoryHeaders = new ArrayList<>();
     DatePickerDialog datePickerDialog;
     Calendar calendar;
