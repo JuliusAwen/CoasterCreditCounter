@@ -126,7 +126,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if(request.initiallyExpandedElements != null)
         {
-            this.expandedParents = request.initiallyExpandedElements;
+            this.expandedParents = new HashSet<>(request.initiallyExpandedElements);
         }
 
         this.initializeContent(request.elements);

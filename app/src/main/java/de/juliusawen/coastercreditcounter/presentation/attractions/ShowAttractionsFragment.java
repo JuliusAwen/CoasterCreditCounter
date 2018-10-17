@@ -27,7 +27,6 @@ import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
-import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -155,7 +154,8 @@ public  class ShowAttractionsFragment extends Fragment
                     {
                         this.viewModel.park.deleteChildren(resultElements);
                         this.viewModel.park.addChildren(resultElements);
-                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
+                        Log.d(Constants.LOG_TAG,
+                                String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
                     }
 
                     this.updateContentRecyclerView();
@@ -191,7 +191,8 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-        List<Element> categorizedAttractions = this.fetchCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
+
+        List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedAttractions,
                 AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions),
@@ -266,18 +267,18 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
-        List<Element> categorizedAttractions = this.fetchCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
+        List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-    private List<Element> fetchCategorizedAttractions(List<Element> attractions)
-    {
-        if(!this.viewModel.categorizedAttractions.isEmpty())
-        {
-            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.categorizedAttractions, OrphanElement.class));
-        }
-        this.viewModel.categorizedAttractions = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
-        return this.viewModel.categorizedAttractions;
-    }
+//    private List<Element> fetchCategorizedAttractions(List<Element> attractions)
+//    {
+//        if(!this.viewModel.categorizedAttractions.isEmpty())
+//        {
+//            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.categorizedAttractions, OrphanElement.class));
+//        }
+//        this.viewModel.categorizedAttractions = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
+//        return this.viewModel.categorizedAttractions;
+//    }
 }

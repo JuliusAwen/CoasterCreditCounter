@@ -176,7 +176,7 @@ public class Content
         }
     }
 
-    private void removeOrphanElement(OrphanElement orphanElement)
+    public void removeOrphanElement(OrphanElement orphanElement)
     {
         if(orphanElement.isInstance(YearHeader.class))
         {

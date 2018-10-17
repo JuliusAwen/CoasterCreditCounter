@@ -108,18 +108,17 @@ public class AttractionCategoryHeader extends OrphanElement
             }
         }
 
-        preparedElements = new ArrayList<Element>(
-                AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(Element.convertElementsToType(preparedElements, AttractionCategoryHeader.class)));
+        preparedElements = AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(preparedElements);
 
         Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: #[%d] headers added", preparedElements.size()));
         return preparedElements;
     }
 
-    private static List<AttractionCategoryHeader> sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(List<AttractionCategoryHeader> attractionCategoryHeaders)
+    public static List<Element> sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(List<Element> attractionCategoryHeaders)
     {
         if(attractionCategoryHeaders.size() > 1)
         {
-            List<AttractionCategoryHeader> sortedAttractionCategoryHeaders = new ArrayList<>();
+            List<Element> sortedAttractionCategoryHeaders = new ArrayList<>();
             List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
 
             Log.v(Constants.LOG_TAG,  String.format("AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder::" +
@@ -127,7 +126,7 @@ public class AttractionCategoryHeader extends OrphanElement
 
             for(AttractionCategory attractionCategory : attractionCategories)
             {
-                for(AttractionCategoryHeader attractionCategoryHeader : attractionCategoryHeaders)
+                for(AttractionCategoryHeader attractionCategoryHeader : Element.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class))
                 {
                     if(attractionCategoryHeader.getAttractionCategory().equals(attractionCategory) && !sortedAttractionCategoryHeaders.contains(attractionCategoryHeader))
                     {
