@@ -53,7 +53,6 @@ public class ShowVisitActivity extends BaseActivity
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
-        this.handleFloatingActionButtonVisibility();
     }
 
     @Override
@@ -73,6 +72,8 @@ public class ShowVisitActivity extends BaseActivity
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+        this.handleFloatingActionButtonVisibility();
     }
 
     private void decorateFloatingActionButton()
@@ -102,10 +103,12 @@ public class ShowVisitActivity extends BaseActivity
         if(!this.allAttractionsAdded())
         {
             super.setFloatingActionButtonVisibility(true);
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
         }
         else
         {
             super.setFloatingActionButtonVisibility(false);
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
         }
     }
 

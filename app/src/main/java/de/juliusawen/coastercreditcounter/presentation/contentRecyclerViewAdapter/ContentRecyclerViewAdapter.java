@@ -54,7 +54,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         PARENT,
         CHILD,
         COUNTABLE_CHILD,
-        ITEM_DIVIDER,
+        BOTTOM_SPACER,
+        ITEM_DIVIDER
     }
 
     static class ViewHolderParent extends RecyclerView.ViewHolder
@@ -115,6 +116,157 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             super("ItemDivider", UUID.randomUUID());
         }
     }
+
+    static class ViewHolderBottomSpacer extends RecyclerView.ViewHolder
+    {
+        ViewHolderBottomSpacer(View view)
+        {
+            super(view);
+            view.setClickable(false);
+        }
+    }
+
+    private class BottomSpacer extends OrphanElement
+    {
+        private BottomSpacer()
+        {
+            super("BottomSpacer", UUID.randomUUID());
+        }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
+    {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int typeOfView)
+    {
+        RecyclerView.ViewHolder viewHolder;
+
+        View view;
+        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+
+        ViewType viewType = ViewType.values()[typeOfView];
+        switch (viewType)
+        {
+            case PARENT:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_parent, viewGroup, false);
+                viewHolder = new ViewHolderParent(view);
+                break;
+
+            case CHILD:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_child, viewGroup, false);
+                viewHolder = new ViewHolderChild(view);
+                break;
+
+            case COUNTABLE_CHILD:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_countable_child, viewGroup, false);
+                viewHolder = new ViewHolderCountableChild(view);
+                break;
+
+            case ITEM_DIVIDER:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_divider, viewGroup, false);
+                viewHolder = new ViewHolderItemDivider(view);
+                break;
+
+            case BOTTOM_SPACER:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_bottom_spacer, viewGroup, false);
+                viewHolder = new ViewHolderBottomSpacer(view);
+                break;
+
+                default:
+                    throw new IllegalStateException();
+        }
+
+        return viewHolder;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        Element item = this.content.get(position);
+
+        if(this.isParent(item))
+        {
+            return ViewType.PARENT.ordinal();
+        }
+        else if(this.isChild(item) && !this.adapterType.equals(AdapterType.COUNTABLE))
+        {
+            return ViewType.CHILD.ordinal();
+        }
+        else if(this.isChild(item) && this.adapterType.equals(AdapterType.COUNTABLE))
+        {
+            return ViewType.COUNTABLE_CHILD.ordinal();
+        }
+        else if(item.isInstance(ItemDivider.class))
+        {
+            return ViewType.ITEM_DIVIDER.ordinal();
+        }
+        else if(item.isInstance(BottomSpacer.class))
+        {
+            return ViewType.BOTTOM_SPACER.ordinal();
+        }
+
+        return -1;
+    }
+
+    private boolean isParent(Element element)
+    {
+        return !element.isInstance(ItemDivider.class) && (this.childType == null || (!element.isInstance(this.childType) && !element.isInstance(BottomSpacer.class)));
+    }
+
+    private boolean isChild(Element element)
+    {
+        return !element.isInstance(ItemDivider.class) && (this.childType != null && (element.isInstance(this.childType) || !element.isInstance(BottomSpacer.class)));
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return this.content.size();
+    }
+
+    @Override
+    public long getItemId(int position)
+    {
+        return this.content.get(position).getItemId();
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position)
+    {
+        ViewType viewType = ViewType.values()[viewHolder.getItemViewType()];
+        switch (viewType)
+        {
+            case PARENT:
+                ViewHolderParent viewHolderParent = (ViewHolderParent) viewHolder;
+                this.bindViewHolderParent(viewHolderParent, position);
+                break;
+
+            case CHILD:
+                ViewHolderChild viewHolderChild = (ViewHolderChild) viewHolder;
+                this.bindViewHolderChild(viewHolderChild, position);
+                break;
+
+            case COUNTABLE_CHILD:
+                ViewHolderCountableChild viewHolderCountableChild = (ViewHolderCountableChild) viewHolder;
+                this.bindViewHolderCountableChild(viewHolderCountableChild, position);
+                break;
+
+            case BOTTOM_SPACER:
+            case ITEM_DIVIDER:
+                break;
+
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+
 
 
 
@@ -314,127 +466,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
-    {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int typeOfView)
-    {
-        RecyclerView.ViewHolder viewHolder;
-
-        View view;
-        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-
-        ViewType viewType = ViewType.values()[typeOfView];
-        switch (viewType)
-        {
-            case PARENT:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_parent, viewGroup, false);
-                viewHolder = new ViewHolderParent(view);
-                break;
-
-            case CHILD:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_child, viewGroup, false);
-                viewHolder = new ViewHolderChild(view);
-                break;
-
-            case COUNTABLE_CHILD:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_countable_child, viewGroup, false);
-                viewHolder = new ViewHolderCountableChild(view);
-                break;
-
-            case ITEM_DIVIDER:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_divider, viewGroup, false);
-                viewHolder = new ViewHolderItemDivider(view);
-                break;
-
-                default:
-                    throw new IllegalStateException();
-        }
-
-        return viewHolder;
-    }
-
-    @Override
-    public int getItemViewType(int position)
-    {
-        Element element = this.content.get(position);
-
-        if(this.isParent(element))
-        {
-            return ViewType.PARENT.ordinal();
-        }
-        else if(this.isChild(element) && !this.adapterType.equals(AdapterType.COUNTABLE))
-        {
-            return ViewType.CHILD.ordinal();
-        }
-        else if(this.isChild(element) && this.adapterType.equals(AdapterType.COUNTABLE))
-        {
-            return ViewType.COUNTABLE_CHILD.ordinal();
-        }
-        else if(element.isInstance(ItemDivider.class))
-        {
-            return ViewType.ITEM_DIVIDER.ordinal();
-        }
-
-        return -1;
-    }
-
-    private boolean isParent(Element element)
-    {
-        return !element.isInstance(ItemDivider.class) && (this.childType == null || !element.isInstance(this.childType));
-    }
-
-    private boolean isChild(Element element)
-    {
-        return !element.isInstance(ItemDivider.class) && (this.childType != null && element.isInstance(this.childType));
-    }
-
-    @Override
-    public int getItemCount()
-    {
-        return this.content.size();
-    }
-
-    @Override
-    public long getItemId(int position)
-    {
-        return this.content.get(position).getItemId();
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position)
-    {
-        ViewType viewType = ViewType.values()[viewHolder.getItemViewType()];
-        switch (viewType)
-        {
-            case PARENT:
-                ViewHolderParent viewHolderParent = (ViewHolderParent) viewHolder;
-                this.bindViewHolderParent(viewHolderParent, position);
-                break;
-
-            case CHILD:
-                ViewHolderChild viewHolderChild = (ViewHolderChild) viewHolder;
-                this.bindViewHolderChild(viewHolderChild, position);
-                break;
-
-            case COUNTABLE_CHILD:
-                ViewHolderCountableChild viewHolderCountableChild = (ViewHolderCountableChild) viewHolder;
-                this.bindViewHolderCountableChild(viewHolderCountableChild, position);
-                break;
-
-            case ITEM_DIVIDER:
-                break;
-
-            default:
-                throw new IllegalStateException();
-        }
-    }
 
 
 
@@ -675,6 +706,39 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(this.content.contains(element) && this.recyclerView != null)
         {
             recyclerView.scrollToPosition(content.indexOf(element));
+        }
+    }
+
+    public void useBottomSpacer(boolean useBottomSpacer)
+    {
+        int position = this.content.size() -1;
+
+        if(useBottomSpacer)
+        {
+            if(!this.content.get(position).isInstance(BottomSpacer.class))
+            {
+                this.content.add(new BottomSpacer());
+                notifyItemRemoved(position);
+                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: added BottomSpacer");
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer already in use");
+            }
+        }
+        else
+        {
+
+            if(this.content.get(position).isInstance(BottomSpacer.class))
+            {
+                this.content.remove(position);
+                notifyItemRemoved(position);
+                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: removed BottomSpacer");
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer not in use");
+            }
         }
     }
 
