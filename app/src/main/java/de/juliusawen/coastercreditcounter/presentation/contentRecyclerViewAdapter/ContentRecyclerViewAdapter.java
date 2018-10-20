@@ -579,24 +579,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext(), imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color));
     }
 
-
-
-
-    public List<Element> getContent()
-    {
-        List<Element> content = new ArrayList<>();
-        for(Element element : this.content)
-        {
-            if(!element.isInstance(ItemDivider.class))
-            {
-                content.add(element);
-            }
-        }
-
-        return content;
-    }
-
-    public void expandParent(Element parent)
+    private void expandParent(Element parent)
     {
         if(!this.expandedParents.contains(parent))
         {
@@ -617,7 +600,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void collapseParent(Element parent)
+    private void collapseParent(Element parent)
     {
         if(this.childType != null && this.expandedParents.contains(parent))
         {
@@ -629,6 +612,21 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
         }
+    }
+
+
+    public List<Element> getContent()
+    {
+        List<Element> content = new ArrayList<>();
+        for(Element element : this.content)
+        {
+            if(!element.isInstance(ItemDivider.class) && !element.isInstance(BottomSpacer.class))
+            {
+                content.add(element);
+            }
+        }
+
+        return content;
     }
 
     public void swapElements(Element element1, Element element2)
