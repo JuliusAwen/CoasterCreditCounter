@@ -190,6 +190,21 @@ public abstract class Element
 
     }
 
+    public void reorderChildren(List<Element> children)
+    {
+        if(!children.isEmpty())
+        {
+            this.getChildren().removeAll(children);
+            this.getChildren().addAll(children);
+            Log.v(Constants.LOG_TAG,
+                    String.format("Element.reorderChildren:: %s -> [%d] children removed and then added again in given order", this, children.size()));
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("Element.reorderChildren:: %s -> given list of children is empty", this));
+        }
+    }
+
     public void addChildToOrphanElement(Element child)
     {
         if(this.isInstance(OrphanElement.class))

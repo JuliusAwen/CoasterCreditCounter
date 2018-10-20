@@ -68,7 +68,7 @@ public abstract class ActivityTool
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, park.getUuid().toString());
         ((Activity)context).startActivityForResult(intent, requestCode);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started activity [%s] for parent %s - add visit",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started activity [%s] for parent %s ",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), park));
     }
 

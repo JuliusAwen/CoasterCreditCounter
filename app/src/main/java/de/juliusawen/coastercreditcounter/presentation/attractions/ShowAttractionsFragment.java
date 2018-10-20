@@ -152,8 +152,7 @@ public  class ShowAttractionsFragment extends Fragment
                     Element parent = resultElements.get(0).getParent();
                     if(parent != null)
                     {
-                        this.viewModel.park.deleteChildren(resultElements);
-                        this.viewModel.park.addChildren(resultElements);
+                        this.viewModel.park.reorderChildren(resultElements);
                         Log.d(Constants.LOG_TAG,
                                 String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
                     }
@@ -271,14 +270,4 @@ public  class ShowAttractionsFragment extends Fragment
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
-
-//    private List<Element> fetchCategorizedAttractions(List<Element> attractions)
-//    {
-//        if(!this.viewModel.categorizedAttractions.isEmpty())
-//        {
-//            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.categorizedAttractions, OrphanElement.class));
-//        }
-//        this.viewModel.categorizedAttractions = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
-//        return this.viewModel.categorizedAttractions;
-//    }
 }

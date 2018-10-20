@@ -124,9 +124,11 @@ public class AttractionCategoryHeader extends OrphanElement
             Log.v(Constants.LOG_TAG,  String.format("AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder::" +
                             " sorting #[%d] AttractionCategoryHeaders based on #[%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
 
+            List<AttractionCategoryHeader> castedAttractionCategoryHeaders = Element.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
+
             for(AttractionCategory attractionCategory : attractionCategories)
             {
-                for(AttractionCategoryHeader attractionCategoryHeader : Element.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class))
+                for(AttractionCategoryHeader attractionCategoryHeader : castedAttractionCategoryHeaders)
                 {
                     if(attractionCategoryHeader.getAttractionCategory().equals(attractionCategory) && !sortedAttractionCategoryHeaders.contains(attractionCategoryHeader))
                     {

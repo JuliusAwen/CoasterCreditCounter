@@ -44,6 +44,11 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
         {
             boolean createdNewAttractionCategoryHeader = false;
 
+            for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByAttractionCategoryNames.values())
+            {
+                attractionCategoryHeader.getChildren().clear();
+            }
+
             for(Attraction attraction : Element.convertElementsToType(attractions, Attraction.class))
             {
                 String categoryName = attraction.getCategory().getName();
