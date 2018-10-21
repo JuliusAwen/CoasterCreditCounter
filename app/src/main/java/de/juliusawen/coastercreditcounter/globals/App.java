@@ -59,17 +59,6 @@ public abstract class App
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
             App.settings = Settings.getInstance();
 
-            //Todo: remove
-//            try
-//            {
-//                Log.e(Constants.LOG_TAG, "App.Initialize.doInBackground:: sleeping for 1000ms in order to test progress bar...");
-//                Thread.sleep(1000);
-//            }
-//            catch (InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
-
             return null;
         }
 

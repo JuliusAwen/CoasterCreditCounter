@@ -51,6 +51,8 @@ public class ShowVisitActivity extends BaseActivity
         super.addToolbarHomeButton();
         super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
 
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_not_available));
+
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
     }

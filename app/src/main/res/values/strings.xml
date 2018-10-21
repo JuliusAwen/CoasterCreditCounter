@@ -34,6 +34,7 @@
 
 
     <string name="title_visit_create">Create Visit</string>
+    <string name="title_visit_show">Visit</string>
 
 
     <!--options menu entries-->
@@ -184,7 +185,8 @@
         \n <li>ShowVisits help not yet available...</li>
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="help_text_show_visit">
+        \n <li>ShowVisit help not yet available...</li>
+    </string>
 
 </resources>
