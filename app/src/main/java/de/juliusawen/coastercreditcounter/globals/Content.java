@@ -8,22 +8,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
+    private Map<UUID, Location> locationsByUuid = new HashMap<>();
+    private Map<UUID, Park> parksByUuid = new HashMap<>();
+    private Map<UUID, Attraction> attractionsByUuid = new HashMap<>();
+    private Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByUuid = new HashMap<>();
+    private Map<UUID, CountableAttraction> countableAttractionsByUuid = new HashMap<>();
+
+
     private Map<UUID, Element> elements = new HashMap<>();
 
     private Map<UUID, Element> orphanElements = new HashMap<>();
 
     private Map<String, YearHeader> yearHeadersByName = new HashMap<>();
+
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
-    private Element rootElement;
+
+    private Element rootLocation;
 
     private static final Content instance = new Content();
 
@@ -52,7 +66,7 @@ public class Content
 
             Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
-            this.flattenContentTree(this.rootElement);
+            this.flattenContentTree(this.rootLocation);
             Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
         }
         else
@@ -67,29 +81,13 @@ public class Content
 
     public Element getRootLocation()
     {
-        return this.rootElement;
+        return this.rootLocation;
     }
 
     private void setRootLocation(Element element)
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", element));
-        this.rootElement = element;
-    }
-
-    public void addAttractionCategory(AttractionCategory attractionCategory)
-    {
-        this.attractionCategories.add(attractionCategory);
-        Log.v(Constants.LOG_TAG,  String.format("Content.addAttractionCategory:: %s added", attractionCategory));
-
-        this.addOrphanElement(attractionCategory);
-    }
-
-    public void removeAttractionCategory(AttractionCategory attractionCategory)
-    {
-        this.attractionCategories.remove(attractionCategory);
-        Log.v(Constants.LOG_TAG,  String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
-
-        this.removeOrphanElement(attractionCategory);
+        this.rootLocation = element;
     }
 
     public List<AttractionCategory> getAttractionCategories()
@@ -116,7 +114,7 @@ public class Content
         }
     }
 
-    public <T extends OrphanElement> List<T> getOrphanElementsOfType(Class<T> type)
+    public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
     {
         List<T> orphanElementsOfType = new ArrayList<>();
         for(Element orphanElement : this.orphanElements.values())
@@ -152,11 +150,11 @@ public class Content
             if(!this.orphanElements.containsKey(orphanElement.getUuid()))
             {
                 this.orphanElements.put(orphanElement.getUuid(), orphanElement);
-                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
+                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s allready exists", orphanElement));
+                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s already exists", orphanElement));
             }
         }
         else
@@ -201,8 +199,6 @@ public class Content
             Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found in OrphanElements", orphanElement));
         }
     }
-
-
 
 
     private void flattenContentTree(Element element)
@@ -299,14 +295,10 @@ public class Content
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: adding %s requested -- DEPRECATED: use AddOrphanElement(s)", element));
+            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement(s)", element);
+            Log.e(Constants.LOG_TAG,  "Content.addElement:: )" + errorMessage);
 
-            //Todo: remove when addOrphanElement(s) is used everywhere
-            if(!this.orphanElements.containsValue(element))
-            {
-                this.orphanElements.put(element.getUuid(), element);
-                Log.e(Constants.LOG_TAG,  String.format("Content.addElement:: %s added -- DEPRECATED: use AddOrphanElement(s)", element));
-            }
+            throw new IllegalStateException(errorMessage);
         }
     }
 

@@ -146,8 +146,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             if(requestCode == Constants.REQUEST_ADD_LOCATION)
             {
-                String uuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element resultElement = App.content.fetchElementByUuidString(uuidString);
+                String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                Element resultElement = App.content.fetchElementByUuidString(resultElementUuidString);
                 updateContentRecyclerViewAdapter();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
