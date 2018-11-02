@@ -34,7 +34,7 @@ public class HelpOverlayFragment extends Fragment
 
     public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER + "HelpOverlayFragment.newInstance:: instantiating fragment...");
+        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: instantiating fragment...");
 
         HelpOverlayFragment helpOverlayFragment = new HelpOverlayFragment();
         Bundle args = new Bundle();

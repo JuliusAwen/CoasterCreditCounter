@@ -579,7 +579,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext(), imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color));
     }
 
-    private void expandParent(Element parent)
+    public void expandParent(Element parent)
     {
         if(!this.expandedParents.contains(parent))
         {

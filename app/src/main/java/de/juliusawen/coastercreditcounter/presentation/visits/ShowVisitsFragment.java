@@ -175,6 +175,12 @@ public class ShowVisitsFragment extends Fragment
             List<Element> sortedYearHeaders = this.fetchCategorizedVisits();
 
             this.viewModel.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
+
+            if(App.settings.getExpandLatestYearInListByDefault())
+            {
+                this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(sortedYearHeaders));
+            }
+
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
         else
