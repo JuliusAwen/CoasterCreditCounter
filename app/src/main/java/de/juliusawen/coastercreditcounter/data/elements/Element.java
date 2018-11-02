@@ -167,7 +167,7 @@ public abstract class Element
             {
                 if(child.getParent() != null)
                 {
-                    Log.e(Constants.LOG_TAG, String.format("Element.addChild:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
+                    Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
                 }
                 child.setParent(this);
 
