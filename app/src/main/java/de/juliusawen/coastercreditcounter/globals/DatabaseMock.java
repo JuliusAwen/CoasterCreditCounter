@@ -338,7 +338,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElement(earth);
 
         content.setAttractionCategories(attractionCategories);
-        content.addOrphanElements(content.getAttractionCategories());
 
     }
 

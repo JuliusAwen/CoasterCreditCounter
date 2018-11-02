@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,8 +19,7 @@ public class Content
     private Map<UUID, Element> elements = new HashMap<>();
     private Map<UUID, Element> orphanElements = new HashMap<>();
 
-    private List<AttractionCategory> attractionCategories = new ArrayList<>();
-
+    private Map<UUID, AttractionCategory> attractionCategoriesByUuid = new LinkedHashMap<>();
 
     private Element rootLocation;
 
@@ -76,12 +76,18 @@ public class Content
 
     public List<AttractionCategory> getAttractionCategories()
     {
-        return this.attractionCategories;
+        return new ArrayList<>(this.attractionCategoriesByUuid.values());
     }
 
     public void setAttractionCategories(List<AttractionCategory> attractionCategories)
     {
-        this.attractionCategories = attractionCategories;
+        this.attractionCategoriesByUuid.clear();
+
+        for(AttractionCategory attractionCategory : attractionCategories)
+        {
+            this.attractionCategoriesByUuid.put(attractionCategory.getUuid(), attractionCategory);
+        }
+
         Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: #[%d] attractionCategories set", attractionCategories.size()));
     }
 
@@ -98,13 +104,19 @@ public class Content
         return orphanElementsOfType;
     }
 
-    public void addOrphanElements(List<? extends OrphanElement> orphanElements)
+    private Element getOrphanElementByUuid(UUID uuid)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElements:: adding [%d] orphan elements", orphanElements.size()));
-
-        for(OrphanElement orphanElement : orphanElements)
+        if(this.orphanElements.containsKey(uuid))
         {
-            this.addOrphanElement(orphanElement);
+            return this.orphanElements.get(uuid);
+        }
+        else if(this.attractionCategoriesByUuid.containsKey(uuid))
+        {
+            return this.attractionCategoriesByUuid.get(uuid);
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -115,7 +127,7 @@ public class Content
             if(!this.orphanElements.containsKey(orphanElement.getUuid()))
             {
                 this.orphanElements.put(orphanElement.getUuid(), orphanElement);
-                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
+                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
             }
             else
             {
@@ -193,13 +205,20 @@ public class Content
 
     public Element getElementByUuid(UUID uuid)
     {
+        Element element;
+
         if(this.elements.containsKey(uuid))
         {
-            return this.elements.get(uuid);
+            element = this.elements.get(uuid);
         }
-        else if(this.orphanElements.containsKey(uuid))
+        else
         {
-            return this.orphanElements.get(uuid);
+            element = this.getOrphanElementByUuid(uuid);
+        }
+
+        if(element != null)
+        {
+            return element;
         }
         else
         {
@@ -238,7 +257,7 @@ public class Content
         }
         else
         {
-            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement(s)", element);
+            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement!", element);
             Log.e(Constants.LOG_TAG,  "Content.addElement:: )" + errorMessage);
 
             throw new IllegalStateException(errorMessage);
