@@ -709,33 +709,36 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void useBottomSpacer(boolean useBottomSpacer)
     {
-        int position = this.content.size() -1;
-
-        if(useBottomSpacer)
+        if(!this.content.isEmpty())
         {
-            if(!this.content.get(position).isInstance(BottomSpacer.class))
+            int position = this.content.size() - 1;
+
+            if(useBottomSpacer)
             {
-                this.content.add(new BottomSpacer());
-                notifyItemRemoved(position);
-                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: added BottomSpacer");
+                if(!this.content.get(position).isInstance(BottomSpacer.class))
+                {
+                    this.content.add(new BottomSpacer());
+                    notifyItemRemoved(position);
+                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: added BottomSpacer");
+                }
+                else
+                {
+                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer already in use");
+                }
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer already in use");
-            }
-        }
-        else
-        {
 
-            if(this.content.get(position).isInstance(BottomSpacer.class))
-            {
-                this.content.remove(position);
-                notifyItemRemoved(position);
-                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: removed BottomSpacer");
-            }
-            else
-            {
-                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer not in use");
+                if(this.content.get(position).isInstance(BottomSpacer.class))
+                {
+                    this.content.remove(position);
+                    notifyItemRemoved(position);
+                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: removed BottomSpacer");
+                }
+                else
+                {
+                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer not in use");
+                }
             }
         }
     }

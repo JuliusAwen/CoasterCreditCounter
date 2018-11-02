@@ -72,7 +72,9 @@ public class YearHeader extends OrphanElement
 
         Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: adding YearHeaders to [%d] elements...", visits.size()));
 
-        OrphanElement.removeAllChildren(App.content.getOrphanElementsAsType(YearHeader.class));
+        List<YearHeader> yearHeaders = App.content.getOrphanElementsAsType(YearHeader.class);
+
+        OrphanElement.removeAllChildren(yearHeaders);
 
         List<Element> preparedElements = new ArrayList<>();
 
@@ -97,8 +99,17 @@ public class YearHeader extends OrphanElement
             }
             else
             {
-                YearHeader yearHeader;
-                yearHeader = (YearHeader) App.content.getYearHeader(year);
+                YearHeader yearHeader = null;
+
+                for(YearHeader header : yearHeaders)
+                {
+                    if(header.getName().equals(year))
+                    {
+                        yearHeader = header;
+                        break;
+                    }
+                }
+
                 if(yearHeader == null)
                 {
                     yearHeader = YearHeader.create(year);

@@ -11,16 +11,12 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
     private Map<UUID, Element> elements = new HashMap<>();
-
     private Map<UUID, Element> orphanElements = new HashMap<>();
-
-    private Map<String, YearHeader> yearHeadersByName = new HashMap<>();
 
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
@@ -89,19 +85,6 @@ public class Content
         Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: #[%d] attractionCategories set", attractionCategories.size()));
     }
 
-    public Element getYearHeader(String name)
-    {
-        if(this.yearHeadersByName.containsKey(name))
-        {
-            return this.yearHeadersByName.get(name);
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, String.format("Content.getYearHeader:: No YearHeader found with name[%s]", name));
-            return null;
-        }
-    }
-
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
     {
         List<T> orphanElementsOfType = new ArrayList<>();
@@ -129,12 +112,6 @@ public class Content
     {
         if(orphanElement.isInstance(OrphanElement.class))
         {
-            if(orphanElement.isInstance(YearHeader.class))
-            {
-                this.yearHeadersByName.put(orphanElement.getName(), (YearHeader)orphanElement);
-                Log.v(Constants.LOG_TAG,  String.format("Content.addOrphanElement:: %s added to YearHeadersByName", orphanElement));
-            }
-
             if(!this.orphanElements.containsKey(orphanElement.getUuid()))
             {
                 this.orphanElements.put(orphanElement.getUuid(), orphanElement);
@@ -164,19 +141,6 @@ public class Content
 
     public void removeOrphanElement(OrphanElement orphanElement)
     {
-        if(orphanElement.isInstance(YearHeader.class))
-        {
-            if(this.yearHeadersByName.containsKey(orphanElement.getName()))
-            {
-                this.yearHeadersByName.remove(orphanElement.getName());
-                Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from YearHeadersByName", orphanElement));
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found", orphanElement));
-            }
-        }
-
         if(this.orphanElements.containsValue(orphanElement))
         {
             this.orphanElements.remove(orphanElement.getUuid());
