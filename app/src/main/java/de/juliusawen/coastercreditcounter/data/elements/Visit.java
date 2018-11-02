@@ -140,7 +140,7 @@ public class Visit extends Element
 
     public static void setSortOrder(SortOrder sortOrder)
     {
-        Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to #[%s]", sortOrder.toString()));
+        Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to [%s]", sortOrder.toString()));
         Visit.sortOrder = sortOrder;
     }
 
@@ -169,7 +169,7 @@ public class Visit extends Element
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name [%s]", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -181,7 +181,7 @@ public class Visit extends Element
             sortedVisits.add(0, visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: #[%d] visits sorted", visits.size()));
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: [%d] visits sorted", visits.size()));
         return sortedVisits;
     }
 
@@ -195,7 +195,7 @@ public class Visit extends Element
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name [%s]", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -207,7 +207,7 @@ public class Visit extends Element
             sortedVisits.add(visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: #[%d] visits sorted", visits.size()));
+        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: [%d] visits sorted", visits.size()));
 
         return sortedVisits;
     }

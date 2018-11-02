@@ -38,7 +38,7 @@ public class Settings
         Log.i(Constants.LOG_TAG, "Settings.Constructor:: Settings instantiated - fetching settings...");
         Stopwatch stopwatch = new Stopwatch(true);
         DatabaseMock.getInstance().fetchSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing content took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
     }
 
     public List<AttractionCategory> getAttractionCategoriesToExpandByDefault()

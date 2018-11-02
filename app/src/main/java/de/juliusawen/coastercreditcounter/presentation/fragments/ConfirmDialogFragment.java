@@ -22,7 +22,7 @@ public class ConfirmDialogFragment extends Fragment
 
     public static ConfirmDialogFragment newInstance()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ConfirmDialogFragment.newInstance:: instantiating fragment...");
+        Log.i(Constants.LOG_TAG, "ConfirmDialogFragment.newInstance:: instantiating fragment...");
         return new ConfirmDialogFragment();
     }
 

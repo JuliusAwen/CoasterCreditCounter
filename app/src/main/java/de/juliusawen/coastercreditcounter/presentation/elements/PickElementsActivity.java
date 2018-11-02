@@ -181,18 +181,18 @@ public class PickElementsActivity extends BaseActivity
 
     private void changeRadioButtonToSelectAll()
     {
-        Log.v(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToSelectAll:: changing RadioButton");
-
         this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);
+
+        Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToSelectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
     private void changeRadioButtonToDeselectAll()
     {
-        Log.v(Constants.LOG_TAG, "PickElementsActivity.changeRadioButtonToDeselectAll:: changing RadioButton");
-
         this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);
+
+        Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToDeselectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
     private void returnResult(int resultCode)

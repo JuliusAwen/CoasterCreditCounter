@@ -4,18 +4,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AlertDialogFragment extends DialogFragment
 {
-
-
     public AlertDialogFragment() {}
 
     public static AlertDialogFragment newInstance(int iconResource, String title, String message, String positiveButtonText, String negativeButtonText, int requestCode)
     {
+        Log.v(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
+                "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
+                title, message, positiveButtonText, negativeButtonText));
+
         AlertDialogFragment alertDialogFragment = new AlertDialogFragment();
 
         Bundle args = new Bundle();
@@ -33,12 +36,14 @@ public class AlertDialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
+        Log.d(Constants.LOG_TAG, "AlertDialogFragment.onCreateDialog:: creating alert dialog...");
+
         Bundle args = getArguments();
         int iconResource = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_ICON_RESOURCE);
         String title = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_TITLE);
         String message = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_MESSAGE);
-        String positiveButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT);
-        String negativeButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT);
+        final String positiveButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT);
+        final String negativeButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT);
         final int requestCode = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE);
         final AlertDialogListener alertDialogListener = (AlertDialogListener) getActivity();
 
@@ -51,6 +56,7 @@ public class AlertDialogFragment extends DialogFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
                         alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
                     }
                 })
@@ -59,6 +65,7 @@ public class AlertDialogFragment extends DialogFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
                         alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
                     }
                 })

@@ -21,6 +21,6 @@ public abstract class OrphanElement extends Element
         {
             orphanElement.getChildren().clear();
         }
-        Log.v(Constants.LOG_TAG,  String.format("OrphanElement.removeAllChildren:: #[%d] children removed", orphanElements.size()));
+        Log.v(Constants.LOG_TAG,  String.format("OrphanElement.removeAllChildren:: [%d] children removed", orphanElements.size()));
     }
 }

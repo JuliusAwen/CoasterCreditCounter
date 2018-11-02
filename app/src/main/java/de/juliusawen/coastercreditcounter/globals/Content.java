@@ -88,7 +88,7 @@ public class Content
             this.attractionCategoriesByUuid.put(attractionCategory.getUuid(), attractionCategory);
         }
 
-        Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: #[%d] attractionCategories set", attractionCategories.size()));
+        Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: [%d]AttractionCategories set", attractionCategories.size()));
     }
 
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)

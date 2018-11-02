@@ -53,7 +53,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             context.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started activity [%s] for %s",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
         }
         else
@@ -68,7 +68,7 @@ public abstract class ActivityTool
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, park.getUuid().toString());
         ((Activity)context).startActivityForResult(intent, requestCode);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started activity [%s] for parent %s ",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started [%s] for parent %s ",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), park));
     }
 
@@ -103,7 +103,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEditForResult:: started activity [%s] for %s",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEditForResult:: started [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementToEdit));
         }
         else
@@ -131,7 +131,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parent.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started activity [%s] for %s  with requestCode [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started [%s] for %s  with requestCode [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), parent, requestCode));
         }
         else
@@ -169,12 +169,12 @@ public abstract class ActivityTool
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySortForResult:: started activity [%s] for #[%d] elements with requestCode [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySortForResult:: started [%s] for [%d] elements with requestCode [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToSort.size(), requestCode));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start c: unknown type %s", firstElement));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start context: unknown type %s", firstElement));
         }
     }
 
@@ -208,7 +208,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityPickForResult:: started activity [%s] for #[%d] elements with requestCode [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityPickForResult:: started [%s] for [%d] elements with requestCode [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToPickFrom.size(), requestCode));
         }
         else

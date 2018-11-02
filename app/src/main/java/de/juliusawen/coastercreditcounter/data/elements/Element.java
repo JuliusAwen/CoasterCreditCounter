@@ -91,7 +91,7 @@ public abstract class Element
     public String getFullName()
     {
         return String.format(Locale.getDefault(),
-                "[%s \"%s\" (%s) - #[%d] children]",
+                "[%s \"%s\" (%s) - [%d]children]",
                 this.getClass().getSimpleName(),
                 this.getName(),
                 this.getUuid(),
@@ -142,7 +142,7 @@ public abstract class Element
 
     private void addChildren(int index, List<Element> children)
     {
-        Log.v(Constants.LOG_TAG, String.format("Element.addChildren:: called with #[%d] children", children.size()));
+        Log.v(Constants.LOG_TAG, String.format("Element.addChildren:: called with [%d] children", children.size()));
         int increment = 0;
         for (Element child : children)
         {
@@ -444,7 +444,7 @@ public abstract class Element
                     return element1.getName().compareToIgnoreCase(element2.getName());
                 }
             });
-            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: #[%s] elements sorted", elements.size()));
+            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: [%s] elements sorted", elements.size()));
         }
         else
         {
@@ -464,7 +464,7 @@ public abstract class Element
                     return element2.getName().compareToIgnoreCase(element1.getName());
                 }
             });
-            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: #[%s] elements sorted", elements.size()));
+            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: [%s] elements sorted", elements.size()));
         }
         else
         {
@@ -477,7 +477,7 @@ public abstract class Element
     {
         if(elementsToSort.size() > 1)
         {
-            Log.v(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing #[%d] elements",
+            Log.v(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing [%d] elements",
                     elementsToSort.size(), comparisonList.size()));
             List<Element> sortedElements = new ArrayList<>();
             for(Element element : comparisonList)
@@ -496,23 +496,9 @@ public abstract class Element
         }
     }
 
-    public static <T extends Element> T convertElementToType(Element element, Class<T> type)
-    {
-        try
-        {
-            return type.cast(element);
-        }
-        catch(ClassCastException e)
-        {
-            String errorMessage = String.format("%s is not of type <%s>", element, type);
-            Log.v(Constants.LOG_TAG, "Element.convertElementToType:: " + errorMessage);
-            throw new IllegalStateException(errorMessage + "\n" + e);
-        }
-    }
-
     public static <T extends Element> List<T> convertElementsToType(List<? extends Element> elements, Class<T> type)
     {
-        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type));
+        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type.getSimpleName()));
 
         List<T> returnList = new ArrayList<>();
         for(Element element : elements)
@@ -523,7 +509,7 @@ public abstract class Element
             }
             catch(ClassCastException e)
             {
-                String errorMessage = String.format("%s is not of type <%s>", element, type);
+                String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
                 Log.v(Constants.LOG_TAG, "Element.convertElementsToType:: " + errorMessage);
                 throw new IllegalStateException(errorMessage + "\n" + e);
             }

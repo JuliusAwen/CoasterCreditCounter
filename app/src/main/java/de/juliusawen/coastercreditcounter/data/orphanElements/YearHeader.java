@@ -56,7 +56,7 @@ public class YearHeader extends OrphanElement
                 }
             }
 
-            Log.v(Constants.LOG_TAG,  String.format("YearHeader.getLatestYearHeader:: [%s] found as latest YearHeader in a list of [%d]", latestYearHeader, yearHeaders.size()));
+            Log.v(Constants.LOG_TAG,  String.format("YearHeader.getLatestYearHeader:: %s found as latest YearHeader in a list of [%d]", latestYearHeader, yearHeaders.size()));
         }
 
         return latestYearHeader;

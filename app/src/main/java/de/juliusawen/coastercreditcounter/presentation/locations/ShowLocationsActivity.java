@@ -307,7 +307,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(this.viewModel.recentElements.isEmpty() && !this.viewModel.currentElement.isRootElement())
         {
-            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing navigation bar");
+            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing NavigationBar");
             this.viewModel.recentElements.clear();
             this.constructNavigationBar(this.viewModel.currentElement.getParent());
         }
@@ -320,7 +320,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         for (Element recentElement : this.viewModel.recentElements)
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating textView for recent element %s...", recentElement));
+            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating TextView for recent element %s...", recentElement));
             TextView textView = (TextView) getLayoutInflater().inflate(R.layout.text_view_navigation_bar, linearLayoutNavigationBar, false);
 
             if(this.viewModel.recentElements.indexOf(recentElement) != this.viewModel.recentElements.size() -1)

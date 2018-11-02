@@ -51,7 +51,7 @@ public class AttractionCategoryHeader extends OrphanElement
 
         if(elements.get(0).isInstance(Attraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: fetching headers for #[%d] attractions...", elements.size()));
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: fetching headers for [%d] attractions...", elements.size()));
             List<Attraction> attractions = Element.convertElementsToType(elements, Attraction.class);
 
             for(Attraction attraction : attractions)
@@ -80,7 +80,7 @@ public class AttractionCategoryHeader extends OrphanElement
         }
         else if(elements.get(0).isInstance(CountableAttraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: adding headers for #[%d] countable attractions...", elements.size()));
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: adding headers for [%d] countable attractions...", elements.size()));
             List<CountableAttraction> countableAttractions = Element.convertElementsToType(elements, CountableAttraction.class);
 
             for(CountableAttraction countableAttraction : countableAttractions)
@@ -110,7 +110,7 @@ public class AttractionCategoryHeader extends OrphanElement
 
         preparedElements = AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(preparedElements);
 
-        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: #[%d] headers added", preparedElements.size()));
+        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: [%d] headers added", preparedElements.size()));
         return preparedElements;
     }
 
@@ -122,7 +122,7 @@ public class AttractionCategoryHeader extends OrphanElement
             List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
 
             Log.v(Constants.LOG_TAG,  String.format("AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder::" +
-                            " sorting #[%d] AttractionCategoryHeaders based on #[%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
+                            " sorting [%d]AttractionCategoryHeaders based on [%d]AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
 
             List<AttractionCategoryHeader> castedAttractionCategoryHeaders = Element.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
 
