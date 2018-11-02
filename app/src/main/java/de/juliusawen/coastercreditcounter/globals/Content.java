@@ -8,26 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
-    private Map<UUID, Location> locationsByUuid = new HashMap<>();
-    private Map<UUID, Park> parksByUuid = new HashMap<>();
-    private Map<UUID, Attraction> attractionsByUuid = new HashMap<>();
-    private Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByUuid = new HashMap<>();
-    private Map<UUID, CountableAttraction> countableAttractionsByUuid = new HashMap<>();
-
-
     private Map<UUID, Element> elements = new HashMap<>();
 
     private Map<UUID, Element> orphanElements = new HashMap<>();
@@ -275,15 +263,6 @@ public class Content
             }
         }
         return this.removeElement(element);
-    }
-
-    public void addElements(List<? extends Element> elements)
-    {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElements:: adding #[%d] elements", elements.size()));
-        for(Element element : elements)
-        {
-            this.addElement(element);
-        }
     }
 
     public void addElement(Element element)

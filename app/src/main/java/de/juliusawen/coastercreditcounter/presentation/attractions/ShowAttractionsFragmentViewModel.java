@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
@@ -21,13 +22,13 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
     public Park park;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
-    private Map<String, AttractionCategoryHeader> attractionCategoryHeadersByAttractionCategoryNames = new HashMap<>();
+    private Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByAttractionCategoryUuids = new HashMap<>();
 
     List<Element> getCategorizedAttractions(List<Element> attractions)
     {
         List<Element> categorizedAttractions = new ArrayList<>();
 
-        if(attractionCategoryHeadersByAttractionCategoryNames.isEmpty())
+        if(attractionCategoryHeadersByAttractionCategoryUuids.isEmpty())
         {
             Log.d(Constants.LOG_TAG, "ShowAttractionsFragmentViewModel.getCategorizedAttractions:: initally fetching AttractionCategoryHeaders...");
 
@@ -35,8 +36,8 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
 
             for(Element attractionCategoryHeader : categorizedAttractions)
             {
-                this.attractionCategoryHeadersByAttractionCategoryNames.put(
-                        ((Attraction)attractionCategoryHeader.getChildren().get(0)).getCategory().getName(),
+                this.attractionCategoryHeadersByAttractionCategoryUuids.put(
+                        ((Attraction)attractionCategoryHeader.getChildren().get(0)).getCategory().getUuid(),
                         (AttractionCategoryHeader) attractionCategoryHeader);
             }
         }
@@ -44,15 +45,15 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
         {
             boolean createdNewAttractionCategoryHeader = false;
 
-            for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByAttractionCategoryNames.values())
+            for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByAttractionCategoryUuids.values())
             {
                 attractionCategoryHeader.getChildren().clear();
             }
 
             for(Attraction attraction : Element.convertElementsToType(attractions, Attraction.class))
             {
-                String categoryName = attraction.getCategory().getName();
-                AttractionCategoryHeader attractionCategoryHeader = this.attractionCategoryHeadersByAttractionCategoryNames.get(categoryName);
+                UUID categoryUuid = attraction.getCategory().getUuid();
+                AttractionCategoryHeader attractionCategoryHeader = this.attractionCategoryHeadersByAttractionCategoryUuids.get(categoryUuid);
 
                 if(attractionCategoryHeader == null)
                 {
@@ -61,8 +62,15 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
                     attractionCategoryHeader = AttractionCategoryHeader.create(attraction.getCategory());
                     App.content.addOrphanElement(attractionCategoryHeader);
 
-                    this.attractionCategoryHeadersByAttractionCategoryNames.put(attraction.getCategory().getName(), attractionCategoryHeader);
+                    this.attractionCategoryHeadersByAttractionCategoryUuids.put(attraction.getCategory().getUuid(), attractionCategoryHeader);
                     createdNewAttractionCategoryHeader = true;
+                }
+                else
+                {
+                    if(!attractionCategoryHeader.getName().equals(attraction.getCategory().getName()))
+                    {
+                        attractionCategoryHeader.setName(attraction.getCategory().getName());
+                    }
                 }
 
                 if(!categorizedAttractions.contains(attractionCategoryHeader))
@@ -84,7 +92,7 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
                 Log.v(Constants.LOG_TAG, "ShowAttractionsFragmentViewModel.getCategorizedAttractions:: new AttractionCategoryHeaders were created...");
 
                 List<AttractionCategoryHeader> attractionCategoryHeadersToRemove = new ArrayList<>();
-                for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByAttractionCategoryNames.values())
+                for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByAttractionCategoryUuids.values())
                 {
                     if(!categorizedAttractions.contains(attractionCategoryHeader))
                     {
@@ -99,7 +107,7 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
                     {
                         Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragmentViewModel.getCategorizedAttractions:: removing %s...", attractionCategoryHeader));
 
-                        this.attractionCategoryHeadersByAttractionCategoryNames.remove(attractionCategoryHeader.getName());
+                        this.attractionCategoryHeadersByAttractionCategoryUuids.remove(attractionCategoryHeader.getName());
                         App.content.removeOrphanElement(attractionCategoryHeader);
                     }
                 }

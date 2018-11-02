@@ -275,8 +275,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             @Override
             public void onClick(View view)
             {
-                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClick:: LinearLayout[%s]", linearLayoutNavigationBar));
-
                 Element element = (Element) view.getTag();
 
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
