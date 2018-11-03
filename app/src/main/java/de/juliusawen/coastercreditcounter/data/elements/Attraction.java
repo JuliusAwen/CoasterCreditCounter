@@ -40,7 +40,14 @@ public class Attraction extends Element
 
     public void setCategory(AttractionCategory category)
     {
+        if(this.category != null)
+        {
+            this.category.deleteChild(this);
+        }
+
+        category.addChildToOrphanElement(this);
         this.category = category;
+
         Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s to %s", category, this));
     }
 }

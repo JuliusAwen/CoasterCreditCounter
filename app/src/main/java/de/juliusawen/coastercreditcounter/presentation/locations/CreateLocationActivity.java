@@ -158,7 +158,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                     this.viewModel.parentLocation.getChildCountOfType(Park.class)));
 
             this.linearLayoutAddChildren.setVisibility(View.VISIBLE);
-            this.textViewAddChildren.setText(R.string.add_children);
+            this.textViewAddChildren.setText(R.string.text_add_children);
         }
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()

@@ -127,7 +127,7 @@ public class ShowVisitsFragment extends Fragment
                 this.updateContentRecyclerView();
 
                 Element visit = App.content.fetchElementByUuidString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID));
-                ActivityTool.startActivityShow(getActivity(), visit);
+                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
             }
         }
     }
@@ -156,7 +156,7 @@ public class ShowVisitsFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startActivityShow(getActivity(), (Element) view.getTag());
+                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, (Element) view.getTag());
             }
 
             @Override

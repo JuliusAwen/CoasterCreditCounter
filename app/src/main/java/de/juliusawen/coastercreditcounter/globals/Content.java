@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +18,7 @@ public class Content
     private Map<UUID, Element> elements = new HashMap<>();
     private Map<UUID, Element> orphanElements = new HashMap<>();
 
-    private Map<UUID, AttractionCategory> attractionCategoriesByUuid = new LinkedHashMap<>();
+    private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
     private Element rootLocation;
 
@@ -32,12 +31,16 @@ public class Content
 
     private Content()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "Content.Constructor:: <Content> instantiated");
+        Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
         Stopwatch stopwatchInitializeContent = new Stopwatch(true);
 
         Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
+
+
         DatabaseMock.getInstance().fetchContent(this);
+
+
         Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
         if(!this.elements.isEmpty())
@@ -76,19 +79,31 @@ public class Content
 
     public List<AttractionCategory> getAttractionCategories()
     {
-        return new ArrayList<>(this.attractionCategoriesByUuid.values());
+        return this.attractionCategories;
     }
 
     public void setAttractionCategories(List<AttractionCategory> attractionCategories)
     {
-        this.attractionCategoriesByUuid.clear();
+        this.attractionCategories = attractionCategories;
 
-        for(AttractionCategory attractionCategory : attractionCategories)
-        {
-            this.attractionCategoriesByUuid.put(attractionCategory.getUuid(), attractionCategory);
-        }
+        Log.v(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: [%d]AttractionCategories set", attractionCategories.size()));
+    }
 
-        Log.d(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: [%d]AttractionCategories set", attractionCategories.size()));
+    public void addAttractionCategory(AttractionCategory attractionCategory)
+    {
+        this.addAttractionCategory(0, attractionCategory);
+    }
+
+    public void addAttractionCategory(int index, AttractionCategory attractionCategory)
+    {
+        this.attractionCategories.add(index, attractionCategory);
+        Log.v(Constants.LOG_TAG,  String.format("Content.addAttractionCategory:: %s added", attractionCategory));
+    }
+
+    public void removeAttractionCategory(AttractionCategory attractionCategory)
+    {
+        this.attractionCategories.remove(attractionCategory);
+        Log.d(Constants.LOG_TAG,  String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
     }
 
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
@@ -101,6 +116,7 @@ public class Content
                 orphanElementsOfType.add(type.cast(orphanElement));
             }
         }
+
         return orphanElementsOfType;
     }
 
@@ -110,14 +126,21 @@ public class Content
         {
             return this.orphanElements.get(uuid);
         }
-        else if(this.attractionCategoriesByUuid.containsKey(uuid))
+
+        return this.getAttractionCategoryByUuid(uuid);
+    }
+
+    private AttractionCategory getAttractionCategoryByUuid(UUID uuid)
+    {
+        for(AttractionCategory attractionCategory : this.attractionCategories)
         {
-            return this.attractionCategoriesByUuid.get(uuid);
+            if(attractionCategory.getUuid().equals(uuid))
+            {
+                return attractionCategory;
+            }
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void addOrphanElement(Element orphanElement)
@@ -236,18 +259,6 @@ public class Content
         this.addElement(element);
     }
 
-    public boolean removeElementAndChildren(Element element)
-    {
-        for(Element child : element.getChildren())
-        {
-            if(!this.removeElementAndChildren(child))
-            {
-                return false;
-            }
-        }
-        return this.removeElement(element);
-    }
-
     public void addElement(Element element)
     {
         if(!element.isInstance(OrphanElement.class))
@@ -262,6 +273,18 @@ public class Content
 
             throw new IllegalStateException(errorMessage);
         }
+    }
+
+    public boolean removeElementAndChildren(Element element)
+    {
+        for(Element child : element.getChildren())
+        {
+            if(!this.removeElementAndChildren(child))
+            {
+                return false;
+            }
+        }
+        return this.removeElement(element);
     }
 
     public boolean removeElement(Element element)

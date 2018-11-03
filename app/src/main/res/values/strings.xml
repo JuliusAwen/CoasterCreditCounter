@@ -29,7 +29,9 @@
     <string name="subtitle_attractions_description_pick">to add to your vist</string>
 
 
+    <string name="title_attraction_categories_show">Attraction Categories</string>
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
+    <string name="title_attraction_categories_create">Create Attraction Category</string>
     <string name="subtitle_attraction_category_edit">Edit Attraction Category</string>
 
 
@@ -42,8 +44,8 @@
 
     <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
-    <string name="selection_sort_attraction_categories">sort attraction categories</string>
     <string name="selection_sort_attractions">sort attractions</string>
+    <string name="selection_sort_attraction_categories">sort attraction categories</string>
 
     <string name="selection_help">help</string>
 
@@ -55,12 +57,9 @@
     <string name="selection_create_location">create location</string>
     <string name="selection_create_park">create park</string>
 
-    <string name="selection_edit_element">edit</string>
-    <string name="selection_edit_location">edit</string>
-    <string name="selection_edit_attraction_category">edit</string>
-
-    <string name="selection_delete_element">delete</string>
-    <string name="selection_remove_element">remove</string>
+    <string name="selection_edit">edit</string>
+    <string name="selection_delete">delete</string>
+    <string name="selection_remove">remove</string>
 
 
     <!--general texts-->
@@ -71,14 +70,16 @@
 
     <string name="text_select_all">select all</string>
     <string name="text_deselect_all">deselect all</string>
-    <string name="add_children">add children</string>
+    <string name="text_add_children">add children</string>
 
-    <string name="root_location">root location</string>
+    <string name="text_root_location">root location</string>
 
 
     <!--dialog texts-->
     <string name="alert_dialog_delete_element_title">DELETE</string>
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
+
+    <string name="alert_dialog_delete_attraction_category_message">%1$d attraction(s) are in this category - do you really want to delete %2$s?</string>
 
     <string name="alert_dialog_remove_element_title">REMOVE</string>
     <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
@@ -110,14 +111,16 @@
 
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
-    <string name="action_undo_delete_element_text">%1$s deleted</string>
-    <string name="action_undo_remove_element_text">%1$s removed</string>
-    <string name="action_element_restored_text">%1$s restored</string>
+    <string name="action_undo_delete_text">%1$s deleted</string>
+    <string name="action_undo_remove_text">%1$s removed</string>
+    <string name="action_restored_text">%1$s restored</string>
 
 
     <!--hint texts-->
     <string name="hint_enter_location_name">enter location name</string>
     <string name="hint_edit_location_name">edit location name</string>
+
+    <string name="hint_enter_attraction_category_name">enter attraction category name</string>
 
 
     <!--error messages-->
@@ -152,41 +155,43 @@
     </string>
 
     <string name="help_text_sort_elements">
-        \n<li>Select entry and use up or down button to move selection. Accept changes with floating action button.</li>
-        \n\n <b>Options Menu</b>
-        \n <li><i>sort a-z:</i> order list alphabetically.</li>
-        \n <li><i>help:</i> show this.</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_pick_elements">
-        \n <li>Select entries and confirm.</li>
-        \n <li><i>select/deselect all:</i> select/deselect all entries.</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_create_location">
-        \n <li>Name new location and confirm.</li>
-        \n <li><i>add children:</i> check to choose which current locations children to add under new location
-        (is automatically added if single child).</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_edit_location">
-        \n <li>Rename location and confirm.</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_show_park_overview">
-        \n <li>ShowOverview help not yet available...</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_show_attractions">
-        \n <li>ShowAttractions help not yet available...</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_show_visits">
-        \n <li>ShowVisits help not yet available...</li>
+        \n <li>Help not yet available...</li>
     </string>
 
     <string name="help_text_show_visit">
-        \n <li>ShowVisit help not yet available...</li>
+        \n <li>Help not yet available...</li>
+    </string>
+
+    <string name="help_text_show_attraction_category">
+        \n <li>Help not yet available...</li>
+    </string>
+
+    <string name="help_text_create_attraction_category">
+        \n <li>Help not yet available...</li>
     </string>
 
 </resources>

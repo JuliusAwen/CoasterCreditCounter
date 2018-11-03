@@ -34,6 +34,7 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public  class ShowAttractionsFragment extends Fragment
@@ -125,27 +126,16 @@ public  class ShowAttractionsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_EDIT_LOCATION)
+            Element selectedElement = ResultTool.fetchSelectedElement(data);
+
+            if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
             {
                 this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToElement(App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID))));
+                this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS || requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
-                String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element selectedElement = null;
-                if(selectedElementUuidString != null)
-                {
-                    selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
-                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<OK>:: selected element %s returned", selectedElement));
-                }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "ShowAttractionsFragment.onActivityResult<OK>:: no selected element returned");
-                }
-
-                List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
+                List<Element> resultElements = ResultTool.fetchResultElements(data);
 
                 if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
                 {
@@ -168,7 +158,7 @@ public  class ShowAttractionsFragment extends Fragment
                 }
                 else
                 {
-                    App.content.setAttractionCategories((Element.convertElementsToType(resultElements, AttractionCategory.class)));
+                    App.content.setAttractionCategories(Element.convertElementsToType(resultElements, AttractionCategory.class));
                     this.updateContentRecyclerView();
 
                     if(selectedElement != null)
@@ -221,7 +211,7 @@ public  class ShowAttractionsFragment extends Fragment
                 if(longClickedElement.isInstance(AttractionCategoryHeader.class))
                 {
                     PopupMenu popupMenu = new PopupMenu(getContext(), view);
-                    popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit_attraction_category);
+                    popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
 
                     if(longClickedElement.getChildCountOfType(Attraction.class) > 1)
                     {

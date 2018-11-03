@@ -81,12 +81,12 @@ public abstract class App
                 if(Visit.validateOpenVisit() && App.settings.jumpToOpenVisitOnStart())
                 {
                     Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
-                    ActivityTool.startActivityShow(App.context, Visit.getOpenVisit());
+                    ActivityTool.startActivityShow(App.context, Constants.REQUEST_SHOW_VISIT, Visit.getOpenVisit());
                 }
                 else
                 {
                     Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
-                    ActivityTool.startActivityShow(App.context, App.content.getRootLocation());
+                    ActivityTool.startActivityShow(App.context, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
                 }
             }
 

@@ -252,6 +252,15 @@ public abstract class Element
 
     public List<Element> getChildren()
     {
+        int sizeBefore = this.children.size();
+        this.children.removeAll(Collections.singleton(null));
+        int sizeAfter = this.children.size();
+        int difference = sizeBefore - sizeAfter;
+        if(difference != 0)
+        {
+            Log.e(Constants.LOG_TAG, String.format("Element.getChildren:: [%d] null objects removed from children ", difference));
+        }
+
         return this.children;
     }
 
@@ -342,7 +351,7 @@ public abstract class Element
             this.deleteChildren(this.backupChildren);
             return true;
         }
-        Log.e(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: unable to delete %s as it is the root element", this));
+        Log.e(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: unable to delete %s as it is root or orphan element", this));
         return false;
     }
 
@@ -394,7 +403,7 @@ public abstract class Element
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is the root element", this));
+            Log.e(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is root or orphan element", this));
             return false;
         }
     }

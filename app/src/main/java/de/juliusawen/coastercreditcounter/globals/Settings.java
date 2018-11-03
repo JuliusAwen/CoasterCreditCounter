@@ -26,6 +26,9 @@ public class Settings
     //Visit
     private int firstDayOfTheWeek;
 
+    //Defaults
+    private AttractionCategory defaultAttractionCategory;
+
     private static final Settings instance = new Settings();
 
     static Settings getInstance()
@@ -91,4 +94,13 @@ public class Settings
         this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
     }
 
+    public AttractionCategory getDefaultAttractionCategory()
+    {
+        return defaultAttractionCategory;
+    }
+
+    void setDefaultAttractionCategory(AttractionCategory defaultAttractionCategory)
+    {
+        this.defaultAttractionCategory = defaultAttractionCategory;
+    }
 }

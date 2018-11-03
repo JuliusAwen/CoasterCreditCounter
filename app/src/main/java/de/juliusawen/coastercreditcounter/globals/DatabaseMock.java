@@ -23,6 +23,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     private AttractionCategory attractionCategoryRollerCoasters;
     private AttractionCategory attractionCategoryNonRollerCoasters;
     private AttractionCategory attractionCategoryWaterRides;
+    private AttractionCategory defaultAttractionCategory;
 
     private static final DatabaseMock instance = new DatabaseMock();
 
@@ -150,7 +151,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         valravn.setCategory(attractionCategoryRollerCoasters);
         maverick.setCategory(attractionCategoryRollerCoasters);
         gatekeeper.setCategory(attractionCategoryRollerCoasters);
-        dodgem.setCategory(attractionCategoryNonRollerCoasters);
+        dodgem.setCategory(attractionCategoryFamilyRides);
 
         Coaster drako = Coaster.create("Drako");
         Coaster elCondor = Coaster.create("El Condor");
@@ -334,11 +335,18 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         heidePark.addChild(visit0);
 
-        //add tree to content (one element is enough - content is searching for root on its own)
+        //add tree to content (one element is enough - content is searching for root on its own and flattens tree from there)
         content.addElement(earth);
 
         content.setAttractionCategories(attractionCategories);
 
+        this.addDefaults(content);
+    }
+
+    private void addDefaults(Content content)
+    {
+        this.defaultAttractionCategory = AttractionCategory.create("uncategorized");
+        content.addAttractionCategory(defaultAttractionCategory);
     }
 
     @Override
@@ -346,7 +354,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
 
-        Settings.jumpToTestActivityOnStart = false;
+        Settings.jumpToTestActivityOnStart = true;
         settings.setJumpToOpenVisitOnStart(false);
 
         List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
@@ -359,5 +367,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         settings.setExpandLatestYearInListByDefault(true);
 
         settings.setFirstDayOfTheWeek(Calendar.MONDAY);
+
+        settings.setDefaultAttractionCategory(this.defaultAttractionCategory);
     }
 }

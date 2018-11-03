@@ -2,8 +2,8 @@ package de.juliusawen.coastercreditcounter.globals.enums;
 
 public enum Selection
 {
-    ADD_LOCATION,
-    ADD_PARK,
+    CREATE_LOCATION,
+    CREATE_PARK,
 
     DELETE_ELEMENT,
     REMOVE_ELEMENT,

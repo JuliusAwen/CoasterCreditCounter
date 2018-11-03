@@ -15,6 +15,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -30,7 +31,7 @@ public class TestActivity extends BaseActivity
         setContentView(R.layout.activity_test);
         super.onCreate(savedInstanceState);
 
-        this.initializeContent();
+//        this.initializeContent();
 
         super.addToolbar();
         super.addToolbarHomeButton();
@@ -39,7 +40,9 @@ public class TestActivity extends BaseActivity
         super.addHelpOverlayFragment(getString(R.string.title_help, "Test"), "Test");
 
 //        this.createContentRecyclerAdapter();
-        this.createLoremIpsum();
+//        this.createLoremIpsum();
+
+        this.startActivity();
     }
 
     @Override
@@ -85,5 +88,10 @@ public class TestActivity extends BaseActivity
     {
         TextView textView = findViewById(R.id.textViewTestActivity);
         textView.setText(StringTool.getLoremIpsum(501));
+    }
+
+    private void startActivity()
+    {
+        ActivityTool.startActivityShow(this, Constants.REQUEST_SHOW_ATTRACTION_CATEGORIES, null);
     }
 }

@@ -11,9 +11,6 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.data.elements.Park;
-import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
@@ -21,30 +18,36 @@ import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActi
 import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.presentation.orphanElements.CreateAttractionCategoryActivity;
+import de.juliusawen.coastercreditcounter.presentation.orphanElements.ShowAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
 {
-    public static void startActivityShow(Context context, Element element)
+    public static void startActivityShow(Context context, int requestCode, Element element)
     {
         Class type = null;
 
-        if(element.isInstance(Location.class))
+        if(requestCode == Constants.REQUEST_SHOW_LOCATION)
         {
             type = ShowLocationsActivity.class;
         }
-        else if(element.isInstance(Park.class))
+        else if(requestCode == Constants.REQUEST_SHOW_PARK)
         {
             type = ShowParkActivity.class;
         }
-        else if(element.isInstance(Visit.class))
+        else if(requestCode == Constants.REQUEST_SHOW_VISIT)
         {
             type = ShowVisitActivity.class;
         }
+        else if(requestCode == Constants.REQUEST_SHOW_ATTRACTION_CATEGORIES)
+        {
+            type = ShowAttractionCategoriesActivity.class;
+        }
 
-        if(type != null)
+        if(type != null && element != null)
         {
             Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
@@ -52,6 +55,14 @@ public abstract class ActivityTool
 
             Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
+        }
+        else if(type != null)
+        {
+            Intent intent = new Intent(context, type);
+            context.startActivity(intent);
+
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started [%s] for OrphanElements",
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
         }
         else
         {
@@ -100,7 +111,7 @@ public abstract class ActivityTool
         }
     }
 
-    public static void startActivityCreateForResult(Context context, int requestCode, Element element)
+    public static void startActivityCreateForResult(Context context, int requestCode, Element parentElement)
     {
         Class type = null;
 
@@ -112,15 +123,27 @@ public abstract class ActivityTool
         {
             type = CreateVisitActivity.class;
         }
+        else if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
+        {
+            type = CreateAttractionCategoryActivity.class;
+        }
 
-        if(type != null)
+        if(type != null && parentElement != null)
         {
             Intent intent = new Intent(context, type);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
             Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityCreateForResult:: started [%s] for %s  with request code [%d]",
-                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element, requestCode));
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), parentElement, requestCode));
+        }
+        else if(type != null)
+        {
+            Intent intent = new Intent(context, type);
+            ((Activity)context).startActivityForResult(intent, requestCode);
+
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityCreateForResult:: started [%s] for OrphanElement with request code [%d]",
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), requestCode));
         }
         else
         {

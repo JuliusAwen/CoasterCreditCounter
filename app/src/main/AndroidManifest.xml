@@ -29,7 +29,9 @@
         <activity android:name=".presentation.parks.ShowParkActivity" />
         <activity android:name=".presentation.visits.ShowVisitActivity" />
         <activity android:name=".presentation.TestActivity" />
-        <activity android:name=".presentation.visits.CreateVisitActivity"></activity>
+        <activity android:name=".presentation.visits.CreateVisitActivity" />
+        <activity android:name=".presentation.orphanElements.CreateAttractionCategoryActivity" />
+        <activity android:name=".presentation.orphanElements.ShowAttractionCategoriesActivity"></activity>
     </application>
 
 </manifest>

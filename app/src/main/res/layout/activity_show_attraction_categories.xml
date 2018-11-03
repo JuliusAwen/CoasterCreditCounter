@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.visits.ShowVisitActivity">
+    tools:context=".presentation.orphanElements.ShowAttractionCategoriesActivity">
 
     <include
         layout="@layout/floating_action_button"/>
-    
+
     <LinearLayout
-        android:id="@+id/linearLayoutShowVisit"
+        android:id="@+id/linearLayoutShowAttractionCategories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,7 +19,7 @@
             layout="@layout/toolbar"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewShowVisit"
+            android:id="@+id/recyclerViewShowAttractionCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
@@ -27,3 +27,4 @@
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

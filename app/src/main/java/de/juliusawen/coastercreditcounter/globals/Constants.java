@@ -31,33 +31,52 @@ public abstract class Constants
     public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM YYYY";
     public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "YYYY";
 
-    public static final int REQUEST_PICK_LOCATIONS = Request.PICK_LOCATIONS.ordinal();
-    public static final int REQUEST_PICK_PARKS = Request.PICK_PARKS.ordinal();
-    public static final int REQUEST_PICK_ATTRACTIONS = Request.PICK_ATTRACTIONS.ordinal();
+    public static final int ALERT_DIALOG_REQUEST_CODE_DELETE = 0;
+    public static final int ALERT_DIALOG_REQUEST_CODE_REMOVE = 1;
+
+
     public static final int REQUEST_CREATE_LOCATION = Request.CREATE_LOCATION.ordinal();
     public static final int REQUEST_CREATE_VISIT = Request.CREATE_VISIT.ordinal();
+    public static final int REQUEST_CREATE_ATTRACTION_CATEGORY = Request.CREATE_ATTRACTION_CATEGORY.ordinal();
+
+    public static final int REQUEST_SHOW_LOCATION = Request.SHOW_LOCATION.ordinal();
+    public static final int REQUEST_SHOW_PARK = Request.SHOW_PARK.ordinal();
+    public static final int REQUEST_SHOW_VISIT = Request.SHOW_VISIT.ordinal();
+    public static final int REQUEST_SHOW_ATTRACTION_CATEGORIES = Request.SHOW_ATTRACTION_CATEGORIES.ordinal();
+
+    public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
+    public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
+
     public static final int REQUEST_SORT_LOCATIONS = Request.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_SORT_PARKS = Request.SORT_PARKS.ordinal();
     public static final int REQUEST_SORT_ATTRACTIONS = Request.SORT_ATTRACTIONS.ordinal();
     public static final int REQUEST_SORT_ATTRACTION_CATEGORIES = Request.SORT_ATTRACTION_CATEGORIES.ordinal();
-    public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
-    public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
+
+    public static final int REQUEST_PICK_LOCATIONS = Request.PICK_LOCATIONS.ordinal();
+    public static final int REQUEST_PICK_PARKS = Request.PICK_PARKS.ordinal();
+    public static final int REQUEST_PICK_ATTRACTIONS = Request.PICK_ATTRACTIONS.ordinal();
 }
 
 enum Request
 {
-    PICK_LOCATIONS,
-    PICK_PARKS,
-    PICK_ATTRACTIONS,
-
     CREATE_LOCATION,
     CREATE_VISIT,
+    CREATE_ATTRACTION_CATEGORY,
+
+    SHOW_LOCATION,
+    SHOW_PARK,
+    SHOW_VISIT,
+    SHOW_ATTRACTION_CATEGORIES,
+
+    EDIT_LOCATION,
+    EDIT_ATTRACTION_CATEGORY,
 
     SORT_LOCATIONS,
     SORT_PARKS,
     SORT_ATTRACTIONS,
     SORT_ATTRACTION_CATEGORIES,
 
-    EDIT_LOCATION,
-    EDIT_ATTRACTION_CATEGORY
+    PICK_LOCATIONS,
+    PICK_PARKS,
+    PICK_ATTRACTIONS,
 }
