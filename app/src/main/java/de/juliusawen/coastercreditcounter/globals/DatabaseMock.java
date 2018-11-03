@@ -354,7 +354,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
 
-        Settings.jumpToTestActivityOnStart = true;
+        Settings.jumpToTestActivityOnStart = false;
         settings.setJumpToOpenVisitOnStart(false);
 
         List<AttractionCategory> attractionCategoriesExpandedByDefault = new ArrayList<>();
