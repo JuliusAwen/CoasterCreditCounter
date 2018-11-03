@@ -9,7 +9,7 @@
     <string name="title_locations_sort">Sort Locations</string>
     <string name="title_locations_pick">Pick Locations</string>
     <string name="subtitle_locations_pick_description">to add to the new location</string>
-    <string name="subtitle_location_add">Add Location</string>
+    <string name="subtitle_location_create">Create Location</string>
     <string name="subtitle_location_edit">Edit Location</string>
 
 
@@ -52,8 +52,8 @@
 
 
     <!--popup menu entries-->
-    <string name="selection_add_location">add location</string>
-    <string name="selection_add_park">add park</string>
+    <string name="selection_create_location">create location</string>
+    <string name="selection_create_park">create park</string>
 
     <string name="selection_edit_element">edit</string>
     <string name="selection_edit_location">edit</string>
@@ -163,7 +163,7 @@
         \n <li><i>select/deselect all:</i> select/deselect all entries.</li>
     </string>
 
-    <string name="help_text_add_location">
+    <string name="help_text_create_location">
         \n <li>Name new location and confirm.</li>
         \n <li><i>add children:</i> check to choose which current locations children to add under new location
         (is automatically added if single child).</li>
@@ -177,11 +177,11 @@
         \n <li>ShowOverview help not yet available...</li>
     </string>
 
-    <string name="help_text_show_park_attractions">
+    <string name="help_text_show_attractions">
         \n <li>ShowAttractions help not yet available...</li>
     </string>
 
-    <string name="help_text_show_park_visits">
+    <string name="help_text_show_visits">
         \n <li>ShowVisits help not yet available...</li>
     </string>
 

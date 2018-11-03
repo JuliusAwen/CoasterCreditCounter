@@ -165,13 +165,13 @@ public class ShowParkActivity extends BaseActivity
             case ATTRACTIONS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_attractions)), getText(R.string.help_text_show_park_attractions));
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_attractions)), getText(R.string.help_text_show_attractions));
                 break;
 
             case VISITS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_visits)), getText(R.string.help_text_show_park_visits));
+                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_visits)), getText(R.string.help_text_show_visits));
                 break;
 
             default:
@@ -214,7 +214,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startAddVisitActivityForResult(ShowParkActivity.this, Constants.REQUEST_ADD_VISIT, viewModel.park);
+                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CREATE_VISIT, viewModel.park);
             }
         });
     }

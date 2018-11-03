@@ -123,7 +123,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         switch(selection)
         {
             case EDIT_LOCATION:
-                ActivityTool.startActivityEditForResult(this, Constants.REQUEST_EDIT_ELEMENT, this.viewModel.currentElement);
+                ActivityTool.startActivityEditForResult(this, Constants.REQUEST_EDIT_LOCATION, this.viewModel.currentElement);
                 return true;
 
             case SORT_LOCATIONS:
@@ -144,7 +144,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
         if(resultCode == RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_ADD_LOCATION)
+            if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 Element resultElement = App.content.fetchElementByUuidString(resultElementUuidString);
@@ -175,7 +175,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
 
             }
-            else if(requestCode == Constants.REQUEST_EDIT_ELEMENT)
+            else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
                 Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
@@ -237,8 +237,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, getFloatingActionButton());
 
-                popupMenu.getMenu().add(0, Selection.ADD_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
-                popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
+                popupMenu.getMenu().add(0, Selection.ADD_LOCATION.ordinal(), Menu.NONE, R.string.selection_create_location);
+                popupMenu.getMenu().add(0, Selection.ADD_PARK.ordinal(), Menu.NONE, R.string.selection_create_park);
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -251,7 +251,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         switch (selection)
                         {
                             case ADD_LOCATION:
-                                ActivityTool.startActivityAddForResult(ShowLocationsActivity.this, Constants.REQUEST_ADD_LOCATION, viewModel.currentElement);
+                                ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_LOCATION, viewModel.currentElement);
                                 return true;
 
                             case ADD_PARK:
@@ -427,7 +427,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             switch (selection)
                             {
                                 case EDIT_LOCATION:
-                                    ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_ELEMENT, viewModel.longClickedElement);
+                                    ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_LOCATION, viewModel.longClickedElement);
                                     return true;
 
                                 case DELETE_ELEMENT:

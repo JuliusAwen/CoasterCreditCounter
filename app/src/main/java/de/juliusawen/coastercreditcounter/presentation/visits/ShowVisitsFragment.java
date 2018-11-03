@@ -122,7 +122,7 @@ public class ShowVisitsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_ADD_VISIT)
+            if(requestCode == Constants.REQUEST_CREATE_VISIT)
             {
                 this.updateContentRecyclerView();
 

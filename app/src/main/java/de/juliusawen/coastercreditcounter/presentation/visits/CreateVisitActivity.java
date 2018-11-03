@@ -27,9 +27,9 @@ import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public class AddVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
+public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private AddVisitActivityViewModel viewModel;
+    private CreateVisitActivityViewModel viewModel;
 
     private static final int ALERT_DIALOG_PICK_ATTRACTIONS = 0;
     private static final int ALERT_DIALOG_VISIT_ALREADY_EXISTS = 1;
@@ -37,12 +37,12 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "AddVisitActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "CreateVisitActivity.onCreate:: creating activity...");
 
-        setContentView(R.layout.activity_add_visit);
+        setContentView(R.layout.activity_create_visit);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(AddVisitActivityViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
 
         if(this.viewModel.park == null)
         {
@@ -67,7 +67,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -91,14 +91,14 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
     private void pickDate()
     {
-        Log.i(Constants.LOG_TAG, String.format("AddVisitActivity.pickDate:: picking date for visit in %s", this.viewModel.park));
+        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.pickDate:: picking date for visit in %s", this.viewModel.park));
 
         this.viewModel.calendar = Calendar.getInstance();
         int year = this.viewModel.calendar.get(Calendar.YEAR);
         int month = this.viewModel.calendar.get(Calendar.MONTH);
         int day = this.viewModel.calendar.get(Calendar.DAY_OF_MONTH);
 
-        this.viewModel.datePickerDialog = new DatePickerDialog(AddVisitActivity.this, new DatePickerDialog.OnDateSetListener()
+        this.viewModel.datePickerDialog = new DatePickerDialog(CreateVisitActivity.this, new DatePickerDialog.OnDateSetListener()
         {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
@@ -154,7 +154,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
         {
             if(Visit.isSameDay(exisingVisit.getCalendar(), calendar))
             {
-                Log.v(Constants.LOG_TAG, String.format("AddVisitActivity.getExistingVisit:: %s already exists", exisingVisit));
+                Log.v(Constants.LOG_TAG, String.format("CreateVisitActivity.getExistingVisit:: %s already exists", exisingVisit));
                 return exisingVisit;
             }
         }
@@ -177,7 +177,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
     private void createVisit(Calendar calendar)
     {
-        Log.d(Constants.LOG_TAG, String.format("AddVisitActivity.createVisit:: creating visit for %s", this.viewModel.park));
+        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.createVisit:: creating visit for %s", this.viewModel.park));
 
         if(this.viewModel.existingVisit != null)
         {
@@ -190,7 +190,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
-            Log.i(Constants.LOG_TAG, "AddVisitActivity.pickDate:: created visit is today - set as open visit");
+            Log.i(Constants.LOG_TAG, "CreateVisitActivity.pickDate:: created visit is today - set as open visit");
             Visit.setOpenVisit(this.viewModel.visit);
         }
 
@@ -199,7 +199,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
     private void deleteExistingVisit()
     {
-        Log.d(Constants.LOG_TAG, String.format("AddVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
+        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
 
         this.viewModel.park.deleteChild(this.viewModel.existingVisit);
         App.content.removeElement(this.viewModel.existingVisit);
@@ -229,7 +229,7 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     ActivityTool.startActivityPickForResult(
-                            AddVisitActivity.this,
+                            CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
                             this.getAttractionsWithCategoryHeaders(viewModel.park.getChildrenOfType(Attraction.class)));
                 }
@@ -263,12 +263,12 @@ public class AddVisitActivity extends BaseActivity implements AlertDialogFragmen
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("AddVisitActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("AddVisitActivity.returnResult:: returning %s", this.viewModel.visit));
+            Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: returning %s", this.viewModel.visit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.visit.getUuid().toString());
         }
 

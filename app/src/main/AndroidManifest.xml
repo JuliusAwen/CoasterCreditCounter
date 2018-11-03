@@ -20,7 +20,7 @@
         <activity android:name=".presentation.locations.ShowLocationsActivity" />
         <activity android:name=".presentation.elements.SortElementsActivity" />
         <activity
-            android:name=".presentation.locations.AddLocationActivity"
+            android:name=".presentation.locations.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.elements.EditElementActivity"
@@ -29,7 +29,7 @@
         <activity android:name=".presentation.parks.ShowParkActivity" />
         <activity android:name=".presentation.visits.ShowVisitActivity" />
         <activity android:name=".presentation.TestActivity" />
-        <activity android:name=".presentation.visits.AddVisitActivity"></activity>
+        <activity android:name=".presentation.visits.CreateVisitActivity"></activity>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 
-class AddVisitActivityViewModel extends ViewModel
+class CreateVisitActivityViewModel extends ViewModel
 {
     Park park;
     Visit visit;

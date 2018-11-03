@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.globals;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
-    public static final String LOG_DIVIDER = "##### ";
+    public static final String LOG_DIVIDER = "####### ";
 
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
@@ -26,7 +26,6 @@ public abstract class Constants
 
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.fragment_tag_help_overlay";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.fragment_tag_confirm_dialog";
-    public static final String FRAGMENT_TAG_SHOW_COUNTABLE_ATTRACTIONS = "de.juliusawen.coding.fragment_tag_show_visit_attractions";
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
     public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM YYYY";
@@ -35,13 +34,14 @@ public abstract class Constants
     public static final int REQUEST_PICK_LOCATIONS = Request.PICK_LOCATIONS.ordinal();
     public static final int REQUEST_PICK_PARKS = Request.PICK_PARKS.ordinal();
     public static final int REQUEST_PICK_ATTRACTIONS = Request.PICK_ATTRACTIONS.ordinal();
-    public static final int REQUEST_ADD_LOCATION = Request.ADD_LOCATION.ordinal();
-    public static final int REQUEST_ADD_VISIT = Request.ADD_VISIT.ordinal();
+    public static final int REQUEST_CREATE_LOCATION = Request.CREATE_LOCATION.ordinal();
+    public static final int REQUEST_CREATE_VISIT = Request.CREATE_VISIT.ordinal();
     public static final int REQUEST_SORT_LOCATIONS = Request.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_SORT_PARKS = Request.SORT_PARKS.ordinal();
     public static final int REQUEST_SORT_ATTRACTIONS = Request.SORT_ATTRACTIONS.ordinal();
     public static final int REQUEST_SORT_ATTRACTION_CATEGORIES = Request.SORT_ATTRACTION_CATEGORIES.ordinal();
-    public static final int REQUEST_EDIT_ELEMENT = Request.EDIT_ELEMENT.ordinal();
+    public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
+    public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
 }
 
 enum Request
@@ -50,13 +50,14 @@ enum Request
     PICK_PARKS,
     PICK_ATTRACTIONS,
 
-    ADD_LOCATION,
-    ADD_VISIT,
+    CREATE_LOCATION,
+    CREATE_VISIT,
 
     SORT_LOCATIONS,
     SORT_PARKS,
     SORT_ATTRACTIONS,
     SORT_ATTRACTION_CATEGORIES,
 
-    EDIT_ELEMENT,
+    EDIT_LOCATION,
+    EDIT_ATTRACTION_CATEGORY
 }

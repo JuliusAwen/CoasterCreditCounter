@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.locations.AddLocationActivity">
+    tools:context=".presentation.locations.CreateLocationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             layout="@layout/toolbar"/>
 
         <LinearLayout
-            android:id="@+id/linearLayoutAddLocation_AddChildren"
+            android:id="@+id/linearLayoutCreateLocation_AddChildren"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
@@ -25,7 +25,7 @@
 
             <TextView
                 style="@style/standard_text_view"
-                android:id="@+id/textViewAddLocation_AddChildren"
+                android:id="@+id/textViewCreateLocation_AddChildren"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="end|center_vertical"
@@ -35,7 +35,7 @@
                 android:layout_weight="1"/>
 
             <CheckBox
-                android:id="@+id/checkBoxAddLocation_AddChildren"
+                android:id="@+id/checkBoxCreateLocation_AddChildren"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_gravity="end|center_vertical|center_horizontal"
@@ -47,7 +47,7 @@
 
         <EditText
             style="@style/standard_edit_text"
-            android:id="@+id/editTextAddLocation"
+            android:id="@+id/editTextCreateLocation"
             android:hint="@string/hint_enter_location_name"/>
 
 

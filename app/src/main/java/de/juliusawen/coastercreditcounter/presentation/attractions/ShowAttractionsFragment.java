@@ -125,7 +125,7 @@ public  class ShowAttractionsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_EDIT_ELEMENT)
+            if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID))));
@@ -241,7 +241,7 @@ public  class ShowAttractionsFragment extends Fragment
                                 case EDIT_ATTRACTION_CATEGORY:
                                     ActivityTool.startActivityEditForResult(
                                             Objects.requireNonNull(getActivity()),
-                                            Constants.REQUEST_EDIT_ELEMENT,
+                                            Constants.REQUEST_EDIT_ATTRACTION_CATEGORY,
                                             ((AttractionCategoryHeader)longClickedElement).getAttractionCategory());
                                     return true;
 

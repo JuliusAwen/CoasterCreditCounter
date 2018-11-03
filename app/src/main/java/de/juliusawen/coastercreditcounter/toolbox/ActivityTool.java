@@ -10,22 +10,19 @@ import java.util.Locale;
 import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
-import de.juliusawen.coastercreditcounter.presentation.locations.AddLocationActivity;
+import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
-import de.juliusawen.coastercreditcounter.presentation.visits.AddVisitActivity;
+import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
@@ -58,28 +55,18 @@ public abstract class ActivityTool
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityShow:: unable to start context: unknown type %s", element));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityShow:: unable to start activity: unknown type %s", element));
         }
     }
 
-    public static void startAddVisitActivityForResult(Context context, int requestCode, Element park)
-    {
-        Intent intent = new Intent(context, AddVisitActivity.class);
-        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, park.getUuid().toString());
-        ((Activity)context).startActivityForResult(intent, requestCode);
-
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started [%s] for parent %s ",
-                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), park));
-    }
-
-    public static void startActivityEditForResult(Context context, int requestCode, Element elementToEdit)
+    public static void startActivityEditForResult(Context context, int requestCode, Element element)
     {
         Class type = null;
         String toolbarSubtitle = null;
 
-        if(elementToEdit.isInstance(Location.class))
+        if(requestCode == Constants.REQUEST_EDIT_LOCATION)
         {
-            if(elementToEdit.isRootElement())
+            if(element.isRootElement())
             {
                 type = EditElementActivity.class;
                 toolbarSubtitle = context.getString(R.string.subtitle_root_location_edit);
@@ -90,7 +77,7 @@ public abstract class ActivityTool
                 toolbarSubtitle = context.getString(R.string.subtitle_location_edit);
             }
         }
-        else if(elementToEdit.isInstance(AttractionCategory.class))
+        else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
         {
             type = EditElementActivity.class;
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_edit);
@@ -100,64 +87,65 @@ public abstract class ActivityTool
         {
             Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, elementToEdit.getUuid().toString());
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
             Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEditForResult:: started [%s] for %s",
-                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementToEdit));
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityEditForResult:: unable to start activity: unknown type %s", elementToEdit));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityEditForResult:: unable to start activity: unknown request code [%s]"
+                    , requestCode));
         }
     }
 
-    public static void startActivityAddForResult(Context context, int requestCode, Element parent)
+    public static void startActivityCreateForResult(Context context, int requestCode, Element element)
     {
         Class type = null;
 
-        if(parent.isInstance(Location.class))
+        if(requestCode == Constants.REQUEST_CREATE_LOCATION)
         {
-            type = AddLocationActivity.class;
+            type = CreateLocationActivity.class;
         }
-        else if(parent.isInstance(Visit.class))
+        else if(requestCode == Constants.REQUEST_CREATE_VISIT)
         {
-            type = Visit.class;
+            type = CreateVisitActivity.class;
         }
 
         if(type != null)
         {
             Intent intent = new Intent(context, type);
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parent.getUuid().toString());
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityAddForResult:: started [%s] for %s  with requestCode [%d]",
-                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), parent, requestCode));
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityCreateForResult:: started [%s] for %s  with request code [%d]",
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element, requestCode));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityAddForResult:: unable to start context: unknown type %s", parent));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityCreateForResult:: unable to start activity: unknown request code [%s]"
+                    , requestCode));
         }
     }
 
     public static void startActivitySortForResult(Context context, int requestCode, List<Element> elementsToSort)
     {
-        Element firstElement = elementsToSort.get(0);
         String toolbarTitle = null;
 
-        if(firstElement.isInstance(Location.class))
+        if(requestCode == Constants.REQUEST_SORT_LOCATIONS)
         {
             toolbarTitle = context.getString(R.string.title_locations_sort);
         }
-        else if(firstElement.isInstance(Park.class))
+        else if(requestCode == Constants.REQUEST_SORT_PARKS)
         {
             toolbarTitle = context.getString(R.string.title_parks_sort);
         }
-        else if(firstElement.isInstance(Attraction.class))
+        else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
         {
             toolbarTitle = context.getString(R.string.title_attractions_sort);
         }
-        else if(firstElement.isInstance(AttractionCategory.class))
+        else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
         {
             toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
         }
@@ -169,32 +157,32 @@ public abstract class ActivityTool
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySortForResult:: started [%s] for [%d] elements with requestCode [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySortForResult:: started [%s] for [%d] elements with request code [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToSort.size(), requestCode));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start context: unknown type %s", firstElement));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start activity: unknown request code [%s]"
+                    , requestCode));
         }
     }
 
     public static void startActivityPickForResult(Context context, int requestCode, List<Element> elementsToPickFrom)
     {
-        Element firstElement = elementsToPickFrom.get(0);
         String toolbarTitle = null;
         String toolbarSubtitle = null;
 
-        if(firstElement.isInstance(Location.class))
+        if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
         {
             toolbarTitle = context.getString(R.string.title_locations_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
         }
-        else if(firstElement.isInstance(Park.class))
+        else if(requestCode == Constants.REQUEST_PICK_PARKS)
         {
             toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
         }
-        else if(firstElement.isInstance(Attraction.class) || firstElement.isInstance(AttractionCategory.class) || firstElement.isInstance(AttractionCategoryHeader.class))
+        else if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
@@ -213,7 +201,8 @@ public abstract class ActivityTool
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start context: unknown type %s", firstElement));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start activity: unknown request code [%s]"
+                    , requestCode));
         }
     }
 }
