@@ -106,15 +106,19 @@ public class ShowVisitActivity extends BaseActivity
 
     private void handleFloatingActionButtonVisibility()
     {
-        if(!this.allAttractionsAdded())
+        if(this.allAttractionsAdded())
         {
-            super.setFloatingActionButtonVisibility(true);
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
+            Log.v(Constants.LOG_TAG, "ShowVisitActivity.handleFloatingActionButtonVisibility:: all attractions added: disabling floating action button ...");
+
+            super.disableFloatingActionButton();
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
         }
         else
         {
-            super.setFloatingActionButtonVisibility(false);
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
+            Log.v(Constants.LOG_TAG, "ShowVisitActivity.handleFloatingActionButtonVisibility:: all attractions added: showing floating action button ...");
+
+            super.setFloatingActionButtonVisibility(true);
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
         }
     }
 

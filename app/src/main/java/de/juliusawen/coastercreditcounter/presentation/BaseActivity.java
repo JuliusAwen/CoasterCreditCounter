@@ -218,6 +218,14 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
+    protected void disableFloatingActionButton()
+    {
+        Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling floating action button...");
+
+        this.floatingActionButton.hide();
+        this.floatingActionButton = null;
+    }
+
     protected void animateFloatingActionButtonTransition(Drawable icon)
     {
         this.floatingActionButton.hide();
