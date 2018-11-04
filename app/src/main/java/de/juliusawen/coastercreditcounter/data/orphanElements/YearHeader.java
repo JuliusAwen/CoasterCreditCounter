@@ -62,15 +62,15 @@ public class YearHeader extends OrphanElement
         return latestYearHeader;
     }
 
-    public static List<Element> fetchYearHeadersFromVisits(List<Visit> visits)
+    public static List<Element> fetchCategorizedVisits(List<Visit> visits)
     {
         if(visits.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "YearHeader.fetchYearHeadersFromVisits:: no elements found");
+            Log.v(Constants.LOG_TAG, "YearHeader.fetchCategorizedVisits:: no elements found");
             return new ArrayList<Element>(visits);
         }
 
-        Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: adding YearHeaders to [%d] elements...", visits.size()));
+        Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: adding YearHeaders to [%d] elements...", visits.size()));
 
         List<YearHeader> yearHeaders = App.content.getOrphanElementsAsType(YearHeader.class);
 
@@ -114,7 +114,7 @@ public class YearHeader extends OrphanElement
                 {
                     yearHeader = YearHeader.create(year);
                     App.content.addOrphanElement(yearHeader);
-                    Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: created new %s", yearHeader));
+                    Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: created new %s", yearHeader));
                 }
 
                 yearHeader.addChildToOrphanElement(visit);
@@ -122,7 +122,7 @@ public class YearHeader extends OrphanElement
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchYearHeadersFromVisits:: [%d] YearHeaders added", preparedElements.size()));
+        Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: [%d] YearHeaders added", preparedElements.size()));
         return preparedElements;
     }
 }

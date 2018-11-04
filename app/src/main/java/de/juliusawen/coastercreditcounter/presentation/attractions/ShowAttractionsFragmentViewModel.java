@@ -32,7 +32,7 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
         {
             Log.d(Constants.LOG_TAG, "ShowAttractionsFragmentViewModel.getCategorizedAttractions:: initally fetching AttractionCategoryHeaders...");
 
-            categorizedAttractions = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
+            categorizedAttractions = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
 
             for(Element attractionCategoryHeader : categorizedAttractions)
             {
@@ -107,7 +107,7 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
                     {
                         Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragmentViewModel.getCategorizedAttractions:: removing %s...", attractionCategoryHeader));
 
-                        this.attractionCategoryHeadersByAttractionCategoryUuids.remove(attractionCategoryHeader.getName());
+                        this.attractionCategoryHeadersByAttractionCategoryUuids.remove(attractionCategoryHeader.getUuid());
                         App.content.removeOrphanElement(attractionCategoryHeader);
                     }
                 }

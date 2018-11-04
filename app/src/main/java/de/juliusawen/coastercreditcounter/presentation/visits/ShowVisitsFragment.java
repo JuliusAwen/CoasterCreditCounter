@@ -102,12 +102,12 @@ public class ShowVisitsFragment extends Fragment
         {
             case SORT_ASCENDING:
                 Visit.setSortOrder(SortOrder.ASCENDING);
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerView(false);
                 return true;
 
             case SORT_DESCENDING:
                 Visit.setSortOrder(SortOrder.DESCENDING);
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerView(false);
                 return true;
 
             default:
@@ -124,7 +124,7 @@ public class ShowVisitsFragment extends Fragment
         {
             if(requestCode == Constants.REQUEST_CREATE_VISIT)
             {
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerView(true);
 
                 Element visit = App.content.fetchElementByUuidString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID));
                 ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
@@ -141,7 +141,7 @@ public class ShowVisitsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        List<Element> categorizedVisits = this.fetchCategorizedVisits();
+        List<Element> categorizedVisits = this.getCategorizedVisits();
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedVisits,
@@ -156,7 +156,15 @@ public class ShowVisitsFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, (Element) view.getTag());
+                Element element = (Element) view.getTag();
+                if(element.isInstance(Visit.class))
+                {
+                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, element);
+                }
+                else if(element.isInstance(YearHeader.class));
+                {
+                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                }
             }
 
             @Override
@@ -168,17 +176,17 @@ public class ShowVisitsFragment extends Fragment
         };
     }
 
-    private void updateContentRecyclerView()
+    private void updateContentRecyclerView(boolean expandLatestYearHeaderAccordingToSettings)
     {
         if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
         {
-            List<Element> sortedYearHeaders = this.fetchCategorizedVisits();
+            List<Element> categorizedVisits = this.getCategorizedVisits();
 
-            this.viewModel.contentRecyclerViewAdapter.updateContent(sortedYearHeaders);
+            this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedVisits);
 
-            if(App.settings.getExpandLatestYearInListByDefault())
+            if(expandLatestYearHeaderAccordingToSettings && App.settings.getExpandLatestYearInListByDefault())
             {
-                this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(sortedYearHeaders));
+                this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(categorizedVisits));
             }
 
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
@@ -190,8 +198,8 @@ public class ShowVisitsFragment extends Fragment
     }
 
 
-    private List<Element> fetchCategorizedVisits()
+    private List<Element> getCategorizedVisits()
     {
-        return YearHeader.fetchYearHeadersFromVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
+        return YearHeader.fetchCategorizedVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
     }
 }

@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -25,8 +26,11 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitActivity extends BaseActivity
 {
@@ -65,10 +69,11 @@ public class ShowVisitActivity extends BaseActivity
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         }
         else
         {
-            updateContentRecyclerView();
+            updateContentRecyclerView(false);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
@@ -95,7 +100,7 @@ public class ShowVisitActivity extends BaseActivity
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_PICK_ATTRACTIONS,
-                        getAttractionsWithCategoryHeaders(allAttractions));
+                        getCategorizedCountableAttractions(allAttractions));
             }
         });
     }
@@ -123,14 +128,14 @@ public class ShowVisitActivity extends BaseActivity
         {
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
-                List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+                List<Element> resultElements = ResultTool.fetchResultElements(data);
 
-                for(Element element : selectedElements)
+                for(Element element : resultElements)
                 {
                     this.viewModel.visit.addChild(CountableAttraction.create((Attraction)element));
                 }
 
-                this.updateContentRecyclerView();
+                this.updateContentRecyclerView(true);
                 this.handleFloatingActionButtonVisibility();
             }
         }
@@ -138,17 +143,59 @@ public class ShowVisitActivity extends BaseActivity
 
     private ContentRecyclerViewAdapter createContentRecyclerView()
     {
-        List<Element> categorizedAttractions = this.getAttractionsWithCategoryHeaders(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
+        List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
-                categorizedAttractions,
-                AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions),
+                categorizedCountableAttractions,
+                AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedCountableAttractions),
                 CountableAttraction.class);
     }
 
-    public void updateContentRecyclerView()
+    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
-        List<Element> categorizedCountableAttractions = this.getAttractionsWithCategoryHeaders(new ArrayList<>(this.viewModel.visit.getChildrenOfType(CountableAttraction.class)));
+        return new RecyclerOnClickListener.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Element element = (Element) view.getTag();
+
+                if(element.isInstance(AttractionCategoryHeader.class))
+                {
+                    Toaster.makeToast(ShowVisitActivity.this, "ACH clicked");
+                }
+                else
+                {
+                    Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
+                }
+            }
+
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return false;
+            }
+        };
+    }
+
+    private void updateContentRecyclerView(boolean expandCategoriesAccordingToSettings)
+    {
+        List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedCountableAttractions);
+
+        if(expandCategoriesAccordingToSettings)
+        {
+            for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
+            {
+                for(Element attractionCategoryHeader : categorizedCountableAttractions)
+                {
+                    if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(attractionCategory))
+                    {
+                        this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
+                    }
+                }
+            }
+        }
+
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -169,13 +216,14 @@ public class ShowVisitActivity extends BaseActivity
         }
     }
 
-    private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
+    private List<Element> getCategorizedCountableAttractions(List<Element> attractions)
     {
         if(!this.viewModel.attractionCategoryHeaders.isEmpty())
         {
             App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
         }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
+
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
         return this.viewModel.attractionCategoryHeaders;
     }
 }

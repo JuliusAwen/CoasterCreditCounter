@@ -630,6 +630,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public void toggleExpansion(Element parent)
+    {
+        if(this.childType != null)
+        {
+            if(!this.expandedParents.contains(parent))
+            {
+                this.expandParent(parent);
+            }
+            else
+            {
+                this.collapseParent(parent);
+            }
+        }
+    }
 
     public List<Element> getContent()
     {

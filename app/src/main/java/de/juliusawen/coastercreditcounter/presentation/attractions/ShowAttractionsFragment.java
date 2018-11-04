@@ -180,7 +180,6 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-
         List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedAttractions,
@@ -199,8 +198,13 @@ public  class ShowAttractionsFragment extends Fragment
 
                 if(element.isInstance(Attraction.class))
                 {
-                    Toaster.makeToast(getContext(), String.format("ShowAttractions not yet implemented %s", (Element) view.getTag()));
+                    Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
                 }
+                else if(element.isInstance(AttractionCategoryHeader.class))
+                {
+                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                }
+
             }
 
             @Override

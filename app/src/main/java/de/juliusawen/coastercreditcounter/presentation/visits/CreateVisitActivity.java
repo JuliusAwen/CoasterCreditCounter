@@ -226,20 +226,22 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         switch(requestCode)
         {
             case ALERT_DIALOG_PICK_ATTRACTIONS:
+            {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            this.getAttractionsWithCategoryHeaders(viewModel.park.getChildrenOfType(Attraction.class)));
+                            this.getCategorizedAttractions(viewModel.park.getChildrenOfType(Attraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
                     returnResult(Activity.RESULT_OK);
                 }
                 break;
-
+            }
             case ALERT_DIALOG_VISIT_ALREADY_EXISTS:
+            {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     this.createVisit(viewModel.calendar);
@@ -255,10 +257,21 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    returnResult(Activity.RESULT_OK);
+                    returnResult(Activity.RESULT_CANCELED);
                 }
                 break;
+            }
         }
+    }
+
+    private List<Element> getCategorizedAttractions(List<Element> attractions)
+    {
+        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
+        {
+            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
+        }
+        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
+        return this.viewModel.attractionCategoryHeaders;
     }
 
     private void returnResult(int resultCode)
@@ -274,15 +287,5 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         setResult(resultCode, intent);
         finish();
-    }
-
-    private List<Element> getAttractionsWithCategoryHeaders(List<Element> attractions)
-    {
-        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
-        {
-            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
-        }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements(attractions);
-        return this.viewModel.attractionCategoryHeaders;
     }
 }

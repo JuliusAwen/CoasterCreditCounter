@@ -39,25 +39,25 @@ public class AttractionCategoryHeader extends OrphanElement
         return attractionCategoryHeader;
     }
 
-    public static List<Element> fetchAttractionCategoryHeadersFromElements(List<? extends Element> elements)
+    public static List<Element> fetchCategorizedAttractions(List<? extends Element> elements)
     {
         if(elements.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: no attractions");
+            Log.v(Constants.LOG_TAG, "AttractionCategoryHeader.fetchCategorizedAttractions:: no attractions passed");
             return new ArrayList<>(elements);
         }
 
-        List<Element> preparedElements = new ArrayList<>();
+        List<Element> categorizedAttractions = new ArrayList<>();
 
         if(elements.get(0).isInstance(Attraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: fetching headers for [%d] attractions...", elements.size()));
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchCategorizedAttractions:: fetching headers for [%d] attractions...", elements.size()));
             List<Attraction> attractions = Element.convertElementsToType(elements, Attraction.class);
 
             for(Attraction attraction : attractions)
             {
                 Element existingCategoryHeader = null;
-                for(Element attractionCategoryHeader : preparedElements)
+                for(Element attractionCategoryHeader : categorizedAttractions)
                 {
                     if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(attraction.getCategory()))
                     {
@@ -74,19 +74,19 @@ public class AttractionCategoryHeader extends OrphanElement
                     Element attractionCategoryHeader = AttractionCategoryHeader.create(attraction.getCategory());
                     App.content.addOrphanElement(attractionCategoryHeader);
                     attractionCategoryHeader.addChildToOrphanElement(attraction);
-                    preparedElements.add(attractionCategoryHeader);
+                    categorizedAttractions.add(attractionCategoryHeader);
                 }
             }
         }
         else if(elements.get(0).isInstance(CountableAttraction.class))
         {
-            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: adding headers for [%d] countable attractions...", elements.size()));
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchCategorizedAttractions:: adding headers for [%d] countable attractions...", elements.size()));
             List<CountableAttraction> countableAttractions = Element.convertElementsToType(elements, CountableAttraction.class);
 
             for(CountableAttraction countableAttraction : countableAttractions)
             {
                 Element existingCategoryHeader = null;
-                for(Element attractionCategoryHeader : preparedElements)
+                for(Element attractionCategoryHeader : categorizedAttractions)
                 {
                     if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(countableAttraction.getAttraction().getCategory()))
                     {
@@ -103,15 +103,15 @@ public class AttractionCategoryHeader extends OrphanElement
                     Element attractionCategoryHeader = AttractionCategoryHeader.create(countableAttraction.getAttraction().getCategory());
                     App.content.addOrphanElement(attractionCategoryHeader);
                     attractionCategoryHeader.addChildToOrphanElement(countableAttraction);
-                    preparedElements.add(attractionCategoryHeader);
+                    categorizedAttractions.add(attractionCategoryHeader);
                 }
             }
         }
 
-        preparedElements = AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(preparedElements);
+        categorizedAttractions = AttractionCategoryHeader.sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(categorizedAttractions);
 
-        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchAttractionCategoryHeadersFromElements:: [%d] headers added", preparedElements.size()));
-        return preparedElements;
+        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeader.fetchCategorizedAttractions:: [%d] headers added", categorizedAttractions.size()));
+        return categorizedAttractions;
     }
 
     public static List<Element> sortAttractionCategoryHeadersBasedOnAttractionCategoriesOrder(List<Element> attractionCategoryHeaders)
