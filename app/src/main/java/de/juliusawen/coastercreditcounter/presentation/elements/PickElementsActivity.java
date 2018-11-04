@@ -36,7 +36,7 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "PickElementsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "PickElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_pick_elements);
         super.onCreate(savedInstanceState);
@@ -215,6 +215,7 @@ public class PickElementsActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 }

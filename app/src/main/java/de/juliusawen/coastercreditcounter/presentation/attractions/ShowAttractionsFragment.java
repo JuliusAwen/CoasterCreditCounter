@@ -5,15 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -25,15 +20,12 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -45,7 +37,7 @@ public  class ShowAttractionsFragment extends Fragment
 
     public static ShowAttractionsFragment newInstance(String uuidString)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowAttractionsFragment.newInstance:: instantiating fragment...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionsFragment.newInstance:: instantiating fragment...");
 
         ShowAttractionsFragment showAttractionsFragment =  new ShowAttractionsFragment();
         Bundle args = new Bundle();
@@ -100,26 +92,6 @@ public  class ShowAttractionsFragment extends Fragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onOptionItemSelected:: [%S] selected", selection));
-
-        switch(selection)
-        {
-            case SORT_ATTRACTION_CATEGORIES:
-                ActivityTool.startActivitySortForResult(
-                        Objects.requireNonNull(getActivity()),
-                        Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
-                        new ArrayList<Element>(App.content.getAttractionCategories()));
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
@@ -133,39 +105,24 @@ public  class ShowAttractionsFragment extends Fragment
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
             }
-            else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS || requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
+            else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
                 List<Element> resultElements = ResultTool.fetchResultElements(data);
 
-                if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
+                Element parent = resultElements.get(0).getParent();
+                if(parent != null)
                 {
-                    Element parent = resultElements.get(0).getParent();
-                    if(parent != null)
-                    {
-                        this.viewModel.park.reorderChildren(resultElements);
-                        Log.d(Constants.LOG_TAG,
-                                String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
-                    }
-
-                    this.updateContentRecyclerView();
-
-                    if(selectedElement != null)
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
-                    }
-
+                    this.viewModel.park.reorderChildren(resultElements);
+                    Log.d(Constants.LOG_TAG,
+                            String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
                 }
-                else
-                {
-                    App.content.setAttractionCategories(Element.convertElementsToType(resultElements, AttractionCategory.class));
-                    this.updateContentRecyclerView();
 
-                    if(selectedElement != null)
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
-                    }
+                this.updateContentRecyclerView();
+
+                if(selectedElement != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
                 }
             }
         }
@@ -204,54 +161,14 @@ public  class ShowAttractionsFragment extends Fragment
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-
             }
 
             @Override
-            public boolean onLongClick(final View view)
+            public boolean onLongClick(View view)
             {
-                final Element longClickedElement = (Element) view.getTag();
-
-                if(longClickedElement.isInstance(AttractionCategoryHeader.class))
+                if(((Element)view.getTag()).isInstance(AttractionCategoryHeader.class))
                 {
-                    PopupMenu popupMenu = new PopupMenu(getContext(), view);
-                    popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
-
-                    if(longClickedElement.getChildCountOfType(Attraction.class) > 1)
-                    {
-                        popupMenu.getMenu().add(0, Selection.SORT_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
-                    }
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                    {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item)
-                        {
-                            Selection selection = Selection.values()[item.getItemId()];
-                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onLongClickExpandableRecyclerView.onMenuItemClick:: [%S] selected", selection));
-
-                            switch (selection)
-                            {
-                                case EDIT_ATTRACTION_CATEGORY:
-                                    ActivityTool.startActivityEditForResult(
-                                            Objects.requireNonNull(getActivity()),
-                                            Constants.REQUEST_EDIT_ATTRACTION_CATEGORY,
-                                            ((AttractionCategoryHeader)longClickedElement).getAttractionCategory());
-                                    return true;
-
-                                case SORT_ATTRACTIONS:
-                                    ActivityTool.startActivitySortForResult(
-                                            Objects.requireNonNull(getActivity()),
-                                            Constants.REQUEST_SORT_ATTRACTIONS,
-                                            longClickedElement.getChildrenOfType(Attraction.class));
-                                    return true;
-
-                                default:
-                                    return false;
-                            }
-                        }
-                    });
-                    popupMenu.show();
+                    AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
                 }
                 return true;
             }
@@ -260,6 +177,8 @@ public  class ShowAttractionsFragment extends Fragment
 
     private void updateContentRecyclerView()
     {
+        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
+
         List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();

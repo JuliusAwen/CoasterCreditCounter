@@ -26,6 +26,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -37,7 +38,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "CreateVisitActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateVisitActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_create_visit);
         super.onCreate(savedInstanceState);
@@ -73,11 +74,13 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
-                List<Element> selectedElements = App.content.fetchElementsByUuidStrings(data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+                List<Element> resultElements = ResultTool.fetchResultElements(data);
 
-                for(Element element : selectedElements)
+                for(Element element : resultElements)
                 {
-                    this.viewModel.visit.addChild(CountableAttraction.create((Attraction)element));
+                    Element countableAttraction = CountableAttraction.create((Attraction)element);
+                    this.viewModel.visit.addChild(countableAttraction);
+                    App.content.addElement(countableAttraction);
                 }
 
                 this.returnResult(Activity.RESULT_OK);
@@ -286,6 +289,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
 
         setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 }

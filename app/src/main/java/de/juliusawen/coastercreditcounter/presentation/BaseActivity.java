@@ -150,6 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     protected void onToolbarHomeButtonBackClicked()
     {
         Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 

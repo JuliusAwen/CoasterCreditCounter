@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     static class ViewHolderCountableChild extends RecyclerView.ViewHolder
     {
+        LinearLayout linearLayoutCounter;
         TextView textViewName;
         TextView textViewCount;
         ImageView imageViewDecrease;
@@ -93,6 +95,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             super(view);
 
+            this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewCountableChild_Counter);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Name);
             this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Count);
             this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemCountableChild_Decrease);
@@ -341,12 +344,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(!expandedParents.contains(parent))
                 {
                     expandParent(parent);
-                    ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(content.indexOf(parent), 0);
                 }
                 else
                 {
                     collapseParent(parent);
-                    recyclerView.scrollToPosition(content.indexOf(parent));
                 }
             }
         };
@@ -583,11 +584,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         CountableAttraction child = (CountableAttraction) this.content.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderCountableChild:: binding %s for position [%d]", child, position));
 
+        viewHolder.linearLayoutCounter.setTag(child);
+        if(this.recyclerOnClickListener != null)
+        {
+            viewHolder.linearLayoutCounter.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            viewHolder.linearLayoutCounter.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+        }
+
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child.getAttraction()));
 
-        viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
         viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
+        viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
     }
 
     private void setImagePlaceholder(ImageView imageView)
@@ -607,6 +615,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
                 notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
 
+                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(this.content.indexOf(parent), 0);
+
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
             }
         }
@@ -625,6 +635,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             this.content.removeAll(parent.getChildrenOfType(this.childType));
             notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+
+            this.recyclerView.scrollToPosition(content.indexOf(parent));
 
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
         }

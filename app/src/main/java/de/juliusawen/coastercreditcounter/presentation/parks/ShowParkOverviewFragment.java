@@ -24,7 +24,7 @@ public class ShowParkOverviewFragment extends Fragment
 
     public static ShowParkOverviewFragment newInstance(String parkUuid)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowParkOverviewFragment.newInstance:: instantiating fragment...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowParkOverviewFragment.newInstance:: instantiating fragment...");
 
         ShowParkOverviewFragment showParkOverviewFragment = new ShowParkOverviewFragment();
         Bundle args = new Bundle();

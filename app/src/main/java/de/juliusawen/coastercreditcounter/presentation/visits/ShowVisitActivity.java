@@ -39,7 +39,7 @@ public class ShowVisitActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowVisitActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_visit);
         super.onCreate(savedInstanceState);
@@ -126,17 +126,40 @@ public class ShowVisitActivity extends BaseActivity
 
         if(resultCode == Activity.RESULT_OK)
         {
+            List<Element> resultElements = ResultTool.fetchResultElements(data);
+
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
-                List<Element> resultElements = ResultTool.fetchResultElements(data);
-
                 for(Element element : resultElements)
                 {
-                    this.viewModel.visit.addChild(CountableAttraction.create((Attraction)element));
+                    Element countableAttraction = CountableAttraction.create((Attraction)element);
+                    this.viewModel.visit.addChild(countableAttraction);
+                    App.content.addElement(countableAttraction);
                 }
 
                 this.updateContentRecyclerView(true);
                 this.handleFloatingActionButtonVisibility();
+            }
+            else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
+            {
+                Element selectedElement = ResultTool.fetchSelectedElement(data);
+
+                Element parent = resultElements.get(0).getParent();
+                if(parent != null)
+                {
+                    this.viewModel.visit.reorderChildren(resultElements);
+                    Log.d(Constants.LOG_TAG,
+                            String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
+                }
+
+                this.updateContentRecyclerView(true);
+
+                if(selectedElement != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((CountableAttraction)selectedElement).getAttraction().getCategory());
+                }
+
             }
         }
     }
@@ -161,9 +184,9 @@ public class ShowVisitActivity extends BaseActivity
 
                 if(element.isInstance(AttractionCategoryHeader.class))
                 {
-                    Toaster.makeToast(ShowVisitActivity.this, "ACH clicked");
+                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else
+                else if(element.isInstance(CountableAttraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
                 }
@@ -172,13 +195,26 @@ public class ShowVisitActivity extends BaseActivity
             @Override
             public boolean onLongClick(View view)
             {
-                return false;
+                Element element = (Element) view.getTag();
+
+                if(element.isInstance(AttractionCategoryHeader.class))
+                {
+                    AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
+                }
+                else if(element.isInstance(CountableAttraction.class))
+                {
+                    Toaster.makeToast(ShowVisitActivity.this, element.getName() + " long clicked");
+                }
+
+                return true;
             }
         };
     }
 
     private void updateContentRecyclerView(boolean expandCategoriesAccordingToSettings)
     {
+        Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
+
         List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedCountableAttractions);
 
@@ -190,6 +226,7 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(attractionCategory))
                     {
+                        Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.updateContentRecyclerView:: expanding %s according to settings...", attractionCategoryHeader));
                         this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
                     }
                 }

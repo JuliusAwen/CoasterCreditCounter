@@ -30,7 +30,7 @@ public class SortElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "SortElementsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "SortElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
@@ -226,6 +226,7 @@ public class SortElementsActivity extends BaseActivity
             }
         }
         setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 }

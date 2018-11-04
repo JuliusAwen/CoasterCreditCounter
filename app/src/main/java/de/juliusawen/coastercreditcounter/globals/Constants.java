@@ -3,7 +3,8 @@ package de.juliusawen.coastercreditcounter.globals;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
-    public static final String LOG_DIVIDER = "####### ";
+    public static final String LOG_DIVIDER_ON_CREATE = "####### ";
+    public static final String LOG_DIVIDER_FINISH = "-------";
 
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
@@ -56,7 +57,6 @@ public abstract class Constants
     public static final int REQUEST_PICK_PARKS = Request.PICK_PARKS.ordinal();
     public static final int REQUEST_PICK_ATTRACTIONS = Request.PICK_ATTRACTIONS.ordinal();
 }
-
 enum Request
 {
     CREATE_LOCATION,

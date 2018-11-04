@@ -9,6 +9,7 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Coaster;
+import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
@@ -315,17 +316,15 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChild(usa);
 
         Visit visit0 = Visit.create(2018, 2, 30);
+        this.addAttractionsToVisit(visit0, Element.convertElementsToType(heidePark.getChildrenAsType(Coaster.class), Attraction.class));
+        heidePark.addChild(visit0);
+
         Visit visit1 = Visit.create(2018, 0, 1);
         Visit visit2 = Visit.create(2018, 1, 2);
         Visit visit3 = Visit.create(2018, 2, 3);
         Visit visit4 = Visit.create(2017, 3, 4);
         Visit visit5 = Visit.create(2017, 4, 5);
         Visit visit6 = Visit.create(2016, 5, 6);
-
-        Visit visitToday = Visit.create(Calendar.getInstance());
-        freimarkt.addChild(visitToday);
-        Visit.setOpenVisit(visitToday);
-
         cedarPoint.addChild(visit6);
         cedarPoint.addChild(visit5);
         cedarPoint.addChild(visit4);
@@ -333,7 +332,15 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChild(visit2);
         cedarPoint.addChild(visit1);
 
-        heidePark.addChild(visit0);
+        Visit visit7 = Visit.create(2019, 0, 1);
+        this.addAttractionsToVisit(visit7, walibiHolland.getChildrenAsType(Attraction.class));
+        walibiHolland.addChild(visit7);
+
+        Visit visitToday = Visit.create(Calendar.getInstance());
+        freimarkt.addChild(visitToday);
+        Visit.setOpenVisit(visitToday);
+
+
 
         //add tree to content (one element is enough - content is searching for root on its own and flattens tree from there)
         content.addElement(earth);
@@ -341,6 +348,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.setAttractionCategories(attractionCategories);
 
         this.addDefaults(content);
+    }
+
+    private void addAttractionsToVisit(Visit visit, List<Attraction> attractions)
+    {
+        for(Attraction attraction : attractions)
+        {
+            visit.addChild(CountableAttraction.create(attraction));
+        }
     }
 
     private void addDefaults(Content content)

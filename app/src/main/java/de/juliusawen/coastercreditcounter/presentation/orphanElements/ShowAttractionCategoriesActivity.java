@@ -42,7 +42,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowAttractionCategoriesActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionCategoriesActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_attraction_categories);
         super.onCreate(savedInstanceState);
@@ -270,6 +270,8 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
 
     private void updateContentRecyclerView()
     {
+        Log.i(Constants.LOG_TAG, "ShowAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
+
         this.viewModel.contentRecyclerViewAdapter.updateContent(new ArrayList<Element>(App.content.getAttractionCategories()));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }

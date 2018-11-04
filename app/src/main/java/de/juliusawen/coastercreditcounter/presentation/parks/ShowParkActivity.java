@@ -46,7 +46,7 @@ public class ShowParkActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowParkActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowParkActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_park);
         super.onCreate(savedInstanceState);
@@ -77,11 +77,6 @@ public class ShowParkActivity extends BaseActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-
-        if(this.viewModel.currentTab == ATTRACTIONS && this.viewModel.park.getAttractionCategoryCount() > 1)
-        {
-            menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
-        }
 
         if(this.viewModel.currentTab == VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {

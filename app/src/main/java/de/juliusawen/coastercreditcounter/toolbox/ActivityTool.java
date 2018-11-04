@@ -68,6 +68,7 @@ public abstract class ActivityTool
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityShow:: unable to start activity: unknown type %s", element));
         }
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivityEditForResult(Context context, int requestCode, Element element)
@@ -109,6 +110,7 @@ public abstract class ActivityTool
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityEditForResult:: unable to start activity: unknown request code [%s]"
                     , requestCode));
         }
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivityCreateForResult(Context context, int requestCode, Element parentElement)
@@ -150,6 +152,7 @@ public abstract class ActivityTool
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityCreateForResult:: unable to start activity: unknown request code [%s]"
                     , requestCode));
         }
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivitySortForResult(Context context, int requestCode, List<Element> elementsToSort)
@@ -188,6 +191,7 @@ public abstract class ActivityTool
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start activity: unknown request code [%s]"
                     , requestCode));
         }
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivityPickForResult(Context context, int requestCode, List<Element> elementsToPickFrom)
@@ -227,5 +231,6 @@ public abstract class ActivityTool
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start activity: unknown request code [%s]"
                     , requestCode));
         }
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 }

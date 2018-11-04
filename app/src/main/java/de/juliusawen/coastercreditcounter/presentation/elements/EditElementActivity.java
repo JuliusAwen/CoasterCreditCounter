@@ -29,7 +29,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "EditElementActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
@@ -137,6 +137,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         }
 
         setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 }

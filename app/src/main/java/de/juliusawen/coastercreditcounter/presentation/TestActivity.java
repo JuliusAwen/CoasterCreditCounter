@@ -27,7 +27,7 @@ public class TestActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER + "TestActivity.onCreate:: creating activity...");
+        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "TestActivity.onCreate:: creating activity...");
         setContentView(R.layout.activity_test);
         super.onCreate(savedInstanceState);
 

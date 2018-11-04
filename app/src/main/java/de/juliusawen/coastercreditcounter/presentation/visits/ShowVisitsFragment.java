@@ -41,7 +41,7 @@ public class ShowVisitsFragment extends Fragment
 
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowVisitsFragment.newInstance:: instantiating fragment...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitsFragment.newInstance:: instantiating fragment...");
 
         ShowVisitsFragment showVisitsFragment = new ShowVisitsFragment();
         Bundle args = new Bundle();
@@ -178,6 +178,8 @@ public class ShowVisitsFragment extends Fragment
 
     private void updateContentRecyclerView(boolean expandLatestYearHeaderAccordingToSettings)
     {
+        Log.i(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: updating RecyclerView...");
+
         if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
         {
             List<Element> categorizedVisits = this.getCategorizedVisits();

@@ -52,7 +52,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "ShowLocationsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowLocationsActivity.onCreate:: creating activity...");
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
 
@@ -443,7 +443,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                                 case REMOVE_ELEMENT:
                                     String alertDialogMessage;
-                                    if(viewModel.longClickedElement.getParent().equals(App.content.getRootLocation()) && viewModel.longClickedElement.hasChildrenOfInstance(Park.class))
+                                    if(viewModel.longClickedElement.getParent().equals(App.content.getRootLocation()) && viewModel.longClickedElement.hasChildrenOfType(Park.class))
                                     {
                                         alertDialogMessage = getString(R.string.alert_dialog_remove_element_message_parent_is_root, viewModel.longClickedElement.getName(),
                                                         viewModel.longClickedElement.getParent().getName());

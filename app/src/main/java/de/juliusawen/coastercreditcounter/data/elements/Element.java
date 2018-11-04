@@ -190,7 +190,7 @@ public abstract class Element
 
     }
 
-    public void reorderChildren(List<Element> children)
+    public void reorderChildren(List<? extends Element> children)
     {
         if(!children.isEmpty())
         {
@@ -235,7 +235,7 @@ public abstract class Element
         return !this.getChildren().isEmpty();
     }
 
-    public boolean hasChildrenOfInstance(Class<? extends Element> type)
+    public boolean hasChildrenOfType(Class<? extends Element> type)
     {
         return !this.getChildrenOfType(type).isEmpty();
     }

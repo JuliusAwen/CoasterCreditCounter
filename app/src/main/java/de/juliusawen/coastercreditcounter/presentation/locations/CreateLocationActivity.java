@@ -44,7 +44,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER + "CreateLocationsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateLocationsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_create_location);
         super.onCreate(savedInstanceState);
@@ -99,6 +99,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                 }
 
                 setResult(RESULT_CANCELED, intent);
+                Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
                 finish();
                 break;
         }
@@ -126,7 +127,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                 Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<PickLocations>:: inserting #[%d] elements...", pickedElements.size()));
                 this.viewModel.parentLocation.insertElements(this.viewModel.newLocation, new ArrayList<>(pickedElements));
 
-                if(this.viewModel.parentLocation.hasChildrenOfInstance(Park.class))
+                if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {
                     Log.v(Constants.LOG_TAG, String.format( "CreateLocationsActivity.onActivityResult<PickLocations>:: parent element %s has #[%d] children parks - asking to relocate...",
                             this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
@@ -151,7 +152,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
     private void createEditText()
     {
-        if(this.viewModel.parentLocation.hasChildrenOfInstance(Location.class))
+        if(this.viewModel.parentLocation.hasChildrenOfType(Location.class))
         {
             Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.createEditText: parent %s has #[%d] children<Park> - offering add location option...",
                     this.viewModel.parentLocation,
@@ -210,7 +211,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                             this.viewModel.parentLocation, this.viewModel.newLocation));
                     this.viewModel.parentLocation.insertElements(this.viewModel.newLocation, this.viewModel.parentLocation.getChildrenOfType(Location.class));
 
-                    if(this.viewModel.parentLocation.hasChildrenOfInstance(Park.class))
+                    if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                     {
                         Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has #[%d] children<Park> - asking to relocate...",
                                 this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
@@ -231,7 +232,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                         this.viewModel.parentLocation, this.viewModel.newLocation));
                 this.viewModel.parentLocation.addChild(this.viewModel.newLocation);
 
-                if(this.viewModel.parentLocation.hasChildrenOfInstance(Park.class))
+                if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {
                     Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> and #[%d] children<Park> - asking to relocate...",
                             this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
@@ -337,6 +338,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         }
 
         setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
 }
