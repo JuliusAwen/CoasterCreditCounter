@@ -18,7 +18,6 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -73,7 +72,7 @@ public class ShowVisitActivity extends BaseActivity
         }
         else
         {
-            updateContentRecyclerView(false);
+            updateContentRecyclerView();
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
@@ -137,13 +136,10 @@ public class ShowVisitActivity extends BaseActivity
                     App.content.addElement(countableAttraction);
                 }
 
-                this.updateContentRecyclerView(true);
                 this.handleFloatingActionButtonVisibility();
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
-                Element selectedElement = ResultTool.fetchSelectedElement(data);
-
                 Element parent = resultElements.get(0).getParent();
                 if(parent != null)
                 {
@@ -151,15 +147,6 @@ public class ShowVisitActivity extends BaseActivity
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
                 }
-
-                this.updateContentRecyclerView(true);
-
-                if(selectedElement != null)
-                {
-                    Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((CountableAttraction)selectedElement).getAttraction().getCategory());
-                }
-
             }
         }
     }
@@ -169,7 +156,7 @@ public class ShowVisitActivity extends BaseActivity
         List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 categorizedCountableAttractions,
-                AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedCountableAttractions),
+                null,
                 CountableAttraction.class);
     }
 
@@ -211,28 +198,12 @@ public class ShowVisitActivity extends BaseActivity
         };
     }
 
-    private void updateContentRecyclerView(boolean expandCategoriesAccordingToSettings)
+    private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
 
         List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedCountableAttractions);
-
-        if(expandCategoriesAccordingToSettings)
-        {
-            for(AttractionCategory attractionCategory : App.settings.getAttractionCategoriesToExpandByDefault())
-            {
-                for(Element attractionCategoryHeader : categorizedCountableAttractions)
-                {
-                    if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(attractionCategory))
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("ShowVisitActivity.updateContentRecyclerView:: expanding %s according to settings...", attractionCategoryHeader));
-                        this.viewModel.contentRecyclerViewAdapter.expandParent(attractionCategoryHeader);
-                    }
-                }
-            }
-        }
-
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 

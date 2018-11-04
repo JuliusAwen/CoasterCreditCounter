@@ -54,7 +54,7 @@ public class PickElementsActivity extends BaseActivity
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.elementsToPickFrom,
-                        AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(this.viewModel.elementsToPickFrom),
+                        null,
                         Attraction.class,
                         true);
             }

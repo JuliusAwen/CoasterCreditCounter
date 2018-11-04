@@ -2,9 +2,6 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -15,9 +12,6 @@ public class Settings
     public static boolean jumpToTestActivityOnStart = false;
 
     private boolean jumpToOpenVisitOnStart;
-
-    //ShowPark - Attractions
-    private List<AttractionCategory> attractionCategoriesToExpandByDefault = new ArrayList<>();
 
     //ShowPark - Visits
     private SortOrder defaultSortOrderParkVisits;
@@ -42,16 +36,6 @@ public class Settings
         Stopwatch stopwatch = new Stopwatch(true);
         DatabaseMock.getInstance().fetchSettings(this);
         Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
-    }
-
-    public List<AttractionCategory> getAttractionCategoriesToExpandByDefault()
-    {
-        return attractionCategoriesToExpandByDefault;
-    }
-
-    void setAttractionCategoriesToExpandByDefault(List<AttractionCategory> attractionCategoriesToExpandByDefault)
-    {
-        this.attractionCategoriesToExpandByDefault = attractionCategoriesToExpandByDefault;
     }
 
     public SortOrder getDefaultSortOrderParkVisits()

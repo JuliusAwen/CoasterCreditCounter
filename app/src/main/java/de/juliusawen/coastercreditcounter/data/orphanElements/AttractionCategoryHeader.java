@@ -8,10 +8,8 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -170,22 +168,6 @@ public class AttractionCategoryHeader extends OrphanElement
         }
 
         return null;
-    }
-
-    public static Set<Element> getAttractionCategoryHeadersToExpandAccordingToSettings(List<? extends Element> attractionCategoryHeaders)
-    {
-        Set<Element> attractionCategoryHeadersToExpand = new HashSet<>();
-        for(Element attractionCategoryHeader : attractionCategoryHeaders)
-        {
-            if(attractionCategoryHeader.isInstance(AttractionCategoryHeader.class))
-            {
-                if(App.settings.getAttractionCategoriesToExpandByDefault().contains(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory()))
-                {
-                    attractionCategoryHeadersToExpand.add(attractionCategoryHeader);
-                }
-            }
-        }
-        return attractionCategoryHeadersToExpand;
     }
 
     public static void handleOnAttractionCategoryHeaderLongClick(final Context context, View view)

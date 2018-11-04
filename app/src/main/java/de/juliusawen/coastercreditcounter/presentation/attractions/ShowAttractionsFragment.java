@@ -137,10 +137,9 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-        List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                categorizedAttractions,
-                AttractionCategoryHeader.getAttractionCategoryHeadersToExpandAccordingToSettings(categorizedAttractions),
+                this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class)),
+                null,
                 Attraction.class);
     }
 
