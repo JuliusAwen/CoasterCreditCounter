@@ -55,9 +55,6 @@ public class ShowVisitActivity extends BaseActivity
         super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
 
         super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_not_available));
-
-        super.addFloatingActionButton();
-        this.decorateFloatingActionButton();
     }
 
     @Override
@@ -79,7 +76,15 @@ public class ShowVisitActivity extends BaseActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-        this.handleFloatingActionButtonVisibility();
+        if(!this.allAttractionsAdded())
+        {
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
+        }
+        else
+        {
+            super.disableFloatingActionButton();
+        }
     }
 
     private void decorateFloatingActionButton()
@@ -102,24 +107,8 @@ public class ShowVisitActivity extends BaseActivity
                         getCategorizedCountableAttractions(allAttractions));
             }
         });
-    }
 
-    private void handleFloatingActionButtonVisibility()
-    {
-        if(this.allAttractionsAdded())
-        {
-            Log.v(Constants.LOG_TAG, "ShowVisitActivity.handleFloatingActionButtonVisibility:: all attractions added: disabling floating action button ...");
-
-            super.disableFloatingActionButton();
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "ShowVisitActivity.handleFloatingActionButtonVisibility:: all attractions added: showing floating action button ...");
-
-            super.setFloatingActionButtonVisibility(true);
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
-        }
+        super.setFloatingActionButtonVisibility(true);
     }
 
     @Override
@@ -139,8 +128,6 @@ public class ShowVisitActivity extends BaseActivity
                     this.viewModel.visit.addChild(countableAttraction);
                     App.content.addElement(countableAttraction);
                 }
-
-                this.handleFloatingActionButtonVisibility();
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
