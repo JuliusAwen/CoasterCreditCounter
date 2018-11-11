@@ -370,7 +370,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
 
         Settings.jumpToTestActivityOnStart = false;
-        settings.setJumpToOpenVisitOnStart(false);
+//        settings.setJumpToOpenVisitOnStart(false);
 
         settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 

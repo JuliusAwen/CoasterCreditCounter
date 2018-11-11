@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity
             else
             {
                 Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting HubActivity");
+
+
                 Log.e(Constants.LOG_TAG, "MainActivity.onResume:: HubActivity not available atm - staring ShowLocationsActivity<root> instead");
                 ActivityTool.startActivityShow(this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
             }

@@ -11,7 +11,7 @@ public class Settings
     //App
     public static boolean jumpToTestActivityOnStart = false;
 
-    private boolean jumpToOpenVisitOnStart;
+//    private boolean jumpToOpenVisitOnStart;
 
     //ShowPark - Visits
     private SortOrder defaultSortOrderParkVisits;
@@ -68,15 +68,15 @@ public class Settings
         this.firstDayOfTheWeek = firstDayOfTheWeek;
     }
 
-    public boolean jumpToOpenVisitOnStart()
-    {
-        return this.jumpToOpenVisitOnStart;
-    }
-
-    void setJumpToOpenVisitOnStart(boolean jumpToOpenVisitOnStart)
-    {
-        this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
-    }
+//    public boolean jumpToOpenVisitOnStart()
+//    {
+//        return this.jumpToOpenVisitOnStart;
+//    }
+//
+//    void setJumpToOpenVisitOnStart(boolean jumpToOpenVisitOnStart)
+//    {
+//        this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
+//    }
 
     public AttractionCategory getDefaultAttractionCategory()
     {

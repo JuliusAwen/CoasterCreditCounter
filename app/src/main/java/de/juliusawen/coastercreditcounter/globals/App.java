@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.presentation.TestActivity;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public abstract class App
 {
@@ -58,6 +56,7 @@ public abstract class App
 
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
             App.settings = Settings.getInstance();
+            App.InitializeSettings();
 
             return null;
         }
@@ -69,26 +68,8 @@ public abstract class App
 
             super.onPostExecute(aVoid);
 
-            Visit.setSortOrder(App.settings.getDefaultSortOrderParkVisits());
-
-            if(Settings.jumpToTestActivityOnStart)
-            {
-                Log.e(Constants.LOG_TAG, "App.Initialize.onPostExecute:: starting TestActivity");
-                context.startActivity(new Intent(context, TestActivity.class));
-            }
-            else
-            {
-                if(Visit.validateOpenVisit() && App.settings.jumpToOpenVisitOnStart())
-                {
-                    Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: open visit found - showing visit");
-                    ActivityTool.startActivityShow(App.context, Constants.REQUEST_SHOW_VISIT, Visit.getOpenVisit());
-                }
-                else
-                {
-                    Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: showing root location");
-                    ActivityTool.startActivityShow(App.context, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
-                }
-            }
+            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: restarting calling activity");
+            App.context.startActivity(new Intent(App.context, ((Activity)context).getClass()));
 
             App.progressBar.setVisibility(View.GONE);
 
@@ -102,5 +83,10 @@ public abstract class App
         {
             super.onProgressUpdate(values);
         }
+    }
+
+    private static void InitializeSettings()
+    {
+        Visit.setSortOrder(App.settings.getDefaultSortOrderParkVisits());
     }
 }
