@@ -66,6 +66,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location));
 
         super.addToolbar();
+        super.addToolbarHomeButton();
         super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
 
         this.createEditText();

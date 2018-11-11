@@ -191,7 +191,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onKeyDown<BACK>:: hardware back button pressed");
                 if(this.viewModel.currentElement.isRootElement())
                 {
-                    this.onToolbarHomeButtonBackClicked();
+                    super.onKeyDown(keyCode, event);
                 }
                 else
                 {
@@ -208,13 +208,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onToolbarHomeButtonBackClicked()
-    {
-        Log.i(Constants.LOG_TAG, "ShowParkActivity.onToolbarHomeButtonBackClicked:: staring HubActivity");
-        Log.e(Constants.LOG_TAG, "ShowParkActivity.onToolbarHomeButtonBackClicked:: HubActivity not available atm - staring ShowLocationsActivity<root> instead");
-        ActivityTool.startActivityShow(this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
-    }
 
     private void updateActivityView()
     {

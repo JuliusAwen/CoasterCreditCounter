@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActi
 import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.presentation.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.presentation.orphanElements.CreateAttractionCategoryActivity;
 import de.juliusawen.coastercreditcounter.presentation.orphanElements.ShowAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
@@ -232,5 +233,10 @@ public abstract class ActivityTool
                     , requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+    }
+
+    public static void startNavigationHubActivity(Context context)
+    {
+        context.startActivity(new Intent(context, NavigationHubActivity.class));
     }
 }

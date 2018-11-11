@@ -38,6 +38,15 @@
     <string name="title_visit_create">Create Visit</string>
     <string name="title_visit_show">Visit</string>
 
+    <string name="subtitle_navigation_hub">Navigation Hub</string>
+
+    <!--navigation drawer-->
+    <string name="item_navigation_drawer_browse_locations">Browse Locations</string>
+
+
+    <string name="group_title_navigation_drawer_manage">Manage</string>
+
+    <string name="item_navigation_drawer_manage_attraction_categories">Attraction Categories</string>
 
     <!--options menu entries-->
     <string name="selection_edit_root_location">edit root location</string>
@@ -122,6 +131,8 @@
 
     <string name="hint_enter_attraction_category_name">enter attraction category name</string>
 
+    <string name="hint_search_content">Search content</string>
+
 
     <!--error messages-->
     <string name="error_text_name_not_valid">Name is not valid!</string>
@@ -191,6 +202,10 @@
     </string>
 
     <string name="help_text_create_attraction_category">
+        \n <li>Help not yet available...</li>
+    </string>
+
+    <string name="help_text_navigation_hub">
         \n <li>Help not yet available...</li>
     </string>
 

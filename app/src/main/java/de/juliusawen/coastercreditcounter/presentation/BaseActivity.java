@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -21,12 +23,15 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     protected Bundle savedInstanceState;
 
     private Toolbar toolbar;
+    private ActionBar actionBar;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
     private FloatingActionButton floatingActionButton;
@@ -112,26 +117,38 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         this.toolbar = findViewById(R.id.toolbar);
         this.toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
+        this.actionBar = getSupportActionBar();
     }
 
     protected void addToolbarHomeButton()
     {
-        if (getSupportActionBar() != null)
+        if(this.actionBar != null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: adding home button to toolbar...");
 
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            this.actionBar.setDisplayHomeAsUpEnabled(true);
+            this.actionBar.setDisplayShowHomeEnabled(true);
 
             this.toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    onToolbarHomeButtonBackClicked();
+                    onToolbarHomeButtonBackClicked(view.getContext());
                 }
 
             });
+        }
+    }
+
+    protected void addToolbarMenuIcon()
+    {
+        if(this.actionBar != null)
+        {
+            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
+
+            this.actionBar.setDisplayHomeAsUpEnabled(true);
+            this.actionBar.setHomeAsUpIndicator(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_menu)));
         }
     }
 
@@ -140,17 +157,18 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch(keyCode)
         {
             case KeyEvent.KEYCODE_BACK:
-                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: hardware back button pressed");
-                this.onToolbarHomeButtonBackClicked();
+                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: hardware back button pressed - finishing activity");
+                finish();
                 return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void onToolbarHomeButtonBackClicked()
+    protected void onToolbarHomeButtonBackClicked(Context context)
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: starting NavigationHubActivity...");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        ActivityTool.startNavigationHubActivity(context);
         finish();
     }
 

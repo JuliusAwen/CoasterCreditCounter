@@ -68,7 +68,7 @@ public abstract class App
 
             super.onPostExecute(aVoid);
 
-            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: restarting calling activity");
+            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: restarting calling activity...");
             App.context.startActivity(new Intent(App.context, ((Activity)context).getClass()));
 
             App.progressBar.setVisibility(View.GONE);

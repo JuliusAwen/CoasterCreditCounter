@@ -110,13 +110,6 @@ public class SortElementsActivity extends BaseActivity
         }
     }
 
-    @Override
-    protected void onToolbarHomeButtonBackClicked()
-    {
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onToolbarHomeButtonBackClicked:: result canceled");
-        returnResult(RESULT_CANCELED);
-    }
-
     private void decorateFloatingActionButton()
     {
         super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));

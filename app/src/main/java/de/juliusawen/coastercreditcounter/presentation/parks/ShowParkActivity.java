@@ -98,13 +98,6 @@ public class ShowParkActivity extends BaseActivity
         }
     }
 
-    @Override
-    protected void onToolbarHomeButtonBackClicked()
-    {
-        Log.i(Constants.LOG_TAG, "ShowParkActivity.onToolbarHomeButtonBackClicked:: staring ShowLocationActivity");
-        ActivityTool.startActivityShow(this, Constants.REQUEST_SHOW_LOCATION, this.viewModel.park.getParent().getParent());
-    }
-
     private void createTabPagerAdapter()
     {
         TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
