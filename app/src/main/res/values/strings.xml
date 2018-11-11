@@ -88,7 +88,8 @@
     <string name="alert_dialog_delete_element_title">DELETE</string>
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
 
-    <string name="alert_dialog_delete_attraction_category_message">%1$d attraction(s) are in this category - do you really want to delete %2$s?</string>
+    <string name="alert_dialog_delete_attraction_category_with_children_message">%1$d attraction(s) are in this category - do you really want to delete category %2$s?</string>
+    <string name="alert_dialog_delete_attraction_category_without_children_message">Do you really want to delete category %1$s?</string>
 
     <string name="alert_dialog_remove_element_title">REMOVE</string>
     <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>

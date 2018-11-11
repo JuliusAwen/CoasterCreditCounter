@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
@@ -94,7 +93,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
         {
             case SORT_ATTRACTION_CATEGORIES:
                 ActivityTool.startActivitySortForResult(
-                        Objects.requireNonNull(this),
+                        this,
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
                         new ArrayList<Element>(App.content.getAttractionCategories()));
                 return true;
@@ -175,12 +174,23 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
 
                             case DELETE_ELEMENT:
                             {
+                                String alertDialogMessage;
+                                if(viewModel.longClickedAttractionCategory.getChildCount() != 0)
+                                {
+                                    alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_with_children_message,
+                                            viewModel.longClickedAttractionCategory.getChildCount(),
+                                            viewModel.longClickedAttractionCategory.getName());
+                                }
+                                else
+                                {
+                                    alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_without_children_message,
+                                            viewModel.longClickedAttractionCategory.getName());
+                                }
+
                                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                                         R.drawable.ic_baseline_warning,
                                         getString(R.string.alert_dialog_delete_element_title),
-                                        getString(R.string.alert_dialog_delete_attraction_category_message,
-                                                viewModel.longClickedAttractionCategory.getChildCount(),
-                                                viewModel.longClickedAttractionCategory.getName()),
+                                        alertDialogMessage,
                                         getString(R.string.text_accept),
                                         getString(R.string.text_cancel),
                                         Constants.ALERT_DIALOG_REQUEST_CODE_DELETE);
