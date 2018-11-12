@@ -96,7 +96,7 @@ public class NavigationHubActivity extends BaseActivity
 
                     case R.id.navigationItem_ManageAttractionCategories:
                     {
-                        ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_SHOW_ATTRACTION_CATEGORIES, null);
+                        ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
                         return true;
                     }
 

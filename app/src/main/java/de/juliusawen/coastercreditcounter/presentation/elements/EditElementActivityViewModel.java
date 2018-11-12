@@ -6,5 +6,5 @@ import de.juliusawen.coastercreditcounter.data.elements.Element;
 public class EditElementActivityViewModel extends ViewModel
 {
     public Element elementToEdit;
-    public String toolbarSubtitle;
+    public String toolbarTitle;
 }

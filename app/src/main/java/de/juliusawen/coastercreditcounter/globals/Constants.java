@@ -14,6 +14,10 @@ public abstract class Constants
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_TOOLBAR_TITLE = "de.juliusawen.coding.extra_toolbar_title";
     public static final String EXTRA_TOOLBAR_SUBTITLE = "de.juliusawen.coding.extra_toolbar_subtitle";
+    public static final String EXTRA_HELP_TITLE = "de.juliusawen.coding.extra_help_title";
+    public static final String EXTRA_HELP_TEXT = "de.juliusawen.coding.extra_help_text";
+
+    public static final String EXTRA_RESULT_STRING = "de.juliusawen.coding.extra_result_string";
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
     public static final String FRAGMENT_ARG_HELP_MESSAGE = "de.juliusawen.coding.fragment_arg_help_message";
@@ -43,7 +47,8 @@ public abstract class Constants
     public static final int REQUEST_SHOW_LOCATION = Request.SHOW_LOCATION.ordinal();
     public static final int REQUEST_SHOW_PARK = Request.SHOW_PARK.ordinal();
     public static final int REQUEST_SHOW_VISIT = Request.SHOW_VISIT.ordinal();
-    public static final int REQUEST_SHOW_ATTRACTION_CATEGORIES = Request.SHOW_ATTRACTION_CATEGORIES.ordinal();
+
+    public static final int REQUEST_MANAGE_ATTRACTION_CATEGORIES = Request.MANAGE_ATTRACTION_CATEGORIES.ordinal();
 
     public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
     public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
@@ -60,13 +65,13 @@ public abstract class Constants
 enum Request
 {
     CREATE_LOCATION,
-    CREATE_VISIT,
-    CREATE_ATTRACTION_CATEGORY,
+    CREATE_VISIT, CREATE_ATTRACTION_CATEGORY,
 
     SHOW_LOCATION,
     SHOW_PARK,
     SHOW_VISIT,
-    SHOW_ATTRACTION_CATEGORIES,
+
+    MANAGE_ATTRACTION_CATEGORIES,
 
     EDIT_LOCATION,
     EDIT_ATTRACTION_CATEGORY,

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.orphanElements.CreateAttractionCategoryActivity">
+    tools:context=".presentation.orphanElements.CreateSimpleStringActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
 
         <EditText
             style="@style/standard_edit_text"
-            android:id="@+id/editTextCreateAttractionCategory"
+            android:id="@+id/editTextCreateSimpleString"
             android:hint="@string/hint_enter_attraction_category_name"
             tools:ignore="Autofill" />
 

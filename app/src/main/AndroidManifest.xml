@@ -15,26 +15,27 @@
         <activity android:name=".presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".presentation.locations.ShowLocationsActivity" />
         <activity android:name=".presentation.elements.SortElementsActivity" />
+        <activity android:name=".presentation.elements.PickElementsActivity" />
+        <activity android:name=".presentation.parks.ShowParkActivity" />
+        <activity android:name=".presentation.visits.ShowVisitActivity" />
+        <activity android:name=".presentation.TestActivity" />
+        <activity android:name=".presentation.visits.CreateVisitActivity" />
+        <activity android:name=".presentation.orphanElements.ManageAttractionCategoriesActivity" />
+        <activity android:name=".presentation.navigationHub.NavigationHubActivity"/>
         <activity
             android:name=".presentation.locations.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".presentation.elements.PickElementsActivity" />
-        <activity android:name=".presentation.parks.ShowParkActivity" />
-        <activity android:name=".presentation.visits.ShowVisitActivity" />
-        <activity android:name=".presentation.TestActivity" />
-        <activity android:name=".presentation.visits.CreateVisitActivity" />
-        <activity android:name=".presentation.orphanElements.CreateAttractionCategoryActivity" />
-        <activity android:name=".presentation.orphanElements.ShowAttractionCategoriesActivity" />
-        <activity android:name=".presentation.navigationHub.NavigationHubActivity"/>
+        <activity
+            android:name=".presentation.orphanElements.CreateSimpleStringActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 
 </manifest>

@@ -34,19 +34,19 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 
-public class ShowAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
+public class ManageAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private ShowAttractionCategoriesViewModel viewModel;
+    private ManageAttractionCategoriesViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionCategoriesActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ManageAttractionCategoriesActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_attraction_categories);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowAttractionCategoriesViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(ManageAttractionCategoriesViewModel.class);
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
@@ -62,9 +62,9 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories_show), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories_manage), null);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories_show)), getString(R.string.help_text_not_available));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories_manage)), getString(R.string.help_text_not_available));
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
@@ -87,7 +87,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
     public boolean onOptionsItemSelected(MenuItem item)
     {
         Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onOptionItemSelected:: [%S] selected", selection));
+        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onOptionItemSelected:: [%S] selected", selection));
 
         switch(selection)
         {
@@ -108,13 +108,33 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
             Element selectedElement = ResultTool.fetchSelectedElement(data);
 
-            if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
+            if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
+            {
+                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+                Log.d(Constants.LOG_TAG,
+                        String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory <%s>", createdString));
+
+                AttractionCategory attractionCategory = AttractionCategory.create(createdString);
+                if(attractionCategory != null)
+                {
+                    App.content.addAttractionCategory(attractionCategory);
+
+                    this.updateContentRecyclerView();
+                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(attractionCategory);
+                }
+                else
+                {
+                    //Todo: log properly!
+                    throw new IllegalStateException();
+                }
+            }
+            else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
             {
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
@@ -128,7 +148,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
 
                 if(selectedElement != null)
                 {
-                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s..."
+                    Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s..."
                             , selectedElement));
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
@@ -147,9 +167,9 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
             public boolean onLongClick(final View view)
             {
                 viewModel.longClickedAttractionCategory = (AttractionCategory) view.getTag();
-                Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedAttractionCategory));
+                Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedAttractionCategory));
 
-                PopupMenu popupMenu = new PopupMenu(ShowAttractionCategoriesActivity.this, view);
+                PopupMenu popupMenu = new PopupMenu(ManageAttractionCategoriesActivity.this, view);
 
                 popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
 
@@ -162,14 +182,14 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
                     public boolean onMenuItemClick(MenuItem item)
                     {
                         Selection selection = Selection.values()[item.getItemId()];
-                        Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
+                        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         switch(selection)
                         {
                             case EDIT_ATTRACTION_CATEGORY:
                             {
-                                ActivityTool.startActivityEditForResult(ShowAttractionCategoriesActivity.this,
+                                ActivityTool.startActivityEditForResult(ManageAttractionCategoriesActivity.this,
                                         Constants.REQUEST_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedAttractionCategory);
                                 return true;
                             }
@@ -226,7 +246,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
+                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
 
                     final List<Attraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(Attraction.class));
                     final int index = viewModel.contentRecyclerViewAdapter.getContent().indexOf(viewModel.longClickedAttractionCategory);
@@ -247,7 +267,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
                         @Override
                         public void onClick(View view)
                         {
-                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionCategoriesActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedAttractionCategory));
+                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedAttractionCategory));
 
                             for(Attraction child : children)
                             {
@@ -273,8 +293,8 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ShowAttractionCategoriesViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
-                ActivityTool.startActivityCreateForResult(ShowAttractionCategoriesActivity.this, Constants.REQUEST_CREATE_ATTRACTION_CATEGORY,null);
+                Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
+                ActivityTool.startActivityCreateForResult(ManageAttractionCategoriesActivity.this, Constants.REQUEST_CREATE_ATTRACTION_CATEGORY,null);
             }
         });
         super.setFloatingActionButtonVisibility(true);
@@ -282,7 +302,7 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
 
     private void updateContentRecyclerView()
     {
-        Log.i(Constants.LOG_TAG, "ShowAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
+        Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
 
         this.viewModel.contentRecyclerViewAdapter.updateContent(new ArrayList<Element>(App.content.getAttractionCategories()));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();

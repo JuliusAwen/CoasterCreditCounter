@@ -10,10 +10,10 @@
     <string name="title_locations_pick">Pick Locations</string>
     <string name="subtitle_locations_pick_description">to add to the new location</string>
     <string name="subtitle_location_create">Create Location</string>
-    <string name="subtitle_location_edit">Edit Location</string>
+    <string name="title_location_edit">Edit Location</string>
 
 
-    <string name="subtitle_root_location_edit">Edit Root Location</string>
+    <string name="title_root_location_edit">Edit Root Location</string>
 
 
     <string name="title_parks_sort">Sort Parks</string>
@@ -29,10 +29,10 @@
     <string name="subtitle_attractions_description_pick">to add to your vist</string>
 
 
-    <string name="title_attraction_categories_show">Attraction Categories</string>
+    <string name="title_attraction_categories_manage">Manage Attraction Categories</string>
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="title_attraction_categories_create">Create Attraction Category</string>
-    <string name="subtitle_attraction_category_edit">Edit Attraction Category</string>
+    <string name="title_attraction_category_edit">Edit Attraction Category</string>
 
 
     <string name="title_visit_create">Create Visit</string>
@@ -40,9 +40,10 @@
 
     <string name="subtitle_navigation_hub">Navigation Hub</string>
 
+
+
     <!--navigation drawer-->
     <string name="item_navigation_drawer_browse_locations">Browse Locations</string>
-
 
     <string name="group_title_navigation_drawer_manage">Manage</string>
 
@@ -189,7 +190,7 @@
         \n <li>Help not yet available...</li>
     </string>
 
-    <string name="help_text_edit_location">
+    <string name="help_text_edit">
         \n <li>Help not yet available...</li>
     </string>
 
