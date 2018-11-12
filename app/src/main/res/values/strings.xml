@@ -48,6 +48,8 @@
 
     <string name="item_navigation_drawer_manage_attraction_categories">Attraction Categories</string>
 
+
+
     <!--options menu entries-->
     <string name="selection_edit_root_location">edit root location</string>
 
@@ -62,6 +64,7 @@
     <string name="selection_sort_descending">sort descending</string>
 
 
+
     <!--popup menu entries-->
     <string name="selection_create_location">create location</string>
     <string name="selection_create_park">create park</string>
@@ -69,6 +72,7 @@
     <string name="selection_edit">edit</string>
     <string name="selection_delete">delete</string>
     <string name="selection_remove">remove</string>
+
 
 
     <!--general texts-->
@@ -82,6 +86,7 @@
     <string name="text_add_children">add children</string>
 
     <string name="text_root_location">root location</string>
+
 
 
     <!--dialog texts-->
@@ -108,6 +113,8 @@
     <string name="alert_dialog_visit_already_exists_title">VISIT ALREADY EXISTS</string>
     <string name="alert_dialog_visit_already_exists_message">Do you want to override existing visit? \n(existing data will be lost)</string>
 
+
+
     <!--descriptions-->
     <string name="description_ok">@string/text_close</string>
     <string name="description_cancel">@string/text_cancel</string>
@@ -119,11 +126,13 @@
     <string name="description_placeholder">&#32;</string>
 
 
+
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
     <string name="action_undo_delete_text">%1$s deleted</string>
     <string name="action_undo_remove_text">%1$s removed</string>
     <string name="action_restored_text">%1$s restored</string>
+
 
 
     <!--hint texts-->
@@ -135,12 +144,14 @@
     <string name="hint_search_content">Search content</string>
 
 
+
     <!--error messages-->
     <string name="error_text_name_not_valid">Name is not valid!</string>
     <string name="error_text_undo_not_possible">UNDO not possible…</string>
     <string name="error_text_delete_failed">Deletion failed…</string>
     <string name="error_text_remove_failed">Removal failed…</string>
     <string name="error_text_no_entry_selected">No entry selected!</string>
+
 
 
     <!--help texts-->

@@ -92,11 +92,13 @@ public class ShowAttractionCategoriesActivity extends BaseActivity implements Al
         switch(selection)
         {
             case SORT_ATTRACTION_CATEGORIES:
+            {
                 ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
                         new ArrayList<Element>(App.content.getAttractionCategories()));
                 return true;
+            }
 
             default:
                 return super.onOptionsItemSelected(item);

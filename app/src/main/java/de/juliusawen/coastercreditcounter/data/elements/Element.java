@@ -252,17 +252,20 @@ public abstract class Element
 
     public List<Element> getChildren()
     {
-        int sizeBefore = this.children.size();
-        this.children.removeAll(Collections.singleton(null));
-        int sizeAfter = this.children.size();
-        int difference = sizeBefore - sizeAfter;
-        if(difference != 0)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Element.getChildren:: [%d] null objects removed from children ", difference));
-        }
 
+        if(this.children.contains(null))
+        {
+            int sizeWithNullElements = this.children.size();
+            this.children.removeAll(Collections.singleton(null));
+            int sizeWithoutNullElements = this.children.size();
+            int difference = sizeWithNullElements - sizeWithoutNullElements;
+
+            Log.e(Constants.LOG_TAG, String.format("Element.getChildren:: [%d] null objects removed from children ", difference));
+
+        }
         return this.children;
     }
+
 
     public List<Element> getChildrenOfType(Class<? extends Element> type)
     {

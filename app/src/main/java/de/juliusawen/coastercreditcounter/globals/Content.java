@@ -22,10 +22,14 @@ public class Content
 
     private Element rootLocation;
 
-    private static final Content instance = new Content();
+    private static Content instance;
 
-    static Content getInstance()
+    private static IDatabaseWrapper databaseWrapper;
+
+    static Content getInstance(IDatabaseWrapper databaseWrapper)
     {
+        Content.databaseWrapper = databaseWrapper;
+        Content.instance = new Content();
         return instance;
     }
 
@@ -38,7 +42,7 @@ public class Content
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
 
 
-        DatabaseMock.getInstance().fetchContent(this);
+        Content.databaseWrapper.fetchContent(this);
 
 
         Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));

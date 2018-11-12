@@ -23,10 +23,14 @@ public class Settings
     //Defaults
     private AttractionCategory defaultAttractionCategory;
 
-    private static final Settings instance = new Settings();
+    private static Settings instance;
 
-    static Settings getInstance()
+    private static IDatabaseWrapper databaseWrapper;
+
+    static Settings getInstance(IDatabaseWrapper databaseWrapper)
     {
+        Settings.databaseWrapper = databaseWrapper;
+        Settings.instance = new Settings();
         return instance;
     }
 
@@ -34,7 +38,7 @@ public class Settings
     {
         Log.i(Constants.LOG_TAG, "Settings.Constructor:: Settings instantiated - fetching settings...");
         Stopwatch stopwatch = new Stopwatch(true);
-        DatabaseMock.getInstance().fetchSettings(this);
+        Settings.databaseWrapper.fetchSettings(this);
         Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
     }
 
