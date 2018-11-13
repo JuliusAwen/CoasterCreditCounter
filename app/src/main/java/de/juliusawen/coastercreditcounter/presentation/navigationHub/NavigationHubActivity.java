@@ -52,6 +52,7 @@ public class NavigationHubActivity extends BaseActivity
         {
             case android.R.id.home:
             {
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
                 this.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
@@ -69,8 +70,8 @@ public class NavigationHubActivity extends BaseActivity
 
                 if(this.drawerLayout.isDrawerOpen(GravityCompat.START))
                 {
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: closing navigation drawer...");
                     this.drawerLayout.closeDrawers();
-                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: closed navigation drawer");
                     return true;
                 }
             }

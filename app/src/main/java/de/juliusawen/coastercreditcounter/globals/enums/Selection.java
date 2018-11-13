@@ -20,5 +20,7 @@ public enum Selection
     SORT_ASCENDING,
     SORT_DESCENDING,
 
+    APPLY_CATEGORY_TO_ATTRACTIONS,
+
     HELP,
 }

@@ -33,6 +33,7 @@
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="title_attraction_categories_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
+    <string name="subtitle_attraction_category_apply_to_attractions">Attractions to categorize</string>
 
 
     <string name="title_visit_create">Create Visit</string>
@@ -59,11 +60,12 @@
     <string name="selection_sort_attractions">sort attractions</string>
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
 
-    <string name="selection_help">help</string>
-
     <string name="selection_sort_ascending">sort ascending</string>
     <string name="selection_sort_descending">sort descending</string>
 
+    <string name="selection_help">help</string>
+
+    <string name="selection_apply_category_to_attractions">apply to attractions</string>
 
 
     <!--popup menu entries-->
@@ -151,8 +153,12 @@
     <string name="error_text_undo_not_possible">UNDO not possible…</string>
     <string name="error_text_delete_failed">Deletion failed…</string>
     <string name="error_text_remove_failed">Removal failed…</string>
+    <string name="error_text_creation_failed">Creation failed…</string>
     <string name="error_text_no_entry_selected">No entry selected!</string>
 
+
+    <!--information texts-->
+    <string name="information_count_of_categorized_attractions">applied category %1$s to %2$d attractions</string>
 
 
     <!--help texts-->

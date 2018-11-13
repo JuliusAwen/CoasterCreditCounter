@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
@@ -301,5 +302,20 @@ public class Content
             return true;
         }
         return false;
+    }
+
+    public List<Element> getAttractions()
+    {
+        List<Element> attractions = new ArrayList<>();
+
+        for(Element element : this.elements.values())
+        {
+            if(element.isInstance(Attraction.class))
+            {
+                attractions.add(element);
+            }
+        }
+
+        return attractions;
     }
 }

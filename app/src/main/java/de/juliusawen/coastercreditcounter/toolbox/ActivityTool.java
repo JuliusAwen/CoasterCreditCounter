@@ -214,26 +214,27 @@ public abstract class ActivityTool
 
     public static void startActivityPickForResult(Context context, int requestCode, List<Element> elementsToPickFrom)
     {
-        String toolbarTitle = null;
+        String toolbarTitle = context.getString(R.string.title_attractions_pick);
         String toolbarSubtitle = null;
 
         if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
         {
-            toolbarTitle = context.getString(R.string.title_locations_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
         }
         else if(requestCode == Constants.REQUEST_PICK_PARKS)
         {
-            toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
         }
         else if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
         {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
         }
+        else if(requestCode == Constants.APPLY_CATEGORY_TO_ATTRACTIONS)
+        {
+            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
+        }
 
-        if(toolbarTitle != null)
+        if(toolbarSubtitle != null)
         {
             Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));

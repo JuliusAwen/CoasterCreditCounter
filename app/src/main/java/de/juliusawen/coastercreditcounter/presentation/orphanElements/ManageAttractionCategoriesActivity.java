@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -33,6 +34,7 @@ import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFrag
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ManageAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -118,7 +120,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
                 Log.d(Constants.LOG_TAG,
-                        String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory <%s>", createdString));
+                        String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory [%s]", createdString));
 
                 AttractionCategory attractionCategory = AttractionCategory.create(createdString);
                 if(attractionCategory != null)
@@ -130,8 +132,10 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 }
                 else
                 {
-                    //Todo: log properly!
-                    throw new IllegalStateException();
+                    Toaster.makeToast(this, getString(R.string.error_text_creation_failed));
+
+                    Log.e(Constants.LOG_TAG,
+                            String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: not able to create AttractionCategory [%s]", createdString));
                 }
             }
             else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
@@ -148,10 +152,25 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 if(selectedElement != null)
                 {
-                    Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s..."
-                            , selectedElement));
+                    Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...",
+                            selectedElement));
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
+            }
+            else if(requestCode == Constants.APPLY_CATEGORY_TO_ATTRACTIONS)
+            {
+                List<Element> resultElements = ResultTool.fetchResultElements(data);
+
+                for(Element element : resultElements)
+                {
+                    ((Attraction)element).setCategory(this.viewModel.longClickedAttractionCategory);
+                }
+
+                Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
+                this.updateContentRecyclerView();
+
+                Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<ApplyCategoryToAttractions>:: applied %s to [%d] attractions",
+                        this.viewModel.longClickedAttractionCategory, resultElements.size()));
             }
         }
     }
@@ -175,6 +194,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
                         .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
+
+                popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
+                        .setEnabled(!App.content.getAttractions().isEmpty());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -219,6 +241,15 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                                 alertDialogFragmentDelete.setCancelable(false);
                                 alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                                return true;
+                            }
+
+                            case APPLY_CATEGORY_TO_ATTRACTIONS:
+                            {
+                                ActivityTool.startActivityPickForResult(
+                                        ManageAttractionCategoriesActivity.this,
+                                        Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
+                                        AttractionCategoryHeader.fetchCategorizedAttractions(App.content.getAttractions()));
                                 return true;
                             }
 

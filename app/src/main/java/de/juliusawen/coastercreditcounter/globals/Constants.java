@@ -50,6 +50,8 @@ public abstract class Constants
 
     public static final int REQUEST_MANAGE_ATTRACTION_CATEGORIES = Request.MANAGE_ATTRACTION_CATEGORIES.ordinal();
 
+    public static final int APPLY_CATEGORY_TO_ATTRACTIONS = Request.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal();
+
     public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
     public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
 
@@ -72,6 +74,8 @@ enum Request
     SHOW_VISIT,
 
     MANAGE_ATTRACTION_CATEGORIES,
+
+    APPLY_CATEGORY_TO_ATTRACTIONS,
 
     EDIT_LOCATION,
     EDIT_ATTRACTION_CATEGORY,

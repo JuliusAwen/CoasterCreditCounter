@@ -211,6 +211,8 @@ public class PickElementsActivity extends BaseActivity
                     selectedElementsWithoutOrphanElements.add(element);
                 }
             }
+
+            Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
         }
 
