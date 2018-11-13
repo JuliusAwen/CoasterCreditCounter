@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -50,10 +51,10 @@ public class Content
         if(!this.elements.isEmpty())
         {
             Log.i(Constants.LOG_TAG, "Content.Constructor:: searching for root location...");
-            Element rootElement = ((Element) this.elements.values().toArray()[0]).getRootElement();
-            Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootElement));
+            Element rootLocation = ((Location) this.elements.values().toArray()[0]).getRootLocation();
+            Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootLocation));
 
-            this.setRootLocation(rootElement);
+            this.setRootLocation(rootLocation);
 
             Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
             Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);

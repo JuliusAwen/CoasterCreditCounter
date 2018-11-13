@@ -19,8 +19,8 @@ public abstract class Element
     private String name;
     private UUID uuid;
 
-    private Element parent = null;
-    private List<Element> children = new ArrayList<>();
+    public Element parent = null;
+    public List<Element> children = new ArrayList<>();
 
     private Element backupParent = null;
     private List<Element> backupChildren = new ArrayList<>();
@@ -112,24 +112,6 @@ public abstract class Element
     public long getItemId()
     {
         return this.itemId;
-    }
-
-    public Element getRootElement()
-    {
-        if(!this.isRootElement())
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Element.getRootLocation:: %s is not root element - calling parent", this));
-            return this.parent.getRootElement();
-        }
-        else
-        {
-            return this;
-        }
-    }
-
-    public boolean isRootElement()
-    {
-        return this.getParent() == null;
     }
 
     public void addChildren(List<Element> children)

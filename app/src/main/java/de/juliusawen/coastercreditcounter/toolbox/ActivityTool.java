@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
@@ -92,7 +93,7 @@ public abstract class ActivityTool
 
         if(requestCode == Constants.REQUEST_EDIT_LOCATION)
         {
-            if(element.isRootElement())
+            if(((Location)element).isRootLocation())
             {
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_root_location_edit);

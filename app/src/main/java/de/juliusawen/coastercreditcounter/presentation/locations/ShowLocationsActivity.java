@@ -98,7 +98,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-        if(this.viewModel.currentElement.isRootElement())
+        if(((Location)this.viewModel.currentElement).isRootLocation())
         {
             menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_root_location);
         }
@@ -189,7 +189,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             case KeyEvent.KEYCODE_BACK:
                 Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onKeyDown<BACK>:: hardware back button pressed");
-                if(this.viewModel.currentElement.isRootElement())
+                if(((Location)this.viewModel.currentElement).isRootLocation())
                 {
                     super.onKeyDown(keyCode, event);
                 }
@@ -296,7 +296,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         this.linearLayoutNavigationBar.removeAllViews();
 
-        if(this.viewModel.recentElements.isEmpty() && !this.viewModel.currentElement.isRootElement())
+        if(this.viewModel.recentElements.isEmpty() && !((Location)this.viewModel.currentElement).isRootLocation())
         {
             Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing NavigationBar");
             this.viewModel.recentElements.clear();
@@ -349,7 +349,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.constructNavigationBar:: adding %s to recent elements...", element));
 
-        if(!element.isRootElement())
+        if(!((Location)element).isRootLocation())
         {
             this.viewModel.recentElements.add(0, element);
             this.constructNavigationBar(element.getParent());

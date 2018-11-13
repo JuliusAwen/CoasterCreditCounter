@@ -29,5 +29,23 @@ public class Location extends Element
         }
         return location;
     }
+
+    public Element getRootLocation()
+    {
+        if(!this.isRootLocation())
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Element.getRootLocation:: %s is not root location - calling parent", this));
+            return ((Location)super.parent).getRootLocation();
+        }
+        else
+        {
+            return this;
+        }
+    }
+
+    public boolean isRootLocation()
+    {
+        return this.getParent() == null;
+    }
 }
 
