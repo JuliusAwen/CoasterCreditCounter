@@ -59,4 +59,9 @@
         <item name="android:layout_margin">16dp</item>
     </style>
 
+    <style name="navigation_drawer_style">
+        <item name="android:textSize">18sp</item>
+        <item name="android:listPreferredItemHeightSmall">32dp</item>
+    </style>
+
 </resources>

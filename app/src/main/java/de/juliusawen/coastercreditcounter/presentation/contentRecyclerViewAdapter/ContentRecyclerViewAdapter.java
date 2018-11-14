@@ -47,6 +47,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Class<? extends Element> childType;
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+
     private boolean selectMultiple;
 
 

@@ -15,6 +15,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class NavigationHubActivity extends BaseActivity
 {
@@ -95,9 +96,27 @@ public class NavigationHubActivity extends BaseActivity
                         return true;
                     }
 
-                    case R.id.navigationItem_ManageAttractionCategories:
+                    case R.id.navigationItem_BrowseVisits:
+                    {
+                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                        return true;
+                    }
+
+                    case R.id.navigationItem_ManageCategories:
                     {
                         ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
+                        return true;
+                    }
+
+                    case R.id.navigationItem_ManageManufacturers:
+                    {
+                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                        return true;
+                    }
+
+                    case R.id.navigationItem_ManageModels:
+                    {
+                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
                         return true;
                     }
 

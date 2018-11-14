@@ -33,7 +33,7 @@
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="title_attraction_categories_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
-    <string name="subtitle_attraction_category_apply_to_attractions">Attractions to categorize</string>
+    <string name="subtitle_attraction_category_apply_to_attractions">to apply category to</string>
 
 
     <string name="title_visit_create">Create Visit</string>
@@ -44,11 +44,16 @@
 
 
     <!--navigation drawer-->
-    <string name="item_navigation_drawer_browse_locations">Browse Locations</string>
 
+    <string name="group_title_navigation_drawer_browse">Browse</string>
     <string name="group_title_navigation_drawer_manage">Manage</string>
 
-    <string name="item_navigation_drawer_manage_attraction_categories">Attraction Categories</string>
+    <string name="item_navigation_drawer_browse_locations">Locations</string>
+    <string name="item_navigation_drawer_browse_visits">Visits</string>
+
+    <string name="item_navigation_drawer_manage_categories">Categories</string>
+    <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>
+    <string name="item_navigation_drawer_manage_models">Models</string>
 
 
 
