@@ -48,8 +48,7 @@
     <string name="group_title_navigation_drawer_browse">Browse</string>
     <string name="group_title_navigation_drawer_manage">Manage</string>
 
-    <string name="item_navigation_drawer_browse_locations">Locations</string>
-    <string name="item_navigation_drawer_browse_visits">Visits</string>
+    <string name="item_navigation_drawer_browse_content">Content</string>
 
     <string name="item_navigation_drawer_manage_categories">Categories</string>
     <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>

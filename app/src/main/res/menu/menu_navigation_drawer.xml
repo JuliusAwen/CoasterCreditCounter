@@ -3,16 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item android:title="@string/group_title_navigation_drawer_browse">
-            <menu>
-                <item
-                    android:id="@+id/navigationItem_BrowseLocations"
-                    android:icon="@drawable/ic_baseline_place"
-                    android:title="@string/item_navigation_drawer_browse_locations"/>
-                <item
-                    android:id="@+id/navigationItem_BrowseVisits"
-                    android:icon="@drawable/ic_baseline_local_activity"
-                    android:title="@string/item_navigation_drawer_browse_visits"/>
-            </menu>
+            <item
+                android:id="@+id/navigationItem_BrowseContent"
+                android:icon="@drawable/ic_baseline_place"
+                android:title="@string/item_navigation_drawer_browse_content"/>
         </item>
     </group>
 

@@ -90,20 +90,16 @@ public class NavigationHubActivity extends BaseActivity
                 int id = item.getItemId();
                 switch(id)
                 {
-                    case R.id.navigationItem_BrowseLocations:
+                    case R.id.navigationItem_BrowseContent:
                     {
+                        Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
                         ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
-                        return true;
-                    }
-
-                    case R.id.navigationItem_BrowseVisits:
-                    {
-                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
                         return true;
                     }
 
                     case R.id.navigationItem_ManageCategories:
                     {
+                        Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageAttractionCategories> selected");
                         ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
                         return true;
                     }
