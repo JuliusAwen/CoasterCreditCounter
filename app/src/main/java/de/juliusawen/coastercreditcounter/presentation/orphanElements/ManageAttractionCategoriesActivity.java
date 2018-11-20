@@ -20,10 +20,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -49,6 +49,11 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         super.onCreate(savedInstanceState);
 
         this.viewModel = ViewModelProviders.of(this).get(ManageAttractionCategoriesViewModel.class);
+
+        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        {
+            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+        }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
@@ -249,7 +254,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                 ActivityTool.startActivityPickForResult(
                                         ManageAttractionCategoriesActivity.this,
                                         Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
-                                        AttractionCategoryHeader.fetchCategorizedAttractions(App.content.getAttractions()));
+                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getAttractions()));
                                 return true;
                             }
 

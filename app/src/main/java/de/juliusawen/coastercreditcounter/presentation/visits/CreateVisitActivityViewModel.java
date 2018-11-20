@@ -2,22 +2,32 @@ package de.juliusawen.coastercreditcounter.presentation.visits;
 
 import android.app.DatePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import androidx.lifecycle.ViewModel;
-import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 
 class CreateVisitActivityViewModel extends ViewModel
 {
     Park park;
+
     Visit visit;
+
     Visit existingVisit;
-    List<Element> attractionCategoryHeaders = new ArrayList<>();
+
+    AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
+
     DatePickerDialog datePickerDialog;
+
     Calendar calendar;
+
     boolean datePicked = false;
+
+    @Override
+    protected void onCleared()
+    {
+        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeaders();
+    }
 }

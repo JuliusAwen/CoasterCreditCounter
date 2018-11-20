@@ -14,13 +14,11 @@ import java.util.UUID;
 
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
-import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
@@ -48,6 +46,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         if(this.viewModel.park == null)
         {
             this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+
+        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        {
+            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
         }
 
         super.addToolbar();
@@ -78,9 +81,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(Element element : resultElements)
                 {
-                    Element countableAttraction = CountableAttraction.create((Attraction)element);
-                    this.viewModel.visit.addChild(countableAttraction);
-                    App.content.addElement(countableAttraction);
+                    this.viewModel.visit.addChild(element);
                 }
 
                 this.returnResult(Activity.RESULT_OK);
@@ -235,7 +236,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            this.getCategorizedAttractions(viewModel.park.getChildrenOfType(Attraction.class)));
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(viewModel.park.getChildrenAsType(Attraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
@@ -267,15 +268,15 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
     }
 
-    private List<Element> getCategorizedAttractions(List<Element> attractions)
-    {
-        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
-        {
-            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
-        }
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
-        return this.viewModel.attractionCategoryHeaders;
-    }
+//    private List<Element> getCategorizedAttractions(List<Element> attractions)
+//    {
+//        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
+//        {
+//            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
+//        }
+//        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
+//        return this.viewModel.attractionCategoryHeaders;
+//    }
 
     private void returnResult(int resultCode)
     {

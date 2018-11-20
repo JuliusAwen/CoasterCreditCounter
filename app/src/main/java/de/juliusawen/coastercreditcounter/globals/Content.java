@@ -304,15 +304,15 @@ public class Content
         return false;
     }
 
-    public List<Element> getAttractions()
+    public List<Attraction> getAttractions()
     {
-        List<Element> attractions = new ArrayList<>();
+        List<Attraction> attractions = new ArrayList<>();
 
         for(Element element : this.elements.values())
         {
             if(element.isInstance(Attraction.class))
             {
-                attractions.add(element);
+                attractions.add((Attraction)element);
             }
         }
 

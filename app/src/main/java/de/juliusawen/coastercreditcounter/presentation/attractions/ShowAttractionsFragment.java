@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
@@ -58,6 +59,11 @@ public  class ShowAttractionsFragment extends Fragment
         if(this.viewModel.park == null)
         {
             this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+        }
+
+        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        {
+            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -138,7 +144,7 @@ public  class ShowAttractionsFragment extends Fragment
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class)),
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(Attraction.class)),
                 null,
                 Attraction.class);
     }
@@ -178,7 +184,7 @@ public  class ShowAttractionsFragment extends Fragment
     {
         Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
 
-        List<Element> categorizedAttractions = this.viewModel.getCategorizedAttractions(this.viewModel.park.getChildrenOfType(Attraction.class));
+        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(Attraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }

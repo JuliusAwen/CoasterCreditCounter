@@ -9,7 +9,6 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Coaster;
-import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
@@ -354,7 +353,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         for(Attraction attraction : attractions)
         {
-            visit.addChild(CountableAttraction.create(attraction));
+            visit.addChild(attraction);
         }
     }
 

@@ -14,12 +14,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.CountableAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
-import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
@@ -48,6 +47,11 @@ public class ShowVisitActivity extends BaseActivity
         if(this.viewModel.visit == null)
         {
             this.viewModel.visit = (Visit) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+
+        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        {
+            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
         }
 
         super.addToolbar();
@@ -97,14 +101,14 @@ public class ShowVisitActivity extends BaseActivity
             {
                 Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                List<Element> allAttractions = new ArrayList<>(viewModel.visit.getParent().getChildrenOfType(Attraction.class));
-                List<Attraction> addedAttractions = new ArrayList<>(CountableAttraction.getAttractions(viewModel.visit.getChildrenAsType(CountableAttraction.class)));
+                List<Attraction> allAttractions = new ArrayList<>(viewModel.visit.getParent().getChildrenAsType(Attraction.class));
+                List<Attraction> addedAttractions = new ArrayList<>(viewModel.visit.getChildrenAsType(Attraction.class));
                 allAttractions.removeAll(addedAttractions);
 
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_PICK_ATTRACTIONS,
-                        getCategorizedCountableAttractions(allAttractions));
+                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(allAttractions));
             }
         });
 
@@ -124,9 +128,7 @@ public class ShowVisitActivity extends BaseActivity
             {
                 for(Element element : resultElements)
                 {
-                    Element countableAttraction = CountableAttraction.create((Attraction)element);
-                    this.viewModel.visit.addChild(countableAttraction);
-                    App.content.addElement(countableAttraction);
+                    this.viewModel.visit.addChild(element);
                 }
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
@@ -144,11 +146,11 @@ public class ShowVisitActivity extends BaseActivity
 
     private ContentRecyclerViewAdapter createContentRecyclerView()
     {
-        List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
+        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(Attraction.class));
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
-                categorizedCountableAttractions,
+                categorizedAttractions,
                 null,
-                CountableAttraction.class);
+                Attraction.class);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
@@ -164,7 +166,7 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else if(element.isInstance(CountableAttraction.class))
+                else if(element.isInstance(Attraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
                 }
@@ -179,7 +181,7 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
                 }
-                else if(element.isInstance(CountableAttraction.class))
+                else if(element.isInstance(Attraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " long clicked");
                 }
@@ -193,8 +195,8 @@ public class ShowVisitActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
 
-        List<Element> categorizedCountableAttractions = this.getCategorizedCountableAttractions(this.viewModel.visit.getChildrenOfType(CountableAttraction.class));
-        this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedCountableAttractions);
+        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(Attraction.class));
+        this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -203,26 +205,15 @@ public class ShowVisitActivity extends BaseActivity
         if(this.viewModel.visit != null)
         {
             List<Attraction> allAttractions = new ArrayList<>(this.viewModel.visit.getParent().getChildrenAsType(Attraction.class));
-            List<Attraction> addedAttractions = new ArrayList<>(CountableAttraction.getAttractions(this.viewModel.visit.getChildrenAsType(CountableAttraction.class)));
+            List<Attraction> addedAttractions = new ArrayList<>(this.viewModel.visit.getChildrenAsType(Attraction.class));
             allAttractions.removeAll(addedAttractions);
 
             Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", allAttractions.size()));
-            return allAttractions.size() <= 0;
+            return allAttractions.isEmpty();
         }
         else
         {
             return false;
         }
-    }
-
-    private List<Element> getCategorizedCountableAttractions(List<Element> attractions)
-    {
-        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
-        {
-            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
-        }
-
-        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
-        return this.viewModel.attractionCategoryHeaders;
     }
 }
