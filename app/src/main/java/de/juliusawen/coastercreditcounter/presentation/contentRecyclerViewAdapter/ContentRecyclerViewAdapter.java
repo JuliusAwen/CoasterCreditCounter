@@ -23,6 +23,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -53,8 +55,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     enum ViewType
     {
         PARENT,
-        CHILD,
-        COUNTABLE_CHILD,
+        CHILD, VISITED_ATTRACTION,
         BOTTOM_SPACER,
         ITEM_DIVIDER
     }
@@ -83,7 +84,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    static class ViewHolderCountableChild extends RecyclerView.ViewHolder
+    static class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
     {
         LinearLayout linearLayoutCounter;
         TextView textViewName;
@@ -91,15 +92,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         ImageView imageViewDecrease;
         ImageView imageViewIncrease;
 
-        ViewHolderCountableChild(View view)
+        ViewHolderVisitedAttraction(View view)
         {
             super(view);
 
-            this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewCountableChild_Counter);
-            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Name);
-            this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemCountableChild_Count);
-            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemCountableChild_Decrease);
-            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemCountableChild_Increase);
+            this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_Counter);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Name);
+            this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
+            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
+            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
         }
     }
 
@@ -166,9 +167,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder = new ViewHolderChild(view);
                 break;
 
-            case COUNTABLE_CHILD:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_countable_child, viewGroup, false);
-                viewHolder = new ViewHolderCountableChild(view);
+            case VISITED_ATTRACTION:
+                view = layoutInflater.inflate(R.layout.recycler_view_item_visited_attraction, viewGroup, false);
+                viewHolder = new ViewHolderVisitedAttraction(view);
                 break;
 
             case ITEM_DIVIDER:
@@ -203,7 +204,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         else if(this.isChild(item) && this.adapterType.equals(AdapterType.COUNTABLE))
         {
-            return ViewType.COUNTABLE_CHILD.ordinal();
+            return ViewType.VISITED_ATTRACTION.ordinal();
         }
         else if(item.isInstance(ItemDivider.class))
         {
@@ -255,9 +256,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 this.bindViewHolderChild(viewHolderChild, position);
                 break;
 
-            case COUNTABLE_CHILD:
-                ViewHolderCountableChild viewHolderCountableChild = (ViewHolderCountableChild) viewHolder;
-                this.bindViewHolderCountableChild(viewHolderCountableChild, position);
+            case VISITED_ATTRACTION:
+                ViewHolderVisitedAttraction viewHolderVisitedAttraction = (ViewHolderVisitedAttraction) viewHolder;
+                this.bindViewHolderVisitedAttraction(viewHolderVisitedAttraction, position);
                 break;
 
             case BOTTOM_SPACER:
@@ -378,7 +379,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
                         {
                             AttractionCategoryHeader attractionCategoryHeader =
-                                    AttractionCategoryHeader.getAttractionCategoryHeaderForAttractionCategoryFromElements(content, ((Attraction)selectedElement).getCategory());
+                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getCategory());
 
                             if(attractionCategoryHeader != null)
                             {
@@ -427,7 +428,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     else if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
                     {
                         AttractionCategoryHeader attractionCategoryHeader =
-                                AttractionCategoryHeader.getAttractionCategoryHeaderForAttractionCategoryFromElements(content, ((Attraction)selectedElement).getCategory());
+                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getCategory());
 
                         selectedElementsInOrderOfSelection.remove(attractionCategoryHeader);
                         notifyItemChanged(content.indexOf(attractionCategoryHeader));
@@ -441,6 +442,22 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         };
+    }
+
+    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromContent(List<? extends Element> content, AttractionCategory attractionCategory)
+    {
+        for(Element element : content)
+        {
+            if(element.isInstance(AttractionCategoryHeader.class))
+            {
+                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
+                {
+                    return (AttractionCategoryHeader) element;
+                }
+            }
+        }
+
+        return null;
     }
 
 
@@ -578,11 +595,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.itemView.setTag(child);
     }
 
-    private void bindViewHolderCountableChild(ViewHolderCountableChild viewHolder, int position)
+    private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
         Context context = viewHolder.itemView.getContext();
-        Element child = this.content.get(position);
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderCountableChild:: binding %s for position [%d]", child, position));
+        VisitedAttraction child = (VisitedAttraction) this.content.get(position);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", child, position));
 
         viewHolder.linearLayoutCounter.setTag(child);
         if(this.recyclerOnClickListener != null)
@@ -592,7 +609,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount((Attraction)child));
+        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child.getAttraction()));
 
         viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
         viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
@@ -766,10 +783,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     notifyItemRemoved(position);
                     Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: added BottomSpacer");
                 }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer already in use");
-                }
             }
             else
             {
@@ -779,10 +792,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     this.content.remove(position);
                     notifyItemRemoved(position);
                     Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: removed BottomSpacer");
-                }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: BottomSpacer not in use");
                 }
             }
         }

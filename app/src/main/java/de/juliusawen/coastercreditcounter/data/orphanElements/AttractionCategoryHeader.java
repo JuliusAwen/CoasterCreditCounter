@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -43,29 +45,13 @@ public class AttractionCategoryHeader extends OrphanElement
         return attractionCategoryHeader;
     }
 
-    public static AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromElements(List<? extends Element> elements, AttractionCategory attractionCategory)
-    {
-        for(Element element : elements)
-        {
-            if(element.isInstance(AttractionCategoryHeader.class))
-            {
-                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
-                {
-                    return (AttractionCategoryHeader) element;
-                }
-            }
-        }
-
-        return null;
-    }
-
     public static void handleOnAttractionCategoryHeaderLongClick(final Context context, View view)
     {
         final Element longClickedElement = (Element) view.getTag();
 
         PopupMenu popupMenu = new PopupMenu(context, view);
 
-        if(longClickedElement.getChildCountOfType(Attraction.class) > 1)
+        if(longClickedElement.getChildCountOfType(Attraction.class) > 1 || longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
         {
             popupMenu.getMenu().add(0, Selection.SORT_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
 
@@ -81,10 +67,21 @@ public class AttractionCategoryHeader extends OrphanElement
                     {
                         case SORT_ATTRACTIONS:
                         {
+                            List<Element> attractions = new ArrayList<>();
+
+                            if(longClickedElement.hasChildrenOfType(Attraction.class))
+                            {
+                                attractions = longClickedElement.getChildrenOfType(Attraction.class);
+                            }
+                            else if(longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+                            {
+                                attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                            }
+
                             ActivityTool.startActivitySortForResult(
                                     Objects.requireNonNull(context),
                                     Constants.REQUEST_SORT_ATTRACTIONS,
-                                    longClickedElement.getChildrenOfType(Attraction.class));
+                                    attractions);
 
                             return true;
                         }

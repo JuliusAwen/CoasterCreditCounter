@@ -19,6 +19,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
@@ -81,7 +82,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(Element element : resultElements)
                 {
-                    this.viewModel.visit.addChild(element);
+                    Element visitedAttraction = VisitedAttraction.create((Attraction)element);
+                    this.viewModel.visit.addChild(visitedAttraction);
+                    App.content.addElement(visitedAttraction);
                 }
 
                 this.returnResult(Activity.RESULT_OK);
@@ -267,16 +270,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             }
         }
     }
-
-//    private List<Element> getCategorizedAttractions(List<Element> attractions)
-//    {
-//        if(!this.viewModel.attractionCategoryHeaders.isEmpty())
-//        {
-//            App.content.removeOrphanElements(Element.convertElementsToType(this.viewModel.attractionCategoryHeaders, OrphanElement.class));
-//        }
-//        this.viewModel.attractionCategoryHeaders = AttractionCategoryHeader.fetchCategorizedAttractions(attractions);
-//        return this.viewModel.attractionCategoryHeaders;
-//    }
 
     private void returnResult(int resultCode)
     {

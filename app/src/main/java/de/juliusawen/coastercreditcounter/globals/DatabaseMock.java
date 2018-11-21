@@ -13,6 +13,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
@@ -353,7 +354,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         for(Attraction attraction : attractions)
         {
-            visit.addChild(attraction);
+            visit.addChild(VisitedAttraction.create(attraction));
         }
     }
 

@@ -93,8 +93,6 @@ public  class ShowAttractionsFragment extends Fragment
     public void onResume()
     {
         super.onResume();
-
-        this.updateContentRecyclerView();
     }
 
     @Override
@@ -106,12 +104,7 @@ public  class ShowAttractionsFragment extends Fragment
         {
             Element selectedElement = ResultTool.fetchSelectedElement(data);
 
-            if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
-            {
-                this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
-            }
-            else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
+            if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
                 List<Element> resultElements = ResultTool.fetchResultElements(data);
 
@@ -121,14 +114,14 @@ public  class ShowAttractionsFragment extends Fragment
                     this.viewModel.park.reorderChildren(resultElements);
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
-                }
 
-                this.updateContentRecyclerView();
+                    this.updateContentRecyclerView();
 
-                if(selectedElement != null)
-                {
-                    Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
+                    if(selectedElement != null)
+                    {
+                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
+                    }
                 }
             }
         }

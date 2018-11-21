@@ -23,7 +23,7 @@
 
         <ImageView
             style="@style/standard_image_holder"
-            android:id="@+id/imageViewRecyclerViewItemCountableChild_Decrease"
+            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
             android:contentDescription="@string/description_decrease"
             android:layout_height="32dp"
             android:background="@color/default_color"
@@ -31,7 +31,7 @@
             android:src="@drawable/ic_baseline_error_outline"/>
 
         <LinearLayout
-            android:id="@+id/linearLayoutRecyclerViewCountableChild_Counter"
+            android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_Counter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -40,14 +40,14 @@
 
             <TextView
                 style="@style/standard_text_view"
-                android:id="@+id/textViewRecyclerViewItemCountableChild_Name"
+                android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="bottom|center_horizontal"/>
 
             <TextView
                 style="@style/standard_text_view"
-                android:id="@+id/textViewRecyclerViewItemCountableChild_Count"
+                android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
                 android:textSize="28sp"
                 android:layout_gravity="center"
                 android:gravity="center" />
@@ -56,7 +56,7 @@
 
         <ImageView
             style="@style/standard_image_holder"
-            android:id="@+id/imageViewRecyclerViewItemCountableChild_Increase"
+            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
             android:contentDescription="@string/description_increase"
             android:layout_height="32dp"
             android:background="@color/default_color"

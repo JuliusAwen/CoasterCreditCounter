@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeade
 import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -71,10 +72,6 @@ public class ShowVisitActivity extends BaseActivity
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         }
-        else
-        {
-            updateContentRecyclerView();
-        }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -84,10 +81,12 @@ public class ShowVisitActivity extends BaseActivity
         {
             super.addFloatingActionButton();
             this.decorateFloatingActionButton();
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
         }
         else
         {
             super.disableFloatingActionButton();
+            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
         }
     }
 
@@ -102,13 +101,13 @@ public class ShowVisitActivity extends BaseActivity
                 Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
                 List<Attraction> allAttractions = new ArrayList<>(viewModel.visit.getParent().getChildrenAsType(Attraction.class));
-                List<Attraction> addedAttractions = new ArrayList<>(viewModel.visit.getChildrenAsType(Attraction.class));
+                List<Attraction> addedAttractions = new ArrayList<>(VisitedAttraction.getAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
                 allAttractions.removeAll(addedAttractions);
 
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_PICK_ATTRACTIONS,
-                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(allAttractions));
+                        ShowVisitActivity.this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(allAttractions));
             }
         });
 
@@ -128,8 +127,12 @@ public class ShowVisitActivity extends BaseActivity
             {
                 for(Element element : resultElements)
                 {
-                    this.viewModel.visit.addChild(element);
+                    Element visitedAttraction = VisitedAttraction.create((Attraction)element);
+                    this.viewModel.visit.addChild(visitedAttraction);
+                    App.content.addElement(visitedAttraction);
                 }
+
+                this.updateContentRecyclerView();
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
@@ -139,6 +142,8 @@ public class ShowVisitActivity extends BaseActivity
                     this.viewModel.visit.reorderChildren(resultElements);
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
+
+                    this.updateContentRecyclerView();
                 }
             }
         }
@@ -146,11 +151,12 @@ public class ShowVisitActivity extends BaseActivity
 
     private ContentRecyclerViewAdapter createContentRecyclerView()
     {
-        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(Attraction.class));
+        List<Element> categorizedVisitedAttractions =
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedVisitedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
-                categorizedAttractions,
+                categorizedVisitedAttractions,
                 null,
-                Attraction.class);
+                VisitedAttraction.class);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
@@ -166,7 +172,7 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else if(element.isInstance(Attraction.class))
+                else if(element.isInstance(VisitedAttraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
                 }
@@ -181,7 +187,7 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
                 }
-                else if(element.isInstance(Attraction.class))
+                else if(element.isInstance(VisitedAttraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " long clicked");
                 }
@@ -195,7 +201,8 @@ public class ShowVisitActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
 
-        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(Attraction.class));
+        List<Element> categorizedAttractions =
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedVisitedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -205,10 +212,18 @@ public class ShowVisitActivity extends BaseActivity
         if(this.viewModel.visit != null)
         {
             List<Attraction> allAttractions = new ArrayList<>(this.viewModel.visit.getParent().getChildrenAsType(Attraction.class));
-            List<Attraction> addedAttractions = new ArrayList<>(this.viewModel.visit.getChildrenAsType(Attraction.class));
+            List<Attraction> addedAttractions = new ArrayList<>(VisitedAttraction.getAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
             allAttractions.removeAll(addedAttractions);
 
-            Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", allAttractions.size()));
+            if(allAttractions.size() > 0)
+            {
+                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", allAttractions.size()));
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "ShowVisitActivity.allAttractionsAdded:: all attractions added");
+            }
+
             return allAttractions.isEmpty();
         }
         else
