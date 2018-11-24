@@ -15,10 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -100,9 +101,9 @@ public class ShowVisitActivity extends BaseActivity
             {
                 Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                List<Attraction> allAttractions = new ArrayList<>(viewModel.visit.getParent().getChildrenAsType(Attraction.class));
-                List<Attraction> addedAttractions = new ArrayList<>(VisitedAttraction.getAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-                allAttractions.removeAll(addedAttractions);
+                List<Attraction> allAttractions = new ArrayList<Attraction>(viewModel.visit.getParent().getChildrenAsType(StockAttraction.class));
+                List<Attraction> visitedAttractions = new ArrayList<Attraction>(VisitedAttraction.getStockAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
+                allAttractions.removeAll(visitedAttractions);
 
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
@@ -127,8 +128,8 @@ public class ShowVisitActivity extends BaseActivity
             {
                 for(Element element : resultElements)
                 {
-                    Element visitedAttraction = VisitedAttraction.create((Attraction)element);
-                    this.viewModel.visit.addChild(visitedAttraction);
+                    Element visitedAttraction = VisitedAttraction.create((StockAttraction)element);
+                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }
 
@@ -152,7 +153,7 @@ public class ShowVisitActivity extends BaseActivity
     private ContentRecyclerViewAdapter createContentRecyclerView()
     {
         List<Element> categorizedVisitedAttractions =
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedVisitedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 categorizedVisitedAttractions,
                 null,
@@ -172,9 +173,9 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else if(element.isInstanceOf(VisitedAttraction.class))
+                else if(element.isInstanceOf(Attraction.class))
                 {
-                    Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
+                    Toaster.makeToast(ShowVisitActivity.this, element + " clicked");
                 }
             }
 
@@ -187,9 +188,9 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
                 }
-                else if(element.isInstanceOf(VisitedAttraction.class))
+                else if(element.isInstanceOf(Attraction.class))
                 {
-                    Toaster.makeToast(ShowVisitActivity.this, element.getName() + " long clicked");
+                    Toaster.makeToast(ShowVisitActivity.this, element + " long clicked");
                 }
 
                 return true;
@@ -202,7 +203,7 @@ public class ShowVisitActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
 
         List<Element> categorizedAttractions =
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedVisitedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -211,8 +212,8 @@ public class ShowVisitActivity extends BaseActivity
     {
         if(this.viewModel.visit != null)
         {
-            List<Attraction> allAttractions = new ArrayList<>(this.viewModel.visit.getParent().getChildrenAsType(Attraction.class));
-            List<Attraction> addedAttractions = new ArrayList<>(VisitedAttraction.getAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
+            List<Attraction> allAttractions = new ArrayList<Attraction>(this.viewModel.visit.getParent().getChildrenAsType(StockAttraction.class));
+            List<Attraction> addedAttractions = new ArrayList<Attraction>(VisitedAttraction.getStockAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
             allAttractions.removeAll(addedAttractions);
 
             if(allAttractions.size() > 0)

@@ -13,9 +13,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;

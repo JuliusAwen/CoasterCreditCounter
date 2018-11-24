@@ -231,7 +231,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> - adding child %s",
                         this.viewModel.parentLocation, this.viewModel.newLocation));
-                this.viewModel.parentLocation.addChild(this.viewModel.newLocation);
+                this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newLocation);
 
                 if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {

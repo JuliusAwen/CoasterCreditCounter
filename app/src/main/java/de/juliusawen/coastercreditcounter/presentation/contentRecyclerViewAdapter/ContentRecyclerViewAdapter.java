@@ -20,10 +20,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
@@ -609,10 +609,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCountForAttraction(child.getAttraction()));
+        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCountForAttraction(child.getStockAttraction()));
+
+        viewHolder.imageViewIncrease.setTag(child);
+        viewHolder.imageViewDecrease.setTag(child);
 
         viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
         viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+
+        if(this.recyclerOnClickListener != null)
+        {
+            viewHolder.imageViewIncrease.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            viewHolder.imageViewDecrease.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+        }
     }
 
     private void setImagePlaceholder(ImageView imageView)

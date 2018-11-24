@@ -157,7 +157,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 Element parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
                 parent.deleteChildren(resultElements);
-                parent.addChildren(resultElements);
+                parent.addChildrenAndSetParents(resultElements);
                 this.updateContentRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);

@@ -95,7 +95,7 @@ public class YearHeader extends OrphanElement
 
             if(existingYearHeader != null)
             {
-                existingYearHeader.addChildToOrphanElement(visit);
+                existingYearHeader.addChild(visit);
             }
             else
             {
@@ -117,7 +117,7 @@ public class YearHeader extends OrphanElement
                     Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: created new %s", yearHeader));
                 }
 
-                yearHeader.addChildToOrphanElement(visit);
+                yearHeader.addChild(visit);
                 preparedElements.add(yearHeader);
             }
         }

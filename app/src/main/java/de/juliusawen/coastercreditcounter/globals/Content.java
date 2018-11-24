@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -304,18 +304,18 @@ public class Content
         return false;
     }
 
-    public List<Attraction> getAttractions()
+    public List<StockAttraction> getStockAttractions()
     {
-        List<Attraction> attractions = new ArrayList<>();
+        List<StockAttraction> stockAttractions = new ArrayList<>();
 
         for(Element element : this.elements.values())
         {
-            if(element.isInstanceOf(Attraction.class))
+            if(element.isInstanceOf(StockAttraction.class))
             {
-                attractions.add((Attraction)element);
+                stockAttractions.add((StockAttraction)element);
             }
         }
 
-        return attractions;
+        return stockAttractions;
     }
 }

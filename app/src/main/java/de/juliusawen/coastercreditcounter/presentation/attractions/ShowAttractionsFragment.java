@@ -18,9 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -137,7 +138,7 @@ public  class ShowAttractionsFragment extends Fragment
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(Attraction.class)),
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(StockAttraction.class)),
                 null,
                 Attraction.class);
     }
@@ -177,7 +178,7 @@ public  class ShowAttractionsFragment extends Fragment
     {
         Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
 
-        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(Attraction.class));
+        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(StockAttraction.class));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }

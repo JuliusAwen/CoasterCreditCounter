@@ -114,21 +114,21 @@ public abstract class Element
         return this.itemId;
     }
 
-    public void addChildren(List<Element> children)
+    public void addChildrenAndSetParents(List<Element> children)
     {
         for (Element child : children)
         {
-            this.addChild(child);
+            this.addChildAndSetParent(child);
         }
     }
 
-    private void addChildren(int index, List<Element> children)
+    private void addChildrenAndSetParents(int index, List<Element> children)
     {
-        Log.v(Constants.LOG_TAG, String.format("Element.addChildren:: called with [%d] children", children.size()));
+        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParents:: called with [%d] children", children.size()));
         int increment = 0;
         for (Element child : children)
         {
-            if(this.addChild(index + increment, child))
+            if(this.addChildAndSetParent(index + increment, child))
             {
                 child.setParent(this);
                 increment ++;
@@ -136,12 +136,12 @@ public abstract class Element
         }
     }
 
-    public void addChild(Element child)
+    public void addChildAndSetParent(Element child)
     {
-        this.addChild(this.getChildCount(), child);
+        this.addChildAndSetParent(this.getChildCount(), child);
     }
 
-    private boolean addChild(int index, Element child)
+    private boolean addChildAndSetParent(int index, Element child)
     {
         if(!this.isInstanceOf(OrphanElement.class))
         {
@@ -149,24 +149,24 @@ public abstract class Element
             {
                 if(child.getParent() != null)
                 {
-                    Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
+                    Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
                 }
                 child.setParent(this);
 
-                Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
+                Log.v(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s -> child %s added", this, child));
                 this.children.add(index, child);
                 return true;
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("Element.addChild:: %s already contains child [%s]", this, child));
+                Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s already contains child [%s]", this, child));
                 return false;
             }
         }
         else
         {
             String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is instance of <OrphanElement> - adding not possible", child);
-            Log.e(Constants.LOG_TAG, "Element.addChild:: " + errorMessage);
+            Log.e(Constants.LOG_TAG, "Element.addChildAndSetParent:: " + errorMessage);
             throw new IllegalStateException(errorMessage);
         }
 
@@ -187,19 +187,10 @@ public abstract class Element
         }
     }
 
-    public void addChildToOrphanElement(Element child)
+    public void addChild(Element child)
     {
-        if(this.isInstanceOf(OrphanElement.class))
-        {
-            this.getChildren().add(child);
-            Log.v(Constants.LOG_TAG, String.format("Element.addChildToOrphanElement:: %s -> child %s added", this, child));
-        }
-        else
-        {
-            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is not instance of <OrphanElement>", child);
-            Log.e(Constants.LOG_TAG, "Element.addChildToOrphanElement:: " + errorMessage);
-            throw new IllegalStateException(errorMessage);
-        }
+        this.getChildren().add(child);
+        Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
     }
 
     public boolean containsChild(Element child)
@@ -312,15 +303,15 @@ public abstract class Element
     public void insertElements(Element newElement, List<Element> children)
     {
         Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
-        newElement.addChildren(new ArrayList<>(children));
+        newElement.addChildrenAndSetParents(new ArrayList<>(children));
         this.deleteChildren(children);
-        this.addChild(newElement);
+        this.addChildAndSetParent(newElement);
     }
 
     public void relocateElement(Element newParent)
     {
         this.getParent().getChildren().remove(this);
-        newParent.addChild(this);
+        newParent.addChildAndSetParent(this);
     }
 
     public boolean deleteElementAndChildren()
@@ -346,8 +337,8 @@ public abstract class Element
         boolean success = false;
         if(this.undoIsPossible && this.backupParent != null && this.undoIndex != -1)
         {
-            this.addChildren(this.backupChildren);
-            this.backupParent.addChild(this.undoIndex, this);
+            this.addChildrenAndSetParents(this.backupChildren);
+            this.backupParent.addChildAndSetParent(this.undoIndex, this);
             this.parent = this.backupParent;
             success = true;
         }
@@ -382,7 +373,7 @@ public abstract class Element
             this.undoIndex = this.parent.indexOfChild(this);
             this.undoIsPossible = true;
             this.parent.deleteChild(this);
-            this.parent.addChildren(this.undoIndex, this.backupChildren);
+            this.parent.addChildrenAndSetParents(this.undoIndex, this.backupChildren);
             this.deleteChildren(this.backupChildren);
             return true;
         }
@@ -399,9 +390,9 @@ public abstract class Element
         boolean success = false;
         if(this.undoIsPossible && this.backupParent != null && this.undoIndex != -1)
         {
-            this.addChildren(this.backupChildren);
+            this.addChildrenAndSetParents(this.backupChildren);
             this.backupParent.deleteChildren(this.backupChildren);
-            this.backupParent.addChild(this.undoIndex, this);
+            this.backupParent.addChildAndSetParent(this.undoIndex, this);
             this.parent = this.backupParent;
             success = true;
         }

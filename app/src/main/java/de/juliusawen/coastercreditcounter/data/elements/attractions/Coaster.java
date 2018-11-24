@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.data.elements;
+package de.juliusawen.coastercreditcounter.data.elements.attractions;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class Coaster extends Attraction
+public class Coaster extends StockAttraction
 {
     private Coaster(String name, UUID uuid)
     {

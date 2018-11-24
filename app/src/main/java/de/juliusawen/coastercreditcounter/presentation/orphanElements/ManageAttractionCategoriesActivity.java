@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -168,7 +168,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 for(Element element : resultElements)
                 {
-                    ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
+                    ((StockAttraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
                 }
 
                 Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
@@ -201,7 +201,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
 
                 popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
-                        .setEnabled(!App.content.getAttractions().isEmpty());
+                        .setEnabled(!App.content.getStockAttractions().isEmpty());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -254,7 +254,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                 ActivityTool.startActivityPickForResult(
                                         ManageAttractionCategoriesActivity.this,
                                         Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
-                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getAttractions()));
+                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getStockAttractions()));
                                 return true;
                             }
 
@@ -284,10 +284,10 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 {
                     Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
 
-                    final List<Attraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(Attraction.class));
+                    final List<StockAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(StockAttraction.class));
                     final int index = viewModel.contentRecyclerViewAdapter.getContent().indexOf(viewModel.longClickedAttractionCategory);
 
-                    for(Attraction child : children)
+                    for(StockAttraction child : children)
                     {
                         child.setAttractionCategory(App.settings.getDefaultAttractionCategory());
                     }
@@ -305,7 +305,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         {
                             Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedAttractionCategory));
 
-                            for(Attraction child : children)
+                            for(StockAttraction child : children)
                             {
                                 child.setAttractionCategory(viewModel.longClickedAttractionCategory);
                             }

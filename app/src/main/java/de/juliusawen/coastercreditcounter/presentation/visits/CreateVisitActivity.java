@@ -15,11 +15,12 @@ import java.util.UUID;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
-import de.juliusawen.coastercreditcounter.data.elements.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
@@ -82,8 +83,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(Element element : resultElements)
                 {
-                    Element visitedAttraction = VisitedAttraction.create((Attraction)element);
-                    this.viewModel.visit.addChild(visitedAttraction);
+                    Element visitedAttraction = VisitedAttraction.create((StockAttraction)element);
+                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }
 
@@ -192,7 +193,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
 
         this.viewModel.visit = Visit.create(calendar);
-        this.viewModel.park.addChild(this.viewModel.visit);
+        this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
         App.content.addElement(this.viewModel.visit);
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
@@ -239,7 +240,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(viewModel.park.getChildrenAsType(Attraction.class)));
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(viewModel.park.getChildrenAsType(StockAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
