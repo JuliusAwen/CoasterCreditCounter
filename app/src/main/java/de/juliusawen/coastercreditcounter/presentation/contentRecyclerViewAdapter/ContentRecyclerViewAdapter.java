@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -516,7 +517,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.decorateExpandToggle(viewHolder, parent);
 
-        viewHolder.textViewName.setText(parent.getName());
+        String name = parent.getName();
+        if(!this.expandedParents.contains(parent) && parent.hasChildrenOfType(this.childType))
+        {
+            name += String.format(Locale.getDefault(), " (%d)", parent.getChildCountOfType(this.childType));
+        }
+
+        viewHolder.textViewName.setText(name);
         viewHolder.textViewName.setTag(parent);
 
         viewHolder.itemView.setTag(parent);
