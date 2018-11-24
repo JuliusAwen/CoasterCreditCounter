@@ -309,6 +309,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChildAndSetParent(valravn);
         cedarPoint.addChildAndSetParent(maverick);
         cedarPoint.addChildAndSetParent(gatekeeper);
+        cedarPoint.addChildAndSetParent(dodgem);
 
         usa.addChildAndSetParent(cedarPoint);
         usa.addChildAndSetParent(sixFlagsMagicMountain);

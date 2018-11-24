@@ -61,7 +61,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<Element>(App.content.getAttractionCategories()),
                     null,
-                    null);
+                    StockAttraction.class);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
@@ -186,7 +186,15 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         return new RecyclerOnClickListener.OnClickListener()
         {
             @Override
-            public void onClick(View view) {}
+            public void onClick(View view)
+            {
+                Element element = (Element)view.getTag();
+
+                if(element.isInstanceOf(AttractionCategory.class))
+                {
+                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                }
+            }
 
             @Override
             public boolean onLongClick(final View view)
