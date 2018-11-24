@@ -24,6 +24,7 @@ import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeade
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -251,10 +252,20 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                             case APPLY_CATEGORY_TO_ATTRACTIONS:
                             {
+                                List<Element> attractionCategoryHeaders = viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getStockAttractions());
+                                for(Element attractionCategoryHeader : attractionCategoryHeaders)
+                                {
+                                    if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
+                                    {
+                                        attractionCategoryHeaders.remove(attractionCategoryHeader);
+                                        break;
+                                    }
+                                }
+
                                 ActivityTool.startActivityPickForResult(
                                         ManageAttractionCategoriesActivity.this,
                                         Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
-                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getStockAttractions()));
+                                        attractionCategoryHeaders);
                                 return true;
                             }
 
@@ -298,6 +309,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                             findViewById(android.R.id.content),
                             getString(R.string.action_undo_delete_text, viewModel.longClickedAttractionCategory.getName()),
                             Snackbar.LENGTH_LONG);
+
                     snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
                     {
                         @Override

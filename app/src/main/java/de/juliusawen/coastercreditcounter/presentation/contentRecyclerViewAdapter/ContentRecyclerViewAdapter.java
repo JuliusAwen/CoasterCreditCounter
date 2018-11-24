@@ -405,9 +405,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     else
                     {
                         Element previouslySelectedElement = getLastSelectedElement();
-                        selectedElementsInOrderOfSelection.remove(previouslySelectedElement);
-                        notifyItemChanged(content.indexOf(previouslySelectedElement));
-                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedElement));
+
+                        if(previouslySelectedElement != null)
+                        {
+                            selectedElementsInOrderOfSelection.remove(previouslySelectedElement);
+                            notifyItemChanged(content.indexOf(previouslySelectedElement));
+                            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedElement));
+                        }
 
                         selectedElementsInOrderOfSelection.add(selectedElement);
                         notifyItemChanged(content.indexOf(selectedElement));

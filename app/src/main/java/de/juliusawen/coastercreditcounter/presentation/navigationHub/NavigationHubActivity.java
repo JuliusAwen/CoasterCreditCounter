@@ -77,7 +77,7 @@ public class NavigationHubActivity extends BaseActivity
                 }
             }
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 
     private NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener()
