@@ -71,18 +71,20 @@ public class Visit extends Element
         return this.calendar;
     }
 
-    public String getRideCount(Attraction attraction)
+    public String getRideCountForAttraction(Attraction attraction)
     {
-        if(this.rideCountByAttractions.containsKey(attraction))
+        if(!this.rideCountByAttractions.containsKey(attraction))
         {
-            return String.valueOf(this.rideCountByAttractions.get(attraction));
+            this.addVisitedAttraction(attraction);
         }
-        else
-        {
-            this.rideCountByAttractions.put(attraction, 0);
-            Log.v(Constants.LOG_TAG,  String.format("Visit.getRideCount:: initializing ride count for %s with 0.", attraction));
-            return "0";
-        }
+
+        return String.valueOf(this.rideCountByAttractions.get(attraction));
+    }
+
+    public void addVisitedAttraction(Attraction attraction)
+    {
+        Log.v(Constants.LOG_TAG,  String.format("Visit.addVisitedAttraction:: initializing ride count for %s with [0]...", attraction));
+        this.rideCountByAttractions.put(attraction, 0);
     }
 
     public static void setOpenVisit(Element visit)

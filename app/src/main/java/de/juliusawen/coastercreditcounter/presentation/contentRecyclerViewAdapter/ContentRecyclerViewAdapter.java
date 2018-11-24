@@ -609,7 +609,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCount(child.getAttraction()));
+        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCountForAttraction(child.getAttraction()));
 
         viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
         viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
