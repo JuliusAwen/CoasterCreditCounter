@@ -9,7 +9,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class Attraction extends Element
 {
-    private AttractionCategory category = null;
+    private AttractionCategory attractionCategory = null;
 
     Attraction(String name, UUID uuid)
     {
@@ -33,21 +33,21 @@ public class Attraction extends Element
         return attraction;
     }
 
-    public AttractionCategory getCategory()
+    public AttractionCategory getAttrationCategory()
     {
-        return this.category;
+        return this.attractionCategory;
     }
 
-    public void setCategory(AttractionCategory category)
+    public void setAttractionCategory(AttractionCategory attractionCategory)
     {
-        if(this.category != null)
+        if(this.attractionCategory != null)
         {
-            this.category.deleteChild(this);
+            this.attractionCategory.deleteChild(this);
         }
 
-        category.addChildToOrphanElement(this);
-        this.category = category;
+        attractionCategory.addChildToOrphanElement(this);
+        this.attractionCategory = attractionCategory;
 
-        Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s to %s", category, this));
+        Log.v(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s to %s", attractionCategory, this));
     }
 }

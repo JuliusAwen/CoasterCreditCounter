@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class VisitedAttraction extends Element
@@ -30,7 +31,12 @@ public class VisitedAttraction extends Element
 
     public Attraction getAttraction()
     {
-        return attraction;
+        return this.attraction;
+    }
+
+    public AttractionCategory getAttractionCategory()
+    {
+        return this.attraction.getAttrationCategory();
     }
 
     public static List<Attraction> getAttractions(List<VisitedAttraction> visitedAttractions)

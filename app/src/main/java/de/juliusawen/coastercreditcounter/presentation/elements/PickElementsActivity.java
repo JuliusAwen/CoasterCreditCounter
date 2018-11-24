@@ -50,7 +50,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            if(this.viewModel.elementsToPickFrom.get(0).isInstance(AttractionCategoryHeader.class))
+            if(this.viewModel.elementsToPickFrom.get(0).isInstanceOf(AttractionCategoryHeader.class))
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.elementsToPickFrom,
@@ -206,7 +206,7 @@ public class PickElementsActivity extends BaseActivity
             List<Element> selectedElementsWithoutOrphanElements = new ArrayList<>();
             for(Element element : this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection())
             {
-                if(!element.isInstance(OrphanElement.class))
+                if(!element.isInstanceOf(OrphanElement.class))
                 {
                     selectedElementsWithoutOrphanElements.add(element);
                 }

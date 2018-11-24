@@ -371,13 +371,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickLocationRecyclerView:: %s clicked", element));
 
-                if(element.isInstance(Location.class))
+                if(element.isInstanceOf(Location.class))
                 {
                     viewModel.currentElement = element;
                     updateActivityView();
                     updateContentRecyclerView();
                 }
-                else if(element.isInstance(Park.class))
+                else if(element.isInstanceOf(Park.class))
                 {
                     ActivityTool.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_SHOW_PARK, element);
                 }
@@ -389,7 +389,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 viewModel.longClickedElement = (Element) view.getTag();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedElement));
 
-                if(viewModel.longClickedElement.isInstance(Location.class))
+                if(viewModel.longClickedElement.isInstanceOf(Location.class))
                 {
                     PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, view);
 

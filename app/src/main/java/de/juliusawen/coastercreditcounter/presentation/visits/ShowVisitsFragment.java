@@ -157,11 +157,11 @@ public class ShowVisitsFragment extends Fragment
             public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
-                if(element.isInstance(Visit.class))
+                if(element.isInstanceOf(Visit.class))
                 {
                     ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, element);
                 }
-                else if(element.isInstance(YearHeader.class));
+                else if(element.isInstanceOf(YearHeader.class));
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }

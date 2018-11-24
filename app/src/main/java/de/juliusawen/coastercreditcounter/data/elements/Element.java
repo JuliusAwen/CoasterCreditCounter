@@ -50,7 +50,7 @@ public abstract class Element
 
         Element element = (Element) obj;
 
-        if(!element.isInstance(this.getClass()))
+        if(!element.isInstanceOf(this.getClass()))
         {
             return false;
         }
@@ -104,7 +104,7 @@ public abstract class Element
         return this.uuid;
     }
 
-    public <T extends Element> boolean isInstance(Class<T> type)
+    public <T extends Element> boolean isInstanceOf(Class<T> type)
     {
         return type.isInstance(this);
     }
@@ -143,7 +143,7 @@ public abstract class Element
 
     private boolean addChild(int index, Element child)
     {
-        if(!this.isInstance(OrphanElement.class))
+        if(!this.isInstanceOf(OrphanElement.class))
         {
             if(!this.containsChild(child))
             {
@@ -189,7 +189,7 @@ public abstract class Element
 
     public void addChildToOrphanElement(Element child)
     {
-        if(this.isInstance(OrphanElement.class))
+        if(this.isInstanceOf(OrphanElement.class))
         {
             this.getChildren().add(child);
             Log.v(Constants.LOG_TAG, String.format("Element.addChildToOrphanElement:: %s -> child %s added", this, child));
@@ -254,7 +254,7 @@ public abstract class Element
         List<Element> children = new ArrayList<>();
         for(Element element : this.getChildren())
         {
-            if(element.isInstance(type))
+            if(element.isInstanceOf(type))
             {
                 children.add(element);
             }
@@ -267,7 +267,7 @@ public abstract class Element
         List<T> children = new ArrayList<>();
         for(Element element : this.getChildren())
         {
-            if(element.isInstance(type))
+            if(element.isInstanceOf(type))
             {
                 children.add(type.cast(element));
             }

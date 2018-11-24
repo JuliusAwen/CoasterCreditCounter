@@ -117,7 +117,7 @@ public class Content
         List<T> orphanElementsOfType = new ArrayList<>();
         for(Element orphanElement : this.orphanElements.values())
         {
-            if(orphanElement.isInstance(type))
+            if(orphanElement.isInstanceOf(type))
             {
                 orphanElementsOfType.add(type.cast(orphanElement));
             }
@@ -151,7 +151,7 @@ public class Content
 
     public void addOrphanElement(Element orphanElement)
     {
-        if(orphanElement.isInstance(OrphanElement.class))
+        if(orphanElement.isInstanceOf(OrphanElement.class))
         {
             if(!this.orphanElements.containsKey(orphanElement.getUuid()))
             {
@@ -267,7 +267,7 @@ public class Content
 
     public void addElement(Element element)
     {
-        if(!element.isInstance(OrphanElement.class))
+        if(!element.isInstanceOf(OrphanElement.class))
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
             this.elements.put(element.getUuid(), element);
@@ -310,7 +310,7 @@ public class Content
 
         for(Element element : this.elements.values())
         {
-            if(element.isInstance(Attraction.class))
+            if(element.isInstanceOf(Attraction.class))
             {
                 attractions.add((Attraction)element);
             }

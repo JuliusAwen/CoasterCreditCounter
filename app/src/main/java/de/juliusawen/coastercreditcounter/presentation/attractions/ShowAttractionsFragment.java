@@ -120,7 +120,7 @@ public  class ShowAttractionsFragment extends Fragment
                     if(selectedElement != null)
                     {
                         Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getCategory());
+                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getAttrationCategory());
                     }
                 }
             }
@@ -151,11 +151,11 @@ public  class ShowAttractionsFragment extends Fragment
             {
                 Element element = (Element) view.getTag();
 
-                if(element.isInstance(Attraction.class))
+                if(element.isInstanceOf(Attraction.class))
                 {
                     Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
                 }
-                else if(element.isInstance(AttractionCategoryHeader.class))
+                else if(element.isInstanceOf(AttractionCategoryHeader.class))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -164,7 +164,7 @@ public  class ShowAttractionsFragment extends Fragment
             @Override
             public boolean onLongClick(View view)
             {
-                if(((Element)view.getTag()).isInstance(AttractionCategoryHeader.class))
+                if(((Element)view.getTag()).isInstanceOf(AttractionCategoryHeader.class))
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
                 }

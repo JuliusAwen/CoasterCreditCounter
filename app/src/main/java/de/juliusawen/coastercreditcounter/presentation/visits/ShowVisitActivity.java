@@ -168,11 +168,11 @@ public class ShowVisitActivity extends BaseActivity
             {
                 Element element = (Element) view.getTag();
 
-                if(element.isInstance(AttractionCategoryHeader.class))
+                if(element.isInstanceOf(AttractionCategoryHeader.class))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else if(element.isInstance(VisitedAttraction.class))
+                else if(element.isInstanceOf(VisitedAttraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " clicked");
                 }
@@ -183,11 +183,11 @@ public class ShowVisitActivity extends BaseActivity
             {
                 Element element = (Element) view.getTag();
 
-                if(element.isInstance(AttractionCategoryHeader.class))
+                if(element.isInstanceOf(AttractionCategoryHeader.class))
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
                 }
-                else if(element.isInstance(VisitedAttraction.class))
+                else if(element.isInstanceOf(VisitedAttraction.class))
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element.getName() + " long clicked");
                 }

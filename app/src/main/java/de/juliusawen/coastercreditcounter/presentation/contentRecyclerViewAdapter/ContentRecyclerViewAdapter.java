@@ -206,11 +206,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return ViewType.VISITED_ATTRACTION.ordinal();
         }
-        else if(item.isInstance(ItemDivider.class))
+        else if(item.isInstanceOf(ItemDivider.class))
         {
             return ViewType.ITEM_DIVIDER.ordinal();
         }
-        else if(item.isInstance(BottomSpacer.class))
+        else if(item.isInstanceOf(BottomSpacer.class))
         {
             return ViewType.BOTTOM_SPACER.ordinal();
         }
@@ -220,12 +220,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private boolean isParent(Element element)
     {
-        return !element.isInstance(ItemDivider.class) && (this.childType == null || (!element.isInstance(this.childType) && !element.isInstance(BottomSpacer.class)));
+        return !element.isInstanceOf(ItemDivider.class) && (this.childType == null || (!element.isInstanceOf(this.childType) && !element.isInstanceOf(BottomSpacer.class)));
     }
 
     private boolean isChild(Element element)
     {
-        return !element.isInstance(ItemDivider.class) && (this.childType != null && (element.isInstance(this.childType) || !element.isInstance(BottomSpacer.class)));
+        return !element.isInstanceOf(ItemDivider.class) && (this.childType != null && (element.isInstanceOf(this.childType) || !element.isInstanceOf(BottomSpacer.class)));
     }
 
     @Override
@@ -311,11 +311,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private boolean expandedParentsContainsParent(Element parent)
     {
-        if(parent.isInstance(AttractionCategoryHeader.class))
+        if(parent.isInstanceOf(AttractionCategoryHeader.class))
         {
             for(Element expandedParent : this.expandedParents)
             {
-                if(expandedParent.isInstance(AttractionCategoryHeader.class))
+                if(expandedParent.isInstanceOf(AttractionCategoryHeader.class))
                 {
                     if(expandedParent.getName().equals(parent.getName()))
                     {
@@ -376,10 +376,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                             selectAllChildren(selectedElement);
                         }
 
-                        if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
+                        if(childType != null && isChild(selectedElement) && selectedElement.isInstanceOf(Attraction.class))
                         {
                             AttractionCategoryHeader attractionCategoryHeader =
-                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getCategory());
+                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttrationCategory());
 
                             if(attractionCategoryHeader != null)
                             {
@@ -425,10 +425,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     {
                         deselectAllChildren(selectedElement);
                     }
-                    else if(childType != null && isChild(selectedElement) && selectedElement.isInstance(Attraction.class))
+                    else if(childType != null && isChild(selectedElement) && selectedElement.isInstanceOf(Attraction.class))
                     {
                         AttractionCategoryHeader attractionCategoryHeader =
-                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getCategory());
+                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttrationCategory());
 
                         selectedElementsInOrderOfSelection.remove(attractionCategoryHeader);
                         notifyItemChanged(content.indexOf(attractionCategoryHeader));
@@ -448,7 +448,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         for(Element element : content)
         {
-            if(element.isInstance(AttractionCategoryHeader.class))
+            if(element.isInstanceOf(AttractionCategoryHeader.class))
             {
                 if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
                 {
@@ -679,7 +679,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         List<Element> content = new ArrayList<>();
         for(Element element : this.content)
         {
-            if(!element.isInstance(ItemDivider.class) && !element.isInstance(BottomSpacer.class))
+            if(!element.isInstanceOf(ItemDivider.class) && !element.isInstanceOf(BottomSpacer.class))
             {
                 content.add(element);
             }
@@ -777,7 +777,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             if(useBottomSpacer)
             {
-                if(!this.content.get(position).isInstance(BottomSpacer.class))
+                if(!this.content.get(position).isInstanceOf(BottomSpacer.class))
                 {
                     this.content.add(new BottomSpacer());
                     notifyItemRemoved(position);
@@ -787,7 +787,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             else
             {
 
-                if(this.content.get(position).isInstance(BottomSpacer.class))
+                if(this.content.get(position).isInstanceOf(BottomSpacer.class))
                 {
                     this.content.remove(position);
                     notifyItemRemoved(position);

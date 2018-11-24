@@ -168,7 +168,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 for(Element element : resultElements)
                 {
-                    ((Attraction)element).setCategory(this.viewModel.longClickedAttractionCategory);
+                    ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
                 }
 
                 Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
@@ -289,7 +289,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                     for(Attraction child : children)
                     {
-                        child.setCategory(App.settings.getDefaultAttractionCategory());
+                        child.setAttractionCategory(App.settings.getDefaultAttractionCategory());
                     }
                     App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
                     updateContentRecyclerView();
@@ -307,7 +307,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                             for(Attraction child : children)
                             {
-                                child.setCategory(viewModel.longClickedAttractionCategory);
+                                child.setAttractionCategory(viewModel.longClickedAttractionCategory);
                             }
 
                             App.content.addAttractionCategory(index, viewModel.longClickedAttractionCategory);

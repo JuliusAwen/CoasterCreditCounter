@@ -16,6 +16,6 @@ public class ShowVisitActivityViewModel extends ViewModel
     @Override
     protected void onCleared()
     {
-        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeaders();
+        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
     }
 }

@@ -99,8 +99,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster taron = Coaster.create("Taron");
         Attraction hollywoodTour = Attraction.create("Hollywood Tour");
 
-        taron.setCategory(attractionCategoryRollerCoasters);
-        hollywoodTour.setCategory(attractionCategoryWaterRides);
+        taron.setAttractionCategory(attractionCategoryRollerCoasters);
+        hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
 
 
         Coaster krake = Coaster.create("Krake");
@@ -121,25 +121,25 @@ public final class DatabaseMock implements IDatabaseWrapper
         Attraction screamie = Attraction.create("Screamie");
         Attraction bounty = Attraction.create("Bounty");
 
-        krake.setCategory(attractionCategoryRollerCoasters);
-        flugDerDaemonen.setCategory(attractionCategoryRollerCoasters);
-        desertRace.setCategory(attractionCategoryRollerCoasters);
-        bigLoop.setCategory(attractionCategoryRollerCoasters);
-        limit.setCategory(attractionCategoryRollerCoasters);
-        grottenblitz.setCategory(attractionCategoryRollerCoasters);
-        indyBlitz.setCategory(attractionCategoryRollerCoasters);
-        bobbahn.setCategory(attractionCategoryRollerCoasters);
-        colossos.setCategory(attractionCategoryRollerCoasters);
+        krake.setAttractionCategory(attractionCategoryRollerCoasters);
+        flugDerDaemonen.setAttractionCategory(attractionCategoryRollerCoasters);
+        desertRace.setAttractionCategory(attractionCategoryRollerCoasters);
+        bigLoop.setAttractionCategory(attractionCategoryRollerCoasters);
+        limit.setAttractionCategory(attractionCategoryRollerCoasters);
+        grottenblitz.setAttractionCategory(attractionCategoryRollerCoasters);
+        indyBlitz.setAttractionCategory(attractionCategoryRollerCoasters);
+        bobbahn.setAttractionCategory(attractionCategoryRollerCoasters);
+        colossos.setAttractionCategory(attractionCategoryRollerCoasters);
 
-        scream.setCategory(attractionCategoryThrillRides);
+        scream.setAttractionCategory(attractionCategoryThrillRides);
 
-        mountainRafting.setCategory(attractionCategoryWaterRides);
-        wildwasserbahn.setCategory(attractionCategoryWaterRides);
+        mountainRafting.setAttractionCategory(attractionCategoryWaterRides);
+        wildwasserbahn.setAttractionCategory(attractionCategoryWaterRides);
 
-        ghostbusters5D.setCategory(attractionCategoryFamilyRides);
-        monorail.setCategory(attractionCategoryFamilyRides);
-        screamie.setCategory(attractionCategoryFamilyRides);
-        bounty.setCategory(attractionCategoryFamilyRides);
+        ghostbusters5D.setAttractionCategory(attractionCategoryFamilyRides);
+        monorail.setAttractionCategory(attractionCategoryFamilyRides);
+        screamie.setAttractionCategory(attractionCategoryFamilyRides);
+        bounty.setAttractionCategory(attractionCategoryFamilyRides);
 
 
         Coaster steelVengeance = Coaster.create("Steel Vengeance");
@@ -148,11 +148,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster gatekeeper = Coaster.create("Gatekeeper");
         Attraction dodgem = Attraction.create("Dodgem");
 
-        steelVengeance.setCategory(attractionCategoryRollerCoasters);
-        valravn.setCategory(attractionCategoryRollerCoasters);
-        maverick.setCategory(attractionCategoryRollerCoasters);
-        gatekeeper.setCategory(attractionCategoryRollerCoasters);
-        dodgem.setCategory(attractionCategoryFamilyRides);
+        steelVengeance.setAttractionCategory(attractionCategoryRollerCoasters);
+        valravn.setAttractionCategory(attractionCategoryRollerCoasters);
+        maverick.setAttractionCategory(attractionCategoryRollerCoasters);
+        gatekeeper.setAttractionCategory(attractionCategoryRollerCoasters);
+        dodgem.setAttractionCategory(attractionCategoryFamilyRides);
 
         Coaster drako = Coaster.create("Drako");
         Coaster elCondor = Coaster.create("El Condor");
@@ -162,13 +162,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Coaster goliath = Coaster.create("Goliath");
         Coaster lostGravity = Coaster.create("Lost Gravity");
 
-        drako.setCategory(attractionCategoryRollerCoasters);
-        elCondor.setCategory(attractionCategoryRollerCoasters);
-        robinHood.setCategory(attractionCategoryRollerCoasters);
-        speedOfSound.setCategory(attractionCategoryRollerCoasters);
-        xpressPlatform13.setCategory(attractionCategoryRollerCoasters);
-        goliath.setCategory(attractionCategoryRollerCoasters);
-        lostGravity.setCategory(attractionCategoryRollerCoasters);
+        drako.setAttractionCategory(attractionCategoryRollerCoasters);
+        elCondor.setAttractionCategory(attractionCategoryRollerCoasters);
+        robinHood.setAttractionCategory(attractionCategoryRollerCoasters);
+        speedOfSound.setAttractionCategory(attractionCategoryRollerCoasters);
+        xpressPlatform13.setAttractionCategory(attractionCategoryRollerCoasters);
+        goliath.setAttractionCategory(attractionCategoryRollerCoasters);
+        lostGravity.setAttractionCategory(attractionCategoryRollerCoasters);
 
         Attraction excalibur = Attraction.create("Excalibur");
         Attraction gForce = Attraction.create("G-Force");
@@ -177,12 +177,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         Attraction skydiver = Attraction.create("Skydiver");
         Attraction theTomahawk = Attraction.create("The Tomahawk");
 
-        excalibur.setCategory(attractionCategoryThrillRides);
-        gForce.setCategory(attractionCategoryThrillRides);
-        spaceShot.setCategory(attractionCategoryThrillRides);
-        spinningVibe.setCategory(attractionCategoryThrillRides);
-        skydiver.setCategory(attractionCategoryThrillRides);
-        theTomahawk.setCategory(attractionCategoryThrillRides);
+        excalibur.setAttractionCategory(attractionCategoryThrillRides);
+        gForce.setAttractionCategory(attractionCategoryThrillRides);
+        spaceShot.setAttractionCategory(attractionCategoryThrillRides);
+        spinningVibe.setAttractionCategory(attractionCategoryThrillRides);
+        skydiver.setAttractionCategory(attractionCategoryThrillRides);
+        theTomahawk.setAttractionCategory(attractionCategoryThrillRides);
 
         Attraction fibisBubbleSwirl = Attraction.create("Fibi's Bubble Swirl");
         Attraction haazGarage = Attraction.create("Haaz Garage");
@@ -201,30 +201,30 @@ public final class DatabaseMock implements IDatabaseWrapper
         Attraction walibisFunRecorder = Attraction.create("Walibi's Fun Recorder");
         Attraction zensGraffityShuttle = Attraction.create("Zen's Graffity Shuttle");
 
-        fibisBubbleSwirl.setCategory(attractionCategoryFamilyRides);
-        haazGarage.setCategory(attractionCategoryFamilyRides);
-        laGrandeRoue.setCategory(attractionCategoryFamilyRides);
-        leTourDesJardins.setCategory(attractionCategoryFamilyRides);
-        losSombreros.setCategory(attractionCategoryFamilyRides);
-        merlinsMagicCastle.setCategory(attractionCategoryFamilyRides);
-        merrieGoround.setCategory(attractionCategoryFamilyRides);
-        pavillonDeThe.setCategory(attractionCategoryFamilyRides);
-        spaceKidz.setCategory(attractionCategoryFamilyRides);
-        superSwing.setCategory(attractionCategoryFamilyRides);
-        squadsStuntFlight.setCategory(attractionCategoryFamilyRides);
-        tequillaTaxis.setCategory(attractionCategoryFamilyRides);
-        wabWorldTour.setCategory(attractionCategoryFamilyRides);
-        walibiExpress.setCategory(attractionCategoryFamilyRides);
-        walibisFunRecorder.setCategory(attractionCategoryFamilyRides);
-        zensGraffityShuttle.setCategory(attractionCategoryFamilyRides);
+        fibisBubbleSwirl.setAttractionCategory(attractionCategoryFamilyRides);
+        haazGarage.setAttractionCategory(attractionCategoryFamilyRides);
+        laGrandeRoue.setAttractionCategory(attractionCategoryFamilyRides);
+        leTourDesJardins.setAttractionCategory(attractionCategoryFamilyRides);
+        losSombreros.setAttractionCategory(attractionCategoryFamilyRides);
+        merlinsMagicCastle.setAttractionCategory(attractionCategoryFamilyRides);
+        merrieGoround.setAttractionCategory(attractionCategoryFamilyRides);
+        pavillonDeThe.setAttractionCategory(attractionCategoryFamilyRides);
+        spaceKidz.setAttractionCategory(attractionCategoryFamilyRides);
+        superSwing.setAttractionCategory(attractionCategoryFamilyRides);
+        squadsStuntFlight.setAttractionCategory(attractionCategoryFamilyRides);
+        tequillaTaxis.setAttractionCategory(attractionCategoryFamilyRides);
+        wabWorldTour.setAttractionCategory(attractionCategoryFamilyRides);
+        walibiExpress.setAttractionCategory(attractionCategoryFamilyRides);
+        walibisFunRecorder.setAttractionCategory(attractionCategoryFamilyRides);
+        zensGraffityShuttle.setAttractionCategory(attractionCategoryFamilyRides);
 
         Attraction crazyRiver = Attraction.create("Crazy River");
         Attraction elRioGrande = Attraction.create("El Rio Grande");
         Attraction splashBattle = Attraction.create("SplashBattle");
 
-        crazyRiver.setCategory(attractionCategoryWaterRides);
-        elRioGrande.setCategory(attractionCategoryWaterRides);
-        splashBattle.setCategory(attractionCategoryWaterRides);
+        crazyRiver.setAttractionCategory(attractionCategoryWaterRides);
+        elRioGrande.setAttractionCategory(attractionCategoryWaterRides);
+        splashBattle.setAttractionCategory(attractionCategoryWaterRides);
 
         // build tree
         phantasialand.addChild(taron);

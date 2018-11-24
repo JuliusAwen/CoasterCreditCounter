@@ -42,12 +42,12 @@ public class AttractionCategoryHeaderProvider
     {
         if(Element.convertElementsToType(visitedAttractions, VisitedAttraction.class).equals(this.attractions))
         {
-            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: CategorizedAttractions unchanged");
+            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: CategorizedVisitedAttractions unchanged");
             return this.categorizedAttractions;
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: CategorizedAttractions changed...");
+            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: CategorizedVisitedAttractions changed...");
             this.attractions = visitedAttractions;
             this.categorizedAttractions.clear();
             return this.categorizeAttractions();
@@ -61,14 +61,14 @@ public class AttractionCategoryHeaderProvider
             if(!this.attractions.isEmpty())
             {
                 Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.categorizeAttractions::" +
-                        "initally fetching AttractionCategoryHeaders for [%d] attractions...", this.attractions.size()));
+                        "initalizing AttractionCategoryHeaders for [%d] attractions...", this.attractions.size()));
 
                 for(Element element : this.attractions)
                 {
                     AttractionCategoryHeader header;
 
                     AttractionCategory category =
-                            element.isInstance(Attraction.class) ? ((Attraction)element).getCategory() : ((VisitedAttraction)element).getAttraction().getCategory();
+                            element.isInstanceOf(Attraction.class) ? ((Attraction)element).getAttrationCategory() : ((VisitedAttraction)element).getAttractionCategory();
 
                     UUID categoryUuid = category.getUuid();
 
@@ -106,7 +106,7 @@ public class AttractionCategoryHeaderProvider
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.categorizeAttractions:: no attractions passed");
+                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.categorizeAttractions:: no attractions to categorize");
 
                 return this.categorizedAttractions;
             }
@@ -116,7 +116,7 @@ public class AttractionCategoryHeaderProvider
             for(Element element : this.attractions)
             {
                 AttractionCategory category =
-                        element.isInstance(Attraction.class) ? ((Attraction)element).getCategory() : ((VisitedAttraction)element).getAttraction().getCategory();
+                        element.isInstanceOf(Attraction.class) ? ((Attraction)element).getAttrationCategory() : ((VisitedAttraction)element).getAttractionCategory();
 
                 UUID categoryUuid = category.getUuid();
 
@@ -217,9 +217,10 @@ public class AttractionCategoryHeaderProvider
         }
     }
 
-    public void removeCreatedAttractionCategoryHeaders()
+    public void removeCreatedAttractionCategoryHeadersFromContent()
     {
-        Log.v(Constants.LOG_TAG,String.format("AttractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeaders:: removing [%d] headers", this.headersByCategoryUuid.values().size()));
+        Log.v(Constants.LOG_TAG,String.format("AttractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent:: " +
+                "removing [%d] headers from content...", this.headersByCategoryUuid.values().size()));
 
         for(AttractionCategoryHeader header : this.headersByCategoryUuid.values())
         {
