@@ -46,8 +46,8 @@ public class VisitedAttraction extends Attraction
     }
 
     @Override
-    public AttractionCategory getAttrationCategory()
+    public AttractionCategory getAttractionCategory()
     {
-        return this.stockAttraction.getAttrationCategory();
+        return this.stockAttraction.getAttractionCategory();
     }
 }

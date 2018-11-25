@@ -14,7 +14,7 @@ public abstract class Attraction extends Element
         super(name, uuid);
     }
 
-    public AttractionCategory getAttrationCategory()
+    public AttractionCategory getAttractionCategory()
     {
         return this.attractionCategory;
     }

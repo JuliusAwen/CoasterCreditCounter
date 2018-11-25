@@ -380,7 +380,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         if(childType != null && isChild(selectedElement) && selectedElement.isInstanceOf(Attraction.class))
                         {
                             AttractionCategoryHeader attractionCategoryHeader =
-                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttrationCategory());
+                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttractionCategory());
 
                             if(attractionCategoryHeader != null)
                             {
@@ -433,7 +433,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     else if(childType != null && isChild(selectedElement) && selectedElement.isInstanceOf(Attraction.class))
                     {
                         AttractionCategoryHeader attractionCategoryHeader =
-                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttrationCategory());
+                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttractionCategory());
 
                         selectedElementsInOrderOfSelection.remove(attractionCategoryHeader);
                         notifyItemChanged(content.indexOf(attractionCategoryHeader));

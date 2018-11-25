@@ -34,7 +34,7 @@ public class AttractionCategoryHeaderProvider
                 {
                     AttractionCategoryHeader header;
 
-                    AttractionCategory category = attraction.getAttrationCategory();
+                    AttractionCategory category = attraction.getAttractionCategory();
 
                     UUID categoryUuid = category.getUuid();
 
@@ -82,7 +82,7 @@ public class AttractionCategoryHeaderProvider
 
             for(Element element : attractions)
             {
-                AttractionCategory category = ((Attraction)element).getAttrationCategory();
+                AttractionCategory category = ((Attraction)element).getAttractionCategory();
 
                 UUID categoryUuid = category.getUuid();
 

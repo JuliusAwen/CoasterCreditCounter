@@ -121,7 +121,7 @@ public  class ShowAttractionsFragment extends Fragment
                     if(selectedElement != null)
                     {
                         Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getAttrationCategory());
+                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getAttractionCategory());
                     }
                 }
             }
