@@ -56,7 +56,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     enum ViewType
     {
         PARENT,
-        CHILD, VISITED_ATTRACTION,
+        CHILD,
+        VISITED_ATTRACTION,
         BOTTOM_SPACER,
         ITEM_DIVIDER
     }
@@ -518,7 +519,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.decorateExpandToggle(viewHolder, parent);
 
         String name = parent.getName();
-        if(!this.expandedParents.contains(parent) && parent.hasChildrenOfType(this.childType))
+        if(this.childType != null && !this.expandedParents.contains(parent) && parent.hasChildrenOfType(this.childType))
         {
             name += String.format(Locale.getDefault(), " (%d)", parent.getChildCountOfType(this.childType));
         }
@@ -654,7 +655,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(this.content.indexOf(parent), 0);
 
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: " +
+                        "expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
             }
         }
         else
