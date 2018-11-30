@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -81,6 +80,19 @@ public class Content
     {
         Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", element));
         this.rootLocation = element;
+    }
+
+    public <T extends Element> List<T> getContentAsType(Class<T> type)
+    {
+        List<T> content = new ArrayList<>();
+        for(Element element : this.elements.values())
+        {
+            if(element.isInstanceOf(type))
+            {
+                content.add(type.cast(element));
+            }
+        }
+        return content;
     }
 
     public List<AttractionCategory> getAttractionCategories()
@@ -302,20 +314,5 @@ public class Content
             return true;
         }
         return false;
-    }
-
-    public List<StockAttraction> getStockAttractions()
-    {
-        List<StockAttraction> stockAttractions = new ArrayList<>();
-
-        for(Element element : this.elements.values())
-        {
-            if(element.isInstanceOf(StockAttraction.class))
-            {
-                stockAttractions.add((StockAttraction)element);
-            }
-        }
-
-        return stockAttractions;
     }
 }

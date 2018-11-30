@@ -210,7 +210,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
 
                 popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
-                        .setEnabled(!App.content.getStockAttractions().isEmpty());
+                        .setEnabled(!App.content.getContentAsType(StockAttraction.class).isEmpty());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -260,7 +260,8 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                             case APPLY_CATEGORY_TO_ATTRACTIONS:
                             {
-                                List<Element> attractionCategoryHeaders = viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getStockAttractions());
+                                List<Element> attractionCategoryHeaders =
+                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getContentAsType(StockAttraction.class));
                                 for(Element attractionCategoryHeader : attractionCategoryHeaders)
                                 {
                                     if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))

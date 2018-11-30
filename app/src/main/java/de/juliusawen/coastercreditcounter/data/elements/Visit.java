@@ -14,7 +14,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
@@ -43,7 +42,6 @@ public class Visit extends Element
         {
             return super.toString();
         }
-
     }
 
     public static Visit create(int year, int month, int day)
@@ -70,22 +68,6 @@ public class Visit extends Element
     public Calendar getCalendar()
     {
         return this.calendar;
-    }
-
-    public String getRideCountForAttraction(Attraction attraction)
-    {
-        if(!this.rideCountByAttractions.containsKey(attraction))
-        {
-            this.addVisitedAttraction(attraction);
-        }
-
-        return String.valueOf(this.rideCountByAttractions.get(attraction));
-    }
-
-    public void addVisitedAttraction(Attraction attraction)
-    {
-        Log.v(Constants.LOG_TAG,  String.format("Visit.addVisitedAttraction:: initializing ride count for %s with [0]...", attraction));
-        this.rideCountByAttractions.put(attraction, 0);
     }
 
     public static void setOpenVisit(Element visit)

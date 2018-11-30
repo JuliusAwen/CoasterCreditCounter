@@ -15,12 +15,17 @@ public class Coaster extends StockAttraction
 
     public static Coaster create(String name)
     {
-        Coaster coaster = null;
-        if(!name.trim().isEmpty())
-        {
-            name = name.trim();
+        return Coaster.create(name, UUID.randomUUID());
+    }
 
-            coaster = new Coaster(name, UUID.randomUUID());
+    public static Coaster create(String name, UUID uuid)
+    {
+        Coaster coaster = null;
+        name = name.trim();
+
+        if(!name.isEmpty())
+        {
+            coaster = new Coaster(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Coaster.create:: %s created.", coaster.getFullName()));
         }
         else

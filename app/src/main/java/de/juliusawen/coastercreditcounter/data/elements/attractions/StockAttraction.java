@@ -9,6 +9,8 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class StockAttraction extends Attraction
 {
+    private int totalRideCount;
+
     StockAttraction(String name, UUID uuid)
     {
         super(name, uuid);
@@ -39,8 +41,25 @@ public class StockAttraction extends Attraction
         }
 
         attractionCategory.addChild(this);
-        this.attractionCategory = attractionCategory;
+        super.attractionCategory = attractionCategory;
 
         Log.v(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s to %s", attractionCategory, this));
+    }
+
+    public int getTotalRideCount()
+    {
+        return this.totalRideCount;
+    }
+
+    protected void increaseTotalRideCount()
+    {
+        this.totalRideCount ++;
+        Log.d(Constants.LOG_TAG, String.format("StockAttraction.increaseTotalRideCount:: increased %s's total ride count to [%d]", this, this.getTotalRideCount()));
+    }
+
+    protected void decreaseTotalRideCount()
+    {
+        this.totalRideCount --;
+        Log.d(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: decreased %s's total ride count to [%d]", this, this.getTotalRideCount()));
     }
 }

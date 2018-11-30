@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
@@ -45,6 +45,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private List<Element> selectedElementsInOrderOfSelection = new ArrayList<>();
     private View.OnClickListener selectionOnClickListener;
+
+    private View.OnClickListener increaseOnClickListener;
+    private View.OnClickListener decreaseOnClickListener;
 
     private Class<? extends Element> childType;
 
@@ -93,6 +96,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         TextView textViewCount;
         ImageView imageViewDecrease;
         ImageView imageViewIncrease;
+        FrameLayout frameLayoutDecrease;
+        FrameLayout frameLayoutIncrease;
 
         ViewHolderVisitedAttraction(View view)
         {
@@ -103,6 +108,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
             this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
             this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
+            this.frameLayoutDecrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Decrease);
+            this.frameLayoutIncrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Increase);
         }
     }
 
@@ -291,6 +298,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
+        this.increaseOnClickListener = this.getIncreaseOnClickListener();
+        this.decreaseOnClickListener = this.getDecreaseOnClickListener();
     }
 
     private void initializeContent(List<Element> parents)
@@ -446,6 +455,42 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     recyclerOnClickListener.onClick(view);
                 }
+            }
+        };
+    }
+
+    private View.OnClickListener getIncreaseOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
+                visitedAttraction.increaseRideCount();
+
+                notifyItemChanged(content.indexOf(visitedAttraction));
+
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getIncreaseOnClickListener.onClick:: increased %s's ride count for %s to [%d]",
+                        visitedAttraction.getStockAttraction(), visitedAttraction.getParent(), visitedAttraction.getRideCount()));
+            }
+        };
+    }
+
+    private View.OnClickListener getDecreaseOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
+                visitedAttraction.decreaseRideCount();
+
+                notifyItemChanged(content.indexOf(visitedAttraction));
+
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getDecreaseOnClickListener.onClick:: decreased %s's ride count for %s to [%d]",
+                        visitedAttraction.getStockAttraction(), visitedAttraction.getParent(), visitedAttraction.getRideCount()));
             }
         };
     }
@@ -621,19 +666,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(((Visit)child.getParent()).getRideCountForAttraction(child.getStockAttraction()));
+        viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
 
-        viewHolder.imageViewIncrease.setTag(child);
-        viewHolder.imageViewDecrease.setTag(child);
-
-        viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
         viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+        viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
 
-        if(this.recyclerOnClickListener != null)
-        {
-            viewHolder.imageViewIncrease.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-            viewHolder.imageViewDecrease.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-        }
+        viewHolder.frameLayoutDecrease.setTag(child);
+        viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseOnClickListener);
+
+        viewHolder.frameLayoutIncrease.setTag(child);
+        viewHolder.frameLayoutIncrease.setOnClickListener(this.increaseOnClickListener);
     }
 
     private void setImagePlaceholder(ImageView imageView)
