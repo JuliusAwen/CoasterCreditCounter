@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public abstract class OrphanElement extends Element
+public abstract class OrphanElement extends Element implements IElement
 {
     public OrphanElement(String name, UUID uuid)
     {

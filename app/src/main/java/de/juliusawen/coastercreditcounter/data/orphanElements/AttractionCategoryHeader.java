@@ -14,13 +14,14 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public class AttractionCategoryHeader extends OrphanElement
+public class AttractionCategoryHeader extends OrphanElement implements IElement
 {
     private AttractionCategory attractionCategory;
 
@@ -67,7 +68,7 @@ public class AttractionCategoryHeader extends OrphanElement
                     {
                         case SORT_ATTRACTIONS:
                         {
-                            List<Element> attractions = new ArrayList<>();
+                            List<IElement> attractions = new ArrayList<>();
 
                             if(longClickedElement.hasChildrenOfType(Attraction.class))
                             {

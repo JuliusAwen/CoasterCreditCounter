@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
@@ -32,6 +33,7 @@ public class Visit extends Element
     }
 
     @Override
+    @NonNull
     public String toString()
     {
         if(this.getParent() != null)

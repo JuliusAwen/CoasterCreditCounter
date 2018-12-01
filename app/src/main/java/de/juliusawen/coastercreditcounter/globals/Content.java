@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
@@ -16,12 +17,12 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
-    private Map<UUID, Element> elements = new HashMap<>();
-    private Map<UUID, Element> orphanElements = new HashMap<>();
+    private Map<UUID, IElement> elements = new HashMap<>();
+    private Map<UUID, IElement> orphanElements = new HashMap<>();
 
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
-    private Element rootLocation;
+    private IElement rootLocation;
 
     private static Content instance;
 
@@ -71,7 +72,7 @@ public class Content
         Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
     }
 
-    public Element getRootLocation()
+    public IElement getRootLocation()
     {
         return this.rootLocation;
     }
@@ -82,12 +83,12 @@ public class Content
         this.rootLocation = element;
     }
 
-    public <T extends Element> List<T> getContentAsType(Class<T> type)
+    public <T extends IElement> List<T> getContentAsType(Class<T> type)
     {
         List<T> content = new ArrayList<>();
-        for(Element element : this.elements.values())
+        for(IElement element : this.elements.values())
         {
-            if(element.isInstanceOf(type))
+            if(type.isInstance(element))
             {
                 content.add(type.cast(element));
             }
@@ -127,9 +128,9 @@ public class Content
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
     {
         List<T> orphanElementsOfType = new ArrayList<>();
-        for(Element orphanElement : this.orphanElements.values())
+        for(IElement orphanElement : this.orphanElements.values())
         {
-            if(orphanElement.isInstanceOf(type))
+            if(type.isInstance(orphanElement))
             {
                 orphanElementsOfType.add(type.cast(orphanElement));
             }
@@ -138,7 +139,7 @@ public class Content
         return orphanElementsOfType;
     }
 
-    private Element getOrphanElementByUuid(UUID uuid)
+    private IElement getOrphanElementByUuid(UUID uuid)
     {
         if(this.orphanElements.containsKey(uuid))
         {
@@ -163,7 +164,7 @@ public class Content
 
     public void addOrphanElement(Element orphanElement)
     {
-        if(orphanElement.isInstanceOf(OrphanElement.class))
+        if(OrphanElement.class.isInstance(orphanElement))
         {
             if(!this.orphanElements.containsKey(orphanElement.getUuid()))
             {
@@ -206,19 +207,19 @@ public class Content
     }
 
 
-    private void flattenContentTree(Element element)
+    private void flattenContentTree(IElement element)
     {
         this.addElement(element);
-        for (Element child : element.getChildren())
+        for (IElement child : element.getChildren())
         {
             this.flattenContentTree(child);
         }
     }
 
-    public ArrayList<String> getUuidStringsFromElements(List<Element> elements)
+    public ArrayList<String> getUuidStringsFromElements(List<IElement> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
-        for(Element element : elements)
+        for(IElement element : elements)
         {
             uuidStrings.add(element.getUuid().toString());
         }
@@ -239,7 +240,7 @@ public class Content
         return elements;
     }
 
-    public Element fetchElementByUuidString(String uuidString)
+    public IElement fetchElementByUuidString(String uuidString)
     {
         return this.getElementByUuid(UUID.fromString(uuidString));
     }
@@ -250,11 +251,11 @@ public class Content
 
         if(this.elements.containsKey(uuid))
         {
-            element = this.elements.get(uuid);
+            element = (Element)this.elements.get(uuid);
         }
         else
         {
-            element = this.getOrphanElementByUuid(uuid);
+            element = (Element)this.getOrphanElementByUuid(uuid);
         }
 
         if(element != null)
@@ -268,18 +269,18 @@ public class Content
         }
     }
 
-    public void addElementAndChildren(Element element)
+    public void addElementAndChildren(IElement element)
     {
-        for(Element child : element.getChildren())
+        for(IElement child : element.getChildren())
         {
             this.addElementAndChildren(child);
         }
         this.addElement(element);
     }
 
-    public void addElement(Element element)
+    public void addElement(IElement element)
     {
-        if(!element.isInstanceOf(OrphanElement.class))
+        if(!OrphanElement.class.isInstance(element))
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
             this.elements.put(element.getUuid(), element);
@@ -293,9 +294,9 @@ public class Content
         }
     }
 
-    public boolean removeElementAndChildren(Element element)
+    public boolean removeElementAndChildren(IElement element)
     {
-        for(Element child : element.getChildren())
+        for(IElement child : element.getChildren())
         {
             if(!this.removeElementAndChildren(child))
             {
@@ -305,7 +306,7 @@ public class Content
         return this.removeElement(element);
     }
 
-    public boolean removeElement(Element element)
+    public boolean removeElement(IElement element)
     {
         if(this.elements.containsKey(element.getUuid()))
         {

@@ -22,6 +22,9 @@ public class Settings
 
     //Defaults
     private AttractionCategory defaultAttractionCategory;
+    private int defaultIncrement;
+
+
 
     private static Settings instance;
 
@@ -90,5 +93,15 @@ public class Settings
     void setDefaultAttractionCategory(AttractionCategory defaultAttractionCategory)
     {
         this.defaultAttractionCategory = defaultAttractionCategory;
+    }
+
+    public int getDefaultIncrement()
+    {
+        return this.defaultIncrement;
+    }
+
+    void setDefaultIncrement(int defaultIncrement)
+    {
+        this.defaultIncrement = defaultIncrement;
     }
 }

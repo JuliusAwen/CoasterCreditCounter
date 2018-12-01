@@ -19,6 +19,7 @@ import java.util.UUID;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -114,7 +115,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         if(resultCode == RESULT_OK)
         {
             List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-            List<Element> pickedElements = App.content.fetchElementsByUuidStrings(uuidStrings);
+            List<IElement> pickedElements = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(uuidStrings));
             Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<OK>:: #[%d] elements returned", pickedElements.size()));
 
             if(pickedElements.size() > 1)
@@ -126,7 +127,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<PickLocations>:: inserting #[%d] elements...", pickedElements.size()));
-                this.viewModel.parentLocation.insertElements(this.viewModel.newLocation, new ArrayList<>(pickedElements));
+                this.viewModel.parentLocation.insertElements(this.viewModel.newLocation, pickedElements);
 
                 if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {
@@ -145,7 +146,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             else if(requestCode == Constants.REQUEST_PICK_PARKS)
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<PickParks>:: relocating #[%d] elements...", pickedElements.size()));
-                this.relocateChildrenParks(pickedElements);
+                this.relocateChildrenParks(Element.convertElementsToType(pickedElements, Element.class));
                 this.returnResult(resultCode);
             }
          }
@@ -210,7 +211,9 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                 {
                     Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has only one child<Location> -> inserting in new %s",
                             this.viewModel.parentLocation, this.viewModel.newLocation));
-                    this.viewModel.parentLocation.insertElements(this.viewModel.newLocation, this.viewModel.parentLocation.getChildrenOfType(Location.class));
+                    this.viewModel.parentLocation.insertElements(
+                            this.viewModel.newLocation,
+                            this.viewModel.parentLocation.getChildrenOfType(Location.class));
 
                     if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                     {
@@ -286,7 +289,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                     }
                     else
                     {
-                        relocateChildrenParks(viewModel.parentLocation.getChildrenOfType(Park.class));
+                        relocateChildrenParks(Element.convertElementsToType(viewModel.parentLocation.getChildrenOfType(Park.class), Element.class));
                         returnResult(RESULT_OK);
                     }
                 }

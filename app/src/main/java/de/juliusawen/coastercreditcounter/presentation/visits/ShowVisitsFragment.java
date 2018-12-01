@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.YearHeader;
@@ -126,7 +127,7 @@ public class ShowVisitsFragment extends Fragment
             {
                 this.updateContentRecyclerView(true);
 
-                Element visit = App.content.fetchElementByUuidString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID));
+                IElement visit = App.content.fetchElementByUuidString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID));
                 ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
             }
         }
@@ -141,11 +142,11 @@ public class ShowVisitsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        List<Element> categorizedVisits = this.getCategorizedVisits();
+        List<IElement> categorizedVisits = this.getCategorizedVisits();
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedVisits,
-                App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((Element)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
+                App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((IElement)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
                 Visit.class);
     }
 
@@ -157,11 +158,11 @@ public class ShowVisitsFragment extends Fragment
             public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
-                if(element.isInstanceOf(Visit.class))
+                if(Visit.class.isInstance(element))
                 {
                     ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, element);
                 }
-                else if(element.isInstanceOf(YearHeader.class));
+                else if(YearHeader.class.isInstance(element))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -182,7 +183,7 @@ public class ShowVisitsFragment extends Fragment
 
         if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
         {
-            List<Element> categorizedVisits = this.getCategorizedVisits();
+            List<IElement> categorizedVisits = this.getCategorizedVisits();
 
             this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedVisits);
 
@@ -200,7 +201,7 @@ public class ShowVisitsFragment extends Fragment
     }
 
 
-    private List<Element> getCategorizedVisits()
+    private List<IElement> getCategorizedVisits()
     {
         return YearHeader.fetchCategorizedVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
     }

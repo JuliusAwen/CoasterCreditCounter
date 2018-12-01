@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -15,18 +16,20 @@ import java.util.UUID;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -83,7 +86,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(Element element : resultElements)
                 {
-                    Element visitedAttraction = VisitedAttraction.create((StockAttraction)element);
+                    Element visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }
@@ -209,8 +212,22 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
 
+        int counter = 0;
+        for(VisitedAttraction visitedAttraction : this.viewModel.existingVisit.getChildrenAsType(VisitedAttraction.class))
+        {
+            if(visitedAttraction.getOnSiteAttraction().getTotalRideCount() > 0 && visitedAttraction.getRideCount() > 0)
+            {
+                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getRideCount());
+                counter ++;
+            }
+        }
+        if(counter > 0)
+        {
+            Toaster.makeToast(this, getString(R.string.information_decreased_ride_count, counter));
+        }
+
         this.viewModel.park.deleteChild(this.viewModel.existingVisit);
-        App.content.removeElement(this.viewModel.existingVisit);
+        App.content.removeElementAndChildren(this.viewModel.existingVisit);
         this.viewModel.existingVisit = null;
     }
 
@@ -240,7 +257,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(viewModel.park.getChildrenAsType(StockAttraction.class)));
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -59,7 +63,10 @@ public  class ShowAttractionsFragment extends Fragment
 
         if(this.viewModel.park == null)
         {
-            this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            if(getArguments() != null)
+            {
+                this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+            }
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -103,13 +110,13 @@ public  class ShowAttractionsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            Element selectedElement = ResultTool.fetchSelectedElement(data);
+            IElement selectedElement = ResultTool.fetchSelectedElement(data);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
                 List<Element> resultElements = ResultTool.fetchResultElements(data);
 
-                Element parent = resultElements.get(0).getParent();
+                IElement parent = resultElements.get(0).getParent();
                 if(parent != null)
                 {
                     this.viewModel.park.reorderChildren(resultElements);
@@ -138,7 +145,7 @@ public  class ShowAttractionsFragment extends Fragment
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(StockAttraction.class)),
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))),
                 null,
                 Attraction.class);
     }
@@ -152,11 +159,11 @@ public  class ShowAttractionsFragment extends Fragment
             {
                 Element element = (Element) view.getTag();
 
-                if(element.isInstanceOf(Attraction.class))
+                if(Attraction.class.isInstance(element))
                 {
                     Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
                 }
-                else if(element.isInstanceOf(AttractionCategoryHeader.class))
+                else if(AttractionCategoryHeader.class.isInstance(element))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -165,7 +172,7 @@ public  class ShowAttractionsFragment extends Fragment
             @Override
             public boolean onLongClick(View view)
             {
-                if(((Element)view.getTag()).isInstanceOf(AttractionCategoryHeader.class))
+                if((AttractionCategoryHeader.class.isInstance(view.getTag())))
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
                 }
@@ -178,7 +185,8 @@ public  class ShowAttractionsFragment extends Fragment
     {
         Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
 
-        List<Element> categorizedAttractions = this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(this.viewModel.park.getChildrenAsType(StockAttraction.class));
+        List<IElement> categorizedAttractions =
+                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
         this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }

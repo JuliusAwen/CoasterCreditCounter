@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -38,13 +39,13 @@ public class YearHeader extends OrphanElement
         return yearHeader;
     }
 
-    public static YearHeader getLatestYearHeader(List<? extends Element> yearHeaders)
+    public static YearHeader getLatestYearHeader(List<? extends IElement> yearHeaders)
     {
         YearHeader latestYearHeader = null;
 
         if(yearHeaders.size() > 0)
         {
-            for(Element yearHeader : yearHeaders)
+            for(IElement yearHeader : yearHeaders)
             {
                 if(latestYearHeader == null)
                 {
@@ -62,12 +63,12 @@ public class YearHeader extends OrphanElement
         return latestYearHeader;
     }
 
-    public static List<Element> fetchCategorizedVisits(List<Visit> visits)
+    public static List<IElement> fetchCategorizedVisits(List<Visit> visits)
     {
         if(visits.isEmpty())
         {
             Log.v(Constants.LOG_TAG, "YearHeader.fetchCategorizedVisits:: no elements found");
-            return new ArrayList<Element>(visits);
+            return new ArrayList<IElement>(visits);
         }
 
         Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: adding YearHeaders to [%d] elements...", visits.size()));
@@ -76,7 +77,7 @@ public class YearHeader extends OrphanElement
 
         OrphanElement.removeAllChildren(yearHeaders);
 
-        List<Element> preparedElements = new ArrayList<>();
+        List<IElement> preparedElements = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
 
@@ -84,8 +85,8 @@ public class YearHeader extends OrphanElement
         {
             String year = String.valueOf(simpleDateFormat.format(visit.getCalendar().getTime()));
 
-            Element existingYearHeader = null;
-            for(Element yearHeader : preparedElements)
+            IElement existingYearHeader = null;
+            for(IElement yearHeader : preparedElements)
             {
                 if(yearHeader.getName().equals(year))
                 {

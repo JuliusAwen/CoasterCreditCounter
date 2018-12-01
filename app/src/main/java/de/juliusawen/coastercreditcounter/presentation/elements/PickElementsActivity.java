@@ -16,7 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -45,12 +46,12 @@ public class PickElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToPickFrom == null)
         {
-            this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel.elementsToPickFrom = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS)));
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            if(!this.viewModel.elementsToPickFrom.isEmpty() && this.viewModel.elementsToPickFrom.get(0).isInstanceOf(AttractionCategoryHeader.class))
+            if(!this.viewModel.elementsToPickFrom.isEmpty() && AttractionCategoryHeader.class.isInstance(this.viewModel.elementsToPickFrom.get(0)))
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.elementsToPickFrom,
@@ -203,10 +204,10 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            List<Element> selectedElementsWithoutOrphanElements = new ArrayList<>();
-            for(Element element : this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection())
+            List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
+            for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection())
             {
-                if(!element.isInstanceOf(OrphanElement.class))
+                if(!OrphanElement.class.isInstance(element))
                 {
                     selectedElementsWithoutOrphanElements.add(element);
                 }

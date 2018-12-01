@@ -6,15 +6,16 @@ import android.util.Log;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class ResultTool
 {
-    public static Element fetchSelectedElement(Intent data)
+    public static IElement fetchSelectedElement(Intent data)
     {
         String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        Element selectedElement = null;
+        IElement selectedElement = null;
         if(selectedElementUuidString != null)
         {
             selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);

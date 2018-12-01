@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -28,7 +29,7 @@ import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
 {
-    public static void startActivityShow(Context context, int requestCode, Element element)
+    public static void startActivityShow(Context context, int requestCode, IElement element)
     {
         Class type = null;
 
@@ -86,7 +87,7 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivityEditForResult(Context context, int requestCode, Element element)
+    public static void startActivityEditForResult(Context context, int requestCode, IElement element)
     {
         Class type = null;
         String toolbarTitle = null;
@@ -128,7 +129,7 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivityCreateForResult(Context context, int requestCode, Element parentElement)
+    public static void startActivityCreateForResult(Context context, int requestCode, IElement parentElement)
     {
         Class type;
 
@@ -173,7 +174,7 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivitySortForResult(Context context, int requestCode, List<Element> elementsToSort)
+    public static void startActivitySortForResult(Context context, int requestCode, List<IElement> elementsToSort)
     {
         String toolbarTitle = null;
 
@@ -212,7 +213,7 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivityPickForResult(Context context, int requestCode, List<Element> elementsToPickFrom)
+    public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
         String toolbarTitle = context.getString(R.string.title_attractions_pick);
         String toolbarSubtitle = null;

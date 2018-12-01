@@ -21,8 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.ICategorized;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -59,9 +62,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                    new ArrayList<Element>(App.content.getAttractionCategories()),
+                    new ArrayList<IElement>(App.content.getAttractionCategories()),
                     null,
-                    StockAttraction.class);
+                    IAttraction.class);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
@@ -104,7 +107,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
-                        new ArrayList<Element>(App.content.getAttractionCategories()));
+                        new ArrayList<IElement>(App.content.getAttractionCategories()));
                 return true;
             }
 
@@ -120,7 +123,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
         if(resultCode == Activity.RESULT_OK)
         {
-            Element selectedElement = ResultTool.fetchSelectedElement(data);
+            IElement selectedElement = ResultTool.fetchSelectedElement(data);
 
             if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
             {
@@ -169,7 +172,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 for(Element element : resultElements)
                 {
-                    ((StockAttraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
+                    ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
                 }
 
                 Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
@@ -190,7 +193,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 Element element = (Element)view.getTag();
 
-                if(element.isInstanceOf(AttractionCategory.class))
+                if(AttractionCategory.class.isInstance(element))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -210,7 +213,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
 
                 popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
-                        .setEnabled(!App.content.getContentAsType(StockAttraction.class).isEmpty());
+                        .setEnabled(!App.content.getContentAsType(IAttraction.class).isEmpty());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
@@ -260,9 +263,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                             case APPLY_CATEGORY_TO_ATTRACTIONS:
                             {
-                                List<Element> attractionCategoryHeaders =
-                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(App.content.getContentAsType(StockAttraction.class));
-                                for(Element attractionCategoryHeader : attractionCategoryHeaders)
+                                List<IElement> attractionCategoryHeaders =
+                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(App.content.getContentAsType(ICategorized.class)));
+                                for(IElement attractionCategoryHeader : attractionCategoryHeaders)
                                 {
                                     if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
                                     {
@@ -304,10 +307,10 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 {
                     Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
 
-                    final List<StockAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(StockAttraction.class));
+                    final List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
                     final int index = viewModel.contentRecyclerViewAdapter.getContent().indexOf(viewModel.longClickedAttractionCategory);
 
-                    for(StockAttraction child : children)
+                    for(IAttraction child : children)
                     {
                         child.setAttractionCategory(App.settings.getDefaultAttractionCategory());
                     }
@@ -326,7 +329,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         {
                             Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedAttractionCategory));
 
-                            for(StockAttraction child : children)
+                            for(IAttraction child : children)
                             {
                                 child.setAttractionCategory(viewModel.longClickedAttractionCategory);
                             }
@@ -361,7 +364,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     {
         Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
 
-        this.viewModel.contentRecyclerViewAdapter.updateContent(new ArrayList<Element>(App.content.getAttractionCategories()));
+        this.viewModel.contentRecyclerViewAdapter.updateContent(new ArrayList<IElement>(App.content.getAttractionCategories()));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

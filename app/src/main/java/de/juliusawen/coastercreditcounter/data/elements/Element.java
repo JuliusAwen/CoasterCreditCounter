@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public abstract class Element
+public abstract class Element implements IElement
 {
     public boolean undoIsPossible = false;
 
@@ -20,10 +21,10 @@ public abstract class Element
     private UUID uuid;
 
     public Element parent = null;
-    public List<Element> children = new ArrayList<>();
+    public List<IElement> children = new ArrayList<>();
 
     private Element backupParent = null;
-    private List<Element> backupChildren = new ArrayList<>();
+    private List<IElement> backupChildren = new ArrayList<>();
     private int undoIndex = -1;
 
     private long itemId;
@@ -50,7 +51,7 @@ public abstract class Element
 
         Element element = (Element) obj;
 
-        if(!element.isInstanceOf(this.getClass()))
+        if(!this.getClass().isInstance(element))
         {
             return false;
         }
@@ -64,6 +65,7 @@ public abstract class Element
     }
 
     @Override
+    @NonNull
     public String toString()
     {
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
@@ -104,29 +106,24 @@ public abstract class Element
         return this.uuid;
     }
 
-    public <T extends Element> boolean isInstanceOf(Class<T> type)
-    {
-        return type.isInstance(this);
-    }
-
     public long getItemId()
     {
         return this.itemId;
     }
 
-    public void addChildrenAndSetParents(List<Element> children)
+    public void addChildrenAndSetParents(List<IElement> children)
     {
-        for (Element child : children)
+        for (IElement child : children)
         {
             this.addChildAndSetParent(child);
         }
     }
 
-    private void addChildrenAndSetParents(int index, List<Element> children)
+    private void addChildrenAndSetParents(int index, List<IElement> children)
     {
         Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParents:: called with [%d] children", children.size()));
         int increment = 0;
-        for (Element child : children)
+        for (IElement child : children)
         {
             if(this.addChildAndSetParent(index + increment, child))
             {
@@ -136,14 +133,14 @@ public abstract class Element
         }
     }
 
-    public void addChildAndSetParent(Element child)
+    public void addChildAndSetParent(IElement child)
     {
         this.addChildAndSetParent(this.getChildCount(), child);
     }
 
-    private boolean addChildAndSetParent(int index, Element child)
+    private boolean addChildAndSetParent(int index, IElement child)
     {
-        if(!this.isInstanceOf(OrphanElement.class))
+        if(!OrphanElement.class.isInstance(this))
         {
             if(!this.containsChild(child))
             {
@@ -172,7 +169,7 @@ public abstract class Element
 
     }
 
-    public void reorderChildren(List<? extends Element> children)
+    public void reorderChildren(List<? extends IElement> children)
     {
         if(!children.isEmpty())
         {
@@ -187,18 +184,18 @@ public abstract class Element
         }
     }
 
-    public void addChild(Element child)
+    public void addChild(IElement child)
     {
         this.getChildren().add(child);
         Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
     }
 
-    public boolean containsChild(Element child)
+    public boolean containsChild(IElement child)
     {
         return this.getChildren().contains(child);
     }
 
-    public int indexOfChild(Element child)
+    public int indexOfChild(IElement child)
     {
         return this.getChildren().indexOf(child);
     }
@@ -208,7 +205,7 @@ public abstract class Element
         return !this.getChildren().isEmpty();
     }
 
-    public boolean hasChildrenOfType(Class<? extends Element> type)
+    public boolean hasChildrenOfType(Class<? extends IElement> type)
     {
         return !this.getChildrenOfType(type).isEmpty();
     }
@@ -218,14 +215,13 @@ public abstract class Element
         return this.getChildren().size();
     }
 
-    public int getChildCountOfType(Class<? extends Element> type)
+    public int getChildCountOfType(Class<? extends IElement> type)
     {
         return this.getChildrenOfType(type).size();
     }
 
-    public List<Element> getChildren()
+    public List<IElement> getChildren()
     {
-
         if(this.children.contains(null))
         {
             int sizeWithNullElements = this.children.size();
@@ -234,18 +230,17 @@ public abstract class Element
             int difference = sizeWithNullElements - sizeWithoutNullElements;
 
             Log.e(Constants.LOG_TAG, String.format("Element.getChildren:: [%d] null objects removed from children ", difference));
-
         }
         return this.children;
     }
 
 
-    public List<Element> getChildrenOfType(Class<? extends Element> type)
+    public List<IElement> getChildrenOfType(Class<? extends IElement> type)
     {
-        List<Element> children = new ArrayList<>();
-        for(Element element : this.getChildren())
+        List<IElement> children = new ArrayList<>();
+        for(IElement element : this.getChildren())
         {
-            if(element.isInstanceOf(type))
+            if(type.isInstance(element))
             {
                 children.add(element);
             }
@@ -253,12 +248,12 @@ public abstract class Element
         return children;
     }
 
-    public <T extends Element> List<T> getChildrenAsType(Class<T> type)
+    public <T extends IElement> List<T> getChildrenAsType(Class<T> type)
     {
         List<T> children = new ArrayList<>();
-        for(Element element : this.getChildren())
+        for(IElement element : this.getChildren())
         {
-            if(element.isInstanceOf(type))
+            if(type.isInstance(element))
             {
                 children.add(type.cast(element));
             }
@@ -266,15 +261,15 @@ public abstract class Element
         return children;
     }
 
-    public void deleteChildren(List<Element> children)
+    public void deleteChildren(List<IElement> children)
     {
-        for(Element child : children)
+        for(IElement child : children)
         {
             this.deleteChild(child);
         }
     }
 
-    public void deleteChild(Element child)
+    public void deleteChild(IElement child)
     {
         if(this.containsChild(child))
         {
@@ -294,13 +289,13 @@ public abstract class Element
         return this.parent;
     }
 
-    private void setParent(Element parent)
+    public void setParent(Element parent)
     {
         Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
         this.parent = parent;
     }
 
-    public void insertElements(Element newElement, List<Element> children)
+    public void insertElements(Element newElement, List<IElement> children)
     {
         Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
         newElement.addChildrenAndSetParents(new ArrayList<>(children));
@@ -417,14 +412,14 @@ public abstract class Element
         return success;
     }
 
-    public static void sortElementsByNameAscending(List<? extends Element> elements)
+    public static void sortElementsByNameAscending(List<? extends IElement> elements)
     {
         if(elements.size() > 1)
         {
-            Collections.sort(elements, new Comparator<Element>()
+            Collections.sort(elements, new Comparator<IElement>()
             {
                 @Override
-                public int compare(Element element1, Element element2)
+                public int compare(IElement element1, IElement element2)
                 {
                     return element1.getName().compareToIgnoreCase(element2.getName());
                 }
@@ -437,14 +432,14 @@ public abstract class Element
         }
     }
 
-    public static void sortElementsByNameDescending(List<? extends Element> elements)
+    public static void sortElementsByNameDescending(List<? extends IElement> elements)
     {
         if(elements.size() > 1)
         {
-            Collections.sort(elements, new Comparator<Element>()
+            Collections.sort(elements, new Comparator<IElement>()
             {
                 @Override
-                public int compare(Element element1, Element element2)
+                public int compare(IElement element1, IElement element2)
                 {
                     return element2.getName().compareToIgnoreCase(element1.getName());
                 }
@@ -458,14 +453,14 @@ public abstract class Element
 
     }
 
-    public static List<Element> sortElementsBasedOnComparisonList(List<Element> elementsToSort, List<Element> comparisonList)
+    public static List<IElement> sortElementsBasedOnComparisonList(List<IElement> elementsToSort, List<IElement> comparisonList)
     {
         if(elementsToSort.size() > 1)
         {
             Log.v(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing [%d] elements",
                     elementsToSort.size(), comparisonList.size()));
-            List<Element> sortedElements = new ArrayList<>();
-            for(Element element : comparisonList)
+            List<IElement> sortedElements = new ArrayList<>();
+            for(IElement element : comparisonList)
             {
                 if(elementsToSort.contains(element))
                 {
@@ -481,12 +476,12 @@ public abstract class Element
         }
     }
 
-    public static <T extends Element> List<T> convertElementsToType(List<? extends Element> elements, Class<T> type)
+    public static <T extends Element> List<T> convertElementsToType(List<? extends IElement> elements, Class<T> type)
     {
         Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type.getSimpleName()));
 
         List<T> returnList = new ArrayList<>();
-        for(Element element : elements)
+        for(IElement element : elements)
         {
             try
             {

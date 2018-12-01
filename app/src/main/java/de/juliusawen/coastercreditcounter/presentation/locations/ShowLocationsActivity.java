@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -72,7 +74,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     this.viewModel.currentElement.getChildrenOfType(Location.class),
-                    new HashSet<Element>(),
+                    new HashSet<IElement>(),
                     Park.class);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
@@ -144,7 +146,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                Element resultElement = App.content.fetchElementByUuidString(resultElementUuidString);
+                IElement resultElement = App.content.fetchElementByUuidString(resultElementUuidString);
                 updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
@@ -152,7 +154,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
+                List<IElement> resultElements = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(resultElementsUuidStrings));
 
                 Element parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
@@ -163,7 +165,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    Element selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
+                    IElement selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
                 else
@@ -195,7 +197,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 else
                 {
-                    Element previousElement = this.viewModel.recentElements.get(this.viewModel.recentElements.size() - 2);
+                    IElement previousElement = this.viewModel.recentElements.get(this.viewModel.recentElements.size() - 2);
                     Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
                     this.viewModel.recentElements.remove(this.viewModel.currentElement);
                     this.viewModel.recentElements.remove(previousElement);
@@ -309,7 +311,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.recentElements.add(this.viewModel.currentElement);
         }
 
-        for (Element recentElement : this.viewModel.recentElements)
+        for (IElement recentElement : this.viewModel.recentElements)
         {
             Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating TextView for recent element %s...", recentElement));
             TextView textView = (TextView) getLayoutInflater().inflate(R.layout.text_view_navigation_bar, linearLayoutNavigationBar, false);
@@ -371,13 +373,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickLocationRecyclerView:: %s clicked", element));
 
-                if(element.isInstanceOf(Location.class))
+                if(Location.class.isInstance(element))
                 {
                     viewModel.currentElement = element;
                     updateActivityView();
                     updateContentRecyclerView();
                 }
-                else if(element.isInstanceOf(Park.class))
+                else if(Park.class.isInstance(element))
                 {
                     ActivityTool.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_SHOW_PARK, element);
                 }
@@ -389,7 +391,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 viewModel.longClickedElement = (Element) view.getTag();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedElement));
 
-                if(viewModel.longClickedElement.isInstanceOf(Location.class))
+                if(Location.class.isInstance(viewModel.longClickedElement))
                 {
                     PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, view);
 

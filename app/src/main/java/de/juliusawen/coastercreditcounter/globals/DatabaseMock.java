@@ -7,14 +7,17 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.Coaster;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.StockAttraction;
-import de.juliusawen.coastercreditcounter.data.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
@@ -97,30 +100,30 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park walibiHolland = Park.create("Walibi Holland");
 
 
-        Coaster taron = Coaster.create("Taron");
-        StockAttraction hollywoodTour = StockAttraction.create("Hollywood Tour");
+        CustomCoaster taron = CustomCoaster.create("Taron");
+        CustomAttraction hollywoodTour = CustomAttraction.create("Hollywood Tour");
 
         taron.setAttractionCategory(attractionCategoryRollerCoasters);
         hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
 
 
-        Coaster krake = Coaster.create("Krake");
-        Coaster flugDerDaemonen = Coaster.create("Flug der Dämonen");
-        Coaster desertRace = Coaster.create("Desert Race");
-        Coaster bigLoop = Coaster.create("Big Loop");
-        Coaster limit = Coaster.create("Limit");
-        Coaster grottenblitz = Coaster.create("Grottenblitz");
-        Coaster indyBlitz = Coaster.create("Indy-Blitz");
-        Coaster bobbahn = Coaster.create("Bobbahn");
-        Coaster colossos = Coaster.create("Colossos");
+        CustomCoaster krake = CustomCoaster.create("Krake");
+        CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen");
+        CustomCoaster desertRace = CustomCoaster.create("Desert Race");
+        CustomCoaster bigLoop = CustomCoaster.create("Big Loop");
+        CustomCoaster limit = CustomCoaster.create("Limit");
+        CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz");
+        CustomCoaster indyBlitz = CustomCoaster.create("Indy-Blitz");
+        CustomCoaster bobbahn = CustomCoaster.create("Bobbahn");
+        CustomCoaster colossos = CustomCoaster.create("Colossos");
 
-        StockAttraction scream = StockAttraction.create("Scream");
-        StockAttraction mountainRafting = StockAttraction.create("Mountain Rafting");
-        StockAttraction wildwasserbahn = StockAttraction.create("Wildwasserbahn");
-        StockAttraction ghostbusters5D = StockAttraction.create("Ghostbusters 5D");
-        StockAttraction monorail = StockAttraction.create("Monorail");
-        StockAttraction screamie = StockAttraction.create("Screamie");
-        StockAttraction bounty = StockAttraction.create("Bounty");
+        CustomAttraction scream = CustomAttraction.create("Scream");
+        CustomAttraction mountainRafting = CustomAttraction.create("Mountain Rafting");
+        CustomAttraction wildwasserbahn = CustomAttraction.create("Wildwasserbahn");
+        CustomAttraction ghostbusters5D = CustomAttraction.create("Ghostbusters 5D");
+        CustomAttraction monorail = CustomAttraction.create("Monorail");
+        CustomAttraction screamie = CustomAttraction.create("Screamie");
+        CustomAttraction bounty = CustomAttraction.create("Bounty");
 
         krake.setAttractionCategory(attractionCategoryRollerCoasters);
         flugDerDaemonen.setAttractionCategory(attractionCategoryRollerCoasters);
@@ -143,11 +146,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         bounty.setAttractionCategory(attractionCategoryFamilyRides);
 
 
-        Coaster steelVengeance = Coaster.create("Steel Vengeance");
-        Coaster valravn = Coaster.create("Valravn");
-        Coaster maverick = Coaster.create("Maverick");
-        Coaster gatekeeper = Coaster.create("Gatekeeper");
-        StockAttraction dodgem = StockAttraction.create("Dodgem");
+        CustomCoaster steelVengeance = CustomCoaster.create("Steel Vengeance");
+        CustomCoaster valravn = CustomCoaster.create("Valravn");
+        CustomCoaster maverick = CustomCoaster.create("Maverick");
+        CustomCoaster gatekeeper = CustomCoaster.create("Gatekeeper");
+        CustomAttraction dodgem = CustomAttraction.create("Dodgem");
 
         steelVengeance.setAttractionCategory(attractionCategoryRollerCoasters);
         valravn.setAttractionCategory(attractionCategoryRollerCoasters);
@@ -155,13 +158,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         gatekeeper.setAttractionCategory(attractionCategoryRollerCoasters);
         dodgem.setAttractionCategory(attractionCategoryFamilyRides);
 
-        Coaster drako = Coaster.create("Drako");
-        Coaster elCondor = Coaster.create("El Condor");
-        Coaster robinHood = Coaster.create("Robin Hood");
-        Coaster speedOfSound = Coaster.create("Speed of Sound");
-        Coaster xpressPlatform13 = Coaster.create("Xpress: Platform 13");
-        Coaster goliath = Coaster.create("Goliath");
-        Coaster lostGravity = Coaster.create("Lost Gravity");
+        CustomCoaster drako = CustomCoaster.create("Drako");
+        CustomCoaster elCondor = CustomCoaster.create("El Condor");
+        CustomCoaster robinHood = CustomCoaster.create("Robin Hood");
+        CustomCoaster speedOfSound = CustomCoaster.create("Speed of Sound");
+        CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13");
+        CustomCoaster goliath = CustomCoaster.create("Goliath");
+        CustomCoaster lostGravity = CustomCoaster.create("Lost Gravity");
 
         drako.setAttractionCategory(attractionCategoryRollerCoasters);
         elCondor.setAttractionCategory(attractionCategoryRollerCoasters);
@@ -171,12 +174,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         goliath.setAttractionCategory(attractionCategoryRollerCoasters);
         lostGravity.setAttractionCategory(attractionCategoryRollerCoasters);
 
-        StockAttraction excalibur = StockAttraction.create("Excalibur");
-        StockAttraction gForce = StockAttraction.create("G-Force");
-        StockAttraction spaceShot = StockAttraction.create("Space Shot");
-        StockAttraction spinningVibe = StockAttraction.create("Spinning Vibe");
-        StockAttraction skydiver = StockAttraction.create("Skydiver");
-        StockAttraction theTomahawk = StockAttraction.create("The Tomahawk");
+        CustomAttraction excalibur = CustomAttraction.create("Excalibur");
+        CustomAttraction gForce = CustomAttraction.create("G-Force");
+        CustomAttraction spaceShot = CustomAttraction.create("Space Shot");
+        CustomAttraction spinningVibe = CustomAttraction.create("Spinning Vibe");
+        CustomAttraction skydiver = CustomAttraction.create("Skydiver");
+        CustomAttraction theTomahawk = CustomAttraction.create("The Tomahawk");
 
         excalibur.setAttractionCategory(attractionCategoryThrillRides);
         gForce.setAttractionCategory(attractionCategoryThrillRides);
@@ -185,22 +188,22 @@ public final class DatabaseMock implements IDatabaseWrapper
         skydiver.setAttractionCategory(attractionCategoryThrillRides);
         theTomahawk.setAttractionCategory(attractionCategoryThrillRides);
 
-        StockAttraction fibisBubbleSwirl = StockAttraction.create("Fibi's Bubble Swirl");
-        StockAttraction haazGarage = StockAttraction.create("Haaz Garage");
-        StockAttraction laGrandeRoue = StockAttraction.create("La Grande Roue");
-        StockAttraction leTourDesJardins = StockAttraction.create("Le Tour Des Jardins");
-        StockAttraction losSombreros = StockAttraction.create("Los Sombreros");
-        StockAttraction merlinsMagicCastle = StockAttraction.create("Merlin's Magic Castle");
-        StockAttraction merrieGoround = StockAttraction.create("Merrie Go'round");
-        StockAttraction pavillonDeThe = StockAttraction.create("Pavillon de Thè");
-        StockAttraction spaceKidz = StockAttraction.create("Space Kidz");
-        StockAttraction superSwing = StockAttraction.create("Super Swing");
-        StockAttraction squadsStuntFlight = StockAttraction.create("Squad's Stunt Flight");
-        StockAttraction tequillaTaxis = StockAttraction.create("Tequilla Taxi's");
-        StockAttraction wabWorldTour = StockAttraction.create("WAB World Tour");
-        StockAttraction walibiExpress = StockAttraction.create("Walibi Express");
-        StockAttraction walibisFunRecorder = StockAttraction.create("Walibi's Fun Recorder");
-        StockAttraction zensGraffityShuttle = StockAttraction.create("Zen's Graffity Shuttle");
+        CustomAttraction fibisBubbleSwirl = CustomAttraction.create("Fibi's Bubble Swirl");
+        CustomAttraction haazGarage = CustomAttraction.create("Haaz Garage");
+        CustomAttraction laGrandeRoue = CustomAttraction.create("La Grande Roue");
+        CustomAttraction leTourDesJardins = CustomAttraction.create("Le Tour Des Jardins");
+        CustomAttraction losSombreros = CustomAttraction.create("Los Sombreros");
+        CustomAttraction merlinsMagicCastle = CustomAttraction.create("Merlin's Magic Castle");
+        CustomAttraction merrieGoround = CustomAttraction.create("Merrie Go'round");
+        CustomAttraction pavillonDeThe = CustomAttraction.create("Pavillon de Thè");
+        CustomAttraction spaceKidz = CustomAttraction.create("Space Kidz");
+        CustomAttraction superSwing = CustomAttraction.create("Super Swing");
+        CustomAttraction squadsStuntFlight = CustomAttraction.create("Squad's Stunt Flight");
+        CustomAttraction tequillaTaxis = CustomAttraction.create("Tequilla Taxi's");
+        CustomAttraction wabWorldTour = CustomAttraction.create("WAB World Tour");
+        CustomAttraction walibiExpress = CustomAttraction.create("Walibi Express");
+        CustomAttraction walibisFunRecorder = CustomAttraction.create("Walibi's Fun Recorder");
+        CustomAttraction zensGraffityShuttle = CustomAttraction.create("Zen's Graffity Shuttle");
 
         fibisBubbleSwirl.setAttractionCategory(attractionCategoryFamilyRides);
         haazGarage.setAttractionCategory(attractionCategoryFamilyRides);
@@ -219,9 +222,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibisFunRecorder.setAttractionCategory(attractionCategoryFamilyRides);
         zensGraffityShuttle.setAttractionCategory(attractionCategoryFamilyRides);
 
-        StockAttraction crazyRiver = StockAttraction.create("Crazy River");
-        StockAttraction elRioGrande = StockAttraction.create("El Rio Grande");
-        StockAttraction splashBattle = StockAttraction.create("SplashBattle");
+        CustomAttraction crazyRiver = CustomAttraction.create("Crazy River");
+        CustomAttraction elRioGrande = CustomAttraction.create("El Rio Grande");
+        CustomAttraction splashBattle = CustomAttraction.create("SplashBattle");
 
         crazyRiver.setAttractionCategory(attractionCategoryWaterRides);
         elRioGrande.setAttractionCategory(attractionCategoryWaterRides);
@@ -297,7 +300,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         germany.addChildAndSetParent(northRhineWestphalia);
         germany.addChildAndSetParent(lowerSaxony);
-        germany.addChildrenAndSetParents(new ArrayList<Element>(germanStates));
+        germany.addChildrenAndSetParents(new ArrayList<IElement>(germanStates));
         germany.addChildAndSetParent(bremen);
 
         netherlands.addChildAndSetParent(biddinghuizen);
@@ -318,7 +321,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChildAndSetParent(usa);
 
         Visit visit0 = Visit.create(2018, 2, 30);
-        this.addAttractionsToVisit(visit0, Element.convertElementsToType(heidePark.getChildrenAsType(Coaster.class), Attraction.class));
+        this.addAttractionsToVisit(visit0, Element.convertElementsToType(heidePark.getChildrenAsType(CustomCoaster.class), Attraction.class));
         heidePark.addChildAndSetParent(visit0);
 
         Visit visit1 = Visit.create(2018, 0, 1);
@@ -356,7 +359,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         for(Attraction attraction : attractions)
         {
-            visit.addChildAndSetParent(VisitedAttraction.create((StockAttraction)attraction));
+            visit.addChildAndSetParent(VisitedAttraction.create((IOnSiteAttraction) attraction));
         }
     }
 
@@ -381,5 +384,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         settings.setFirstDayOfTheWeek(Calendar.MONDAY);
 
         settings.setDefaultAttractionCategory(this.defaultAttractionCategory);
+
+        settings.setDefaultIncrement(1);
     }
 }

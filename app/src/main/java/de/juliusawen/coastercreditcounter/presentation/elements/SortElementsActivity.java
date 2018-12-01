@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -39,7 +41,7 @@ public class SortElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToSort == null)
         {
-            this.viewModel.elementsToSort = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel.elementsToSort = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS)));
         }
         
         if(this.viewModel.toolbarTitle == null)
@@ -214,7 +216,7 @@ public class SortElementsActivity extends BaseActivity
 
             if(!this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
             {
-                Element lastSelectedElement = this.viewModel.contentRecyclerViewAdapter.getLastSelectedElement();
+                IElement lastSelectedElement = this.viewModel.contentRecyclerViewAdapter.getLastSelectedElement();
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, lastSelectedElement.getUuid().toString());
             }
         }

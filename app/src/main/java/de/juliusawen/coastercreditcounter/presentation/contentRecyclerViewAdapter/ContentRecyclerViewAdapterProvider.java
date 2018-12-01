@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 
 public abstract class ContentRecyclerViewAdapterProvider
 {
     public static ContentRecyclerViewAdapter getExpandableContentRecyclerViewAdapter(
-            List<Element> parentElements,
-            Set<Element> initiallyExpandedElements,
-            Class<? extends Element> childTypeToExpand)
+            List<IElement> parentElements,
+            Set<IElement> initiallyExpandedElements,
+            Class<? extends IElement> childTypeToExpand)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.EXPANDABLE;
@@ -25,8 +26,8 @@ public abstract class ContentRecyclerViewAdapterProvider
     }
 
     public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
-            List<Element> elements,
-            Class<? extends Element> childType,
+            List<IElement> elements,
+            Class<? extends IElement> childType,
             boolean selectMultiple)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
@@ -41,9 +42,9 @@ public abstract class ContentRecyclerViewAdapterProvider
     }
 
     public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
-            List<Element> elements,
-            Set<Element> initiallyExpandedElements,
-            Class<? extends Element> childType,
+            List<IElement> elements,
+            Set<IElement> initiallyExpandedElements,
+            Class<? extends IElement> childType,
             boolean selectMultiple)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
@@ -59,9 +60,9 @@ public abstract class ContentRecyclerViewAdapterProvider
     }
 
     public static ContentRecyclerViewAdapter getCountableContentRecyclerViewAdapter(
-            List<Element> parentElements,
-            Set<Element> initiallyExpandedElements,
-            Class<? extends Element> childTypeToExpand)
+            List<IElement> parentElements,
+            Set<IElement> initiallyExpandedElements,
+            Class<? extends IElement> childTypeToExpand)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.COUNTABLE;
