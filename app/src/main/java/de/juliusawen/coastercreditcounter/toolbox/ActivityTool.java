@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -21,8 +20,8 @@ import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActi
 import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.presentation.navigationHub.NavigationHubActivity;
-import de.juliusawen.coastercreditcounter.presentation.orphanElements.CreateSimpleStringActivity;
-import de.juliusawen.coastercreditcounter.presentation.orphanElements.ManageAttractionCategoriesActivity;
+import de.juliusawen.coastercreditcounter.presentation.CreateSimpleStringActivity;
+import de.juliusawen.coastercreditcounter.presentation.attractionCategories.ManageAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;

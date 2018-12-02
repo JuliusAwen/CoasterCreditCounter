@@ -25,7 +25,7 @@
         <activity android:name=".presentation.visits.ShowVisitActivity" />
         <activity android:name=".presentation.TestActivity" />
         <activity android:name=".presentation.visits.CreateVisitActivity" />
-        <activity android:name=".presentation.orphanElements.ManageAttractionCategoriesActivity" />
+        <activity android:name=".presentation.attractionCategories.ManageAttractionCategoriesActivity" />
         <activity android:name=".presentation.navigationHub.NavigationHubActivity"/>
         <activity
             android:name=".presentation.locations.CreateLocationActivity"
@@ -34,7 +34,7 @@
             android:name=".presentation.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.orphanElements.CreateSimpleStringActivity"
+            android:name=".presentation.CreateSimpleStringActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 

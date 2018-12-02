@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.orphanElements;
+package de.juliusawen.coastercreditcounter.presentation.attractionCategories;
 
 import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;

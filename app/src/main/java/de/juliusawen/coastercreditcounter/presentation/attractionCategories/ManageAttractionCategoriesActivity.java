@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.presentation.orphanElements;
+package de.juliusawen.coastercreditcounter.presentation.attractionCategories;
 
 import android.app.Activity;
 import android.content.DialogInterface;
