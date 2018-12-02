@@ -134,7 +134,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 @Override
                 public void onClick(View view)
                 {
-                    onToolbarHomeButtonBackClicked(view.getContext());
+                    onToolbarHomeButtonBackClicked();
                 }
 
             });
@@ -164,11 +164,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void onToolbarHomeButtonBackClicked(Context context)
+    protected void onToolbarHomeButtonBackClicked()
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: starting NavigationHubActivity...");
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
-        ActivityTool.startNavigationHubActivity(context);
         finish();
     }
 

@@ -63,7 +63,7 @@ public class VisitedAttraction extends Attraction
 
     public boolean decreaseRideCount(int decrement)
     {
-        if((this.rideCount - decrement) > 0)
+        if((this.rideCount - decrement) >= 0)
         {
             this.rideCount -= decrement;
             Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.decreaseRideCount:: decreased %s's ride count for %s by [%d] to [%d]",
