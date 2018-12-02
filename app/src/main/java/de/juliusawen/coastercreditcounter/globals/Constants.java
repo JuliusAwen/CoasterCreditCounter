@@ -6,6 +6,9 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
+    public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
+    public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
+
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
     public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";

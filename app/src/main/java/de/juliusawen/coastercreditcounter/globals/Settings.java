@@ -10,6 +10,7 @@ public class Settings
 {
     //App
     public static boolean jumpToTestActivityOnStart = false;
+    private String exportFileName;
 
 //    private boolean jumpToOpenVisitOnStart;
 
@@ -28,21 +29,36 @@ public class Settings
 
     private static Settings instance;
 
-    private static IDatabaseWrapper databaseWrapper;
+    private Persistency persistency;
 
-    static Settings getInstance(IDatabaseWrapper databaseWrapper)
+    static Settings getInstance(Persistency persistency)
     {
-        Settings.databaseWrapper = databaseWrapper;
-        Settings.instance = new Settings();
+        if(Settings.instance == null)
+        {
+            Settings.instance = new Settings(persistency);
+        }
         return instance;
     }
 
-    private Settings()
+    private Settings(Persistency persistency)
     {
         Log.i(Constants.LOG_TAG, "Settings.Constructor:: Settings instantiated - fetching settings...");
+
+        this.persistency = persistency;
+
         Stopwatch stopwatch = new Stopwatch(true);
-        Settings.databaseWrapper.fetchSettings(this);
+        this.persistency.fetchSettings(this);
         Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
+    }
+
+    public String getExportFileName()
+    {
+        return exportFileName;
+    }
+
+    void setExportFileName(String exportFileName)
+    {
+        this.exportFileName = exportFileName;
     }
 
     public SortOrder getDefaultSortOrderParkVisits()

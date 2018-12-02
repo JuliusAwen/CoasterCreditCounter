@@ -8,6 +8,8 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AttractionCategory extends OrphanElement
 {
+    private static AttractionCategory defaultAttractionCategory = null;
+
     private AttractionCategory(String name, UUID uuid)
     {
         super(name, uuid);
@@ -28,5 +30,15 @@ public class AttractionCategory extends OrphanElement
             Log.e(Constants.LOG_TAG,  String.format("AttractionCategory.create:: invalid name[%s] - attractionCategory not created.", name));
         }
         return attractionCategory;
+    }
+
+    public static void setDefaultAttractionCategory(AttractionCategory attractionCategory)
+    {
+        AttractionCategory.defaultAttractionCategory = attractionCategory;
+    }
+
+    public static AttractionCategory getDefaultAttractionCategory()
+    {
+        return AttractionCategory.defaultAttractionCategory;
     }
 }

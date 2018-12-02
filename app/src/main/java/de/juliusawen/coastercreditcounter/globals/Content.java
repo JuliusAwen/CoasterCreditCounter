@@ -1,6 +1,11 @@
 package de.juliusawen.coastercreditcounter.globals;
 
+import android.content.Context;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +13,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.data.attractions.AttractionBlueprint;
+import de.juliusawen.coastercreditcounter.data.attractions.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.data.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
+import de.juliusawen.coastercreditcounter.data.elements.Park;
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -24,25 +37,33 @@ public class Content
 
     private static Content instance;
 
-    private static IDatabaseWrapper databaseWrapper;
+    private Persistency persistency;
 
-    static Content getInstance(IDatabaseWrapper databaseWrapper)
+    public static Content getInstance(Persistency persistency)
     {
-        Content.databaseWrapper = databaseWrapper;
-        Content.instance = new Content();
-        return instance;
+        if(Content.instance == null)
+        {
+            Content.instance = new Content(persistency);
+        }
+        return Content.instance;
     }
 
-    private Content()
+    private Content(Persistency persistency)
     {
+        this.persistency = persistency;
+
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
         Stopwatch stopwatchInitializeContent = new Stopwatch(true);
 
-
         Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
-        Content.databaseWrapper.fetchContent(this);
-        this.setRootLocation(Content.databaseWrapper.fetchRootLocation());
+        this.persistency.fetchContent(this);
+
+        Log.i(Constants.LOG_TAG, "Content.Constructor:: setting root location...");
+        Stopwatch stopwatchSetRootLocation = new Stopwatch(true);
+        this.setRootLocation();
+        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching root location took [%d]ms", stopwatchSetRootLocation.stop()));
+
         Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
 
@@ -60,10 +81,11 @@ public class Content
         return this.rootLocation;
     }
 
-    private void setRootLocation(Location location)
+    private void setRootLocation()
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", location));
-        this.rootLocation = location;
+        Location rootLocation = this.getContentAsType(Location.class).get(0).getRootLocation();
+        this.rootLocation = rootLocation;
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)
@@ -74,6 +96,19 @@ public class Content
             if(type.isInstance(element))
             {
                 content.add(type.cast(element));
+            }
+        }
+        return content;
+    }
+
+    public <T extends IElement> List<IElement> getContentOfType(Class<T> type)
+    {
+        List<IElement> content = new ArrayList<>();
+        for(IElement element : this.elements.values())
+        {
+            if(type.isInstance(element))
+            {
+                content.add(element);
             }
         }
         return content;
@@ -301,5 +336,78 @@ public class Content
             return true;
         }
         return false;
+    }
+
+    public boolean export(Context context)
+    {
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("locations", this.fetchJsonArray(this.getContentOfType(Location.class)));
+            jsonObject.put("parks", this.fetchJsonArray(this.getContentOfType(Park.class)));
+            jsonObject.put("visits", this.fetchJsonArray(this.getContentOfType(Visit.class)));
+            jsonObject.put("attractions", this.fetchJsonObjectAttractions());
+            jsonObject.put("attraction categories", this.fetchJsonArray(new ArrayList<IElement>(this.getAttractionCategories())));
+
+            if(FileTool.writeStringToFile(App.settings.getExportFileName(), jsonObject.toString(), context))
+            {
+                Log.v(Constants.LOG_TAG,  String.format("Content.export:: export took [%d]ms", stopwatch.stop()));
+                return true;
+            }
+        }
+        catch(JSONException exception)
+        {
+            exception.printStackTrace();
+        }
+
+        Log.v(Constants.LOG_TAG,  String.format("Content.export:: export failed - took [%d]ms", stopwatch.stop()));
+        return false;
+    }
+
+    private JSONObject fetchJsonObjectAttractions()
+    {
+        try
+        {
+            JSONObject jsonObjectAttractions = new JSONObject();
+
+            jsonObjectAttractions.put("attraction blueprints", this.fetchJsonArray(this.getContentOfType(AttractionBlueprint.class)));
+            jsonObjectAttractions.put("coaster blueprints", this.fetchJsonArray(this.getContentOfType(CoasterBlueprint.class)));
+            jsonObjectAttractions.put("custom attractions", this.fetchJsonArray(this.getContentOfType(CustomAttraction.class)));
+            jsonObjectAttractions.put("custom coasters", this.fetchJsonArray(this.getContentOfType(CustomCoaster.class)));
+            jsonObjectAttractions.put("stock attractions", this.fetchJsonArray(this.getContentOfType(StockAttraction.class)));
+
+            return jsonObjectAttractions;
+
+        }
+        catch(JSONException exception)
+        {
+            exception.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+
+    private JSONArray fetchJsonArray(List<IElement> elements)
+    {
+        JSONArray jsonArray = new JSONArray();
+
+        if(!elements.isEmpty())
+        {
+            for(IElement element : elements)
+            {
+                jsonArray.put(element.toJson());
+            }
+        }
+        else
+        {
+            jsonArray.put(JSONObject.NULL);
+        }
+
+        return jsonArray;
     }
 }

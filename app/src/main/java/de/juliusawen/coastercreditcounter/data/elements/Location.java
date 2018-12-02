@@ -2,6 +2,9 @@ package de.juliusawen.coastercreditcounter.data.elements;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -28,6 +31,24 @@ public class Location extends Element
             Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
         }
         return location;
+    }
+
+    public JSONObject toJson()
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("element", Element.toJson(this, true));
+
+            Log.v(Constants.LOG_TAG, String.format("Location.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Location.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            return null;
+        }
     }
 
     public Location getRootLocation()

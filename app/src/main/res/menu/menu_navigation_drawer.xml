@@ -27,4 +27,19 @@
         </item>
     </group>
 
+    <group android:checkableBehavior="single">
+        <item android:title="@string/group_title_navigation_import_export">
+            <menu>
+                <item
+                    android:id="@+id/navigationItem_Import"
+                    android:icon="@drawable/ic_baseline_unarchive"
+                    android:title="@string/item_navigation_drawer_import" />
+                <item
+                    android:id="@+id/navigationItem_Export"
+                    android:icon="@drawable/ic_baseline_archive"
+                    android:title="@string/item_navigation_drawer_export" />
+            </menu>
+        </item>
+    </group>
+
 </menu>

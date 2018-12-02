@@ -2,6 +2,9 @@ package de.juliusawen.coastercreditcounter.data.attractions;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.data.elements.Element;
@@ -16,6 +19,25 @@ public abstract class Attraction extends Element implements IAttraction
     protected Attraction(String name, UUID uuid)
     {
         super(name, uuid);
+    }
+
+    public JSONObject toJson()
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("element", Element.toJson(this, false));
+            jsonObject.put("total ride count", this.totalRideCount);
+
+            Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            return null;
+        }
     }
 
     public AttractionCategory getAttractionCategory()

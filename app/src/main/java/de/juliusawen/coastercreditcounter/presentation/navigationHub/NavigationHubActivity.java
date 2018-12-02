@@ -15,6 +15,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class NavigationHubActivity extends BaseActivity
@@ -33,8 +34,6 @@ public class NavigationHubActivity extends BaseActivity
         NavigationView navigationView = this.drawerLayout.findViewById(R.id.navigationView);
 
         navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
-
-
 
         this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
 
@@ -85,7 +84,7 @@ public class NavigationHubActivity extends BaseActivity
         return new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
-            public boolean onNavigationItemSelected(MenuItem item)
+            public boolean onNavigationItemSelected(@SuppressWarnings("NullableProblems") MenuItem item)
             {
                 int id = item.getItemId();
                 switch(id)
@@ -103,16 +102,41 @@ public class NavigationHubActivity extends BaseActivity
                         ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
                         return true;
                     }
-
                     case R.id.navigationItem_ManageManufacturers:
                     {
                         Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
                         return true;
                     }
-
                     case R.id.navigationItem_ManageModels:
                     {
                         Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                        return true;
+                    }
+
+                    case R.id.navigationItem_Import:
+                    {
+                        String jsonString = FileTool.readStringFromFile(App.settings.getExportFileName(), NavigationHubActivity.this);
+                        if(!jsonString.isEmpty())
+                        {
+                            Toaster.makeToast(NavigationHubActivity.this, "content imported");
+                        }
+                        else
+                        {
+                            Toaster.makeToast(NavigationHubActivity.this, "import failed!");
+                        }
+
+                        return true;
+                    }
+                    case R.id.navigationItem_Export:
+                    {
+                        if(App.content.export(NavigationHubActivity.this))
+                        {
+                            Toaster.makeToast(NavigationHubActivity.this, "content exported");
+                        }
+                        else
+                        {
+                            Toaster.makeToast(NavigationHubActivity.this, "export failed!");
+                        }
                         return true;
                     }
 

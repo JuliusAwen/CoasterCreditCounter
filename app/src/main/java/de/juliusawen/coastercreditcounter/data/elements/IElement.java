@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.data.elements;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +11,7 @@ public interface IElement
 {
     @NonNull
     String toString();
+    JSONObject toJson();
 
     String getName();
     boolean setName(String name);

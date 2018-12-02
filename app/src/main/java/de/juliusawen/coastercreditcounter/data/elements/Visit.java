@@ -2,19 +2,22 @@ package de.juliusawen.coastercreditcounter.data.elements;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
@@ -24,26 +27,11 @@ public class Visit extends Element
     private static SortOrder sortOrder = SortOrder.DESCENDING;
 
     private Calendar calendar;
-    private Map<Element, Integer> rideCountByAttractions = new LinkedHashMap<>();
 
     private Visit(String name, UUID uuid, Calendar calendar)
     {
         super(name, uuid);
         this.calendar = calendar;
-    }
-
-    @Override
-    @NonNull
-    public String toString()
-    {
-        if(this.getParent() != null)
-        {
-            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
-        }
-        else
-        {
-            return super.toString();
-        }
     }
 
     public static Visit create(int year, int month, int day)
@@ -67,6 +55,53 @@ public class Visit extends Element
         return visit;
     }
 
+
+    @Override
+    @NonNull
+    public String toString()
+    {
+        if(this.getParent() != null)
+        {
+            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
+        }
+        else
+        {
+            return super.toString();
+        }
+    }
+
+    public JSONObject toJson()
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("element", Element.toJson(this, false));
+
+            jsonObject.put("day", this.getCalendar().get(Calendar.DAY_OF_MONTH));
+            jsonObject.put("month", this.getCalendar().get(Calendar.MONTH));
+            jsonObject.put("year", this.getCalendar().get(Calendar.YEAR));
+
+            int counter = 0;
+            JSONArray jsonArrayRideCountByAttraction = new JSONArray();
+            for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+            {
+                JSONObject jsonObjectRideCountByAttraction = new JSONObject();
+                jsonObjectRideCountByAttraction.put(visitedAttraction.getOnSiteAttraction().getUuid().toString(), visitedAttraction.getRideCount());
+                jsonArrayRideCountByAttraction.put(jsonObjectRideCountByAttraction);
+                counter ++;
+            }
+            jsonObject.put("ride count by attraction", counter > 0 ? jsonArrayRideCountByAttraction : JSONObject.NULL);
+
+            Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            return null;
+        }
+    }
     public Calendar getCalendar()
     {
         return this.calendar;

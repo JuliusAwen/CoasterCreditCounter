@@ -24,7 +24,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
-    private Location rootLocation;
     private AttractionCategory defaultAttractionCategory;
 
     private static final DatabaseMock instance = new DatabaseMock();
@@ -44,6 +43,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
         AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
         AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
+        AttractionCategory attractionCategoryDefault = AttractionCategory.create("uncategorized");
 
         List<AttractionCategory> attractionCategories = new ArrayList<>();
         attractionCategories.add(attractionCategoryRollerCoasters);
@@ -51,6 +51,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         attractionCategories.add(attractionCategoryFamilyRides);
         attractionCategories.add(attractionCategoryWaterRides);
         attractionCategories.add(attractionCategoryNonRollerCoasters);
+        attractionCategories.add(attractionCategoryDefault);
 
 
         // create Nodes
@@ -361,10 +362,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit.setOpenVisit(visitToday);
 
 
+        this.defaultAttractionCategory = attractionCategoryDefault;
+        AppSettings.defaultAttractionCategoryUuid = this.defaultAttractionCategory.getUuid();
 
-//        content.addElement(germany); //adding one location is enough - content is searching for root on its own and flattens tree from there)
-
-        this.rootLocation = earth;
+        content.addElement(germany); //adding one location is enough - content is searching for root on its own and flattens tree from there)
 
         content.setAttractionCategories(attractionCategories);
         content.addElements(Element.convertElementsToType(blueprints, IElement.class));
@@ -382,14 +383,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void addDefaults(Content content)
     {
-        this.defaultAttractionCategory = AttractionCategory.create("uncategorized");
-        content.addAttractionCategory(defaultAttractionCategory);
-    }
 
-    @Override
-    public Location fetchRootLocation()
-    {
-        return this.rootLocation;
     }
 
     @Override
@@ -409,5 +403,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         settings.setDefaultAttractionCategory(this.defaultAttractionCategory);
 
         settings.setDefaultIncrement(1);
+
+        settings.setExportFileName("CCCExport.json");
     }
 }

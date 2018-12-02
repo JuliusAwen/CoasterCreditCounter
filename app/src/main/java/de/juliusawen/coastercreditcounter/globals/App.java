@@ -52,10 +52,10 @@ public abstract class App
         protected Void doInBackground(Void... params)
         {
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Content>...");
-            App.content = Content.getInstance(DatabaseMock.getInstance());
+            App.content = Content.getInstance(Persistency.getInstance());
 
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
-            App.settings = Settings.getInstance(DatabaseMock.getInstance());
+            App.settings = Settings.getInstance(Persistency.getInstance());
             App.InitializeSettings();
 
             return null;
