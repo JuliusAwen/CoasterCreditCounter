@@ -73,9 +73,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories_manage), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories), null);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories_manage)), getString(R.string.help_text_not_available));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories)), getString(R.string.help_text_not_available));
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();

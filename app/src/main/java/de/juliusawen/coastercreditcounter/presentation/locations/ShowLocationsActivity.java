@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -83,12 +82,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_locations_show), null);
+        super.setToolbarTitleAndSubtitle(getString(R.string.title_locations), null);
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations_show)), getString(R.string.help_text_show_locations));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
 
         this.onClickListenerNavigationBar = this.getNavigationBarOnClickListener();
 
