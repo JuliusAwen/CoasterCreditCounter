@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.util.List;
+import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -18,7 +18,7 @@ public abstract class ResultTool
         IElement selectedElement = null;
         if(selectedElementUuidString != null)
         {
-            selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
+            selectedElement = App.content.getElementByUuid(UUID.fromString(selectedElementUuidString));
             Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchSelectedElement:: selected element %s fetched", selectedElement));
         }
         else
@@ -29,10 +29,10 @@ public abstract class ResultTool
         return selectedElement;
     }
 
-    public static List<Element> fetchResultElements(Intent data)
+    public static List<IElement> fetchResultElements(Intent data)
     {
         List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-        List<Element> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
+        List<IElement> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
 
         Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchSelectedElement:: [%d] result elements fetched", resultElements.size()));
 

@@ -30,7 +30,7 @@ public class Location extends Element
         return location;
     }
 
-    public Element getRootLocation()
+    public Location getRootLocation()
     {
         if(!this.isRootLocation())
         {

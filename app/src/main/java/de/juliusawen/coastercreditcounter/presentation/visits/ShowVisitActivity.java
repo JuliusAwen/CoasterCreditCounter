@@ -125,13 +125,13 @@ public class ShowVisitActivity extends BaseActivity
 
         if(resultCode == Activity.RESULT_OK)
         {
-            List<Element> resultElements = ResultTool.fetchResultElements(data);
+            List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
-                for(Element element : resultElements)
+                for(IElement element : resultElements)
                 {
-                    Element visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }
@@ -140,7 +140,7 @@ public class ShowVisitActivity extends BaseActivity
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
-                Element parent = resultElements.get(0).getParent();
+                IElement parent = resultElements.get(0).getParent();
                 if(parent != null)
                 {
                     this.viewModel.visit.reorderChildren(resultElements);

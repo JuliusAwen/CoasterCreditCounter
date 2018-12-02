@@ -20,10 +20,10 @@ public abstract class Element implements IElement
     private String name;
     private UUID uuid;
 
-    public Element parent = null;
+    public IElement parent = null;
     public List<IElement> children = new ArrayList<>();
 
-    private Element backupParent = null;
+    private IElement backupParent = null;
     private List<IElement> backupChildren = new ArrayList<>();
     private int undoIndex = -1;
 
@@ -119,7 +119,7 @@ public abstract class Element implements IElement
         }
     }
 
-    private void addChildrenAndSetParents(int index, List<IElement> children)
+    public void addChildrenAndSetParents(int index, List<IElement> children)
     {
         Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParents:: called with [%d] children", children.size()));
         int increment = 0;
@@ -138,7 +138,7 @@ public abstract class Element implements IElement
         this.addChildAndSetParent(this.getChildCount(), child);
     }
 
-    private boolean addChildAndSetParent(int index, IElement child)
+    public boolean addChildAndSetParent(int index, IElement child)
     {
         if(!OrphanElement.class.isInstance(this))
         {
@@ -195,7 +195,7 @@ public abstract class Element implements IElement
         return this.getChildren().contains(child);
     }
 
-    public int indexOfChild(IElement child)
+    public int getIndexOfChild(IElement child)
     {
         return this.getChildren().indexOf(child);
     }
@@ -284,12 +284,12 @@ public abstract class Element implements IElement
         }
     }
 
-    public Element getParent()
+    public IElement getParent()
     {
         return this.parent;
     }
 
-    public void setParent(Element parent)
+    public void setParent(IElement parent)
     {
         Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
         this.parent = parent;
@@ -316,7 +316,7 @@ public abstract class Element implements IElement
         {
             this.backupChildren = new ArrayList<>(this.getChildren());
             this.backupParent = this.parent;
-            this.undoIndex = this.parent.indexOfChild(this);
+            this.undoIndex = this.parent.getIndexOfChild(this);
             this.undoIsPossible = true;
             this.parent.deleteChild(this);
             this.deleteChildren(this.backupChildren);
@@ -365,7 +365,7 @@ public abstract class Element implements IElement
         {
             this.backupChildren = new ArrayList<>(this.getChildren());
             this.backupParent = this.parent;
-            this.undoIndex = this.parent.indexOfChild(this);
+            this.undoIndex = this.parent.getIndexOfChild(this);
             this.undoIsPossible = true;
             this.parent.deleteChild(this);
             this.parent.addChildrenAndSetParents(this.undoIndex, this.backupChildren);
@@ -410,6 +410,11 @@ public abstract class Element implements IElement
         this.undoIsPossible = false;
         Log.d(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
         return success;
+    }
+
+    public boolean undoIsPossible()
+    {
+        return this.undoIsPossible;
     }
 
     public static void sortElementsByNameAscending(List<? extends IElement> elements)
@@ -476,7 +481,7 @@ public abstract class Element implements IElement
         }
     }
 
-    public static <T extends Element> List<T> convertElementsToType(List<? extends IElement> elements, Class<T> type)
+    public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elements, Class<T> type)
     {
         Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type.getSimpleName()));
 

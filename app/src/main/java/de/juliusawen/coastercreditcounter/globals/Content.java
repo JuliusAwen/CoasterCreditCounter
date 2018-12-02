@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
@@ -19,10 +18,9 @@ public class Content
 {
     private Map<UUID, IElement> elements = new HashMap<>();
     private Map<UUID, IElement> orphanElements = new HashMap<>();
-
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
-    private IElement rootLocation;
+    public Location rootLocation;
 
     private static Content instance;
 
@@ -40,47 +38,32 @@ public class Content
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
         Stopwatch stopwatchInitializeContent = new Stopwatch(true);
 
+
         Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
-
-
         Content.databaseWrapper.fetchContent(this);
-
-
+        this.setRootLocation(Content.databaseWrapper.fetchRootLocation());
         Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
-        if(!this.elements.isEmpty())
-        {
-            Log.i(Constants.LOG_TAG, "Content.Constructor:: searching for root location...");
-            Element rootLocation = ((Location) this.elements.values().toArray()[0]).getRootLocation();
-            Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: root %s found", rootLocation));
 
-            this.setRootLocation(rootLocation);
+        Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
+        Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
+        this.flattenContentTree(this.rootLocation);
+        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
 
-            Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
-            Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
-            this.flattenContentTree(this.rootLocation);
-            Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
-        }
-        else
-        {
-            String errorMessage = "Content.Constructor:: no elements fetched - unable to find root location";
-            Log.e(Constants.LOG_TAG, errorMessage);
-            throw new IllegalStateException(errorMessage);
-        }
 
         Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
     }
 
-    public IElement getRootLocation()
+    public Location getRootLocation()
     {
         return this.rootLocation;
     }
 
-    private void setRootLocation(Element element)
+    private void setRootLocation(Location location)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", element));
-        this.rootLocation = element;
+        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", location));
+        this.rootLocation = location;
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)
@@ -162,7 +145,7 @@ public class Content
         return null;
     }
 
-    public void addOrphanElement(Element orphanElement)
+    public void addOrphanElement(IElement orphanElement)
     {
         if(OrphanElement.class.isInstance(orphanElement))
         {
@@ -226,11 +209,11 @@ public class Content
         return uuidStrings;
     }
 
-    public List<Element> fetchElementsByUuidStrings(List<String> uuidStrings)
+    public List<IElement> fetchElementsByUuidStrings(List<String> uuidStrings)
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        List<Element> elements = new ArrayList<>();
+        List<IElement> elements = new ArrayList<>();
         for(String uuidString : uuidStrings)
         {
             elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
@@ -240,22 +223,17 @@ public class Content
         return elements;
     }
 
-    public IElement fetchElementByUuidString(String uuidString)
+    public IElement getElementByUuid(UUID uuid)
     {
-        return this.getElementByUuid(UUID.fromString(uuidString));
-    }
-
-    public Element getElementByUuid(UUID uuid)
-    {
-        Element element;
+        IElement element;
 
         if(this.elements.containsKey(uuid))
         {
-            element = (Element)this.elements.get(uuid);
+            element = this.elements.get(uuid);
         }
         else
         {
-            element = (Element)this.getOrphanElementByUuid(uuid);
+            element = this.getOrphanElementByUuid(uuid);
         }
 
         if(element != null)
@@ -276,6 +254,14 @@ public class Content
             this.addElementAndChildren(child);
         }
         this.addElement(element);
+    }
+
+    public void addElements(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            this.addElement(element);
+        }
     }
 
     public void addElement(IElement element)

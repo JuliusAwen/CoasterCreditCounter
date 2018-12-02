@@ -114,7 +114,7 @@ public  class ShowAttractionsFragment extends Fragment
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
-                List<Element> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
                 IElement parent = resultElements.get(0).getParent();
                 if(parent != null)

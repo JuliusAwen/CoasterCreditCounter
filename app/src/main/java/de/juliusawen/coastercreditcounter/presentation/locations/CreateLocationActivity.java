@@ -115,7 +115,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         if(resultCode == RESULT_OK)
         {
             List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-            List<IElement> pickedElements = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(uuidStrings));
+            List<IElement> pickedElements = App.content.fetchElementsByUuidStrings(uuidStrings);
             Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<OK>:: #[%d] elements returned", pickedElements.size()));
 
             if(pickedElements.size() > 1)

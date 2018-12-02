@@ -21,6 +21,7 @@ import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.App;
@@ -82,11 +83,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
             {
-                List<Element> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                for(Element element : resultElements)
+                for(IElement element : resultElements)
                 {
-                    Element visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }

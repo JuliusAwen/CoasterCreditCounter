@@ -1,5 +1,5 @@
 package de.juliusawen.coastercreditcounter.data.attractions;
 
-public interface IBlueprint extends IAttraction
+public interface IBlueprint extends IAttraction, ICategorized
 {
 }

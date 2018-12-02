@@ -146,7 +146,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.fetchElementByUuidString(resultElementUuidString);
+                IElement resultElement = App.content.getElementByUuid(UUID.fromString(resultElementUuidString));
                 updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
@@ -154,9 +154,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<IElement> resultElements = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(resultElementsUuidStrings));
+                List<IElement> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
 
-                Element parent = resultElements.get(0).getParent();
+                IElement parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
                 parent.deleteChildren(resultElements);
                 parent.addChildrenAndSetParents(resultElements);
@@ -165,7 +165,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    IElement selectedElement = App.content.fetchElementByUuidString(selectedElementUuidString);
+                    IElement selectedElement = App.content.getElementByUuid(UUID.fromString(selectedElementUuidString));
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
                 else
@@ -176,7 +176,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
-                Element editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(editedElement);
@@ -347,7 +347,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.viewModel.recentElements.size()));
     }
 
-    private void constructNavigationBar(Element element)
+    private void constructNavigationBar(IElement element)
     {
         Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.constructNavigationBar:: adding %s to recent elements...", element));
 
@@ -526,7 +526,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         {
                             Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedElement));
 
-                            if(viewModel.longClickedElement.undoIsPossible && viewModel.longClickedElement.undoDeleteElementAndChildren())
+                            if(viewModel.longClickedElement.undoIsPossible() && viewModel.longClickedElement.undoDeleteElementAndChildren())
                             {
                                 App.content.addElementAndChildren(viewModel.longClickedElement);
                                 updateContentRecyclerView();
@@ -583,7 +583,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         {
                             Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo remove %s...", viewModel.longClickedElement));
 
-                            if(viewModel.longClickedElement.undoIsPossible && viewModel.longClickedElement.undoRemoveElement())
+                            if(viewModel.longClickedElement.undoIsPossible() && viewModel.longClickedElement.undoRemoveElement())
                             {
                                 App.content.addElement(viewModel.longClickedElement);
                                 updateContentRecyclerView();

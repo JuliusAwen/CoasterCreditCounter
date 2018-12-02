@@ -41,7 +41,7 @@ public class SortElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToSort == null)
         {
-            this.viewModel.elementsToSort = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS)));
+            this.viewModel.elementsToSort = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
         
         if(this.viewModel.toolbarTitle == null)

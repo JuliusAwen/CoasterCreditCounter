@@ -46,7 +46,7 @@ public class PickElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToPickFrom == null)
         {
-            this.viewModel.elementsToPickFrom = new ArrayList<IElement>(App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS)));
+            this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)

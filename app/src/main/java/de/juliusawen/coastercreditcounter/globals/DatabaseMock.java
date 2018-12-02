@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.data.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.data.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
@@ -23,11 +24,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
-    private AttractionCategory attractionCategoryThrillRides;
-    private AttractionCategory attractionCategoryFamilyRides;
-    private AttractionCategory attractionCategoryRollerCoasters;
-    private AttractionCategory attractionCategoryNonRollerCoasters;
-    private AttractionCategory attractionCategoryWaterRides;
+    private Location rootLocation;
     private AttractionCategory defaultAttractionCategory;
 
     private static final DatabaseMock instance = new DatabaseMock();
@@ -42,11 +39,11 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public void fetchContent(Content content)
     {
-        this.attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
-        this.attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
-        this.attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
-        this.attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
-        this.attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
+        AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides");
+        AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides");
+        AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters");
+        AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters");
+        AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides");
 
         List<AttractionCategory> attractionCategories = new ArrayList<>();
         attractionCategories.add(attractionCategoryRollerCoasters);
@@ -107,11 +104,25 @@ public final class DatabaseMock implements IDatabaseWrapper
         hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
 
 
+
+        //Create Blueprints
+        List<IBlueprint> blueprints = new ArrayList<>();
+
+
+        CoasterBlueprint suspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", null);
+        suspendedLoopingCoaster.setAttractionCategory(attractionCategoryRollerCoasters);
+
+        blueprints.add(suspendedLoopingCoaster);
+
+        //Create Attractions
         CustomCoaster krake = CustomCoaster.create("Krake");
         CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen");
         CustomCoaster desertRace = CustomCoaster.create("Desert Race");
         CustomCoaster bigLoop = CustomCoaster.create("Big Loop");
-        CustomCoaster limit = CustomCoaster.create("Limit");
+
+        StockAttraction limit = StockAttraction.create("Limit", suspendedLoopingCoaster, null);
+
+
         CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz");
         CustomCoaster indyBlitz = CustomCoaster.create("Indy-Blitz");
         CustomCoaster bobbahn = CustomCoaster.create("Bobbahn");
@@ -129,7 +140,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         flugDerDaemonen.setAttractionCategory(attractionCategoryRollerCoasters);
         desertRace.setAttractionCategory(attractionCategoryRollerCoasters);
         bigLoop.setAttractionCategory(attractionCategoryRollerCoasters);
-        limit.setAttractionCategory(attractionCategoryRollerCoasters);
         grottenblitz.setAttractionCategory(attractionCategoryRollerCoasters);
         indyBlitz.setAttractionCategory(attractionCategoryRollerCoasters);
         bobbahn.setAttractionCategory(attractionCategoryRollerCoasters);
@@ -158,16 +168,21 @@ public final class DatabaseMock implements IDatabaseWrapper
         gatekeeper.setAttractionCategory(attractionCategoryRollerCoasters);
         dodgem.setAttractionCategory(attractionCategoryFamilyRides);
 
+
+
+
+
+
         CustomCoaster drako = CustomCoaster.create("Drako");
-        CustomCoaster elCondor = CustomCoaster.create("El Condor");
         CustomCoaster robinHood = CustomCoaster.create("Robin Hood");
         CustomCoaster speedOfSound = CustomCoaster.create("Speed of Sound");
         CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13");
         CustomCoaster goliath = CustomCoaster.create("Goliath");
         CustomCoaster lostGravity = CustomCoaster.create("Lost Gravity");
 
+        StockAttraction elCondor = StockAttraction.create("El Condor", suspendedLoopingCoaster, null);
+
         drako.setAttractionCategory(attractionCategoryRollerCoasters);
-        elCondor.setAttractionCategory(attractionCategoryRollerCoasters);
         robinHood.setAttractionCategory(attractionCategoryRollerCoasters);
         speedOfSound.setAttractionCategory(attractionCategoryRollerCoasters);
         xpressPlatform13.setAttractionCategory(attractionCategoryRollerCoasters);
@@ -321,7 +336,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         earth.addChildAndSetParent(usa);
 
         Visit visit0 = Visit.create(2018, 2, 30);
-        this.addAttractionsToVisit(visit0, Element.convertElementsToType(heidePark.getChildrenAsType(CustomCoaster.class), Attraction.class));
+        this.addAttractionsToVisit(visit0, heidePark.getChildrenAsType(IOnSiteAttraction.class));
         heidePark.addChildAndSetParent(visit0);
 
         Visit visit1 = Visit.create(2018, 0, 1);
@@ -338,7 +353,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         cedarPoint.addChildAndSetParent(visit1);
 
         Visit visit7 = Visit.create(2019, 0, 1);
-        this.addAttractionsToVisit(visit7, walibiHolland.getChildrenAsType(Attraction.class));
+        this.addAttractionsToVisit(visit7, walibiHolland.getChildrenAsType(IOnSiteAttraction.class));
         walibiHolland.addChildAndSetParent(visit7);
 
         Visit visitToday = Visit.create(Calendar.getInstance());
@@ -347,19 +362,21 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
 
-        //add tree to content (one element is enough - content is searching for root on its own and flattens tree from there)
-        content.addElement(earth);
+//        content.addElement(germany); //adding one location is enough - content is searching for root on its own and flattens tree from there)
+
+        this.rootLocation = earth;
 
         content.setAttractionCategories(attractionCategories);
+        content.addElements(Element.convertElementsToType(blueprints, IElement.class));
 
         this.addDefaults(content);
     }
 
-    private void addAttractionsToVisit(Visit visit, List<Attraction> attractions)
+    private void addAttractionsToVisit(Visit visit, List<IOnSiteAttraction> attractions)
     {
-        for(Attraction attraction : attractions)
+        for(IOnSiteAttraction attraction : attractions)
         {
-            visit.addChildAndSetParent(VisitedAttraction.create((IOnSiteAttraction) attraction));
+            visit.addChildAndSetParent(VisitedAttraction.create(attraction));
         }
     }
 
@@ -367,6 +384,12 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         this.defaultAttractionCategory = AttractionCategory.create("uncategorized");
         content.addAttractionCategory(defaultAttractionCategory);
+    }
+
+    @Override
+    public Location fetchRootLocation()
+    {
+        return this.rootLocation;
     }
 
     @Override

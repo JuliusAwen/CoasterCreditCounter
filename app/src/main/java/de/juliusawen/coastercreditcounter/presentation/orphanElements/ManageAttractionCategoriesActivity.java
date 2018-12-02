@@ -64,7 +64,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<IElement>(App.content.getAttractionCategories()),
                     null,
-                    IAttraction.class);
+                    ICategorized.class);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
@@ -154,7 +154,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
-                List<Element> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
                 App.content.setAttractionCategories(Element.convertElementsToType(resultElements, AttractionCategory.class));
                 this.updateContentRecyclerView();
@@ -168,9 +168,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             }
             else if(requestCode == Constants.APPLY_CATEGORY_TO_ATTRACTIONS)
             {
-                List<Element> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                for(Element element : resultElements)
+                for(IElement element : resultElements)
                 {
                     ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
                 }
@@ -213,7 +213,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
 
                 popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
-                        .setEnabled(!App.content.getContentAsType(IAttraction.class).isEmpty());
+                        .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                 {
