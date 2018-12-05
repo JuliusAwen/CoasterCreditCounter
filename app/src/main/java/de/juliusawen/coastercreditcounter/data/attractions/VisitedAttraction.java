@@ -13,21 +13,20 @@ public class VisitedAttraction extends Attraction
 {
     private IOnSiteAttraction onSiteAttraction;
 
-    private int rideCount;
+    private int rideCount = 0;
 
-    private VisitedAttraction(String name, UUID uuid, IOnSiteAttraction onSiteAttraction, int rideCount)
+    private VisitedAttraction(String name, UUID uuid, IOnSiteAttraction onSiteAttraction)
     {
         super(name, uuid);
         this.onSiteAttraction = onSiteAttraction;
-        this.rideCount = rideCount;
     }
 
-    public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction, int initialRideCount)
+    public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction)
     {
         VisitedAttraction visitedAttraction;
-        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), UUID.randomUUID(), onSiteAttraction, initialRideCount);
+        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), UUID.randomUUID(), onSiteAttraction);
 
-        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created with initial ride count [%d]", visitedAttraction.getFullName(), initialRideCount));
+        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
 
         return visitedAttraction;
     }

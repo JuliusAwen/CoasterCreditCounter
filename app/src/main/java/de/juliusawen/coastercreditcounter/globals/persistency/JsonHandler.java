@@ -337,7 +337,7 @@ public class JsonHandler
             for(Map.Entry<UUID, Integer> rideCountByAttractionUuid : temporaryVisit.rideCountByAttractionUuids.entrySet())
             {
                 VisitedAttraction visitedAttraction =
-                        VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuid(rideCountByAttractionUuid.getKey()), rideCountByAttractionUuid.getValue());
+                        VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuid(rideCountByAttractionUuid.getKey()));
                 visitedAttraction.increaseRideCount(rideCountByAttractionUuid.getValue());
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);

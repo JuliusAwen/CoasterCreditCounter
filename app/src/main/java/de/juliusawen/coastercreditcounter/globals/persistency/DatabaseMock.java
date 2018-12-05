@@ -381,7 +381,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         for(IOnSiteAttraction attraction : attractions)
         {
-            visit.addChildAndSetParent(VisitedAttraction.create(attraction, 0));
+            visit.addChildAndSetParent(VisitedAttraction.create(attraction));
         }
     }
 
