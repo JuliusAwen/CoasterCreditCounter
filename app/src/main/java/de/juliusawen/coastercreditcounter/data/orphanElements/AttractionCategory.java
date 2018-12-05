@@ -15,14 +15,14 @@ public class AttractionCategory extends OrphanElement
         super(name, uuid);
     }
 
-    public static AttractionCategory create(String name)
+    public static AttractionCategory create(String name, UUID uuid)
     {
         AttractionCategory attractionCategory = null;
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
-            attractionCategory = new AttractionCategory(name, UUID.randomUUID());
+            attractionCategory = new AttractionCategory(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("AttractionCategory.create:: %s created.", attractionCategory));
         }
         else

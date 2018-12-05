@@ -18,7 +18,6 @@ import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeade
 import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
@@ -51,7 +50,7 @@ public class ShowVisitActivity extends BaseActivity
 
         if(this.viewModel.visit == null)
         {
-            this.viewModel.visit = (Visit) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -111,7 +110,7 @@ public class ShowVisitActivity extends BaseActivity
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_PICK_ATTRACTIONS,
-                        ShowVisitActivity.this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(allAttractions));
+                        new ArrayList<IElement>(allAttractions));
             }
         });
 
@@ -131,7 +130,7 @@ public class ShowVisitActivity extends BaseActivity
             {
                 for(IElement element : resultElements)
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element, 0);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }

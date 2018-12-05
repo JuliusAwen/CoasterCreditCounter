@@ -22,8 +22,11 @@ public interface IElement
     void addChild(IElement child);
     void addChildrenAndSetParents(List<IElement> children);
     void addChildrenAndSetParents(int index, List<IElement> children);
+    void addChildrenAndSetParent(List<UUID> childUuids);
     void addChildAndSetParent(IElement child);
-    boolean addChildAndSetParent(int index, IElement child);
+    void addChildAndSetParent(int index, IElement child);
+    void addChildAndSetParent(UUID childUuid);
+
     List<IElement> getChildren();
     List<IElement> getChildrenOfType(Class<? extends IElement> type);
     <T extends IElement> List<T> getChildrenAsType(Class<T> type);

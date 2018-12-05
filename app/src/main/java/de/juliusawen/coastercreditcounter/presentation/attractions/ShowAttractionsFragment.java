@@ -22,7 +22,6 @@ import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeade
 import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
@@ -65,7 +64,7 @@ public  class ShowAttractionsFragment extends Fragment
         {
             if(getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
 

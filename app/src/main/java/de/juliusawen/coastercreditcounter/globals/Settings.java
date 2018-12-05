@@ -4,13 +4,13 @@ import android.util.Log;
 
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Settings
 {
     //App
     public static boolean jumpToTestActivityOnStart = false;
-    private String exportFileName;
 
 //    private boolean jumpToOpenVisitOnStart;
 
@@ -24,8 +24,6 @@ public class Settings
     //Defaults
     private AttractionCategory defaultAttractionCategory;
     private int defaultIncrement;
-
-
 
     private static Settings instance;
 
@@ -51,22 +49,12 @@ public class Settings
         Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
     }
 
-    public String getExportFileName()
-    {
-        return exportFileName;
-    }
-
-    void setExportFileName(String exportFileName)
-    {
-        this.exportFileName = exportFileName;
-    }
-
     public SortOrder getDefaultSortOrderParkVisits()
     {
         return defaultSortOrderParkVisits;
     }
 
-    void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
+    public void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
     {
         this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
     }
@@ -76,7 +64,7 @@ public class Settings
         return expandLatestYearInListByDefault;
     }
 
-    void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
+    public void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
     {
         this.expandLatestYearInListByDefault = expandLatestYearInListByDefault;
     }
@@ -86,7 +74,7 @@ public class Settings
         return this.firstDayOfTheWeek;
     }
 
-    void setFirstDayOfTheWeek(int firstDayOfTheWeek)
+    public void setFirstDayOfTheWeek(int firstDayOfTheWeek)
     {
         this.firstDayOfTheWeek = firstDayOfTheWeek;
     }
@@ -106,7 +94,7 @@ public class Settings
         return defaultAttractionCategory;
     }
 
-    void setDefaultAttractionCategory(AttractionCategory defaultAttractionCategory)
+    public void setDefaultAttractionCategory(AttractionCategory defaultAttractionCategory)
     {
         this.defaultAttractionCategory = defaultAttractionCategory;
     }
@@ -116,7 +104,7 @@ public class Settings
         return this.defaultIncrement;
     }
 
-    void setDefaultIncrement(int defaultIncrement)
+    public void setDefaultIncrement(int defaultIncrement)
     {
         this.defaultIncrement = defaultIncrement;
     }

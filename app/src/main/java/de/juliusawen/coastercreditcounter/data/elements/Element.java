@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class Element implements IElement
@@ -75,21 +76,21 @@ public abstract class Element implements IElement
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
     }
 
-    public static JSONObject toJson(IElement element, boolean getChildren)
+    public static JSONObject toJson(IElement element, boolean parseChildren)
     {
         try
         {
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("name", element.getName());
-            jsonObject.put("uuid", element.getUuid().toString());
-            jsonObject.put("parent", element.getParent() == null ? JSONObject.NULL : element.getParent().getUuid().toString());
+            jsonObject.put(Constants.JSON_STRING_NAME, element.getName());
+            jsonObject.put(Constants.JSON_STRING_UUID, element.getUuid().toString());
+            jsonObject.put(Constants.JSON_STRING_PARENT, element.getParent() == null ? JSONObject.NULL : element.getParent().getUuid().toString());
 
             JSONArray jsonArrayChildren = new JSONArray();
 
-            if(element.getChildren().isEmpty() || !getChildren)
+            if(element.getChildren().isEmpty() || !parseChildren)
             {
-                jsonObject.put("children", JSONObject.NULL);
+                jsonObject.put(Constants.JSON_STRING_CHILDREN, JSONObject.NULL);
             }
             else
             {
@@ -98,7 +99,7 @@ public abstract class Element implements IElement
                     jsonArrayChildren.put(child.getUuid().toString());
                 }
 
-                jsonObject.put("children", jsonArrayChildren);
+                jsonObject.put(Constants.JSON_STRING_CHILDREN, jsonArrayChildren);
             }
 
             return jsonObject;
@@ -160,26 +161,37 @@ public abstract class Element implements IElement
         }
     }
 
+    public void addChildAndSetParent(IElement child)
+    {
+        this.addChildAndSetParent(this.getChildCount(), child);
+    }
+
+    public void addChildrenAndSetParent(List<UUID> childUuids)
+    {
+        for(UUID childUuid : childUuids)
+        {
+            this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
+        }
+    }
+
+    public void addChildAndSetParent(UUID childUuid)
+    {
+        this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
+    }
+
     public void addChildrenAndSetParents(int index, List<IElement> children)
     {
         Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParents:: called with [%d] children", children.size()));
         int increment = 0;
         for (IElement child : children)
         {
-            if(this.addChildAndSetParent(index + increment, child))
-            {
-                child.setParent(this);
-                increment ++;
-            }
+            this.addChildAndSetParent(index + increment, child);
+            child.setParent(this);
+            increment ++;
         }
     }
 
-    public void addChildAndSetParent(IElement child)
-    {
-        this.addChildAndSetParent(this.getChildCount(), child);
-    }
-
-    public boolean addChildAndSetParent(int index, IElement child)
+    public void addChildAndSetParent(int index, IElement child)
     {
         if(!OrphanElement.class.isInstance(this))
         {
@@ -193,12 +205,10 @@ public abstract class Element implements IElement
 
                 Log.v(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s -> child %s added", this, child));
                 this.children.add(index, child);
-                return true;
             }
             else
             {
                 Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s already contains child [%s]", this, child));
-                return false;
             }
         }
         else
@@ -207,7 +217,6 @@ public abstract class Element implements IElement
             Log.e(Constants.LOG_TAG, "Element.addChildAndSetParent:: " + errorMessage);
             throw new IllegalStateException(errorMessage);
         }
-
     }
 
     public void reorderChildren(List<? extends IElement> children)
@@ -229,6 +238,11 @@ public abstract class Element implements IElement
     {
         this.getChildren().add(child);
         Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
+    }
+
+    public void addChild(UUID childUuid)
+    {
+        this.addChild(App.content.getContentByUuid(childUuid));
     }
 
     public boolean containsChild(IElement child)

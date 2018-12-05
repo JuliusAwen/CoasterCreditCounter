@@ -55,7 +55,7 @@ public class ShowParkActivity extends BaseActivity
         
         if(this.viewModel.park == null)
         {
-            this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
         
         if(this.viewModel.currentTab == -1)

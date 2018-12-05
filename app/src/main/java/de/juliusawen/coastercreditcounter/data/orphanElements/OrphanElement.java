@@ -24,7 +24,7 @@ public abstract class OrphanElement extends Element implements IElement
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("element", Element.toJson(this, false));
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
 
             Log.v(Constants.LOG_TAG, String.format("OrphanElement.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

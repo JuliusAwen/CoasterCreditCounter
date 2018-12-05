@@ -9,6 +9,34 @@ public abstract class Constants
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
 
+
+    public static final String JSON_STRING_LOCATIONS = "locations";
+    public static final String JSON_STRING_PARKS = "parks";
+    public static final String JSON_STRING_VISITS = "visits";
+    public static final String JSON_STRING_ATTRACTIONS = "attractions";
+    public static final String JSON_STRING_ATTRACTION_BLUEPRINTS = "attraction blueprints";
+    public static final String JSON_STRING_COASTER_BLUEPRINTS = "coaster blueprints";
+    public static final String JSON_STRING_CUSTOM_ATTRACTIONS = "custom attractions";
+    public static final String JSON_STRING_CUSTOM_COASTERS = "custom coasters";
+    public static final String JSON_STRING_STOCK_ATTRACTIONS = "stock attractions";
+
+    public static final String JSON_STRING_ELEMENT = "element";
+    public static final String JSON_STRING_NAME = "name";
+    public static final String JSON_STRING_UUID = "uuid";
+    public static final String JSON_STRING_PARENT = "parent";
+    public static final String JSON_STRING_CHILDREN = "children";
+
+    public static final String JSON_STRING_DAY = "day";
+    public static final String JSON_STRING_MONTH = "month";
+    public static final String JSON_STRING_YEAR = "year";
+    public static final String JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS = "ride count by attractions";
+    public static final String JSON_STRING_BLUEPRINT = "blueprint";
+
+    public static final String JSON_STRING_TOTAL_RIDE_COUNT = "total ride count";
+    public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
+    public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
+
+
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
     public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";

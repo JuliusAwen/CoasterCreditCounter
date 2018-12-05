@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 
 public abstract class App
 {

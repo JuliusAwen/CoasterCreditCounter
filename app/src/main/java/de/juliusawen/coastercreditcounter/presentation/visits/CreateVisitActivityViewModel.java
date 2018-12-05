@@ -25,9 +25,9 @@ class CreateVisitActivityViewModel extends ViewModel
 
     boolean datePicked = false;
 
-    @Override
-    protected void onCleared()
-    {
-        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
-    }
+//    @Override
+//    protected void onCleared()
+//    {
+//        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
+//    }
 }

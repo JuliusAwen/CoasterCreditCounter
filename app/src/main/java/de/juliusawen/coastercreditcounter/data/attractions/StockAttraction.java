@@ -21,27 +21,6 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         this.blueprint = blueprint;
     }
 
-    @Override
-    public JSONObject toJson()
-    {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("element", Element.toJson(this, false));
-            jsonObject.put("blueprint", this.blueprint.getUuid());
-            jsonObject.put("total ride count", this.getTotalRideCount());
-
-            Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("StockAttraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
-        }
-    }
-
     public static StockAttraction create(String name, IBlueprint blueprint, UUID uuid)
     {
         StockAttraction stockAttraction = null;
@@ -59,9 +38,54 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         return stockAttraction;
     }
 
+
+    @Override
+    public JSONObject toJson()
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
+            jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
+            jsonObject.put(Constants.JSON_STRING_TOTAL_RIDE_COUNT, this.getTotalRideCount());
+
+            Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("StockAttraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            return null;
+        }
+    }
+
     @Override
     public AttractionCategory getAttractionCategory()
     {
         return this.blueprint.getAttractionCategory();
+    }
+
+    @Override
+    public void increaseTotalRideCount(int increment)
+    {
+        this.blueprint.increaseTotalRideCount(increment);
+        super.increaseTotalRideCount(increment);
+    }
+
+    @Override
+    public void decreaseTotalRideCount(int decrement)
+    {
+        if((this.blueprint.getTotalRideCount() - decrement) >= 0 && (super.getTotalRideCount() - decrement) >= 0)
+        {
+            this.blueprint.decreaseTotalRideCount(decrement);
+            super.decreaseTotalRideCount(decrement);
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
+                    this, decrement, this.getTotalRideCount()));
+        }
+
     }
 }

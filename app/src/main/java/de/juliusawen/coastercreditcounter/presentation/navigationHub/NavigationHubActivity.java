@@ -12,7 +12,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.persistency.JsonHandler;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.FileTool;
@@ -115,10 +117,13 @@ public class NavigationHubActivity extends BaseActivity
 
                     case R.id.navigationItem_Import:
                     {
-                        String jsonString = FileTool.readStringFromFile(App.settings.getExportFileName(), NavigationHubActivity.this);
+                        String jsonString = FileTool.readStringFromFile(AppSettings.exportFileName, NavigationHubActivity.this);
                         if(!jsonString.isEmpty())
                         {
                             Toaster.makeToast(NavigationHubActivity.this, "content imported");
+
+                            JsonHandler jsonHandler = new JsonHandler();
+                            jsonHandler.fetchContentFromJsonString(jsonString, App.content);
                         }
                         else
                         {

@@ -13,11 +13,6 @@ public class CustomCoaster extends Coaster implements IOnSiteAttraction, ICatego
         super(name, uuid);
     }
 
-    public static CustomCoaster create(String name)
-    {
-        return CustomCoaster.create(name, UUID.randomUUID());
-    }
-
     public static CustomCoaster create(String name, UUID uuid)
     {
         CustomCoaster customCoaster = null;
@@ -25,7 +20,7 @@ public class CustomCoaster extends Coaster implements IOnSiteAttraction, ICatego
 
         if(!name.isEmpty())
         {
-            customCoaster = new CustomCoaster(name, uuid);
+            customCoaster = new CustomCoaster(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CustomCoaster.create:: %s created.", customCoaster.getFullName()));
         }
         else

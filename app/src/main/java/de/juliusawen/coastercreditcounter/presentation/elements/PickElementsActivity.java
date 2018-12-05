@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
@@ -49,12 +51,17 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
+        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        {
+            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+        }
+
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            if(!this.viewModel.elementsToPickFrom.isEmpty() && AttractionCategoryHeader.class.isInstance(this.viewModel.elementsToPickFrom.get(0)))
+            if(!this.viewModel.elementsToPickFrom.isEmpty() && IAttraction.class.isInstance(this.viewModel.elementsToPickFrom.get(0)))
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.elementsToPickFrom,
+                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(Element.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
                         null,
                         Attraction.class,
                         true);

@@ -55,7 +55,7 @@ public class AttractionCategoryHeaderProvider
                     else
                     {
                         header = AttractionCategoryHeader.create(category);
-                        App.content.addOrphanElement(header);
+//                        App.content.addOrphanElement(header);
                         this.headersByCategoryUuid.put(categoryUuid, header);
                         categorizedAttractions.add(header);
 
@@ -109,7 +109,7 @@ public class AttractionCategoryHeaderProvider
                 else
                 {
                     AttractionCategoryHeader newHeader = AttractionCategoryHeader.create(category);
-                    App.content.addOrphanElement(newHeader);
+//                    App.content.addOrphanElement(newHeader);
                     this.headersByCategoryUuid.put(categoryUuid, newHeader);
                     categorizedAttractions.add(newHeader);
 
@@ -169,14 +169,14 @@ public class AttractionCategoryHeaderProvider
         }
     }
 
-    public void removeCreatedAttractionCategoryHeadersFromContent()
-    {
-        Log.v(Constants.LOG_TAG,String.format("AttractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent:: " +
-                "removing [%d] headers from content...", this.headersByCategoryUuid.values().size()));
-
-        for(AttractionCategoryHeader header : this.headersByCategoryUuid.values())
-        {
-            App.content.removeOrphanElement(header);
-        }
-    }
+//    public void removeCreatedAttractionCategoryHeadersFromContent()
+//    {
+//        Log.v(Constants.LOG_TAG,String.format("AttractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent:: " +
+//                "removing [%d] headers from content...", this.headersByCategoryUuid.values().size()));
+//
+//        for(AttractionCategoryHeader header : this.headersByCategoryUuid.values())
+//        {
+//            App.content.removeOrphanElement(header);
+//        }
+//    }
 }

@@ -34,22 +34,22 @@ public class Visit extends Element
         this.calendar = calendar;
     }
 
-    public static Visit create(int year, int month, int day)
+    public static Visit create(int year, int month, int day, UUID uuid)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
-        return Visit.createInstance(calendar);
+        return Visit.createInstance(calendar, uuid);
     }
 
-    public static Visit create(Calendar calendar)
+    public static Visit create(Calendar calendar, UUID uuid)
     {
-        return Visit.createInstance(calendar);
+        return Visit.createInstance(calendar, uuid);
     }
 
-    private static Visit createInstance(Calendar calendar)
+    private static Visit createInstance(Calendar calendar, UUID uuid)
     {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_FULL_PATTERN, Locale.getDefault());
-        Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), UUID.randomUUID(), calendar);
+        Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
         Log.v(Constants.LOG_TAG,  String.format("Visit.createInstance:: %s created.", visit.getFullName()));
         return visit;
@@ -75,11 +75,11 @@ public class Visit extends Element
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("element", Element.toJson(this, false));
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
 
-            jsonObject.put("day", this.getCalendar().get(Calendar.DAY_OF_MONTH));
-            jsonObject.put("month", this.getCalendar().get(Calendar.MONTH));
-            jsonObject.put("year", this.getCalendar().get(Calendar.YEAR));
+            jsonObject.put(Constants.JSON_STRING_DAY, this.getCalendar().get(Calendar.DAY_OF_MONTH));
+            jsonObject.put(Constants.JSON_STRING_MONTH, this.getCalendar().get(Calendar.MONTH));
+            jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
 
             int counter = 0;
             JSONArray jsonArrayRideCountByAttraction = new JSONArray();
@@ -90,7 +90,7 @@ public class Visit extends Element
                 jsonArrayRideCountByAttraction.put(jsonObjectRideCountByAttraction);
                 counter ++;
             }
-            jsonObject.put("ride count by attraction", counter > 0 ? jsonArrayRideCountByAttraction : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS, counter > 0 ? jsonArrayRideCountByAttraction : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

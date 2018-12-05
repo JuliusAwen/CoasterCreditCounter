@@ -17,10 +17,8 @@ import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
@@ -51,7 +49,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(this.viewModel.park == null)
         {
-            this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -87,7 +85,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(IElement element : resultElements)
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element, 0);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
                 }
@@ -196,7 +194,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             this.deleteExistingVisit();
         }
 
-        this.viewModel.visit = Visit.create(calendar);
+        this.viewModel.visit = Visit.create(calendar, null);
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
         App.content.addElement(this.viewModel.visit);
 
@@ -258,7 +256,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
                             Constants.REQUEST_PICK_ATTRACTIONS,
-                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
+                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {

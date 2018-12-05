@@ -59,7 +59,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
         if(this.viewModel.parentLocation == null)
         {
-            this.viewModel.parentLocation = (Location) App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         super.addConfirmDialogFragment();
@@ -316,7 +316,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
     private boolean createLocation()
     {
         boolean success = false;
-        this.viewModel.newLocation = Location.create(this.editText.getText().toString());
+        this.viewModel.newLocation = Location.create(this.editText.getText().toString(), null);
 
         if(this.viewModel.newLocation != null)
         {

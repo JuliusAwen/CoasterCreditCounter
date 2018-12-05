@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class FileTool
@@ -64,7 +63,7 @@ public abstract class FileTool
         }
         catch (IOException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("FileTool.readStringFromFile:: IOException: File [%s]: [%s]", App.settings.getExportFileName(), e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("FileTool.readStringFromFile:: IOException: File [%s]: [%s]", fileName, e.getMessage()));
         }
 
         return output;

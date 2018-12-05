@@ -66,7 +66,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.currentElement == null)
         {
             String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-            this.viewModel.currentElement = elementUuid != null ? App.content.getElementByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+            this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -145,7 +145,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.getElementByUuid(UUID.fromString(resultElementUuidString));
+                IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
                 updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
 
@@ -164,7 +164,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    IElement selectedElement = App.content.getElementByUuid(UUID.fromString(selectedElementUuidString));
+                    IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
                 else
@@ -175,7 +175,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
-                IElement editedElement = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToElement(editedElement);

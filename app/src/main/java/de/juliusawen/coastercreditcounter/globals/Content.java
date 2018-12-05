@@ -24,13 +24,14 @@ import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
     private Map<UUID, IElement> elements = new HashMap<>();
-    private Map<UUID, IElement> orphanElements = new HashMap<>();
+//    private Map<UUID, IElement> orphanElements = new HashMap<>();
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
 
     public Location rootLocation;
@@ -58,14 +59,10 @@ public class Content
         Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
         this.persistency.fetchContent(this);
-
-        Log.i(Constants.LOG_TAG, "Content.Constructor:: setting root location...");
-        Stopwatch stopwatchSetRootLocation = new Stopwatch(true);
-        this.setRootLocation();
-        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching root location took [%d]ms", stopwatchSetRootLocation.stop()));
-
         Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
+        Log.i(Constants.LOG_TAG, "Content.Constructor:: setting root location...");
+        this.setRootLocation();
 
         Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
         Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
@@ -76,12 +73,20 @@ public class Content
         Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
     }
 
+    public void clear()
+    {
+        this.rootLocation = null;
+        this.elements.clear();
+//        this.orphanElements.clear();
+        this.attractionCategories.clear();
+    }
+
     public Location getRootLocation()
     {
         return this.rootLocation;
     }
 
-    private void setRootLocation()
+    public void setRootLocation()
     {
         Location rootLocation = this.getContentAsType(Location.class).get(0).getRootLocation();
         this.rootLocation = rootLocation;
@@ -145,29 +150,31 @@ public class Content
 
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
     {
-        List<T> orphanElementsOfType = new ArrayList<>();
-        for(IElement orphanElement : this.orphanElements.values())
-        {
-            if(type.isInstance(orphanElement))
-            {
-                orphanElementsOfType.add(type.cast(orphanElement));
-            }
-        }
+//        List<T> orphanElementsOfType = new ArrayList<>();
+//        for(IElement orphanElement : this.orphanElements.values())
+//        {
+//            if(type.isInstance(orphanElement))
+//            {
+//                orphanElementsOfType.add(type.cast(orphanElement));
+//            }
+//        }
+//
+//        return orphanElementsOfType;
 
-        return orphanElementsOfType;
+        return this.getContentAsType(type);
     }
 
-    private IElement getOrphanElementByUuid(UUID uuid)
-    {
-        if(this.orphanElements.containsKey(uuid))
-        {
-            return this.orphanElements.get(uuid);
-        }
+//    private IElement getOrphanElementByUuid(UUID uuid)
+//    {
+//        if(this.orphanElements.containsKey(uuid))
+//        {
+//            return this.orphanElements.get(uuid);
+//        }
+//
+//        return this.getAttractionCategoryByUuid(uuid);
+//    }
 
-        return this.getAttractionCategoryByUuid(uuid);
-    }
-
-    private AttractionCategory getAttractionCategoryByUuid(UUID uuid)
+    public AttractionCategory getAttractionCategoryByUuid(UUID uuid)
     {
         for(AttractionCategory attractionCategory : this.attractionCategories)
         {
@@ -180,52 +187,54 @@ public class Content
         return null;
     }
 
-    public void addOrphanElement(IElement orphanElement)
-    {
-        if(OrphanElement.class.isInstance(orphanElement))
-        {
-            if(!this.orphanElements.containsKey(orphanElement.getUuid()))
-            {
-                this.orphanElements.put(orphanElement.getUuid(), orphanElement);
-                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s already exists", orphanElement));
-            }
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s is not of type <OrphanElement>", orphanElement));
-        }
+//    public void addOrphanElement(IElement orphanElement)
+//    {
+//        if(OrphanElement.class.isInstance(orphanElement))
+//        {
+//            if(!this.orphanElements.containsKey(orphanElement.getUuid()))
+//            {
+//                this.orphanElements.put(orphanElement.getUuid(), orphanElement);
+//                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
+//            }
+//            else
+//            {
+//                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s already exists", orphanElement));
+//            }
+//        }
+//        else
+//        {
+//            Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s is not of type <OrphanElement>", orphanElement));
+//        }
+//
+//        this.addElement(orphanElement);
+//    }
 
-    }
-
-    public void removeOrphanElements(List<? extends OrphanElement> orphanElements)
-    {
-        Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElements:: removing [%d] orphan elements", orphanElements.size()));
-
-        for(OrphanElement orphanElement : orphanElements)
-        {
-            this.removeOrphanElement(orphanElement);
-        }
-    }
+//    public void removeOrphanElements(List<? extends OrphanElement> orphanElements)
+//    {
+//        Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElements:: removing [%d] orphan elements", orphanElements.size()));
+//
+//        for(OrphanElement orphanElement : orphanElements)
+//        {
+//            this.removeOrphanElement(orphanElement);
+//        }
+//    }
 
     public void removeOrphanElement(OrphanElement orphanElement)
     {
-        if(this.orphanElements.containsValue(orphanElement))
-        {
-            this.orphanElements.remove(orphanElement.getUuid());
-            Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from orphan elements", orphanElement));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found in OrphanElements", orphanElement));
-        }
+        this.removeElement(orphanElement);
+//        if(this.orphanElements.containsValue(orphanElement))
+//        {
+//            this.orphanElements.remove(orphanElement.getUuid());
+//            Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from orphan elements", orphanElement));
+//        }
+//        else
+//        {
+//            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found in OrphanElements", orphanElement));
+//        }
     }
 
 
-    private void flattenContentTree(IElement element)
+    public void flattenContentTree(IElement element)
     {
         this.addElement(element);
         for (IElement child : element.getChildren())
@@ -251,25 +260,25 @@ public class Content
         List<IElement> elements = new ArrayList<>();
         for(String uuidString : uuidStrings)
         {
-            elements.add(this.getElementByUuid(UUID.fromString(uuidString)));
+            elements.add(this.getContentByUuid(UUID.fromString(uuidString)));
         }
 
         Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
         return elements;
     }
 
-    public IElement getElementByUuid(UUID uuid)
+    public IElement getContentByUuid(UUID uuid)
     {
-        IElement element;
+        IElement element = null;
 
         if(this.elements.containsKey(uuid))
         {
             element = this.elements.get(uuid);
         }
-        else
-        {
-            element = this.getOrphanElementByUuid(uuid);
-        }
+//        else
+//        {
+//            element = this.getOrphanElementByUuid(uuid);
+//        }
 
         if(element != null)
         {
@@ -277,7 +286,7 @@ public class Content
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Content.getElementByUuid:: No element found for uuid[%s]", uuid));
+            Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
             return null;
         }
     }
@@ -301,18 +310,18 @@ public class Content
 
     public void addElement(IElement element)
     {
-        if(!OrphanElement.class.isInstance(element))
-        {
+//        if(!OrphanElement.class.isInstance(element))
+//        {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
             this.elements.put(element.getUuid(), element);
-        }
-        else
-        {
-            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement!", element);
-            Log.e(Constants.LOG_TAG,  "Content.addElement:: )" + errorMessage);
-
-            throw new IllegalStateException(errorMessage);
-        }
+//        }
+//        else
+//        {
+//            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement!", element);
+//            Log.e(Constants.LOG_TAG,  "Content.addElement:: )" + errorMessage);
+//
+//            throw new IllegalStateException(errorMessage);
+//        }
     }
 
     public boolean removeElementAndChildren(IElement element)
@@ -346,13 +355,18 @@ public class Content
         {
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("locations", this.fetchJsonArray(this.getContentOfType(Location.class)));
-            jsonObject.put("parks", this.fetchJsonArray(this.getContentOfType(Park.class)));
-            jsonObject.put("visits", this.fetchJsonArray(this.getContentOfType(Visit.class)));
-            jsonObject.put("attractions", this.fetchJsonObjectAttractions());
-            jsonObject.put("attraction categories", this.fetchJsonArray(new ArrayList<IElement>(this.getAttractionCategories())));
+            jsonObject.put(Constants.JSON_STRING_LOCATIONS,
+                    this.getContentOfType(Location.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Location.class)));
+            jsonObject.put(Constants.JSON_STRING_PARKS,
+                    this.getContentOfType(Park.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Park.class)));
+            jsonObject.put(Constants.JSON_STRING_VISITS,
+                    this.getContentOfType(Visit.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Visit.class)));
+            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS,
+                    this.fetchJsonObjectAttractions());
+            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
+                    this.getAttractionCategories().isEmpty() ? JSONObject.NULL : this.fetchJsonArray(new ArrayList<IElement>(this.getAttractionCategories())));
 
-            if(FileTool.writeStringToFile(App.settings.getExportFileName(), jsonObject.toString(), context))
+            if(FileTool.writeStringToFile(AppSettings.exportFileName, jsonObject.toString(), context))
             {
                 Log.v(Constants.LOG_TAG,  String.format("Content.export:: export took [%d]ms", stopwatch.stop()));
                 return true;
@@ -373,11 +387,16 @@ public class Content
         {
             JSONObject jsonObjectAttractions = new JSONObject();
 
-            jsonObjectAttractions.put("attraction blueprints", this.fetchJsonArray(this.getContentOfType(AttractionBlueprint.class)));
-            jsonObjectAttractions.put("coaster blueprints", this.fetchJsonArray(this.getContentOfType(CoasterBlueprint.class)));
-            jsonObjectAttractions.put("custom attractions", this.fetchJsonArray(this.getContentOfType(CustomAttraction.class)));
-            jsonObjectAttractions.put("custom coasters", this.fetchJsonArray(this.getContentOfType(CustomCoaster.class)));
-            jsonObjectAttractions.put("stock attractions", this.fetchJsonArray(this.getContentOfType(StockAttraction.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS,
+                    this.getContentOfType(AttractionBlueprint.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(AttractionBlueprint.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS,
+                    this.getContentOfType(CoasterBlueprint.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CoasterBlueprint.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS,
+                    this.getContentOfType(CustomAttraction.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CustomAttraction.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_COASTERS,
+                    this.getContentOfType(CustomCoaster.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CustomCoaster.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS,
+                    this.getContentOfType(StockAttraction.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(StockAttraction.class)));
 
             return jsonObjectAttractions;
 
@@ -387,8 +406,6 @@ public class Content
             exception.printStackTrace();
             return null;
         }
-
-
     }
 
 

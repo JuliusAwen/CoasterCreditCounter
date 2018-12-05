@@ -16,14 +16,14 @@ public class Location extends Element
         super(name, uuid);
     }
 
-    public static Location create(String name)
+    public static Location create(String name, UUID uuid)
     {
         Location location = null;
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
-            location = new Location(name, UUID.randomUUID());
+            location = new Location(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
         }
         else
@@ -38,7 +38,7 @@ public class Location extends Element
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("element", Element.toJson(this, true));
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
 
             Log.v(Constants.LOG_TAG, String.format("Location.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

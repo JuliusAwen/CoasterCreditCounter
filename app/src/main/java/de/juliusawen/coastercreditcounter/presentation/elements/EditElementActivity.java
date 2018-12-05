@@ -40,7 +40,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
 
         if(this.viewModel.elementToEdit == null)
         {
-            this.viewModel.elementToEdit = App.content.getElementByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
         
         if(this.viewModel.toolbarTitle == null)

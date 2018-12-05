@@ -22,16 +22,6 @@ public class VisitedAttraction extends Attraction
         this.rideCount = rideCount;
     }
 
-    public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction)
-    {
-        VisitedAttraction visitedAttraction;
-        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), UUID.randomUUID(), onSiteAttraction, 0);
-
-        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
-
-        return visitedAttraction;
-    }
-
     public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction, int initialRideCount)
     {
         VisitedAttraction visitedAttraction;

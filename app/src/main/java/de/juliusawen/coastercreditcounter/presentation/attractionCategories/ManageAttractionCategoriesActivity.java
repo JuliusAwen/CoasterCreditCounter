@@ -131,7 +131,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 Log.d(Constants.LOG_TAG,
                         String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory [%s]", createdString));
 
-                AttractionCategory attractionCategory = AttractionCategory.create(createdString);
+                AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
                 if(attractionCategory != null)
                 {
                     App.content.addAttractionCategory(attractionCategory);

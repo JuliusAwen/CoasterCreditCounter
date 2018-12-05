@@ -114,7 +114,7 @@ public class YearHeader extends OrphanElement
                 if(yearHeader == null)
                 {
                     yearHeader = YearHeader.create(year);
-                    App.content.addOrphanElement(yearHeader);
+                    App.content.addElement(yearHeader);
                     Log.d(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: created new %s", yearHeader));
                 }
 

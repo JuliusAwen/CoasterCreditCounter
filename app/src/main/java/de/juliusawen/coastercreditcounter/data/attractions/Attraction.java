@@ -26,8 +26,9 @@ public abstract class Attraction extends Element implements IAttraction
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("element", Element.toJson(this, false));
-            jsonObject.put("total ride count", this.totalRideCount);
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
+            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORY, this.attractionCategory.getUuid());
+            jsonObject.put(Constants.JSON_STRING_TOTAL_RIDE_COUNT, this.totalRideCount);
 
             Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

@@ -64,7 +64,7 @@ public class ShowVisitsFragment extends Fragment
         {
             if (getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getElementByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
 
@@ -127,7 +127,7 @@ public class ShowVisitsFragment extends Fragment
             {
                 this.updateContentRecyclerView(true);
 
-                IElement visit = App.content.getElementByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
             }
         }

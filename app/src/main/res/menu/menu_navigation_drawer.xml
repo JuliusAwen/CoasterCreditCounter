@@ -13,16 +13,16 @@
             <menu>
                 <item
                     android:id="@+id/navigationItem_ManageCategories"
-                    android:icon="@drawable/ic_baseline_build"
-                    android:title="@string/item_navigation_drawer_manage_categories" />
+                    android:title="@string/item_navigation_drawer_manage_categories"
+                    android:icon="@drawable/ic_baseline_build"/>
                 <item
                     android:id="@+id/navigationItem_ManageManufacturers"
-                    android:icon="@drawable/ic_baseline_build"
-                    android:title="@string/item_navigation_drawer_manage_manufacturers" />
+                    android:title="@string/item_navigation_drawer_manage_manufacturers"
+                    android:icon="@drawable/ic_baseline_build"/>
                 <item
                     android:id="@+id/navigationItem_ManageModels"
-                    android:icon="@drawable/ic_baseline_build"
-                    android:title="@string/item_navigation_drawer_manage_models" />
+                    android:title="@string/item_navigation_drawer_manage_models"
+                    android:icon="@drawable/ic_baseline_build"/>
             </menu>
         </item>
     </group>

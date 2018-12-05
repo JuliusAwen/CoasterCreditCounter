@@ -13,9 +13,9 @@ class ManageAttractionCategoriesViewModel extends ViewModel
 
     AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
 
-    @Override
-    protected void onCleared()
-    {
-        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
-    }
+//    @Override
+//    protected void onCleared()
+//    {
+//        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
+//    }
 }

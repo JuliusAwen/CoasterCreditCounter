@@ -18,7 +18,7 @@ public abstract class ResultTool
         IElement selectedElement = null;
         if(selectedElementUuidString != null)
         {
-            selectedElement = App.content.getElementByUuid(UUID.fromString(selectedElementUuidString));
+            selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
             Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchSelectedElement:: selected element %s fetched", selectedElement));
         }
         else
