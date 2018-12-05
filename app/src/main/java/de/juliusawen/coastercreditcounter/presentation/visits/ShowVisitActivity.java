@@ -95,7 +95,7 @@ public class ShowVisitActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

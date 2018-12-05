@@ -21,7 +21,8 @@ public abstract class Attraction extends Element implements IAttraction
         super(name, uuid);
     }
 
-    public JSONObject toJson()
+    @Override
+    public JSONObject toJson() throws JSONException
     {
         try
         {
@@ -37,7 +38,7 @@ public abstract class Attraction extends Element implements IAttraction
         {
             e.printStackTrace();
             Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
+            throw e;
         }
     }
 

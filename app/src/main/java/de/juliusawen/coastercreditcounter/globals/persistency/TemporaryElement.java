@@ -19,4 +19,5 @@ public class TemporaryElement
     public UUID blueprintUuid;
     public UUID attractionCategoryUuid;
     public int totalRideCount;
+    public boolean isDefault;
 }

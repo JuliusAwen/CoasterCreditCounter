@@ -10,15 +10,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class FileTool
 {
-    public static boolean writeStringToFile(String fileName, String input, Context context)
+    public static boolean writeStringToFile(String fileName, String input)
     {
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.applicationContext.openFileOutput(fileName, Context.MODE_PRIVATE));
             outputStreamWriter.write(input);
             outputStreamWriter.close();
 
@@ -33,13 +34,13 @@ public abstract class FileTool
 
     }
 
-    public static String readStringFromFile(String fileName, Context context)
+    public static String readStringFromFile(String fileName)
     {
         String output = "";
 
         try
         {
-            InputStream inputStream = context.openFileInput(fileName);
+            InputStream inputStream = App.applicationContext.openFileInput(fileName);
 
             if(inputStream != null)
             {

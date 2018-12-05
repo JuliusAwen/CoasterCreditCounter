@@ -76,7 +76,7 @@ public abstract class Element implements IElement
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
     }
 
-    public static JSONObject toJson(IElement element, boolean parseChildren)
+    public static JSONObject toJson(IElement element, boolean parseChildren) throws JSONException
     {
         try
         {
@@ -109,7 +109,7 @@ public abstract class Element implements IElement
             e.printStackTrace();
 
             Log.e(Constants.LOG_TAG, String.format("Element.toJson:: creation for %s failed with JSONException [%s]", element, e.getMessage()));
-            return null;
+            throw e;
         }
     }
 

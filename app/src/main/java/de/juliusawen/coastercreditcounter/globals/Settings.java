@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.util.Log;
 
+import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
@@ -22,12 +23,9 @@ public class Settings
     private int firstDayOfTheWeek;
 
     //Defaults
-    private AttractionCategory defaultAttractionCategory;
     private int defaultIncrement;
 
     private static Settings instance;
-
-    private Persistency persistency;
 
     static Settings getInstance(Persistency persistency)
     {
@@ -42,11 +40,14 @@ public class Settings
     {
         Log.i(Constants.LOG_TAG, "Settings.Constructor:: Settings instantiated - fetching settings...");
 
-        this.persistency = persistency;
-
         Stopwatch stopwatch = new Stopwatch(true);
-        this.persistency.fetchSettings(this);
+        persistency.loadSettings(this);
         Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
+    }
+
+    public void initialize()
+    {
+        Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
     }
 
     public SortOrder getDefaultSortOrderParkVisits()
@@ -88,16 +89,6 @@ public class Settings
 //    {
 //        this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
 //    }
-
-    public AttractionCategory getDefaultAttractionCategory()
-    {
-        return defaultAttractionCategory;
-    }
-
-    public void setDefaultAttractionCategory(AttractionCategory defaultAttractionCategory)
-    {
-        this.defaultAttractionCategory = defaultAttractionCategory;
-    }
 
     public int getDefaultIncrement()
     {

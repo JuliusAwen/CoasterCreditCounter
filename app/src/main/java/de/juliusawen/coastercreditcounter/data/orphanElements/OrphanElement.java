@@ -19,7 +19,7 @@ public abstract class OrphanElement extends Element implements IElement
         super(name, uuid);
     }
 
-    public JSONObject toJson()
+    public JSONObject toJson() throws JSONException
     {
         try
         {
@@ -33,7 +33,7 @@ public abstract class OrphanElement extends Element implements IElement
         {
             e.printStackTrace();
             Log.e(Constants.LOG_TAG, String.format("OrphanElement.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
+            throw e;
         }
     }
 

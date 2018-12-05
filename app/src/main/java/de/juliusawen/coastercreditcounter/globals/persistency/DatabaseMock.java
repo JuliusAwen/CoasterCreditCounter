@@ -20,7 +20,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.globals.AppSettings;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.Settings;
@@ -28,8 +28,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
-    private AttractionCategory defaultAttractionCategory;
-
     private static final DatabaseMock instance = new DatabaseMock();
 
     public static DatabaseMock getInstance()
@@ -40,14 +38,13 @@ public final class DatabaseMock implements IDatabaseWrapper
     private DatabaseMock() {}
 
     @Override
-    public void fetchContent(Content content)
+    public void loadContent(Content content)
     {
         AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides", null);
         AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides", null);
         AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters", null);
         AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters", null);
         AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides", null);
-        AttractionCategory attractionCategoryDefault = AttractionCategory.create("uncategorized", null);
 
         List<AttractionCategory> attractionCategories = new ArrayList<>();
         attractionCategories.add(attractionCategoryRollerCoasters);
@@ -55,7 +52,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         attractionCategories.add(attractionCategoryFamilyRides);
         attractionCategories.add(attractionCategoryWaterRides);
         attractionCategories.add(attractionCategoryNonRollerCoasters);
-        attractionCategories.add(attractionCategoryDefault);
 
 
         // create Nodes
@@ -365,16 +361,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         freimarkt.addChildAndSetParent(visitToday);
         Visit.setOpenVisit(visitToday);
 
-
-        this.defaultAttractionCategory = attractionCategoryDefault;
-        AppSettings.defaultAttractionCategoryUuid = this.defaultAttractionCategory.getUuid();
-
         content.addElement(germany); //adding one location is enough - content is searching for root on its own and flattens tree from there)
 
+        AttractionCategory.createAndSetDefault();
+        attractionCategories.add(AttractionCategory.getDefault());
         content.setAttractionCategories(attractionCategories);
-        content.addElements(Element.convertElementsToType(blueprints, IElement.class));
 
-        this.addDefaults(content);
+        content.addElements(Element.convertElementsToType(blueprints, IElement.class));
+        this.flattenContentTree(App.content.getRootLocation());
     }
 
     private void addAttractionsToVisit(Visit visit, List<IOnSiteAttraction> attractions)
@@ -385,15 +379,27 @@ public final class DatabaseMock implements IDatabaseWrapper
         }
     }
 
-    private void addDefaults(Content content)
+    public void flattenContentTree(IElement element)
     {
+        if(App.content.getContentByUuid(element.getUuid()) == null)
+        {
+            App.content.addElement(element);
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Content already has %s ", element));
+        }
 
+        for (IElement child : element.getChildren())
+        {
+            this.flattenContentTree(child);
+        }
     }
 
     @Override
-    public void fetchSettings(Settings settings)
+    public void loadSettings(Settings settings)
     {
-        Log.v(Constants.LOG_TAG, "DatabaseMock.fetchSettings:: creating mock data");
+        Log.v(Constants.LOG_TAG, "DatabaseMock.loadSettings:: creating mock data");
 
         Settings.jumpToTestActivityOnStart = false;
 //        settings.setJumpToOpenVisitOnStart(false);
@@ -404,10 +410,6 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         settings.setFirstDayOfTheWeek(Calendar.MONDAY);
 
-        settings.setDefaultAttractionCategory(this.defaultAttractionCategory);
-
         settings.setDefaultIncrement(1);
-
-        AppSettings.exportFileName = "CCCExport.json";
     }
 }

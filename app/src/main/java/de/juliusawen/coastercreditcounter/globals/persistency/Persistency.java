@@ -1,5 +1,8 @@
 package de.juliusawen.coastercreditcounter.globals.persistency;
 
+import android.content.Context;
+
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -16,6 +19,7 @@ public class Persistency
      */
 
     private IDatabaseWrapper databaseWrapper;
+    private JsonHandler jsonHandler;
 
     private static Persistency instance;
 
@@ -30,6 +34,8 @@ public class Persistency
 
     private Persistency()
     {
+        this.jsonHandler = new JsonHandler();
+
         switch(AppSettings.DATABASE_WRAPPER)
         {
             case Constants.DATABASE_WRAPPER_DATABASE_MOCK:
@@ -40,19 +46,29 @@ public class Persistency
 
             case Constants.DATABASE_WRAPPER_JSON_HANDLER:
             {
-
+                this.databaseWrapper = this.jsonHandler;
+                break;
             }
         }
     }
 
-    public void fetchContent(Content content)
+    public void loadContent(Content content)
     {
-        this.databaseWrapper.fetchContent(content);
+        this.databaseWrapper.loadContent(content);
     }
 
-
-    public void fetchSettings(Settings settings)
+    public void loadSettings(Settings settings)
     {
-        this.databaseWrapper.fetchSettings(settings);
+        this.databaseWrapper.loadSettings(settings);
+    }
+
+    public boolean importContent()
+    {
+        return this.jsonHandler.importContent(App.content);
+    }
+
+    public boolean exportContent()
+    {
+        return this.jsonHandler.exportContent(App.content);
     }
 }

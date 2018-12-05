@@ -8,7 +8,7 @@
             android:title="@string/item_navigation_drawer_browse_content"/>
     </group>
 
-    <group android:checkableBehavior="single">
+    <group>
         <item android:title="@string/group_title_navigation_drawer_manage">
             <menu>
                 <item
@@ -27,7 +27,7 @@
         </item>
     </group>
 
-    <group android:checkableBehavior="single">
+    <group>
         <item android:title="@string/group_title_navigation_import_export">
             <menu>
                 <item

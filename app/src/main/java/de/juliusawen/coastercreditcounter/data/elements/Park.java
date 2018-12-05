@@ -33,7 +33,7 @@ public class Park extends Element
         return park;
     }
 
-    public JSONObject toJson()
+    public JSONObject toJson() throws JSONException
     {
         try
         {
@@ -47,7 +47,7 @@ public class Park extends Element
         {
             e.printStackTrace();
             Log.e(Constants.LOG_TAG, String.format("Park.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
+            throw e;
         }
     }
 }

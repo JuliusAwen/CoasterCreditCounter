@@ -2,12 +2,8 @@ package de.juliusawen.coastercreditcounter.data.attractions;
 
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class CoasterBlueprint extends Coaster implements IBlueprint

@@ -2,8 +2,14 @@ package de.juliusawen.coastercreditcounter.data.orphanElements;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AttractionCategory extends OrphanElement
@@ -32,13 +38,39 @@ public class AttractionCategory extends OrphanElement
         return attractionCategory;
     }
 
-    public static void setDefaultAttractionCategory(AttractionCategory attractionCategory)
+    @Override
+    public JSONObject toJson() throws JSONException
     {
-        AttractionCategory.defaultAttractionCategory = attractionCategory;
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(AttractionCategory.getDefault()));
+
+            Log.v(Constants.LOG_TAG, String.format("AttractionCategory.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("AttractionCategory.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 
-    public static AttractionCategory getDefaultAttractionCategory()
+    public static void setDefault(AttractionCategory attractionCategory)
+    {
+        AttractionCategory.defaultAttractionCategory = attractionCategory;
+        Log.i(Constants.LOG_TAG, String.format("AttractionCategory.setDefault:: set %s as default attraction category", attractionCategory));
+    }
+
+    public static AttractionCategory getDefault()
     {
         return AttractionCategory.defaultAttractionCategory;
+    }
+
+    public static void createAndSetDefault()
+    {
+        AttractionCategory.setDefault(new AttractionCategory(App.applicationContext.getString(R.string.name_default_attraction_category), UUID.randomUUID()));
     }
 }

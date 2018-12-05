@@ -1,11 +1,6 @@
 package de.juliusawen.coastercreditcounter.globals;
 
-import android.content.Context;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,19 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.attractions.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.data.attractions.CoasterBlueprint;
-import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
-import de.juliusawen.coastercreditcounter.data.attractions.CustomCoaster;
-import de.juliusawen.coastercreditcounter.data.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.data.elements.Park;
-import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
-import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -36,9 +23,9 @@ public class Content
 
     public Location rootLocation;
 
-    private static Content instance;
-
     private Persistency persistency;
+
+    private static Content instance;
 
     public static Content getInstance(Persistency persistency)
     {
@@ -51,46 +38,45 @@ public class Content
 
     private Content(Persistency persistency)
     {
-        this.persistency = persistency;
-
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
+        this.persistency = persistency;
+    }
+
+    public void initialize()
+    {
+        Log.i(Constants.LOG_TAG,"Content.initialize:: initializing <Content>");
         Stopwatch stopwatchInitializeContent = new Stopwatch(true);
 
-        Log.i(Constants.LOG_TAG, "Content.Constructor:: fetching content...");
+        Log.i(Constants.LOG_TAG, "Content.initialize:: fetching content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
-        this.persistency.fetchContent(this);
-        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
+        this.persistency.loadContent(this);
+        Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
 
-        Log.i(Constants.LOG_TAG, "Content.Constructor:: setting root location...");
-        this.setRootLocation();
-
-        Log.i(Constants.LOG_TAG, "Content.Constructor:: flattening content tree...");
-        Stopwatch stopwatchFlattenContentTree = new Stopwatch(true);
-        this.flattenContentTree(this.rootLocation);
-        Log.i(Constants.LOG_TAG,  String.format("Content.Constructor:: flattening content tree took [%d]ms", stopwatchFlattenContentTree.stop()));
-
-
-        Log.i(Constants.LOG_TAG, String.format("Content.Constructor:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
+        Log.i(Constants.LOG_TAG, String.format("Content.initialize:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
     }
 
     public void clear()
     {
         this.rootLocation = null;
         this.elements.clear();
-//        this.orphanElements.clear();
         this.attractionCategories.clear();
     }
 
     public Location getRootLocation()
     {
+        if(this.rootLocation == null)
+        {
+            this.setRootLocation();
+        }
+
         return this.rootLocation;
     }
 
-    public void setRootLocation()
+    private void setRootLocation()
     {
         Location rootLocation = this.getContentAsType(Location.class).get(0).getRootLocation();
         this.rootLocation = rootLocation;
-        Log.v(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
+        Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)
@@ -150,29 +136,8 @@ public class Content
 
     public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
     {
-//        List<T> orphanElementsOfType = new ArrayList<>();
-//        for(IElement orphanElement : this.orphanElements.values())
-//        {
-//            if(type.isInstance(orphanElement))
-//            {
-//                orphanElementsOfType.add(type.cast(orphanElement));
-//            }
-//        }
-//
-//        return orphanElementsOfType;
-
         return this.getContentAsType(type);
     }
-
-//    private IElement getOrphanElementByUuid(UUID uuid)
-//    {
-//        if(this.orphanElements.containsKey(uuid))
-//        {
-//            return this.orphanElements.get(uuid);
-//        }
-//
-//        return this.getAttractionCategoryByUuid(uuid);
-//    }
 
     public AttractionCategory getAttractionCategoryByUuid(UUID uuid)
     {
@@ -185,62 +150,6 @@ public class Content
         }
 
         return null;
-    }
-
-//    public void addOrphanElement(IElement orphanElement)
-//    {
-//        if(OrphanElement.class.isInstance(orphanElement))
-//        {
-//            if(!this.orphanElements.containsKey(orphanElement.getUuid()))
-//            {
-//                this.orphanElements.put(orphanElement.getUuid(), orphanElement);
-//                Log.v(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s added to orphan elements", orphanElement));
-//            }
-//            else
-//            {
-//                Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s already exists", orphanElement));
-//            }
-//        }
-//        else
-//        {
-//            Log.e(Constants.LOG_TAG, String.format("Content.addOrphanElement:: %s is not of type <OrphanElement>", orphanElement));
-//        }
-//
-//        this.addElement(orphanElement);
-//    }
-
-//    public void removeOrphanElements(List<? extends OrphanElement> orphanElements)
-//    {
-//        Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElements:: removing [%d] orphan elements", orphanElements.size()));
-//
-//        for(OrphanElement orphanElement : orphanElements)
-//        {
-//            this.removeOrphanElement(orphanElement);
-//        }
-//    }
-
-    public void removeOrphanElement(OrphanElement orphanElement)
-    {
-        this.removeElement(orphanElement);
-//        if(this.orphanElements.containsValue(orphanElement))
-//        {
-//            this.orphanElements.remove(orphanElement.getUuid());
-//            Log.v(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s removed from orphan elements", orphanElement));
-//        }
-//        else
-//        {
-//            Log.e(Constants.LOG_TAG,  String.format("Content.removeOrphanElement:: %s not found in OrphanElements", orphanElement));
-//        }
-    }
-
-
-    public void flattenContentTree(IElement element)
-    {
-        this.addElement(element);
-        for (IElement child : element.getChildren())
-        {
-            this.flattenContentTree(child);
-        }
     }
 
     public ArrayList<String> getUuidStringsFromElements(List<IElement> elements)
@@ -269,20 +178,9 @@ public class Content
 
     public IElement getContentByUuid(UUID uuid)
     {
-        IElement element = null;
-
         if(this.elements.containsKey(uuid))
         {
-            element = this.elements.get(uuid);
-        }
-//        else
-//        {
-//            element = this.getOrphanElementByUuid(uuid);
-//        }
-
-        if(element != null)
-        {
-            return element;
+            return this.elements.get(uuid);
         }
         else
         {
@@ -345,86 +243,5 @@ public class Content
             return true;
         }
         return false;
-    }
-
-    public boolean export(Context context)
-    {
-        Stopwatch stopwatch = new Stopwatch(true);
-
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            jsonObject.put(Constants.JSON_STRING_LOCATIONS,
-                    this.getContentOfType(Location.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Location.class)));
-            jsonObject.put(Constants.JSON_STRING_PARKS,
-                    this.getContentOfType(Park.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Park.class)));
-            jsonObject.put(Constants.JSON_STRING_VISITS,
-                    this.getContentOfType(Visit.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(Visit.class)));
-            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS,
-                    this.fetchJsonObjectAttractions());
-            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
-                    this.getAttractionCategories().isEmpty() ? JSONObject.NULL : this.fetchJsonArray(new ArrayList<IElement>(this.getAttractionCategories())));
-
-            if(FileTool.writeStringToFile(AppSettings.exportFileName, jsonObject.toString(), context))
-            {
-                Log.v(Constants.LOG_TAG,  String.format("Content.export:: export took [%d]ms", stopwatch.stop()));
-                return true;
-            }
-        }
-        catch(JSONException exception)
-        {
-            exception.printStackTrace();
-        }
-
-        Log.v(Constants.LOG_TAG,  String.format("Content.export:: export failed - took [%d]ms", stopwatch.stop()));
-        return false;
-    }
-
-    private JSONObject fetchJsonObjectAttractions()
-    {
-        try
-        {
-            JSONObject jsonObjectAttractions = new JSONObject();
-
-            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS,
-                    this.getContentOfType(AttractionBlueprint.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(AttractionBlueprint.class)));
-            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS,
-                    this.getContentOfType(CoasterBlueprint.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CoasterBlueprint.class)));
-            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS,
-                    this.getContentOfType(CustomAttraction.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CustomAttraction.class)));
-            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_COASTERS,
-                    this.getContentOfType(CustomCoaster.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(CustomCoaster.class)));
-            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS,
-                    this.getContentOfType(StockAttraction.class).isEmpty() ? JSONObject.NULL : this.fetchJsonArray(this.getContentOfType(StockAttraction.class)));
-
-            return jsonObjectAttractions;
-
-        }
-        catch(JSONException exception)
-        {
-            exception.printStackTrace();
-            return null;
-        }
-    }
-
-
-    private JSONArray fetchJsonArray(List<IElement> elements)
-    {
-        JSONArray jsonArray = new JSONArray();
-
-        if(!elements.isEmpty())
-        {
-            for(IElement element : elements)
-            {
-                jsonArray.put(element.toJson());
-            }
-        }
-        else
-        {
-            jsonArray.put(JSONObject.NULL);
-        }
-
-        return jsonArray;
     }
 }

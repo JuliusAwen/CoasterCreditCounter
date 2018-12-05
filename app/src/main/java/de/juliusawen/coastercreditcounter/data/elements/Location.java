@@ -33,7 +33,7 @@ public class Location extends Element
         return location;
     }
 
-    public JSONObject toJson()
+    public JSONObject toJson() throws JSONException
     {
         try
         {
@@ -47,7 +47,7 @@ public class Location extends Element
         {
             e.printStackTrace();
             Log.e(Constants.LOG_TAG, String.format("Location.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
+            throw e;
         }
     }
 

@@ -114,7 +114,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_check)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -130,12 +130,12 @@ public class SortElementsActivity extends BaseActivity
     private void createActionDialog()
     {
         ImageButton buttonDown = findViewById(R.id.buttonActionDialogUpDown_Down);
-        buttonDown.setImageDrawable(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_downward)));
+        buttonDown.setImageDrawable(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_downward)));
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
         findViewById(R.id.frameLayoutDialogUpDown_Down).setOnClickListener(this.getActionDialogOnClickListenerDown());
 
         ImageButton buttonUp = findViewById(R.id.buttonActionDialogUpDown_Up);
-        buttonUp.setImageDrawable(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_arrow_upward)));
+        buttonUp.setImageDrawable(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_arrow_upward)));
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
         findViewById(R.id.frameLayoutDialogUpDown_Up).setOnClickListener(this.getActionDialogOnClickListenerUp());
     }

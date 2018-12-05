@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,41 +25,59 @@ import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
+import de.juliusawen.coastercreditcounter.globals.Settings;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
-public class JsonHandler
+public class JsonHandler implements IDatabaseWrapper
 {
-    private List<TemporaryElement> temporaryLocations = new ArrayList<>();
-    private List<TemporaryElement> temporaryParks = new ArrayList<>();
-    private List<TemporaryElement> temporaryCoasterBlueprints = new ArrayList<>();
-    private List<TemporaryElement> temporaryStockAttractions = new ArrayList<>();
-    private List<TemporaryElement> temporaryCustomAttractions = new ArrayList<>();
-    private List<TemporaryElement> temporaryCustomCoasters = new ArrayList<>();
-    private List<TemporaryElement> temporaryVisits = new ArrayList<>();
+    private List<TemporaryElement> temporaryLocations;
+    private List<TemporaryElement> temporaryParks;
+    private List<TemporaryElement> temporaryCoasterBlueprints;
+    private List<TemporaryElement> temporaryStockAttractions;
+    private List<TemporaryElement> temporaryCustomAttractions;
+    private List<TemporaryElement> temporaryCustomCoasters;
+    private List<TemporaryElement> temporaryVisits;
 
-    public void fetchContentFromJsonString(String jsonString, Content content)
+    public boolean importContent(Content content)
     {
         Stopwatch stopwatch = new Stopwatch(true);
+
         content.clear();
 
-        this.addChildlessOrphanElements(jsonString, content);
+        if(this.fetchContentFromJsonString(FileTool.readStringFromFile(AppSettings.exportFileName), content))
+        {
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json successful - took [%d]ms", stopwatch.stop()));
+            return true;
+        }
 
-        this.entangleElements(this.temporaryLocations, content);
-        this.entangleElements(this.temporaryParks, content);
-        this.entangleElements(this.temporaryCoasterBlueprints, content);
-        this.entangleElements(this.temporaryStockAttractions, content);
-        this.entangleElements(this.temporaryCustomAttractions, content);
-        this.entangleElements(this.temporaryCustomCoasters, content);
-
-        this.addVisitedAttractions(this.temporaryVisits, content);
-
-        content.setRootLocation();
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchContentFromJsonString:: fetching content from json string took [%d]ms", stopwatch.stop()));
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json failed - took [%d]ms", stopwatch.stop()));
+        return false;
     }
 
-    private void addChildlessOrphanElements(String jsonString, Content content)
+    private boolean fetchContentFromJsonString(String jsonString, Content content)
+    {
+        if(this.addChildlessOrphanElements(jsonString, content))
+        {
+            this.entangleElements(this.temporaryLocations, content);
+            this.entangleElements(this.temporaryParks, content);
+            this.entangleElements(this.temporaryCoasterBlueprints, content);
+            this.entangleElements(this.temporaryStockAttractions, content);
+            this.entangleElements(this.temporaryCustomAttractions, content);
+            this.entangleElements(this.temporaryCustomCoasters, content);
+
+            this.addVisitedAttractions(this.temporaryVisits, content);
+
+            return true;
+        }
+        return false;
+    }
+
+    private boolean addChildlessOrphanElements(String jsonString, Content content)
     {
         try
         {
@@ -66,7 +85,7 @@ public class JsonHandler
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
             {
                 List<TemporaryElement> temporaryAttractionCategories =
-                        this.createTemporary(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
                 content.setAttractionCategories(this.createAttractionCategories(temporaryAttractionCategories));
             }
 
@@ -74,14 +93,15 @@ public class JsonHandler
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_LOCATIONS))
             {
                 this.temporaryLocations =
-                        this.createTemporary(jsonObjectContent.getJSONArray(Constants.JSON_STRING_LOCATIONS));
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_LOCATIONS));
                 content.addElements(this.createLocations(temporaryLocations));
+
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_PARKS))
             {
                 this.temporaryParks =
-                        this.createTemporary(jsonObjectContent.getJSONArray(Constants.JSON_STRING_PARKS));
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_PARKS));
                 content.addElements(this.createParks(this.temporaryParks));
             }
 
@@ -92,35 +112,35 @@ public class JsonHandler
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS))
                 {
                     List<TemporaryElement> temporaryAttractionBlueprints =
-                            this.createTemporary(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
+                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
                     content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_COASTER_BLUEPRINTS))
                 {
                     this.temporaryCoasterBlueprints =
-                            this.createTemporary(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
+                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
                     content.addElements(this.createCoasterBlueprints(this.temporaryCoasterBlueprints, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_STOCK_ATTRACTIONS))
                 {
                     this.temporaryStockAttractions =
-                            this.createTemporary(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_STOCK_ATTRACTIONS));
+                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_STOCK_ATTRACTIONS));
                     content.addElements(this.createStockAttractions(this.temporaryStockAttractions, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_ATTRACTIONS))
                 {
                     this.temporaryCustomAttractions =
-                            this.createTemporary(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
+                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
                     content.addElements(this.createCustomAttractions(this.temporaryCustomAttractions, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_COASTERS))
                 {
                     this.temporaryCustomCoasters =
-                            this.createTemporary(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_COASTERS));
+                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_COASTERS));
                     content.addElements(this.createCustomCoasters(this.temporaryCustomCoasters, content));
                 }
             }
@@ -128,15 +148,17 @@ public class JsonHandler
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
             {
                 this.temporaryVisits =
-                        this.createTemporary(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
         }
         catch(JSONException e)
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.setChildlessOrphanElements:: JSONException [%s]", e.getMessage()));
-            throw new IllegalStateException(e);
+            return false;
         }
+
+        return true;
     }
 
     private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements)
@@ -145,8 +167,19 @@ public class JsonHandler
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
+            if(temporaryElement.isDefault)
+            {
+                AttractionCategory.setDefault(attractionCategory);
+            }
             attractionCategories.add(attractionCategory);
         }
+
+        if(AttractionCategory.getDefault() == null)
+        {
+            AttractionCategory.createAndSetDefault();
+            attractionCategories.add(AttractionCategory.getDefault());
+        }
+
         return attractionCategories;
     }
 
@@ -243,7 +276,7 @@ public class JsonHandler
         return elements;
     }
 
-    private List<TemporaryElement> createTemporary(JSONArray jsonArray)
+    private List<TemporaryElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
     {
         List<TemporaryElement> temporaryElements = new ArrayList<>();
         try
@@ -307,14 +340,19 @@ public class JsonHandler
                     temporaryElement.totalRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_TOTAL_RIDE_COUNT);
                 }
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_IS_DEFAULT))
+                {
+                    temporaryElement.isDefault = jsonObjectItem.getBoolean(Constants.JSON_STRING_IS_DEFAULT);
+                }
 
                 temporaryElements.add(temporaryElement);
             }
         }
         catch(JSONException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createTemporary:: JSONException [%s]", e.getMessage()));
-            throw new IllegalStateException(e);
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createTemporaryElements:: JSONException [%s]", e.getMessage()));
+            throw e;
         }
 
         return temporaryElements;
@@ -343,5 +381,118 @@ public class JsonHandler
                 content.addElement(visitedAttraction);
             }
         }
+    }
+
+    public boolean exportContent(Content content)
+    {
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        JSONObject jsonObject = this.createJsonObject(content);
+        if(jsonObject != null && FileTool.writeStringToFile(AppSettings.exportFileName, jsonObject.toString()))
+        {
+            Log.i(Constants.LOG_TAG,  String.format("Content.export:: exporting content to json successful - took [%d]ms", stopwatch.stop()));
+            return true;
+        }
+
+        Log.e(Constants.LOG_TAG,  String.format("Content.export:: exporting content to json failed - took [%d]ms", stopwatch.stop()));
+        return false;
+    }
+
+    private JSONObject createJsonObject(Content content)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put(Constants.JSON_STRING_LOCATIONS,
+                    content.getContentOfType(Location.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Location.class)));
+
+            jsonObject.put(Constants.JSON_STRING_PARKS,
+                    content.getContentOfType(Park.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Park.class)));
+
+            jsonObject.put(Constants.JSON_STRING_VISITS,
+                    content.getContentOfType(Visit.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Visit.class)));
+
+
+            JSONObject jsonObjectAttractions = new JSONObject();
+            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS,
+                    content.getContentOfType(AttractionBlueprint.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionBlueprint.class)));
+
+            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS,
+                    content.getContentOfType(CoasterBlueprint.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CoasterBlueprint.class)));
+
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS,
+                    content.getContentOfType(CustomAttraction.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CustomAttraction.class)));
+
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_COASTERS,
+                    content.getContentOfType(CustomCoaster.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CustomCoaster.class)));
+
+            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS,
+                    content.getContentOfType(StockAttraction.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(StockAttraction.class)));
+            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
+
+
+            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
+                    content.getAttractionCategories().isEmpty() ? JSONObject.NULL : this.createJsonArray(new ArrayList<IElement>(content.getAttractionCategories())));
+
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createJsonObject:: JSONException [%s]", e.getMessage()));
+        }
+
+        return null;
+    }
+
+    private JSONArray createJsonArray(List<IElement> elements) throws JSONException
+    {
+        JSONArray jsonArray = new JSONArray();
+
+        if(!elements.isEmpty())
+        {
+            try
+            {
+                for(IElement element : elements)
+                {
+                    jsonArray.put(element.toJson());
+                }
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                throw e;
+            }
+        }
+        else
+        {
+            jsonArray.put(JSONObject.NULL);
+        }
+
+        return jsonArray;
+    }
+
+    @Override
+    public void loadContent(Content content)
+    {
+        this.importContent(content);
+    }
+
+    @Override
+    public void loadSettings(Settings settings)
+    {
+        Log.v(Constants.LOG_TAG, "DatabaseMock.loadSettings:: creating mock data");
+
+        Settings.jumpToTestActivityOnStart = false;
+        //        settings.setJumpToOpenVisitOnStart(false);
+
+        settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
+
+        settings.setExpandLatestYearInListByDefault(true);
+
+        settings.setFirstDayOfTheWeek(Calendar.MONDAY);
+
+        settings.setDefaultIncrement(1);
     }
 }

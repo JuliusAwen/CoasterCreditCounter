@@ -684,7 +684,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setImagePlaceholder(ImageView imageView)
     {
-        imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext(), imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color));
+        imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color));
     }
 
     public void expandParent(Element parent)

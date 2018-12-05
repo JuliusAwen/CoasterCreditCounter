@@ -210,7 +210,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
 
                 popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
-                        .setEnabled(!viewModel.longClickedAttractionCategory.equals(App.settings.getDefaultAttractionCategory()));
+                        .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
 
                 popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
                         .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
@@ -312,7 +312,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                     for(IAttraction child : children)
                     {
-                        child.setAttractionCategory(App.settings.getDefaultAttractionCategory());
+                        child.setAttractionCategory(AttractionCategory.getDefault());
                     }
                     App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
                     updateContentRecyclerView();
@@ -347,7 +347,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(this, getDrawable(R.drawable.ic_baseline_add)));
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_add)));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

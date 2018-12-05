@@ -70,7 +70,7 @@ public class Visit extends Element
         }
     }
 
-    public JSONObject toJson()
+    public JSONObject toJson() throws JSONException
     {
         try
         {
@@ -99,7 +99,7 @@ public class Visit extends Element
         {
             e.printStackTrace();
             Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            return null;
+            throw e;
         }
     }
     public Calendar getCalendar()

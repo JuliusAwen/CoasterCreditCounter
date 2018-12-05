@@ -5,6 +5,6 @@ import de.juliusawen.coastercreditcounter.globals.Settings;
 
 public interface IDatabaseWrapper
 {
-    void fetchContent(Content content);
-    void fetchSettings(Settings settings);
+    void loadContent(Content content);
+    void loadSettings(Settings settings);
 }

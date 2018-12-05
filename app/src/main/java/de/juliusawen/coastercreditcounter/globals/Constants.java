@@ -35,6 +35,7 @@ public abstract class Constants
     public static final String JSON_STRING_TOTAL_RIDE_COUNT = "total ride count";
     public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
+    public static final String JSON_STRING_IS_DEFAULT = "is default";
 
 
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";

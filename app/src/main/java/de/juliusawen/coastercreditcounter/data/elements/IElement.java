@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.data.elements;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface IElement
 {
     @NonNull
     String toString();
-    JSONObject toJson();
+    JSONObject toJson() throws JSONException;
 
     String getName();
     boolean setName(String name);

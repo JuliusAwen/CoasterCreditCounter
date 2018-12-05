@@ -98,6 +98,11 @@
 
 
 
+    <!--names-->
+    <string name="name_default_attraction_category">uncategorized</string>
+
+
+
     <!--dialog texts-->
     <string name="alert_dialog_delete_element_title">DELETE</string>
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
@@ -141,6 +146,11 @@
     <string name="action_undo_delete_text">%1$s deleted</string>
     <string name="action_undo_remove_text">%1$s removed</string>
     <string name="action_restored_text">%1$s restored</string>
+
+    <string name="action_export_success">Content exported</string>
+    <string name="action_export_fail">Export failed!</string>
+    <string name="action_import_success">Content imported</string>
+    <string name="action_import_fail">Import failed!</string>
 
 
 
