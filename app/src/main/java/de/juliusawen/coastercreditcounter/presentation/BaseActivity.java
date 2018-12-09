@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -148,7 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
 
             this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setHomeAsUpIndicator(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_menu)));
+            this.actionBar.setHomeAsUpIndicator(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_menu), this));
         }
     }
 

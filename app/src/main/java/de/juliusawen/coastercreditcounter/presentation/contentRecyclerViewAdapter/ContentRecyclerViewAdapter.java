@@ -22,9 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.attractions.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
@@ -684,7 +684,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setImagePlaceholder(ImageView imageView)
     {
-        imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color));
+        imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color, imageView.getContext()));
     }
 
     public void expandParent(Element parent)

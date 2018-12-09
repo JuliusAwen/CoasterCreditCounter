@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.presentation.navigationHub;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -7,11 +9,14 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
@@ -99,50 +104,95 @@ public class NavigationHubActivity extends BaseActivity
             @Override
             public boolean onNavigationItemSelected(@SuppressWarnings("NullableProblems") MenuItem item)
             {
-                int id = item.getItemId();
-                switch(id)
-                {
-                    case R.id.navigationItem_BrowseContent:
-                    {
-                        Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
-                        ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
-                        break;
-                    }
-
-                    case R.id.navigationItem_ManageCategories:
-                    {
-                        Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageAttractionCategories> selected");
-                        ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
-                        break;
-                    }
-                    case R.id.navigationItem_ManageManufacturers:
-                    {
-                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
-                        break;
-                    }
-                    case R.id.navigationItem_ManageModels:
-                    {
-                        Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
-                        break;
-                    }
-
-                    case R.id.navigationItem_Import:
-                    {
-                        String toast = getString(App.persistency.importContent() ? R.string.action_import_success : R.string.action_import_fail);
-                        Toaster.makeToast(NavigationHubActivity.this, toast);
-                        break;
-                    }
-                    case R.id.navigationItem_Export:
-                    {
-                        String toast =  getString(App.persistency.exportContent() ? R.string.action_export_success : R.string.action_export_fail);
-                        Toaster.makeToast(NavigationHubActivity.this, toast);
-                        break;
-                    }
-                }
-
-                return true;
+                return NavigationHubActivity.this.onNavigationItemSelected(item);
             }
         };
+    }
+
+    private boolean onNavigationItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        switch(id)
+        {
+            case R.id.navigationItem_BrowseContent:
+            {
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
+                ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
+                break;
+            }
+
+            case R.id.navigationItem_ManageCategories:
+            {
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageAttractionCategories> selected");
+                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
+                break;
+            }
+            case R.id.navigationItem_ManageManufacturers:
+            {
+                Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                break;
+            }
+            case R.id.navigationItem_ManageModels:
+            {
+                Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                break;
+            }
+
+            case R.id.navigationItem_Import:
+            {
+                if(this.requestPermissionWriteExternalStorage(item))
+                {
+                    String toast = App.persistency.importContent()
+                            ? getString(R.string.action_import_success)
+                            : getString(R.string.action_import_fail, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath());
+                    Toaster.makeLongToast(NavigationHubActivity.this, toast);
+                }
+                break;
+            }
+            case R.id.navigationItem_Export:
+            {
+                if(this.requestPermissionWriteExternalStorage(item))
+                {
+                    String toast =  App.persistency.exportContent()
+                            ? getString(R.string.action_export_success, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath())
+                            : getString(R.string.action_export_fail);
+                    Toaster.makeLongToast(NavigationHubActivity.this, toast);
+                }
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean requestPermissionWriteExternalStorage(MenuItem item)
+    {
+        if(ContextCompat.checkSelfPermission(App.applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemExportSelected:: Permission to write to external storage denied - requesting permission");
+
+            this.viewModel.menuItem = item;
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.i(Constants.LOG_TAG, "NavigationHubActivity.onRequestPermissionsResult:: Permission to write to external storage granted by user");
+                this.onNavigationItemSelected(this.viewModel.menuItem);
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, "NavigationHubActivity.onRequestPermissionsResult:: Permission to write to external storage not granted by user");
+            }
+        }
     }
 }
 

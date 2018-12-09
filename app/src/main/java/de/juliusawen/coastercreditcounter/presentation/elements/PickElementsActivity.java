@@ -16,11 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.data.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
-import de.juliusawen.coastercreditcounter.data.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -100,7 +99,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_check)));
+        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_check), this));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

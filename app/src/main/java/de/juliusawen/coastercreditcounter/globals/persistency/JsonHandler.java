@@ -49,10 +49,14 @@ public class JsonHandler implements IDatabaseWrapper
 
         content.clear();
 
-        if(this.fetchContentFromJsonString(FileTool.readStringFromFile(AppSettings.exportFileName), content))
+        String jsonString = FileTool.readStringFromExternalFile(AppSettings.exportFileName);
+        if(!jsonString.isEmpty())
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json successful - took [%d]ms", stopwatch.stop()));
-            return true;
+            if(this.fetchContentFromJsonString(jsonString, content))
+            {
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json successful - took [%d]ms", stopwatch.stop()));
+                return true;
+            }
         }
 
         Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json failed - took [%d]ms", stopwatch.stop()));
@@ -388,7 +392,7 @@ public class JsonHandler implements IDatabaseWrapper
         Stopwatch stopwatch = new Stopwatch(true);
 
         JSONObject jsonObject = this.createJsonObject(content);
-        if(jsonObject != null && FileTool.writeStringToFile(AppSettings.exportFileName, jsonObject.toString()))
+        if(jsonObject != null && FileTool.writeStringToExternalFile(AppSettings.exportFileName, jsonObject.toString()))
         {
             Log.i(Constants.LOG_TAG,  String.format("Content.export:: exporting content to json successful - took [%d]ms", stopwatch.stop()));
             return true;

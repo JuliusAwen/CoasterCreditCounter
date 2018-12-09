@@ -37,6 +37,8 @@ public abstract class Constants
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
     public static final String JSON_STRING_IS_DEFAULT = "is default";
 
+    public static final int REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = Request.PERMISSION_WRITE_EXTERNAL_STORAGE.ordinal();
+
 
     public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
@@ -120,4 +122,6 @@ enum Request
     PICK_LOCATIONS,
     PICK_PARKS,
     PICK_ATTRACTIONS,
+
+    PERMISSION_WRITE_EXTERNAL_STORAGE,
 }

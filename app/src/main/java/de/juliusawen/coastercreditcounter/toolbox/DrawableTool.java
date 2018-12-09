@@ -1,24 +1,27 @@
 package de.juliusawen.coastercreditcounter.toolbox;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.globals.App;
 
 public abstract class DrawableTool
 {
-    public static Drawable setTintToWhite(Drawable drawable)
+    public static Drawable setTintToWhite(Drawable drawable, Context context)
     {
-        DrawableTool.setTintToColor(drawable, ContextCompat.getColor(App.applicationContext, R.color.white));
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, R.color.white));
+
         return drawable;
     }
 
-    public static Drawable setTintToColor(Drawable drawable, int colorId)
+    public static Drawable setTintToColor(Drawable drawable, int colorId, Context context)
     {
         drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(App.applicationContext, colorId));
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, colorId));
+
         return drawable;
     }
 }
