@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -49,7 +50,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         content.clear();
 
-        String jsonString = FileTool.readStringFromExternalFile(AppSettings.exportFileName);
+        String jsonString = FileTool.readStringFromExternalFile();
         if(!jsonString.isEmpty())
         {
             if(this.fetchContentFromJsonString(jsonString, content))
@@ -59,7 +60,8 @@ public class JsonHandler implements IDatabaseWrapper
             }
         }
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json failed - took [%d]ms", stopwatch.stop()));
+        App.content.restoreBackup();
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from json failed, restored content backup - took [%d]ms", stopwatch.stop()));
         return false;
     }
 

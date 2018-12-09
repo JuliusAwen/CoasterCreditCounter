@@ -57,18 +57,18 @@ public abstract class FileTool
         return output;
     }
 
-    public static String readStringFromExternalFile(String fileName)
+    public static String readStringFromExternalFile()
     {
         String output = "";
         try
         {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), fileName);
+            File file = new File(AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath(), AppSettings.exportFileName);
             FileInputStream fileInputStream = new FileInputStream(file);
             output = FileTool.readStringFromFile(fileInputStream);
         }
         catch (FileNotFoundException e)
         {
-            Log.e(LOG_TAG, String.format("FileTool.readStringFromExternalFile:: FileNotFoundException: [%s] does not exists: [%s]", fileName, e.getMessage()));
+            Log.e(LOG_TAG, String.format("FileTool.readStringFromExternalFile:: FileNotFoundException: export file does not exists: [%s]", e.getMessage()));
         }
         return output;
     }
@@ -129,5 +129,12 @@ public abstract class FileTool
         }
 
         return false;
+    }
+
+    public static boolean fileExists(String absolutePath)
+    {
+        File file = new File(absolutePath);
+        Log.i(LOG_TAG, String.format("FileTool.fileExists:: File [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
+        return file.exists();
     }
 }

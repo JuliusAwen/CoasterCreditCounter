@@ -72,6 +72,8 @@ public abstract class Constants
 
     public static final int ALERT_DIALOG_REQUEST_CODE_DELETE = 0;
     public static final int ALERT_DIALOG_REQUEST_CODE_REMOVE = 1;
+    public static final int ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE = 3;
+    public static final int ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT = 4;
 
 
     public static final int REQUEST_CREATE_LOCATION = Request.CREATE_LOCATION.ordinal();

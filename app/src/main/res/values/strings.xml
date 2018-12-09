@@ -127,6 +127,11 @@
     <string name="alert_dialog_visit_already_exists_title">VISIT ALREADY EXISTS</string>
     <string name="alert_dialog_visit_already_exists_message">Do you want to override existing visit? \n(existing data will be lost, ride counts and credits will be adjusted)</string>
 
+    <string name="alert_dialog_overwrite_file_title">FILE ALREADY EXISTS</string>
+    <string name="alert_dialog_overwrite_file_message">Do you want to overwrite existing file?</string>
+
+    <string name="alert_dialog_overwrite_content_title">IMPORT CONTENT</string>
+    <string name="alert_dialog_overwrite_content_message">Do you want to import content? \nThis will permanently overwrite your existing content!</string>
 
 
     <!--descriptions-->
@@ -151,6 +156,7 @@
     <string name="action_export_fail">Export failed!</string>
     <string name="action_import_success">Content imported</string>
     <string name="action_import_fail">Import from %1$s failed!</string>
+    <string name="action_restore_content_backup_success">Content restored</string>
 
 
 

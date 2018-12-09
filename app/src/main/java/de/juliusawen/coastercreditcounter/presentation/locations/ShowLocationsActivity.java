@@ -485,6 +485,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         dialog.dismiss();
 
         Snackbar snackbar;
+
         switch(requestCode)
         {
             case Constants.ALERT_DIALOG_REQUEST_CODE_DELETE:

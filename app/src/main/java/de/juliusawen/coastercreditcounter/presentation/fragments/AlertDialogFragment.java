@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
@@ -33,12 +36,15 @@ public class AlertDialogFragment extends DialogFragment
         return alertDialogFragment;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Log.d(Constants.LOG_TAG, "AlertDialogFragment.onCreateDialog:: creating alert dialog...");
 
         Bundle args = getArguments();
+        assert args != null;
+
         int iconResource = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_ICON_RESOURCE);
         String title = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_TITLE);
         String message = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_MESSAGE);
@@ -57,7 +63,7 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
-                        alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
+                        Objects.requireNonNull(alertDialogListener).onAlertDialogClick(requestCode, dialog, which);
                     }
                 })
                 .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener()
@@ -66,10 +72,11 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
-                        alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
+                        Objects.requireNonNull(alertDialogListener).onAlertDialogClick(requestCode, dialog, which);
                     }
                 })
                 .create();
+
     }
 
     public interface AlertDialogListener

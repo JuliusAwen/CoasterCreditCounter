@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,13 +19,15 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 public class Content
 {
     private Map<UUID, IElement> elements = new HashMap<>();
-//    private Map<UUID, IElement> orphanElements = new HashMap<>();
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
+    private Location rootLocation;
 
-    public Location rootLocation;
+    private Map<UUID, IElement> backupElements = null;
+    private List<AttractionCategory> backupAttractionCategories = null;
+    private Location backupRootLocation = null;
+
 
     private Persistency persistency;
-
     private static Content instance;
 
     public static Content getInstance(Persistency persistency)
@@ -57,9 +60,50 @@ public class Content
 
     public void clear()
     {
-        this.rootLocation = null;
-        this.elements.clear();
-        this.attractionCategories.clear();
+        if(this.backup())
+        {
+            this.rootLocation = null;
+            this.elements.clear();
+            this.attractionCategories.clear();
+
+            Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "Content.clear:: content not cleared!");
+        }
+    }
+
+    private boolean backup()
+    {
+        this.backupElements = new LinkedHashMap<>(this.elements);
+        this.backupAttractionCategories = new ArrayList<>(this.attractionCategories);
+        this.backupRootLocation = this.rootLocation;
+
+        Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
+        return true;
+    }
+
+    public boolean restoreBackup()
+    {
+        if(this.backupElements != null && this.backupAttractionCategories != null && this.backupRootLocation != null)
+        {
+            this.elements = new LinkedHashMap<>(this.backupElements);
+            this.attractionCategories = new ArrayList<>(backupAttractionCategories);
+            this.rootLocation = this.backupRootLocation;
+
+            this.backupElements = null;
+            this.backupAttractionCategories = null;
+            this.backupRootLocation = null;
+
+            Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible!");
+            return false;
+        }
     }
 
     public Location getRootLocation()

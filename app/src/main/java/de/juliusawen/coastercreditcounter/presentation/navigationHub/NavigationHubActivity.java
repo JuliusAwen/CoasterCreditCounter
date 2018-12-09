@@ -1,28 +1,36 @@
 package de.juliusawen.coastercreditcounter.presentation.navigationHub;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
+import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class NavigationHubActivity extends BaseActivity
+import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
+
+public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private NavigationHubActivityViewModel viewModel;
 
@@ -142,10 +150,30 @@ public class NavigationHubActivity extends BaseActivity
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String toast = App.persistency.importContent()
-                            ? getString(R.string.action_import_success)
-                            : getString(R.string.action_import_fail, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath());
-                    Toaster.makeLongToast(NavigationHubActivity.this, toast);
+                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.exportFileName;
+
+                    if(FileTool.fileExists(exportFileAbsolutePath))
+                    {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+
+                        AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
+                                R.drawable.ic_baseline_warning,
+                                getString(R.string.alert_dialog_overwrite_content_title),
+                                getString(R.string.alert_dialog_overwrite_content_message),
+                                getString(R.string.text_accept),
+                                getString(R.string.text_cancel),
+                                Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT
+                        );
+
+                        alertDialogFragmentOverwriteFile.setCancelable(false);
+                        alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                    }
+                    else
+                    {
+                        String message = String.format("Import file %s does not exist!", exportFileAbsolutePath);
+                        Log.e(LOG_TAG, String.format("FileTool.onNavigationItemSelected<navigationItem_Import>:: %s", message));
+                        Toaster.makeLongToast(NavigationHubActivity.this, message);
+                    }
                 }
                 break;
             }
@@ -153,10 +181,28 @@ public class NavigationHubActivity extends BaseActivity
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String toast =  App.persistency.exportContent()
-                            ? getString(R.string.action_export_success, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath())
-                            : getString(R.string.action_export_fail);
-                    Toaster.makeLongToast(NavigationHubActivity.this, toast);
+                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.exportFileName;
+
+                    if(FileTool.fileExists(exportFileAbsolutePath))
+                    {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+
+                        AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
+                                R.drawable.ic_baseline_warning,
+                                getString(R.string.alert_dialog_overwrite_file_title),
+                                getString(R.string.alert_dialog_overwrite_file_message),
+                                getString(R.string.text_accept),
+                                getString(R.string.text_cancel),
+                                Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE
+                        );
+
+                        alertDialogFragmentOverwriteFile.setCancelable(false);
+                        alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                    }
+                    else
+                    {
+                        this.exportContent();
+                    }
                 }
                 break;
             }
@@ -194,5 +240,73 @@ public class NavigationHubActivity extends BaseActivity
             }
         }
     }
+
+
+    @Override
+    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    {
+        dialog.dismiss();
+
+        switch(requestCode)
+        {
+            case Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE:
+            {
+                if(which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    this.exportContent();
+                }
+                break;
+            }
+
+            case Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT:
+            {
+                if(which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    this.importContent();
+                }
+                break;
+            }
+        }
+    }
+
+    private void importContent()
+    {
+        if(!App.persistency.importContent())
+        {
+            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.action_import_fail, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+        }
+        else
+        {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_import_success), Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Log.i(Constants.LOG_TAG, "ShowLocationsActivity.importContent.onSnackbarClick:: restoring content backup...");
+
+                    if(App.content.restoreBackup())
+                    {
+                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.action_restore_content_backup_success));
+                    }
+                    else
+                    {
+                        Log.e(Constants.LOG_TAG, "ShowLocationsActivity.importContent.onSnackbarClick:: restoring content backup failed!");
+                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.error_text_undo_not_possible));
+                    }
+                }
+            });
+            snackbar.show();
+        }
+    }
+
+    private void exportContent()
+    {
+        String toast =  App.persistency.exportContent()
+                ? getString(R.string.action_export_success, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath())
+                : getString(R.string.action_export_fail);
+        Toaster.makeLongToast(NavigationHubActivity.this, toast);
+    }
 }
+
 
