@@ -98,12 +98,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park walibiHolland = Park.create("Walibi Holland", null);
 
 
-        CustomCoaster taron = CustomCoaster.create("Taron", null);
-        CustomAttraction hollywoodTour = CustomAttraction.create("Hollywood Tour", null);
-
-        taron.setAttractionCategory(attractionCategoryRollerCoasters);
-        hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
-
 
 
         //Create Blueprints
@@ -115,7 +109,61 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         blueprints.add(suspendedLoopingCoaster);
 
+
+
+
+
         //Create Attractions
+
+        CustomCoaster taron = CustomCoaster.create("Taron", null);
+        CustomCoaster blackMamba = CustomCoaster.create("Black Mamba", null);
+        CustomCoaster coloradoAdventure = CustomCoaster.create("Colorado Adventure", null);
+        CustomCoaster raik = CustomCoaster.create("Raik", null);
+        CustomCoaster templeOfTheNightHawk = CustomCoaster.create("Temple of the Night Hawk", null);
+        CustomCoaster winjasFear = CustomCoaster.create("Winja's Fear", null);
+        CustomCoaster winjasForce = CustomCoaster.create("Winja's Force", null);
+
+        CustomAttraction mysteryCastle = CustomAttraction.create("Mystery Castle", null);
+        CustomAttraction hollywoodTour = CustomAttraction.create("Hollywood Tour", null);
+        CustomAttraction chiapas = CustomAttraction.create("Chiapas", null);
+        CustomAttraction talocan = CustomAttraction.create("Talocan", null);
+        CustomAttraction fengJuPalace = CustomAttraction.create("Feng Ju Palace", null);
+        CustomAttraction geisterRiksha = CustomAttraction.create("Geister Rikscha", null);
+        CustomAttraction mausAuChocolat = CustomAttraction.create("Maus-Au-Chocolat", null);
+        CustomAttraction wellenflug = CustomAttraction.create("Wellenflug", null);
+        CustomAttraction tikal = CustomAttraction.create("Tikal", null);
+        CustomAttraction verruecktesHotelTartueff = CustomAttraction.create("Verrücktes Hotel Tartüff", null);
+        CustomAttraction riverQuest = CustomAttraction.create("River Quest", null);
+        CustomAttraction pferdekarusell = CustomAttraction.create("Pferdekarusell", null);
+        CustomAttraction wuermlingExpress = CustomAttraction.create("Würmling Express", null);
+
+
+        taron.setAttractionCategory(attractionCategoryRollerCoasters);
+        blackMamba.setAttractionCategory(attractionCategoryRollerCoasters);
+        coloradoAdventure.setAttractionCategory(attractionCategoryRollerCoasters);
+        raik.setAttractionCategory(attractionCategoryRollerCoasters);
+        templeOfTheNightHawk.setAttractionCategory(attractionCategoryRollerCoasters);
+        winjasFear.setAttractionCategory(attractionCategoryRollerCoasters);
+        winjasForce.setAttractionCategory(attractionCategoryRollerCoasters);
+
+        hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
+        chiapas.setAttractionCategory(attractionCategoryWaterRides);
+        riverQuest.setAttractionCategory(attractionCategoryWaterRides);
+        mysteryCastle.setAttractionCategory(attractionCategoryThrillRides);
+        talocan.setAttractionCategory(attractionCategoryThrillRides);
+
+        fengJuPalace.setAttractionCategory(attractionCategoryFamilyRides);
+        geisterRiksha.setAttractionCategory(attractionCategoryFamilyRides);
+        mausAuChocolat.setAttractionCategory(attractionCategoryFamilyRides);
+        wellenflug.setAttractionCategory(attractionCategoryFamilyRides);
+        tikal.setAttractionCategory(attractionCategoryFamilyRides);
+        verruecktesHotelTartueff.setAttractionCategory(attractionCategoryFamilyRides);
+        pferdekarusell.setAttractionCategory(attractionCategoryFamilyRides);
+        wuermlingExpress.setAttractionCategory(attractionCategoryFamilyRides);
+
+
+
+
         CustomCoaster krake = CustomCoaster.create("Krake", null);
         CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen", null);
         CustomCoaster desertRace = CustomCoaster.create("Desert Race", null);
@@ -248,8 +296,28 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         // build tree
         phantasialand.addChildAndSetParent(taron);
-        phantasialand.addChildAndSetParent(hollywoodTour);
+        phantasialand.addChildAndSetParent(blackMamba);
+        phantasialand.addChildAndSetParent(coloradoAdventure);
+        phantasialand.addChildAndSetParent(raik);
+        phantasialand.addChildAndSetParent(templeOfTheNightHawk);
+        phantasialand.addChildAndSetParent(winjasFear);
+        phantasialand.addChildAndSetParent(winjasForce);
 
+        phantasialand.addChildAndSetParent(mysteryCastle);
+        phantasialand.addChildAndSetParent(hollywoodTour);
+        phantasialand.addChildAndSetParent(chiapas);
+        phantasialand.addChildAndSetParent(talocan);
+        phantasialand.addChildAndSetParent(fengJuPalace);
+        phantasialand.addChildAndSetParent(geisterRiksha);
+        phantasialand.addChildAndSetParent(mausAuChocolat);
+        phantasialand.addChildAndSetParent(wellenflug);
+        phantasialand.addChildAndSetParent(tikal);
+        phantasialand.addChildAndSetParent(verruecktesHotelTartueff);
+        phantasialand.addChildAndSetParent(riverQuest);
+        phantasialand.addChildAndSetParent(pferdekarusell);
+        phantasialand.addChildAndSetParent(wuermlingExpress);
+
+        
 
         heidePark.addChildAndSetParent(krake);
         heidePark.addChildAndSetParent(flugDerDaemonen);
