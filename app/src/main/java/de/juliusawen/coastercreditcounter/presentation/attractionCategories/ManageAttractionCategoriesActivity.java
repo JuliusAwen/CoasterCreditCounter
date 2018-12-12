@@ -202,92 +202,96 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             @Override
             public boolean onLongClick(final View view)
             {
-                viewModel.longClickedAttractionCategory = (AttractionCategory) view.getTag();
-                Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedAttractionCategory));
+                Element element = (Element)view.getTag();
 
-                PopupMenu popupMenu = new PopupMenu(ManageAttractionCategoriesActivity.this, view);
-
-                popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
-
-                popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
-                        .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
-
-                popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
-                        .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                if(AttractionCategory.class.isInstance(element))
                 {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item)
+                    viewModel.longClickedAttractionCategory = (AttractionCategory) element;
+                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedAttractionCategory));
+
+                    PopupMenu popupMenu = new PopupMenu(ManageAttractionCategoriesActivity.this, view);
+
+                    popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
+
+                    popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
+                            .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
+
+                    popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
+                            .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
-                        Selection selection = Selection.values()[item.getItemId()];
-                        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
-
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        switch(selection)
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
                         {
-                            case EDIT_ATTRACTION_CATEGORY:
-                            {
-                                ActivityTool.startActivityEditForResult(ManageAttractionCategoriesActivity.this,
-                                        Constants.REQUEST_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedAttractionCategory);
-                                return true;
-                            }
+                            Selection selection = Selection.values()[item.getItemId()];
+                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
 
-                            case DELETE_ELEMENT:
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            switch(selection)
                             {
-                                String alertDialogMessage;
-                                if(viewModel.longClickedAttractionCategory.getChildCount() != 0)
+                                case EDIT_ATTRACTION_CATEGORY:
                                 {
-                                    alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_with_children_message,
-                                            viewModel.longClickedAttractionCategory.getChildCount(),
-                                            viewModel.longClickedAttractionCategory.getName());
-                                }
-                                else
-                                {
-                                    alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_without_children_message,
-                                            viewModel.longClickedAttractionCategory.getName());
+                                    ActivityTool.startActivityEditForResult(ManageAttractionCategoriesActivity.this,
+                                            Constants.REQUEST_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedAttractionCategory);
+                                    return true;
                                 }
 
-                                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                                        R.drawable.ic_baseline_warning,
-                                        getString(R.string.alert_dialog_delete_element_title),
-                                        alertDialogMessage,
-                                        getString(R.string.text_accept),
-                                        getString(R.string.text_cancel),
-                                        Constants.ALERT_DIALOG_REQUEST_CODE_DELETE);
-
-                                alertDialogFragmentDelete.setCancelable(false);
-                                alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                                return true;
-                            }
-
-                            case APPLY_CATEGORY_TO_ATTRACTIONS:
-                            {
-                                List<IElement> attractionCategoryHeaders =
-                                        viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(App.content.getContentAsType(ICategorized.class)));
-                                for(IElement attractionCategoryHeader : attractionCategoryHeaders)
+                                case DELETE_ELEMENT:
                                 {
-                                    if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
+                                    String alertDialogMessage;
+                                    if(viewModel.longClickedAttractionCategory.getChildCount() != 0)
                                     {
-                                        attractionCategoryHeaders.remove(attractionCategoryHeader);
-                                        break;
+                                        alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_with_children_message,
+                                                viewModel.longClickedAttractionCategory.getChildCount(),
+                                                viewModel.longClickedAttractionCategory.getName());
                                     }
+                                    else
+                                    {
+                                        alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_without_children_message,
+                                                viewModel.longClickedAttractionCategory.getName());
+                                    }
+
+                                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                                            R.drawable.ic_baseline_warning,
+                                            getString(R.string.alert_dialog_delete_element_title),
+                                            alertDialogMessage,
+                                            getString(R.string.text_accept),
+                                            getString(R.string.text_cancel),
+                                            Constants.ALERT_DIALOG_REQUEST_CODE_DELETE);
+
+                                    alertDialogFragmentDelete.setCancelable(false);
+                                    alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                                    return true;
                                 }
 
-                                ActivityTool.startActivityPickForResult(
-                                        ManageAttractionCategoriesActivity.this,
-                                        Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
-                                        attractionCategoryHeaders);
-                                return true;
+                                case APPLY_CATEGORY_TO_ATTRACTIONS:
+                                {
+                                    List<IElement> attractionCategoryHeaders =
+                                            viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(App.content.getContentAsType(ICategorized.class)));
+                                    for(IElement attractionCategoryHeader : attractionCategoryHeaders)
+                                    {
+                                        if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
+                                        {
+                                            attractionCategoryHeaders.remove(attractionCategoryHeader);
+                                            break;
+                                        }
+                                    }
+
+                                    ActivityTool.startActivityPickForResult(
+                                            ManageAttractionCategoriesActivity.this,
+                                            Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
+                                            attractionCategoryHeaders);
+                                    return true;
+                                }
+
+                                default:
+                                    return false;
                             }
-
-                            default:
-                                return false;
                         }
-                    }
-                });
-                popupMenu.show();
-
+                    });
+                    popupMenu.show();
+                }
                 return true;
             }
         };
