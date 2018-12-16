@@ -84,12 +84,11 @@ public class ShowVisitActivity extends BaseActivity
         {
             super.addFloatingActionButton();
             this.decorateFloatingActionButton();
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(true);
+            this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
         }
         else
         {
             super.disableFloatingActionButton();
-            this.viewModel.contentRecyclerViewAdapter.useBottomSpacer(false);
         }
     }
 

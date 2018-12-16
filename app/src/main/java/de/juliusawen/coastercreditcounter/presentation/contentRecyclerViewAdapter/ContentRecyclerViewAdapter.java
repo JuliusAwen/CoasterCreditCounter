@@ -63,8 +63,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         PARENT,
         CHILD,
         VISITED_ATTRACTION,
-        BOTTOM_SPACER,
-        ITEM_DIVIDER
+        ITEM_DIVIDER,
+        BOTTOM_SPACER
     }
 
     static class ViewHolderParent extends RecyclerView.ViewHolder
@@ -837,31 +837,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void useBottomSpacer(boolean useBottomSpacer)
+    public void addBottomSpacer()
     {
         if(!this.content.isEmpty())
         {
-            int position = this.content.size() - 1;
-
-            if(useBottomSpacer)
-            {
-                if(!BottomSpacer.class.isInstance(this.content.get(position)))
-                {
-                    this.content.add(new BottomSpacer());
-                    notifyItemRemoved(position);
-                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: added BottomSpacer");
-                }
-            }
-            else
-            {
-
-                if(BottomSpacer.class.isInstance(this.content.get(position)))
-                {
-                    this.content.remove(position);
-                    notifyItemRemoved(position);
-                    Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.useBottomSpacer:: removed BottomSpacer");
-                }
-            }
+            this.content.add(new BottomSpacer());
+            notifyItemInserted(this.content.size() - 1);
+            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.addBottomSpacer:: added BottomSpacer");
         }
     }
 

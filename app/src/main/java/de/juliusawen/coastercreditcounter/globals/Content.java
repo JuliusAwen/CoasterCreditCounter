@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
-    private Map<UUID, IElement> elements = new HashMap<>();
+    private Map<UUID, IElement> elementsByUuid = new HashMap<>();
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
     private Location rootLocation;
 
@@ -63,7 +63,7 @@ public class Content
         if(this.backup())
         {
             this.rootLocation = null;
-            this.elements.clear();
+            this.elementsByUuid.clear();
             this.attractionCategories.clear();
 
             Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
@@ -76,7 +76,7 @@ public class Content
 
     private boolean backup()
     {
-        this.backupElements = new LinkedHashMap<>(this.elements);
+        this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
         this.backupAttractionCategories = new ArrayList<>(this.attractionCategories);
         this.backupRootLocation = this.rootLocation;
 
@@ -88,7 +88,7 @@ public class Content
     {
         if(this.backupElements != null && this.backupAttractionCategories != null && this.backupRootLocation != null)
         {
-            this.elements = new LinkedHashMap<>(this.backupElements);
+            this.elementsByUuid = new LinkedHashMap<>(this.backupElements);
             this.attractionCategories = new ArrayList<>(backupAttractionCategories);
             this.rootLocation = this.backupRootLocation;
 
@@ -126,7 +126,7 @@ public class Content
     public <T extends IElement> List<T> getContentAsType(Class<T> type)
     {
         List<T> content = new ArrayList<>();
-        for(IElement element : this.elements.values())
+        for(IElement element : this.elementsByUuid.values())
         {
             if(type.isInstance(element))
             {
@@ -139,7 +139,7 @@ public class Content
     public <T extends IElement> List<IElement> getContentOfType(Class<T> type)
     {
         List<IElement> content = new ArrayList<>();
-        for(IElement element : this.elements.values())
+        for(IElement element : this.elementsByUuid.values())
         {
             if(type.isInstance(element))
             {
@@ -157,7 +157,6 @@ public class Content
     public void setAttractionCategories(List<AttractionCategory> attractionCategories)
     {
         this.attractionCategories = attractionCategories;
-
         Log.v(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: [%d]AttractionCategories set", attractionCategories.size()));
     }
 
@@ -222,14 +221,22 @@ public class Content
 
     public IElement getContentByUuid(UUID uuid)
     {
-        if(this.elements.containsKey(uuid))
+        if(this.elementsByUuid.containsKey(uuid))
         {
-            return this.elements.get(uuid);
+            return this.elementsByUuid.get(uuid);
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
-            return null;
+            AttractionCategory attractionCategory = this.getAttractionCategoryByUuid(uuid);
+            if(attractionCategory != null)
+            {
+                return attractionCategory;
+            }
+            else
+            {
+                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
+                return null;
+            }
         }
     }
 
@@ -255,7 +262,7 @@ public class Content
 //        if(!OrphanElement.class.isInstance(element))
 //        {
             Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-            this.elements.put(element.getUuid(), element);
+            this.elementsByUuid.put(element.getUuid(), element);
 //        }
 //        else
 //        {
@@ -280,10 +287,10 @@ public class Content
 
     public boolean removeElement(IElement element)
     {
-        if(this.elements.containsKey(element.getUuid()))
+        if(this.elementsByUuid.containsKey(element.getUuid()))
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: %s removed", element));
-            this.elements.remove(element.getUuid());
+            this.elementsByUuid.remove(element.getUuid());
             return true;
         }
         return false;
