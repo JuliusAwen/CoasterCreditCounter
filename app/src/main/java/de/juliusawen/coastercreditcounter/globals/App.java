@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 
-public abstract class App extends Application
+public abstract class App
 {
     public static boolean isInitialized = false;
     public static Context applicationContext;

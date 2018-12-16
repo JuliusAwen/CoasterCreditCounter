@@ -267,21 +267,21 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                                 case APPLY_CATEGORY_TO_ATTRACTIONS:
                                 {
-                                    List<IElement> attractionCategoryHeaders =
-                                            viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(App.content.getContentAsType(ICategorized.class)));
-                                    for(IElement attractionCategoryHeader : attractionCategoryHeaders)
+                                    List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+
+                                    for(IAttraction attraction : Element.convertElementsToType(attractions, IAttraction.class))
                                     {
-                                        if(((AttractionCategoryHeader)attractionCategoryHeader).getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
+                                        if(attraction.getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
                                         {
-                                            attractionCategoryHeaders.remove(attractionCategoryHeader);
-                                            break;
+                                            attractions.remove(attraction);
                                         }
                                     }
 
                                     ActivityTool.startActivityPickForResult(
                                             ManageAttractionCategoriesActivity.this,
                                             Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
-                                            attractionCategoryHeaders);
+                                            attractions);
+
                                     return true;
                                 }
 

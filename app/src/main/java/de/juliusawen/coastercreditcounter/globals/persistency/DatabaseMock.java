@@ -429,7 +429,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         freimarkt.addChildAndSetParent(visitToday);
         Visit.setOpenVisit(visitToday);
 
-        content.addElement(germany); //adding one location is enough - content is searching for root on its own and flattens tree from there)
+        content.addElement(germany); //adding one location is enough - content is searching for root from there
 
         AttractionCategory.createAndSetDefault();
         attractionCategories.add(AttractionCategory.getDefault());
@@ -447,15 +447,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         }
     }
 
-    public void flattenContentTree(IElement element)
+    private void flattenContentTree(IElement element)
     {
+        Log.i(Constants.LOG_TAG,  "DatabaseMock.flattenContentTree:: adding elements to content (if not already known)");
+
         if(App.content.getContentByUuid(element.getUuid()) == null)
         {
             App.content.addElement(element);
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Content already has %s ", element));
+            Log.v(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Not adding %s as it is already known to content", element));
         }
 
         for (IElement child : element.getChildren())
