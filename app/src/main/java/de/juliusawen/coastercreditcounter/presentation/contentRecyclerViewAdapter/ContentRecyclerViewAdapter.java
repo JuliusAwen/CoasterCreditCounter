@@ -312,37 +312,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         for(IElement parent : parents)
         {
             this.content.add(parent);
-            if(this.childType != null && this.expandedParentsContainsParent(parent))
+            if(this.childType != null && this.expandedParents.contains(parent))
             {
                 this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: parent %s is expanded - [%d] children added",
                         parent, parent.getChildCountOfType(this.childType)));
             }
             this.content.add(new ItemDivider());
-        }
-    }
-
-    private boolean expandedParentsContainsParent(IElement parent)
-    {
-        if(AttractionCategoryHeader.class.isInstance(parent))
-        {
-            for(IElement expandedParent : this.expandedParents)
-            {
-                if(AttractionCategoryHeader.class.isInstance(expandedParent))
-                {
-                    if(expandedParent.getName().equals(parent.getName()))
-                    {
-                        this.expandedParents.remove(expandedParent);
-                        this.expandedParents.add(parent);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        else
-        {
-            return this.expandedParents.contains(parent);
         }
     }
 
@@ -831,9 +807,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void scrollToElement(IElement element)
     {
+        if(element instanceof AttractionCategory)
+        {
+            for(IElement item : this.content)
+            {
+                if(item instanceof AttractionCategoryHeader)
+                {
+                    if(((AttractionCategoryHeader) item).getAttractionCategory().equals(element))
+                    {
+                        element = item;
+                        break;
+                    }
+                }
+            }
+        }
+
         if(this.content.contains(element) && this.recyclerView != null)
         {
             recyclerView.scrollToPosition(content.indexOf(element));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToElement:: scrolled to [%s]", element));
         }
     }
 
