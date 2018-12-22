@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.globals;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -20,11 +19,6 @@ public class App extends Application
     public static Persistency persistency;
     public static Content content;
     public static UserSettings userSettings;
-
-    @SuppressLint("StaticFieldLeak")
-    private static View progressBar;
-    @SuppressLint("StaticFieldLeak")
-    private static Context activityContext;
 
     private static Application application;
     public static Application getApplication()
@@ -48,18 +42,21 @@ public class App extends Application
     {
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing app...");
 
-        App.activityContext = context;
-
         App.persistency = Persistency.getInstance();
 
         ViewGroup viewGroup = ((Activity)context).findViewById(android.R.id.content);
-        App.progressBar = ((Activity)context).getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
-        viewGroup.addView(App.progressBar);
+        View progressBar = ((Activity)context).getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
+        viewGroup.addView(progressBar);
 
-        new Initialize().execute();
+
+        Object[] params = new Object[2];
+        params[0] = context;
+        params[1] = progressBar;
+
+        new Initialize().execute(params);
     }
 
-    private static class Initialize extends AsyncTask<Void, Void, Void>
+    private static class Initialize extends AsyncTask<Object, Void, Object[]>
     {
         @Override
         protected void onPreExecute()
@@ -67,12 +64,15 @@ public class App extends Application
             Log.i(Constants.LOG_TAG, "App.Initialize.onPreExecute:: preparing initialization...");
 
             super.onPreExecute();
-            App.progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Void doInBackground(Void... params)
+        protected Object[] doInBackground(Object... params)
         {
+            View progressBar = (View) params[1];
+
+            progressBar.setVisibility(View.VISIBLE);
+
             Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Content>...");
             App.content = Content.getInstance(App.persistency);
             App.content.initialize();
@@ -81,23 +81,24 @@ public class App extends Application
             App.userSettings = UserSettings.getInstance(App.persistency);
             App.userSettings.initialize();
 
-            return null;
+            return params;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
+        protected void onPostExecute(Object[] params)
         {
             Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: finishing initialization...");
 
-            super.onPostExecute(aVoid);
+            super.onPostExecute(params);
+
+            Context context = (Context) params[0];
+            View progressBar = (View) params[1];
 
             Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: restarting calling activity...");
-            App.activityContext.startActivity(new Intent(App.activityContext, ((Activity) activityContext).getClass()));
+            context.startActivity(new Intent(context, ((Activity) context).getClass()));
 
-            App.progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
 
-            App.progressBar = null;
-            App.activityContext = null;
             App.isInitialized = true;
         }
 
