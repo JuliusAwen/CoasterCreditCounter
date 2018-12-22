@@ -456,7 +456,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             {
                 Log.i(Constants.LOG_TAG, String.format("BaseActivity.InitializeAppAsyncTask.onPostExecute:: restarting [%s]",
                         StringTool.parseActivityName(Objects.requireNonNull(baseActivity.getIntent().getComponent()).getShortClassName())));
-                baseActivity.startActivity(baseActivity.getIntent());
+                baseActivity.startActivity(new Intent(baseActivity, baseActivity.getClass()));
             }
         }
 

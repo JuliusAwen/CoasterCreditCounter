@@ -2,11 +2,11 @@ package de.juliusawen.coastercreditcounter.presentation;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -14,7 +14,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-        ActivityTool.startNavigationHubActivity(this);
-
+        if(App.isInitialized)
+        {
+            ActivityTool.startNavigationHubActivity(this);
+        }
     }
 }
