@@ -146,7 +146,7 @@ public class ShowVisitsFragment extends Fragment
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedVisits,
-                App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((IElement)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
+                App.userSettings.getExpandLatestYearInListByDefault() ? Collections.singleton((IElement)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
                 Visit.class);
     }
 
@@ -187,7 +187,7 @@ public class ShowVisitsFragment extends Fragment
 
             this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedVisits);
 
-            if(expandLatestYearHeaderAccordingToSettings && App.settings.getExpandLatestYearInListByDefault())
+            if(expandLatestYearHeaderAccordingToSettings && App.userSettings.getExpandLatestYearInListByDefault())
             {
                 this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(categorizedVisits));
             }

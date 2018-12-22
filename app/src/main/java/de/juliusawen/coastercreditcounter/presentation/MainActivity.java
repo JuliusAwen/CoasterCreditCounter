@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Settings;
+import de.juliusawen.coastercreditcounter.globals.UserSettings;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class MainActivity extends AppCompatActivity
@@ -37,22 +37,15 @@ public class MainActivity extends AppCompatActivity
         Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
         if(App.isInitialized)
         {
-            if(Settings.jumpToTestActivityOnStart)
+            if(UserSettings.jumpToTestActivityOnStart)
             {
                 Log.e(Constants.LOG_TAG, "MainActivity.onResume:: starting TestActivity");
                 startActivity(new Intent(this, TestActivity.class));
             }
             else
             {
-                if(true)
-                {
-                    Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting NavigationHubActivity");
-                    ActivityTool.startNavigationHubActivity(this);
-                }
-                else
-                {
-                    Log.e(Constants.LOG_TAG, "MainActivity.onResume:: NavigationHubActivity not available atm - staring ShowLocationsActivity<root> instead");
-                }
+                Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting NavigationHubActivity");
+                ActivityTool.startNavigationHubActivity(this);
             }
         }
         else

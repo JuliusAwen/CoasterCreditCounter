@@ -29,7 +29,7 @@ import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.Settings;
+import de.juliusawen.coastercreditcounter.globals.UserSettings;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -486,19 +486,19 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
-    public void loadSettings(Settings settings)
+    public void loadSettings(UserSettings userSettings)
     {
         Log.v(Constants.LOG_TAG, "DatabaseMock.loadSettings:: creating mock data");
 
-        Settings.jumpToTestActivityOnStart = false;
-        //        settings.setJumpToOpenVisitOnStart(false);
+        UserSettings.jumpToTestActivityOnStart = false;
+        //        userSettings.setJumpToOpenVisitOnStart(false);
 
-        settings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
+        userSettings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
-        settings.setExpandLatestYearInListByDefault(true);
+        userSettings.setExpandLatestYearInListByDefault(true);
 
-        settings.setFirstDayOfTheWeek(Calendar.MONDAY);
+        userSettings.setFirstDayOfTheWeek(Calendar.MONDAY);
 
-        settings.setDefaultIncrement(1);
+        userSettings.setDefaultIncrement(1);
     }
 }

@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,7 +18,7 @@ public abstract class App
     public static Context applicationContext;
     public static Persistency persistency;
     public static Content content;
-    public static Settings settings;
+    public static UserSettings userSettings;
 
     @SuppressLint("StaticFieldLeak")
     private static View progressBar;
@@ -60,9 +59,9 @@ public abstract class App
             App.content = Content.getInstance(App.persistency);
             App.content.initialize();
 
-            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Settings>...");
-            App.settings = Settings.getInstance(App.persistency);
-            App.settings.initialize();
+            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <UserSettings>...");
+            App.userSettings = UserSettings.getInstance(App.persistency);
+            App.userSettings.initialize();
 
             return null;
         }

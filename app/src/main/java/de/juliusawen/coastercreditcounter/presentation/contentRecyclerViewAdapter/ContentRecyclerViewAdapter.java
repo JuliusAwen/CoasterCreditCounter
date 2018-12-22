@@ -449,7 +449,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getIncreaseOnClickListener.onClick:: increasing %s's ride count for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
+                visitedAttraction.increaseRideCount(App.userSettings.getDefaultIncrement());
                 notifyItemChanged(content.indexOf(visitedAttraction));
             }
         };
@@ -467,7 +467,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getDecreaseOnClickListener.onClick:: decreasing %s's ride count for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
+                if(visitedAttraction.decreaseRideCount(App.userSettings.getDefaultIncrement()))
                 {
                     notifyItemChanged(content.indexOf(visitedAttraction));
                 }

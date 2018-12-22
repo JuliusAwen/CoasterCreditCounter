@@ -3,12 +3,11 @@ package de.juliusawen.coastercreditcounter.globals;
 import android.util.Log;
 
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
-public class Settings
+public class UserSettings
 {
     //App
     public static boolean jumpToTestActivityOnStart = false;
@@ -25,24 +24,24 @@ public class Settings
     //Defaults
     private int defaultIncrement;
 
-    private static Settings instance;
+    private static UserSettings instance;
 
-    static Settings getInstance(Persistency persistency)
+    static UserSettings getInstance(Persistency persistency)
     {
-        if(Settings.instance == null)
+        if(UserSettings.instance == null)
         {
-            Settings.instance = new Settings(persistency);
+            UserSettings.instance = new UserSettings(persistency);
         }
         return instance;
     }
 
-    private Settings(Persistency persistency)
+    private UserSettings(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG, "Settings.Constructor:: Settings instantiated - fetching settings...");
+        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: UserSettings instantiated - fetching userSettings...");
 
         Stopwatch stopwatch = new Stopwatch(true);
         persistency.loadSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("Settings.Constructor:: initializing settings took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: initializing userSettings took [%d]ms", stopwatch.stop()));
     }
 
     public void initialize()

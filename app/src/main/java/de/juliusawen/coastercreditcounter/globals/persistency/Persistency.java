@@ -1,12 +1,10 @@
 package de.juliusawen.coastercreditcounter.globals.persistency;
 
-import android.content.Context;
-
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.Settings;
+import de.juliusawen.coastercreditcounter.globals.UserSettings;
 
 public class Persistency
 {
@@ -14,7 +12,7 @@ public class Persistency
 
     The idea behind this is as follows:
 
-    Persistency fetches settings from settings-json file and then decides based on settings which IDatabaseWrapper will be used.
+    Persistency fetches userSettings from userSettings-json file and then decides based on userSettings which IDatabaseWrapper will be used.
 
      */
 
@@ -57,9 +55,9 @@ public class Persistency
         this.databaseWrapper.loadContent(content);
     }
 
-    public void loadSettings(Settings settings)
+    public void loadSettings(UserSettings userSettings)
     {
-        this.databaseWrapper.loadSettings(settings);
+        this.databaseWrapper.loadSettings(userSettings);
     }
 
     public boolean importContent()
