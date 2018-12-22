@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -36,6 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener onClickListenerFloatingActionButton;
 
+    private BaseActivityViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,7 +47,16 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
 
-        if(!App.isInitialized)
+        if(App.isInitialized)
+        {
+            this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
+
+            if(this.helpOverlayFragment != null)
+            {
+                this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE));
+            }
+        }
+        else
         {
             Toolbar toolbar = findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.title_app_name));
@@ -95,28 +107,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%S] selected", buttonFunction));
                 this.setHelpOverlayVisibility(false);
                 break;
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
-        if(this.helpOverlayFragment != null)
-        {
-            outState.putBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE, this.helpOverlayFragment.isVisible());
-        }
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        if(this.helpOverlayFragment != null)
-        {
-            this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE));
         }
     }
 
@@ -320,6 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 this.hideFragment(this.helpOverlayFragment);
             }
 
+            this.viewModel.helpOverlayFragmentIsVisible = isVisible;
             this.setFloatingActionButtonVisibility(!isVisible);
             this.setConfirmDialogVisibility(!isVisible);
         }
