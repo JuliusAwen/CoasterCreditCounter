@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -42,6 +43,16 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+
+        if(!App.isInitialized)
+        {
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            toolbar.setTitle(getString(R.string.title_app_name));
+            toolbar.setVisibility(View.VISIBLE);
+            setSupportActionBar(toolbar);
+
+            App.initialize(this);
+        }
     }
 
     @Override

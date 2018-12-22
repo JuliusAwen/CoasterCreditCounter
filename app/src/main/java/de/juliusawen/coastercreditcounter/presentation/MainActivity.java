@@ -1,16 +1,11 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.UserSettings;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class MainActivity extends AppCompatActivity
@@ -23,35 +18,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.title_app_name));
-        toolbar.setVisibility(View.VISIBLE);
-        setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        Log.i(Constants.LOG_TAG, String.format("MainActivity.onResume:: App.isInitialized[%S]", App.isInitialized));
-        if(App.isInitialized)
-        {
-            if(UserSettings.jumpToTestActivityOnStart)
-            {
-                Log.e(Constants.LOG_TAG, "MainActivity.onResume:: starting TestActivity");
-                startActivity(new Intent(this, TestActivity.class));
-            }
-            else
-            {
-                Log.i(Constants.LOG_TAG, "MainActivity.onResume:: starting NavigationHubActivity");
-                ActivityTool.startNavigationHubActivity(this);
-            }
-        }
-        else
-        {
-            Log.i(Constants.LOG_TAG, "MainActivity.onResume:: app needs to initialize");
-            App.initialize(this);
-        }
+        Log.i(Constants.LOG_TAG, "MainActivity.onCreate:: starting NavigationHubActivity");
+        ActivityTool.startNavigationHubActivity(this);
     }
 }

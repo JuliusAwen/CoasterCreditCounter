@@ -43,27 +43,34 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         setContentView(R.layout.activity_navigation_hub);
         super.onCreate(savedInstanceState);
 
-        this.drawerLayout = findViewById(R.id.navigationDrawer);
-        this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
+        if(App.isInitialized)
+        {
+            this.drawerLayout = findViewById(R.id.navigationDrawer);
+            this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
 
-        this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
+            this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-        this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
+            this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
 
-        super.addToolbar();
-        super.addToolbarMenuIcon();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), getString(R.string.subtitle_navigation_hub));
+            super.addToolbar();
+            super.addToolbarMenuIcon();
+            super.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), getString(R.string.subtitle_navigation_hub));
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+        }
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        for (int i = 0; i < this.navigationView.getMenu().size(); i++)
+
+        if(App.isInitialized)
         {
-            this.navigationView.getMenu().getItem(i).setChecked(false);
+            for (int i = 0; i < this.navigationView.getMenu().size(); i++)
+            {
+                this.navigationView.getMenu().getItem(i).setChecked(false);
+            }
         }
     }
 

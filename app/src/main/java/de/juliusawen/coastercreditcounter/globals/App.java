@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class App extends Application
 {
@@ -94,8 +97,10 @@ public class App extends Application
             Context context = (Context) params[0];
             View progressBar = (View) params[1];
 
-            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: restarting calling activity...");
-            context.startActivity(new Intent(context, ((Activity) context).getClass()));
+            Intent intent = ((Activity) context).getIntent();
+            Log.i(Constants.LOG_TAG, String.format("App.Initialize.onPostExecute:: restarting calling activity [%s]...",
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+            context.startActivity(intent);
 
             progressBar.setVisibility(View.GONE);
 
