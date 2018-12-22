@@ -46,23 +46,26 @@ public class ShowVisitActivity extends BaseActivity
         setContentView(R.layout.activity_show_visit);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowVisitActivityViewModel.class);
-
-        if(this.viewModel.visit == null)
+        if(App.isInitialized)
         {
-            this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel = ViewModelProviders.of(this).get(ShowVisitActivityViewModel.class);
+
+            if(this.viewModel.visit == null)
+            {
+                this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
+
+            if(this.viewModel.attractionCategoryHeaderProvider == null)
+            {
+                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+            }
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_not_available));
         }
-
-        if(this.viewModel.attractionCategoryHeaderProvider == null)
-        {
-            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-        }
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_not_available));
     }
 
     @Override
@@ -70,25 +73,28 @@ public class ShowVisitActivity extends BaseActivity
     {
         super.onResume();
 
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(App.isInitialized)
         {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-        }
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-        if(!this.allAttractionsAdded())
-        {
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButton();
-            this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
-        }
-        else
-        {
-            super.disableFloatingActionButton();
+            if(!this.allAttractionsAdded())
+            {
+                super.addFloatingActionButton();
+                this.decorateFloatingActionButton();
+                this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
+            }
+            else
+            {
+                super.disableFloatingActionButton();
+            }
         }
     }
 

@@ -53,12 +53,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
 
         this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
 
@@ -77,13 +71,14 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             this.addToolbar();
             this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
 
-
             if(this.viewModel.isInitializingApp)
             {
+                Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: app is initializing...");
                 this.showProgressBar();
             }
             else
             {
+                Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: initializing app initialization...");
                 this.viewModel.isInitializingApp = true;
                 this.initializeApp();
             }
@@ -111,7 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch (selection)
         {
             case HELP:
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%S] selected", selection));
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", selection));
                 this.setHelpOverlayVisibility(true);
                 return true;
 
@@ -127,7 +122,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch (buttonFunction)
         {
             case CLOSE:
-                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%S] selected", buttonFunction));
+                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%s] selected", buttonFunction));
                 this.setHelpOverlayVisibility(false);
                 break;
         }

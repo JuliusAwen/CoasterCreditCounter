@@ -54,44 +54,48 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowLocationsActivity.onCreate:: creating activity...");
+
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
 
-        this.linearLayoutNavigationBar = findViewById(R.id.linearLayoutShowLocations_NavigationBar);
-        this.horizontalScrollViewNavigationBar = findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
-
-        this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
-
-        if(this.viewModel.currentElement == null)
+        if(App.isInitialized)
         {
-            String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-            this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+            this.linearLayoutNavigationBar = findViewById(R.id.linearLayoutShowLocations_NavigationBar);
+            this.horizontalScrollViewNavigationBar = findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
+
+            this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
+
+            if(this.viewModel.currentElement == null)
+            {
+                String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+            }
+
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                        this.viewModel.currentElement.getChildrenOfType(Location.class),
+                        new HashSet<IElement>(),
+                        Park.class);
+            }
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(getString(R.string.title_locations), null);
+
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
+
+            this.onClickListenerNavigationBar = this.getNavigationBarOnClickListener();
+
+            this.updateActivityView();
         }
-
-        if(this.viewModel.contentRecyclerViewAdapter == null)
-        {
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                    this.viewModel.currentElement.getChildrenOfType(Location.class),
-                    new HashSet<IElement>(),
-                    Park.class);
-        }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_locations), null);
-
-        super.addFloatingActionButton();
-        this.decorateFloatingActionButton();
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
-
-        this.onClickListenerNavigationBar = this.getNavigationBarOnClickListener();
-
-        this.updateActivityView();
     }
 
     @Override

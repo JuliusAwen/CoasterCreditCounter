@@ -50,27 +50,30 @@ public class ShowParkActivity extends BaseActivity
 
         setContentView(R.layout.activity_show_park);
         super.onCreate(savedInstanceState);
-
-        this.viewModel = ViewModelProviders.of(this).get(ShowParkActivityViewModel.class);
         
-        if(this.viewModel.park == null)
+        if(App.isInitialized)
         {
-            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel = ViewModelProviders.of(this).get(ShowParkActivityViewModel.class);
+
+            if(this.viewModel.park == null)
+            {
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
+
+            if(this.viewModel.currentTab == -1)
+            {
+                this.viewModel.currentTab = OVERVIEW;
+            }
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+
+            super.addFloatingActionButton();
+
+            super.addHelpOverlayFragment(null, null);
+
+            this.createTabPagerAdapter();
         }
-        
-        if(this.viewModel.currentTab == -1)
-        {
-            this.viewModel.currentTab = OVERVIEW;
-        }
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-
-        super.addFloatingActionButton();
-
-        super.addHelpOverlayFragment(null, null);
-
-        this.createTabPagerAdapter();
     }
 
     @Override
