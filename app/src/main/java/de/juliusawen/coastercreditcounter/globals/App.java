@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,10 +13,10 @@ import android.view.ViewGroup;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 
-public abstract class App
+public class App extends Application
 {
     public static boolean isInitialized = false;
-    public static Context applicationContext;
+
     public static Persistency persistency;
     public static Content content;
     public static UserSettings userSettings;
@@ -25,12 +26,29 @@ public abstract class App
     @SuppressLint("StaticFieldLeak")
     private static Context activityContext;
 
+    private static Application application;
+    public static Application getApplication()
+    {
+        return App.application;
+    }
+
+    public static Context getContext()
+    {
+        return getApplication().getApplicationContext();
+    }
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        application = this;
+    }
+
     public static void initialize(Context context)
     {
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing app...");
 
         App.activityContext = context;
-        App.applicationContext = App.activityContext.getApplicationContext();
 
         App.persistency = Persistency.getInstance();
 

@@ -71,6 +71,6 @@ public class AttractionCategory extends OrphanElement
 
     public static void createAndSetDefault()
     {
-        AttractionCategory.setDefault(new AttractionCategory(App.applicationContext.getString(R.string.name_default_attraction_category), UUID.randomUUID()));
+        AttractionCategory.setDefault(new AttractionCategory(App.getContext().getString(R.string.name_default_attraction_category), UUID.randomUUID()));
     }
 }

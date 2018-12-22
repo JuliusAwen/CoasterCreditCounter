@@ -24,7 +24,7 @@ public abstract class FileTool
     {
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.applicationContext.openFileOutput(fileName, Context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.getContext().openFileOutput(fileName, Context.MODE_PRIVATE));
             outputStreamWriter.write(input);
             outputStreamWriter.close();
 
@@ -43,7 +43,7 @@ public abstract class FileTool
         String output = "";
         try
         {
-            FileInputStream fileInputStream = App.applicationContext.openFileInput(fileName);
+            FileInputStream fileInputStream = App.getContext().openFileInput(fileName);
 
             if(fileInputStream != null)
             {
@@ -72,7 +72,8 @@ public abstract class FileTool
         }
         return output;
     }
-    public static String readStringFromFile(FileInputStream fileInputStream)
+
+    private static String readStringFromFile(FileInputStream fileInputStream)
     {
         String output = "";
 

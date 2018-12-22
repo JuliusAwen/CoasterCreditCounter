@@ -213,7 +213,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private boolean requestPermissionWriteExternalStorage(MenuItem item)
     {
-        if(ContextCompat.checkSelfPermission(App.applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemExportSelected:: Permission to write to external storage denied - requesting permission");
 
