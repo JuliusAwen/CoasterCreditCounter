@@ -6,6 +6,7 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
+
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
 
@@ -37,10 +38,6 @@ public abstract class Constants
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
     public static final String JSON_STRING_IS_DEFAULT = "is default";
 
-    public static final int REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = Request.PERMISSION_WRITE_EXTERNAL_STORAGE.ordinal();
-
-    public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
-    public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";
 
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
@@ -48,8 +45,8 @@ public abstract class Constants
     public static final String EXTRA_TOOLBAR_SUBTITLE = "de.juliusawen.coding.extra_toolbar_subtitle";
     public static final String EXTRA_HELP_TITLE = "de.juliusawen.coding.extra_help_title";
     public static final String EXTRA_HELP_TEXT = "de.juliusawen.coding.extra_help_text";
-
     public static final String EXTRA_RESULT_STRING = "de.juliusawen.coding.extra_result_string";
+
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
     public static final String FRAGMENT_ARG_HELP_MESSAGE = "de.juliusawen.coding.fragment_arg_help_message";
@@ -61,12 +58,16 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE = "de.juliusawen.coding.fragment_arg_alert_dialog_negative_request_code";
     public static final String FRAGMENT_ARG_PARK_UUID = "de.juliusawen.coding.fragment_arg_park_uuid";
 
+
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.fragment_tag_help_overlay";
     public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.fragment_tag_confirm_dialog";
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
+
     public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM YYYY";
     public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "YYYY";
+
+
 
     public static final int ALERT_DIALOG_REQUEST_CODE_DELETE = 0;
     public static final int ALERT_DIALOG_REQUEST_CODE_REMOVE = 1;
@@ -84,7 +85,7 @@ public abstract class Constants
 
     public static final int REQUEST_MANAGE_ATTRACTION_CATEGORIES = Request.MANAGE_ATTRACTION_CATEGORIES.ordinal();
 
-    public static final int APPLY_CATEGORY_TO_ATTRACTIONS = Request.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal();
+    public static final int REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS = Request.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal();
 
     public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
     public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
@@ -97,6 +98,8 @@ public abstract class Constants
     public static final int REQUEST_PICK_LOCATIONS = Request.PICK_LOCATIONS.ordinal();
     public static final int REQUEST_PICK_PARKS = Request.PICK_PARKS.ordinal();
     public static final int REQUEST_PICK_ATTRACTIONS = Request.PICK_ATTRACTIONS.ordinal();
+
+    public static final int REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = Request.PERMISSION_WRITE_EXTERNAL_STORAGE.ordinal();
 }
 enum Request
 {

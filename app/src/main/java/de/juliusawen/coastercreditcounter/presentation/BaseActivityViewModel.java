@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel;
 
 public class BaseActivityViewModel extends ViewModel
 {
-    boolean isInitializingApp = false;
+    public boolean isInitializingApp = false;
 
-    boolean helpOverlayFragmentIsVisible = false;
-    String helpOverlayFragmentTitle;
-    String getHelpOverlayFragmentMessage;
+    public boolean helpOverlayFragmentIsVisible = false;
+    public String helpOverlayFragmentTitle;
+    public CharSequence helpOverlayFragmentMessage;
 }

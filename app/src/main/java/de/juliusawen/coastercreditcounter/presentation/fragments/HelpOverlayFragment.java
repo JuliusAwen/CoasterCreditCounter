@@ -15,15 +15,16 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.presentation.BaseActivityViewModel;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class HelpOverlayFragment extends Fragment
 {
-    private String title;
-    private CharSequence message;
+    private BaseActivityViewModel viewModel;
 
     private TextView textViewTitle;
     private TextView textViewMessage;
@@ -51,18 +52,20 @@ public class HelpOverlayFragment extends Fragment
 
         super.onCreate(savedInstanceState);
 
+        this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
+
         if (getArguments() != null)
         {
-            this.title = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
-            if(this.title == null)
+            this.viewModel.helpOverlayFragmentTitle = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
+            if(this.viewModel.helpOverlayFragmentTitle == null)
             {
-                this.title = getString(R.string.title_help, "");
+                this.viewModel.helpOverlayFragmentTitle = getString(R.string.title_help, getString(R.string.help_title_not_available));
             }
 
-            this.message = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
-            if(this.message == null)
+            this.viewModel.helpOverlayFragmentMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
+            if(this.viewModel.helpOverlayFragmentMessage == null)
             {
-                this.message = getString(R.string.help_text_not_available);
+                this.viewModel.helpOverlayFragmentMessage = getString(R.string.help_text_not_available);
             }
         }
     }
@@ -85,14 +88,8 @@ public class HelpOverlayFragment extends Fragment
 
         super.onViewCreated(view, savedInstanceState);
 
-        if(savedInstanceState != null)
-        {
-            this.title = savedInstanceState.getString(Constants.KEY_HELP_TITLE);
-            this.message = savedInstanceState.getCharSequence(Constants.KEY_HELP_MESSAGE);
-        }
-
-        this.textViewTitle.setText(this.title);
-        this.textViewMessage.setText(this.message);
+        this.textViewTitle.setText(this.viewModel.helpOverlayFragmentTitle);
+        this.textViewMessage.setText(this.viewModel.helpOverlayFragmentMessage);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
         Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_baseline_close), getContext());
@@ -117,15 +114,6 @@ public class HelpOverlayFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState)
-    {
-        outState.putString(Constants.KEY_HELP_TITLE, this.title);
-        outState.putCharSequence(Constants.KEY_HELP_MESSAGE, this.message);
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
@@ -144,8 +132,6 @@ public class HelpOverlayFragment extends Fragment
     public void onDetach()
     {
         super.onDetach();
-        this.title = null;
-        this.message = null;
         this.textViewTitle = null;
         this.textViewMessage = null;
         this.helpOverlayFragmentInteractionListener = null;

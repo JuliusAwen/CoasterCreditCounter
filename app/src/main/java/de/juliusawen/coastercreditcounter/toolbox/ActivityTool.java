@@ -229,7 +229,7 @@ public abstract class ActivityTool
         {
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
         }
-        else if(requestCode == Constants.APPLY_CATEGORY_TO_ATTRACTIONS)
+        else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
         {
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
         }

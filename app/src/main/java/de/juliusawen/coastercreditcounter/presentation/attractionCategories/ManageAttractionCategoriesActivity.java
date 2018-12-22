@@ -27,7 +27,6 @@ import de.juliusawen.coastercreditcounter.data.attractions.ICategorized;
 import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -166,7 +165,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                     this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
                 }
             }
-            else if(requestCode == Constants.APPLY_CATEGORY_TO_ATTRACTIONS)
+            else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
             {
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
@@ -279,7 +278,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                                     ActivityTool.startActivityPickForResult(
                                             ManageAttractionCategoriesActivity.this,
-                                            Constants.APPLY_CATEGORY_TO_ATTRACTIONS,
+                                            Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS,
                                             attractions);
 
                                     return true;

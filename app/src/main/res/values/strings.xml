@@ -186,6 +186,7 @@
 
     <!--help texts-->
     <string name="help_text_not_available">…not available</string>
+    <string name="help_title_not_available">…not available</string>
 
     <string name="help_text_show_locations">
         \n<b>Options Menu</b>
