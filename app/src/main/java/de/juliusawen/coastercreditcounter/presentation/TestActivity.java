@@ -31,30 +31,32 @@ public class TestActivity extends BaseActivity
         setContentView(R.layout.activity_test);
         super.onCreate(savedInstanceState);
 
-//        this.initializeContent();
+        if(App.isInitialized)
+        {
+            //        this.initializeContent();
 
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle("Test", "Test");
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle("Test", "Test");
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, "Test"), "Test");
+            super.addHelpOverlayFragment(getString(R.string.title_help, "Test"), "Test");
 
-//        this.createContentRecyclerAdapter();
-//        this.createLoremIpsum();
+            //        this.createContentRecyclerAdapter();
+            //        this.createLoremIpsum();
 
-        this.startActivity();
+//            this.startActivity();
+        }
     }
 
     @Override
     protected void onResume()
     {
-        Log.e(Constants.LOG_TAG, String.format("TestActivity.onResume:: location is %s", this.location));
         super.onResume();
     }
 
     private void initializeContent()
     {
-        this.location = (Location) App.content.getRootLocation();
+        this.location = App.content.getRootLocation();
     }
 
     private void createContentRecyclerAdapter()

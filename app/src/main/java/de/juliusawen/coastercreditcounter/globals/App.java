@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.presentation.TestActivity;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class App extends Application
@@ -56,6 +57,7 @@ public class App extends Application
         params[0] = context;
         params[1] = progressBar;
 
+        Log.i(Constants.LOG_TAG, "App.initialize:: starting async initialization...");
         new Initialize().execute(params);
     }
 
@@ -64,8 +66,6 @@ public class App extends Application
         @Override
         protected void onPreExecute()
         {
-            Log.i(Constants.LOG_TAG, "App.Initialize.onPreExecute:: preparing initialization...");
-
             super.onPreExecute();
         }
 
@@ -76,11 +76,11 @@ public class App extends Application
 
             progressBar.setVisibility(View.VISIBLE);
 
-            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <Content>...");
+            Log.i(Constants.LOG_TAG, "App.initialize.doInBackground:: getting instance of <Content>...");
             App.content = Content.getInstance(App.persistency);
             App.content.initialize();
 
-            Log.i(Constants.LOG_TAG, "App.Initialize.doInBackground:: getting instance of <UserSettings>...");
+            Log.i(Constants.LOG_TAG, "App.initialize.doInBackground:: getting instance of <UserSettings>...");
             App.userSettings = UserSettings.getInstance(App.persistency);
             App.userSettings.initialize();
 
@@ -90,21 +90,28 @@ public class App extends Application
         @Override
         protected void onPostExecute(Object[] params)
         {
-            Log.i(Constants.LOG_TAG, "App.Initialize.onPostExecute:: finishing initialization...");
-
+            Log.i(Constants.LOG_TAG, "App.initialize.onPostExecute:: finishing initialization...");
             super.onPostExecute(params);
 
             Context context = (Context) params[0];
             View progressBar = (View) params[1];
 
-            Intent intent = ((Activity) context).getIntent();
-            Log.i(Constants.LOG_TAG, String.format("App.Initialize.onPostExecute:: restarting calling activity [%s]...",
-                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
-            context.startActivity(intent);
-
             progressBar.setVisibility(View.GONE);
 
             App.isInitialized = true;
+
+            if(!AppSettings.jumpToTestActivityOnStart)
+            {
+                Intent intent = ((Activity) context).getIntent();
+                Log.i(Constants.LOG_TAG, String.format("App.initialize.onPostExecute:: restarting calling activity [%s]...",
+                        StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+                context.startActivity(intent);
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, "App.initialize.onPostExecute:: starting TestActivity");
+                context.startActivity(new Intent(context, TestActivity.class));
+            }
         }
 
         @Override

@@ -9,9 +9,6 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class UserSettings
 {
-    //App
-    public static boolean jumpToTestActivityOnStart = false;
-
 //    private boolean jumpToOpenVisitOnStart;
 
     //ShowPark - Visits
@@ -37,7 +34,7 @@ public class UserSettings
 
     private UserSettings(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: UserSettings instantiated - fetching userSettings...");
+        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: UserSettings instantiated - fetching UserSettings...");
 
         Stopwatch stopwatch = new Stopwatch(true);
         persistency.loadSettings(this);

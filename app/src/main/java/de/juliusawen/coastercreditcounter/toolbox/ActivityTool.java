@@ -14,14 +14,14 @@ import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.presentation.CreateSimpleStringActivity;
+import de.juliusawen.coastercreditcounter.presentation.attractionCategories.ManageAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.presentation.navigationHub.NavigationHubActivity;
-import de.juliusawen.coastercreditcounter.presentation.CreateSimpleStringActivity;
-import de.juliusawen.coastercreditcounter.presentation.attractionCategories.ManageAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
@@ -255,6 +255,8 @@ public abstract class ActivityTool
 
     public static void startNavigationHubActivity(Context context)
     {
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startNavigationHubActivity:: starting [%s]...",
+                StringTool.parseActivityName(Objects.requireNonNull(((Activity) context).getIntent().getComponent()).getShortClassName())));
         context.startActivity(new Intent(context, NavigationHubActivity.class));
     }
 }

@@ -9,6 +9,8 @@ import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
 public abstract class AppSettings
 {
+    public static boolean jumpToTestActivityOnStart = false;
+
     public static final String DATABASE_WRAPPER = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
 //    public static final String DATABASE_WRAPPER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
 
@@ -24,11 +26,11 @@ public abstract class AppSettings
         {
             if(directory.mkdirs())
             {
-                Log.i(LOG_TAG, String.format("FileTool.getPublicDownloadsDir:: created Directory [%s] in Downloads", directory.getName()));
+                Log.i(LOG_TAG, String.format("AppSettings.getExternalStorageDocumentsDirectory:: created Directory [%s] in Downloads", directory.getName()));
             }
             else
             {
-                Log.e(LOG_TAG, String.format("FileTool.getPublicDownloadsDir:: Directory [%s] not created!", directory.getName()));
+                Log.e(LOG_TAG, String.format("AppSettings.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getName()));
             }
         }
         return directory;
