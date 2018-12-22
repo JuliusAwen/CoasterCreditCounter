@@ -23,7 +23,7 @@ public class UserSettings
 
     private static UserSettings instance;
 
-    static UserSettings getInstance(Persistency persistency)
+    public static UserSettings getInstance(Persistency persistency)
     {
         if(UserSettings.instance == null)
         {
@@ -34,11 +34,12 @@ public class UserSettings
 
     private UserSettings(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: UserSettings instantiated - fetching UserSettings...");
+        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: <UserSettings> instantiated - loading UserSettings...");
 
         Stopwatch stopwatch = new Stopwatch(true);
         persistency.loadSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: initializing userSettings took [%d]ms", stopwatch.stop()));
+
+        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings took [%d]ms", stopwatch.stop()));
     }
 
     public void initialize()

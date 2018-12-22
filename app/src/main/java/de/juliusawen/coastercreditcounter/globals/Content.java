@@ -26,8 +26,8 @@ public class Content
     private List<AttractionCategory> backupAttractionCategories = null;
     private Location backupRootLocation = null;
 
-
     private Persistency persistency;
+
     private static Content instance;
 
     public static Content getInstance(Persistency persistency)
@@ -47,15 +47,10 @@ public class Content
 
     public void initialize()
     {
-        Log.i(Constants.LOG_TAG,"Content.initialize:: initializing <Content>");
-        Stopwatch stopwatchInitializeContent = new Stopwatch(true);
-
-        Log.i(Constants.LOG_TAG, "Content.initialize:: fetching content...");
+        Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
         this.persistency.loadContent(this);
-        Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: fetching content took [%d]ms", stopwatchFetchContent.stop()));
-
-        Log.i(Constants.LOG_TAG, String.format("Content.initialize:: initializing content took [%d]ms", stopwatchInitializeContent.stop()));
+        Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: loading content took [%d]ms", stopwatchFetchContent.stop()));
     }
 
     public void clear()
@@ -182,19 +177,6 @@ public class Content
         return this.getContentAsType(type);
     }
 
-    public AttractionCategory getAttractionCategoryByUuid(UUID uuid)
-    {
-        for(AttractionCategory attractionCategory : this.attractionCategories)
-        {
-            if(attractionCategory.getUuid().equals(uuid))
-            {
-                return attractionCategory;
-            }
-        }
-
-        return null;
-    }
-
     public ArrayList<String> getUuidStringsFromElements(List<IElement> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
@@ -240,6 +222,19 @@ public class Content
         }
     }
 
+    public AttractionCategory getAttractionCategoryByUuid(UUID uuid)
+    {
+        for(AttractionCategory attractionCategory : this.attractionCategories)
+        {
+            if(attractionCategory.getUuid().equals(uuid))
+            {
+                return attractionCategory;
+            }
+        }
+
+        return null;
+    }
+
     public void addElementAndChildren(IElement element)
     {
         for(IElement child : element.getChildren())
@@ -259,18 +254,8 @@ public class Content
 
     public void addElement(IElement element)
     {
-//        if(!OrphanElement.class.isInstance(element))
-//        {
-            Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
-            this.elementsByUuid.put(element.getUuid(), element);
-//        }
-//        else
-//        {
-//            String errorMessage = String.format("adding %s requested -- DEPRECATED: use AddOrphanElement!", element);
-//            Log.e(Constants.LOG_TAG,  "Content.addElement:: )" + errorMessage);
-//
-//            throw new IllegalStateException(errorMessage);
-//        }
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
+        this.elementsByUuid.put(element.getUuid(), element);
     }
 
     public boolean removeElementAndChildren(IElement element)

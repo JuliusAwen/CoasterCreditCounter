@@ -55,8 +55,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             super.addToolbar();
             super.addToolbarMenuIcon();
             super.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), getString(R.string.subtitle_navigation_hub));
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
         }
     }
 
@@ -67,6 +65,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(App.isInitialized)
         {
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+
             for (int i = 0; i < this.navigationView.getMenu().size(); i++)
             {
                 this.navigationView.getMenu().getItem(i).setChecked(false);

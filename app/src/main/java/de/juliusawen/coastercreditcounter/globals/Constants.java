@@ -39,8 +39,6 @@ public abstract class Constants
 
     public static final int REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = Request.PERMISSION_WRITE_EXTERNAL_STORAGE.ordinal();
 
-
-    public static final String KEY_HELP_OVERLAY_IS_VISIBLE = "de.juliusawen.coding.key_help_overlay_is_visible";
     public static final String KEY_HELP_TITLE = "de.juliusawen.coding.key_help_title";
     public static final String KEY_HELP_MESSAGE = "de.juliusawen.coding.key_help_message";
 

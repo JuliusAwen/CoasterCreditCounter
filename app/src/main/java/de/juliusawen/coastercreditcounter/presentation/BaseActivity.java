@@ -1,14 +1,19 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Objects;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,23 +24,26 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.Content;
+import de.juliusawen.coastercreditcounter.globals.UserSettings;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    protected Bundle savedInstanceState;
-
     private Toolbar toolbar;
     private ActionBar actionBar;
     private HelpOverlayFragment helpOverlayFragment;
     private ConfirmDialogFragment confirmDialogFragment;
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener onClickListenerFloatingActionButton;
+    private View progressBar;
 
     private BaseActivityViewModel viewModel;
 
@@ -45,25 +53,40 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
-        this.savedInstanceState = savedInstanceState;
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
 
         if(App.isInitialized)
         {
-            this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
+            this.viewModel.isInitializingApp = false;
 
             if(this.helpOverlayFragment != null)
             {
-                this.setHelpOverlayVisibility(savedInstanceState.getBoolean(Constants.KEY_HELP_OVERLAY_IS_VISIBLE));
+                this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
             }
         }
         else
         {
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            toolbar.setTitle(getString(R.string.title_app_name));
-            toolbar.setVisibility(View.VISIBLE);
-            setSupportActionBar(toolbar);
+            //Todo: introduce SplashScreen
+            this.addToolbar();
+            this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
 
-            App.initialize(this);
+
+            if(this.viewModel.isInitializingApp)
+            {
+                this.showProgressBar();
+            }
+            else
+            {
+                this.viewModel.isInitializingApp = true;
+                this.initializeApp();
+            }
         }
     }
 
@@ -135,7 +158,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 {
                     onToolbarHomeButtonBackClicked();
                 }
-
             });
         }
     }
@@ -172,18 +194,19 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
-        if(getSupportActionBar() != null)
+        ActionBar supportActionBar = getSupportActionBar();
+        if(supportActionBar != null)
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
 
             if(title != null && !title.trim().isEmpty())
             {
-                getSupportActionBar().setTitle(title);
+                supportActionBar.setTitle(title);
             }
 
             if(subtitle != null && !subtitle.trim().isEmpty())
             {
-                getSupportActionBar().setSubtitle(subtitle);
+                supportActionBar.setSubtitle(subtitle);
             }
         }
     }
@@ -267,7 +290,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void addHelpOverlayFragment(String title, CharSequence message)
     {
-        if (this.savedInstanceState == null)
+        this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+        if(this.helpOverlayFragment == null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: creating fragment...");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -279,7 +304,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         else
         {
             Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using fragment...");
-            this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
         }
     }
 
@@ -318,7 +342,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void addConfirmDialogFragment()
     {
-        if(this.savedInstanceState == null)
+        this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+
+        if(this.confirmDialogFragment == null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating confirm dialog fragment...");
 
@@ -330,7 +356,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         else
         {
             Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using fragment...");
-            this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
         }
     }
 
@@ -365,5 +390,99 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .hide(fragment)
                 .commit();
+    }
+
+    private void initializeApp()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: initializing app...");
+
+        Object[] params = new Object[1];
+        params[0] = this;
+
+        Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: executing async initialization...");
+        new InitializeAppAsyncTask().execute(params);
+    }
+
+    private static class InitializeAppAsyncTask extends AsyncTask<Object, Void, BaseActivity>
+    {
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected BaseActivity doInBackground(Object... params)
+        {
+            BaseActivity baseActivity = (BaseActivity)params[0];
+            baseActivity.showProgressBar();
+
+//            try
+//            {
+//                Thread.sleep(5000);
+//            }
+//            catch(InterruptedException e)
+//            {
+//                e.printStackTrace();
+//            }
+
+            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.doInBackground:: getting instance of <Content>...");
+            App.content = Content.getInstance(App.persistency);
+            App.content.initialize();
+
+            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.doInBackground:: getting instance of <UserSettings>...");
+            App.userSettings = UserSettings.getInstance(App.persistency);
+            App.userSettings.initialize();
+
+            return baseActivity;
+        }
+
+        @Override
+        protected void onPostExecute(BaseActivity baseActivity)
+        {
+            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.onPostExecute:: finishing initialization...");
+            super.onPostExecute(baseActivity);
+
+            baseActivity.hideProgressBar();
+
+            App.isInitialized = true;
+
+            if(AppSettings.jumpToTestActivityOnStart)
+            {
+                Log.e(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.onPostExecute:: starting TestActivity");
+                baseActivity.startActivity(new Intent(baseActivity, TestActivity.class));
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, String.format("BaseActivity.InitializeAppAsyncTask.onPostExecute:: restarting [%s]",
+                        StringTool.parseActivityName(Objects.requireNonNull(baseActivity.getIntent().getComponent()).getShortClassName())));
+                baseActivity.startActivity(baseActivity.getIntent());
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values)
+        {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    private void showProgressBar()
+    {
+        if(this.progressBar == null)
+        {
+            ViewGroup viewGroup = findViewById(android.R.id.content);
+            View progressBar = getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
+            viewGroup.addView(progressBar);
+
+            this.progressBar = progressBar;
+        }
+
+        this.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar()
+    {
+        this.progressBar.setVisibility(View.GONE);
     }
 }
