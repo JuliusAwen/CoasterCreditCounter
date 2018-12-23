@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapt
 import java.util.List;
 import java.util.Set;
 
-import de.juliusawen.coastercreditcounter.data.elements.Element;
 import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 

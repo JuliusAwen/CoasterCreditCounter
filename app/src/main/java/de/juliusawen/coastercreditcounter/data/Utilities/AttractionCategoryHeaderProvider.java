@@ -55,7 +55,6 @@ public class AttractionCategoryHeaderProvider
                     else
                     {
                         header = AttractionCategoryHeader.create(category);
-//                        App.content.addOrphanElement(header);
                         this.headersByCategoryUuid.put(categoryUuid, header);
                         categorizedAttractions.add(header);
 
@@ -73,7 +72,6 @@ public class AttractionCategoryHeaderProvider
             else
             {
                 Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: no attractions to categorize");
-
                 return categorizedAttractions;
             }
         }
@@ -109,7 +107,6 @@ public class AttractionCategoryHeaderProvider
                 else
                 {
                     AttractionCategoryHeader newHeader = AttractionCategoryHeader.create(category);
-//                    App.content.addOrphanElement(newHeader);
                     this.headersByCategoryUuid.put(categoryUuid, newHeader);
                     categorizedAttractions.add(newHeader);
 
@@ -132,8 +129,6 @@ public class AttractionCategoryHeaderProvider
         categorizedAttractions.removeAll(emptyHeaders);
 
         return this.sortHeadersBasedOnCategoriesOrder(categorizedAttractions);
-
-
     }
 
     private List<IElement> sortHeadersBasedOnCategoriesOrder(List<IElement> attractionCategoryHeaders)
@@ -168,15 +163,4 @@ public class AttractionCategoryHeaderProvider
             return attractionCategoryHeaders;
         }
     }
-
-//    public void removeCreatedAttractionCategoryHeadersFromContent()
-//    {
-//        Log.v(Constants.LOG_TAG,String.format("AttractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent:: " +
-//                "removing [%d] headers from content...", this.headersByCategoryUuid.values().size()));
-//
-//        for(AttractionCategoryHeader header : this.headersByCategoryUuid.values())
-//        {
-//            App.content.removeOrphanElement(header);
-//        }
-//    }
 }
