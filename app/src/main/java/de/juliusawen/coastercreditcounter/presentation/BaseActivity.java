@@ -391,14 +391,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: initializing app...");
 
-        Object[] params = new Object[1];
-        params[0] = this;
-
         Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: executing async initialization...");
-        new InitializeAppAsyncTask().execute(params);
+        new InitializeAppAsyncTask().execute(this);
     }
 
-    private static class InitializeAppAsyncTask extends AsyncTask<Object, Void, BaseActivity>
+    private static class InitializeAppAsyncTask extends AsyncTask<BaseActivity, Void, BaseActivity>
     {
         @Override
         protected void onPreExecute()
@@ -407,9 +404,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
 
         @Override
-        protected BaseActivity doInBackground(Object... params)
+        protected BaseActivity doInBackground(BaseActivity... baseActivities)
         {
-            BaseActivity baseActivity = (BaseActivity)params[0];
+            BaseActivity baseActivity = baseActivities[0];
             baseActivity.showProgressBar();
 
 //            try
