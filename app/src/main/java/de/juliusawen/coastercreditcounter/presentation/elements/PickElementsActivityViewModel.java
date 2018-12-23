@@ -10,8 +10,6 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 public class PickElementsActivityViewModel extends ViewModel
 {
     List<IElement> elementsToPickFrom;
-    String toolbarTitle;
-    String toolbarSubtitle;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
 }

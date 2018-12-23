@@ -160,7 +160,7 @@ public abstract class ActivityTool
 
             if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
             {
-                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_categories_create));
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
             }
 
@@ -214,27 +214,31 @@ public abstract class ActivityTool
 
     public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
-        String toolbarTitle = context.getString(R.string.title_attractions_pick);
+        String toolbarTitle = null;
         String toolbarSubtitle = null;
 
         if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
         {
+            toolbarTitle = context.getString(R.string.title_locations_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
         }
         else if(requestCode == Constants.REQUEST_PICK_PARKS)
         {
+            toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
         }
         else if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
         {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
         }
         else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
         {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
         }
 
-        if(toolbarSubtitle != null)
+        if(toolbarTitle != null)
         {
             Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));

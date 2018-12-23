@@ -20,19 +20,19 @@
     <string name="title_parks_sort">Sort Parks</string>
     <string name="title_parks_pick">Pick Parks</string>
     <string name="subtitle_parks_pick_description">to add to the new location</string>
-    <string name="subtitle_park_show_overview">Overview</string>
-    <string name="subtitle_park_show_attractions">Attractions</string>
-    <string name="subtitle_park_show_visits">Visits</string>
+    <string name="subtitle_park_show_tab_overview">Overview</string>
+    <string name="subtitle_park_show_tab_attractions">Attractions</string>
+    <string name="subtitle_park_show_tab_visits">Visits</string>
 
 
     <string name="title_attractions_sort">Sort Attractions</string>
     <string name="title_attractions_pick">Pick Attractions</string>
-    <string name="subtitle_attractions_description_pick">to add to your vist</string>
+    <string name="subtitle_attractions_description_pick">to add to your visit</string>
 
 
     <string name="title_attraction_categories">Attraction Categories</string>
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
-    <string name="title_attraction_categories_create">Create Attraction Category</string>
+    <string name="title_attraction_category_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
     <string name="subtitle_attraction_category_apply_to_attractions">to apply category to</string>
 

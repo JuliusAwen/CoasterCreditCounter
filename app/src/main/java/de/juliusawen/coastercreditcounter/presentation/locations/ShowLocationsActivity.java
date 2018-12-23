@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,7 +75,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                         this.viewModel.currentElement.getChildrenOfType(Location.class),
-                        new HashSet<IElement>(),
+                        null,
                         Park.class);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());

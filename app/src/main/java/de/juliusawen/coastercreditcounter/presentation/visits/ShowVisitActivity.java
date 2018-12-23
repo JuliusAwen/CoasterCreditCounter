@@ -161,9 +161,9 @@ public class ShowVisitActivity extends BaseActivity
     {
         List<IElement> categorizedVisitedAttractions =
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
+
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 categorizedVisitedAttractions,
-                null,
                 VisitedAttraction.class);
     }
 

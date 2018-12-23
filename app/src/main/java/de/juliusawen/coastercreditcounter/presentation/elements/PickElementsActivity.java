@@ -57,18 +57,16 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            if(!this.viewModel.elementsToPickFrom.isEmpty() && IAttraction.class.isInstance(this.viewModel.elementsToPickFrom.get(0)))
+            if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(Element.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
-                        null,
                         Attraction.class,
                         true);
             }
             else
             {
-                this.viewModel.contentRecyclerViewAdapter =
-                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
             }
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
@@ -79,20 +77,12 @@ public class PickElementsActivity extends BaseActivity
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        if(this.viewModel.toolbarTitle == null)
-        {
-            this.viewModel.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        }
-        if(this.viewModel.toolbarSubtitle == null)
-        {
-            this.viewModel.toolbarSubtitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE);
-        }
-        super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, this.viewModel.toolbarTitle), getText(R.string.help_text_pick_elements));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
 
         this.addSelectOrDeselectAllBar();
     }

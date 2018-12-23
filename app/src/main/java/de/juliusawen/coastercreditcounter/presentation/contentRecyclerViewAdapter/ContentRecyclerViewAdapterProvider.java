@@ -40,33 +40,13 @@ public abstract class ContentRecyclerViewAdapterProvider
         return contentRecyclerViewAdapter;
     }
 
-    public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
-            List<IElement> elements,
-            Set<IElement> initiallyExpandedElements,
-            Class<? extends IElement> childType,
-            boolean selectMultiple)
-    {
-        GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
-        request.adapterType = AdapterType.SELECTABLE;
-        request.elements = elements;
-        request.initiallyExpandedElements = initiallyExpandedElements;
-        request.childType = childType;
-        request.selectMultiple = selectMultiple;
-
-        ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
-        contentRecyclerViewAdapter.setHasStableIds(true);
-        return contentRecyclerViewAdapter;
-    }
-
     public static ContentRecyclerViewAdapter getCountableContentRecyclerViewAdapter(
             List<IElement> parentElements,
-            Set<IElement> initiallyExpandedElements,
             Class<? extends IElement> childTypeToExpand)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.COUNTABLE;
         request.elements = parentElements;
-        request.initiallyExpandedElements = initiallyExpandedElements;
         request.childType = childTypeToExpand;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);

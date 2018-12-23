@@ -42,7 +42,7 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.getString(R.string.title_attraction_categories_create), null);
+        super.setToolbarTitleAndSubtitle(this.getString(R.string.title_attraction_category_create), null);
     }
 
     @Override
