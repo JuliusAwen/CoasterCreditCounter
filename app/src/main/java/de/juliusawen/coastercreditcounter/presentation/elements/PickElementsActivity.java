@@ -99,7 +99,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_check), this));
+        super.setFloatingActionButtonIcon(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_check));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

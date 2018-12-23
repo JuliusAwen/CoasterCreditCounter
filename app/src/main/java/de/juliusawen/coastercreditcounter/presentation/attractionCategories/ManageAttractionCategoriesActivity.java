@@ -350,7 +350,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_add), this));
+        super.setFloatingActionButtonIcon(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_add));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

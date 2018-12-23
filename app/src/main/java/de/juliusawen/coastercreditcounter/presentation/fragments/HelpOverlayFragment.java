@@ -11,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -92,7 +90,7 @@ public class HelpOverlayFragment extends Fragment
         this.textViewMessage.setText(this.viewModel.helpOverlayFragmentMessage);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
-        Drawable drawable = DrawableTool.setTintToWhite(Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_baseline_close), getContext());
+        Drawable drawable = DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_close);
         buttonBack.setImageDrawable(drawable);
         buttonBack.setId(ButtonFunction.CLOSE.ordinal());
         buttonBack.setOnClickListener(new View.OnClickListener()

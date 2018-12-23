@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -585,11 +584,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if(this.expandedParents.contains(parent))
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(viewHolder.imageViewExpandToggle.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
 
             viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
@@ -634,7 +633,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
-        Context context = viewHolder.itemView.getContext();
         VisitedAttraction child = (VisitedAttraction) this.content.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", child, position));
 
@@ -648,8 +646,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
 
-        viewHolder.imageViewDecrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_remove_circle_outline));
-        viewHolder.imageViewIncrease.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_add_circle_outline));
+        viewHolder.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+        viewHolder.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
 
         viewHolder.frameLayoutDecrease.setTag(child);
         viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseOnClickListener);
@@ -660,7 +658,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setImagePlaceholder(ImageView imageView)
     {
-        imageView.setImageDrawable(DrawableTool.setTintToColor(imageView.getContext().getDrawable(R.drawable.ic_baseline_error_outline), R.color.default_color, imageView.getContext()));
+        imageView.setImageDrawable(DrawableTool.getDrawableInColor(R.drawable.ic_baseline_error_outline, R.color.default_color));
     }
 
     public void expandParent(Element parent)

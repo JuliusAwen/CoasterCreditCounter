@@ -174,7 +174,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkOverview()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_comment), this));
+        super.animateFloatingActionButtonTransition(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_comment));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -187,7 +187,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void decorateFloatingActionButtonShowParkAttractions()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_add), this));
+        super.animateFloatingActionButtonTransition(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_add));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -199,7 +199,7 @@ public class ShowParkActivity extends BaseActivity
     }
     private void decorateFloatingActionButtonShowParkVisits()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_add), this));
+        super.animateFloatingActionButtonTransition(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_add));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -220,9 +220,9 @@ public class ShowParkActivity extends BaseActivity
 
         private Drawable tabTitleDrawables[] = new Drawable[]
                 {
-                        DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_home), ShowParkActivity.this),
-                        DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra), ShowParkActivity.this),
-                        DrawableTool.setTintToWhite(getDrawable(R.drawable.ic_baseline_local_activity), ShowParkActivity.this)
+                        DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_home),
+                        DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_airline_seat_legroom_extra),
+                        DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_local_activity)
                 };
 
         TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
