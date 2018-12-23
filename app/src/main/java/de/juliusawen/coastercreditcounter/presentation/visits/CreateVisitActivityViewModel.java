@@ -12,22 +12,10 @@ import de.juliusawen.coastercreditcounter.data.elements.Visit;
 class CreateVisitActivityViewModel extends ViewModel
 {
     Park park;
-
     Visit visit;
-
     Visit existingVisit;
-
     AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
-
     DatePickerDialog datePickerDialog;
-
     Calendar calendar;
-
     boolean datePicked = false;
-
-//    @Override
-//    protected void onCleared()
-//    {
-//        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
-//    }
 }

@@ -8,14 +8,6 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 class ShowAttractionsFragmentViewModel extends ViewModel
 {
     Park park;
-
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-
     AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
-
-//    @Override
-//    protected void onCleared()
-//    {
-//        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
-//    }
 }

@@ -8,7 +8,6 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 
 class SortElementsActivityViewModel extends ViewModel
 {
-    String toolbarTitle;
     List<IElement> elementsToSort;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

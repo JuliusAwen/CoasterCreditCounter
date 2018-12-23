@@ -43,11 +43,6 @@ public class SortElementsActivity extends BaseActivity
             this.viewModel.elementsToSort = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
         
-        if(this.viewModel.toolbarTitle == null)
-        {
-            this.viewModel.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        }
-        
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter =
@@ -58,11 +53,11 @@ public class SortElementsActivity extends BaseActivity
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, this.viewModel.toolbarTitle), getText(R.string.help_text_sort_elements));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, null);
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
 
         super.addFloatingActionButton();
         this.decorateFloatingActionButton();

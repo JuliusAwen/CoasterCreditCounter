@@ -42,18 +42,13 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         {
             this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
-        
-        if(this.viewModel.toolbarTitle == null)
-        {
-            this.viewModel.toolbarTitle = getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        }
-        
+
         super.addConfirmDialogFragment();
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, this.viewModel.toolbarTitle), getText(R.string.help_text_edit));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
 
         super.addToolbar();
-        super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.elementToEdit.getName());
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
 
         this.createEditText();
     }

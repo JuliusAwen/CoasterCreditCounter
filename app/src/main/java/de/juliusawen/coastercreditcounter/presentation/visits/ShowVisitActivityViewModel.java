@@ -8,14 +8,6 @@ import de.juliusawen.coastercreditcounter.presentation.contentRecyclerViewAdapte
 public class ShowVisitActivityViewModel extends ViewModel
 {
     Visit visit;
-
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-
     AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
-
-//    @Override
-//    protected void onCleared()
-//    {
-//        this.attractionCategoryHeaderProvider.removeCreatedAttractionCategoryHeadersFromContent();
-//    }
 }
