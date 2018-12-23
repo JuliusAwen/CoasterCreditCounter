@@ -164,7 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
 
             this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setHomeAsUpIndicator(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_menu));
+            this.actionBar.setHomeAsUpIndicator(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
         }
     }
 

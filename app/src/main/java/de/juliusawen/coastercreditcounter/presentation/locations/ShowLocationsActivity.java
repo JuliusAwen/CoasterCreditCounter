@@ -221,7 +221,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_add));
+        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -320,7 +320,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             if(this.viewModel.recentElements.indexOf(recentElement) != this.viewModel.recentElements.size() -1)
             {
-                Drawable drawable = DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_chevron_right);
+                Drawable drawable = DrawableTool.getColoredDrawable(R.drawable.ic_baseline_chevron_right, R.color.white);
                 textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
                 textView.setText(recentElement.getName());
                 textView.setTag(recentElement);

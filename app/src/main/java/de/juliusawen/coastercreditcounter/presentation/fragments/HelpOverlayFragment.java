@@ -90,7 +90,7 @@ public class HelpOverlayFragment extends Fragment
         this.textViewMessage.setText(this.viewModel.helpOverlayFragmentMessage);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
-        Drawable drawable = DrawableTool.getDrawableInWhite(R.drawable.ic_baseline_close);
+        Drawable drawable = DrawableTool.getColoredDrawable(R.drawable.ic_baseline_close, R.color.white);
         buttonBack.setImageDrawable(drawable);
         buttonBack.setId(ButtonFunction.CLOSE.ordinal());
         buttonBack.setOnClickListener(new View.OnClickListener()
