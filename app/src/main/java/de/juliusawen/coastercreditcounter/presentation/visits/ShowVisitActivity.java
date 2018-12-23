@@ -211,7 +211,7 @@ public class ShowVisitActivity extends BaseActivity
 
         List<IElement> categorizedAttractions =
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-        this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
+        this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 

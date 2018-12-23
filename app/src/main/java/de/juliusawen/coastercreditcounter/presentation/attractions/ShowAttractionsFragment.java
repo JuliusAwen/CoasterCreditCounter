@@ -127,7 +127,7 @@ public  class ShowAttractionsFragment extends Fragment
                     if(selectedElement != null)
                     {
                         Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToElement(((Attraction)selectedElement).getAttractionCategory());
+                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
                     }
                 }
             }
@@ -186,7 +186,7 @@ public  class ShowAttractionsFragment extends Fragment
 
         List<IElement> categorizedAttractions =
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
-        this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedAttractions);
+        this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedAttractions);
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

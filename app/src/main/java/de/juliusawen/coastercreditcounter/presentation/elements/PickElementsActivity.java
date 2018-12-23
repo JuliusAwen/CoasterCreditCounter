@@ -95,7 +95,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
                     returnResult(RESULT_OK);
@@ -136,12 +136,12 @@ public class PickElementsActivity extends BaseActivity
 
                 if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.selectAllElements();
+                    viewModel.contentRecyclerViewAdapter.selectAllItems();
                     changeRadioButtonToDeselectAll();
                 }
                 else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.deselectAllElements();
+                    viewModel.contentRecyclerViewAdapter.deselectAllItems();
                     changeRadioButtonToSelectAll();
                 }
             }
@@ -201,7 +201,7 @@ public class PickElementsActivity extends BaseActivity
         if(resultCode == RESULT_OK)
         {
             List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
-            for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection())
+            for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
             {
                 if(!OrphanElement.class.isInstance(element))
                 {

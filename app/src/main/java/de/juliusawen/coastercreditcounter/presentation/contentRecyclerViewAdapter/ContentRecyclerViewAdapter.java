@@ -39,7 +39,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private AdapterType adapterType;
 
-    private List<IElement> content = new ArrayList<>();
+    private List<IElement> items = new ArrayList<>();
 
     private Set<IElement> expandedParents = new HashSet<>();
     private View.OnClickListener expansionOnClickListener;
@@ -202,7 +202,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position)
     {
-        IElement item = this.content.get(position);
+        IElement item = this.items.get(position);
 
         if(this.isParent(item))
         {
@@ -216,11 +216,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return ViewType.VISITED_ATTRACTION.ordinal();
         }
-        else if(ItemDivider.class.isInstance(item))
+        else if(item instanceof ItemDivider)
         {
             return ViewType.ITEM_DIVIDER.ordinal();
         }
-        else if(BottomSpacer.class.isInstance(item))
+        else if(item instanceof BottomSpacer)
         {
             return ViewType.BOTTOM_SPACER.ordinal();
         }
@@ -228,26 +228,26 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return -1;
     }
 
-    private boolean isParent(IElement element)
+    private boolean isParent(IElement item)
     {
-        return !ItemDivider.class.isInstance(element) && (this.childType == null || !this.childType.isInstance(element) && !BottomSpacer.class.isInstance(element));
+        return !(item instanceof ItemDivider) && (this.childType == null || !this.childType.isInstance(item) && !(item instanceof BottomSpacer));
     }
 
-    private boolean isChild(IElement element)
+    private boolean isChild(IElement item)
     {
-        return !ItemDivider.class.isInstance(element) && (this.childType != null && (this.childType.isInstance(element) || !BottomSpacer.class.isInstance(element)));
+        return !(item instanceof ItemDivider) && (this.childType != null && (this.childType.isInstance(item) || !(item instanceof BottomSpacer)));
     }
 
     @Override
     public int getItemCount()
     {
-        return this.content.size();
+        return this.items.size();
     }
 
     @Override
     public long getItemId(int position)
     {
-        return this.content.get(position).getItemId();
+        return this.items.get(position).getItemId();
     }
 
     @Override
@@ -295,7 +295,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.expandedParents = new HashSet<>(request.initiallyExpandedElements);
         }
 
-        this.initializeContent(request.elements);
+        this.initializeItems(request.elements);
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
@@ -303,21 +303,21 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.decreaseOnClickListener = this.getDecreaseOnClickListener();
     }
 
-    private void initializeContent(List<IElement> parents)
+    private void initializeItems(List<IElement> parents)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: initializing [%d] parents...", parents.size()));
-        this.content.clear();
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: initializing [%d] parents...", parents.size()));
+        this.items.clear();
 
         for(IElement parent : parents)
         {
-            this.content.add(parent);
+            this.items.add(parent);
             if(this.childType != null && this.expandedParents.contains(parent))
             {
-                this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeContent:: parent %s is expanded - [%d] children added",
+                this.items.addAll(this.items.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: parent %s is expanded - [%d] children added",
                         parent, parent.getChildCountOfType(this.childType)));
             }
-            this.content.add(new ItemDivider());
+            this.items.add(new ItemDivider());
         }
     }
 
@@ -349,25 +349,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onClick(View view)
             {
-                final Element selectedElement = (Element) view.getTag();
+                final IElement selectedItem = (IElement) view.getTag();
 
-                if(!selectedElementsInOrderOfSelection.contains(selectedElement))
+                if(!selectedElementsInOrderOfSelection.contains(selectedItem))
                 {
                     if(selectMultiple)
                     {
-                        selectedElementsInOrderOfSelection.add(selectedElement);
-                        notifyItemChanged(content.indexOf(selectedElement));
-                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedElement));
+                        selectedElementsInOrderOfSelection.add(selectedItem);
+                        notifyItemChanged(items.indexOf(selectedItem));
+                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
 
-                        if(childType != null && isParent(selectedElement))
+                        if(childType != null && isParent(selectedItem))
                         {
-                            selectAllChildren(selectedElement);
+                            selectAllChildren(selectedItem);
                         }
 
-                        if(childType != null && isChild(selectedElement) && Attraction.class.isInstance(selectedElement))
+                        if(childType != null && isChild(selectedItem) && (selectedItem instanceof Attraction))
                         {
                             AttractionCategoryHeader attractionCategoryHeader =
-                                    getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttractionCategory());
+                                    getAttractionCategoryHeaderForAttractionCategoryFromItems(((Attraction)selectedItem).getAttractionCategory());
 
                             if(attractionCategoryHeader != null)
                             {
@@ -384,7 +384,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                 if(children.size() <= 0)
                                 {
                                     selectedElementsInOrderOfSelection.add(attractionCategoryHeader);
-                                    notifyItemChanged(content.indexOf(attractionCategoryHeader));
+                                    notifyItemChanged(items.indexOf(attractionCategoryHeader));
                                     Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", attractionCategoryHeader));
                                 }
                             }
@@ -392,38 +392,38 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                     else
                     {
-                        IElement previouslySelectedElement = getLastSelectedElement();
+                        IElement previouslySelectedElement = getLastSelectedItem();
 
                         if(previouslySelectedElement != null)
                         {
                             selectedElementsInOrderOfSelection.remove(previouslySelectedElement);
-                            notifyItemChanged(content.indexOf(previouslySelectedElement));
+                            notifyItemChanged(items.indexOf(previouslySelectedElement));
                             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedElement));
                         }
 
-                        selectedElementsInOrderOfSelection.add(selectedElement);
-                        notifyItemChanged(content.indexOf(selectedElement));
-                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedElement));
+                        selectedElementsInOrderOfSelection.add(selectedItem);
+                        notifyItemChanged(items.indexOf(selectedItem));
+                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
                     }
                 }
                 else
                 {
-                    selectedElementsInOrderOfSelection.remove(selectedElement);
-                    notifyItemChanged(content.indexOf(selectedElement));
+                    selectedElementsInOrderOfSelection.remove(selectedItem);
+                    notifyItemChanged(items.indexOf(selectedItem));
 
-                    Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", selectedElement));
+                    Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", selectedItem));
 
-                    if(childType != null && isParent(selectedElement))
+                    if(childType != null && isParent(selectedItem))
                     {
-                        deselectAllChildren(selectedElement);
+                        deselectAllChildren(selectedItem);
                     }
-                    else if(childType != null && isChild(selectedElement) && Attraction.class.isInstance(selectedElement))
+                    else if(childType != null && isChild(selectedItem) && Attraction.class.isInstance(selectedItem))
                     {
                         AttractionCategoryHeader attractionCategoryHeader =
-                                getAttractionCategoryHeaderForAttractionCategoryFromContent(content, ((Attraction)selectedElement).getAttractionCategory());
+                                getAttractionCategoryHeaderForAttractionCategoryFromItems(((Attraction)selectedItem).getAttractionCategory());
 
                         selectedElementsInOrderOfSelection.remove(attractionCategoryHeader);
-                        notifyItemChanged(content.indexOf(attractionCategoryHeader));
+                        notifyItemChanged(items.indexOf(attractionCategoryHeader));
                         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", attractionCategoryHeader));
                     }
                 }
@@ -449,7 +449,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 visitedAttraction.increaseRideCount(App.userSettings.getDefaultIncrement());
-                notifyItemChanged(content.indexOf(visitedAttraction));
+                notifyItemChanged(items.indexOf(visitedAttraction));
             }
         };
     }
@@ -468,21 +468,21 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(visitedAttraction.decreaseRideCount(App.userSettings.getDefaultIncrement()))
                 {
-                    notifyItemChanged(content.indexOf(visitedAttraction));
+                    notifyItemChanged(items.indexOf(visitedAttraction));
                 }
             }
         };
     }
 
-    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromContent(List<? extends IElement> content, AttractionCategory attractionCategory)
+    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromItems(AttractionCategory attractionCategory)
     {
-        for(IElement element : content)
+        for(IElement item : this.items)
         {
-            if(AttractionCategoryHeader.class.isInstance(element))
+            if(item instanceof AttractionCategoryHeader)
             {
-                if(((AttractionCategoryHeader)element).getAttractionCategory().equals(attractionCategory))
+                if(((AttractionCategoryHeader)item).getAttractionCategory().equals(attractionCategory))
                 {
-                    return (AttractionCategoryHeader) element;
+                    return (AttractionCategoryHeader) item;
                 }
             }
         }
@@ -492,38 +492,36 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
 
-    private void selectAllChildren(Element element)
+    private void selectAllChildren(IElement item)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllChildren:: selecting [%d] children of element %s",
-                element.getChildCountOfType(this.childType), element));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllChildren:: selecting [%d] children of item %s", item.getChildCountOfType(this.childType), item));
 
-        for(IElement child : element.getChildrenOfType(this.childType))
+        for(IElement child : item.getChildrenOfType(this.childType))
         {
             if(!this.selectedElementsInOrderOfSelection.contains(child))
             {
                 this.selectedElementsInOrderOfSelection.add(child);
-                if(this.content.contains(child))
+                if(this.items.contains(child))
                 {
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllChildren:: [%s] selected", child));
-                    notifyItemChanged(this.content.indexOf(child));
+                    notifyItemChanged(this.items.indexOf(child));
                 }
             }
         }
     }
 
-    private void deselectAllChildren(Element element)
+    private void deselectAllChildren(IElement item)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectAllChildren:: deselecting [%d] children of element %s"
-                , element.getChildCountOfType(this.childType), element));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectAllChildren:: deselecting [%d] children of item %s", item.getChildCountOfType(this.childType), item));
 
-        for(IElement child : element.getChildrenOfType(this.childType))
+        for(IElement child : item.getChildrenOfType(this.childType))
         {
             if(this.selectedElementsInOrderOfSelection.contains(child))
             {
                 this.selectedElementsInOrderOfSelection.remove(child);
-                if(this.content.contains(child))
+                if(this.items.contains(child))
                 {
-                    notifyItemChanged(this.content.indexOf(child));
+                    notifyItemChanged(this.items.indexOf(child));
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectAllChildren:: [%s] deselected", child));
                 }
             }
@@ -537,7 +535,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void bindViewHolderParent(final ViewHolderParent viewHolder, int position)
     {
-        IElement parent = this.content.get(position);
+        IElement parent = this.items.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderParent:: binding %s for position [%d]...", parent, position));
 
         this.decorateExpandToggle(viewHolder, parent);
@@ -601,7 +599,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void bindViewHolderChild(ViewHolderChild viewHolder, int position)
     {
-        IElement child = this.content.get(position);
+        IElement child = this.items.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderChild:: binding %s for position [%d]", child, position));
 
         viewHolder.textViewName.setText(child.getName());
@@ -633,7 +631,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
-        VisitedAttraction child = (VisitedAttraction) this.content.get(position);
+        VisitedAttraction child = (VisitedAttraction) this.items.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", child, position));
 
         viewHolder.linearLayoutCounter.setTag(child);
@@ -661,19 +659,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         imageView.setImageDrawable(DrawableTool.getDrawableInColor(R.drawable.ic_baseline_error_outline, R.color.default_color));
     }
 
-    public void expandParent(Element parent)
+    public void expandParent(IElement parent)
     {
         if(!this.expandedParents.contains(parent))
         {
-            if(this.childType != null && this.content.contains(parent))
+            if(this.childType != null && this.items.contains(parent))
             {
                 this.expandedParents.add(parent);
-                notifyItemChanged(this.content.indexOf(parent));
+                notifyItemChanged(this.items.indexOf(parent));
 
-                this.content.addAll(this.content.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-                notifyItemRangeInserted(this.content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+                this.items.addAll(this.items.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
+                notifyItemRangeInserted(this.items.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
 
-                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(this.content.indexOf(parent), 0);
+                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(this.items.indexOf(parent), 0);
 
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandParent:: " +
                         "expanded parent %s with [%d] children", parent, parent.getChildCountOfType(this.childType)));
@@ -685,23 +683,23 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private void collapseParent(Element parent)
+    private void collapseParent(IElement parent)
     {
         if(this.childType != null && this.expandedParents.contains(parent))
         {
             this.expandedParents.remove(parent);
-            notifyItemChanged(content.indexOf(parent));
+            notifyItemChanged(items.indexOf(parent));
 
-            this.content.removeAll(parent.getChildrenOfType(this.childType));
-            notifyItemRangeRemoved(content.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
+            this.items.removeAll(parent.getChildrenOfType(this.childType));
+            notifyItemRangeRemoved(items.indexOf(parent) + 1, parent.getChildCountOfType(this.childType));
 
-            this.recyclerView.scrollToPosition(content.indexOf(parent));
+            this.recyclerView.scrollToPosition(items.indexOf(parent));
 
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseParent:: collapsed parent %s", parent));
         }
     }
 
-    public void toggleExpansion(Element parent)
+    public void toggleExpansion(IElement parent)
     {
         if(this.childType != null)
         {
@@ -716,72 +714,72 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public List<IElement> getContent()
+    public List<IElement> getItems()
     {
         List<IElement> content = new ArrayList<>();
-        for(IElement element : this.content)
+        for(IElement item : this.items)
         {
-            if(!ItemDivider.class.isInstance(element) && !BottomSpacer.class.isInstance(element))
+            if(!(item instanceof ItemDivider) && !(item instanceof BottomSpacer))
             {
-                content.add(element);
+                content.add(item);
             }
         }
 
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getContent:: returning [%d] elements", content.size()));
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getItems:: returning [%d] elements", content.size()));
         return content;
     }
 
-    public void swapElements(IElement element1, IElement element2)
+    public void swapItems(IElement item1, IElement item2)
     {
-        int index1 = this.content.indexOf(element1);
-        int index2 = this.content.indexOf(element2);
+        int index1 = this.items.indexOf(item1);
+        int index2 = this.items.indexOf(item2);
 
-        Collections.swap(this.content, index1, index2);
+        Collections.swap(this.items, index1, index2);
         notifyItemMoved(index1, index2);
 
-        this.scrollToElement(element1);
+        this.scrollToItem(item1);
     }
 
     public boolean isAllSelected()
     {
-        List<IElement> content = new ArrayList<>(this.getContent());
+        List<IElement> content = new ArrayList<>(this.getItems());
         content.removeAll(this.selectedElementsInOrderOfSelection);
         return content.size() <= 0;
     }
 
-    public void selectAllElements()
+    public void selectAllItems()
     {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllElements:: selecting all elements...");
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllItems:: selecting all elements...");
 
         this.selectedElementsInOrderOfSelection.clear();
 
-        for(IElement element : this.getContent())
+        for(IElement item : this.getItems())
         {
-            this.selectedElementsInOrderOfSelection.add(element);
-            notifyItemChanged(this.content.indexOf(element));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllElements:: %s parent selected", element));
+            this.selectedElementsInOrderOfSelection.add(item);
+            notifyItemChanged(this.items.indexOf(item));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: %s parent selected", item));
 
-            if(this.childType != null && this.isParent(element) && !this.expandedParents.contains(element))
+            if(this.childType != null && this.isParent(item) && !this.expandedParents.contains(item))
             {
-                this.selectedElementsInOrderOfSelection.addAll(element.getChildrenOfType(childType));
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllElements:: selected [%d] children of %s", element.getChildCountOfType(childType), element));
+                this.selectedElementsInOrderOfSelection.addAll(item.getChildrenOfType(childType));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: selected [%d] children of %s", item.getChildCountOfType(childType), item));
             }
         }
     }
 
-    public void deselectAllElements()
+    public void deselectAllItems()
     {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllElements:: deselecting all elements...");
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllItems:: deselecting all elements...");
         this.selectedElementsInOrderOfSelection.clear();
         notifyDataSetChanged();
     }
 
-    public List<IElement> getSelectedElementsInOrderOfSelection()
+    public List<IElement> getSelectedItemsInOrderOfSelection()
     {
         return this.selectedElementsInOrderOfSelection;
     }
 
-    public IElement getLastSelectedElement()
+    public IElement getLastSelectedItem()
     {
         if(!this.selectedElementsInOrderOfSelection.isEmpty())
         {
@@ -791,10 +789,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return null;
     }
 
-    public void updateContent(List<IElement> elements)
+    public void updateItems(List<IElement> items)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateContent:: updating with [%d] elements...", elements.size()));
-        this.initializeContent(elements);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating with [%d] items...", items.size()));
+        this.initializeItems(items);
     }
 
 
@@ -803,36 +801,36 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.recyclerOnClickListener = onClickListener;
     }
 
-    public void scrollToElement(IElement element)
+    public void scrollToItem(IElement item)
     {
-        if(element instanceof AttractionCategory)
+        if(item instanceof AttractionCategory)
         {
-            for(IElement item : this.content)
+            for(IElement element : this.items)
             {
-                if(item instanceof AttractionCategoryHeader)
+                if(element instanceof AttractionCategoryHeader)
                 {
-                    if(((AttractionCategoryHeader) item).getAttractionCategory().equals(element))
+                    if(((AttractionCategoryHeader) element).getAttractionCategory().equals(item))
                     {
-                        element = item;
+                        item = element;
                         break;
                     }
                 }
             }
         }
 
-        if(this.content.contains(element) && this.recyclerView != null)
+        if(this.items.contains(item) && this.recyclerView != null)
         {
-            recyclerView.scrollToPosition(content.indexOf(element));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToElement:: scrolled to [%s]", element));
+            recyclerView.scrollToPosition(items.indexOf(item));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to [%s]", item));
         }
     }
 
     public void addBottomSpacer()
     {
-        if(!this.content.isEmpty())
+        if(!this.items.isEmpty() && !(this.items.get(this.items.size() - 1) instanceof BottomSpacer))
         {
-            this.content.add(new BottomSpacer());
-            notifyItemInserted(this.content.size() - 1);
+            this.items.add(new BottomSpacer());
+            notifyItemInserted(this.items.size() - 1);
             Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.addBottomSpacer:: added BottomSpacer");
         }
     }

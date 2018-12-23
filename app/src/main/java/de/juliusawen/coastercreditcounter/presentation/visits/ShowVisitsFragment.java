@@ -185,7 +185,7 @@ public class ShowVisitsFragment extends Fragment
         {
             List<IElement> categorizedVisits = this.getCategorizedVisits();
 
-            this.viewModel.contentRecyclerViewAdapter.updateContent(categorizedVisits);
+            this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedVisits);
 
             if(expandLatestYearHeaderAccordingToSettings && App.userSettings.getExpandLatestYearInListByDefault())
             {

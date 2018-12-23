@@ -150,7 +150,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
                 updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToElement(resultElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
 
             }
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
@@ -168,7 +168,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 if(selectedElementUuidString != null)
                 {
                     IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
                 }
                 else
                 {
@@ -181,7 +181,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToElement(editedElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(editedElement);
             }
         }
     }
@@ -533,7 +533,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             {
                                 App.content.addElementAndChildren(viewModel.longClickedElement);
                                 updateContentRecyclerView();
-                                viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.longClickedElement);
+                                viewModel.contentRecyclerViewAdapter.scrollToItem(viewModel.longClickedElement);
 
                                 Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_restored_text, viewModel.longClickedElement.getName()));
                             }
@@ -590,7 +590,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             {
                                 App.content.addElement(viewModel.longClickedElement);
                                 updateContentRecyclerView();
-                                viewModel.contentRecyclerViewAdapter.scrollToElement(viewModel.longClickedElement);
+                                viewModel.contentRecyclerViewAdapter.scrollToItem(viewModel.longClickedElement);
 
                                 Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_restored_text, viewModel.longClickedElement.getName()));
                             }
@@ -611,7 +611,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.currentElement.getChildrenOfType(Location.class));
+        this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.currentElement.getChildrenOfType(Location.class));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

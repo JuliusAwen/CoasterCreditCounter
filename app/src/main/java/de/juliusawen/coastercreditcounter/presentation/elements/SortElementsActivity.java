@@ -91,13 +91,13 @@ public class SortElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
                 Element.sortElementsByNameAscending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             case SORT_DESCENDING:
                 Element.sortElementsByNameDescending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateContent(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
@@ -142,14 +142,14 @@ public class SortElementsActivity extends BaseActivity
             public void onClick(View view)
             {
                 Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedElement());
+                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
 
                     if(position < viewModel.elementsToSort.size() - 1)
                     {
                         Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
-                        viewModel.contentRecyclerViewAdapter.swapElements(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position +1));
+                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position +1));
                         Collections.swap(viewModel.elementsToSort, position, position +1);
                     }
                     else
@@ -174,15 +174,15 @@ public class SortElementsActivity extends BaseActivity
             {
                 Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
 
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedElement());
+                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
 
                     if(position > 0)
                     {
                         Log.d(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
 
-                        viewModel.contentRecyclerViewAdapter.swapElements(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position -1));
+                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position -1));
                         Collections.swap(viewModel.elementsToSort, position, position -1);
                     }
                     else
@@ -208,9 +208,9 @@ public class SortElementsActivity extends BaseActivity
 
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.viewModel.elementsToSort));
 
-            if(!this.viewModel.contentRecyclerViewAdapter.getSelectedElementsInOrderOfSelection().isEmpty())
+            if(!this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
             {
-                IElement lastSelectedElement = this.viewModel.contentRecyclerViewAdapter.getLastSelectedElement();
+                IElement lastSelectedElement = this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem();
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, lastSelectedElement.getUuid().toString());
             }
         }

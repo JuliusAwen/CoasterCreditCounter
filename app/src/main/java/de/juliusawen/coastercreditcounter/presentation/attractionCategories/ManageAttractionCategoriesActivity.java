@@ -136,7 +136,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                     App.content.addAttractionCategory(attractionCategory);
 
                     this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(attractionCategory);
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(attractionCategory);
                 }
                 else
                 {
@@ -149,7 +149,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
             {
                 this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
@@ -162,7 +162,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 {
                     Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...",
                             selectedElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToElement(selectedElement);
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
                 }
             }
             else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
@@ -311,7 +311,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                     Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
 
                     final List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
-                    final int index = viewModel.contentRecyclerViewAdapter.getContent().indexOf(viewModel.longClickedAttractionCategory);
+                    final int index = viewModel.contentRecyclerViewAdapter.getItems().indexOf(viewModel.longClickedAttractionCategory);
 
                     for(IAttraction child : children)
                     {
@@ -367,7 +367,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     {
         Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
 
-        this.viewModel.contentRecyclerViewAdapter.updateContent(new ArrayList<IElement>(App.content.getAttractionCategories()));
+        this.viewModel.contentRecyclerViewAdapter.updateItems(new ArrayList<IElement>(App.content.getAttractionCategories()));
         this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }
