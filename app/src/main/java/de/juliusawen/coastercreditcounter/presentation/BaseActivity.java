@@ -65,18 +65,20 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
+            Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
+
             //Todo: introduce SplashScreen
             this.addToolbar();
             this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
 
             if(this.viewModel.isInitializingApp)
             {
-                Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: app is initializing...");
+                Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: app is initializing...");
                 this.showProgressBar();
             }
             else
             {
-                Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: initializing app initialization...");
+                Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: starting app initialization...");
                 this.viewModel.isInitializingApp = true;
                 this.startAppInitialization();
             }
