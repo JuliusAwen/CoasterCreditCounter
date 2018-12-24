@@ -390,10 +390,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
         this.showProgressBar();
 
-        new InitializeAppAsyncTask().execute(this);
+        new InitializeApp().execute(this);
     }
 
-    private static class InitializeAppAsyncTask extends AsyncTask<BaseActivity, Void, BaseActivity>
+    private static class InitializeApp extends AsyncTask<BaseActivity, Void, BaseActivity>
     {
         @Override
         protected void onPreExecute()
@@ -404,13 +404,15 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         @Override
         protected BaseActivity doInBackground(BaseActivity... baseActivities)
         {
-            if(App.initialize())
+            boolean success = App.initialize();
+
+            if(success)
             {
                 return baseActivities[0];
             }
 
             String message = "App initialization failed";
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeAppAsyncTask.doInBackground:: %s", message));
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeApp.doInBackground:: %s", message));
             throw new IllegalStateException(message);
         }
 
