@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.presentation.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class MainActivity extends BaseActivity
@@ -16,7 +17,7 @@ public class MainActivity extends BaseActivity
 
         if(App.isInitialized)
         {
-            ActivityTool.startNavigationHubActivity(this);
+            ActivityTool.startActivity(this, NavigationHubActivity.class);
         }
     }
 }

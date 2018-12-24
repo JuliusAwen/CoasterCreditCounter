@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.presentation.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
@@ -436,18 +436,16 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         this.hideProgressBar();
 
-        App.isInitialized = true;
-
         if(AppSettings.jumpToTestActivityOnStart)
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
-            startActivity(new Intent(this, TestActivity.class));
+            ActivityTool.startActivity(this, TestActivity.class);
         }
         else
         {
             Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
                     StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
-            startActivity(new Intent(this, this.getClass()));
+            ActivityTool.startActivity(this, this.getClass());
         }
     }
 

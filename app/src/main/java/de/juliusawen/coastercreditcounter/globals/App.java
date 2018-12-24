@@ -36,19 +36,26 @@ public class App extends Application
 
     public static boolean initialize()
     {
-                    try
-                    {
-                        Thread.sleep(2000);
-                    }
-                    catch(InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
+//                    try
+//                    {
+//                        Thread.sleep(2000);
+//                    }
+//                    catch(InterruptedException e)
+//                    {
+//                        e.printStackTrace();
+//                    }
 
         App.content = Content.getInstance(App.persistency);
         App.userSettings = UserSettings.getInstance(App.persistency);
 
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Content> and <UserSettings>...");
-        return App.content.initialize() && App.userSettings.initialize();
+        boolean success = App.content.initialize() && App.userSettings.initialize();
+
+        if(success)
+        {
+            App.isInitialized = true;
+        }
+
+        return success;
     }
 }

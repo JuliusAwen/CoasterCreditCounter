@@ -21,7 +21,6 @@ import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActi
 import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.presentation.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
@@ -257,11 +256,11 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startNavigationHubActivity(Context context)
+    public static void startActivity(Context context, Class type)
     {
-        Intent intent = new Intent(context, NavigationHubActivity.class);
+        Intent intent = new Intent(context, type);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startNavigationHubActivity:: starting [%s]...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s]...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);
