@@ -2,6 +2,11 @@ package de.juliusawen.coastercreditcounter.globals;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
@@ -36,26 +41,73 @@ public class UserSettings
 
     private UserSettings(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG,"UserSettings.Constructor:: <UserSettings> instantiated");
         this.persistency = persistency;
+        Log.i(Constants.LOG_TAG,"UserSettings.Constructor:: <UserSettings> instantiated");
     }
 
     public boolean initialize()
     {
+        boolean success;
+
         Log.i(Constants.LOG_TAG, "UserSettings.initialize:: loading UserSettings...");
         Stopwatch stopwatch = new Stopwatch(true);
-        persistency.loadSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings took [%d]ms", stopwatch.stop()));
+        success = persistency.loadUserSettings(this);
+        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings successful[%S] - took [%d]ms", success, stopwatch.stop()));
 
-        Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
+        if(success)
+        {
+            success = this.validate();
 
-        return this.validate();
+            if(success)
+            {
+                Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
+            }
+        }
+        return success;
     }
 
     private boolean validate()
     {
-        //Todo: implement
+        Log.i(Constants.LOG_TAG, "UserSettings.validate:: validating user settings...");
+
+        if(this.getDefaultSortOrderParkVisits() == null)
+        {
+            Log.e(Constants.LOG_TAG, "UserSettings.validate:: validating user settings failed: default sort order for park visits is null");
+            return false;
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: default sort order for park visits is [%S]", this.getDefaultSortOrderParkVisits().toString()));
+        }
+
+        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: expand latest year in visits list [%S]", this.getExpandLatestYearInListByDefault()));
+
+        String dayNames[] = new DateFormatSymbols().getWeekdays();
+        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
+
+        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: default increment is [%S]", this.getDefaultIncrement()));
+
+
+        Log.i(Constants.LOG_TAG, "UserSettings.validate:: validating user settings successful");
         return true;
+    }
+
+    public JSONObject toJson()
+    {
+        return null;
+    }
+
+    public void useDefaults()
+    {
+        //        this.setJumpToOpenVisitOnStart(false);
+
+        this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
+
+        this.setExpandLatestYearInListByDefault(true);
+
+        this.setFirstDayOfTheWeek(Calendar.MONDAY);
+
+        this.setDefaultIncrement(1);
     }
 
     public SortOrder getDefaultSortOrderParkVisits()

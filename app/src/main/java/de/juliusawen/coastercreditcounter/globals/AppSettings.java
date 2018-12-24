@@ -15,9 +15,9 @@ public abstract class AppSettings
 //    public static final String DATABASE_WRAPPER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
 
 
-    public static String exportFileName = "CoasterCreditCounterExport.json";
-
+    public static String contentFileName = "CoasterCreditCounterExport.json";
     public static String userSettingsFileName = "UserSettings.json";
+    public static String appSettingsFileName = "AppSettings.json";
 
     public static File getExternalStorageDocumentsDirectory()
     {

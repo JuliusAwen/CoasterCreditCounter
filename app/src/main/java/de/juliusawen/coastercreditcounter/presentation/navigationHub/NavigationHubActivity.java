@@ -25,7 +25,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.FileTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -157,9 +156,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.exportFileName;
+                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.contentFileName;
 
-                    if(FileTool.fileExists(exportFileAbsolutePath))
+                    if(App.persistency.fileExists(exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -188,9 +187,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.exportFileName;
+                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.contentFileName;
 
-                    if(FileTool.fileExists(exportFileAbsolutePath))
+                    if(App.persistency.fileExists(exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 

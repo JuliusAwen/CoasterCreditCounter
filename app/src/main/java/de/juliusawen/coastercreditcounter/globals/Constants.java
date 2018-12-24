@@ -39,6 +39,13 @@ public abstract class Constants
     public static final String JSON_STRING_IS_DEFAULT = "is default";
 
 
+    public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
+    public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";
+    public static final String JSON_STRING_FIRST_DAY_OF_THE_WEEK = "first day of the week";
+    public static final String JSON_STRING_DEFAULT_INCREMENT = "default increment";
+
+
+
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_TOOLBAR_TITLE = "de.juliusawen.coding.extra_toolbar_title";

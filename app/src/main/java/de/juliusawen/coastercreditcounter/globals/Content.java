@@ -41,24 +41,30 @@ public class Content
 
     private Content(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
         this.persistency = persistency;
+        Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
     }
 
     public boolean initialize()
     {
-
+        boolean success;
         Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
-        this.persistency.loadContent(this);
+        success = this.persistency.loadContent(this);
         Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: loading content took [%d]ms", stopwatchFetchContent.stop()));
 
-        return this.validate();
+        if(success)
+        {
+            success = this.validate();
+        }
+        return success;
     }
 
     public boolean validate()
     {
+        Log.e(Constants.LOG_TAG, "Content.validate:: validation not yet implemented");
         //Todo: implement
+
         return true;
     }
 

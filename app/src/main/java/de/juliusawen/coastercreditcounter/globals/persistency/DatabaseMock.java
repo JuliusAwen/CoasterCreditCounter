@@ -23,8 +23,6 @@ import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.UserSettings;
-import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -38,7 +36,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     private DatabaseMock() {}
 
     @Override
-    public void loadContent(Content content)
+    public boolean loadContent(Content content)
     {
         AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides", null);
         AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides", null);
@@ -515,6 +513,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         content.addElements(Element.convertElementsToType(blueprints, IElement.class));
         this.flattenContentTree(App.content.getRootLocation());
+
+        return true;
     }
 
     private void addAttractionsToVisit(Visit visit, List<IOnSiteAttraction> attractions)
@@ -544,18 +544,9 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
-    public void loadSettings(UserSettings userSettings)
+    public boolean saveContent(Content content)
     {
-        Log.v(Constants.LOG_TAG, "DatabaseMock.loadSettings:: creating mock data");
-
-        //        userSettings.setJumpToOpenVisitOnStart(false);
-
-        userSettings.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
-
-        userSettings.setExpandLatestYearInListByDefault(true);
-
-        userSettings.setFirstDayOfTheWeek(Calendar.MONDAY);
-
-        userSettings.setDefaultIncrement(1);
+        Log.w(Constants.LOG_TAG,  "DatabaseMock.saveContent:: Content is not persited - as DatabaseMock is not able to save any data");
+        return true;
     }
 }
