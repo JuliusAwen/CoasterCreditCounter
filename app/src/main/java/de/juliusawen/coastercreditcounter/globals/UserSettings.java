@@ -47,23 +47,28 @@ public class UserSettings
 
     public boolean initialize()
     {
-        boolean success;
-
         Log.i(Constants.LOG_TAG, "UserSettings.initialize:: loading UserSettings...");
         Stopwatch stopwatch = new Stopwatch(true);
-        success = persistency.loadUserSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings successful [%S] - took [%d]ms", success, stopwatch.stop()));
 
-        if(success)
+        if(persistency.loadUserSettings(this))
         {
-            success = this.validate();
-
-            if(success)
+            if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
+                Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings successful - took [%d]ms", stopwatch.stop()));
+                return true;
+            }
+            else
+            {
+                Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings failed: validation failed - took [%d]ms", stopwatch.stop()));
             }
         }
-        return success;
+        else
+        {
+            Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings failed - took [%d]ms", stopwatch.stop()));
+        }
+
+        return false;
     }
 
     private boolean validate()
