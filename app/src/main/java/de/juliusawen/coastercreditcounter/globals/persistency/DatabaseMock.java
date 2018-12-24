@@ -527,15 +527,14 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void flattenContentTree(IElement element)
     {
-        Log.i(Constants.LOG_TAG,  "DatabaseMock.flattenContentTree:: adding elements to content (if not already known)");
-
-        if(App.content.getContentByUuid(element.getUuid()) == null)
+        if(!App.content.containsElement(element))
         {
+            Log.v(Constants.LOG_TAG, String.format("DatabaseMock.flattenContentTree:: adding %s to content", element));
             App.content.addElement(element);
         }
         else
         {
-            Log.v(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Not adding %s as it is already known to content", element));
+            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Not adding %s to content as it is already known", element));
         }
 
         for (IElement child : element.getChildren())

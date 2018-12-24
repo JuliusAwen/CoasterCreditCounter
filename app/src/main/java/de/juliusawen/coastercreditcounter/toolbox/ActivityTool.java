@@ -259,8 +259,11 @@ public abstract class ActivityTool
 
     public static void startNavigationHubActivity(Context context)
     {
+        Intent intent = new Intent(context, NavigationHubActivity.class);
+
         Log.i(Constants.LOG_TAG, String.format("ActivityTool.startNavigationHubActivity:: starting [%s]...",
-                StringTool.parseActivityName(Objects.requireNonNull(((Activity) context).getIntent().getComponent()).getShortClassName())));
-        context.startActivity(new Intent(context, NavigationHubActivity.class));
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        context.startActivity(intent);
     }
 }

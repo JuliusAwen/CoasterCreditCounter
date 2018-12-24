@@ -45,12 +45,21 @@ public class Content
         this.persistency = persistency;
     }
 
-    public void initialize()
+    public boolean initialize()
     {
+
         Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
         Stopwatch stopwatchFetchContent = new Stopwatch(true);
         this.persistency.loadContent(this);
         Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: loading content took [%d]ms", stopwatchFetchContent.stop()));
+
+        return this.validate();
+    }
+
+    public boolean validate()
+    {
+        //Todo: implement
+        return true;
     }
 
     public void clear()
@@ -116,6 +125,11 @@ public class Content
         Location rootLocation = this.getContentAsType(Location.class).get(0).getRootLocation();
         this.rootLocation = rootLocation;
         Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
+    }
+
+    public boolean containsElement(IElement element)
+    {
+        return this.elementsByUuid.values().contains(element);
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)

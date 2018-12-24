@@ -111,6 +111,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
             this.frameLayoutDecrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Decrease);
             this.frameLayoutIncrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Increase);
+
+            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+            this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
         }
     }
 
@@ -643,9 +646,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
-
-        viewHolder.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
-        viewHolder.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
 
         viewHolder.frameLayoutDecrease.setTag(child);
         viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseOnClickListener);

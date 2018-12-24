@@ -26,8 +26,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
 import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.UserSettings;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.presentation.fragments.ConfirmDialogFragment;
@@ -80,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             {
                 Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: initializing app initialization...");
                 this.viewModel.isInitializingApp = true;
-                this.initializeApp();
+                this.startAppInitialization();
             }
         }
     }
@@ -387,11 +385,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 .commit();
     }
 
-    private void initializeApp()
+    private void startAppInitialization()
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: initializing app...");
+        Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
+        this.showProgressBar();
 
-        Log.i(Constants.LOG_TAG, "BaseActivity.initializeApp:: executing async initialization...");
         new InitializeAppAsyncTask().execute(this);
     }
 
@@ -406,50 +404,21 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         @Override
         protected BaseActivity doInBackground(BaseActivity... baseActivities)
         {
-            BaseActivity baseActivity = baseActivities[0];
-            baseActivity.showProgressBar();
+            if(App.initialize())
+            {
+                return baseActivities[0];
+            }
 
-//            try
-//            {
-//                Thread.sleep(5000);
-//            }
-//            catch(InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
-
-            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.doInBackground:: getting instance of <Content>...");
-            App.content = Content.getInstance(App.persistency);
-            App.content.initialize();
-
-            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.doInBackground:: getting instance of <UserSettings>...");
-            App.userSettings = UserSettings.getInstance(App.persistency);
-            App.userSettings.initialize();
-
-            return baseActivity;
+            String message = "App initialization failed";
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeAppAsyncTask.doInBackground:: %s", message));
+            throw new IllegalStateException(message);
         }
 
         @Override
         protected void onPostExecute(BaseActivity baseActivity)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.onPostExecute:: finishing initialization...");
             super.onPostExecute(baseActivity);
-
-            baseActivity.hideProgressBar();
-
-            App.isInitialized = true;
-
-            if(AppSettings.jumpToTestActivityOnStart)
-            {
-                Log.e(Constants.LOG_TAG, "BaseActivity.InitializeAppAsyncTask.onPostExecute:: starting TestActivity");
-                baseActivity.startActivity(new Intent(baseActivity, TestActivity.class));
-            }
-            else
-            {
-                Log.i(Constants.LOG_TAG, String.format("BaseActivity.InitializeAppAsyncTask.onPostExecute:: restarting [%s]",
-                        StringTool.parseActivityName(Objects.requireNonNull(baseActivity.getIntent().getComponent()).getShortClassName())));
-                baseActivity.startActivity(new Intent(baseActivity, baseActivity.getClass()));
-            }
+            baseActivity.finishAppInitialization();
         }
 
         @Override
@@ -459,7 +428,28 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
-    private void showProgressBar()
+    public void finishAppInitialization()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: finishing app initialization...");
+
+        this.hideProgressBar();
+
+        App.isInitialized = true;
+
+        if(AppSettings.jumpToTestActivityOnStart)
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
+            startActivity(new Intent(this, TestActivity.class));
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
+                    StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
+            startActivity(new Intent(this, this.getClass()));
+        }
+    }
+
+    public void showProgressBar()
     {
         if(this.progressBar == null)
         {
@@ -473,7 +463,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         this.progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar()
+    public void hideProgressBar()
     {
         this.progressBar.setVisibility(View.GONE);
     }

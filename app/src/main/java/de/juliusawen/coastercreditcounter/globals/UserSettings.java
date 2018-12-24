@@ -21,6 +21,8 @@ public class UserSettings
     //Defaults
     private int defaultIncrement;
 
+    private Persistency persistency;
+
     private static UserSettings instance;
 
     public static UserSettings getInstance(Persistency persistency)
@@ -34,17 +36,26 @@ public class UserSettings
 
     private UserSettings(Persistency persistency)
     {
-        Log.i(Constants.LOG_TAG, "UserSettings.Constructor:: <UserSettings> instantiated - loading UserSettings...");
-
-        Stopwatch stopwatch = new Stopwatch(true);
-        persistency.loadSettings(this);
-
-        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG,"UserSettings.Constructor:: <UserSettings> instantiated");
+        this.persistency = persistency;
     }
 
-    public void initialize()
+    public boolean initialize()
     {
+        Log.i(Constants.LOG_TAG, "UserSettings.initialize:: loading UserSettings...");
+        Stopwatch stopwatch = new Stopwatch(true);
+        persistency.loadSettings(this);
+        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings took [%d]ms", stopwatch.stop()));
+
         Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
+
+        return this.validate();
+    }
+
+    private boolean validate()
+    {
+        //Todo: implement
+        return true;
     }
 
     public SortOrder getDefaultSortOrderParkVisits()
