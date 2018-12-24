@@ -52,7 +52,7 @@ public class UserSettings
         Log.i(Constants.LOG_TAG, "UserSettings.initialize:: loading UserSettings...");
         Stopwatch stopwatch = new Stopwatch(true);
         success = persistency.loadUserSettings(this);
-        Log.i(Constants.LOG_TAG, String.format("UserSettings.Constructor:: loading UserSettings successful[%S] - took [%d]ms", success, stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings successful [%S] - took [%d]ms", success, stopwatch.stop()));
 
         if(success)
         {
