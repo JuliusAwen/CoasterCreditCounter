@@ -132,7 +132,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
-            public boolean onNavigationItemSelected(@SuppressWarnings("NullableProblems") MenuItem item)
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
             {
                 return NavigationHubActivity.this.onNavigationItemSelected(item);
             }
