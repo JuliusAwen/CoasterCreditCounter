@@ -122,7 +122,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(this.drawerLayout.isDrawerOpen(GravityCompat.START))
         {
-            Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: closing navigation drawer...");
+            Log.d(Constants.LOG_TAG, "NavigationHubActivity.closeNavigationDrawer:: closing navigation drawer...");
             this.drawerLayout.closeDrawers();
         }
     }
