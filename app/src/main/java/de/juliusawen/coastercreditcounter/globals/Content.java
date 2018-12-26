@@ -13,6 +13,7 @@ import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.data.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.data.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
@@ -58,6 +59,15 @@ public class Content
             success = this.validate();
         }
         return success;
+    }
+
+    public void useDefaults()
+    {
+        Log.i(Constants.LOG_TAG, "Content.useDefaults:: creating default content...");
+
+        //Todo: implement proper defaults creation
+        DatabaseMock databaseMock = DatabaseMock.getInstance();
+        databaseMock.loadContent(this);
     }
 
     public boolean validate()

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.data.attractions.AttractionBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
@@ -58,9 +57,10 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        if(BuildConfig.DEBUG)
+        if(App.DEBUG)
         {
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: BuildConfig is [reading external json string..."));
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: running DEBUG build - using external json..."));
+            return this.importContent(content);
         }
 
 
@@ -69,7 +69,29 @@ public class JsonHandler implements IDatabaseWrapper
         String jsonString = App.persistency.readStringFromInternalFile(App.config.getContentFileName());
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading internal json string took [%d]ms", stopwatch.stop()));
 
-        return this.fetchContent(jsonString, content);
+        if(!jsonString.isEmpty())
+        {
+            Stopwatch stopwatchFetch = new Stopwatch(true);
+            if(this.fetchContent(jsonString, content))
+            {
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content successful - took [%d]ms", stopwatchFetch.stop()));
+                return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed: could not fetch content from json string - using default content." +
+                        " Operation took [%d]ms", stopwatchFetch.stop()));
+            }
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadContent:: loading content failed: json string is empty - using default content");
+        }
+
+        content.useDefaults();
+
+        Log.e(Constants.LOG_TAG, "JsonHandler.loadContent:: saving default content...");
+        return this.saveContent(content);
     }
 
     private boolean fetchContent(String jsonString, Content content)
@@ -443,6 +465,14 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
+
+        if(App.DEBUG)
+        {
+            Log.i(Constants.LOG_TAG, ("JsonHandler.saveContent:: running DEBUG build - using external json..."));
+            return this.exportContent(content);
+        }
+
+
         Stopwatch stopwatch = new Stopwatch(true);
 
         JSONObject jsonObject = this.createContentJsonObject(content);
@@ -548,10 +578,10 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading internal json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
         String jsonString = App.persistency.readStringFromInternalFile(App.config.getSettingsFileName());
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchLoad.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading json string took [%d]ms", stopwatchLoad.stop()));
 
         if(!jsonString.isEmpty())
         {
@@ -569,7 +599,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading user settings failed: json string is empty - using defaults");
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading settings failed: json string is empty - using defaults");
         }
 
         settings.useDefaults();
@@ -622,17 +652,17 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(App.persistency.writeStringToInternalFile(App.config.getSettingsFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings to internal json successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings failed: could not write to internal json file - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving settings failed: could not write to json file - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving settings failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;

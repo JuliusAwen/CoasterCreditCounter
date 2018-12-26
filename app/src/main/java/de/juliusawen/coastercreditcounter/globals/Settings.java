@@ -104,6 +104,8 @@ public class Settings
 
     public void useDefaults()
     {
+        Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
+
         //        this.setJumpToOpenVisitOnStart(false);
 
         this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);

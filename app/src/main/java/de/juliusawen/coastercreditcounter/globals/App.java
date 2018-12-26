@@ -71,7 +71,7 @@ public class App extends Application
 
 
         private final boolean isDebugBuild = true;
-        private final String DATABASE_WRAPPER = DATABASE_MOCK;
+        private final String databaseWrapperToUse = JSON_HANDLER;
         private final boolean jumpToTestActivityOnStart = false;
 
 
@@ -83,14 +83,14 @@ public class App extends Application
             Log.i(Constants.LOG_TAG,"AppConfig.Constructor:: <AppConfig> instantiated");
         }
 
-        public boolean isDebugBuild()
+        private boolean isDebugBuild()
         {
             return this.isDebugBuild;
         }
 
         public String databaseWrapperToUse()
         {
-            return this.DATABASE_WRAPPER;
+            return this.databaseWrapperToUse;
         }
 
         public boolean jumpToTestActivityOnStart()
