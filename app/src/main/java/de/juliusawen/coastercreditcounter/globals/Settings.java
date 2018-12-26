@@ -8,11 +8,11 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
+import de.juliusawen.coastercreditcounter.data.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
-public class UserSettings
+public class Settings
 {
 //    private boolean jumpToOpenVisitOnStart;
 
@@ -28,44 +28,44 @@ public class UserSettings
 
     private Persistency persistency;
 
-    private static UserSettings instance;
+    private static Settings instance;
 
-    public static UserSettings getInstance(Persistency persistency)
+    public static Settings getInstance(Persistency persistency)
     {
-        if(UserSettings.instance == null)
+        if(Settings.instance == null)
         {
-            UserSettings.instance = new UserSettings(persistency);
+            Settings.instance = new Settings(persistency);
         }
         return instance;
     }
 
-    private UserSettings(Persistency persistency)
+    private Settings(Persistency persistency)
     {
         this.persistency = persistency;
-        Log.i(Constants.LOG_TAG,"UserSettings.Constructor:: <UserSettings> instantiated");
+        Log.i(Constants.LOG_TAG,"Settings.Constructor:: <Settings> instantiated");
     }
 
     public boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "UserSettings.initialize:: loading UserSettings...");
+        Log.i(Constants.LOG_TAG, "Settings.initialize:: loading Settings...");
         Stopwatch stopwatch = new Stopwatch(true);
 
-        if(persistency.loadUserSettings(this))
+        if(persistency.loadSettings(this))
         {
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
-                Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings failed: validation failed - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings failed: validation failed - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.i(Constants.LOG_TAG, String.format("UserSettings.initialize:: loading UserSettings failed - took [%d]ms", stopwatch.stop()));
+            Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings failed - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -73,27 +73,27 @@ public class UserSettings
 
     private boolean validate()
     {
-        Log.i(Constants.LOG_TAG, "UserSettings.validate:: validating user settings...");
+        Log.i(Constants.LOG_TAG, "Settings.validate:: validating user settings...");
 
         if(this.getDefaultSortOrderParkVisits() == null)
         {
-            Log.e(Constants.LOG_TAG, "UserSettings.validate:: validating user settings failed: default sort order for park visits is null");
+            Log.e(Constants.LOG_TAG, "Settings.validate:: validating user settings failed: default sort order for park visits is null");
             return false;
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: default sort order for park visits is [%S]", this.getDefaultSortOrderParkVisits().toString()));
+            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order for park visits is [%S]", this.getDefaultSortOrderParkVisits().toString()));
         }
 
-        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: expand latest year in visits list [%S]", this.getExpandLatestYearInListByDefault()));
+        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.getExpandLatestYearInListByDefault()));
 
         String dayNames[] = new DateFormatSymbols().getWeekdays();
-        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
+        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
 
-        Log.d(Constants.LOG_TAG, String.format("UserSettings.validate:: default increment is [%S]", this.getDefaultIncrement()));
+        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%S]", this.getDefaultIncrement()));
 
 
-        Log.i(Constants.LOG_TAG, "UserSettings.validate:: validating user settings successful");
+        Log.i(Constants.LOG_TAG, "Settings.validate:: validating user settings successful");
         return true;
     }
 

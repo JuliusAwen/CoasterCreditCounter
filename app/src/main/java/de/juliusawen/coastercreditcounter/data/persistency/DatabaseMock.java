@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals.persistency;
+package de.juliusawen.coastercreditcounter.data.persistency;
 
 import android.util.Log;
 

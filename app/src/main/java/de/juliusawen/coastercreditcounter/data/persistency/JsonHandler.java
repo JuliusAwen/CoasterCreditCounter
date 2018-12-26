@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals.persistency;
+package de.juliusawen.coastercreditcounter.data.persistency;
 
 import android.util.Log;
 
@@ -8,10 +8,12 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.data.attractions.AttractionBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.data.attractions.CustomAttraction;
@@ -26,10 +28,9 @@ import de.juliusawen.coastercreditcounter.data.elements.Park;
 import de.juliusawen.coastercreditcounter.data.elements.Visit;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.App;
-import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.UserSettings;
+import de.juliusawen.coastercreditcounter.globals.Settings;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
@@ -47,7 +48,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Log.i(Constants.LOG_TAG, ("JsonHandler.importContent:: reading external json string..."));
         Stopwatch stopwatch = new Stopwatch(true);
-        File file = new File(AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath(), AppSettings.contentFileName);
+        File file = new File(App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
         String jsonString = App.persistency.readStringFromExternalFile(file);
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: reading external json string took [%d]ms", stopwatch.stop()));
 
@@ -57,9 +58,15 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
+        if(BuildConfig.DEBUG)
+        {
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: BuildConfig is [reading external json string..."));
+        }
+
+
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: reading internal json string..."));
         Stopwatch stopwatch = new Stopwatch(true);
-        String jsonString = App.persistency.readStringFromInternalFile(AppSettings.contentFileName);
+        String jsonString = App.persistency.readStringFromInternalFile(App.config.getContentFileName());
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading internal json string took [%d]ms", stopwatch.stop()));
 
         return this.fetchContent(jsonString, content);
@@ -410,9 +417,9 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        JSONObject jsonObject = this.createJsonObject(content);
+        JSONObject jsonObject = this.createContentJsonObject(content);
 
-        File file = new File(AppSettings.getExternalStorageDocumentsDirectory(), AppSettings.contentFileName);
+        File file = new File(App.persistency.getExternalStorageDocumentsDirectory(), App.config.getContentFileName());
         if(jsonObject != null)
         {
             if(App.persistency.writeStringToExternalFile(file , jsonObject.toString()))
@@ -438,11 +445,11 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        JSONObject jsonObject = this.createJsonObject(content);
+        JSONObject jsonObject = this.createContentJsonObject(content);
 
         if(jsonObject != null)
         {
-            if(App.persistency.writeStringToInternalFile(AppSettings.contentFileName, jsonObject.toString()))
+            if(App.persistency.writeStringToInternalFile(App.config.getContentFileName(), jsonObject.toString()))
             {
                 Log.i(Constants.LOG_TAG,  String.format("Content.saveContent:: saving content to internal json file successful - took [%d]ms", stopwatch.stop()));
                 return true;
@@ -460,9 +467,9 @@ public class JsonHandler implements IDatabaseWrapper
         return false;
     }
 
-    private JSONObject createJsonObject(Content content)
+    private JSONObject createContentJsonObject(Content content)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.createJsonObject:: creating json object from content..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.createContentJsonObject:: creating json object from content..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         try
@@ -500,13 +507,13 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
                     content.getAttractionCategories().isEmpty() ? JSONObject.NULL : this.createJsonArray(new ArrayList<IElement>(content.getAttractionCategories())));
 
-            Log.i(Constants.LOG_TAG, String.format("Content.createJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
+            Log.i(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
         }
 
         return null;
@@ -539,122 +546,138 @@ public class JsonHandler implements IDatabaseWrapper
         return jsonArray;
     }
 
-    public boolean loadUserSettings(UserSettings userSettings)
+    public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadUserSettings:: reading internal json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
-        String jsonString = App.persistency.readStringFromInternalFile(AppSettings.userSettingsFileName);
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadUserSettings:: reading internal json string took [%d]ms", stopwatchLoad.stop()));
+        String jsonString = App.persistency.readStringFromInternalFile(App.config.getSettingsFileName());
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchLoad.stop()));
 
         if(!jsonString.isEmpty())
         {
             Stopwatch stopwatchFetch = new Stopwatch(true);
-            if(this.fetchUserSettings(jsonString, userSettings))
+            if(this.fetchSettings(jsonString, settings))
             {
-                Log.i(Constants.LOG_TAG, String.format("Persistency.loadUserSettings:: loading user settings successful - took [%d]ms", stopwatchFetch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchFetch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Persistency.loadUserSettings:: loading user settings failed: could not fetch user settings from json string using defaults." +
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings failed: could not fetch settings from json string - using defaults." +
                                 " Operation took [%d]ms", stopwatchFetch.stop()));
-                userSettings.useDefaults();
-                return true;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "Persistency.loadUserSettings:: loading user settings failed: json string is empty - using user settings defaults");
-            userSettings.useDefaults();
-
-            return this.saveUserSettings(userSettings);
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading user settings failed: json string is empty - using defaults");
         }
+
+        settings.useDefaults();
+
+        Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: saving defaults...");
+        return this.saveSettings(settings);
     }
 
-    private boolean fetchUserSettings(String jsonString, UserSettings userSettings)
+    private boolean fetchSettings(String jsonString, Settings settings)
     {
         try
         {
-            JSONObject jsonObjectUserSettings = new JSONObject(jsonString);
-            if(!jsonObjectUserSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
+            JSONObject jsonObjectSettings = new JSONObject(jsonString);
+            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
             {
-                userSettings.setDefaultSortOrderParkVisits(SortOrder.values()[jsonObjectUserSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
+                settings.setDefaultSortOrderParkVisits(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
             }
 
-            if(!jsonObjectUserSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
+            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
             {
-                userSettings.setExpandLatestYearInListByDefault(jsonObjectUserSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                settings.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
             }
 
-            if(!jsonObjectUserSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
+            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
             {
-                userSettings.setFirstDayOfTheWeek(jsonObjectUserSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
+                settings.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
             }
 
-            if(!jsonObjectUserSettings.isNull(Constants.JSON_STRING_DEFAULT_INCREMENT))
+            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_INCREMENT))
             {
-                userSettings.setDefaultIncrement(jsonObjectUserSettings.getInt(Constants.JSON_STRING_DEFAULT_INCREMENT));
+                settings.setDefaultIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_INCREMENT));
             }
 
             return true;
         }
         catch(JSONException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchUserSettings:: JSONException [%s]", e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: JSONException [%s]", e.getMessage()));
             return false;
         }
     }
 
-    public boolean saveUserSettings(UserSettings userSettings)
+    public boolean saveSettings(Settings settings)
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        JSONObject jsonObject = this.createJsonObject(userSettings);
+        JSONObject jsonObject = this.createSettingsJsonObject(settings);
 
         if(jsonObject != null)
         {
-            if(App.persistency.writeStringToInternalFile(AppSettings.userSettingsFileName, jsonObject.toString()))
+            if(App.persistency.writeStringToInternalFile(App.config.getSettingsFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,  String.format("Content.saveUserSettings:: saving user settings to internal json successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings to internal json successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("Content.saveUserSettings:: saving user settings failed: could not write to internal json file - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings failed: could not write to internal json file - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.saveUserSettings:: saving user settings failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG,  String.format("Content.saveSettings:: saving user settings failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
     }
 
-    private JSONObject createJsonObject(UserSettings userSettings)
+    private JSONObject createSettingsJsonObject(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.createJsonObject:: creating json object from user settings..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.createSettingsJsonObject:: creating json object from settings..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         try
         {
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, userSettings.getDefaultSortOrderParkVisits().ordinal());
-            jsonObject.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, userSettings.getExpandLatestYearInListByDefault());
-            jsonObject.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, userSettings.getFirstDayOfTheWeek());
-            jsonObject.put(Constants.JSON_STRING_DEFAULT_INCREMENT, userSettings.getDefaultIncrement());
+            jsonObject.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, settings.getDefaultSortOrderParkVisits().ordinal());
+            jsonObject.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, settings.getExpandLatestYearInListByDefault());
+            jsonObject.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, settings.getFirstDayOfTheWeek());
+            jsonObject.put(Constants.JSON_STRING_DEFAULT_INCREMENT, settings.getDefaultIncrement());
 
-            Log.i(Constants.LOG_TAG, String.format("Content.createJsonObject:: creating json object from user settings - took [%d]ms", stopwatch.stop()));
+            Log.i(Constants.LOG_TAG, String.format("Content.createSettingsJsonObject:: creating json object from settings - took [%d]ms", stopwatch.stop()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createJsonObject:: creating json object from user settingsfailed: JSONException [%s] - took [%d]ms",
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createSettingsJsonObject:: creating json object from settings failed: JSONException [%s] - took [%d]ms",
                     e.getMessage(), stopwatch.stop()));
         }
 
         return null;
+    }
+
+    private class TemporaryElement
+    {
+        public String name;
+        public UUID uuid;
+        public UUID parentUuid;
+        public List<UUID> childrenUuids = new ArrayList<>();
+        public int day;
+        public int month;
+        public int year;
+        public Map<UUID, Integer> rideCountByAttractionUuids = new LinkedHashMap<>();
+        public UUID blueprintUuid;
+        public UUID attractionCategoryUuid;
+        public int totalRideCount;
+        public boolean isDefault;
     }
 }

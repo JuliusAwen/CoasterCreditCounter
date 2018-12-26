@@ -20,7 +20,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
-import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.presentation.BaseActivity;
 import de.juliusawen.coastercreditcounter.presentation.fragments.AlertDialogFragment;
@@ -156,7 +155,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.contentFileName;
+                    String exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
 
                     if(App.persistency.fileExists(exportFileAbsolutePath))
                     {
@@ -177,7 +176,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     else
                     {
                         String message = String.format("Import file %s does not exist!", exportFileAbsolutePath);
-                        Log.e(LOG_TAG, String.format("FileTool.onNavigationItemSelected<navigationItem_Import>:: %s", message));
+                        Log.e(LOG_TAG, String.format("NavigationHubActivity.onNavigationItemSelected<navigationItem_Import>:: %s", message));
                         Toaster.makeLongToast(NavigationHubActivity.this, message);
                     }
                 }
@@ -187,7 +186,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + AppSettings.contentFileName;
+                    String exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
 
                     if(App.persistency.fileExists(exportFileAbsolutePath))
                     {
@@ -279,7 +278,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(!App.persistency.importContent())
         {
-            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.action_import_fail, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.action_import_fail, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath()));
         }
         else
         {
@@ -289,7 +288,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 @Override
                 public void onClick(View view)
                 {
-                    Log.i(Constants.LOG_TAG, "ShowLocationsActivity.importContent.onSnackbarClick:: restoring content backup...");
+                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.importContent.onSnackbarClick:: restoring content backup...");
 
                     if(App.content.restoreBackup())
                     {
@@ -297,7 +296,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Log.e(Constants.LOG_TAG, "ShowLocationsActivity.importContent.onSnackbarClick:: restoring content backup failed!");
+                        Log.e(Constants.LOG_TAG, "NavigationHubActivity.importContent.onSnackbarClick:: restoring content backup failed!");
                         Toaster.makeToast(NavigationHubActivity.this, getString(R.string.error_text_undo_not_possible));
                     }
                 }
@@ -309,7 +308,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private void exportContent()
     {
         String toast =  App.persistency.exportContent()
-                ? getString(R.string.action_export_success, AppSettings.getExternalStorageDocumentsDirectory().getAbsolutePath())
+                ? getString(R.string.action_export_success, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath())
                 : getString(R.string.action_export_fail);
         Toaster.makeLongToast(NavigationHubActivity.this, toast);
     }

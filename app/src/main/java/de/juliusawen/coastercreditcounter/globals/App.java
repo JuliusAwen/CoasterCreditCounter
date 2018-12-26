@@ -4,33 +4,38 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.data.persistency.Persistency;
 
 public class App extends Application
 {
-    public static boolean isInitialized = false;
+    public static boolean isInitialized;
+    public static boolean DEBUG;
 
     public static Persistency persistency;
     public static Content content;
-    public static UserSettings userSettings;
 
-    private static Application application;
+    public static AppConfig config;
+    public static Settings settings;
 
-    public static Application getApplication()
+    private static Application instance;
+
+    public static Application getInstance()
     {
-        return App.application;
+        return App.instance;
     }
 
     public static Context getContext()
     {
-        return getApplication().getApplicationContext();
+        return getInstance().getApplicationContext();
     }
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        App.application = this;
+        App.instance = this;
+        App.config = new AppConfig();
+        App.DEBUG = App.config.isDebugBuild();
         App.persistency = Persistency.getInstance();
     }
 
@@ -46,10 +51,10 @@ public class App extends Application
 //                    }
 
         App.content = Content.getInstance(App.persistency);
-        App.userSettings = UserSettings.getInstance(App.persistency);
+        App.settings = Settings.getInstance(App.persistency);
 
-        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Content> and <UserSettings>...");
-        boolean success = App.content.initialize() && App.userSettings.initialize();
+        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Content> and <Settings>...");
+        boolean success = App.content.initialize() && App.settings.initialize();
 
         if(success)
         {
@@ -57,5 +62,50 @@ public class App extends Application
         }
 
         return success;
+    }
+
+    public class AppConfig
+    {
+        private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
+        private final String JSON_HANDLER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
+
+
+        private final boolean isDebugBuild = true;
+        private final String DATABASE_WRAPPER = DATABASE_MOCK;
+        private final boolean jumpToTestActivityOnStart = false;
+
+
+        private final String contentFileName = "CoasterCreditCounterExport.json";
+        private final String settingsFileName = "Settings.json";
+
+        private AppConfig()
+        {
+            Log.i(Constants.LOG_TAG,"AppConfig.Constructor:: <AppConfig> instantiated");
+        }
+
+        public boolean isDebugBuild()
+        {
+            return this.isDebugBuild;
+        }
+
+        public String databaseWrapperToUse()
+        {
+            return this.DATABASE_WRAPPER;
+        }
+
+        public boolean jumpToTestActivityOnStart()
+        {
+            return this.jumpToTestActivityOnStart;
+        }
+
+        public String getContentFileName()
+        {
+            return this.contentFileName;
+        }
+
+        public String getSettingsFileName()
+        {
+            return this.settingsFileName;
+        }
     }
 }

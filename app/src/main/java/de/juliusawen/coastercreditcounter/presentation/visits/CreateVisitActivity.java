@@ -151,7 +151,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             }
         });
 
-        this.viewModel.datePickerDialog.getDatePicker().setFirstDayOfWeek(App.userSettings.getFirstDayOfTheWeek());
+        this.viewModel.datePickerDialog.getDatePicker().setFirstDayOfWeek(App.settings.getFirstDayOfTheWeek());
         this.viewModel.datePickerDialog.setCancelable(false);
         this.viewModel.datePickerDialog.setCanceledOnTouchOutside(false);
         this.viewModel.datePickerDialog.show();

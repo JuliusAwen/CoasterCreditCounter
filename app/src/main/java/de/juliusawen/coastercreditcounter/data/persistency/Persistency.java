@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals.persistency;
+package de.juliusawen.coastercreditcounter.data.persistency;
 
 import android.content.Context;
 import android.os.Environment;
@@ -14,10 +14,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import de.juliusawen.coastercreditcounter.globals.App;
-import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
-import de.juliusawen.coastercreditcounter.globals.UserSettings;
+import de.juliusawen.coastercreditcounter.globals.Settings;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
@@ -41,7 +40,7 @@ public class Persistency
     {
         this.jsonHandler = new JsonHandler();
 
-        switch(AppSettings.DATABASE_WRAPPER)
+        switch(App.config.databaseWrapperToUse())
         {
             case Constants.DATABASE_WRAPPER_DATABASE_MOCK:
             {
@@ -65,17 +64,17 @@ public class Persistency
         return this.databaseWrapper.loadContent(content);
     }
 
-    public boolean loadUserSettings(UserSettings userSettings)
+    public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.loadUserSettings:: loading user settings...");
+        Log.i(Constants.LOG_TAG, "Persistency.loadSettings:: loading user settings...");
 
-        return this.jsonHandler.loadUserSettings(userSettings);
+        return this.jsonHandler.loadSettings(settings);
     }
 
-    public boolean saveUserSettings(UserSettings userSettings)
+    public boolean saveSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.saveUserSettings:: saving user settings...");
-        return this.jsonHandler.saveUserSettings(userSettings);
+        Log.i(Constants.LOG_TAG, "Persistency.saveSettings:: saving user settings...");
+        return this.jsonHandler.saveSettings(settings);
     }
 
     public boolean importContent()
@@ -88,6 +87,23 @@ public class Persistency
     {
         Log.i(Constants.LOG_TAG, "Persistency.exportContent:: exporting content...");
         return this.jsonHandler.exportContent(App.content);
+    }
+
+    public File getExternalStorageDocumentsDirectory()
+    {
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        if(!directory.exists())
+        {
+            if(directory.mkdirs())
+            {
+                Log.i(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: created Directory [%s] in Documents", directory.getName()));
+            }
+            else
+            {
+                Log.e(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getName()));
+            }
+        }
+        return directory;
     }
 
     public boolean writeStringToInternalFile(String fileName, String input)

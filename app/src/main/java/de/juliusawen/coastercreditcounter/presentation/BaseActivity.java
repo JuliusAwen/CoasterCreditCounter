@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.App;
-import de.juliusawen.coastercreditcounter.globals.AppSettings;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
@@ -438,7 +437,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         this.hideProgressBar();
 
-        if(AppSettings.jumpToTestActivityOnStart)
+        if(App.config.jumpToTestActivityOnStart())
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
             ActivityTool.startActivity(this, TestActivity.class);

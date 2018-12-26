@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.data.elements.IElement;
 import de.juliusawen.coastercreditcounter.data.elements.Location;
 import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.globals.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.data.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
