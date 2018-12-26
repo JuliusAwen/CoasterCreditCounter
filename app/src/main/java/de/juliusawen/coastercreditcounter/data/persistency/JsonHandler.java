@@ -499,7 +499,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private JSONObject createContentJsonObject(Content content)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.createContentJsonObject:: creating json object from content..."));
+        Log.d(Constants.LOG_TAG, ("JsonHandler.createContentJsonObject:: creating json object from content..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         try
@@ -580,21 +580,21 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
+        Stopwatch stopwatchRead = new Stopwatch(true);
         String jsonString = App.persistency.readStringFromInternalFile(App.config.getSettingsFileName());
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading json string took [%d]ms", stopwatchLoad.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading json string took [%d]ms", stopwatchRead.stop()));
 
         if(!jsonString.isEmpty())
         {
-            Stopwatch stopwatchFetch = new Stopwatch(true);
             if(this.fetchSettings(jsonString, settings))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchFetch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
                 return true;
             }
             else
             {
                 Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings failed: could not fetch settings from json string - using defaults." +
-                                " Operation took [%d]ms", stopwatchFetch.stop()));
+                                " Operation took [%d]ms", stopwatchLoad.stop()));
             }
         }
         else
@@ -604,7 +604,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         settings.useDefaults();
 
-        Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: saving defaults...");
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: saving defaults... - opreation took [%d]ms", stopwatchLoad.stop()));
         return this.saveSettings(settings);
     }
 
@@ -670,7 +670,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private JSONObject createSettingsJsonObject(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.createSettingsJsonObject:: creating json object from settings..."));
+        Log.d(Constants.LOG_TAG, ("JsonHandler.createSettingsJsonObject:: creating json object from settings..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         try

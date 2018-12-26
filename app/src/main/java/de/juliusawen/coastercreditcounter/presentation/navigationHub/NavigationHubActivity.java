@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -43,12 +44,17 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(App.isInitialized)
         {
+            this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
+            if(this.viewModel.exportFileAbsolutePath == null)
+            {
+                this.viewModel.exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
+            }
+
             this.drawerLayout = findViewById(R.id.navigationDrawer);
             this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
+            this.setMenuItemImportAvailability();
 
             this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
-
-            this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
 
             super.addToolbar();
             super.addToolbarMenuIcon();
@@ -85,6 +91,13 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setMenuItemImportAvailability()
+    {
+        Menu navigationMenu = navigationView.getMenu();
+        MenuItem menuItemImport = navigationMenu.findItem(R.id.navigationItem_Import);
+        menuItemImport.setEnabled(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -155,9 +168,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
-
-                    if(App.persistency.fileExists(exportFileAbsolutePath))
+                    if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -175,7 +186,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        String message = String.format("Import file %s does not exist!", exportFileAbsolutePath);
+                        String message = String.format("Import file %s does not exist!", this.viewModel.exportFileAbsolutePath);
                         Log.e(LOG_TAG, String.format("NavigationHubActivity.onNavigationItemSelected<navigationItem_Import>:: %s", message));
                         Toaster.makeLongToast(NavigationHubActivity.this, message);
                     }
@@ -186,9 +197,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    String exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
-
-                    if(App.persistency.fileExists(exportFileAbsolutePath))
+                    if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -222,7 +231,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemExportSelected:: Permission to write to external storage denied - requesting permission");
 
-            this.viewModel.menuItem = item;
+            this.viewModel.selectedMenuItem = item;
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
             return false;
         }
@@ -237,7 +246,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Log.i(Constants.LOG_TAG, "NavigationHubActivity.onRequestPermissionsResult:: Permission to write to external storage granted by user");
-                this.onNavigationItemSelected(this.viewModel.menuItem);
+                this.onNavigationItemSelected(this.viewModel.selectedMenuItem);
             }
             else
             {
@@ -307,9 +316,18 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void exportContent()
     {
-        String toast =  App.persistency.exportContent()
-                ? getString(R.string.action_export_success, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath())
-                : getString(R.string.action_export_fail);
+        String toast;
+
+        if(App.persistency.exportContent())
+        {
+            toast = getString(R.string.action_export_success, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath());
+            this.setMenuItemImportAvailability();
+        }
+        else
+        {
+            toast = getString(R.string.action_export_fail);
+        }
+
         Toaster.makeLongToast(NavigationHubActivity.this, toast);
     }
 }

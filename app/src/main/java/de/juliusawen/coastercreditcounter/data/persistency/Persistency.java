@@ -66,14 +66,14 @@ public class Persistency
 
     public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.loadSettings:: loading user settings...");
+        Log.i(Constants.LOG_TAG, "Persistency.loadSettings:: loading settings...");
 
         return this.jsonHandler.loadSettings(settings);
     }
 
     public boolean saveSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.saveSettings:: saving user settings...");
+        Log.i(Constants.LOG_TAG, "Persistency.saveSettings:: saving settings...");
         return this.jsonHandler.saveSettings(settings);
     }
 
@@ -96,11 +96,11 @@ public class Persistency
         {
             if(directory.mkdirs())
             {
-                Log.i(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: created Directory [%s] in Documents", directory.getName()));
+                Log.i(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
             }
             else
             {
-                Log.e(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getName()));
+                Log.e(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getAbsolutePath()));
             }
         }
         return directory;
@@ -115,6 +115,8 @@ public class Persistency
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.getContext().openFileOutput(fileName, Context.MODE_PRIVATE));
             outputStreamWriter.write(input);
             outputStreamWriter.close();
+
+            Log.i(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
 
             return true;
         }
@@ -135,6 +137,8 @@ public class Persistency
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
                 fileOutputStream.write(input.getBytes());
                 fileOutputStream.close();
+
+                Log.i(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file written to [%s]", file.getAbsolutePath()));
 
                 return true;
             }
