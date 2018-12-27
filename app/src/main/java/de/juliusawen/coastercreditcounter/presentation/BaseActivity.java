@@ -72,23 +72,30 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
             if(App.DEBUG && App.config.useExternalStorage())
             {
-                Log.e(Constants.LOG_TAG, "BaseActivity.onCreate:: permission to write to external storage needed for initialization with this configuration");
-                this.viewModel.writeToExternalStoragePermissionNeededToInitialize = true;
-
-                if(this.requestPermissionWriteExternalStorage())
-                {
-                    this.startAppInitialization();
-                }
-                else
-                {
-                    Log.e(Constants.LOG_TAG, "BaseActivity.onCreate:: not able to initialize app without permission to write to external storage" +
-                            " (change configuration <useExternalStorage> to 'false' or grant permission!)");
-                }
+                this.requestWriteToExternalStoragePermissionForDebugBuild();
             }
             else
             {
                 this.startAppInitialization();
             }
+        }
+    }
+
+    private void requestWriteToExternalStoragePermissionForDebugBuild()
+    {
+        Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuild::" +
+                " permission to write to external storage needed for initialization with this configuration");
+
+        this.viewModel.writeToExternalStoragePermissionNeededToInitialize = true;
+
+        if(this.requestPermissionWriteExternalStorage())
+        {
+            this.startAppInitialization();
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuild:: not able to initialize app without permission to write to external storage" +
+                    " (change configuration <useExternalStorage> to 'false' or grant permission!)");
         }
     }
 
