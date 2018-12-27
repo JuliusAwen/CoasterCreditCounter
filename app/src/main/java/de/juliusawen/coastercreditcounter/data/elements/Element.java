@@ -135,11 +135,10 @@ public abstract class Element implements IElement
     public String getFullName()
     {
         return String.format(Locale.getDefault(),
-                "[%s \"%s\" (%s) - [%d]children]",
+                "[%s \"%s\" (%s)]",
                 this.getClass().getSimpleName(),
                 this.getName(),
-                this.getUuid(),
-                this.getChildCount()
+                this.getUuid()
         );
     }
 

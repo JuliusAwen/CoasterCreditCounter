@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public abstract class Coaster extends Attraction
 {
-    protected Coaster(String name, UUID uuid)
+    protected Coaster(String name, int untrackedRideCount, UUID uuid)
     {
-        super(name, uuid);
+        super(name, untrackedRideCount, uuid);
     }
 }

@@ -9,4 +9,6 @@ public class BaseActivityViewModel extends ViewModel
     public boolean helpOverlayFragmentIsVisible = false;
     public String helpOverlayFragmentTitle;
     public CharSequence helpOverlayFragmentMessage;
+
+    public boolean writeToExternalStoragePermissionNeededToInitialize;
 }

@@ -55,17 +55,17 @@ public class Settings
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
-                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings failed: validation failed - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading Settings failed - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: loading settings failed - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -73,11 +73,11 @@ public class Settings
 
     private boolean validate()
     {
-        Log.i(Constants.LOG_TAG, "Settings.validate:: validating user settings...");
+        Log.i(Constants.LOG_TAG, "Settings.validate:: validating settings...");
 
         if(this.getDefaultSortOrderParkVisits() == null)
         {
-            Log.e(Constants.LOG_TAG, "Settings.validate:: validating user settings failed: default sort order for park visits is null");
+            Log.e(Constants.LOG_TAG, "Settings.validate:: settings validation failed: default sort order for park visits is null");
             return false;
         }
         else
@@ -93,7 +93,7 @@ public class Settings
         Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%S]", this.getDefaultIncrement()));
 
 
-        Log.i(Constants.LOG_TAG, "Settings.validate:: validating user settings successful");
+        Log.i(Constants.LOG_TAG, "Settings.validate:: settings validation successful");
         return true;
     }
 

@@ -69,9 +69,12 @@ public class App extends Application
         private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
         private final String JSON_HANDLER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
 
+        private final String databaseWrapperToUse = JSON_HANDLER;
 
         private final boolean isDebugBuild = true;
-        private final String databaseWrapperToUse = JSON_HANDLER;
+        private final boolean useExternalStorage = true;
+        private final boolean createExportFileIfNotExists = true;
+
         private final boolean jumpToTestActivityOnStart = false;
 
 
@@ -106,6 +109,16 @@ public class App extends Application
         public String getSettingsFileName()
         {
             return this.settingsFileName;
+        }
+
+        public boolean createExportFileIfNotExists()
+        {
+            return createExportFileIfNotExists;
+        }
+
+        public boolean useExternalStorage()
+        {
+            return useExternalStorage;
         }
     }
 }

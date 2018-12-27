@@ -14,11 +14,13 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 public abstract class Attraction extends Element implements IAttraction
 {
     protected AttractionCategory attractionCategory = null;
+    private int untracktedRideCount;
     private int totalRideCount;
 
-    protected Attraction(String name, UUID uuid)
+    protected Attraction(String name, int untrackedRideCount, UUID uuid)
     {
         super(name, uuid);
+        this.setUntracktedRideCount(untrackedRideCount);
     }
 
     @Override
@@ -29,7 +31,7 @@ public abstract class Attraction extends Element implements IAttraction
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
             jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORY, this.attractionCategory.getUuid());
-            jsonObject.put(Constants.JSON_STRING_TOTAL_RIDE_COUNT, this.totalRideCount);
+            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.untracktedRideCount);
 
             Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
@@ -61,18 +63,33 @@ public abstract class Attraction extends Element implements IAttraction
 
         this.attractionCategory = attractionCategory;
 
-        Log.v(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s to %s", attractionCategory, this));
+        Log.v(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s's attraction category to %s", this, attractionCategory));
+    }
+
+    public int getUntracktedRideCount()
+    {
+        return this.untracktedRideCount;
+    }
+
+    public void setUntracktedRideCount(int untracktedRideCount)
+    {
+        if(untracktedRideCount != this.untracktedRideCount)
+        {
+            this.untracktedRideCount = untracktedRideCount;
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
+        }
     }
 
     public int getTotalRideCount()
     {
-        return this.totalRideCount;
+        return this.totalRideCount + this.untracktedRideCount;
     }
 
     public void increaseTotalRideCount(int increment)
     {
         this.totalRideCount += increment;
-        Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTotalRideCount:: increased %s's total ride count by [%d] to [%d]", this, increment, this.getTotalRideCount()));
+        Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTotalRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)"
+                , this, increment, this.getTotalRideCount(), this.untracktedRideCount));
     }
 
 
@@ -81,13 +98,13 @@ public abstract class Attraction extends Element implements IAttraction
         if((this.totalRideCount - decrement) >= 0)
         {
             this.totalRideCount -= decrement;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: decreased %s's total ride count by [%d] to [%d]", this, decrement, this.getTotalRideCount()));
+            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)"
+                    , this, decrement, this.getTotalRideCount(), this.untracktedRideCount));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
-                    this, decrement, this.getTotalRideCount()));
+            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d] ([%d] rides untracked):" +
+                            " decreasing by [%d] would make it negative - not decreasing", this, this.getTotalRideCount(), this.untracktedRideCount, decrement));
         }
-
     }
 }

@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.presentation.navigationHub;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -153,7 +151,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             case R.id.navigationItem_ManageCategories:
             {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageAttractionCategories> selected");
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
                 ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
                 break;
             }
@@ -170,6 +168,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             case R.id.navigationItem_Import:
             {
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");
+
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
                     if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
@@ -199,6 +199,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             case R.id.navigationItem_Export:
             {
+                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Export> selected");
+
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
                     if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
@@ -229,36 +231,22 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return true;
     }
 
-    private boolean requestPermissionWriteExternalStorage(MenuItem item)
+    private boolean requestPermissionWriteExternalStorage(MenuItem menuItem)
     {
-        if(ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemExportSelected:: Permission to write to external storage denied - requesting permission");
-
-            this.viewModel.selectedMenuItem = item;
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
-            return false;
-        }
-
-        return true;
+        this.viewModel.selectedMenuItem = menuItem;
+        return super.requestPermissionWriteExternalStorage();
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-        if(requestCode == Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
         {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Log.i(Constants.LOG_TAG, "NavigationHubActivity.onRequestPermissionsResult:: Permission to write to external storage granted by user");
-                this.onNavigationItemSelected(this.viewModel.selectedMenuItem);
-            }
-            else
-            {
-                Log.i(Constants.LOG_TAG, "NavigationHubActivity.onRequestPermissionsResult:: Permission to write to external storage not granted by user");
-            }
+            this.onNavigationItemSelected(this.viewModel.selectedMenuItem);
         }
     }
-
 
     @Override
     public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)

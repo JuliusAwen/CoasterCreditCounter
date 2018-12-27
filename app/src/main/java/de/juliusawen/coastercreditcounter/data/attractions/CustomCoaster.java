@@ -8,24 +8,24 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class CustomCoaster extends Coaster implements IOnSiteAttraction, ICategorized
 {
-    private CustomCoaster(String name, UUID uuid)
+    private CustomCoaster(String name, int untrackedRideCount, UUID uuid)
     {
-        super(name, uuid);
+        super(name, untrackedRideCount, uuid);
     }
 
-    public static CustomCoaster create(String name, UUID uuid)
+    public static CustomCoaster create(String name, int untrackedRideCount, UUID uuid)
     {
         CustomCoaster customCoaster = null;
         name = name.trim();
 
         if(!name.isEmpty())
         {
-            customCoaster = new CustomCoaster(name, uuid == null ? UUID.randomUUID() : uuid);
+            customCoaster = new CustomCoaster(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CustomCoaster.create:: %s created.", customCoaster.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("CustomCoaster.create:: invalid name[%s] - customCoaster not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("CustomCoaster.create:: invalid name[%s] - CustomCoaster not created.", name));
         }
         return customCoaster;
     }

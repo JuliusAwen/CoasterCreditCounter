@@ -15,20 +15,20 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
 {
     private IBlueprint blueprint;
 
-    private StockAttraction(String name, IBlueprint blueprint, UUID uuid)
+    private StockAttraction(String name, IBlueprint blueprint, int untrackedRideCount, UUID uuid)
     {
-        super(name, uuid);
+        super(name, untrackedRideCount, uuid);
         this.blueprint = blueprint;
     }
 
-    public static StockAttraction create(String name, IBlueprint blueprint, UUID uuid)
+    public static StockAttraction create(String name, IBlueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         StockAttraction stockAttraction = null;
         name = name.trim();
 
         if(!name.isEmpty())
         {
-            stockAttraction = new StockAttraction(name, blueprint, uuid == null ? UUID.randomUUID() : uuid);
+            stockAttraction = new StockAttraction(name, blueprint, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));
         }
         else
@@ -47,7 +47,7 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
             jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
-            jsonObject.put(Constants.JSON_STRING_TOTAL_RIDE_COUNT, this.getTotalRideCount());
+            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 
             Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

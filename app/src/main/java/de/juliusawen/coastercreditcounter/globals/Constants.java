@@ -33,7 +33,7 @@ public abstract class Constants
     public static final String JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS = "ride count by attractions";
     public static final String JSON_STRING_BLUEPRINT = "blueprint";
 
-    public static final String JSON_STRING_TOTAL_RIDE_COUNT = "total ride count";
+    public static final String JSON_STRING_UNTRACKED_RIDE_COUNT = "untracked ride count";
     public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
     public static final String JSON_STRING_IS_DEFAULT = "is default";

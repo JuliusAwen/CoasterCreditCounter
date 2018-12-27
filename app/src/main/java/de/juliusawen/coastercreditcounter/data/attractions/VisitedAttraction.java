@@ -15,16 +15,16 @@ public class VisitedAttraction extends Attraction
 
     private int rideCount = 0;
 
-    private VisitedAttraction(String name, UUID uuid, IOnSiteAttraction onSiteAttraction)
+    private VisitedAttraction(String name, IOnSiteAttraction onSiteAttraction, UUID uuid)
     {
-        super(name, uuid);
+        super(name, 0, uuid);
         this.onSiteAttraction = onSiteAttraction;
     }
 
     public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction)
     {
         VisitedAttraction visitedAttraction;
-        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), UUID.randomUUID(), onSiteAttraction);
+        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), onSiteAttraction, UUID.randomUUID());
 
         Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
 
@@ -45,7 +45,7 @@ public class VisitedAttraction extends Attraction
     {
         this.rideCount += increment;
         Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.increaseRideCount:: increased %s's ride count for %s by [%d] to [%d]",
-                this.getOnSiteAttraction(), this.getParent(), increment, this.getRideCount()));
+                this.getOnSiteAttraction(), this.getParent() == null ? "[visit not yet set]" : this.getParent().toString(), increment, this.getRideCount()));
 
         this.onSiteAttraction.increaseTotalRideCount(increment);
     }

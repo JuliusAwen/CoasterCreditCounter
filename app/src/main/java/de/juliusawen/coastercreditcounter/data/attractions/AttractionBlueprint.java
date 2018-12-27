@@ -8,19 +8,19 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AttractionBlueprint extends Attraction implements IBlueprint
 {
-    private AttractionBlueprint(String name, UUID uuid)
+    private AttractionBlueprint(String name, int untrackedRideCount, UUID uuid)
     {
-        super(name, uuid);
+        super(name, untrackedRideCount, uuid);
     }
 
-    public static AttractionBlueprint create(String name, UUID uuid)
+    public static AttractionBlueprint create(String name, int untrackedRideCount, UUID uuid)
     {
         AttractionBlueprint attractionBlueprint = null;
         name = name.trim();
 
         if(!name.isEmpty())
         {
-            attractionBlueprint = new AttractionBlueprint(name, uuid == null ? UUID.randomUUID() : uuid);
+            attractionBlueprint = new AttractionBlueprint(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("AttractionBlueprint.create:: %s created.", attractionBlueprint.getFullName()));
         }
         else

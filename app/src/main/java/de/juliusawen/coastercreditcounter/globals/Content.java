@@ -48,32 +48,52 @@ public class Content
 
     public boolean initialize()
     {
-        boolean success;
-        Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
-        Stopwatch stopwatchFetchContent = new Stopwatch(true);
-        success = this.persistency.loadContent(this);
-        Log.i(Constants.LOG_TAG,  String.format("Content.initialize:: loading content took [%d]ms", stopwatchFetchContent.stop()));
 
-        if(success)
+        Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        if(this.persistency.loadContent(this))
         {
-            success = this.validate();
+            if(this.validate())
+            {
+                Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
+                return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("Content.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
+            }
         }
-        return success;
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("Content.initialize:: loading content failed - took [%d]ms", stopwatch.stop()));
+        }
+
+        return false;
     }
 
     public void useDefaults()
     {
         Log.i(Constants.LOG_TAG, "Content.useDefaults:: creating default content...");
 
-        //Todo: implement proper defaults creation
-        DatabaseMock databaseMock = DatabaseMock.getInstance();
-        databaseMock.loadContent(this);
+        if(App.DEBUG)
+        {
+            DatabaseMock databaseMock = DatabaseMock.getInstance();
+            databaseMock.loadContent(this);
+        }
+        else
+        {
+            //Todo: implement default content creation for non-debug builds
+            Log.e(Constants.LOG_TAG,"Content.useDefaults:: creating default content for non-debug build not yet implemented");
+            throw new IllegalStateException();
+        }
+
     }
 
     public boolean validate()
     {
         Log.e(Constants.LOG_TAG, "Content.validate:: validation not yet implemented");
-        //Todo: implement
+        //Todo: implement content validation
 
         return true;
     }

@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.presentation;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +16,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -66,21 +70,102 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
 
-            //Todo: introduce SplashScreen
-            this.addToolbar();
-            this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
-
-            if(this.viewModel.isInitializingApp)
+            if(App.DEBUG && App.config.useExternalStorage())
             {
-                Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: app is initializing...");
-                this.showProgressBar();
+                Log.e(Constants.LOG_TAG, "BaseActivity.onCreate:: permission to write to external storage needed for initialization with this configuration");
+                this.viewModel.writeToExternalStoragePermissionNeededToInitialize = true;
+
+                if(this.requestPermissionWriteExternalStorage())
+                {
+                    this.startAppInitialization();
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, "BaseActivity.onCreate:: not able to initialize app without permission to write to external storage" +
+                            " (change configuration <useExternalStorage> to 'false' or grant permission!)");
+                }
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "BaseActivity.onCreate:: starting app initialization...");
-                this.viewModel.isInitializingApp = true;
                 this.startAppInitialization();
             }
+        }
+    }
+
+    private void startAppInitialization()
+    {
+        //Todo: introduce SplashScreen
+        this.addToolbar();
+        this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
+
+        if(this.viewModel.isInitializingApp)
+        {
+            Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: app is initializing...");
+            this.showProgressBar();
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
+
+            this.viewModel.isInitializingApp = true;
+            this.showProgressBar();
+            new InitializeApp().execute(this);
+        }
+    }
+
+    private static class InitializeApp extends AsyncTask<BaseActivity, Void, BaseActivity>
+    {
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected BaseActivity doInBackground(BaseActivity... baseActivities)
+        {
+            boolean success = App.initialize();
+
+            if(success)
+            {
+                return baseActivities[0];
+            }
+
+            String message = "App initialization failed";
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeApp.doInBackground:: %s", message));
+            throw new IllegalStateException(message);
+        }
+
+        @Override
+        protected void onPostExecute(BaseActivity baseActivity)
+        {
+            super.onPostExecute(baseActivity);
+            baseActivity.finishAppInitialization();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values)
+        {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    public void finishAppInitialization()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: finishing app initialization...");
+
+        this.hideProgressBar();
+
+        if(App.config.jumpToTestActivityOnStart())
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
+            ActivityTool.startActivity(this, TestActivity.class);
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
+                    StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
+            ActivityTool.startActivity(this, this.getClass());
         }
     }
 
@@ -386,70 +471,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 .commit();
     }
 
-    private void startAppInitialization()
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
-        this.showProgressBar();
-
-        new InitializeApp().execute(this);
-    }
-
-    private static class InitializeApp extends AsyncTask<BaseActivity, Void, BaseActivity>
-    {
-        @Override
-        protected void onPreExecute()
-        {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected BaseActivity doInBackground(BaseActivity... baseActivities)
-        {
-            boolean success = App.initialize();
-
-            if(success)
-            {
-                return baseActivities[0];
-            }
-
-            String message = "App initialization failed";
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeApp.doInBackground:: %s", message));
-            throw new IllegalStateException(message);
-        }
-
-        @Override
-        protected void onPostExecute(BaseActivity baseActivity)
-        {
-            super.onPostExecute(baseActivity);
-            baseActivity.finishAppInitialization();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values)
-        {
-            super.onProgressUpdate(values);
-        }
-    }
-
-    public void finishAppInitialization()
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: finishing app initialization...");
-
-        this.hideProgressBar();
-
-        if(App.config.jumpToTestActivityOnStart())
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
-            ActivityTool.startActivity(this, TestActivity.class);
-        }
-        else
-        {
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
-                    StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
-            ActivityTool.startActivity(this, this.getClass());
-        }
-    }
-
     public void showProgressBar()
     {
         if(this.progressBar == null)
@@ -467,5 +488,48 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     public void hideProgressBar()
     {
         this.progressBar.setVisibility(View.GONE);
+    }
+
+    protected boolean requestPermissionWriteExternalStorage()
+    {
+        if(ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.i(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
+
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.i(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: permission to write to external storage granted by user");
+
+                if(this.viewModel.writeToExternalStoragePermissionNeededToInitialize)
+                {
+                    this.viewModel.writeToExternalStoragePermissionNeededToInitialize = false;
+                    this.startAppInitialization();
+                }
+
+            }
+            else
+            {
+                if(this.viewModel.writeToExternalStoragePermissionNeededToInitialize)
+                {
+                    Log.e(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: needed permission to write to external storage not granted by user - closing app");
+                    finishAndRemoveTask();
+                }
+                else
+                {
+                    Log.i(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: permission to write to external storage not granted by user");
+                }
+            }
+        }
     }
 }

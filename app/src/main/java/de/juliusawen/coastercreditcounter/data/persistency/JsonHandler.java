@@ -45,53 +45,65 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean importContent(Content content)
     {
+        Stopwatch stopwatchImport = new Stopwatch(true);
+
         Log.i(Constants.LOG_TAG, ("JsonHandler.importContent:: reading external json string..."));
-        Stopwatch stopwatch = new Stopwatch(true);
+        Stopwatch stopwatchRead = new Stopwatch(true);
         File file = new File(App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
         String jsonString = App.persistency.readStringFromExternalFile(file);
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: reading external json string took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
 
-        return this.fetchContent(jsonString, content);
+        if(this.fetchContent(jsonString, content))
+        {
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content successful - took [%d]ms", stopwatchImport.stop()));
+            return true;
+        }
+        else if(App.DEBUG && App.config.createExportFileIfNotExists())
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: running DEBUG build - creating default content and exporting to external json...");
+            content.useDefaults();
+            boolean success = (this.exportContent(content));
+
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content failed: using default content - took [%d]ms", stopwatchImport.stop()));
+            return success;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content failed - took [%d]ms", stopwatchImport.stop()));
+            return false;
+        }
     }
 
     @Override
     public boolean loadContent(Content content)
     {
-        if(App.DEBUG)
+        if(App.DEBUG && App.config.useExternalStorage())
         {
             Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: running DEBUG build - using external json..."));
             return this.importContent(content);
         }
 
+        Stopwatch stopwatchLoad = new Stopwatch(true);
 
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: reading internal json string..."));
-        Stopwatch stopwatch = new Stopwatch(true);
+        Stopwatch stopwatchRead = new Stopwatch(true);
         String jsonString = App.persistency.readStringFromInternalFile(App.config.getContentFileName());
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading internal json string took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-        if(!jsonString.isEmpty())
+        if(this.fetchContent(jsonString, content))
         {
-            Stopwatch stopwatchFetch = new Stopwatch(true);
-            if(this.fetchContent(jsonString, content))
-            {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content successful - took [%d]ms", stopwatchFetch.stop()));
-                return true;
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed: could not fetch content from json string - using default content." +
-                        " Operation took [%d]ms", stopwatchFetch.stop()));
-            }
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content took [%d]ms", stopwatchLoad.stop()));
+            return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.loadContent:: loading content failed: json string is empty - using default content");
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadContent:: creating default content and saving to internal json...");
+            content.useDefaults();
+            boolean success = this.saveContent(content);
+
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed: using default content - took [%d]ms", stopwatchLoad.stop()));
+            return success;
         }
-
-        content.useDefaults();
-
-        Log.e(Constants.LOG_TAG, "JsonHandler.loadContent:: saving default content...");
-        return this.saveContent(content);
     }
 
     private boolean fetchContent(String jsonString, Content content)
@@ -115,13 +127,14 @@ public class JsonHandler implements IDatabaseWrapper
                 this.addVisitedAttractions(this.temporaryVisits, content);
 
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string successful - took [%d]ms", stopwatch.stop()));
-
                 return true;
             }
             else
             {
+                Log.e(Constants.LOG_TAG, "JsonHandler.fetchContent:: json string is corrupt - restoring content backup");
                 App.content.restoreBackup();
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed: restored content backup - took [%d]ms", stopwatch.stop()));
+
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed - took [%d]ms", stopwatch.stop()));
                 return false;
             }
         }
@@ -263,7 +276,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.uuid);
+            AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
             element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
             elements.add(element);
         }
@@ -275,7 +288,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.uuid);
+            CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
             element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
             elements.add(element);
         }
@@ -288,7 +301,11 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             StockAttraction element =
-                    StockAttraction.create(temporaryElement.name, (IBlueprint)content.getContentByUuid(temporaryElement.blueprintUuid), temporaryElement.uuid);
+                    StockAttraction.create(
+                            temporaryElement.name,
+                            (IBlueprint)content.getContentByUuid(temporaryElement.blueprintUuid),
+                            temporaryElement.untrackedRideCount,
+                            temporaryElement.uuid);
             elements.add(element);
         }
         return elements;
@@ -299,7 +316,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.uuid);
+            CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
             element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
             elements.add(element);
         }
@@ -311,7 +328,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.uuid);
+            CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
             element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
             elements.add(element);
         }
@@ -388,9 +405,9 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryElement.attractionCategoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_ATTRACTION_CATEGORY));
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_TOTAL_RIDE_COUNT))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT))
                 {
-                    temporaryElement.totalRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_TOTAL_RIDE_COUNT);
+                    temporaryElement.untrackedRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_IS_DEFAULT))
@@ -428,7 +445,12 @@ public class JsonHandler implements IDatabaseWrapper
             for(Map.Entry<UUID, Integer> rideCountByAttractionUuid : temporaryVisit.rideCountByAttractionUuids.entrySet())
             {
                 VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuid(rideCountByAttractionUuid.getKey()));
-                visitedAttraction.increaseRideCount(rideCountByAttractionUuid.getValue());
+
+                if(rideCountByAttractionUuid.getValue() != 0)
+                {
+                    visitedAttraction.increaseRideCount(rideCountByAttractionUuid.getValue());
+                }
+
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);
             }
@@ -451,7 +473,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("Content.export:: exporting content failed: could not write to external json file - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG,  String.format("Content.export:: exporting content failed: could not write to external json - took [%d]ms", stopwatch.stop()));
             }
         }
         else
@@ -466,7 +488,7 @@ public class JsonHandler implements IDatabaseWrapper
     public boolean saveContent(Content content)
     {
 
-        if(App.DEBUG)
+        if(App.DEBUG && App.config.useExternalStorage())
         {
             Log.i(Constants.LOG_TAG, ("JsonHandler.saveContent:: running DEBUG build - using external json..."));
             return this.exportContent(content);
@@ -543,7 +565,8 @@ public class JsonHandler implements IDatabaseWrapper
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s]" +
+                    " - took [%d]ms", e.getMessage(), stopwatch.stop()));
         }
 
         return null;
@@ -578,68 +601,69 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
+
         Stopwatch stopwatchRead = new Stopwatch(true);
         String jsonString = App.persistency.readStringFromInternalFile(App.config.getSettingsFileName());
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading json string took [%d]ms", stopwatchRead.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-        if(!jsonString.isEmpty())
+        if(this.fetchSettings(jsonString, settings))
         {
-            if(this.fetchSettings(jsonString, settings))
-            {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
-                return true;
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings failed: could not fetch settings from json string - using defaults." +
-                                " Operation took [%d]ms", stopwatchLoad.stop()));
-            }
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading settings failed: json string is empty - using defaults");
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
+            return true;
         }
 
+        Log.e(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating and saving default settings"));
         settings.useDefaults();
+        boolean success = this.saveSettings(settings);
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: saving defaults... - opreation took [%d]ms", stopwatchLoad.stop()));
-        return this.saveSettings(settings);
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings failed - using default settings. Took [%d]ms", stopwatchLoad.stop()));
+        return success;
     }
 
     private boolean fetchSettings(String jsonString, Settings settings)
     {
-        try
+        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchSettings:: fetching settings from json string..."));
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        if(!jsonString.isEmpty())
         {
-            JSONObject jsonObjectSettings = new JSONObject(jsonString);
-            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
+            try
             {
-                settings.setDefaultSortOrderParkVisits(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
-            }
+                JSONObject jsonObjectSettings = new JSONObject(jsonString);
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
+                {
+                    settings.setDefaultSortOrderParkVisits(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
+                }
 
-            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
+                {
+                    settings.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                }
+
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
+                {
+                    settings.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
+                }
+
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_INCREMENT))
+                {
+                    settings.setDefaultIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_INCREMENT));
+                }
+
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: fetching settings from json string successful - took [%d]ms", stopwatch.stop()));
+                return true;
+            }
+            catch(JSONException e)
             {
-                settings.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: json string is corrupt: JSONException [%s]", e.getMessage()));
+                return false;
             }
-
-            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
-            {
-                settings.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
-            }
-
-            if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_INCREMENT))
-            {
-                settings.setDefaultIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_INCREMENT));
-            }
-
-            return true;
         }
-        catch(JSONException e)
-        {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: JSONException [%s]", e.getMessage()));
-            return false;
-        }
+
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching settings from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
+        return false;
     }
 
     public boolean saveSettings(Settings settings)
@@ -707,7 +731,7 @@ public class JsonHandler implements IDatabaseWrapper
         public Map<UUID, Integer> rideCountByAttractionUuids = new LinkedHashMap<>();
         public UUID blueprintUuid;
         public UUID attractionCategoryUuid;
-        public int totalRideCount;
+        public int untrackedRideCount;
         public boolean isDefault;
     }
 }
