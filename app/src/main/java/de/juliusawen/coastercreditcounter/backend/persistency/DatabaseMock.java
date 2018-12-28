@@ -104,8 +104,13 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         CoasterBlueprint suspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", 4, null);
         suspendedLoopingCoaster.setAttractionCategory(attractionCategoryRollerCoasters);
-
         blueprints.add(suspendedLoopingCoaster);
+
+        CoasterBlueprint boomerang = CoasterBlueprint.create("Boomerang", 2, null);
+        boomerang.setAttractionCategory(attractionCategoryRollerCoasters);
+        blueprints.add(boomerang);
+
+
 
 
 
@@ -220,18 +225,17 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
 
+        StockAttraction elCondor = StockAttraction.create("El Condor", suspendedLoopingCoaster, 1, null);
+        StockAttraction speedOfSound = StockAttraction.create("Speed of Sound", boomerang, 2, null);
+
         CustomCoaster drako = CustomCoaster.create("Drako", 2, null);
         CustomCoaster robinHood = CustomCoaster.create("Robin Hood", 2, null);
-        CustomCoaster speedOfSound = CustomCoaster.create("Speed of Sound", 2, null);
         CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13", 2, null);
         CustomCoaster goliath = CustomCoaster.create("Goliath", 7, null);
         CustomCoaster lostGravity = CustomCoaster.create("Lost Gravity", 7, null);
 
-        StockAttraction elCondor = StockAttraction.create("El Condor", suspendedLoopingCoaster, 1, null);
-
         drako.setAttractionCategory(attractionCategoryRollerCoasters);
         robinHood.setAttractionCategory(attractionCategoryRollerCoasters);
-        speedOfSound.setAttractionCategory(attractionCategoryRollerCoasters);
         xpressPlatform13.setAttractionCategory(attractionCategoryRollerCoasters);
         goliath.setAttractionCategory(attractionCategoryRollerCoasters);
         lostGravity.setAttractionCategory(attractionCategoryRollerCoasters);

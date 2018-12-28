@@ -24,7 +24,6 @@ public abstract class Constants
     public static final String JSON_STRING_ELEMENT = "element";
     public static final String JSON_STRING_NAME = "name";
     public static final String JSON_STRING_UUID = "uuid";
-    public static final String JSON_STRING_PARENT = "parent";
     public static final String JSON_STRING_CHILDREN = "children";
 
     public static final String JSON_STRING_DAY = "day";
