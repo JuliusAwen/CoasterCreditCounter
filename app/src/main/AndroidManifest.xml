@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="de.juliusawen.coastercreditcounter.globals.App"
+        android:name="de.juliusawen.coastercreditcounter.backend.application.App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -15,29 +15,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".presentation.MainActivity">
+        <activity android:name=".frontend.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.locations.ShowLocationsActivity" />
-        <activity android:name=".presentation.elements.SortElementsActivity" />
-        <activity android:name=".presentation.elements.PickElementsActivity" />
-        <activity android:name=".presentation.parks.ShowParkActivity" />
-        <activity android:name=".presentation.visits.ShowVisitActivity" />
-        <activity android:name=".presentation.TestActivity" />
-        <activity android:name=".presentation.visits.CreateVisitActivity" />
-        <activity android:name=".presentation.attractionCategories.ManageAttractionCategoriesActivity" />
-        <activity android:name=".presentation.navigationHub.NavigationHubActivity"/>
+        <activity android:name=".frontend.locations.ShowLocationsActivity" />
+        <activity android:name=".frontend.elements.SortElementsActivity" />
+        <activity android:name=".frontend.elements.PickElementsActivity" />
+        <activity android:name=".frontend.parks.ShowParkActivity" />
+        <activity android:name=".frontend.visits.ShowVisitActivity" />
+        <activity android:name=".frontend.TestActivity" />
+        <activity android:name=".frontend.visits.CreateVisitActivity" />
+        <activity android:name=".frontend.attractionCategories.ManageAttractionCategoriesActivity" />
+        <activity android:name=".frontend.navigationHub.NavigationHubActivity"/>
         <activity
-            android:name=".presentation.locations.CreateLocationActivity"
+            android:name=".frontend.locations.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.elements.EditElementActivity"
+            android:name=".frontend.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.CreateSimpleStringActivity"
+            android:name=".frontend.CreateSimpleStringActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 

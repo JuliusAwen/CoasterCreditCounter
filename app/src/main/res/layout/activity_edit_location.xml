@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.elements.EditElementActivity">
+    tools:context=".frontend.elements.EditElementActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
         
         <include
             layout="@layout/toolbar"/>
@@ -17,7 +18,8 @@
         <EditText
             style="@style/standard_edit_text"
             android:id="@+id/editTextEditLocation"
-            android:hint="@string/hint_edit_location_name"/>
+            android:hint="@string/hint_edit_location_name"
+            tools:ignore="Autofill" />
 
     </LinearLayout>
 

@@ -10,20 +10,20 @@ import java.util.Locale;
 import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.data.elements.IElement;
-import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
+import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
+import de.juliusawen.coastercreditcounter.frontend.attractionCategories.ManageAttractionCategoriesActivity;
+import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
+import de.juliusawen.coastercreditcounter.frontend.elements.PickElementsActivity;
+import de.juliusawen.coastercreditcounter.frontend.elements.SortElementsActivity;
+import de.juliusawen.coastercreditcounter.frontend.locations.CreateLocationActivity;
+import de.juliusawen.coastercreditcounter.frontend.locations.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.frontend.parks.ShowParkActivity;
+import de.juliusawen.coastercreditcounter.frontend.visits.CreateVisitActivity;
+import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.presentation.CreateSimpleStringActivity;
-import de.juliusawen.coastercreditcounter.presentation.attractionCategories.ManageAttractionCategoriesActivity;
-import de.juliusawen.coastercreditcounter.presentation.elements.EditElementActivity;
-import de.juliusawen.coastercreditcounter.presentation.elements.PickElementsActivity;
-import de.juliusawen.coastercreditcounter.presentation.elements.SortElementsActivity;
-import de.juliusawen.coastercreditcounter.presentation.locations.CreateLocationActivity;
-import de.juliusawen.coastercreditcounter.presentation.locations.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.presentation.parks.ShowParkActivity;
-import de.juliusawen.coastercreditcounter.presentation.visits.CreateVisitActivity;
-import de.juliusawen.coastercreditcounter.presentation.visits.ShowVisitActivity;
 
 public abstract class ActivityTool
 {

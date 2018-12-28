@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".presentation.fragments.HelpOverlayFragment">
+    tools:context=".frontend.fragments.HelpOverlayFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

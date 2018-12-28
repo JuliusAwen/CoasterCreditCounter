@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.IElement;
-import de.juliusawen.coastercreditcounter.data.elements.Location;
-import de.juliusawen.coastercreditcounter.data.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.data.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.data.persistency.DatabaseMock;
-import de.juliusawen.coastercreditcounter.data.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
+import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -27,7 +28,7 @@ public class Content
     private List<AttractionCategory> backupAttractionCategories = null;
     private Location backupRootLocation = null;
 
-    private Persistency persistency;
+    private final Persistency persistency;
 
     private static Content instance;
 

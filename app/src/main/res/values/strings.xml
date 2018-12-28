@@ -94,9 +94,6 @@
     <string name="text_deselect_all">deselect all</string>
     <string name="text_add_children">add children</string>
 
-    <string name="text_root_location">root location</string>
-
-
 
     <!--names-->
     <string name="name_default_attraction_category">uncategorized</string>
@@ -142,7 +139,6 @@
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
     <string name="description_decrease">decrease count</string>
     <string name="description_increase">increase count</string>
-    <string name="description_placeholder">&#32;</string>
 
 
 

@@ -6,8 +6,8 @@ import android.util.Log;
 import java.util.List;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.data.elements.IElement;
-import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class ResultTool

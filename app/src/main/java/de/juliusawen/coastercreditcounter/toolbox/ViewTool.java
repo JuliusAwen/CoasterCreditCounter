@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.toolbox;
 
-import de.juliusawen.coastercreditcounter.globals.App;
+import de.juliusawen.coastercreditcounter.backend.application.App;
 
 public abstract class ViewTool
 {
