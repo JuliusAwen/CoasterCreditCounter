@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -79,6 +82,13 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 this.startAppInitialization();
             }
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        this.synchronizePersistency();
     }
 
     private void requestWriteToExternalStoragePermissionForDebugBuild()
@@ -501,7 +511,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
+            Log.d(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
 
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
             return false;
@@ -537,6 +547,93 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                     Log.i(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: permission to write to external storage not granted by user");
                 }
             }
+        }
+    }
+
+    protected void markForCreation(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            this.markForCreation(element);
+        }
+    }
+
+    protected void markForCreation(IElement element)
+    {
+        if(!this.viewModel.elementsToCreate.contains(element))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
+            this.viewModel.elementsToCreate.add(element);
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s already marked for creation", element));
+        }
+    }
+
+    protected void markForUpdate(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            this.markForUpdate(element);
+        }
+    }
+
+    protected void markForUpdate(IElement element)
+    {
+        if(!this.viewModel.elementsToCreate.contains(element))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for update", element));
+            this.viewModel.elementsToUpdate.add(element);
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s already marked for update", element));
+        }
+    }
+
+    protected void markForDeletion(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            this.markForDeletion(element);
+        }
+    }
+
+    protected void markForDeletion(IElement element)
+    {
+        if(!this.viewModel.elementsToCreate.contains(element))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for deletion", element));
+            this.viewModel.elementsToDelete.add(element);
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s already marked for deletion", element));
+        }
+    }
+
+
+
+    protected void synchronizePersistency()
+    {
+        if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
+        {
+            Log.d(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistency...");
+
+            if(!App.persistency.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
+            {
+                Log.e(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistency failed");
+                throw new IllegalStateException();
+            }
+
+            this.viewModel.elementsToCreate.clear();
+            this.viewModel.elementsToUpdate.clear();
+            this.viewModel.elementsToDelete.clear();
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistency is synchronous");
         }
     }
 }

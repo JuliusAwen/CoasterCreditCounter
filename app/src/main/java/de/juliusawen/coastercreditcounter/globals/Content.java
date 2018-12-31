@@ -13,6 +13,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
@@ -24,6 +25,7 @@ public class Content
     private List<AttractionCategory> attractionCategories = new ArrayList<>();
     private Location rootLocation;
 
+    private boolean isRestoreBackupPossible;
     private Map<UUID, IElement> backupElements = null;
     private List<AttractionCategory> backupAttractionCategories = null;
     private Location backupRootLocation = null;
@@ -55,7 +57,7 @@ public class Content
 
         if(this.persistency.loadContent(this))
         {
-            if(this.validate())
+            if(App.DEBUG && App.config.validateContent() && this.validate())
             {
                 Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
                 return true;
@@ -85,7 +87,7 @@ public class Content
         else
         {
             //Todo: implement default content creation for non-debug builds
-            Log.e(Constants.LOG_TAG,"Content.useDefaults:: creating default content for non-debug build not yet implemented");
+            Log.e(Constants.LOG_TAG, "Content.useDefaults:: creating default content for non-debug build not yet implemented");
             throw new IllegalStateException();
         }
 
@@ -93,9 +95,57 @@ public class Content
 
     public boolean validate()
     {
-        Log.e(Constants.LOG_TAG, "Content.validate:: validation not yet implemented");
-        //Todo: implement content validation
+        //Todo: extend validation
+        Stopwatch stopwatch = new Stopwatch(true);
+        Log.i(Constants.LOG_TAG, "Content.validate:: validating content...");
 
+        if(this.validateParentChildRelations(new ArrayList<>(this.elementsByUuid.values()))
+
+                )
+        {
+            Log.i(Constants.LOG_TAG, String.format("Content.validate:: validation successful - took [%d]ms", stopwatch.stop()));
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("Content.validate:: validation failed - took [%d]ms", stopwatch.stop()));
+            return false;
+        }
+    }
+
+    private boolean validateParentChildRelations(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            if(element.getParent() == null)
+            {
+                if(!(element instanceof IOrphanElement) && !element.equals(this.getRootLocation()))
+                {
+                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: %s missing parent", element));
+                    return false;
+                }
+            }
+            else
+            {
+                if(!element.getParent().getChildren().contains(element))
+                {
+                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: parent %s does not have child %s", element.getParent(), element));
+                    return false;
+                }
+            }
+
+            for(Location child : element.getChildrenAsType(Location.class))
+            {
+                if(child.getParent() != element)
+                {
+                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: child %s has unexpected parent %s - expected parent is %s",
+                            child, child.getParent(), element));
+                    return false;
+                }
+            }
+        }
+
+        Log.d(Constants.LOG_TAG, "Content.validateParentChildRelations:: SUCCESS");
         return true;
     }
 
@@ -121,28 +171,40 @@ public class Content
         this.backupAttractionCategories = new ArrayList<>(this.attractionCategories);
         this.backupRootLocation = this.rootLocation;
 
+        this.isRestoreBackupPossible = true;
+
         Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
         return true;
     }
 
     public boolean restoreBackup()
     {
-        if(this.backupElements != null && this.backupAttractionCategories != null && this.backupRootLocation != null)
+        if(this.isRestoreBackupPossible)
         {
-            this.elementsByUuid = new LinkedHashMap<>(this.backupElements);
-            this.attractionCategories = new ArrayList<>(backupAttractionCategories);
-            this.rootLocation = this.backupRootLocation;
+            if(this.backupElements != null && this.backupAttractionCategories != null && this.backupRootLocation != null)
+            {
+                this.elementsByUuid = new LinkedHashMap<>(this.backupElements);
+                this.attractionCategories = new ArrayList<>(backupAttractionCategories);
+                this.rootLocation = this.backupRootLocation;
 
-            this.backupElements = null;
-            this.backupAttractionCategories = null;
-            this.backupRootLocation = null;
+                this.isRestoreBackupPossible = false;
 
-            Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
-            return true;
+                this.backupElements = null;
+                this.backupAttractionCategories = null;
+                this.backupRootLocation = null;
+
+                Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
+                return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible: backup data is null");
+                return false;
+            }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible!");
+            Log.d(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible");
             return false;
         }
     }
@@ -238,21 +300,23 @@ public class Content
         return uuidStrings;
     }
 
-    public List<IElement> fetchElementsByUuidStrings(List<String> uuidStrings)
+    public List<IElement> getContentByUuidStrings(List<String> uuidStrings)
     {
+        List<IElement> elements = new ArrayList<>();
+
         Stopwatch stopwatch = new Stopwatch(true);
 
-        List<IElement> elements = new ArrayList<>();
         for(String uuidString : uuidStrings)
         {
-            elements.add(this.getContentByUuid(UUID.fromString(uuidString)));
+            elements.add(this.getContentByUuidString(UUID.fromString(uuidString)));
         }
 
-        Log.v(Constants.LOG_TAG, String.format("Content.fetchElementsByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
+        Log.v(Constants.LOG_TAG, String.format("Content.getContentByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
+
         return elements;
     }
 
-    public IElement getContentByUuid(UUID uuid)
+    public IElement getContentByUuidString(UUID uuid)
     {
         if(this.elementsByUuid.containsKey(uuid))
         {
@@ -267,7 +331,7 @@ public class Content
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
+                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuidString:: No element found for uuid[%s]", uuid));
                 return null;
             }
         }

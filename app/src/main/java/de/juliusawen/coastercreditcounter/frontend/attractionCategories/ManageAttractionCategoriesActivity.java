@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -42,6 +43,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ManageAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ManageAttractionCategoriesViewModel viewModel;
+    private boolean actionConfirmed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -122,7 +124,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
         if(resultCode == Activity.RESULT_OK)
         {
-            IElement selectedElement = ResultTool.fetchSelectedElement(data);
+            IElement resultElement = ResultTool.fetchResultElement(data);
 
             if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
             {
@@ -134,9 +136,10 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 if(attractionCategory != null)
                 {
                     App.content.addAttractionCategory(attractionCategory);
-
                     this.updateContentRecyclerView();
                     this.viewModel.contentRecyclerViewAdapter.scrollToItem(attractionCategory);
+
+                    this.markForCreation(attractionCategory);
                 }
                 else
                 {
@@ -149,21 +152,25 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
             {
                 this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+
+                this.markForUpdate(resultElement);
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
             {
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                App.content.setAttractionCategories(Element.convertElementsToType(resultElements, AttractionCategory.class));
+                App.content.setAttractionCategories(ConvertTool.convertElementsToType(resultElements, AttractionCategory.class));
                 this.updateContentRecyclerView();
 
-                if(selectedElement != null)
+                if(resultElement != null)
                 {
                     Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...",
-                            selectedElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                            resultElement));
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
                 }
+
+                this.markForUpdate(resultElements);
             }
             else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
             {
@@ -172,6 +179,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 for(IElement element : resultElements)
                 {
                     ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
+                    this.markForUpdate(element);
                 }
 
                 Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
@@ -206,7 +214,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 if(AttractionCategory.class.isInstance(element))
                 {
                     viewModel.longClickedAttractionCategory = (AttractionCategory) element;
-                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClickLocationRecyclerView:: %s long clicked", viewModel.longClickedAttractionCategory));
+                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClick:: %s long clicked", viewModel.longClickedAttractionCategory));
 
                     PopupMenu popupMenu = new PopupMenu(ManageAttractionCategoriesActivity.this, view);
 
@@ -224,7 +232,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         public boolean onMenuItemClick(MenuItem item)
                         {
                             Selection selection = Selection.values()[item.getItemId()];
-                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onClickMenuItemPopupMenuLongClickContentRecyclerView:: [%S] selected", selection));
+                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick:: [%S] selected", selection));
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             switch(selection)
@@ -239,11 +247,12 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                 case DELETE_ELEMENT:
                                 {
                                     String alertDialogMessage;
-                                    if(viewModel.longClickedAttractionCategory.getChildCount() != 0)
+                                    if(viewModel.longClickedAttractionCategory.hasChildren())
                                     {
                                         alertDialogMessage = getString(R.string.alert_dialog_delete_attraction_category_with_children_message,
                                                 viewModel.longClickedAttractionCategory.getChildCount(),
-                                                viewModel.longClickedAttractionCategory.getName());
+                                                viewModel.longClickedAttractionCategory.getName(),
+                                                AttractionCategory.getDefault().getName());
                                     }
                                     else
                                     {
@@ -268,10 +277,12 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                 {
                                     List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
 
-                                    for(IAttraction attraction : Element.convertElementsToType(attractions, IAttraction.class))
+                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
                                     {
                                         if(attraction.getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
                                         {
+                                            Log.v(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick<APPLY_CATEGORY_TO_ATTRACTIONS>:: " +
+                                                    "removing %s from pick list - is already in %s", attraction, viewModel.longClickedAttractionCategory));
                                             attractions.remove(attraction);
                                         }
                                     }
@@ -308,39 +319,53 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedAttractionCategory));
-
-                    final List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
-                    final int index = viewModel.contentRecyclerViewAdapter.getItems().indexOf(viewModel.longClickedAttractionCategory);
-
-                    for(IAttraction child : children)
-                    {
-                        child.setAttractionCategory(AttractionCategory.getDefault());
-                    }
-                    App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
-                    updateContentRecyclerView();
-
                     snackbar = Snackbar.make(
                             findViewById(android.R.id.content),
-                            getString(R.string.action_undo_delete_text, viewModel.longClickedAttractionCategory.getName()),
+                            getString(R.string.action_confirm_delete_text, viewModel.longClickedAttractionCategory.getName()),
                             Snackbar.LENGTH_LONG);
 
-                    snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                    snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedAttractionCategory));
-
-                            for(IAttraction child : children)
-                            {
-                                child.setAttractionCategory(viewModel.longClickedAttractionCategory);
-                            }
-
-                            App.content.addAttractionCategory(index, viewModel.longClickedAttractionCategory);
-                            updateContentRecyclerView();
+                            actionConfirmed = true;
+                            Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesActivity.onSnackbarClick:: action <delete> confirmed");
                         }
                     });
+
+                    snackbar.addCallback(new Snackbar.Callback()
+                    {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event)
+                        {
+                            if(actionConfirmed)
+                            {
+                                actionConfirmed = false;
+
+                                Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onSnackbarDismissed<delete>:: deleting %s...",
+                                        viewModel.longClickedAttractionCategory));
+
+                                List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
+
+                                for(IAttraction child : children)
+                                {
+                                    child.setAttractionCategory(AttractionCategory.getDefault());
+                                    markForUpdate(child);
+                                }
+
+                                App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
+                                updateContentRecyclerView();
+
+                                markForDeletion(viewModel.longClickedAttractionCategory);
+                            }
+                            else
+                            {
+                                Log.d(Constants.LOG_TAG, "ManageAttractionCategoriesActivity.onSnackbarDismissed<delete>:: action not confirmed - doing nothing");
+                            }
+                        }
+                    });
+
                     snackbar.show();
                 }
                 break;

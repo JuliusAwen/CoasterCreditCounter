@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
@@ -15,7 +16,6 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.IBlueprint
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -515,7 +516,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         attractionCategories.add(AttractionCategory.getDefault());
         content.setAttractionCategories(attractionCategories);
 
-        content.addElements(Element.convertElementsToType(blueprints, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(blueprints, IElement.class));
         this.flattenContentTree(App.content.getRootLocation());
 
         return true;
@@ -538,7 +539,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: Not adding %s to content as it is already known", element));
+            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: not adding %s to content as it is already known", element));
         }
 
         for (IElement child : element.getChildren())
@@ -550,7 +551,35 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
-        Log.w(Constants.LOG_TAG,  "DatabaseMock.saveContent:: Content is not persited - as DatabaseMock is not able to save any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.saveContent:: content is not persited - DatabaseMock is not able to persist any data");
+        return true;
+    }
+
+    @Override
+    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: persistency not synchronized - DatabaseMock is not able to persist any data");
+        return true;
+    }
+
+    @Override
+    public boolean create(Set<IElement> elements)
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: elements not created - DatabaseMock is not able to persist any data");
+        return true;
+    }
+
+    @Override
+    public boolean update(Set<IElement> elements)
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.update:: elements not updated - DatabaseMock is not able to persist any data");
+        return true;
+    }
+
+    @Override
+    public boolean delete(Set<IElement> elements)
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.delete:: elements not updated - DatabaseMock is not able to persist any data");
         return true;
     }
 }

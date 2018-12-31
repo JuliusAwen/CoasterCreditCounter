@@ -49,7 +49,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(this.viewModel.park == null)
         {
-            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -113,6 +113,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
             {
+                Log.v(Constants.LOG_TAG, String.format("CreateVisitActivity.onDateSet:: picked date: year[%d], month[%d], day[%d]", year, month, day));
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
 
@@ -127,7 +128,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     viewModel.datePickerDialog.dismiss();
                     createVisit(viewModel.calendar);
 
-                    if(viewModel.park.getChildCountOfType(Attraction.class) > 0)
+                    if(viewModel.park.hasChildrenOfType(Attraction.class))
                     {
                         showPickAttractionsDialog();
                     }
@@ -155,7 +156,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         this.viewModel.datePickerDialog.setCancelable(false);
         this.viewModel.datePickerDialog.setCanceledOnTouchOutside(false);
         this.viewModel.datePickerDialog.show();
-
     }
 
     private Visit getExistingVisit(Calendar calendar)
@@ -198,25 +198,29 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
         App.content.addElement(this.viewModel.visit);
 
-        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
-        {
-            Log.i(Constants.LOG_TAG, "CreateVisitActivity.pickDate:: created visit is today - set as open visit");
-            Visit.setOpenVisit(this.viewModel.visit);
-        }
+//        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
+//        {
+//            Log.i(Constants.LOG_TAG, "CreateVisitActivity.pickDate:: created visit is today - set as open visit");
+//            Visit.setOpenVisit(this.viewModel.visit);
+//        }
 
         this.decorateToolbar();
     }
 
     private void deleteExistingVisit()
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit));
+        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit.getFullName()));
 
         int counter = 0;
         for(VisitedAttraction visitedAttraction : this.viewModel.existingVisit.getChildrenAsType(VisitedAttraction.class))
         {
-            if(visitedAttraction.getOnSiteAttraction().getTotalRideCount() > 0 && visitedAttraction.getRideCount() > 0)
+            IOnSiteAttraction onSiteAttraction = visitedAttraction.getOnSiteAttraction();
+            if(onSiteAttraction.getTotalRideCount() > 0 && visitedAttraction.getRideCount() > 0)
             {
-                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getRideCount());
+                onSiteAttraction.decreaseTotalRideCount(visitedAttraction.getRideCount());
+
+                super.markForUpdate(onSiteAttraction);
+
                 counter ++;
             }
         }
@@ -227,7 +231,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         this.viewModel.park.deleteChild(this.viewModel.existingVisit);
         App.content.removeElementAndChildren(this.viewModel.existingVisit);
+        Visit existingVisit = this.viewModel.existingVisit;
         this.viewModel.existingVisit = null;
+
+        super.markForDeletion(existingVisit);
+        super.markForDeletion(existingVisit.getChildren());
     }
 
     private void showPickAttractionsDialog()
@@ -297,6 +305,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: returning %s", this.viewModel.visit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.visit.getUuid().toString());
+
+            super.markForCreation(this.viewModel.visit);
+            super.markForCreation(this.viewModel.visit.getChildren());
         }
 
         setResult(resultCode, intent);

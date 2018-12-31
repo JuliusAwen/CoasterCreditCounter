@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.globals;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
+    public static final String LOG_DIVIDER = "##################### ";
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
@@ -45,6 +46,13 @@ public abstract class Constants
 
 
 
+    public static final String ACTION_SAVE = "de.juliusawen.coding.action_save";
+    public static final String ACTION_CREATE = "de.juliusawen.coding.action_create";
+    public static final String ACTION_UPDATE = "de.juliusawen.coding.action_update";
+    public static final String ACTION_DELETE = "de.juliusawen.coding.action_delete";
+
+
+
     public static final String EXTRA_ELEMENT_UUID = "de.juliusawen.coding.extra_element_uuid";
     public static final String EXTRA_ELEMENTS_UUIDS = "de.juliusawen.coding.extra_elements_uuids";
     public static final String EXTRA_TOOLBAR_TITLE = "de.juliusawen.coding.extra_toolbar_title";
@@ -52,6 +60,9 @@ public abstract class Constants
     public static final String EXTRA_HELP_TITLE = "de.juliusawen.coding.extra_help_title";
     public static final String EXTRA_HELP_TEXT = "de.juliusawen.coding.extra_help_text";
     public static final String EXTRA_RESULT_STRING = "de.juliusawen.coding.extra_result_string";
+    public static final String EXTRA_ELEMENTS_TO_CREATE_UUIDS = "de.juliusawen.coding.extra_elements_to_create_uuids";
+    public static final String EXTRA_ELEMENTS_TO_UPDATE_UUIDS = "de.juliusawen.coding.extra_elements_to_update_uuids";
+    public static final String EXTRA_ELEMENTS_TO_DELETE_UUIDS = "de.juliusawen.coding.extra_elements_to_delete_uuids";
 
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
@@ -70,8 +81,8 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
 
-    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM YYYY";
-    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "YYYY";
+    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM yyyy";
+    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
 
 
 

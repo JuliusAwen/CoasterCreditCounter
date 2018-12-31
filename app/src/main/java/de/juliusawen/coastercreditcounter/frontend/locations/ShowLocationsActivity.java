@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +50,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private LinearLayout linearLayoutNavigationBar;
     private HorizontalScrollView horizontalScrollViewNavigationBar;
 
+    private boolean actionConfirmed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -68,7 +71,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(this.viewModel.currentElement == null)
             {
                 String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+                this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuidString(UUID.fromString(elementUuid)) : App.content.getRootLocation();
             }
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -148,7 +151,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
+                IElement resultElement = App.content.getContentByUuidString(UUID.fromString(resultElementUuidString));
                 updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
 
@@ -156,18 +159,19 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
                 List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<IElement> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
+                List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
                 IElement parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
                 parent.deleteChildren(resultElements);
                 parent.addChildrenAndSetParents(resultElements);
+
                 this.updateContentRecyclerView();
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
+                    IElement selectedElement = App.content.getContentByUuidString(UUID.fromString(selectedElementUuidString));
                     this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
                 }
                 else
@@ -175,13 +179,16 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
                 }
 
+                super.markForUpdate(parent);
             }
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
-                IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement editedElement = App.content.getContentByUuidString(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(editedElement);
+
+                super.markForUpdate(editedElement);
             }
         }
     }
@@ -495,55 +502,67 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: deleting %s...", viewModel.longClickedElement));
+                    snackbar = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                            Snackbar.LENGTH_LONG);
 
-                    if(App.content.removeElementAndChildren(viewModel.longClickedElement))
-                    {
-                        if(viewModel.longClickedElement.deleteElementAndChildren())
-                        {
-                            updateContentRecyclerView();
-                        }
-                        else
-                        {
-                            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: deleting %s and children failed - restoring content...",
-                                    viewModel.longClickedElement));
-
-                            App.content.addElementAndChildren(viewModel.longClickedElement);
-                            Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_delete_failed));
-                        }
-                    }
-                    else
-                    {
-                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_delete_failed));
-
-                        String errorMessage = String.format("ShowLocationsActivity.onAlertDialogClick:: removing %s and children from content failed!", viewModel.longClickedElement);
-                        Log.e(Constants.LOG_TAG, errorMessage);
-                        throw new IllegalStateException(errorMessage);
-                    }
-
-                    snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_undo_delete_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                    snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo delete %s...", viewModel.longClickedElement));
+                            actionConfirmed = true;
+                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                        }
+                    });
 
-                            if(viewModel.longClickedElement.undoIsPossible() && viewModel.longClickedElement.undoDeleteElementAndChildren())
+                    snackbar.addCallback(new Snackbar.Callback()
+                    {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event)
+                        {
+                            if(actionConfirmed)
                             {
-                                App.content.addElementAndChildren(viewModel.longClickedElement);
-                                updateContentRecyclerView();
-                                viewModel.contentRecyclerViewAdapter.scrollToItem(viewModel.longClickedElement);
+                                actionConfirmed = false;
 
-                                Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_restored_text, viewModel.longClickedElement.getName()));
+                                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+
+                                if(App.content.removeElementAndChildren(viewModel.longClickedElement))
+                                {
+                                    List<IElement> childrenToDelete = new ArrayList<>(viewModel.longClickedElement.getChildren());
+
+                                    if(viewModel.longClickedElement.deleteElementAndChildren())
+                                    {
+                                        updateContentRecyclerView();
+
+                                        ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
+                                        ShowLocationsActivity.super.markForDeletion(childrenToDelete);
+                                    }
+                                    else
+                                    {
+                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s and children failed - restoring content...",
+                                                viewModel.longClickedElement));
+
+                                        App.content.addElementAndChildren(viewModel.longClickedElement);
+                                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_delete_failed));
+                                    }
+                                }
+                                else
+                                {
+                                    String errorMessage = String.format("ShowLocationsActivity.onDismissed<DELETE>:: removing %s and children from content failed!",
+                                            viewModel.longClickedElement);
+                                    Log.e(Constants.LOG_TAG, errorMessage);
+                                    throw new IllegalStateException(errorMessage);
+                                }
                             }
                             else
                             {
-                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo delete %s failed!", viewModel.longClickedElement));
-                                Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_undo_not_possible));
+                                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
                             }
                         }
                     });
+
                     snackbar.show();
                 }
                 break;
@@ -553,54 +572,70 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: removing %s...", viewModel.longClickedElement));
+                    snackbar = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()),
+                            Snackbar.LENGTH_LONG);
 
-                    if(App.content.removeElement(viewModel.longClickedElement))
-                    {
-                        if(viewModel.longClickedElement.removeElement())
-                        {
-                            viewModel.currentElement = viewModel.longClickedElement.getParent();
-                            updateContentRecyclerView();
-                        }
-                        else
-                        {
-                            Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: removing %s failed - restoring content...", viewModel.longClickedElement));
-                            App.content.addElementAndChildren(viewModel.longClickedElement);
-                            Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_remove_failed));
-                        }
-                    }
-                    else
-                    {
-                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_delete_failed));
-
-                        String errorMessage = String.format("ShowLocationsActivity.onAlertDialogClick:: removing %s from content failed!", viewModel.longClickedElement);
-                        Log.e(Constants.LOG_TAG, errorMessage);
-                        throw new IllegalStateException(errorMessage);
-                    }
-
-                    snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_undo_remove_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+                    snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo remove %s...", viewModel.longClickedElement));
+                            actionConfirmed = true;
+                            Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onSnackbarClick<REMOVE>:: action <REMOVE> confirmed");
+                        }
+                    });
 
-                            if(viewModel.longClickedElement.undoIsPossible() && viewModel.longClickedElement.undoRemoveElement())
+                    snackbar.addCallback(new Snackbar.Callback()
+                    {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event)
+                        {
+                            if(actionConfirmed)
                             {
-                                App.content.addElement(viewModel.longClickedElement);
-                                updateContentRecyclerView();
-                                viewModel.contentRecyclerViewAdapter.scrollToItem(viewModel.longClickedElement);
+                                actionConfirmed = false;
 
-                                Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.action_restored_text, viewModel.longClickedElement.getName()));
+                                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s...", viewModel.longClickedElement));
+
+                                if(App.content.removeElement(viewModel.longClickedElement))
+                                {
+                                    List<IElement> childrenToUpdate = new ArrayList<>(viewModel.longClickedElement.getChildren());
+
+                                    if(viewModel.longClickedElement.removeElement())
+                                    {
+                                        viewModel.currentElement = viewModel.longClickedElement.getParent();
+                                        updateContentRecyclerView();
+
+                                        ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
+                                        ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
+                                        ShowLocationsActivity.super.markForUpdate(childrenToUpdate);
+                                    }
+                                    else
+                                    {
+                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s failed - restoring content...",
+                                                viewModel.longClickedElement));
+
+                                        App.content.addElementAndChildren(viewModel.longClickedElement);
+
+                                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_remove_failed));
+                                    }
+                                }
+                                else
+                                {
+                                    String errorMessage = String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s from content failed",
+                                            viewModel.longClickedElement);
+                                    Log.e(Constants.LOG_TAG, errorMessage);
+                                    throw new IllegalStateException(errorMessage);
+                                }
                             }
                             else
                             {
-                                Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick:: undo remove %s failed!", viewModel.longClickedElement));
-                                Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_undo_not_possible));
+                                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onDismissed<REMOVE>:: action <REMOVE> not confirmed - doing nothing");
                             }
                         }
                     });
+
                     snackbar.show();
                 }
                 break;

@@ -63,7 +63,7 @@ public abstract class Attraction extends Element implements IAttraction
 
         this.attractionCategory = attractionCategory;
 
-        Log.v(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s's attraction category to %s", this, attractionCategory));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s's attraction category to %s", this, attractionCategory));
     }
 
     public int getUntracktedRideCount()

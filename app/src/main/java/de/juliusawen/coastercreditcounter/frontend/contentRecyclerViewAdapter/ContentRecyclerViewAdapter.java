@@ -42,8 +42,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
-    private final View.OnClickListener increaseOnClickListener;
-    private final View.OnClickListener decreaseOnClickListener;
 
     private final boolean selectMultiple;
 
@@ -54,6 +52,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Set<IElement> expandedParents = new HashSet<>();
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+    private View.OnClickListener increaseRideCountOnClickListener;
+    private View.OnClickListener decreaseRideCountOnClickListener;
 
 
     enum ViewType
@@ -301,8 +301,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
-        this.increaseOnClickListener = this.getIncreaseOnClickListener();
-        this.decreaseOnClickListener = this.getDecreaseOnClickListener();
     }
 
     private void initializeItems(List<IElement> parents)
@@ -433,44 +431,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(recyclerOnClickListener != null)
                 {
                     recyclerOnClickListener.onClick(view);
-                }
-            }
-        };
-    }
-
-    private View.OnClickListener getIncreaseOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
-
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getIncreaseOnClickListener.onClick:: increasing %s's ride count for %s",
-                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
-
-                visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
-                notifyItemChanged(items.indexOf(visitedAttraction));
-            }
-        };
-    }
-
-    private View.OnClickListener getDecreaseOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
-
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getDecreaseOnClickListener.onClick:: decreasing %s's ride count for %s",
-                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
-
-                if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
-                {
-                    notifyItemChanged(items.indexOf(visitedAttraction));
                 }
             }
         };
@@ -642,15 +602,33 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.linearLayoutCounter.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
             viewHolder.linearLayoutCounter.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
         }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: RecycleOnClickListener is null");
+        }
 
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
 
-        viewHolder.frameLayoutDecrease.setTag(child);
-        viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseOnClickListener);
-
         viewHolder.frameLayoutIncrease.setTag(child);
-        viewHolder.frameLayoutIncrease.setOnClickListener(this.increaseOnClickListener);
+        if(this.increaseRideCountOnClickListener != null)
+        {
+            viewHolder.frameLayoutIncrease.setOnClickListener(this.increaseRideCountOnClickListener);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: IncreaseRideCountOnClickListener is null");
+        }
+
+        viewHolder.frameLayoutDecrease.setTag(child);
+        if(this.decreaseRideCountOnClickListener != null)
+        {
+            viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseRideCountOnClickListener);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: DecreaseRideCountOnClickListener is null");
+        }
     }
 
     private void setImagePlaceholder(ImageView imageView)
@@ -798,6 +776,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.recyclerOnClickListener = onClickListener;
+    }
+
+    public void setIncreaseRideCountOnClickListener(View.OnClickListener increaseOnClickListener)
+    {
+        this.increaseRideCountOnClickListener = increaseOnClickListener;
+    }
+
+    public void setDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
+    {
+        this.decreaseRideCountOnClickListener = decreaseOnClickListener;
     }
 
     public void scrollToItem(IElement item)

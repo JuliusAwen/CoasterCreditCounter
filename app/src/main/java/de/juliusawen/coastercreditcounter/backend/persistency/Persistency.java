@@ -12,9 +12,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.application.Settings;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 
@@ -58,36 +60,76 @@ public class Persistency
         Log.i(Constants.LOG_TAG, "Persistency.Constructor:: <Persistency> instantiated");
     }
 
+    IDatabaseWrapper getDatabaseWrapper()
+    {
+        return this.databaseWrapper;
+    }
+
     public boolean loadContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.loadContent:: loading content...");
+        Log.d(Constants.LOG_TAG, "Persistency.loadContent:: loading content...");
         return this.databaseWrapper.loadContent(content);
     }
 
     public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.loadSettings:: loading settings...");
+        Log.d(Constants.LOG_TAG, "Persistency.loadSettings:: loading settings...");
 
         return this.jsonHandler.loadSettings(settings);
     }
 
     public boolean saveSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, "Persistency.saveSettings:: saving settings...");
+        Log.e(Constants.LOG_TAG, "Persistency.saveSettings:: saving settings...");
         return this.jsonHandler.saveSettings(settings);
     }
 
     public boolean importContent()
     {
-        Log.i(Constants.LOG_TAG, "Persistency.exportContent:: importing content...");
+        Log.d(Constants.LOG_TAG, "Persistency.exportContent:: importing content...");
         return this.jsonHandler.importContent(App.content);
     }
 
     public boolean exportContent()
     {
-        Log.i(Constants.LOG_TAG, "Persistency.exportContent:: exporting content...");
+        Log.d(Constants.LOG_TAG, "Persistency.exportContent:: exporting content...");
         return this.jsonHandler.exportContent(App.content);
     }
+
+    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
+    {
+        int size;
+
+        size = elementsToCreate.size();
+        elementsToCreate.removeAll(elementsToDelete);
+        if(elementsToCreate.size() != size)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistency.synchronize:: removed [%d] elements from ElementsToCreate - since they will be deleted anyway",
+                    size - elementsToCreate.size()));
+        }
+
+        size = elementsToUpdate.size();
+        elementsToUpdate.removeAll(elementsToDelete);
+        if(elementsToUpdate.size() != size)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistency.synchronize:: removed [%d] elements from ElementsToUpdate - since they will be deleted anyway",
+                    size - elementsToUpdate.size()));
+        }
+
+        size = elementsToUpdate.size();
+        elementsToUpdate.removeAll(elementsToCreate);
+        if(elementsToUpdate.size() != size)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistency.synchronize:: removed [%d] elements from ElementsToUpdate - since they will be created in updated state anyway",
+                    size - elementsToUpdate.size()));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("Persistency.synchronize:: creating [%d], updating [%d], deleting [%d] elements...",
+                elementsToCreate.size(), elementsToUpdate.size(), elementsToDelete.size()));
+
+        return this.databaseWrapper.synchronize(elementsToCreate, elementsToUpdate, elementsToDelete);
+    }
+
 
     public File getExternalStorageDocumentsDirectory()
     {
@@ -96,7 +138,7 @@ public class Persistency
         {
             if(directory.mkdirs())
             {
-                Log.i(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
+                Log.d(LOG_TAG, String.format("Persistency.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
             }
             else
             {
@@ -108,15 +150,13 @@ public class Persistency
 
     public boolean writeStringToInternalFile(String fileName, String input)
     {
-        Log.i(Constants.LOG_TAG, String.format("Persistency.writeStringToInternalFile:: writing string to internal file [%s]...", fileName));
-
         try
         {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.getContext().openFileOutput(fileName, Context.MODE_PRIVATE));
             outputStreamWriter.write(input);
             outputStreamWriter.close();
 
-            Log.i(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
+            Log.d(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
 
             return true;
         }
@@ -138,7 +178,7 @@ public class Persistency
                 fileOutputStream.write(input.getBytes());
                 fileOutputStream.close();
 
-                Log.i(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file written to [%s]", file.getAbsolutePath()));
+                Log.d(LOG_TAG, String.format("Persistency.writeStringToExternalFile:: file written to external storage [%s]", file.getAbsolutePath()));
 
                 return true;
             }
@@ -161,7 +201,7 @@ public class Persistency
 
     public String readStringFromInternalFile(String fileName)
     {
-        Log.i(Constants.LOG_TAG, String.format("Persistency.readStringFromInternalFile:: reading string from internal file [%s]...", fileName));
+        Log.d(Constants.LOG_TAG, String.format("Persistency.readStringFromInternalFile:: reading string from internal file [%s]...", fileName));
 
         String output = "";
         try
@@ -182,7 +222,7 @@ public class Persistency
 
     public String readStringFromExternalFile(File file)
     {
-        Log.i(Constants.LOG_TAG, String.format("Persistency.readStringFromInternalFile:: reading string from external file [%s]...", file.getAbsolutePath()));
+        Log.d(Constants.LOG_TAG, String.format("Persistency.readStringFromInternalFile:: reading string from external storage [%s]...", file.getAbsolutePath()));
 
         String output = "";
         try
@@ -228,7 +268,7 @@ public class Persistency
     public boolean fileExists(String absolutePath)
     {
         File file = new File(absolutePath);
-        Log.i(LOG_TAG, String.format("Persistency.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
+        Log.v(LOG_TAG, String.format("Persistency.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
         return file.exists();
     }
 }

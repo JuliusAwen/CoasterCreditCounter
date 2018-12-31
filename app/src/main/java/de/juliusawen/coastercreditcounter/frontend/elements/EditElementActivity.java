@@ -40,7 +40,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
 
         if(this.viewModel.elementToEdit == null)
         {
-            this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.elementToEdit = App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         super.addConfirmDialogFragment();
@@ -129,6 +129,8 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         {
             Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.elementToEdit.getUuid().toString());
+
+            super.markForUpdate(this.viewModel.elementToEdit);
         }
 
         setResult(resultCode, intent);

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -56,14 +57,16 @@ public class App extends Application
         App.settings = Settings.getInstance(App.persistency);
 
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Content> and <Settings>...");
-        boolean success = App.content.initialize() && App.settings.initialize();
 
-        if(success)
+        if(App.content.initialize() && App.settings.initialize())
         {
             App.isInitialized = true;
+            return true;
         }
-
-        return success;
+        else
+        {
+            return false;
+        }
     }
 
     public class AppConfig
@@ -75,7 +78,10 @@ public class App extends Application
 
         private final boolean isDebugBuild = true;
         private final boolean useExternalStorage = true;
+        private final boolean reinitializeContentFromDatabaseMock = false;
         private final boolean createExportFileIfNotExists = true;
+
+        private final boolean validateContent = true;
 
         private final boolean jumpToTestActivityOnStart = false;
 
@@ -85,7 +91,36 @@ public class App extends Application
 
         private AppConfig()
         {
-            Log.i(Constants.LOG_TAG,"AppConfig.Constructor:: <AppConfig> instantiated");
+            Log.i(Constants.LOG_TAG, "AppConfig.Constructor:: <AppConfig> instantiated");
+            Log.i(Constants.LOG_TAG, String.format("AppConfig.Constructor:: Configuration: \n%s", this));
+        }
+
+        @NonNull
+        @Override
+        public String toString()
+        {
+            return String.format(
+                    Constants.LOG_DIVIDER + "\n" +
+                            "databaseWrapperToUse [%s]\n" +
+                            "isDebugBuild [%S]\n" +
+                            "useExternalStorage [%S]\n" +
+                            "reinitializeContentFromDatabaseMock [%S]\n" +
+                            "createExportFileIfNotExists [%S]\n" +
+                            "validateContent [%S]\n" +
+                            "jumpToTestActivityOnStart [%S]\n" +
+                            "contentFileName [%s]\n" +
+                            "settingsFileName [%s]\n" +
+                    Constants.LOG_DIVIDER,
+                    this.databaseWrapperToUse(),
+                    this.isDebugBuild(),
+                    this.useExternalStorage(),
+                    this.reinitializeContentFromDatabaseMock(),
+                    this.createExportFileIfNotExists(),
+                    this.validateContent(),
+                    this.jumpToTestActivityOnStart(),
+                    this.getContentFileName(),
+                    this.getSettingsFileName()
+            );
         }
 
         private boolean isDebugBuild()
@@ -121,6 +156,16 @@ public class App extends Application
         public boolean useExternalStorage()
         {
             return useExternalStorage;
+        }
+
+        public boolean validateContent()
+        {
+            return this.validateContent;
+        }
+
+        public boolean reinitializeContentFromDatabaseMock()
+        {
+            return reinitializeContentFromDatabaseMock;
         }
     }
 }

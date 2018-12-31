@@ -12,7 +12,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public abstract class OrphanElement extends Element implements IElement
+public abstract class OrphanElement extends Element implements IElement, IOrphanElement
 {
     public OrphanElement(String name, UUID uuid)
     {

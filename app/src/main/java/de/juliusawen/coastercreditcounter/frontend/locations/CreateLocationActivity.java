@@ -29,6 +29,8 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragme
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
+import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateLocationActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener, AlertDialogFragment.AlertDialogListener
@@ -59,7 +61,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
         if(this.viewModel.parentLocation == null)
         {
-            this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.parentLocation = (Location) App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         super.addConfirmDialogFragment();
@@ -115,13 +117,13 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         if(resultCode == RESULT_OK)
         {
             List<String> uuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-            List<IElement> pickedElements = App.content.fetchElementsByUuidStrings(uuidStrings);
+            List<IElement> pickedElements = App.content.getContentByUuidStrings(uuidStrings);
             Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<OK>:: #[%d] elements returned", pickedElements.size()));
 
             if(pickedElements.size() > 1)
             {
                 Log.v(Constants.LOG_TAG, "CreateLocationsActivity.onActivityResult<OK>:: sorting list...");
-                pickedElements = Element.sortElementsBasedOnComparisonList(new ArrayList<>(pickedElements), new ArrayList<>(viewModel.parentLocation.getChildren()));
+                pickedElements = SortTool.sortElementsBasedOnComparisonList(new ArrayList<>(pickedElements), new ArrayList<>(viewModel.parentLocation.getChildren()));
             }
 
             if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
@@ -131,7 +133,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
                 if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {
-                    Log.v(Constants.LOG_TAG, String.format( "CreateLocationsActivity.onActivityResult<PickLocations>:: parent element %s has #[%d] children parks - asking to relocate...",
+                    Log.d(Constants.LOG_TAG, String.format( "CreateLocationsActivity.onActivityResult<PickLocations>:: parent element %s has #[%d] children parks - asking to relocate...",
                             this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
 
                     this.showAlertDialogRelocateChildrenParks();
@@ -146,7 +148,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             else if(requestCode == Constants.REQUEST_PICK_PARKS)
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onActivityResult<PickParks>:: relocating #[%d] elements...", pickedElements.size()));
-                this.relocateChildrenParks(Element.convertElementsToType(pickedElements, Element.class));
+                this.relocateChildrenParks(ConvertTool.convertElementsToType(pickedElements, Element.class));
                 this.returnResult(resultCode);
             }
          }
@@ -189,14 +191,14 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
     private void handleOnEditorActionDone()
     {
         Log.d(Constants.LOG_TAG, String.format(
-                "CreateLocationsActivity.handleOnEditorActionDone:: %s has #[%d] children<Location> and #[%d] children<Park>",
+                "CreateLocationsActivity.handleOnEditorActionDone:: %s has [%d] children<Location> and [%d] children<Park>",
                 this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Location.class), this.viewModel.parentLocation.getChildCountOfType(Park.class)));
 
         if(this.createLocation())
         {
             if(this.checkBoxAddChildren != null && this.checkBoxAddChildren.isChecked())
             {
-                Log.d(Constants.LOG_TAG, String .format("CreateLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S] - parent %s has #[%d] children<Location>",
+                Log.d(Constants.LOG_TAG, String .format("CreateLocationsActivity.handleOnEditorActionDone:: checkboxAddChildren.isChecked[%S] - parent %s has [%d] children<Location>",
                         this.checkBoxAddChildren.isChecked(), this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Location.class)));
 
 
@@ -217,14 +219,14 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
                     if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                     {
-                        Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has #[%d] children<Park> - asking to relocate...",
+                        Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has [%d] children<Park> - asking to relocate...",
                                 this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
                         this.showAlertDialogRelocateChildrenParks();
                     }
                     else
                     {
                         Log.v(Constants.LOG_TAG, String.format(
-                                "CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
+                                "CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning <RESULT_OK>", this.viewModel.parentLocation));
 
                         this.returnResult(RESULT_OK);
                     }
@@ -238,7 +240,8 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
                 if(this.viewModel.parentLocation.hasChildrenOfType(Park.class))
                 {
-                    Log.v(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> and #[%d] children<Park> - asking to relocate...",
+                    Log.v(Constants.LOG_TAG,
+                            String.format("CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Location> and [%d] children<Park> - asking to relocate...",
                             this.viewModel.parentLocation, this.viewModel.parentLocation.getChildCountOfType(Park.class)));
 
                     this.showAlertDialogRelocateChildrenParks();
@@ -282,20 +285,20 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             case ALERT_DIALOG_RELOCATE:
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    Log.i(Constants.LOG_TAG, "CreateLocationsActivity.onAlertDialogClick:: accepted");
+                    Log.i(Constants.LOG_TAG, "CreateLocationsActivity.onAlertDialogClickPositive<RELOCATE>:: accepted");
                     if(viewModel.parentLocation.getChildCountOfType(Park.class) > 1)
                     {
                         ActivityTool.startActivityPickForResult(CreateLocationActivity.this, Constants.REQUEST_PICK_PARKS, viewModel.parentLocation.getChildrenOfType(Park.class));
                     }
                     else
                     {
-                        relocateChildrenParks(Element.convertElementsToType(viewModel.parentLocation.getChildrenOfType(Park.class), Element.class));
+                        relocateChildrenParks(ConvertTool.convertElementsToType(viewModel.parentLocation.getChildrenOfType(Park.class), Element.class));
                         returnResult(RESULT_OK);
                     }
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    Log.i(Constants.LOG_TAG, "CreateLocationsActivity.onClickAlertDialogNegativeButton:: canceled");
+                    Log.i(Constants.LOG_TAG, "CreateLocationsActivity.onAlertDialogClickNegative<RELOCATE>:: canceled");
                     returnResult(RESULT_OK);
                 }
                 break;
@@ -308,7 +311,8 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         for(Element park : parks)
         {
             Log.d(Constants.LOG_TAG, String.format(
-                    "CreateLocationsActivity.relocateChildrenParks:: relocating children<Park> of parent %s to new %s...", this.viewModel.parentLocation, this.viewModel.newLocation));
+                    "CreateLocationsActivity.relocateChildrenParks:: relocating child %s from former parent %s to new parent %s...",
+                    park, this.viewModel.parentLocation, this.viewModel.newLocation));
             park.relocateElement(this.viewModel.newLocation);
         }
     }
@@ -339,6 +343,10 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         {
             Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: returning new %s", this.viewModel.newLocation));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newLocation.getUuid().toString());
+
+            super.markForCreation(this.viewModel.newLocation);
+            super.markForUpdate(this.viewModel.newLocation.getParent());
+            super.markForUpdate(this.viewModel.newLocation.getChildren());
         }
 
         setResult(resultCode, intent);

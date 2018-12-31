@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
 public class AttractionCategoryHeaderProvider
 {
@@ -67,7 +66,7 @@ public class AttractionCategoryHeaderProvider
                 Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: " +
                         "[%d] AttractionCategoryHeaders added", categorizedAttractions.size()));
 
-                return this.sortHeadersBasedOnCategoriesOrder(categorizedAttractions);
+                return SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
             }
             else
             {
@@ -128,39 +127,6 @@ public class AttractionCategoryHeaderProvider
         }
         categorizedAttractions.removeAll(emptyHeaders);
 
-        return this.sortHeadersBasedOnCategoriesOrder(categorizedAttractions);
-    }
-
-    private List<IElement> sortHeadersBasedOnCategoriesOrder(List<IElement> attractionCategoryHeaders)
-    {
-        if(attractionCategoryHeaders.size() > 1)
-        {
-            List<IElement> sortedAttractionCategoryHeaders = new ArrayList<>();
-            List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
-
-            Log.v(Constants.LOG_TAG,  String.format("AttractionCategoryHeaderProvider.sortHeadersBasedOnCategoriesOrder::" +
-                    " sorting [%d]AttractionCategoryHeaders based on [%d]AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
-
-            List<AttractionCategoryHeader> castedAttractionCategoryHeaders = Element.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
-
-            for(AttractionCategory attractionCategory : attractionCategories)
-            {
-                for(AttractionCategoryHeader attractionCategoryHeader : castedAttractionCategoryHeaders)
-                {
-                    if(attractionCategoryHeader.getAttractionCategory().equals(attractionCategory) && !sortedAttractionCategoryHeaders.contains(attractionCategoryHeader))
-                    {
-                        sortedAttractionCategoryHeaders.add(attractionCategoryHeader);
-                        break;
-                    }
-                }
-            }
-
-            return sortedAttractionCategoryHeaders;
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,"AttractionCategoryHeaderProvider.sortHeadersBasedOnCategoriesOrder:: not sorted - list contains less than two elements");
-            return attractionCategoryHeaders;
-        }
+        return SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
     }
 }

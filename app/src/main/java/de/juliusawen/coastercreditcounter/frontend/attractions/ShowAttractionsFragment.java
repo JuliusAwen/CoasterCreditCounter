@@ -64,7 +64,7 @@ public  class ShowAttractionsFragment extends Fragment
         {
             if(getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
 
@@ -103,7 +103,7 @@ public  class ShowAttractionsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            IElement selectedElement = ResultTool.fetchSelectedElement(data);
+            IElement selectedElement = ResultTool.fetchResultElement(data);
 
             if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {

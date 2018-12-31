@@ -40,7 +40,7 @@ public class AlertDialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "AlertDialogFragment.onCreateDialog:: creating alert dialog...");
+        Log.v(Constants.LOG_TAG, "AlertDialogFragment.onCreateDialog:: creating alert dialog...");
 
         Bundle args = getArguments();
         assert args != null;

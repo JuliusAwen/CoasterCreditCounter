@@ -52,7 +52,7 @@ public class ShowVisitActivity extends BaseActivity
 
             if(this.viewModel.visit == null)
             {
-                this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                this.viewModel.visit = (Visit) App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
             if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -79,6 +79,8 @@ public class ShowVisitActivity extends BaseActivity
             {
                 this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+                this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
+                this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
             }
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
@@ -138,9 +140,13 @@ public class ShowVisitActivity extends BaseActivity
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
+
+                    super.markForCreation(visitedAttraction);
                 }
 
                 this.updateContentRecyclerView();
+
+                super.markForUpdate(this.viewModel.visit);
             }
             else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
             {
@@ -152,6 +158,8 @@ public class ShowVisitActivity extends BaseActivity
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
                     this.updateContentRecyclerView();
+
+                    super.markForUpdate(this.viewModel.visit);
                 }
             }
         }
@@ -201,6 +209,48 @@ public class ShowVisitActivity extends BaseActivity
                 }
 
                 return true;
+            }
+        };
+    }
+
+    private View.OnClickListener getIncreaseRideCountOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
+
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.increaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s",
+                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+
+                visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
+                updateContentRecyclerView();
+
+                ShowVisitActivity.super.markForUpdate(visitedAttraction);
+            }
+        };
+    }
+
+    private View.OnClickListener getDecreaseRideCountOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
+
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.decreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s",
+                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+
+                if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
+                {
+                    updateContentRecyclerView();
+
+                    ShowVisitActivity.super.markForUpdate(visitedAttraction);
+                }
             }
         };
     }

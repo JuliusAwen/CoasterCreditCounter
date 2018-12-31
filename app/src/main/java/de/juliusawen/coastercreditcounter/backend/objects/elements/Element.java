@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -28,7 +27,7 @@ public abstract class Element implements IElement
     public IElement parent = null;
     public final List<IElement> children = new ArrayList<>();
 
-    public boolean undoIsPossible = false;
+    public boolean isUndoPossible = false;
     private IElement backupParent = null;
     private List<IElement> backupChildren = new ArrayList<>();
     private int undoIndex = -1;
@@ -167,13 +166,13 @@ public abstract class Element implements IElement
     {
         for(UUID childUuid : childUuids)
         {
-            this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
+            this.addChildAndSetParent(App.content.getContentByUuidString(childUuid));
         }
     }
 
     public void addChildAndSetParent(UUID childUuid)
     {
-        this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
+        this.addChildAndSetParent(App.content.getContentByUuidString(childUuid));
     }
 
     public void addChildrenAndSetParents(int index, List<IElement> children)
@@ -239,7 +238,7 @@ public abstract class Element implements IElement
 
     public void addChild(UUID childUuid)
     {
-        this.addChild(App.content.getContentByUuid(childUuid));
+        this.addChild(App.content.getContentByUuidString(childUuid));
     }
 
     public boolean containsChild(IElement child)
@@ -369,7 +368,8 @@ public abstract class Element implements IElement
             this.backupChildren = new ArrayList<>(this.getChildren());
             this.backupParent = this.parent;
             this.undoIndex = this.parent.getIndexOfChild(this);
-            this.undoIsPossible = true;
+            this.isUndoPossible = true;
+
             this.parent.deleteChild(this);
             this.deleteChildren(this.backupChildren);
             return true;
@@ -382,7 +382,7 @@ public abstract class Element implements IElement
     {
         Log.d(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: restoring %s and children", this));
         boolean success = false;
-        if(this.undoIsPossible && this.backupParent != null && this.undoIndex != -1)
+        if(this.isUndoPossible && this.backupParent != null && this.undoIndex != -1)
         {
             this.addChildrenAndSetParents(this.backupChildren);
             this.backupParent.addChildAndSetParent(this.undoIndex, this);
@@ -392,12 +392,12 @@ public abstract class Element implements IElement
         else
         {
             Log.e(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to restore %s -" +
-                            " undoIsPossible[%s]," +
+                            " isUndoPossible[%s]," +
                             " backupChildrenCount[%d]," +
                             " backupParent[%s]," +
                             " undoIndex[%d]",
                     this,
-                    this.undoIsPossible,
+                    this.isUndoPossible,
                     this.backupChildren.size(),
                     this.backupParent,
                     this.undoIndex));
@@ -405,7 +405,7 @@ public abstract class Element implements IElement
         this.backupChildren.clear();
         this.backupParent = null;
         this.undoIndex = -1;
-        this.undoIsPossible = false;
+        this.isUndoPossible = false;
         Log.d(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: restore %s success[%s]", this, success));
         return success;
     }
@@ -413,12 +413,13 @@ public abstract class Element implements IElement
     public boolean removeElement()
     {
         Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s", this));
-        if (this.parent != null)
+        if(this.parent != null)
         {
             this.backupChildren = new ArrayList<>(this.getChildren());
             this.backupParent = this.parent;
             this.undoIndex = this.parent.getIndexOfChild(this);
-            this.undoIsPossible = true;
+            this.isUndoPossible = true;
+
             this.parent.deleteChild(this);
             this.parent.addChildrenAndSetParents(this.undoIndex, this.backupChildren);
             this.deleteChildren(this.backupChildren);
@@ -435,7 +436,7 @@ public abstract class Element implements IElement
     {
         Log.d(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: restoring %s", this));
         boolean success = false;
-        if(this.undoIsPossible && this.backupParent != null && this.undoIndex != -1)
+        if(this.isUndoPossible && this.backupParent != null && this.undoIndex != -1)
         {
             this.addChildrenAndSetParents(this.backupChildren);
             this.backupParent.deleteChildren(this.backupChildren);
@@ -446,12 +447,12 @@ public abstract class Element implements IElement
         else
         {
             Log.e(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to restore %s -" +
-                            " undoIsPossible[%s]," +
+                            " isUndoPossible[%s]," +
                             " backupChildrenCount[%d]," +
                             " backupParent[%s]," +
                             " undoIndex[%d]",
                     this,
-                    this.undoIsPossible,
+                    this.isUndoPossible,
                     this.backupChildren.size(),
                     this.backupParent,
                     this.undoIndex));
@@ -459,98 +460,13 @@ public abstract class Element implements IElement
         this.backupChildren.clear();
         this.backupParent = null;
         this.undoIndex = -1;
-        this.undoIsPossible = false;
+        this.isUndoPossible = false;
         Log.d(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
         return success;
     }
 
     public boolean undoIsPossible()
     {
-        return this.undoIsPossible;
-    }
-
-    public static void sortElementsByNameAscending(List<? extends IElement> elements)
-    {
-        if(elements.size() > 1)
-        {
-            Collections.sort(elements, new Comparator<IElement>()
-            {
-                @Override
-                public int compare(IElement element1, IElement element2)
-                {
-                    return element1.getName().compareToIgnoreCase(element2.getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameAscending:: [%s] elements sorted", elements.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "Element.sortElementsByNameAscending:: not sorted - list contains only one element");
-        }
-    }
-
-    public static void sortElementsByNameDescending(List<? extends IElement> elements)
-    {
-        if(elements.size() > 1)
-        {
-            Collections.sort(elements, new Comparator<IElement>()
-            {
-                @Override
-                public int compare(IElement element1, IElement element2)
-                {
-                    return element2.getName().compareToIgnoreCase(element1.getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("Element.sortElementsByNameDescending:: [%s] elements sorted", elements.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "Element.sortElementsByNameDescending:: not sorted - list contains only one element");
-        }
-
-    }
-
-    public static List<IElement> sortElementsBasedOnComparisonList(List<IElement> elementsToSort, List<IElement> comparisonList)
-    {
-        if(elementsToSort.size() > 1)
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Element.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing [%d] elements",
-                    elementsToSort.size(), comparisonList.size()));
-            List<IElement> sortedElements = new ArrayList<>();
-            for(IElement element : comparisonList)
-            {
-                if(elementsToSort.contains(element))
-                {
-                    sortedElements.add(elementsToSort.get(elementsToSort.indexOf(element)));
-                }
-            }
-            return sortedElements;
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,"Element.sortElementsBasedOnComparisonList:: not sorted - list contains only one element");
-            return elementsToSort;
-        }
-    }
-
-    public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elements, Class<T> type)
-    {
-        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type.getSimpleName()));
-
-        List<T> returnList = new ArrayList<>();
-        for(IElement element : elements)
-        {
-            try
-            {
-                returnList.add(type.cast(element));
-            }
-            catch(ClassCastException e)
-            {
-                String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
-                Log.v(Constants.LOG_TAG, "Element.convertElementsToType:: " + errorMessage);
-                throw new IllegalStateException(errorMessage + "\n" + e);
-            }
-        }
-        return returnList;
+        return this.isUndoPossible;
     }
 }

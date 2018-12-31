@@ -4,9 +4,10 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class CoasterBlueprint extends Coaster implements IBlueprint
+public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElement
 {
     private CoasterBlueprint(String name, int untrackedRideCount, UUID uuid)
     {

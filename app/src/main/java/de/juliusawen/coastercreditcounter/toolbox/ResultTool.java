@@ -12,18 +12,18 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class ResultTool
 {
-    public static IElement fetchSelectedElement(Intent data)
+    public static IElement fetchResultElement(Intent data)
     {
-        String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+        String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
         IElement selectedElement = null;
-        if(selectedElementUuidString != null)
+        if(resultElementUuidString != null)
         {
-            selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-            Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchSelectedElement:: selected element %s fetched", selectedElement));
+            selectedElement = App.content.getContentByUuidString(UUID.fromString(resultElementUuidString));
+            Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElement:: selected element %s fetched", selectedElement));
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "ResultTool.fetchSelectedElement:: no selected element fetched");
+            Log.v(Constants.LOG_TAG, "ResultTool.fetchResultElement:: no selected element fetched");
         }
 
         return selectedElement;
@@ -32,9 +32,9 @@ public abstract class ResultTool
     public static List<IElement> fetchResultElements(Intent data)
     {
         List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-        List<IElement> resultElements = App.content.fetchElementsByUuidStrings(resultElementsUuidStrings);
+        List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
-        Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchSelectedElement:: [%d] result elements fetched", resultElements.size()));
+        Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElements:: [%d] result elements fetched", resultElements.size()));
 
         return resultElements;
     }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -23,6 +22,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -40,7 +40,7 @@ public class SortElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToSort == null)
         {
-            this.viewModel.elementsToSort = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
         
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -90,13 +90,13 @@ public class SortElementsActivity extends BaseActivity
         switch (selection)
         {
             case SORT_ASCENDING:
-                Element.sortElementsByNameAscending(this.viewModel.elementsToSort);
+                SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             case SORT_DESCENDING:
-                Element.sortElementsByNameDescending(this.viewModel.elementsToSort);
+                SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;

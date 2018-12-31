@@ -104,15 +104,18 @@
     <string name="alert_dialog_delete_element_title">DELETE</string>
     <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
 
-    <string name="alert_dialog_delete_attraction_category_with_children_message">%1$d attraction(s) are in this category - do you really want to delete category %2$s?</string>
-    <string name="alert_dialog_delete_attraction_category_without_children_message">Do you really want to delete category %1$s?</string>
+    <string name="alert_dialog_delete_attraction_category_with_children_message">
+        %1$d attraction(s) are in this category - do you really want to delete category \'%2$s\'?
+        \n(attractions will be sorted into default category \'%3$s\')
+    </string>
+    <string name="alert_dialog_delete_attraction_category_without_children_message">Do you really want to delete category \'%1$s\'?</string>
 
     <string name="alert_dialog_remove_element_title">REMOVE</string>
-    <string name="alert_dialog_remove_element_message">Do you really want to remove %1$s and attach all of its children to %2$s?</string>
+    <string name="alert_dialog_remove_element_message">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
     <string name="alert_dialog_remove_element_message_parent_is_root">
-        Do you really want to remove %1$s? \n\n
-        WARNING: \n
-        As locations parent is root location %2$s you have to assign new parents to children parks manually!
+        Do you really want to remove \'%1$s\'? \n
+        \nWARNING:
+        \nAs location\'s parent is root location \'%2$s\' you have to assign new parents to children parks manually!
     </string>
 
     <string name="alert_dialog_relocate_children_parks_title">LOCATION CONTAINS PARKS</string>
@@ -144,9 +147,13 @@
 
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
-    <string name="action_undo_delete_text">%1$s deleted</string>
-    <string name="action_undo_remove_text">%1$s removed</string>
-    <string name="action_restored_text">%1$s restored</string>
+    <string name="action_undo_delete_text">\'%1$s\' deleted</string>
+    <string name="action_undo_remove_text">\'%1$s\' removed</string>
+    <string name="action_restored_text">\'%1$s\' restored</string>
+
+    <string name="action_confirm_text">CONFIRM</string>
+    <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
+    <string name="action_confirm_remove_text">Confirm removal of \'%1$s\'</string>
 
     <string name="action_export_success">Content exported to %1$s</string>
     <string name="action_export_fail">Export failed!</string>
@@ -176,7 +183,7 @@
 
 
     <!--information texts-->
-    <string name="information_count_of_categorized_attractions">applied category %1$s to %2$d attractions</string>
+    <string name="information_count_of_categorized_attractions">applied category \'%1$s\' to %2$d attractions</string>
     <string name="information_decreased_ride_count">decreased ride count for %1$d attractions</string>
 
 

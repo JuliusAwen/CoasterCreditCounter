@@ -19,13 +19,13 @@ import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHe
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -47,7 +47,7 @@ public class PickElementsActivity extends BaseActivity
         
         if(this.viewModel.elementsToPickFrom == null)
         {
-            this.viewModel.elementsToPickFrom = App.content.fetchElementsByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -60,7 +60,7 @@ public class PickElementsActivity extends BaseActivity
             if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(Element.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
+                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(ConvertTool.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
                         Attraction.class,
                         true);
             }

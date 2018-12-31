@@ -39,6 +39,12 @@
         <activity
             android:name=".frontend.CreateSimpleStringActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <service
+            android:name=".backend.persistency.PersistenceService"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>
