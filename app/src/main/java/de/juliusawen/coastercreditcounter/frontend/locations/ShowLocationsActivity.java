@@ -647,6 +647,5 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: updating RecyclerView...");
         this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.currentElement.getChildrenOfType(Location.class));
-        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

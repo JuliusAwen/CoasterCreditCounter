@@ -37,6 +37,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 {
     private RecyclerView recyclerView;
 
+    private List<IElement> items;
+
+    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+    private View.OnClickListener increaseRideCountOnClickListener;
+    private View.OnClickListener decreaseRideCountOnClickListener;
+
     private final AdapterType adapterType;
     private final Class<? extends IElement> childType;
 
@@ -44,17 +50,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final View.OnClickListener selectionOnClickListener;
 
     private final boolean selectMultiple;
-
-    private final List<IElement> items = new ArrayList<>();
-
     private final List<IElement> selectedItemsInOrderOfSelection = new ArrayList<>();
-
-    private Set<IElement> expandedParents = new HashSet<>();
-
-    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
-    private View.OnClickListener increaseRideCountOnClickListener;
-    private View.OnClickListener decreaseRideCountOnClickListener;
-
+    private final Set<IElement> expandedParents = new HashSet<>();
 
     enum ViewType
     {
@@ -104,15 +101,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             super(view);
 
             this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_Counter);
+
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Name);
             this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
-            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
-            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
-            this.frameLayoutDecrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Decrease);
-            this.frameLayoutIncrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Increase);
 
-            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+            this.frameLayoutIncrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Increase);
+            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
             this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
+
+            this.frameLayoutDecrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Decrease);
+            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
+            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
         }
     }
 
@@ -294,31 +293,34 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if(request.initiallyExpandedElements != null)
         {
-            this.expandedParents = new HashSet<>(request.initiallyExpandedElements);
+            this.expandedParents.addAll(request.initiallyExpandedElements);
         }
 
-        this.initializeItems(request.elements);
+        this.items = this.initializeItems(request.elements);
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
-    private void initializeItems(List<IElement> parents)
+    private List<IElement> initializeItems(List<IElement> items)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: initializing [%d] parents...", parents.size()));
-        this.items.clear();
+        List<IElement> initializedItems = new ArrayList<>();
 
-        for(IElement parent : parents)
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: initializing [%d] items...", items.size()));
+
+        for(IElement item : items)
         {
-            this.items.add(parent);
-            if(this.childType != null && this.expandedParents.contains(parent))
+            initializedItems.add(item);
+            if(this.childType != null && this.expandedParents.contains(item))
             {
-                this.items.addAll(this.items.indexOf(parent) + 1, parent.getChildrenOfType(this.childType));
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: parent %s is expanded - [%d] children added",
-                        parent, parent.getChildCountOfType(this.childType)));
+                initializedItems.addAll(initializedItems.indexOf(item) + 1, item.getChildrenOfType(this.childType));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: item %s is expanded - [%d] children added",
+                        item, item.getChildCountOfType(this.childType)));
             }
-            this.items.add(new ItemDivider());
+            initializedItems.add(new ItemDivider());
         }
+
+        return initializedItems;
     }
 
     private View.OnClickListener getExpansionOnClickListener()
@@ -702,7 +704,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getItems:: returning [%d] elements", content.size()));
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getItems:: returning [%d] items", content.size()));
         return content;
     }
 
@@ -726,7 +728,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void selectAllItems()
     {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllItems:: selecting all elements...");
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllItems:: selecting all items...");
 
         this.selectedItemsInOrderOfSelection.clear();
 
@@ -734,7 +736,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             this.selectedItemsInOrderOfSelection.add(item);
             notifyItemChanged(this.items.indexOf(item));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: %s parent selected", item));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: %s item selected", item));
 
             if(this.childType != null && this.isParent(item) && !this.expandedParents.contains(item))
             {
@@ -747,8 +749,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void deselectAllItems()
     {
         Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllItems:: deselecting all elements...");
+
+        List<IElement> selectedItems = new ArrayList<>(this.selectedItemsInOrderOfSelection);
         this.selectedItemsInOrderOfSelection.clear();
-        notifyDataSetChanged();
+
+        for(IElement selectedItem : selectedItems)
+        {
+            notifyItemChanged(this.items.indexOf(selectedItem));
+        }
     }
 
     public List<IElement> getSelectedItemsInOrderOfSelection()
@@ -769,7 +777,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void updateItems(List<IElement> items)
     {
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating with [%d] items...", items.size()));
-        this.initializeItems(items);
+        this.items = this.initializeItems(items);
+        notifyDataSetChanged();
     }
 
 
@@ -796,7 +805,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 if(element instanceof AttractionCategoryHeader)
                 {
-                    if(((AttractionCategoryHeader) element).getAttractionCategory().equals(item))
+                    if(((AttractionCategoryHeader)element).getAttractionCategory().equals(item))
                     {
                         item = element;
                         break;

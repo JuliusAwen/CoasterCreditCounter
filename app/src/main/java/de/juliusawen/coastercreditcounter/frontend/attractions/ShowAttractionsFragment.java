@@ -181,6 +181,5 @@ public  class ShowAttractionsFragment extends Fragment
         List<IElement> categorizedAttractions =
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
         this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedAttractions);
-        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

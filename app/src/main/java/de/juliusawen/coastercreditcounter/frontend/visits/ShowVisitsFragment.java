@@ -191,15 +191,12 @@ public class ShowVisitsFragment extends Fragment
             {
                 this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(categorizedVisits));
             }
-
-            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
         else
         {
             Log.v(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: no elements to update");
         }
     }
-
 
     private List<IElement> getCategorizedVisits()
     {

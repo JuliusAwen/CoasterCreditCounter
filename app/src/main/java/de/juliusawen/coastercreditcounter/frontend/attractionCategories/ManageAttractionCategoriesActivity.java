@@ -393,6 +393,5 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
 
         this.viewModel.contentRecyclerViewAdapter.updateItems(new ArrayList<IElement>(App.content.getAttractionCategories()));
-        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

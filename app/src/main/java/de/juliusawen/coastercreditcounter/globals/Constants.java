@@ -11,6 +11,8 @@ public abstract class Constants
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
 
+    public static final String PERSISTENCY_SERVICE_NAME = "de.juliusawen.coding.persistency_service";
+
 
     public static final String JSON_STRING_LOCATIONS = "locations";
     public static final String JSON_STRING_PARKS = "parks";

@@ -66,13 +66,6 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume()
-    {
-        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
-        super.onResume();
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
@@ -92,13 +85,11 @@ public class SortElementsActivity extends BaseActivity
             case SORT_ASCENDING:
                 SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             case SORT_DESCENDING:
                 SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             default:
@@ -148,18 +139,18 @@ public class SortElementsActivity extends BaseActivity
 
                     if(position < viewModel.elementsToSort.size() - 1)
                     {
-                        Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
+                        Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
                         viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position +1));
                         Collections.swap(viewModel.elementsToSort, position, position +1);
                     }
                     else
                     {
-                        Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
+                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
                     }
                 }
                 else
                 {
-                    Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
+                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
                 }
             }
         };
@@ -187,12 +178,12 @@ public class SortElementsActivity extends BaseActivity
                     }
                     else
                     {
-                        Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
+                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
                     }
                 }
                 else
                 {
-                    Log.i(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: no element selected");
+                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: no element selected");
                 }
             }
         };

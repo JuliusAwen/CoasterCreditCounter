@@ -19,10 +19,9 @@ public class PersistenceService extends IntentService
 
     public PersistenceService()
     {
-        super("PersistenceService");
+        super(Constants.PERSISTENCY_SERVICE_NAME);
         this.databaseWrapper = App.persistency.getDatabaseWrapper();
     }
-
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent)
@@ -31,7 +30,7 @@ public class PersistenceService extends IntentService
 
         if(action != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("PersistenceService.onHandleIntent:: Action is [%s]", action));
+            Log.d(Constants.LOG_TAG, String.format("PersistenceService.onHandleIntent:: action is [%s]", action));
 
             switch(action)
             {
@@ -70,7 +69,7 @@ public class PersistenceService extends IntentService
 
         if(this.databaseWrapper.create(elementsToCreate))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.synchronize:: created elements successfully");
+            Log.d(Constants.LOG_TAG, "PersistenceService.synchronize:: elements created successfully");
         }
         else
         {
@@ -85,7 +84,7 @@ public class PersistenceService extends IntentService
 
         if(databaseWrapper.update(elementsToUpdate))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.update:: updated elements successfully");
+            Log.d(Constants.LOG_TAG, "PersistenceService.update:: elements updated successfully");
         }
         else
         {
@@ -101,7 +100,7 @@ public class PersistenceService extends IntentService
 
         if(databaseWrapper.delete(elementsToDelete))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.delete:: deleted elements successfully");
+            Log.d(Constants.LOG_TAG, "PersistenceService.delete:: elements deleted successfully");
         }
         else
         {
@@ -115,7 +114,7 @@ public class PersistenceService extends IntentService
 
         if(databaseWrapper.saveContent(App.content))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.save:: saved elements successfully");
+            Log.d(Constants.LOG_TAG, "PersistenceService.save:: elements saved successfully");
         }
         else
         {
