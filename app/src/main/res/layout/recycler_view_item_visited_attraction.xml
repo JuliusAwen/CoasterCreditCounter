@@ -21,22 +21,15 @@
         android:orientation="horizontal"
         tools:ignore="DisableBaselineAlignment">
 
-        <FrameLayout
-            android:id="@+id/FrameLayoutRecyclerViewItemVisitedAttraction_Decrease"
-            android:layout_height="match_parent"
-            android:layout_width="92dp"
-            android:background="@color/default_color">
-
-            <ImageView
-                style="@style/standard_image_holder"
-                android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
-                android:contentDescription="@string/description_decrease"
-                android:layout_height="32dp"
-                android:background="@color/default_color"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_error_outline"/>
-
-        </FrameLayout>
+        <ImageView
+            style="@style/standard_image_holder"
+            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
+            android:contentDescription="@string/description_decrease"
+            android:layout_height="32dp"
+            android:layout_width="96dp"
+            android:background="@color/default_color"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_error_outline"/>
 
         <LinearLayout
             android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_Counter"
@@ -62,22 +55,15 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/FrameLayoutRecyclerViewItemVisitedAttraction_Increase"
-            android:layout_height="match_parent"
-            android:layout_width="92dp"
-            android:background="@color/default_color">
-
-            <ImageView
-                style="@style/standard_image_holder"
-                android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
-                android:contentDescription="@string/description_increase"
-                android:layout_height="32dp"
-                android:background="@color/default_color"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_error_outline"/>
-
-        </FrameLayout>
+        <ImageView
+            style="@style/standard_image_holder"
+            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
+            android:contentDescription="@string/description_increase"
+            android:layout_height="32dp"
+            android:layout_width="96dp"
+            android:background="@color/default_color"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_error_outline"/>
 
     </LinearLayout>
 

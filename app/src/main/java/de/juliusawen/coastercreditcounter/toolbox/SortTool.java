@@ -60,7 +60,7 @@ public abstract class SortTool
     {
         if(elementsToSort.size() > 1)
         {
-            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElementsBasedOnComparisonList:: sorted #[%d] elements based on comparison list containing [%d] elements",
+            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElementsBasedOnComparisonList:: sorted [%d] elements based on comparison list containing [%d] elements",
                     elementsToSort.size(), comparisonList.size()));
             List<IElement> sortedElements = new ArrayList<>();
             for(IElement element : comparisonList)
@@ -87,7 +87,7 @@ public abstract class SortTool
             List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
 
             Log.v(Constants.LOG_TAG,  String.format("SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
-                    " sorting [%d]AttractionCategoryHeaders based on [%d]AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
+                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
 
             List<AttractionCategoryHeader> castedAttractionCategoryHeaders = ConvertTool.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
 

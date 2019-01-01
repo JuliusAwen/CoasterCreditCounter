@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,8 +92,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         final TextView textViewCount;
         final ImageView imageViewDecrease;
         final ImageView imageViewIncrease;
-        final FrameLayout frameLayoutDecrease;
-        final FrameLayout frameLayoutIncrease;
 
         ViewHolderVisitedAttraction(View view)
         {
@@ -105,11 +102,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Name);
             this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
 
-            this.frameLayoutIncrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Increase);
             this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
             this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
 
-            this.frameLayoutDecrease = view.findViewById(R.id.FrameLayoutRecyclerViewItemVisitedAttraction_Decrease);
             this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
             this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
         }
@@ -612,20 +607,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.textViewName.setText(child.getName());
         viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
 
-        viewHolder.frameLayoutIncrease.setTag(child);
+        viewHolder.imageViewIncrease.setTag(child);
         if(this.increaseRideCountOnClickListener != null)
         {
-            viewHolder.frameLayoutIncrease.setOnClickListener(this.increaseRideCountOnClickListener);
+            viewHolder.imageViewIncrease.setOnClickListener(this.increaseRideCountOnClickListener);
         }
         else
         {
             Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: IncreaseRideCountOnClickListener is null");
         }
 
-        viewHolder.frameLayoutDecrease.setTag(child);
+        viewHolder.imageViewDecrease.setTag(child);
         if(this.decreaseRideCountOnClickListener != null)
         {
-            viewHolder.frameLayoutDecrease.setOnClickListener(this.decreaseRideCountOnClickListener);
+            viewHolder.imageViewDecrease.setOnClickListener(this.decreaseRideCountOnClickListener);
         }
         else
         {

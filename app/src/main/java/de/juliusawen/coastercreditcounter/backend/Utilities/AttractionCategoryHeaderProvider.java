@@ -18,6 +18,8 @@ import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 public class AttractionCategoryHeaderProvider
 {
     private final Map<UUID, AttractionCategoryHeader> headersByCategoryUuid = new HashMap<>();
+    private List<IAttraction> formerAttractions;
+    private List<IElement> formerCategorizedAttractions;
 
     public List<IElement> getCategorizedAttractions(List<IAttraction> attractions)
     {
@@ -66,53 +68,70 @@ public class AttractionCategoryHeaderProvider
                 Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: " +
                         "[%d] AttractionCategoryHeaders added", categorizedAttractions.size()));
 
-                return SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
+                categorizedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
+
+                this.formerAttractions = attractions;
+                this.formerCategorizedAttractions = categorizedAttractions;
+
+                return categorizedAttractions;
             }
             else
             {
                 Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: no attractions to categorize");
+
+                this.formerAttractions = attractions;
+                this.formerCategorizedAttractions = categorizedAttractions;
+
                 return categorizedAttractions;
             }
         }
         else
         {
-            AttractionCategoryHeader.removeAllChildren(new ArrayList<>(this.headersByCategoryUuid.values()));
-
-            for(IAttraction attraction : attractions)
+            if(this.attractionsHaveChanged(attractions))
             {
-                AttractionCategory category = (attraction).getAttractionCategory();
+                AttractionCategoryHeader.removeAllChildren(new ArrayList<>(this.headersByCategoryUuid.values()));
 
-                UUID categoryUuid = category.getUuid();
-
-                AttractionCategoryHeader header = this.headersByCategoryUuid.get(categoryUuid);
-                if(header != null)
+                for(IAttraction attraction : attractions)
                 {
-                    if(!header.getName().equals(category.getName()))
+                    AttractionCategory category = (attraction).getAttractionCategory();
+
+                    UUID categoryUuid = category.getUuid();
+
+                    AttractionCategoryHeader header = this.headersByCategoryUuid.get(categoryUuid);
+                    if(header != null)
                     {
-                        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: " +
-                                "changing name for %s to [%s]...", header, category.getName()));
+                        if(!header.getName().equals(category.getName()))
+                        {
+                            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: " +
+                                    "changing name for %s to [%s]...", header, category.getName()));
 
-                        header.setName(category.getName());
+                            header.setName(category.getName());
+                        }
+
+                        if(!categorizedAttractions.contains(header))
+                        {
+                            categorizedAttractions.add(header);
+                            Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: added %s to CategorizedAttractions", header));
+                        }
+
+                        header.addChild(attraction);
                     }
-
-                    if(!categorizedAttractions.contains(header))
+                    else
                     {
-                        categorizedAttractions.add(header);
-                        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: added %s to CategorizedAttractions", header));
+                        AttractionCategoryHeader newHeader = AttractionCategoryHeader.create(category);
+                        this.headersByCategoryUuid.put(categoryUuid, newHeader);
+                        categorizedAttractions.add(newHeader);
+
+                        newHeader.addChild(attraction);
+
+                        Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: created new %s and added %s", newHeader, attraction));
                     }
-
-                    header.addChild(attraction);
                 }
-                else
-                {
-                    AttractionCategoryHeader newHeader = AttractionCategoryHeader.create(category);
-                    this.headersByCategoryUuid.put(categoryUuid, newHeader);
-                    categorizedAttractions.add(newHeader);
-
-                    newHeader.addChild(attraction);
-
-                    Log.v(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getCategorizedAttractions:: created new %s and added %s", newHeader, attraction));
-                }
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getCategorizedAttractions:: attractions have not changed - returning former categorized attractions");
+                return this.formerCategorizedAttractions;
             }
         }
 
@@ -127,6 +146,24 @@ public class AttractionCategoryHeaderProvider
         }
         categorizedAttractions.removeAll(emptyHeaders);
 
-        return SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
+        categorizedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(categorizedAttractions);
+
+        this.formerAttractions = attractions;
+        this.formerCategorizedAttractions = categorizedAttractions;
+
+        return categorizedAttractions;
+    }
+
+    private boolean attractionsHaveChanged(List<IAttraction> attractions)
+    {
+        for(IAttraction attraction : attractions)
+        {
+            if(!attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
