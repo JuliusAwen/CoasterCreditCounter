@@ -92,14 +92,8 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
                 if(this.viewModel.newLocation != null)
                 {
-                    if(App.content.removeElement(this.viewModel.newLocation))
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("CreateLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newLocation));
-                    }
-                    else
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("CreateLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> not able to remove remove %s", this.viewModel.newLocation));
-                    }
+                    App.content.removeElement(this.viewModel.newLocation);
+                    Log.d(Constants.LOG_TAG, String.format("CreateLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newLocation));
                 }
 
                 setResult(RESULT_CANCELED, intent);

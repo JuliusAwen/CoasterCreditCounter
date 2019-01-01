@@ -13,7 +13,9 @@ import android.widget.PopupMenu;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
@@ -136,8 +138,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 if(attractionCategory != null)
                 {
                     App.content.addAttractionCategory(attractionCategory);
-                    this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(attractionCategory);
+                    this.viewModel.contentRecyclerViewAdapter.addItem(attractionCategory);
 
                     this.markForCreation(attractionCategory);
                 }
@@ -151,8 +152,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             }
             else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
             {
-                this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+                this.viewModel.contentRecyclerViewAdapter.updateItem(resultElement);
 
                 this.markForUpdate(resultElement);
             }
@@ -161,7 +161,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
                 App.content.setAttractionCategories(ConvertTool.convertElementsToType(resultElements, AttractionCategory.class));
-                this.updateContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.setItems(resultElements);
 
                 if(resultElement != null)
                 {
@@ -176,14 +176,18 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
+                Set<IElement> changedAttractionCategories = new HashSet<>();
+                changedAttractionCategories.add(this.viewModel.longClickedAttractionCategory);
+
                 for(IElement element : resultElements)
                 {
+                    changedAttractionCategories.add(((Attraction)element).getAttractionCategory());
                     ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
-                    this.markForUpdate(element);
+                    super.markForUpdate(element);
                 }
 
                 Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
-                this.updateContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.updateItems(new ArrayList<>(changedAttractionCategories));
 
                 Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<ApplyCategoryToAttractions>:: applied %s to [%d] attractions",
                         this.viewModel.longClickedAttractionCategory, resultElements.size()));
@@ -346,6 +350,8 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                 Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onSnackbarDismissed<delete>:: deleting %s...",
                                         viewModel.longClickedAttractionCategory));
 
+                                viewModel.contentRecyclerViewAdapter.removeItem(viewModel.longClickedAttractionCategory);
+
                                 List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
 
                                 for(IAttraction child : children)
@@ -354,8 +360,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                     markForUpdate(child);
                                 }
 
+                                viewModel.contentRecyclerViewAdapter.updateItem(AttractionCategory.getDefault());
+
                                 App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
-                                updateContentRecyclerView();
 
                                 markForDeletion(viewModel.longClickedAttractionCategory);
                             }
@@ -386,12 +393,5 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             }
         });
         super.setFloatingActionButtonVisibility(true);
-    }
-
-    private void updateContentRecyclerView()
-    {
-        Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: updating RecyclerView...");
-
-        this.viewModel.contentRecyclerViewAdapter.updateItems(new ArrayList<IElement>(App.content.getAttractionCategories()));
     }
 }

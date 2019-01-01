@@ -30,6 +30,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -144,7 +145,10 @@ public class ShowVisitActivity extends BaseActivity
                     super.markForCreation(visitedAttraction);
                 }
 
-                this.updateContentRecyclerView();
+                List<IElement> categorizedAttractions =
+                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
+                                new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
+                this.viewModel.contentRecyclerViewAdapter.setItems(categorizedAttractions);
 
                 super.markForUpdate(this.viewModel.visit);
             }
@@ -157,7 +161,9 @@ public class ShowVisitActivity extends BaseActivity
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
-                    this.updateContentRecyclerView();
+                    this.viewModel.contentRecyclerViewAdapter.updateItem(
+                            this.viewModel.attractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory(
+                                    ConvertTool.convertElementsToType(resultElements, IAttraction.class)));
 
                     super.markForUpdate(this.viewModel.visit);
                 }
@@ -226,7 +232,7 @@ public class ShowVisitActivity extends BaseActivity
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
-                updateContentRecyclerView();
+                viewModel.contentRecyclerViewAdapter.updateItem(visitedAttraction);
 
                 ShowVisitActivity.super.markForUpdate(visitedAttraction);
             }
@@ -247,21 +253,12 @@ public class ShowVisitActivity extends BaseActivity
 
                 if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
                 {
-                    updateContentRecyclerView();
+                    viewModel.contentRecyclerViewAdapter.updateItem(visitedAttraction);
 
                     ShowVisitActivity.super.markForUpdate(visitedAttraction);
                 }
             }
         };
-    }
-
-    private void updateContentRecyclerView()
-    {
-        Log.i(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: updating RecyclerView...");
-
-        List<IElement> categorizedAttractions =
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-        this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedAttractions);
     }
 
     private boolean allAttractionsAdded()

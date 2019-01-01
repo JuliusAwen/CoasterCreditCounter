@@ -5,7 +5,6 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
@@ -35,14 +34,5 @@ public abstract class OrphanElement extends Element implements IElement, IOrphan
             Log.e(Constants.LOG_TAG, String.format("OrphanElement.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
-    }
-
-    public static void removeAllChildren(List<? extends OrphanElement> orphanElements)
-    {
-        for(OrphanElement orphanElement : orphanElements)
-        {
-            orphanElement.getChildren().clear();
-        }
-        Log.v(Constants.LOG_TAG,  String.format("OrphanElement.removeAllChildren:: children removed from [%d] OrphanElements", orphanElements.size()));
     }
 }

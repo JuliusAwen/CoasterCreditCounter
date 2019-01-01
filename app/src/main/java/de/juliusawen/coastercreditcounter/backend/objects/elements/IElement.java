@@ -38,9 +38,9 @@ public interface IElement
 
     void deleteChildren(List<IElement> children);
     void deleteChild(IElement child);
-    boolean deleteElementAndChildren();
+    void deleteElementAndChildren();
 
-    boolean removeElement();
+    void removeElement();
 
     boolean undoIsPossible();
     boolean undoDeleteElementAndChildren();

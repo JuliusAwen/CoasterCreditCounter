@@ -583,12 +583,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(!this.viewModel.elementsToCreate.contains(element))
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for update", element));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s already marked for update", element));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: %s already marked for update", element));
         }
     }
 
@@ -604,12 +604,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(!this.viewModel.elementsToCreate.contains(element))
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for deletion", element));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
             this.viewModel.elementsToDelete.add(element);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s already marked for deletion", element));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: %s already marked for deletion", element));
         }
     }
 

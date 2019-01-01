@@ -116,7 +116,9 @@ public  class ShowAttractionsFragment extends Fragment
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
 
-                    this.updateContentRecyclerView();
+                    this.viewModel.contentRecyclerViewAdapter.setItems(
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
+                                    new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
 
                     if(selectedElement != null)
                     {
@@ -172,14 +174,5 @@ public  class ShowAttractionsFragment extends Fragment
                 return true;
             }
         };
-    }
-
-    private void updateContentRecyclerView()
-    {
-        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
-
-        List<IElement> categorizedAttractions =
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
-        this.viewModel.contentRecyclerViewAdapter.updateItems(categorizedAttractions);
     }
 }

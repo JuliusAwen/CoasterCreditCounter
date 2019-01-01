@@ -152,9 +152,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 IElement resultElement = App.content.getContentByUuidString(UUID.fromString(resultElementUuidString));
-                updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
 
+                this.setItemsInRecyclerViewAdapter();
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
             }
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
@@ -166,7 +166,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 parent.deleteChildren(resultElements);
                 parent.addChildrenAndSetParents(resultElements);
 
-                this.updateContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.currentElement.getChildrenOfType(Location.class));
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
@@ -185,8 +185,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 IElement editedElement = App.content.getContentByUuidString(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
-                this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(editedElement);
+                this.viewModel.contentRecyclerViewAdapter.updateItem(editedElement);
 
                 super.markForUpdate(editedElement);
             }
@@ -212,7 +211,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     this.viewModel.recentElements.remove(previousElement);
                     this.viewModel.currentElement = previousElement;
                     this.updateActivityView();
-                    this.updateContentRecyclerView();
+                    this.setItemsInRecyclerViewAdapter();
                 }
                 return true;
         }
@@ -296,7 +295,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 viewModel.currentElement = element;
                 updateActivityView();
-                updateContentRecyclerView();
+                setItemsInRecyclerViewAdapter();
             }
         };
     }
@@ -386,7 +385,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     viewModel.currentElement = element;
                     updateActivityView();
-                    updateContentRecyclerView();
+                    setItemsInRecyclerViewAdapter();
                 }
                 else if(Park.class.isInstance(element))
                 {
@@ -528,33 +527,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                                if(App.content.removeElementAndChildren(viewModel.longClickedElement))
-                                {
-                                    List<IElement> childrenToDelete = new ArrayList<>(viewModel.longClickedElement.getChildren());
+                                List<IElement> childrenToDelete = new ArrayList<>(viewModel.longClickedElement.getChildren());
 
-                                    if(viewModel.longClickedElement.deleteElementAndChildren())
-                                    {
-                                        updateContentRecyclerView();
+                                viewModel.contentRecyclerViewAdapter.removeItem(viewModel.longClickedElement);
 
-                                        ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
-                                        ShowLocationsActivity.super.markForDeletion(childrenToDelete);
-                                    }
-                                    else
-                                    {
-                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s and children failed - restoring content...",
-                                                viewModel.longClickedElement));
+                                App.content.removeElementAndChildren(viewModel.longClickedElement);
+                                viewModel.longClickedElement.deleteElementAndChildren();
 
-                                        App.content.addElementAndChildren(viewModel.longClickedElement);
-                                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_delete_failed));
-                                    }
-                                }
-                                else
-                                {
-                                    String errorMessage = String.format("ShowLocationsActivity.onDismissed<DELETE>:: removing %s and children from content failed!",
-                                            viewModel.longClickedElement);
-                                    Log.e(Constants.LOG_TAG, errorMessage);
-                                    throw new IllegalStateException(errorMessage);
-                                }
+                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
+                                ShowLocationsActivity.super.markForDeletion(childrenToDelete);
                             }
                             else
                             {
@@ -598,36 +579,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s...", viewModel.longClickedElement));
 
-                                if(App.content.removeElement(viewModel.longClickedElement))
-                                {
-                                    List<IElement> childrenToUpdate = new ArrayList<>(viewModel.longClickedElement.getChildren());
+                                App.content.removeElement(viewModel.longClickedElement);
+                                viewModel.longClickedElement.removeElement();
 
-                                    if(viewModel.longClickedElement.removeElement())
-                                    {
-                                        viewModel.currentElement = viewModel.longClickedElement.getParent();
-                                        updateContentRecyclerView();
+                                setItemsInRecyclerViewAdapter();
 
-                                        ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
-                                        ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
-                                        ShowLocationsActivity.super.markForUpdate(childrenToUpdate);
-                                    }
-                                    else
-                                    {
-                                        Log.e(Constants.LOG_TAG, String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s failed - restoring content...",
-                                                viewModel.longClickedElement));
-
-                                        App.content.addElementAndChildren(viewModel.longClickedElement);
-
-                                        Toaster.makeToast(ShowLocationsActivity.this, getString(R.string.error_text_remove_failed));
-                                    }
-                                }
-                                else
-                                {
-                                    String errorMessage = String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s from content failed",
-                                            viewModel.longClickedElement);
-                                    Log.e(Constants.LOG_TAG, errorMessage);
-                                    throw new IllegalStateException(errorMessage);
-                                }
+                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
+                                ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
                             }
                             else
                             {
@@ -643,9 +601,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    private void updateContentRecyclerView()
+    private void setItemsInRecyclerViewAdapter()
     {
-        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.currentElement.getChildrenOfType(Location.class));
+        viewModel.contentRecyclerViewAdapter.setItems(viewModel.currentElement.getChildrenOfType(Location.class));
     }
 }

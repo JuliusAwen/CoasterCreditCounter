@@ -36,11 +36,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 {
     private RecyclerView recyclerView;
 
-    private List<IElement> items;
-
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
     private View.OnClickListener increaseRideCountOnClickListener;
     private View.OnClickListener decreaseRideCountOnClickListener;
+
+    private final List<IElement> items;
 
     private final AdapterType adapterType;
     private final Class<? extends IElement> childType;
@@ -769,13 +769,140 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return null;
     }
 
-    public void updateItems(List<IElement> items)
+    public void setItems(List<IElement> items)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating with [%d] items...", items.size()));
-        this.items = this.initializeItems(items);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
+
+        this.items.clear();
+        this.items.addAll(this.initializeItems(items));
         notifyDataSetChanged();
     }
 
+    public void updateItems(List<IElement> items)
+    {
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating [%d] items...", items.size()));
+
+        for(IElement item : items)
+        {
+            if(this.items.contains(item))
+            {
+                this.updateChildren(item);
+
+                int index = this.items.indexOf(item);
+                notifyItemChanged(index);
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updated %s at index [%d]", items, index));
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: %s not visible", item));
+            }
+        }
+    }
+
+    public void updateItem(IElement item)
+    {
+        if(this.items.contains(item))
+        {
+            this.updateChildren(item);
+
+            int index = this.items.indexOf(item);
+            notifyItemChanged(index);
+            this.scrollToItem(item);
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: updated %s at index [%d]", item, index));
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: %s not visible - doing nothing", item));
+        }
+    }
+
+    private void updateChildren(IElement item)
+    {
+        if(this.childType != null)
+        {
+            if(this.expandedParents.contains(item))
+            {
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateChildren:: updating %s's children", item));
+
+                IElement parentToUpdate = this.items.get(this.items.indexOf(item));
+
+                for(IElement child : parentToUpdate.getChildrenOfType(this.childType))
+                {
+                    this.removeItem(child);
+                }
+
+                int index = this.items.indexOf(parentToUpdate) + 1;
+
+                for(IElement child : item.getChildrenOfType(this.childType))
+                {
+                    this.addItemAtIndex(child, index);
+                    index ++;
+                }
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateChildren:: %s not expanded - doing nothing", item));
+            }
+
+        }
+    }
+
+    public void addItem(IElement item)
+    {
+        this.addItemAtIndex(item, this.items.size());
+    }
+
+    private void addItemAtIndex(IElement item, int index)
+    {
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.addItemAtIndex:: adding %s at index [%d]...", item, index));
+
+        this.items.add(index, item);
+        notifyItemInserted(index);
+
+        if(this.isParent(item))
+        {
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.addItemAtIndex:: adding ItemDivider for %s at index [%d]...", item, index + 1));
+
+            this.items.add(index + 1, new ItemDivider());
+            notifyItemInserted(index + 1);
+
+            this.scrollToItem(item);
+        }
+    }
+
+    public void removeItem(IElement item)
+    {
+        if(this.items.contains(item))
+        {
+            int index = this.items.indexOf(item);
+
+            if(this.isParent(item))
+            {
+                if(this.expandedParents.contains(item) && this.childType != null)
+                {
+                    for(IElement child : item.getChildrenOfType(this.childType))
+                    {
+                        this.removeItem(child);
+                    }
+                }
+
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: removing %s for %s at index [%d]...", this.items.get(index + 1), item, index + 1));
+
+                this.items.remove(index + 1);
+                notifyItemRemoved(index + 1);
+            }
+
+            this.items.remove(index);
+            notifyItemRemoved(index);
+
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: removed %s at index [%d]...", item, index));
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: %s not visible - doing nothing", item));
+        }
+    }
 
     public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
     {
@@ -812,7 +939,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(this.items.contains(item) && this.recyclerView != null)
         {
             recyclerView.scrollToPosition(items.indexOf(item));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to [%s]", item));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to %s", item));
         }
     }
 

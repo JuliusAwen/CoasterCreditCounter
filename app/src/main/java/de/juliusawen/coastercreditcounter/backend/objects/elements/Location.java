@@ -56,7 +56,7 @@ public class Location extends Element
         if(!this.isRootLocation())
         {
             Log.v(Constants.LOG_TAG,  String.format("Element.getRootLocation:: %s is not root location - calling parent", this));
-            return ((Location)super.parent).getRootLocation();
+            return ((Location)super.getParent()).getRootLocation();
         }
         else
         {

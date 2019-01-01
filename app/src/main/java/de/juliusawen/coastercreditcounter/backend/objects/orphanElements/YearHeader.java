@@ -72,9 +72,12 @@ public class YearHeader extends OrphanElement
 
         Log.v(Constants.LOG_TAG, String.format("YearHeader.fetchCategorizedVisits:: adding YearHeaders to [%d] elements...", visits.size()));
 
-        List<YearHeader> yearHeaders = App.content.getOrphanElementsAsType(YearHeader.class);
+        List<YearHeader> yearHeaders = App.content.getContentAsType(YearHeader.class);
 
-        OrphanElement.removeAllChildren(yearHeaders);
+        for(YearHeader yearHeader : yearHeaders)
+        {
+            yearHeader.getChildren().clear();
+        }
 
         List<IElement> preparedElements = new ArrayList<>();
 

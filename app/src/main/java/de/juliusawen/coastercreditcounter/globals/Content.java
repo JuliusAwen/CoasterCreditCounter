@@ -14,7 +14,6 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -265,29 +264,24 @@ public class Content
     public void setAttractionCategories(List<AttractionCategory> attractionCategories)
     {
         this.attractionCategories = attractionCategories;
-        Log.v(Constants.LOG_TAG,  String.format("Content.setAttractionCategories:: [%d]AttractionCategories set", attractionCategories.size()));
+        Log.v(Constants.LOG_TAG, String.format("Content.setAttractionCategories:: [%d] AttractionCategories set", attractionCategories.size()));
     }
 
     public void addAttractionCategory(AttractionCategory attractionCategory)
     {
-        this.addAttractionCategory(0, attractionCategory);
+        this.addAttractionCategory(this.attractionCategories.size(), attractionCategory);
     }
 
     public void addAttractionCategory(int index, AttractionCategory attractionCategory)
     {
         this.attractionCategories.add(index, attractionCategory);
-        Log.v(Constants.LOG_TAG,  String.format("Content.addAttractionCategory:: %s added", attractionCategory));
+        Log.v(Constants.LOG_TAG, String.format("Content.addAttractionCategory:: %s added at index [%d] of [%d]", attractionCategory, index, this.attractionCategories.size() - 1));
     }
 
     public void removeAttractionCategory(AttractionCategory attractionCategory)
     {
         this.attractionCategories.remove(attractionCategory);
-        Log.d(Constants.LOG_TAG,  String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
-    }
-
-    public <T extends OrphanElement> List<T> getOrphanElementsAsType(Class<T> type)
-    {
-        return this.getContentAsType(type);
+        Log.d(Constants.LOG_TAG, String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
     }
 
     public ArrayList<String> getUuidStringsFromElements(List<IElement> elements)
@@ -373,26 +367,21 @@ public class Content
         this.elementsByUuid.put(element.getUuid(), element);
     }
 
-    public boolean removeElementAndChildren(IElement element)
+    public void removeElementAndChildren(IElement element)
     {
         for(IElement child : element.getChildren())
         {
-            if(!this.removeElementAndChildren(child))
-            {
-                return false;
-            }
+            this.removeElementAndChildren(child);
         }
-        return this.removeElement(element);
+        this.removeElement(element);
     }
 
-    public boolean removeElement(IElement element)
+    public void removeElement(IElement element)
     {
         if(this.elementsByUuid.containsKey(element.getUuid()))
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: %s removed", element));
             this.elementsByUuid.remove(element.getUuid());
-            return true;
         }
-        return false;
     }
 }

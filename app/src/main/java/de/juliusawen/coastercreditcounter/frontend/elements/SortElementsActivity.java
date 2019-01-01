@@ -84,12 +84,12 @@ public class SortElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
                 SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;
 
             case SORT_DESCENDING:
                 SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.updateItems(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;
 
             default:

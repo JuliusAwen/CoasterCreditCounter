@@ -24,8 +24,8 @@ public abstract class Element implements IElement
 
     private String name;
 
-    public IElement parent = null;
-    public final List<IElement> children = new ArrayList<>();
+    private IElement parent = null;
+    private final List<IElement> children = new ArrayList<>();
 
     public boolean isUndoPossible = false;
     private IElement backupParent = null;
@@ -42,12 +42,12 @@ public abstract class Element implements IElement
     @Override
     public boolean equals(Object obj)
     {
-        if (obj == this)
+        if(obj == this)
         {
             return true;
         }
 
-        if (!(obj instanceof Element))
+        if(!(obj instanceof Element))
         {
             return false;
         }
@@ -63,7 +63,10 @@ public abstract class Element implements IElement
         {
             return true;
         }
-        else return element.getName() != null && element.getName().equals(this.getName());
+        else
+        {
+            return element.getName() != null && element.getName().equals(this.getName());
+        }
 
     }
 
@@ -236,11 +239,6 @@ public abstract class Element implements IElement
         Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
     }
 
-    public void addChild(UUID childUuid)
-    {
-        this.addChild(App.content.getContentByUuidString(childUuid));
-    }
-
     public boolean containsChild(IElement child)
     {
         return this.getChildren().contains(child);
@@ -360,22 +358,12 @@ public abstract class Element implements IElement
         newParent.addChildAndSetParent(this);
     }
 
-    public boolean deleteElementAndChildren()
+    public void deleteElementAndChildren()
     {
         Log.d(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: deleting %s and children", this));
-        if (this.parent != null)
-        {
-            this.backupChildren = new ArrayList<>(this.getChildren());
-            this.backupParent = this.parent;
-            this.undoIndex = this.parent.getIndexOfChild(this);
-            this.isUndoPossible = true;
 
-            this.parent.deleteChild(this);
-            this.deleteChildren(this.backupChildren);
-            return true;
-        }
-        Log.e(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: unable to delete %s as it is root or orphan element", this));
-        return false;
+        this.parent.deleteChild(this);
+        this.deleteChildren(new ArrayList<>(this.getChildren()));
     }
 
     public boolean undoDeleteElementAndChildren()
@@ -410,26 +398,15 @@ public abstract class Element implements IElement
         return success;
     }
 
-    public boolean removeElement()
+    public void removeElement()
     {
         Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s", this));
-        if(this.parent != null)
-        {
-            this.backupChildren = new ArrayList<>(this.getChildren());
-            this.backupParent = this.parent;
-            this.undoIndex = this.parent.getIndexOfChild(this);
-            this.isUndoPossible = true;
 
-            this.parent.deleteChild(this);
-            this.parent.addChildrenAndSetParents(this.undoIndex, this.backupChildren);
-            this.deleteChildren(this.backupChildren);
-            return true;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Element.removeElement:: unable to remove %s as it is root or orphan element", this));
-            return false;
-        }
+        int index = this.parent.getIndexOfChild(this);
+
+        this.parent.deleteChild(this);
+        this.parent.addChildrenAndSetParents(index, new ArrayList<>(this.getChildren()));
+        this.deleteChildren(new ArrayList<>(this.getChildren()));
     }
 
     public boolean undoRemoveElement()

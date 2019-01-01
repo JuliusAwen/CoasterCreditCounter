@@ -7,6 +7,9 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
+    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM yyyy";
+    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
+
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
@@ -83,8 +86,10 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
 
-    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM yyyy";
-    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
+
+    public static final String PAYLOAD_UPDATE_RIDE_COUNT = "de.juliusawen.coding.payload_update_ride_count";
+
+
 
 
 

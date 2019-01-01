@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
 public class AttractionCategoryHeaderProvider
 {
-    private final Map<UUID, AttractionCategoryHeader> headersByCategoryUuid = new HashMap<>();
+    private final Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByCategoryUuid = new HashMap<>();
     private List<IAttraction> formerAttractions;
     private List<IElement> formerCategorizedAttractions;
 
@@ -25,7 +25,7 @@ public class AttractionCategoryHeaderProvider
     {
         List<IElement> categorizedAttractions = new ArrayList<>();
 
-        if(this.headersByCategoryUuid.isEmpty())
+        if(this.attractionCategoryHeadersByCategoryUuid.isEmpty())
         {
             if(!attractions.isEmpty())
             {
@@ -40,7 +40,7 @@ public class AttractionCategoryHeaderProvider
 
                     UUID categoryUuid = category.getUuid();
 
-                    header = this.headersByCategoryUuid.get(categoryUuid);
+                    header = this.attractionCategoryHeadersByCategoryUuid.get(categoryUuid);
                     if(header != null)
                     {
                         header.addChild(attraction);
@@ -56,7 +56,7 @@ public class AttractionCategoryHeaderProvider
                     else
                     {
                         header = AttractionCategoryHeader.create(category);
-                        this.headersByCategoryUuid.put(categoryUuid, header);
+                        this.attractionCategoryHeadersByCategoryUuid.put(categoryUuid, header);
                         categorizedAttractions.add(header);
 
                         header.addChild(attraction);
@@ -89,7 +89,10 @@ public class AttractionCategoryHeaderProvider
         {
             if(this.attractionsHaveChanged(attractions))
             {
-                AttractionCategoryHeader.removeAllChildren(new ArrayList<>(this.headersByCategoryUuid.values()));
+                for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByCategoryUuid.values())
+                {
+                    attractionCategoryHeader.getChildren().clear();
+                }
 
                 for(IAttraction attraction : attractions)
                 {
@@ -97,7 +100,7 @@ public class AttractionCategoryHeaderProvider
 
                     UUID categoryUuid = category.getUuid();
 
-                    AttractionCategoryHeader header = this.headersByCategoryUuid.get(categoryUuid);
+                    AttractionCategoryHeader header = this.attractionCategoryHeadersByCategoryUuid.get(categoryUuid);
                     if(header != null)
                     {
                         if(!header.getName().equals(category.getName()))
@@ -119,7 +122,7 @@ public class AttractionCategoryHeaderProvider
                     else
                     {
                         AttractionCategoryHeader newHeader = AttractionCategoryHeader.create(category);
-                        this.headersByCategoryUuid.put(categoryUuid, newHeader);
+                        this.attractionCategoryHeadersByCategoryUuid.put(categoryUuid, newHeader);
                         categorizedAttractions.add(newHeader);
 
                         newHeader.addChild(attraction);
@@ -165,5 +168,50 @@ public class AttractionCategoryHeaderProvider
         }
 
         return false;
+    }
+
+    public AttractionCategoryHeader getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory(List<IAttraction> attractions)
+    {
+        if(!attractions.isEmpty())
+        {
+            if(!this.attractionCategoryHeadersByCategoryUuid.isEmpty())
+            {
+                AttractionCategory attractionCategory = attractions.get(0).getAttractionCategory();
+
+                for(IAttraction attraction : attractions)
+                {
+                    if(!attraction.getAttractionCategory().equals(attractionCategory))
+                    {
+                        Log.e(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: attractions are not all the same");
+                        return null;
+                    }
+                }
+
+                AttractionCategoryHeader attractionCategoryHeader = this.attractionCategoryHeadersByCategoryUuid.get(attractionCategory.getUuid());
+                if(attractionCategoryHeader != null)
+                {
+                    attractionCategoryHeader.reorderChildren(attractions);
+                    return attractionCategoryHeader;
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory::" +
+                            "AttractionCategoryHeader for %s does not exist", attractionCategory));
+                    return null;
+                }
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: " +
+                        "AttractionCategoryHeaders not created yet");
+            }
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: no attractions passed");
+        }
+
+
+        return null;
     }
 }
