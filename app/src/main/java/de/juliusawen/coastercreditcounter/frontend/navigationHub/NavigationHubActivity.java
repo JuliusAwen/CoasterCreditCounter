@@ -45,7 +45,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
             if(this.viewModel.exportFileAbsolutePath == null)
             {
-                this.viewModel.exportFileAbsolutePath = App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
+                this.viewModel.exportFileAbsolutePath = App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
             }
 
             this.drawerLayout = findViewById(R.id.navigationDrawer);
@@ -93,7 +93,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void setMenuItemImportAvailability()
     {
-        boolean enabled = App.persistency.fileExists(this.viewModel.exportFileAbsolutePath);
+        boolean enabled = App.persistence.fileExists(this.viewModel.exportFileAbsolutePath);
 
         Menu navigationMenu = navigationView.getMenu();
         MenuItem menuItemImport = navigationMenu.findItem(R.id.navigationItem_Import);
@@ -172,7 +172,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
+                    if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -203,7 +203,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 if(this.requestPermissionWriteExternalStorage(item))
                 {
-                    if(App.persistency.fileExists(this.viewModel.exportFileAbsolutePath))
+                    if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
                     {
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -277,9 +277,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void importContent()
     {
-        if(!App.persistency.importContent())
+        if(!App.persistence.importContent())
         {
-            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.action_import_fail, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.action_import_fail, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
         }
         else
         {
@@ -310,9 +310,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         String toast;
 
-        if(App.persistency.exportContent())
+        if(App.persistence.exportContent())
         {
-            toast = getString(R.string.action_export_success, App.persistency.getExternalStorageDocumentsDirectory().getAbsolutePath());
+            toast = getString(R.string.action_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath());
             this.setMenuItemImportAvailability();
         }
         else

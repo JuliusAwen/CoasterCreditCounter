@@ -125,6 +125,7 @@ public abstract class Constants
 
     public static final int REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = Request.PERMISSION_WRITE_EXTERNAL_STORAGE.ordinal();
 }
+
 enum Request
 {
     CREATE_LOCATION,

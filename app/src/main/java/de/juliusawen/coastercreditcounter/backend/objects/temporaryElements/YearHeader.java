@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.orphanElements;
+package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
 
 import android.util.Log;
 
@@ -12,6 +12,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class YearHeader extends OrphanElement

@@ -28,7 +28,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAtt
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;

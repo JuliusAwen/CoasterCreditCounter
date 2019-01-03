@@ -9,7 +9,7 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -28,22 +28,22 @@ public class Settings
     //Defaults
     private int defaultIncrement;
 
-    private final Persistency persistency;
+    private final Persistence persistence;
 
     private static Settings instance;
 
-    public static Settings getInstance(Persistency persistency)
+    public static Settings getInstance(Persistence persistence)
     {
         if(Settings.instance == null)
         {
-            Settings.instance = new Settings(persistency);
+            Settings.instance = new Settings(persistence);
         }
         return instance;
     }
 
-    private Settings(Persistency persistency)
+    private Settings(Persistence persistence)
     {
-        this.persistency = persistency;
+        this.persistence = persistence;
         Log.i(Constants.LOG_TAG,"Settings.Constructor:: <Settings> instantiated");
     }
 
@@ -52,7 +52,7 @@ public class Settings
         Log.i(Constants.LOG_TAG, "Settings.initialize:: loading Settings...");
         Stopwatch stopwatch = new Stopwatch(true);
 
-        if(persistency.loadSettings(this))
+        if(persistence.loadSettings(this))
         {
             if(this.validate())
             {

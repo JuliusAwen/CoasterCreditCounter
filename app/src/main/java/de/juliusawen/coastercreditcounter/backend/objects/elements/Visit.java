@@ -17,7 +17,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 

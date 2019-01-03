@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.backend.persistency;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -15,12 +14,12 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoas
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
@@ -64,25 +63,24 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         Location northRhineWestphalia = Location.create("North Rhine-Westphalia", null);
         Location lowerSaxony = Location.create("Lower Saxony", null);
-        List<Location> germanStates = Arrays.asList(
-                Location.create("Baden-Württemberg", null),
-                Location.create("Bavaria", null),
-                Location.create("Berlin", null),
-                Location.create("Brandenburg", null),
-                Location.create("Hamburg", null),
-                Location.create("Hesse", null),
-                Location.create("Mecklenburg-Vorpommern", null),
-                Location.create("Rhineland-Palatinate", null),
-                Location.create("Saarland", null),
-                Location.create("Saxony", null),
-                Location.create("Saxony-Anhalt", null),
-                Location.create("Schleswig-Holstein", null),
-                Location.create("Thuringia", null)
-        );
+        Location badenWuerttemberg = Location.create("Baden-Württemberg", null);
+        Location bavaria = Location.create("Bavaria", null);
+        Location berlin = Location.create("Berlin", null);
+        Location brandenburg = Location.create("Brandenburg", null);
+        Location hamburg = Location.create("Hamburg", null);
+        Location hesse = Location.create("Hesse", null);
+        Location mecklenburgVorpommern = Location.create("Mecklenburg-Vorpommern", null);
+        Location rhinelandPalatinate = Location.create("Rhineland-Palatinate", null);
+        Location saarland = Location.create("Saarland", null);
+        Location saxony = Location.create("Saxony", null);
+        Location saxonyAnhalt = Location.create("Saxony-Anhalt", null);
+        Location schleswigHolstein = Location.create("Schleswig-Holstein", null);
+        Location thuringia = Location.create("Thuringia", null);
+        Location bremen = Location.create("Bremen", null);
 
         Location bruehl = Location.create("Brühl", null);
         Location soltau = Location.create("Soltau", null);
-        Location bremen = Location.create("Bremen", null);
+
 
         Location biddinghuizen = Location.create("Biddinghuizen", null);
 
@@ -384,10 +382,21 @@ public final class DatabaseMock implements IDatabaseWrapper
         northRhineWestphalia.addChildAndSetParent(bruehl);
         lowerSaxony.addChildAndSetParent(soltau);
 
-
         germany.addChildAndSetParent(northRhineWestphalia);
         germany.addChildAndSetParent(lowerSaxony);
-        germany.addChildrenAndSetParents(new ArrayList<IElement>(germanStates));
+        germany.addChildAndSetParent(badenWuerttemberg);
+        germany.addChildAndSetParent(bavaria);
+        germany.addChildAndSetParent(berlin);
+        germany.addChildAndSetParent(brandenburg);
+        germany.addChildAndSetParent(hamburg);
+        germany.addChildAndSetParent(hesse);
+        germany.addChildAndSetParent(mecklenburgVorpommern);
+        germany.addChildAndSetParent(rhinelandPalatinate);
+        germany.addChildAndSetParent(saarland);
+        germany.addChildAndSetParent(saxony);
+        germany.addChildAndSetParent(saxonyAnhalt);
+        germany.addChildAndSetParent(schleswigHolstein);
+        germany.addChildAndSetParent(thuringia);
         germany.addChildAndSetParent(bremen);
 
         netherlands.addChildAndSetParent(biddinghuizen);
@@ -558,7 +567,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: persistency not synchronized - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: persistence not synchronized - DatabaseMock is not able to persist any data");
         return true;
     }
 

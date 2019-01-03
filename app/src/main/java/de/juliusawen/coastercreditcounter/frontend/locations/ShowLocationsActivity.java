@@ -3,21 +3,15 @@ package de.juliusawen.coastercreditcounter.frontend.locations;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -39,18 +33,10 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.StringTool;
-import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ShowLocationsActivityViewModel viewModel;
-
-    private View.OnClickListener onClickListenerNavigationBar;
-    private LinearLayout linearLayoutNavigationBar;
-    private HorizontalScrollView horizontalScrollViewNavigationBar;
-
     private boolean actionConfirmed;
 
     @Override
@@ -63,8 +49,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(App.isInitialized)
         {
-            this.linearLayoutNavigationBar = findViewById(R.id.linearLayoutShowLocations_NavigationBar);
-            this.horizontalScrollViewNavigationBar = findViewById(R.id.horizontalScrollViewShowLocations_NavigationBar);
             RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
 
             this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
@@ -86,9 +70,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         null,
                         childTypesToExpand);
 
+                this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Location.class, Typeface.BOLD);
             }
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
@@ -96,14 +80,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(getString(R.string.title_locations), null);
 
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButton();
-
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
-
-            this.onClickListenerNavigationBar = this.getNavigationBarOnClickListener();
-
-            this.updateActivityView();
         }
     }
 
@@ -112,15 +89,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-        if(((Location)this.viewModel.currentElement).isRootLocation())
-        {
-            menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit_root_location);
-        }
+//        if(this.viewModel.currentElement.getChildCountOfType(Location.class) > 1)
+//        {
+//            menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
+//        }
 
-        if(this.viewModel.currentElement.getChildCountOfType(Location.class) > 1)
-        {
-            menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
-        }
+        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Selection.COLLAPSE_ALL.ordinal(), Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -133,10 +108,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         switch(selection)
         {
-            case EDIT_LOCATION:
-                ActivityTool.startActivityEditForResult(this, Constants.REQUEST_EDIT_LOCATION, this.viewModel.currentElement);
-                return true;
-
             case SORT_LOCATIONS:
                 ActivityTool.startActivitySortForResult(
                         this,
@@ -170,9 +141,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 IElement parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: replacing children with sorted children in parent %s...", parent));
-                parent.deleteChildren(resultElements);
-                parent.addChildrenAndSetParents(resultElements);
 
+                parent.reorderChildren(resultElements);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.currentElement.getChildrenOfType(Location.class));
 
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
@@ -191,189 +161,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
                 IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-                this.updateActivityView();
                 this.viewModel.contentRecyclerViewAdapter.updateItem(editedElement);
 
                 super.markForUpdate(editedElement);
             }
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        switch(keyCode)
-        {
-            case KeyEvent.KEYCODE_BACK:
-                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onKeyDown<BACK>:: hardware back button pressed");
-                if(((Location)this.viewModel.currentElement).isRootLocation())
-                {
-                    super.onKeyDown(keyCode, event);
-                }
-                else
-                {
-                    IElement previousElement = this.viewModel.recentElements.get(this.viewModel.recentElements.size() - 2);
-                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActonKeyDown<KEYCODE_BACK>:: returning to previous element %s", previousElement));
-                    this.viewModel.recentElements.remove(this.viewModel.currentElement);
-                    this.viewModel.recentElements.remove(previousElement);
-                    this.viewModel.currentElement = previousElement;
-                    this.updateActivityView();
-                    this.setItemsInRecyclerViewAdapter();
-                }
-                return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-    private void updateActivityView()
-    {
-        super.animateFloatingActionButtonTransition(null);
-        this.updateNavigationBar();
-    }
-
-    private void decorateFloatingActionButton()
-    {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
-
-                PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, getFloatingActionButton());
-
-                popupMenu.getMenu().add(0, Selection.CREATE_LOCATION.ordinal(), Menu.NONE, R.string.selection_create_location);
-                popupMenu.getMenu().add(0, Selection.CREATE_PARK.ordinal(), Menu.NONE, R.string.selection_create_park)
-                        .setEnabled(false); //Todo: implement CreatePark
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item)
-                    {
-                        Selection selection = Selection.values()[item.getItemId()];
-                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickFloatingActionButton.PopupMenu.onMenuItemClick:: [%S] selected", selection));
-
-                        switch (selection)
-                        {
-                            case CREATE_LOCATION:
-                                ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_LOCATION, viewModel.currentElement);
-                                return true;
-
-                            case CREATE_PARK:
-                                Toaster.makeToast(ShowLocationsActivity.this, "AddPark not yet implemented");
-                                return true;
-
-                            default:
-                                return false;
-                        }
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-    }
-
-    private View.OnClickListener getNavigationBarOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Element element = (Element) view.getTag();
-
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar.onClick:: %s clicked", element));
-
-                int length = viewModel.recentElements.size() - 1;
-                for (int i = length; i >= 0; i--)
-                {
-                    if(viewModel.recentElements.get(i).equals(element))
-                    {
-                        viewModel.recentElements.remove(i);
-                        break;
-                    }
-                    else
-                    {
-                        viewModel.recentElements.remove(i);
-                    }
-                }
-                viewModel.currentElement = element;
-                updateActivityView();
-                setItemsInRecyclerViewAdapter();
-            }
-        };
-    }
-
-    private void updateNavigationBar()
-    {
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: updating NavigationBar...");
-
-        this.linearLayoutNavigationBar.removeAllViews();
-
-        if(this.viewModel.recentElements.isEmpty() && !((Location)this.viewModel.currentElement).isRootLocation())
-        {
-            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateNavigationBar:: constructing NavigationBar");
-            this.viewModel.recentElements.clear();
-            this.constructNavigationBar(this.viewModel.currentElement.getParent());
-        }
-
-        if(!this.viewModel.recentElements.contains(this.viewModel.currentElement))
-        {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: adding CurrentElement %s to RecentElements...", this.viewModel.currentElement));
-            this.viewModel.recentElements.add(this.viewModel.currentElement);
-        }
-
-        for (IElement recentElement : this.viewModel.recentElements)
-        {
-            Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: creating TextView for recent element %s...", recentElement));
-            TextView textView = (TextView) getLayoutInflater().inflate(R.layout.text_view_navigation_bar, linearLayoutNavigationBar, false);
-
-            if(this.viewModel.recentElements.indexOf(recentElement) != this.viewModel.recentElements.size() -1)
-            {
-                Drawable drawable = DrawableTool.getColoredDrawable(R.drawable.ic_baseline_chevron_right, R.color.white);
-                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-                textView.setText(recentElement.getName());
-                textView.setTag(recentElement);
-                textView.setOnClickListener(this.onClickListenerNavigationBar);
-            }
-            else
-            {
-                Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: %s is current element - applying special treatment", recentElement));
-                textView.setText(StringTool.getSpannableString(recentElement.getName(), Typeface.BOLD_ITALIC));
-            }
-
-            this.linearLayoutNavigationBar.addView(textView);
-        }
-
-        this.linearLayoutNavigationBar.invalidate();
-
-        this.horizontalScrollViewNavigationBar.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                horizontalScrollViewNavigationBar.fullScroll(View.FOCUS_RIGHT);
-            }
-        });
-
-        Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.updateNavigationBar:: NavigationBar holds #[%d] elements", this.viewModel.recentElements.size()));
-    }
-
-    private void constructNavigationBar(IElement element)
-    {
-        Log.v(Constants.LOG_TAG, String.format("ShowLocationsActivity.constructNavigationBar:: adding %s to recent elements...", element));
-
-        if(!((Location)element).isRootLocation())
-        {
-            this.viewModel.recentElements.add(0, element);
-            this.constructNavigationBar(element.getParent());
-        }
-        else
-        {
-            this.viewModel.recentElements.add(0, element);
         }
     }
 
@@ -390,9 +181,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 if(Location.class.isInstance(element))
                 {
-                    viewModel.currentElement = element;
-                    updateActivityView();
-                    setItemsInRecyclerViewAdapter();
+                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
                 else if(Park.class.isInstance(element))
                 {
@@ -534,15 +323,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                                List<IElement> childrenToDelete = new ArrayList<>(viewModel.longClickedElement.getChildren());
-
                                 viewModel.contentRecyclerViewAdapter.removeItem(viewModel.longClickedElement);
 
-                                App.content.removeElementAndChildren(viewModel.longClickedElement);
-                                viewModel.longClickedElement.deleteElementAndChildren();
+                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
+                                ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
 
-                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
-                                ShowLocationsActivity.super.markForDeletion(childrenToDelete);
+                                App.content.removeElementAndDescendants(viewModel.longClickedElement);
+                                viewModel.longClickedElement.deleteElementAndDescendants();
                             }
                             else
                             {
@@ -586,13 +373,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onSnackbarDismissed<REMOVE>:: removing %s...", viewModel.longClickedElement));
 
-                                App.content.removeElement(viewModel.longClickedElement);
-                                viewModel.longClickedElement.removeElement();
-
                                 setItemsInRecyclerViewAdapter();
 
-                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement);
+                                ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, false);
                                 ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
+
+                                App.content.removeElement(viewModel.longClickedElement);
+                                viewModel.longClickedElement.removeElement();
                             }
                             else
                             {

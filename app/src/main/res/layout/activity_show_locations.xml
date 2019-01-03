@@ -11,10 +11,6 @@
     <include
         layout="@layout/floating_action_button"/>
 
-    <include
-        layout="@layout/floating_action_button"
-        android:id="@+id/floatingActionButton_Animation"/>
-
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -23,24 +19,6 @@
 
         <include
             layout="@layout/toolbar"/>
-
-        <HorizontalScrollView
-            style="@style/standard_bar_layout"
-            android:id="@+id/horizontalScrollViewShowLocations_NavigationBar"
-            android:background="?android:attr/colorPrimary"
-            android:scrollbars="none"
-            android:elevation="6dp">
-
-            <LinearLayout
-                android:id="@+id/linearLayoutShowLocations_NavigationBar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:orientation="horizontal"/>
-
-        </HorizontalScrollView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewShowLocations"

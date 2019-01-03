@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.attractions;
+package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
 
 import android.util.Log;
 
@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class VisitedAttraction extends Attraction
+public class VisitedAttraction extends Attraction implements ITemporaryElement
 {
     private final IOnSiteAttraction onSiteAttraction;
 

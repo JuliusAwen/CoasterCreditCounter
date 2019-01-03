@@ -19,10 +19,10 @@ import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHe
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -229,13 +229,13 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             Toaster.makeToast(this, getString(R.string.information_decreased_ride_count, counter));
         }
 
-        this.viewModel.park.deleteChild(this.viewModel.existingVisit);
-        App.content.removeElementAndChildren(this.viewModel.existingVisit);
-        Visit existingVisit = this.viewModel.existingVisit;
-        this.viewModel.existingVisit = null;
+        super.markForDeletion(this.viewModel.existingVisit, true);
+        super.markForUpdate(this.viewModel.park);
 
-        super.markForDeletion(existingVisit);
-        super.markForDeletion(existingVisit.getChildren());
+        this.viewModel.park.deleteChild(this.viewModel.existingVisit);
+        App.content.removeElementAndDescendants(this.viewModel.existingVisit);
+
+        this.viewModel.existingVisit = null;
     }
 
     private void showPickAttractionsDialog()

@@ -10,7 +10,7 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class SortTool

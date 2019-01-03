@@ -20,13 +20,15 @@ public interface IElement
     UUID getUuid();
     long getItemId();
 
+    IElement getParent();
+    void setParent(IElement parent);
+
     void addChild(IElement child);
     void addChildrenAndSetParents(List<IElement> children);
-    void addChildrenAndSetParents(int index, List<IElement> children);
+    void addChildrenAndSetParentsAtIndex(int index, List<IElement> children);
     void addChildrenAndSetParent(List<UUID> childUuids);
     void addChildAndSetParent(IElement child);
-    void addChildAndSetParent(int index, IElement child);
-    void addChildAndSetParent(UUID childUuid);
+    void addChildAndSetParentAtIndex(int index, IElement child);
 
     List<IElement> getChildren();
     List<IElement> getChildrenOfType(Class<? extends IElement> type);
@@ -36,19 +38,12 @@ public interface IElement
     boolean hasChildrenOfType(Class<? extends IElement> type);
     boolean hasChildren();
 
-    void deleteChildren(List<IElement> children);
+    int getIndexOfChild(IElement child);
+
     void deleteChild(IElement child);
-    void deleteElementAndChildren();
+    void deleteElementAndDescendants();
 
     void removeElement();
 
-    boolean undoIsPossible();
-    boolean undoDeleteElementAndChildren();
-    boolean undoRemoveElement();
-
-
-    int getIndexOfChild(IElement child);
-
-    IElement getParent();
-    void setParent(IElement parent);
+    void reorderChildren(List<? extends IElement> children);
 }

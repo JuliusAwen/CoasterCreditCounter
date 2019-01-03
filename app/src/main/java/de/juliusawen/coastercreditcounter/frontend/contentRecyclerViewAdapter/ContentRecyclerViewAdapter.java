@@ -27,11 +27,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
@@ -399,6 +399,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return generation;
     }
 
+    private List<IElement> getRelevantChildren(IElement item)
+    {
+        List<IElement> relevantChildren = new ArrayList<>();
+
+        for(Class<? extends IElement> childType : this.relevantChildTypes)
+        {
+            relevantChildren.addAll(item.getChildrenOfType(childType));
+        }
+
+        return relevantChildren;
+    }
+
     private IElement getParentOfRelevantChild(IElement item)
     {
         if(item instanceof Attraction)
@@ -416,16 +428,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private List<IElement> getRelevantChildren(IElement item)
+    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromItem(AttractionCategory attractionCategory)
     {
-        List<IElement> relevantChildren = new ArrayList<>();
-
-        for(Class<? extends IElement> childType : this.relevantChildTypes)
+        for(IElement item : this.items)
         {
-            relevantChildren.addAll(item.getChildrenOfType(childType));
+            if(item instanceof AttractionCategoryHeader)
+            {
+                if(((AttractionCategoryHeader)item).getAttractionCategory().equals(attractionCategory))
+                {
+                    return (AttractionCategoryHeader) item;
+                }
+            }
         }
-
-        return relevantChildren;
+        return null;
     }
 
     public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
@@ -548,6 +563,38 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public boolean isAllExpanded()
+    {
+        for(IElement item : this.items)
+        {
+            List<IElement> relevantChildren = this.getRelevantChildren(item);
+            if(!this.items.containsAll(relevantChildren))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isAllCollapsed()
+    {
+        for(IElement item : this.items)
+        {
+            List<IElement> relevantChildren = this.getRelevantChildren(item);
+            int relevantChildCount = relevantChildren.size();
+
+            relevantChildren.removeAll(this.items);
+
+            if(relevantChildCount != relevantChildren.size())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private View.OnClickListener getSelectionOnClickListener()
     {
         return new View.OnClickListener()
@@ -612,21 +659,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         };
-    }
-
-    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromItem(AttractionCategory attractionCategory)
-    {
-        for(IElement item : this.items)
-        {
-            if(item instanceof AttractionCategoryHeader)
-            {
-                if(((AttractionCategoryHeader)item).getAttractionCategory().equals(attractionCategory))
-                {
-                    return (AttractionCategoryHeader) item;
-                }
-            }
-        }
-        return null;
     }
 
     private void selectAllRelevantChildren(List<IElement> relevantChildren)
@@ -849,7 +881,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             int index = this.items.indexOf(parentToUpdate) + 1;
             for(IElement child : comingRelevantChildren)
             {
-                this.addItemAtIndex(child, index);
+                this.addItemAtIndex(index, child);
                 index ++;
             }
         }
@@ -857,11 +889,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void addItem(IElement item)
     {
-        this.addItemAtIndex(item, this.items.size());
+        this.addItemAtIndex(this.items.size(), item);
         this.scrollToItem(item);
     }
 
-    private void addItemAtIndex(IElement item, int index)
+    private void addItemAtIndex(int index, IElement item)
     {
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.addItemAtIndex:: adding %s at index [%d]...", item, index));
 

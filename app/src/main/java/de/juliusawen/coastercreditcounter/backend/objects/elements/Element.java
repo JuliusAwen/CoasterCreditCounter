@@ -27,11 +27,6 @@ public abstract class Element implements IElement
     private IElement parent = null;
     private final List<IElement> children = new ArrayList<>();
 
-    public boolean isUndoPossible = false;
-    private IElement backupParent = null;
-    private List<IElement> backupChildren = new ArrayList<>();
-    private int undoIndex = -1;
-
     protected Element(String name, UUID uuid)
     {
         this.setName(name);
@@ -67,7 +62,6 @@ public abstract class Element implements IElement
         {
             return element.getName() != null && element.getName().equals(this.getName());
         }
-
     }
 
     @Override
@@ -162,7 +156,7 @@ public abstract class Element implements IElement
 
     public void addChildAndSetParent(IElement child)
     {
-        this.addChildAndSetParent(this.getChildCount(), child);
+        this.addChildAndSetParentAtIndex(this.getChildCount(), child);
     }
 
     public void addChildrenAndSetParent(List<UUID> childUuids)
@@ -173,24 +167,19 @@ public abstract class Element implements IElement
         }
     }
 
-    public void addChildAndSetParent(UUID childUuid)
+    public void addChildrenAndSetParentsAtIndex(int index, List<IElement> children)
     {
-        this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
-    }
-
-    public void addChildrenAndSetParents(int index, List<IElement> children)
-    {
-        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParents:: called with [%d] children", children.size()));
+        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParentsAtIndex:: called with [%d] children", children.size()));
         int increment = 0;
         for (IElement child : children)
         {
-            this.addChildAndSetParent(index + increment, child);
+            this.addChildAndSetParentAtIndex(index + increment, child);
             child.setParent(this);
             increment ++;
         }
     }
 
-    public void addChildAndSetParent(int index, IElement child)
+    public void addChildAndSetParentAtIndex(int index, IElement child)
     {
         if(!OrphanElement.class.isInstance(this))
         {
@@ -198,22 +187,22 @@ public abstract class Element implements IElement
             {
                 if(child.getParent() != null)
                 {
-                    Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
+                    Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
                 }
                 child.setParent(this);
 
-                Log.v(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s -> child %s added", this, child));
+                Log.v(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s -> child %s added", this, child));
                 this.children.add(index, child);
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParent:: %s already contains child [%s]", this, child));
+                Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s already contains child [%s]", this, child));
             }
         }
         else
         {
             String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is instance of <OrphanElement> - adding not possible", child);
-            Log.e(Constants.LOG_TAG, "Element.addChildAndSetParent:: " + errorMessage);
+            Log.e(Constants.LOG_TAG, "Element.addChildAndSetParentAtIndex:: " + errorMessage);
             throw new IllegalStateException(errorMessage);
         }
     }
@@ -310,29 +299,6 @@ public abstract class Element implements IElement
         return children;
     }
 
-    public void deleteChildren(List<IElement> children)
-    {
-        for(IElement child : children)
-        {
-            this.deleteChild(child);
-        }
-    }
-
-    public void deleteChild(IElement child)
-    {
-        if(this.containsChild(child))
-        {
-            this.getChildren().remove(child);
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s removed", this, child));
-        }
-        else
-        {
-            String errorMessage = String.format("Element.deleteChild:: %s -> child %s not found", this, child);
-            Log.e(Constants.LOG_TAG, errorMessage);
-            throw new IllegalStateException(errorMessage);
-        }
-    }
-
     public IElement getParent()
     {
         return this.parent;
@@ -348,54 +314,44 @@ public abstract class Element implements IElement
     {
         Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
         newElement.addChildrenAndSetParents(new ArrayList<>(children));
-        this.deleteChildren(children);
+        for(IElement child : this.children)
+        {
+            this.deleteChild(child);
+        }
         this.addChildAndSetParent(newElement);
     }
 
     public void relocateElement(Element newParent)
     {
-        this.getParent().getChildren().remove(this);
+        this.parent.getChildren().remove(this);
         newParent.addChildAndSetParent(this);
     }
 
-    public void deleteElementAndChildren()
+    public void deleteElementAndDescendants()
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.removeElementAndChildren:: deleting %s and children", this));
+        Log.d(Constants.LOG_TAG, String.format("Element.removeElementAndDescendants:: deleting %s and descendants", this));
 
+        for(IElement child : new ArrayList<>(this.children))
+        {
+            child.deleteElementAndDescendants();
+        }
         this.parent.deleteChild(this);
-        this.deleteChildren(new ArrayList<>(this.getChildren()));
     }
 
-    public boolean undoDeleteElementAndChildren()
+
+    public void deleteChild(IElement child)
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: restoring %s and children", this));
-        boolean success = false;
-        if(this.isUndoPossible && this.backupParent != null && this.undoIndex != -1)
+        if(this.containsChild(child))
         {
-            this.addChildrenAndSetParents(this.backupChildren);
-            this.backupParent.addChildAndSetParent(this.undoIndex, this);
-            this.parent = this.backupParent;
-            success = true;
+            this.getChildren().remove(child);
+            Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s deleted", this, child));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Element.undoDeleteElementAndChildren:: not able to restore %s -" +
-                            " isUndoPossible[%s]," +
-                            " backupChildrenCount[%d]," +
-                            " backupParent[%s]," +
-                            " undoIndex[%d]",
-                    this,
-                    this.isUndoPossible,
-                    this.backupChildren.size(),
-                    this.backupParent,
-                    this.undoIndex));
+            String errorMessage = String.format("Element.deleteChild:: %s -> child %s not found", this, child);
+            Log.e(Constants.LOG_TAG, errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
-        this.backupChildren.clear();
-        this.backupParent = null;
-        this.undoIndex = -1;
-        this.isUndoPossible = false;
-        Log.d(Constants.LOG_TAG,  String.format("Element.undoDeleteElement:: restore %s success[%s]", this, success));
-        return success;
     }
 
     public void removeElement()
@@ -405,45 +361,10 @@ public abstract class Element implements IElement
         int index = this.parent.getIndexOfChild(this);
 
         this.parent.deleteChild(this);
-        this.parent.addChildrenAndSetParents(index, new ArrayList<>(this.getChildren()));
-        this.deleteChildren(new ArrayList<>(this.getChildren()));
-    }
-
-    public boolean undoRemoveElement()
-    {
-        Log.d(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: restoring %s", this));
-        boolean success = false;
-        if(this.isUndoPossible && this.backupParent != null && this.undoIndex != -1)
+        this.parent.addChildrenAndSetParentsAtIndex(index, new ArrayList<>(this.getChildren()));
+        for(IElement child : this.children)
         {
-            this.addChildrenAndSetParents(this.backupChildren);
-            this.backupParent.deleteChildren(this.backupChildren);
-            this.backupParent.addChildAndSetParent(this.undoIndex, this);
-            this.parent = this.backupParent;
-            success = true;
+            this.deleteChild(child);
         }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("Element.undoRemoveElement:: not able to restore %s -" +
-                            " isUndoPossible[%s]," +
-                            " backupChildrenCount[%d]," +
-                            " backupParent[%s]," +
-                            " undoIndex[%d]",
-                    this,
-                    this.isUndoPossible,
-                    this.backupChildren.size(),
-                    this.backupParent,
-                    this.undoIndex));
-        }
-        this.backupChildren.clear();
-        this.backupParent = null;
-        this.undoIndex = -1;
-        this.isUndoPossible = false;
-        Log.d(Constants.LOG_TAG,  String.format("Element.undoRemoveElement:: restore %s success[%s]", this, success));
-        return success;
-    }
-
-    public boolean undoIsPossible()
-    {
-        return this.isUndoPossible;
     }
 }

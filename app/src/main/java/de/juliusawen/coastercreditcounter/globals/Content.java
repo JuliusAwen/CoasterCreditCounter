@@ -15,7 +15,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
-import de.juliusawen.coastercreditcounter.backend.persistency.Persistency;
+import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
@@ -29,22 +29,22 @@ public class Content
     private List<AttractionCategory> backupAttractionCategories = null;
     private Location backupRootLocation = null;
 
-    private final Persistency persistency;
+    private final Persistence persistence;
 
     private static Content instance;
 
-    public static Content getInstance(Persistency persistency)
+    public static Content getInstance(Persistence persistence)
     {
         if(Content.instance == null)
         {
-            Content.instance = new Content(persistency);
+            Content.instance = new Content(persistence);
         }
         return Content.instance;
     }
 
-    private Content(Persistency persistency)
+    private Content(Persistence persistence)
     {
-        this.persistency = persistency;
+        this.persistence = persistence;
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
     }
 
@@ -54,7 +54,7 @@ public class Content
         Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
         Stopwatch stopwatch = new Stopwatch(true);
 
-        if(this.persistency.loadContent(this))
+        if(this.persistence.loadContent(this))
         {
             if(App.DEBUG && App.config.validateContent() && this.validate())
             {
@@ -268,13 +268,13 @@ public class Content
 
     public void addAttractionCategory(AttractionCategory attractionCategory)
     {
-        this.addAttractionCategory(this.attractionCategories.size(), attractionCategory);
+        this.addAttractionCategoryAtIndex(this.attractionCategories.size(), attractionCategory);
     }
 
-    public void addAttractionCategory(int index, AttractionCategory attractionCategory)
+    public void addAttractionCategoryAtIndex(int index, AttractionCategory attractionCategory)
     {
         this.attractionCategories.add(index, attractionCategory);
-        Log.v(Constants.LOG_TAG, String.format("Content.addAttractionCategory:: %s added at index [%d] of [%d]", attractionCategory, index, this.attractionCategories.size() - 1));
+        Log.v(Constants.LOG_TAG, String.format("Content.addAttractionCategoryAtIndex:: %s added at index [%d] of [%d]", attractionCategory, index, this.attractionCategories.size() - 1));
     }
 
     public void removeAttractionCategory(AttractionCategory attractionCategory)
@@ -357,11 +357,11 @@ public class Content
         this.elementsByUuid.put(element.getUuid(), element);
     }
 
-    public void removeElementAndChildren(IElement element)
+    public void removeElementAndDescendants(IElement element)
     {
         for(IElement child : element.getChildren())
         {
-            this.removeElementAndChildren(child);
+            this.removeElementAndDescendants(child);
         }
         this.removeElement(element);
     }

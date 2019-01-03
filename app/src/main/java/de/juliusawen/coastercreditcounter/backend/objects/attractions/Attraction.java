@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
@@ -41,6 +42,20 @@ public abstract class Attraction extends Element implements IAttraction
             Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
+    }
+
+    @Override
+    public void deleteElementAndDescendants()
+    {
+        Log.d(Constants.LOG_TAG, String.format("Attraction.deleteElementAndDescendants:: deleting %s and children", this));
+
+        for(IElement child : this.getChildren())
+        {
+            child.deleteElementAndDescendants();
+        }
+
+        this.attractionCategory.deleteChild(this);
+        this.getParent().deleteChild(this);
     }
 
     public AttractionCategory getAttractionCategory()

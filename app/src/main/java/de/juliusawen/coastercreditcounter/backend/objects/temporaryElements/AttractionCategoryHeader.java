@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.orphanElements;
+package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,14 +14,15 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public class AttractionCategoryHeader extends OrphanElement implements IElement
+public class AttractionCategoryHeader extends OrphanElement implements IElement, ITemporaryElement
 {
     private final AttractionCategory attractionCategory;
 

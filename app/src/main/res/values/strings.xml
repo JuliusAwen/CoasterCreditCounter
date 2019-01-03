@@ -58,9 +58,8 @@
 
 
     <!--options menu entries-->
-    <string name="selection_edit_root_location">edit root location</string>
+    <string name="selection_help">help</string>
 
-    <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
     <string name="selection_sort_attractions">sort attractions</string>
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
@@ -68,7 +67,8 @@
     <string name="selection_sort_ascending">sort ascending</string>
     <string name="selection_sort_descending">sort descending</string>
 
-    <string name="selection_help">help</string>
+    <string name="selection_expand_all">expand all</string>
+    <string name="selection_collapse_all">collapse all</string>
 
     <string name="selection_apply_category_to_attractions">apply to attractions</string>
 

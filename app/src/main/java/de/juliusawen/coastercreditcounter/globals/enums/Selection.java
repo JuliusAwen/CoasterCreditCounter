@@ -20,6 +20,9 @@ public enum Selection
     SORT_ASCENDING,
     SORT_DESCENDING,
 
+    EXPAND_ALL,
+    COLLAPSE_ALL,
+
     APPLY_CATEGORY_TO_ATTRACTIONS,
 
     HELP,

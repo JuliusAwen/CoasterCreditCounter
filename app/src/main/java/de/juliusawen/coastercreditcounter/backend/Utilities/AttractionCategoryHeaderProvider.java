@@ -11,7 +11,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 

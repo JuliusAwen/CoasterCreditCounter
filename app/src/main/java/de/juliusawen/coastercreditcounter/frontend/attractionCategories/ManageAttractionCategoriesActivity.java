@@ -368,9 +368,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                                 viewModel.contentRecyclerViewAdapter.updateItem(AttractionCategory.getDefault());
 
-                                App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
+                                markForDeletion(viewModel.longClickedAttractionCategory, false);
 
-                                markForDeletion(viewModel.longClickedAttractionCategory);
+                                App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
                             }
                             else
                             {

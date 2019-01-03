@@ -20,7 +20,7 @@ public class PersistenceService extends IntentService
     public PersistenceService()
     {
         super(Constants.PERSISTENCY_SERVICE_NAME);
-        this.databaseWrapper = App.persistency.getDatabaseWrapper();
+        this.databaseWrapper = App.persistence.getDatabaseWrapper();
     }
 
     @Override
