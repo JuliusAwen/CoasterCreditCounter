@@ -2,11 +2,13 @@ package de.juliusawen.coastercreditcounter.frontend.visits;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,7 +55,7 @@ public class ShowVisitActivity extends BaseActivity
 
             if(this.viewModel.visit == null)
             {
-                this.viewModel.visit = (Visit) App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
             if(this.viewModel.attractionCategoryHeaderProvider == null)
@@ -82,6 +84,7 @@ public class ShowVisitActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
@@ -176,9 +179,12 @@ public class ShowVisitActivity extends BaseActivity
         List<IElement> categorizedVisitedAttractions =
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
 
+        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+        childTypesToExpand.add(VisitedAttraction.class);
+
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 categorizedVisitedAttractions,
-                VisitedAttraction.class);
+                childTypesToExpand);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

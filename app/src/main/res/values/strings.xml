@@ -138,10 +138,10 @@
     <string name="description_ok">@string/text_close</string>
     <string name="description_cancel">@string/text_cancel</string>
     <string name="description_close">@string/text_close</string>
-    <string name="description_expand_toggle">expand/collapse item</string>
+    <string name="description_image_view">image</string>
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
-    <string name="description_decrease">decrease count</string>
-    <string name="description_increase">increase count</string>
+    <string name="description_decrease">decrease ride count</string>
+    <string name="description_increase">increase ride count</string>
 
 
 

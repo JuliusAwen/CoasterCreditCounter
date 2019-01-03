@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,15 +72,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(this.viewModel.currentElement == null)
             {
                 String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuidString(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+                this.viewModel.currentElement = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
             }
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
+                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(Location.class);
+                childTypesToExpand.add(Park.class);
+
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                         this.viewModel.currentElement.getChildrenOfType(Location.class),
                         null,
-                        Park.class);
+                        childTypesToExpand);
+
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Location.class, Typeface.BOLD);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -151,7 +158,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             if(requestCode == Constants.REQUEST_CREATE_LOCATION)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.getContentByUuidString(UUID.fromString(resultElementUuidString));
+                IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
 
                 this.setItemsInRecyclerViewAdapter();
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
@@ -171,7 +178,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
-                    IElement selectedElement = App.content.getContentByUuidString(UUID.fromString(selectedElementUuidString));
+                    IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
                     this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
                 }
                 else
@@ -183,7 +190,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {
-                IElement editedElement = App.content.getContentByUuidString(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 this.updateActivityView();
                 this.viewModel.contentRecyclerViewAdapter.updateItem(editedElement);
 

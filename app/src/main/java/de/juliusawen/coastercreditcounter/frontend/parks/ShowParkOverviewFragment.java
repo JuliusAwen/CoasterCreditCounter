@@ -45,7 +45,7 @@ public class ShowParkOverviewFragment extends Fragment
         {
             if (getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
     }

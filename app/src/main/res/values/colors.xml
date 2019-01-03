@@ -12,6 +12,6 @@
 
     <color name="semi_transparent">#88000000</color>
 
-    <color name="pressed_color">#303F51B5</color>
+    <color name="selected_color">#303F51B5</color>
     <color name="default_color">#00000000</color>
 </resources>

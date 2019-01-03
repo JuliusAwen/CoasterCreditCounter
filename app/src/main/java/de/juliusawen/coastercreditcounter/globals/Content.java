@@ -214,7 +214,6 @@ public class Content
         {
             this.setRootLocation();
         }
-
         return this.rootLocation;
     }
 
@@ -302,7 +301,7 @@ public class Content
 
         for(String uuidString : uuidStrings)
         {
-            elements.add(this.getContentByUuidString(UUID.fromString(uuidString)));
+            elements.add(this.getContentByUuid(UUID.fromString(uuidString)));
         }
 
         Log.v(Constants.LOG_TAG, String.format("Content.getContentByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
@@ -310,7 +309,7 @@ public class Content
         return elements;
     }
 
-    public IElement getContentByUuidString(UUID uuid)
+    public IElement getContentByUuid(UUID uuid)
     {
         if(this.elementsByUuid.containsKey(uuid))
         {
@@ -325,7 +324,7 @@ public class Content
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuidString:: No element found for uuid[%s]", uuid));
+                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
                 return null;
             }
         }
@@ -342,15 +341,6 @@ public class Content
         }
 
         return null;
-    }
-
-    public void addElementAndChildren(IElement element)
-    {
-        for(IElement child : element.getChildren())
-        {
-            this.addElementAndChildren(child);
-        }
-        this.addElement(element);
     }
 
     public void addElements(List<IElement> elements)

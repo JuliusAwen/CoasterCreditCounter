@@ -44,7 +44,7 @@ public class AttractionCategory extends OrphanElement
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
+            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(AttractionCategory.getDefault()));
 
             Log.v(Constants.LOG_TAG, String.format("AttractionCategory.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
@@ -66,6 +66,11 @@ public class AttractionCategory extends OrphanElement
 
     public static AttractionCategory getDefault()
     {
+        if(AttractionCategory.defaultAttractionCategory == null)
+        {
+            AttractionCategory.createAndSetDefault();
+        }
+
         return AttractionCategory.defaultAttractionCategory;
     }
 

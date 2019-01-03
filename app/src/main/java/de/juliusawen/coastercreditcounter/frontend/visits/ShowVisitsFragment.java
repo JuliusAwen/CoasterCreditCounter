@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.frontend.visits;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,13 +66,14 @@ public class ShowVisitsFragment extends Fragment
         {
             if (getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(YearHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
 
@@ -127,7 +130,7 @@ public class ShowVisitsFragment extends Fragment
             {
                 this.updateContentRecyclerView(true);
 
-                IElement visit = App.content.getContentByUuidString(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
             }
         }
@@ -144,10 +147,13 @@ public class ShowVisitsFragment extends Fragment
     {
         List<IElement> categorizedVisits = this.getCategorizedVisits();
 
+        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+        childTypesToExpand.add(Visit.class);
+
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 categorizedVisits,
                 App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((IElement)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
-                Visit.class);
+                childTypesToExpand);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
@@ -189,7 +195,7 @@ public class ShowVisitsFragment extends Fragment
 
             if(expandLatestYearHeaderAccordingToSettings && App.settings.getExpandLatestYearInListByDefault())
             {
-                this.viewModel.contentRecyclerViewAdapter.expandParent(YearHeader.getLatestYearHeader(categorizedVisits));
+                this.viewModel.contentRecyclerViewAdapter.expandItem(YearHeader.getLatestYearHeader(categorizedVisits));
             }
         }
         else

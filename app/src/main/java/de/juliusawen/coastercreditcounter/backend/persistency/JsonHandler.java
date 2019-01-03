@@ -21,6 +21,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
@@ -181,13 +182,6 @@ public class JsonHandler implements IDatabaseWrapper
         try
         {
             JSONObject jsonObjectContent = new JSONObject(jsonString);
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
-            {
-                List<TemporaryElement> temporaryAttractionCategories =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
-                content.setAttractionCategories(this.createAttractionCategories(temporaryAttractionCategories));
-            }
-
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_LOCATIONS))
             {
@@ -212,14 +206,14 @@ public class JsonHandler implements IDatabaseWrapper
                 {
                     List<TemporaryElement> temporaryAttractionBlueprints =
                             this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
-                    content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints, content));
+                    content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_COASTER_BLUEPRINTS))
                 {
                     this.temporaryCoasterBlueprints =
                             this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
-                    content.addElements(this.createCoasterBlueprints(this.temporaryCoasterBlueprints, content));
+                    content.addElements(this.createCoasterBlueprints(this.temporaryCoasterBlueprints));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_STOCK_ATTRACTIONS))
@@ -233,15 +227,22 @@ public class JsonHandler implements IDatabaseWrapper
                 {
                     this.temporaryCustomAttractions =
                             this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
-                    content.addElements(this.createCustomAttractions(this.temporaryCustomAttractions, content));
+                    content.addElements(this.createCustomAttractions(this.temporaryCustomAttractions));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_COASTERS))
                 {
                     this.temporaryCustomCoasters =
                             this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_COASTERS));
-                    content.addElements(this.createCustomCoasters(this.temporaryCustomCoasters, content));
+                    content.addElements(this.createCustomCoasters(this.temporaryCustomCoasters));
                 }
+            }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
+            {
+                List<TemporaryElement> temporaryAttractionCategories =
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
+                content.setAttractionCategories(this.createAttractionCategories(temporaryAttractionCategories, content));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
@@ -260,16 +261,23 @@ public class JsonHandler implements IDatabaseWrapper
         return true;
     }
 
-    private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements)
+    private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements, Content content)
     {
         List<AttractionCategory> attractionCategories = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
+
+            for(UUID childUuid : temporaryElement.childrenUuids)
+            {
+                ((IAttraction)content.getContentByUuid(childUuid)).setAttractionCategory(attractionCategory);
+            }
+
             if(temporaryElement.isDefault)
             {
                 AttractionCategory.setDefault(attractionCategory);
             }
+
             attractionCategories.add(attractionCategory);
         }
 
@@ -304,25 +312,25 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
     
-    private List<IElement> createAttractionBlueprints(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createAttractionBlueprints(List<TemporaryElement> temporaryElements)
     {
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
+            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createCoasterBlueprints(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCoasterBlueprints(List<TemporaryElement> temporaryElements)
     {
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
+            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -336,7 +344,7 @@ public class JsonHandler implements IDatabaseWrapper
             StockAttraction element =
                     StockAttraction.create(
                             temporaryElement.name,
-                            (IBlueprint)content.getContentByUuidString(temporaryElement.blueprintUuid),
+                            (IBlueprint)content.getContentByUuid(temporaryElement.blueprintUuid),
                             temporaryElement.untrackedRideCount,
                             temporaryElement.uuid);
             elements.add(element);
@@ -344,25 +352,25 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private List<IElement> createCustomAttractions(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCustomAttractions(List<TemporaryElement> temporaryElements)
     {
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
+            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createCustomCoasters(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCustomCoasters(List<TemporaryElement> temporaryElements)
     {
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(content.getAttractionCategoryByUuid(temporaryElement.attractionCategoryUuid));
+            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -460,7 +468,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         for(TemporaryElement temporaryElement : elements)
         {
-            IElement element = content.getContentByUuidString(temporaryElement.uuid);
+            IElement element = content.getContentByUuid(temporaryElement.uuid);
             element.addChildrenAndSetParent(temporaryElement.childrenUuids);
         }
     }
@@ -469,10 +477,10 @@ public class JsonHandler implements IDatabaseWrapper
     {
         for(TemporaryElement temporaryVisit : temporaryVisits)
         {
-            Visit visit = (Visit)content.getContentByUuidString(temporaryVisit.uuid);
+            Visit visit = (Visit)content.getContentByUuid(temporaryVisit.uuid);
             for(Map.Entry<UUID, Integer> rideCountByAttractionUuid : temporaryVisit.rideCountByAttractionUuids.entrySet())
             {
-                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuidString(rideCountByAttractionUuid.getKey()));
+                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuid(rideCountByAttractionUuid.getKey()));
 
                 if(rideCountByAttractionUuid.getValue() != 0)
                 {

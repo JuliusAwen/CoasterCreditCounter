@@ -169,13 +169,13 @@ public abstract class Element implements IElement
     {
         for(UUID childUuid : childUuids)
         {
-            this.addChildAndSetParent(App.content.getContentByUuidString(childUuid));
+            this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
         }
     }
 
     public void addChildAndSetParent(UUID childUuid)
     {
-        this.addChildAndSetParent(App.content.getContentByUuidString(childUuid));
+        this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
     }
 
     public void addChildrenAndSetParents(int index, List<IElement> children)

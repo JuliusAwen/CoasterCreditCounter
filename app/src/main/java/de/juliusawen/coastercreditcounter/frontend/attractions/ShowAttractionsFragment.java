@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.frontend.attractions;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +66,7 @@ public  class ShowAttractionsFragment extends Fragment
         {
             if(getArguments() != null)
             {
-                this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
 
@@ -76,6 +78,7 @@ public  class ShowAttractionsFragment extends Fragment
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
@@ -139,10 +142,14 @@ public  class ShowAttractionsFragment extends Fragment
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
+        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+        childTypesToExpand.add(Attraction.class);
+
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))),
                 null,
-                Attraction.class);
+                childTypesToExpand);
+
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

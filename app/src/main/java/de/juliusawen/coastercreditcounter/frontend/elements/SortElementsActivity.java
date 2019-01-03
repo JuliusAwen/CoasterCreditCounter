@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.frontend.elements;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +48,8 @@ public class SortElementsActivity extends BaseActivity
         {
             this.viewModel.contentRecyclerViewAdapter =
                     ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
         }
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

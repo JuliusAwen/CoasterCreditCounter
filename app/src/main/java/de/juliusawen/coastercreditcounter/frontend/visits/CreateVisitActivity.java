@@ -49,7 +49,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(this.viewModel.park == null)
         {
-            this.viewModel.park = (Park) App.content.getContentByUuidString(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.attractionCategoryHeaderProvider == null)

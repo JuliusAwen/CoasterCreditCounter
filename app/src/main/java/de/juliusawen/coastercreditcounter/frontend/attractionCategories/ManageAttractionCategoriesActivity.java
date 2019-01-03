@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.frontend.attractionCategories;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -64,10 +65,15 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
+            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+            childTypesToExpand.add(ICategorized.class);
+
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<IElement>(App.content.getAttractionCategories()),
                     null,
-                    ICategorized.class);
+                    childTypesToExpand);
+
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);

@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.frontend.elements;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -20,6 +22,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -59,14 +62,19 @@ public class PickElementsActivity extends BaseActivity
         {
             if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
             {
+                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(Attraction.class);
+
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(ConvertTool.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
-                        Attraction.class,
+                        childTypesToExpand,
                         true);
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
             else
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
             }
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
