@@ -15,7 +15,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class YearHeader extends OrphanElement
+public class YearHeader extends OrphanElement implements ITemporaryElement
 {
     private YearHeader(String name, UUID uuid)
     {
