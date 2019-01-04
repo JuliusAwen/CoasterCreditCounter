@@ -94,7 +94,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 //            menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
 //        }
 
-        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(/*!this.viewModel.contentRecyclerViewAdapter.isAllExpanded()*/ false);
         menu.add(Menu.NONE, Selection.COLLAPSE_ALL.ordinal(), Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
 
         return super.onPrepareOptionsMenu(menu);
@@ -108,12 +108,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         switch(selection)
         {
-            case SORT_LOCATIONS:
-                ActivityTool.startActivitySortForResult(
-                        this,
-                        Constants.REQUEST_SORT_LOCATIONS,
-                        this.viewModel.currentElement.getChildrenOfType(Location.class));
-                return true;
+            case COLLAPSE_ALL:
+                this.viewModel.contentRecyclerViewAdapter.collapseAll();
+
+//            case SORT_LOCATIONS:
+//                ActivityTool.startActivitySortForResult(
+//                        this,
+//                        Constants.REQUEST_SORT_LOCATIONS,
+//                        this.viewModel.currentElement.getChildrenOfType(Location.class));
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

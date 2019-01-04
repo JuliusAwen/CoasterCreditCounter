@@ -46,53 +46,56 @@ public class PickElementsActivity extends BaseActivity
         setContentView(R.layout.activity_pick_elements);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
-        
-        if(this.viewModel.elementsToPickFrom == null)
+        if(App.isInitialized)
         {
-            this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-        }
+            this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
 
-        if(this.viewModel.attractionCategoryHeaderProvider == null)
-        {
-            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-        }
-
-        if(this.viewModel.contentRecyclerViewAdapter == null)
-        {
-            if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
+            if(this.viewModel.elementsToPickFrom == null)
             {
-                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                childTypesToExpand.add(Attraction.class);
-
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(ConvertTool.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
-                        childTypesToExpand,
-                        true);
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+                this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
             }
-            else
+
+            if(this.viewModel.attractionCategoryHeaderProvider == null)
             {
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
             }
+
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
+                {
+                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(Attraction.class);
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(ConvertTool.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
+                            childTypesToExpand,
+                            true);
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+                }
+                else
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                }
+            }
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
+
+            this.addSelectOrDeselectAllBar();
         }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
-
-        super.addFloatingActionButton();
-        this.decorateFloatingActionButton();
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
-
-        this.addSelectOrDeselectAllBar();
     }
 
     private void decorateFloatingActionButton()

@@ -34,23 +34,26 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
         setContentView(R.layout.activity_edit_location);
         super.onCreate(savedInstanceState);
 
-        this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
-
-        this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
-
-        if(this.viewModel.elementToEdit == null)
+        if(App.isInitialized)
         {
-            this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
+
+            this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
+
+            if(this.viewModel.elementToEdit == null)
+            {
+                this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
+
+            super.addConfirmDialogFragment();
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
+
+            super.addToolbar();
+            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
+
+            this.createEditText();
         }
-
-        super.addConfirmDialogFragment();
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
-
-        super.addToolbar();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
-
-        this.createEditText();
     }
 
     @Override

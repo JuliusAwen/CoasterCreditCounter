@@ -526,6 +526,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public void collapseAll()
+    {
+        for(IElement item : new ArrayList<>(this.items))
+        {
+            if(this.getGeneration(item) == 0)
+            {
+                this.collapseItem(item);
+            }
+        }
+    }
+
     private void collapseItem(IElement item)
     {
         if(this.expandedItems.contains(item))

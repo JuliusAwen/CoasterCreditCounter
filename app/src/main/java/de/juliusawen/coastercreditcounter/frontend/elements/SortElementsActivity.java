@@ -37,35 +37,38 @@ public class SortElementsActivity extends BaseActivity
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
-        
-        if(this.viewModel.elementsToSort == null)
+        if(App.isInitialized)
         {
-            this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
+
+            if(this.viewModel.elementsToSort == null)
+            {
+                this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            }
+
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                this.viewModel.contentRecyclerViewAdapter =
+                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
+            }
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
+
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
+
+            this.createActionDialog();
         }
-        
-        if(this.viewModel.contentRecyclerViewAdapter == null)
-        {
-            this.viewModel.contentRecyclerViewAdapter =
-                    ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
-
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
-        }
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
-
-        super.addFloatingActionButton();
-        this.decorateFloatingActionButton();
-
-        this.createActionDialog();
     }
 
     @Override

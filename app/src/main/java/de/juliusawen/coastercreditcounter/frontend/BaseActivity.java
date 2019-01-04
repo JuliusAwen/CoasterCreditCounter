@@ -16,7 +16,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -38,7 +37,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
@@ -133,12 +131,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     private static class InitializeApp extends AsyncTask<BaseActivity, Void, BaseActivity>
     {
-//        @Override
-//        protected void onPreExecute()
-//        {
-//            super.onPreExecute();
-//        }
-
         @Override
         protected BaseActivity doInBackground(BaseActivity... baseActivities)
         {
@@ -181,9 +173,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
-                    StringTool.parseActivityName(Objects.requireNonNull(getIntent().getComponent()).getShortClassName())));
-            ActivityTool.startActivity(this, this.getClass());
+            Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: restarting activity");
+            ActivityTool.startActivity(this, getIntent());
         }
     }
 

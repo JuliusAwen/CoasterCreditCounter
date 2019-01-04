@@ -256,11 +256,19 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
+    public static void startActivity(Context context, Intent intent)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s] over given intent...",
+                StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+        context.startActivity(intent);
+    }
+
     public static void startActivity(Context context, Class type)
     {
         Intent intent = new Intent(context, type);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s]...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s] over given class type...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);

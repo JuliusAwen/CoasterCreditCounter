@@ -45,25 +45,28 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         setContentView(R.layout.activity_create_visit);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
-
-        if(this.viewModel.park == null)
+        if(App.isInitialized)
         {
-            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        }
+            this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
 
-        if(this.viewModel.attractionCategoryHeaderProvider == null)
-        {
-            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-        }
+            if(this.viewModel.park == null)
+            {
+                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
 
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        this.decorateToolbar();
+            if(this.viewModel.attractionCategoryHeaderProvider == null)
+            {
+                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+            }
 
-        if(!this.viewModel.datePicked)
-        {
-            this.pickDate();
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            this.decorateToolbar();
+
+            if(!this.viewModel.datePicked)
+            {
+                this.pickDate();
+            }
         }
     }
 

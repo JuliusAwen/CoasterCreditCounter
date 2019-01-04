@@ -52,27 +52,30 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         setContentView(R.layout.activity_create_location);
         super.onCreate(savedInstanceState);
 
-        this.linearLayoutAddChildren = findViewById(R.id.linearLayoutCreateLocation_AddChildren);
-        this.textViewAddChildren = this.linearLayoutAddChildren.findViewById(R.id.textViewCreateLocation_AddChildren);
-        this.editText = findViewById(R.id.editTextCreateLocation);
-        this.checkBoxAddChildren = this.linearLayoutAddChildren.findViewById(R.id.checkBoxCreateLocation_AddChildren);
-
-        this.viewModel = ViewModelProviders.of(this).get(CreateLocationActivityViewModel.class);
-
-        if(this.viewModel.parentLocation == null)
+        if(App.isInitialized)
         {
-            this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.linearLayoutAddChildren = findViewById(R.id.linearLayoutCreateLocation_AddChildren);
+            this.textViewAddChildren = this.linearLayoutAddChildren.findViewById(R.id.textViewCreateLocation_AddChildren);
+            this.editText = findViewById(R.id.editTextCreateLocation);
+            this.checkBoxAddChildren = this.linearLayoutAddChildren.findViewById(R.id.checkBoxCreateLocation_AddChildren);
+
+            this.viewModel = ViewModelProviders.of(this).get(CreateLocationActivityViewModel.class);
+
+            if(this.viewModel.parentLocation == null)
+            {
+                this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
+
+            super.addConfirmDialogFragment();
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location));
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
+
+            this.createEditText();
         }
-
-        super.addConfirmDialogFragment();
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location));
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
-
-        this.createEditText();
     }
 
     @Override

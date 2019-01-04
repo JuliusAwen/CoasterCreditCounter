@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -24,25 +25,30 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.CreateSimpleStringActivity:: creating activity...");
+
         setContentView(R.layout.activity_create_simple_string);
         super.onCreate(savedInstanceState);
 
-        this.editText = findViewById(R.id.editTextCreateSimpleString);
-        this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
+        if(App.isInitialized)
+        {
+            this.editText = findViewById(R.id.editTextCreateSimpleString);
+            this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
 
-        Intent intent = getIntent();
-        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
+            Intent intent = getIntent();
+            String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
+            String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
 
-        this.viewModel = ViewModelProviders.of(this).get(CreateSimpleStringActivityViewModel.class);
+            this.viewModel = ViewModelProviders.of(this).get(CreateSimpleStringActivityViewModel.class);
 
-        super.addConfirmDialogFragment();
+            super.addConfirmDialogFragment();
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
 
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.getString(R.string.title_attraction_category_create), null);
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(this.getString(R.string.title_attraction_category_create), null);
+        }
     }
 
     @Override
