@@ -10,13 +10,11 @@ import de.juliusawen.coastercreditcounter.globals.Content;
 
 public class App extends Application
 {
-    public static boolean isInitialized = false;
+    public static boolean isInitialized;
     public static boolean DEBUG;
-
 
     public static Persistence persistence;
     public static Content content;
-
 
     //TODO: use SharedPreferences
     public static AppConfig config;
@@ -40,10 +38,24 @@ public class App extends Application
         Log.i(Constants.LOG_TAG, "App.onCreate:: creating app...");
 
         super.onCreate();
+
+        App.isInitialized = false;
+
         App.instance = this;
+
         App.config = new AppConfig();
         App.DEBUG = App.config.isDebugBuild();
+
         App.persistence = Persistence.getInstance();
+    }
+
+    @Override
+    public void onTerminate()
+    {
+        Log.e(Constants.LOG_TAG, "App.onTerminate:: app is terminated...");
+        App.isInitialized = false;
+
+        super.onTerminate();
     }
 
     public static boolean initialize()

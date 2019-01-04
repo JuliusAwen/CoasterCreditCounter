@@ -56,38 +56,41 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         setContentView(R.layout.activity_show_attraction_categories);
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ManageAttractionCategoriesViewModel.class);
-
-        if(this.viewModel.attractionCategoryHeaderProvider == null)
+        if(App.isInitialized)
         {
-            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+            this.viewModel = ViewModelProviders.of(this).get(ManageAttractionCategoriesViewModel.class);
+
+            if(this.viewModel.attractionCategoryHeaderProvider == null)
+            {
+                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
+            }
+
+            if(this.viewModel.contentRecyclerViewAdapter == null)
+            {
+                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(ICategorized.class);
+
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                        new ArrayList<IElement>(App.content.getAttractionCategories()),
+                        null,
+                        childTypesToExpand);
+
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+            }
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories), null);
+
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories)), getString(R.string.help_text_show_attraction_category));
+
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
         }
-
-        if(this.viewModel.contentRecyclerViewAdapter == null)
-        {
-            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(ICategorized.class);
-
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                    new ArrayList<IElement>(App.content.getAttractionCategories()),
-                    null,
-                    childTypesToExpand);
-
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
-        }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories), null);
-
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories)), getString(R.string.help_text_show_attraction_category));
-
-        super.addFloatingActionButton();
-        this.decorateFloatingActionButton();
     }
 
     @Override

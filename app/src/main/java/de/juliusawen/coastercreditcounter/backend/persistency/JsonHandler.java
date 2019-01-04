@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.application.Settings;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
@@ -160,6 +161,8 @@ public class JsonHandler implements IDatabaseWrapper
 
                 this.addVisitedAttractions(this.temporaryVisits, content);
 
+                this.applyAttractionCategories(content);
+
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
@@ -261,35 +264,6 @@ public class JsonHandler implements IDatabaseWrapper
         return true;
     }
 
-    private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements, Content content)
-    {
-        List<AttractionCategory> attractionCategories = new ArrayList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
-        {
-            AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
-
-            for(UUID childUuid : temporaryElement.childrenUuids)
-            {
-                ((IAttraction)content.getContentByUuid(childUuid)).setAttractionCategory(attractionCategory);
-            }
-
-            if(temporaryElement.isDefault)
-            {
-                AttractionCategory.setDefault(attractionCategory);
-            }
-
-            attractionCategories.add(attractionCategory);
-        }
-
-        if(AttractionCategory.getDefault() == null)
-        {
-            AttractionCategory.createAndSetDefault();
-            attractionCategories.add(AttractionCategory.getDefault());
-        }
-
-        return attractionCategories;
-    }
-
     private List<IElement> createLocations(List<TemporaryElement> temporaryElements)
     {
         List<IElement> elements = new ArrayList<>();
@@ -318,7 +292,6 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -330,7 +303,6 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -358,7 +330,6 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -370,7 +341,6 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setAttractionCategory(AttractionCategory.getDefault());
             elements.add(element);
         }
         return elements;
@@ -385,6 +355,35 @@ public class JsonHandler implements IDatabaseWrapper
             elements.add(element);
         }
         return elements;
+    }
+
+    private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements, Content content)
+    {
+        List<AttractionCategory> attractionCategories = new ArrayList<>();
+        for(TemporaryElement temporaryElement : temporaryElements)
+        {
+            AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
+
+            for(UUID childUuid : temporaryElement.childrenUuids)
+            {
+                attractionCategory.addChild(content.getContentByUuid(childUuid));
+            }
+
+            if(temporaryElement.isDefault)
+            {
+                AttractionCategory.setDefault(attractionCategory);
+            }
+
+            attractionCategories.add(attractionCategory);
+        }
+
+        if(AttractionCategory.getDefault() == null)
+        {
+            AttractionCategory.createAndSetDefault();
+            attractionCategories.add(AttractionCategory.getDefault());
+        }
+
+        return attractionCategories;
     }
 
     private List<TemporaryElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
@@ -462,6 +461,17 @@ public class JsonHandler implements IDatabaseWrapper
         }
 
         return temporaryElements;
+    }
+
+    private void applyAttractionCategories(Content content)
+    {
+        for(AttractionCategory attractionCategory : content.getAttractionCategories())
+        {
+            for(IAttraction attraction : attractionCategory.getChildrenAsType(Attraction.class))
+            {
+                attraction.setAttractionCategory(attractionCategory);
+            }
+        }
     }
 
     private void entangleElements(List<TemporaryElement> elements, Content content)

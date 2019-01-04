@@ -37,6 +37,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "NavigationHubActivity.onCreate:: creating activity...");
+
         setContentView(R.layout.activity_navigation_hub);
         super.onCreate(savedInstanceState);
 

@@ -102,8 +102,8 @@ public abstract class Attraction extends Element implements IAttraction
     public void increaseTotalRideCount(int increment)
     {
         this.totalRideCount += increment;
-        Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTotalRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)"
-                , this, increment, this.getTotalRideCount(), this.untracktedRideCount));
+        Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTotalRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+                this, increment, this.getTotalRideCount(), this.untracktedRideCount));
     }
 
 
@@ -112,13 +112,13 @@ public abstract class Attraction extends Element implements IAttraction
         if((this.totalRideCount - decrement) >= 0)
         {
             this.totalRideCount -= decrement;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)"
-                    , this, decrement, this.getTotalRideCount(), this.untracktedRideCount));
+            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+                    this, decrement, this.getTotalRideCount(), this.untracktedRideCount));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d] ([%d] rides untracked):" +
-                            " decreasing by [%d] would make it negative - not decreasing", this, this.getTotalRideCount(), this.untracktedRideCount, decrement));
+            Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d] ([%d] rides untracked): " +
+                            "decreasing by [%d] would make it negative - not decreasing", this, this.getTotalRideCount(), this.untracktedRideCount, decrement));
         }
     }
 }

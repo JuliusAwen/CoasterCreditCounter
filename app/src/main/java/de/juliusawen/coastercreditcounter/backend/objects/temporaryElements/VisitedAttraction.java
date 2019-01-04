@@ -66,7 +66,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("VisitedAttraction.decreaseRideCount:: %s's total ride count for [%s] is [%d]: decreasing by [%d] would make it negative - not decreasing",
+            Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.decreaseRideCount:: %s's total ride count for [%s] is [%d]: decreasing by [%d] would make it negative - not decreasing",
                     this.getOnSiteAttraction(), this.getParent(), this.getRideCount(), decrement));
 
             return false;

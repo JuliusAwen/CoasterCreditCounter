@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.frontend;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -37,6 +39,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
@@ -53,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: creating activity...");
 
         super.onCreate(savedInstanceState);
 
@@ -152,12 +155,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             super.onPostExecute(baseActivity);
             baseActivity.finishAppInitialization();
         }
-
-        @Override
-        protected void onProgressUpdate(Void... values)
-        {
-            super.onProgressUpdate(values);
-        }
     }
 
     public void finishAppInitialization()
@@ -173,8 +170,13 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: restarting activity");
-            ActivityTool.startActivity(this, getIntent());
+            Intent intent = getIntent();
+
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
+                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            ActivityTool.startActivity(this, intent);
         }
     }
 
@@ -223,11 +225,14 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void addToolbar()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
-        this.toolbar = findViewById(R.id.toolbar);
-        this.toolbar.setVisibility(View.VISIBLE);
-        setSupportActionBar(toolbar);
-        this.actionBar = getSupportActionBar();
+        if(App.isInitialized)
+        {
+            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
+            this.toolbar = findViewById(R.id.toolbar);
+            this.toolbar.setVisibility(View.VISIBLE);
+            setSupportActionBar(toolbar);
+            this.actionBar = getSupportActionBar();
+        }
     }
 
     protected void addToolbarHomeButton()
@@ -261,6 +266,32 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
+    protected void onToolbarHomeButtonBackClicked()
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        finish();
+    }
+
+    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
+    {
+
+        if(this.actionBar != null)
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
+
+            if(title != null && !title.trim().isEmpty())
+            {
+                this.actionBar.setTitle(title);
+            }
+
+            if(subtitle != null && !subtitle.trim().isEmpty())
+            {
+                this.actionBar.setSubtitle(subtitle);
+            }
+        }
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         switch(keyCode)
@@ -271,32 +302,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    protected void onToolbarHomeButtonBackClicked()
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
-        finish();
-    }
-
-    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
-    {
-        ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null)
-        {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
-
-            if(title != null && !title.trim().isEmpty())
-            {
-                supportActionBar.setTitle(title);
-            }
-
-            if(subtitle != null && !subtitle.trim().isEmpty())
-            {
-                supportActionBar.setSubtitle(subtitle);
-            }
-        }
     }
 
     protected void addFloatingActionButton()
