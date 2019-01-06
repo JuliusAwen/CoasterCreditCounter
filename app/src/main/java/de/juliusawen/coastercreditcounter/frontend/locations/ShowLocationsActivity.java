@@ -90,7 +90,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(/*!this.viewModel.contentRecyclerViewAdapter.isAllExpanded()*/ false);
+        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
         menu.add(Menu.NONE, Selection.COLLAPSE_ALL.ordinal(), Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
 
         return super.onPrepareOptionsMenu(menu);
@@ -104,12 +104,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         switch(selection)
         {
+            case EXPAND_ALL:
+                this.viewModel.contentRecyclerViewAdapter.expandAll();
+                break;
+
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
-
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

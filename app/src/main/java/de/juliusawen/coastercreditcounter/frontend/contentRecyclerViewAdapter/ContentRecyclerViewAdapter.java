@@ -494,6 +494,29 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public void expandAll()
+    {
+        int itemsCount;
+        do
+        {
+            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding next generation");
+
+            List<IElement> itemsList = new ArrayList<>(this.items);
+            itemsCount = itemsList.size();
+
+            for(IElement item : itemsList)
+            {
+                if(!this.expandedItems.contains(item))
+                {
+                    this.expandItem(item);
+                }
+            }
+        }
+        while(itemsCount != this.items.size());
+
+        Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: all expanded");
+    }
+
     public void expandItem(IElement item)
     {
         if(!this.expandedItems.contains(item))
@@ -526,15 +549,41 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public boolean isAllExpanded()
+    {
+        for(IElement item : this.items)
+        {
+            for(IElement relevantChild : this.getRelevantChildren(item))
+            {
+                List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
+                if(!relevantGrandchildren.isEmpty())
+                {
+                    if(!this.expandedItems.contains(relevantChild))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void collapseAll()
     {
-        for(IElement item : new ArrayList<>(this.items))
+        Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: collapsing all");
+
+        List<IElement> itemsList = new ArrayList<>(this.expandedItems);
+
+        for(IElement item : itemsList)
         {
-            if(this.getGeneration(item) == 0)
+            if(this.expandedItems.contains(item))
             {
                 this.collapseItem(item);
             }
         }
+
+        Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: all collapsed");
     }
 
     private void collapseItem(IElement item)
@@ -572,20 +621,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: %s not expanded", item));
         }
-    }
-
-    public boolean isAllExpanded()
-    {
-        for(IElement item : this.items)
-        {
-            List<IElement> relevantChildren = this.getRelevantChildren(item);
-            if(!this.items.containsAll(relevantChildren))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public boolean isAllCollapsed()

@@ -98,10 +98,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         boolean enabled = App.persistence.fileExists(this.viewModel.exportFileAbsolutePath);
 
         Menu navigationMenu = navigationView.getMenu();
-        MenuItem menuItemImport = navigationMenu.findItem(R.id.navigationItem_Import);
-        menuItemImport.setEnabled(enabled);
+        navigationMenu.findItem(R.id.navigationItem_Import).setEnabled(enabled);
 
         Log.d(Constants.LOG_TAG, String.format("NavigationHubActivity.setMenuItemImportAvailability:: import enabled [%S]", enabled));
+
+
+        //Todo: remove
+        navigationMenu.findItem(R.id.navigationItem_ManageManufacturers).setEnabled(false);
+        navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
