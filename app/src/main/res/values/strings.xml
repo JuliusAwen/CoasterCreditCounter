@@ -14,9 +14,6 @@
     <string name="title_location_edit">Edit Location</string>
 
 
-    <string name="title_root_location_edit">Edit Root Location</string>
-
-
     <string name="title_parks_sort">Sort Parks</string>
     <string name="title_parks_pick">Pick Parks</string>
     <string name="subtitle_parks_pick_description">to add to the new location</string>
@@ -57,28 +54,30 @@
 
 
 
-    <!--options menu entries-->
+    <!--menu entries-->
     <string name="selection_help">help</string>
 
+    <string name="selection_sort">sort</string>
+
+    <string name="selection_sort_locations">sort locations</string>
     <string name="selection_sort_parks">sort parks</string>
     <string name="selection_sort_attractions">sort attractions</string>
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
-
     <string name="selection_sort_ascending">sort ascending</string>
     <string name="selection_sort_descending">sort descending</string>
 
     <string name="selection_expand_all">expand all</string>
     <string name="selection_collapse_all">collapse all</string>
 
-    <string name="selection_apply_category_to_attractions">apply to attractions</string>
+    <string name="selection_apply_to_attractions">apply to attractions</string>
 
+    <string name="selection_add">add</string>
+    <string name="selection_add_location">add location</string>
+    <string name="selection_add_park">add park</string>
 
-
-    <!--popup menu entries-->
-    <string name="selection_create_location">create location</string>
-    <string name="selection_create_park">create park</string>
-
+    <string name="selection_maintain">maintain</string>
     <string name="selection_edit">edit</string>
+    <string name="selection_relocate">relocate</string>
     <string name="selection_delete">delete</string>
     <string name="selection_remove">remove</string>
 

@@ -2,15 +2,23 @@ package de.juliusawen.coastercreditcounter.globals.enums;
 
 public enum Selection
 {
+    ADD,
+
     CREATE_LOCATION,
     CREATE_PARK,
 
-    DELETE_ELEMENT,
-    REMOVE_ELEMENT,
+
+    MAINTAIN,
 
     EDIT_ELEMENT,
     EDIT_LOCATION,
     EDIT_ATTRACTION_CATEGORY,
+
+    DELETE_ELEMENT,
+    REMOVE_ELEMENT,
+
+
+    SORT,
 
     SORT_LOCATIONS,
     SORT_PARKS,
@@ -20,10 +28,13 @@ public enum Selection
     SORT_ASCENDING,
     SORT_DESCENDING,
 
+
+
+
     EXPAND_ALL,
     COLLAPSE_ALL,
 
-    APPLY_CATEGORY_TO_ATTRACTIONS,
+    APPLY_TO_ATTRACTIONS,
 
     HELP,
 }

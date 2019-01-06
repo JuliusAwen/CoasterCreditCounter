@@ -23,4 +23,9 @@ public abstract class Toaster
 
         Log.i(Constants.LOG_TAG, String.format("Toaster.makeLongToast:: showed toast ['%s']", text));
     }
+
+    public static void notYetImplemented(Context context)
+    {
+        Toaster.makeToast(context, "not yet implemented");
+    }
 }

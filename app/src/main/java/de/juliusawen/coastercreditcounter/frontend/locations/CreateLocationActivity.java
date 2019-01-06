@@ -340,10 +340,6 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         {
             Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: returning new %s", this.viewModel.newLocation));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newLocation.getUuid().toString());
-
-            super.markForCreation(this.viewModel.newLocation);
-            super.markForUpdate(this.viewModel.newLocation.getParent());
-            super.markForUpdate(this.viewModel.newLocation.getChildren());
         }
 
         setResult(resultCode, intent);

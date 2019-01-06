@@ -33,6 +33,7 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -89,11 +90,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-//        if(this.viewModel.currentElement.getChildCountOfType(Location.class) > 1)
-//        {
-//            menu.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations);
-//        }
-
         menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(/*!this.viewModel.contentRecyclerViewAdapter.isAllExpanded()*/ false);
         menu.add(Menu.NONE, Selection.COLLAPSE_ALL.ordinal(), Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
 
@@ -110,13 +106,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
-
-//            case SORT_LOCATIONS:
-//                ActivityTool.startActivitySortForResult(
-//                        this,
-//                        Constants.REQUEST_SORT_LOCATIONS,
-//                        this.viewModel.currentElement.getChildrenOfType(Location.class));
-//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -136,6 +125,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 this.setItemsInRecyclerViewAdapter();
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+
+                super.markForCreation(resultElement);
+                super.markForUpdate(resultElement.getParent());
+                super.markForUpdate(resultElement.getChildren());
             }
             else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
             {
@@ -202,16 +195,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, view);
 
-                    popupMenu.getMenu().add(0, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit);
-                    popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete);
+                    Menu submenuAdd = popupMenu.getMenu().addSubMenu(Menu.NONE, Selection.ADD.ordinal(), Menu.NONE, R.string.selection_add);
+                    submenuAdd.add(Menu.NONE, Selection.CREATE_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
+                    submenuAdd.add(Menu.NONE, Selection.CREATE_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
 
-                    popupMenu.getMenu().add(0, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove).setEnabled(viewModel.longClickedElement.hasChildren());
+                    Menu submenuSort = popupMenu.getMenu().addSubMenu(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort);
+                    submenuSort.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations)
+                            .setEnabled(viewModel.longClickedElement.hasChildrenOfType(Location.class));
+                    submenuSort.add(Menu.NONE, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks)
+                            .setEnabled(viewModel.longClickedElement.hasChildrenOfType(Park.class));
 
-
-                    if(viewModel.longClickedElement.getChildCountOfType(Park.class) > 1)
-                    {
-                        popupMenu.getMenu().add(0, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks);
-                    }
+                    Menu submenuMaintain = popupMenu.getMenu().addSubMenu(Menu.NONE, Selection.MAINTAIN.ordinal(), Menu.NONE, R.string.selection_maintain);
+                    submenuMaintain.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit);
+                    submenuMaintain.add(Menu.NONE, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete);
+                    submenuMaintain.add(Menu.NONE, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove)
+                            .setEnabled(viewModel.longClickedElement.hasChildren());
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
@@ -224,6 +222,29 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             switch (selection)
                             {
+                                case CREATE_LOCATION:
+                                    ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_LOCATION, viewModel.longClickedElement);
+                                    return true;
+
+                                case CREATE_PARK:
+                                    //Todo: implement create park
+                                    Toaster.notYetImplemented(ShowLocationsActivity.this);
+                                    return true;
+
+                                case SORT_LOCATIONS:
+                                    ActivityTool.startActivitySortForResult(
+                                            ShowLocationsActivity.this,
+                                            Constants.REQUEST_SORT_LOCATIONS,
+                                            viewModel.longClickedElement.getChildrenOfType(Location.class));
+                                    return true;
+
+                                case SORT_PARKS:
+                                    ActivityTool.startActivitySortForResult(
+                                            ShowLocationsActivity.this,
+                                            Constants.REQUEST_SORT_PARKS,
+                                            viewModel.longClickedElement.getChildrenOfType(Park.class));
+                                    return true;
+
                                 case EDIT_LOCATION:
                                     ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_LOCATION, viewModel.longClickedElement);
                                     return true;
@@ -268,18 +289,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                                     alertDialogFragmentRemove.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
                                     return true;
 
-                                case SORT_PARKS:
-                                    ActivityTool.startActivitySortForResult(
-                                            ShowLocationsActivity.this,
-                                            Constants.REQUEST_SORT_PARKS,
-                                            viewModel.longClickedElement.getChildrenOfType(Park.class));
-                                    return true;
-
                                 default:
                                     return false;
                             }
                         }
                     });
+
                     popupMenu.show();
                 }
                 return true;

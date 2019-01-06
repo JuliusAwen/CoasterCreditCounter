@@ -12,7 +12,6 @@ import java.util.Objects;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractionCategories.ManageAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
@@ -92,16 +91,8 @@ public abstract class ActivityTool
 
         if(requestCode == Constants.REQUEST_EDIT_LOCATION)
         {
-            if(((Location)element).isRootLocation())
-            {
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_root_location_edit);
-            }
-            else
-            {
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_location_edit);
-            }
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_location_edit);
         }
         else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
         {

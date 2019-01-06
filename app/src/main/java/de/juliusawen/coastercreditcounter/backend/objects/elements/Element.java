@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -260,15 +259,6 @@ public abstract class Element implements IElement
 
     public List<IElement> getChildren()
     {
-        if(this.children.contains(null))
-        {
-            int sizeWithNullElements = this.children.size();
-            this.children.removeAll(Collections.singleton(null));
-            int sizeWithoutNullElements = this.children.size();
-            int difference = sizeWithNullElements - sizeWithoutNullElements;
-
-            Log.e(Constants.LOG_TAG, String.format("Element.getChildren:: [%d] null objects removed from children ", difference));
-        }
         return this.children;
     }
 
@@ -314,7 +304,7 @@ public abstract class Element implements IElement
     {
         Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
         newElement.addChildrenAndSetParents(new ArrayList<>(children));
-        for(IElement child : this.children)
+        for(IElement child : children)
         {
             this.deleteChild(child);
         }
@@ -343,7 +333,7 @@ public abstract class Element implements IElement
     {
         if(this.containsChild(child))
         {
-            this.getChildren().remove(child);
+            this.children.remove(child);
             Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s deleted", this, child));
         }
         else
@@ -362,7 +352,7 @@ public abstract class Element implements IElement
 
         this.parent.deleteChild(this);
         this.parent.addChildrenAndSetParentsAtIndex(index, new ArrayList<>(this.getChildren()));
-        for(IElement child : this.children)
+        for(IElement child : new ArrayList<>(this.children))
         {
             this.deleteChild(child);
         }

@@ -236,7 +236,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                     popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
                             .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
 
-                    popupMenu.getMenu().add(0, Selection.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_category_to_attractions)
+                    popupMenu.getMenu().add(0, Selection.APPLY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_to_attractions)
                             .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
@@ -286,7 +286,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                     return true;
                                 }
 
-                                case APPLY_CATEGORY_TO_ATTRACTIONS:
+                                case APPLY_TO_ATTRACTIONS:
                                 {
                                     List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
 
@@ -294,7 +294,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                     {
                                         if(attraction.getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
                                         {
-                                            Log.v(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick<APPLY_CATEGORY_TO_ATTRACTIONS>:: " +
+                                            Log.v(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
                                                     "removing %s from pick list - is already in %s", attraction, viewModel.longClickedAttractionCategory));
                                             attractions.remove(attraction);
                                         }
