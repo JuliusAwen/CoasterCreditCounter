@@ -43,7 +43,11 @@ public interface IElement
     void deleteChild(IElement child);
     void deleteElementAndDescendants();
 
+    boolean isDescendantOf(IElement ancestor);
+
     void removeElement();
 
     void reorderChildren(List<? extends IElement> children);
+
+    void relocateElement(IElement newParent);
 }

@@ -300,7 +300,7 @@ public abstract class Element implements IElement
         this.parent = parent;
     }
 
-    public void insertElements(Element newElement, List<IElement> children)
+    public void insertElements(IElement newElement, List<IElement> children)
     {
         Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
         newElement.addChildrenAndSetParents(new ArrayList<>(children));
@@ -311,7 +311,7 @@ public abstract class Element implements IElement
         this.addChildAndSetParent(newElement);
     }
 
-    public void relocateElement(Element newParent)
+    public void relocateElement(IElement newParent)
     {
         this.parent.getChildren().remove(this);
         newParent.addChildAndSetParent(this);
@@ -356,5 +356,22 @@ public abstract class Element implements IElement
         {
             this.deleteChild(child);
         }
+    }
+
+    public boolean isDescendantOf(IElement ancestor)
+    {
+        if(this.equals(ancestor))
+        {
+            return true;
+        }
+        else if(this.getParent() == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.getParent().isDescendantOf(ancestor);
+        }
+
     }
 }

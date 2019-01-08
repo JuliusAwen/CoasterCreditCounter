@@ -53,6 +53,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final AdapterType adapterType;
 
+    private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
     private final boolean selectMultipleItems;
@@ -88,6 +89,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.items.addAll(this.initializeItems(request.elements, 0));
 
+        this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
@@ -299,6 +301,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
                 }
+
+                viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
             }
             else
             {
@@ -451,6 +455,27 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
         this.decreaseRideCountOnClickListener = decreaseOnClickListener;
+    }
+
+    private View.OnClickListener getExpansionOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                final IElement item = (IElement) view.getTag();
+
+                if(!expandedItems.contains(item))
+                {
+                    expandItem(item);
+                }
+                else
+                {
+                    collapseItem(item);
+                }
+            }
+        };
     }
 
     public void toggleExpansion(IElement item)
@@ -839,116 +864,116 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    public void updateItems(List<IElement> items)
-    {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating [%d] items...", items.size()));
-
-        for(IElement item : items)
-        {
-            if(this.items.contains(item))
-            {
-                if(this.expandedItems.contains(item))
-                {
-                    this.updateChildren(item);
-                }
-
-                notifyItemChanged(this.items.indexOf(item));
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updated %s", items));
-            }
-            else
-            {
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: %s not visible", item));
-            }
-        }
-    }
-
-    public void updateItem(IElement item)
-    {
-        if(this.items.contains(item))
-        {
-            if(this.expandedItems.contains(item))
-            {
-                this.updateChildren(item);
-            }
-
-            notifyItemChanged(this.items.indexOf(item));
-            this.scrollToItem(item);
-
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: updated %s", item));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: %s not visible - doing nothing", item));
-        }
-    }
-
-    private void updateChildren(IElement item)
-    {
-        if(!this.relevantChildTypes.isEmpty())
-        {
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateChildren:: updating %s's children", item));
-
-            IElement parentToUpdate = this.items.get(this.items.indexOf(item));
-
-            List<IElement> formerRelevantChildren = this.getRelevantChildren(parentToUpdate);
-            List<IElement> comingRelevantChildren = this.getRelevantChildren(item);
-
-            for(IElement child : formerRelevantChildren)
-            {
-                this.removeItem(child);
-            }
-
-            int index = this.items.indexOf(parentToUpdate) + 1;
-            for(IElement child : comingRelevantChildren)
-            {
-                this.addItemAtIndex(index, child);
-                index ++;
-            }
-        }
-    }
-
-    public void addItem(IElement item)
-    {
-        this.addItemAtIndex(this.items.size(), item);
-        this.scrollToItem(item);
-    }
-
-    private void addItemAtIndex(int index, IElement item)
-    {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.addItemAtIndex:: adding %s at index [%d]...", item, index));
-
-        this.items.add(index, item);
-        Integer generation = this.getGeneration(item.getParent()) + 1;
-        this.generationByItem.put(item, generation);
-
-        notifyItemInserted(index);
-    }
-
-    public void removeItem(IElement item)
-    {
-        if(this.items.contains(item))
-        {
-            if(this.expandedItems.contains(item))
-            {
-                for(IElement child : this.getRelevantChildren(item))
-                {
-                    this.removeItem(child);
-                }
-            }
-
-            this.generationByItem.remove(item);
-            int index = this.items.indexOf(item);
-            this.items.remove(index);
-
-            notifyItemRemoved(index);
-
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: removed %s at index [%d]...", item, index));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: %s not visible - doing nothing", item));
-        }
-    }
+//    public void updateItems(List<IElement> items)
+//    {
+//        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating [%d] items...", items.size()));
+//
+//        for(IElement item : items)
+//        {
+//            if(this.items.contains(item))
+//            {
+//                if(this.expandedItems.contains(item))
+//                {
+//                    this.updateChildren(item);
+//                }
+//
+//                notifyItemChanged(this.items.indexOf(item));
+//                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updated %s", items));
+//            }
+//            else
+//            {
+//                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: %s not visible", item));
+//            }
+//        }
+//    }
+//
+//    public void updateItem(IElement item)
+//    {
+//        if(this.items.contains(item))
+//        {
+//            if(this.expandedItems.contains(item))
+//            {
+//                this.updateChildren(item);
+//            }
+//
+//            notifyItemChanged(this.items.indexOf(item));
+//            this.scrollToItem(item);
+//
+//            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: updated %s", item));
+//        }
+//        else
+//        {
+//            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: %s not visible - doing nothing", item));
+//        }
+//    }
+//
+//    private void updateChildren(IElement item)
+//    {
+//        if(!this.relevantChildTypes.isEmpty())
+//        {
+//            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateChildren:: updating %s's children", item));
+//
+//            IElement parentToUpdate = this.items.get(this.items.indexOf(item));
+//
+//            List<IElement> formerRelevantChildren = this.getRelevantChildren(parentToUpdate);
+//            List<IElement> comingRelevantChildren = this.getRelevantChildren(item);
+//
+//            for(IElement child : formerRelevantChildren)
+//            {
+//                this.removeItem(child);
+//            }
+//
+//            int index = this.items.indexOf(parentToUpdate) + 1;
+//            for(IElement child : comingRelevantChildren)
+//            {
+//                this.addItemAtIndex(index, child);
+//                index ++;
+//            }
+//        }
+//    }
+//
+//    public void addItem(IElement item)
+//    {
+//        this.addItemAtIndex(this.items.size(), item);
+//        this.scrollToItem(item);
+//    }
+//
+//    private void addItemAtIndex(int index, IElement item)
+//    {
+//        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.addItemAtIndex:: adding %s at index [%d]...", item, index));
+//
+//        this.items.add(index, item);
+//        Integer generation = this.getGeneration(item.getParent()) + 1;
+//        this.generationByItem.put(item, generation);
+//
+//        notifyItemInserted(index);
+//    }
+//
+//    public void removeItem(IElement item)
+//    {
+//        if(this.items.contains(item))
+//        {
+//            if(this.expandedItems.contains(item))
+//            {
+//                for(IElement child : this.getRelevantChildren(item))
+//                {
+//                    this.removeItem(child);
+//                }
+//            }
+//
+//            this.generationByItem.remove(item);
+//            int index = this.items.indexOf(item);
+//            this.items.remove(index);
+//
+//            notifyItemRemoved(index);
+//
+//            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: removed %s at index [%d]...", item, index));
+//        }
+//        else
+//        {
+//            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.removeItem:: %s not visible - doing nothing", item));
+//        }
+//    }
 
     public void scrollToItem(IElement item)
     {

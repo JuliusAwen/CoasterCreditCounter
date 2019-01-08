@@ -63,6 +63,7 @@ public abstract class Constants
     public static final String EXTRA_TOOLBAR_SUBTITLE = "de.juliusawen.coding.extra_toolbar_subtitle";
     public static final String EXTRA_HELP_TITLE = "de.juliusawen.coding.extra_help_title";
     public static final String EXTRA_HELP_TEXT = "de.juliusawen.coding.extra_help_text";
+    public static final String EXTRA_HINT = "de.juliusawen.coding.extra_hint";
     public static final String EXTRA_RESULT_STRING = "de.juliusawen.coding.extra_result_string";
     public static final String EXTRA_ELEMENTS_TO_CREATE_UUIDS = "de.juliusawen.coding.extra_elements_to_create_uuids";
     public static final String EXTRA_ELEMENTS_TO_UPDATE_UUIDS = "de.juliusawen.coding.extra_elements_to_update_uuids";
@@ -97,6 +98,7 @@ public abstract class Constants
     public static final int ALERT_DIALOG_REQUEST_CODE_REMOVE = 1;
     public static final int ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE = 3;
     public static final int ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT = 4;
+    public static final int ALERT_DIALOG_REQUEST_CODE_RELOCATE = 5;
 
 
     public static final int REQUEST_CREATE_LOCATION = Request.CREATE_LOCATION.ordinal();

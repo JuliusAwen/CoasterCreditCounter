@@ -16,6 +16,7 @@ public enum Selection
 
     DELETE_ELEMENT,
     REMOVE_ELEMENT,
+    RELOCATE_ELEMENT,
 
 
     SORT,

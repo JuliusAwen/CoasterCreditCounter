@@ -113,7 +113,7 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
             Log.i(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
             if(!this.viewModel.elementToEdit.setName(editText))
             {
-                Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
+                Toaster.makeToast(this, getString(R.string.error_name_not_valid));
             }
         }
         else

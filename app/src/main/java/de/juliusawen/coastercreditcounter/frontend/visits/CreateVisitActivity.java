@@ -178,8 +178,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 R.drawable.ic_baseline_warning,
-                getString(R.string.alert_dialog_visit_already_exists_title),
-                getString(R.string.alert_dialog_visit_already_exists_message),
+                getString(R.string.alert_dialog_title_visit_already_exists),
+                getString(R.string.alert_dialog_message_visit_already_exists),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
                 ALERT_DIALOG_VISIT_ALREADY_EXISTS
@@ -245,8 +245,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 R.drawable.ic_baseline_notification_important,
-                getString(R.string.alert_dialog_add_attractions_to_visit_title),
-                getString(R.string.alert_dialog_add_attractions_to_visit_message),
+                getString(R.string.alert_dialog_title_add_attractions_to_visit),
+                getString(R.string.alert_dialog_message_add_attractions_to_visit),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel), ALERT_DIALOG_PICK_ATTRACTIONS
         );

@@ -17,7 +17,7 @@
         <EditText
             style="@style/standard_edit_text"
             android:id="@+id/editTextCreateSimpleString"
-            android:hint="@string/hint_enter_attraction_category_name"
+            android:hint="@string/hint_enter_string"
             tools:ignore="Autofill" />
 
     </LinearLayout>

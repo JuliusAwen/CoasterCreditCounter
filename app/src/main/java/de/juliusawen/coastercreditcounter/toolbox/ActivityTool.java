@@ -121,6 +121,7 @@ public abstract class ActivityTool
     public static void startActivityCreateForResult(Context context, int requestCode, IElement parentElement)
     {
         Class type;
+        String hint;
 
         if(requestCode == Constants.REQUEST_CREATE_LOCATION)
         {
@@ -152,6 +153,7 @@ public abstract class ActivityTool
             {
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
             }
 
             ((Activity)context).startActivityForResult(intent, requestCode);

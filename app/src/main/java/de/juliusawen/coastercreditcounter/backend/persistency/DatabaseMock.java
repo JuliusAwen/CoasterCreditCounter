@@ -53,7 +53,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         // create Nodes
-        Location rootLocation = Location.create("Root", null);
+        Location earth = Location.create("Earth", null);
 
         Location europe = Location.create("Europe", null);
         Location usa = Location.create("USA", null);
@@ -413,8 +413,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         usa.addChildAndSetParent(cedarPoint);
         usa.addChildAndSetParent(sixFlagsMagicMountain);
 
-        rootLocation.addChildAndSetParent(europe);
-        rootLocation.addChildAndSetParent(usa);
+        earth.addChildAndSetParent(europe);
+        earth.addChildAndSetParent(usa);
 
         Visit visit0 = Visit.create(2018, 2, 30, null);
         this.addAttractionsToVisit(visit0, heidePark.getChildrenAsType(IOnSiteAttraction.class));

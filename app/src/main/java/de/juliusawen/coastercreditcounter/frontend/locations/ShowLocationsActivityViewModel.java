@@ -6,7 +6,9 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 
 class ShowLocationsActivityViewModel extends ViewModel
 {
-    IElement currentElement;
+    IElement currentLocation;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     IElement longClickedElement;
+    boolean selectionMode;
+    IElement newParent;
 }

@@ -38,6 +38,9 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
             Intent intent = getIntent();
             String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
             String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
+            String hint = intent.getStringExtra(Constants.EXTRA_HINT);
+
+            this.editText.setHint(hint);
 
             this.viewModel = ViewModelProviders.of(this).get(CreateSimpleStringActivityViewModel.class);
 
@@ -106,7 +109,7 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_text_name_not_valid));
+            Toaster.makeToast(this, getString(R.string.error_name_not_valid));
         }
     }
 

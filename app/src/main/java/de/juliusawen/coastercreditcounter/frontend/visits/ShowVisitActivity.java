@@ -32,7 +32,6 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -81,11 +80,11 @@ public class ShowVisitActivity extends BaseActivity
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -164,9 +163,7 @@ public class ShowVisitActivity extends BaseActivity
                     Log.d(Constants.LOG_TAG,
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
-                    this.viewModel.contentRecyclerViewAdapter.updateItem(
-                            this.viewModel.attractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory(
-                                    ConvertTool.convertElementsToType(resultElements, IAttraction.class)));
+                    updateContentRecyclerView(true);
 
                     super.markForUpdate(this.viewModel.visit);
                 }
@@ -238,9 +235,9 @@ public class ShowVisitActivity extends BaseActivity
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
-                viewModel.contentRecyclerViewAdapter.updateItem(visitedAttraction);
 
                 ShowVisitActivity.super.markForUpdate(visitedAttraction);
+                updateContentRecyclerView(false);
             }
         };
     }
@@ -259,9 +256,8 @@ public class ShowVisitActivity extends BaseActivity
 
                 if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
                 {
-                    viewModel.contentRecyclerViewAdapter.updateItem(visitedAttraction);
-
                     ShowVisitActivity.super.markForUpdate(visitedAttraction);
+                    updateContentRecyclerView(false);
                 }
             }
         };
@@ -289,6 +285,22 @@ public class ShowVisitActivity extends BaseActivity
         else
         {
             return false;
+        }
+    }
+
+    private void updateContentRecyclerView(boolean resetContent)
+    {
+        if(resetContent)
+        {
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
+            this.viewModel.contentRecyclerViewAdapter.setItems(
+                    this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
+                            new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class))));
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: notifying data set changes...");
+            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
 }

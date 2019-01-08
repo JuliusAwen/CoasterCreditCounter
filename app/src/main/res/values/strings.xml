@@ -10,7 +10,8 @@
     <string name="title_locations_sort">Sort Locations</string>
     <string name="title_locations_pick">Pick Locations</string>
     <string name="subtitle_locations_pick_description">to add to the new location</string>
-    <string name="subtitle_location_create">Create Location</string>
+    <string name="subtitle_location_create">create child location</string>
+    <string name="subtitle_location_relocate">select new parent location for \'%1$s\'</string>
     <string name="title_location_edit">Edit Location</string>
 
 
@@ -75,11 +76,10 @@
     <string name="selection_add_location">add location</string>
     <string name="selection_add_park">add park</string>
 
-    <string name="selection_maintain">maintain</string>
     <string name="selection_edit">edit</string>
-    <string name="selection_relocate">relocate</string>
     <string name="selection_delete">delete</string>
     <string name="selection_remove">remove</string>
+    <string name="selection_relocate">relocate</string>
 
 
 
@@ -100,37 +100,32 @@
 
 
     <!--dialog texts-->
-    <string name="alert_dialog_delete_element_title">DELETE</string>
-    <string name="alert_dialog_delete_element_message">Do you really want to delete %1$s and all of its children permanently?</string>
+    <string name="alert_dialog_title_delete_element">DELETE</string>
+    <string name="alert_dialog_message_delete_element">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
 
-    <string name="alert_dialog_delete_attraction_category_with_children_message">
+    <string name="alert_dialog_message_delete_attraction_category_with_children">
         %1$d attraction(s) are in this category - do you really want to delete category \'%2$s\'?
         \n(attractions will be sorted into default category \'%3$s\')
     </string>
-    <string name="alert_dialog_delete_attraction_category_without_children_message">Do you really want to delete category \'%1$s\'?</string>
+    <string name="alert_dialog_message_delete_attraction_category_without_children">Do you really want to delete category \'%1$s\'?</string>
 
-    <string name="alert_dialog_remove_element_title">REMOVE</string>
-    <string name="alert_dialog_remove_element_message">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
-    <string name="alert_dialog_remove_element_message_parent_is_root">
-        Do you really want to remove \'%1$s\'? \n
-        \nWARNING:
-        \nAs location\'s parent is root location \'%2$s\' you have to assign new parents to children parks manually!
-    </string>
+    <string name="alert_dialog_title_remove_element">REMOVE</string>
+    <string name="alert_dialog_message_remove_element">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
 
-    <string name="alert_dialog_relocate_children_parks_title">LOCATION CONTAINS PARKS</string>
-    <string name="alert_dialog_relocate_children_parks_message">Do you want to relocate %1$s\'s parks to %2$s?</string>
+    <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
+    <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
 
-    <string name="alert_dialog_add_attractions_to_visit_title">ADD ATTRACTIONS</string>
-    <string name="alert_dialog_add_attractions_to_visit_message">Do you want to add attractions to your visit?</string>
+    <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
+    <string name="alert_dialog_message_visit_already_exists">Do you want to override existing visit? \n(existing data will be lost, ride counts and credits will be adjusted)</string>
 
-    <string name="alert_dialog_visit_already_exists_title">VISIT ALREADY EXISTS</string>
-    <string name="alert_dialog_visit_already_exists_message">Do you want to override existing visit? \n(existing data will be lost, ride counts and credits will be adjusted)</string>
+    <string name="alert_dialog_title_overwrite_file">FILE ALREADY EXISTS</string>
+    <string name="alert_dialog_message_overwrite_file">Do you want to overwrite existing file?</string>
 
-    <string name="alert_dialog_overwrite_file_title">FILE ALREADY EXISTS</string>
-    <string name="alert_dialog_overwrite_file_message">Do you want to overwrite existing file?</string>
+    <string name="alert_dialog_title_overwrite_content">IMPORT CONTENT</string>
+    <string name="alert_dialog_message_overwrite_content">Do you want to import content? \nThis will permanently overwrite your existing content!</string>
 
-    <string name="alert_dialog_overwrite_content_title">IMPORT CONTENT</string>
-    <string name="alert_dialog_overwrite_content_message">Do you want to import content? \nThis will permanently overwrite your existing content!</string>
+    <string name="alert_dialog_title_relocate">RELOCATE</string>
+    <string name="alert_dialog_message_relocate">Do you really want to relocate \'%1$s\' to \'%2$s\'?</string>
 
 
     <!--descriptions-->
@@ -154,36 +149,35 @@
     <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
     <string name="action_confirm_remove_text">Confirm removal of \'%1$s\'</string>
 
-    <string name="action_export_success">Content exported to %1$s</string>
-    <string name="action_export_fail">Export failed!</string>
-    <string name="action_import_success">Content imported</string>
-    <string name="action_import_fail">Import from %1$s failed!</string>
-    <string name="action_restore_content_backup_success">Content restored</string>
-
 
 
     <!--hint texts-->
-    <string name="hint_enter_location_name">enter location name</string>
-    <string name="hint_edit_location_name">edit location name</string>
-
-    <string name="hint_enter_attraction_category_name">enter attraction category name</string>
-
+    <string name="hint_enter_location_name">Enter location name</string>
+    <string name="hint_edit_location_name">Edit location name</string>
+    <string name="hint_enter_string">Enter string</string>
+    <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
     <string name="hint_search_content">Search content</string>
 
 
 
     <!--error messages-->
-    <string name="error_text_name_not_valid">Name is not valid!</string>
-    <string name="error_text_undo_not_possible">UNDO not possible…</string>
-    <string name="error_text_delete_failed">Deletion failed…</string>
-    <string name="error_text_remove_failed">Removal failed…</string>
-    <string name="error_text_creation_failed">Creation failed…</string>
-    <string name="error_text_no_entry_selected">No entry selected!</string>
-
+    <string name="error_name_not_valid">Name is not valid!</string>
+    <string name="error_undo_not_possible">UNDO not possible…</string>
+    <string name="error_delete_failed">Deletion failed…</string>
+    <string name="error_remove_failed">Removal failed…</string>
+    <string name="error_creation_failed">Creation failed…</string>
+    <string name="error_no_entry_selected">No entry selected!</string>
+    <string name="error_export_fail">Export failed!</string>
+    <string name="error_import_fail">Import from %1$s failed!</string>
+    <string name="error_new_parent_is_not_location">New parent must be a location!</string>
+    <string name="error_new_parent_is_own_descendant">New parent can not be its own descendant!</string>
 
     <!--information texts-->
     <string name="information_count_of_categorized_attractions">applied category \'%1$s\' to %2$d attractions</string>
     <string name="information_decreased_ride_count">decreased ride count for %1$d attractions</string>
+    <string name="information_export_success">Content exported to %1$s</string>
+    <string name="information_import_success">Content imported</string>
+    <string name="information_restore_content_backup_success">Content restored</string>
 
 
     <!--help texts-->

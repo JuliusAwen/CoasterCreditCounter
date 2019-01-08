@@ -268,14 +268,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void onToolbarHomeButtonBackClicked()
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: finishing activity...");
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
-        finish();
+        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button pressed...");
+        this.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
     }
 
     protected void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
-
         if(this.actionBar != null)
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
@@ -284,10 +282,18 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             {
                 this.actionBar.setTitle(title);
             }
+            else
+            {
+                this.actionBar.setTitle("");
+            }
 
             if(subtitle != null && !subtitle.trim().isEmpty())
             {
                 this.actionBar.setSubtitle(subtitle);
+            }
+            else
+            {
+                this.actionBar.setSubtitle("");
             }
         }
     }
@@ -297,7 +303,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         switch(keyCode)
         {
             case KeyEvent.KEYCODE_BACK:
-                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: hardware back button pressed - finishing activity");
+                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
+                Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
                 finish();
                 return true;
         }

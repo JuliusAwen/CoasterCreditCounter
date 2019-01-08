@@ -161,7 +161,7 @@ public class AttractionCategoryHeaderProvider
     {
         for(IAttraction attraction : attractions)
         {
-            if(!attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+            if(!this.formerAttractions.contains(attraction) || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
             {
                 return true;
             }
@@ -170,48 +170,48 @@ public class AttractionCategoryHeaderProvider
         return false;
     }
 
-    public AttractionCategoryHeader getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory(List<IAttraction> attractions)
-    {
-        if(!attractions.isEmpty())
-        {
-            if(!this.attractionCategoryHeadersByCategoryUuid.isEmpty())
-            {
-                AttractionCategory attractionCategory = attractions.get(0).getAttractionCategory();
-
-                for(IAttraction attraction : attractions)
-                {
-                    if(!attraction.getAttractionCategory().equals(attractionCategory))
-                    {
-                        Log.e(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: attractions are not all the same");
-                        return null;
-                    }
-                }
-
-                AttractionCategoryHeader attractionCategoryHeader = this.attractionCategoryHeadersByCategoryUuid.get(attractionCategory.getUuid());
-                if(attractionCategoryHeader != null)
-                {
-                    attractionCategoryHeader.reorderChildren(attractions);
-                    return attractionCategoryHeader;
-                }
-                else
-                {
-                    Log.e(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory::" +
-                            "AttractionCategoryHeader for %s does not exist", attractionCategory));
-                    return null;
-                }
-            }
-            else
-            {
-                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: " +
-                        "AttractionCategoryHeaders not created yet");
-            }
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: no attractions passed");
-        }
-
-
-        return null;
-    }
+//    public AttractionCategoryHeader getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory(List<IAttraction> attractions)
+//    {
+//        if(!attractions.isEmpty())
+//        {
+//            if(!this.attractionCategoryHeadersByCategoryUuid.isEmpty())
+//            {
+//                AttractionCategory attractionCategory = attractions.get(0).getAttractionCategory();
+//
+//                for(IAttraction attraction : attractions)
+//                {
+//                    if(!attraction.getAttractionCategory().equals(attractionCategory))
+//                    {
+//                        Log.e(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: attractions are not all the same");
+//                        return null;
+//                    }
+//                }
+//
+//                AttractionCategoryHeader attractionCategoryHeader = this.attractionCategoryHeadersByCategoryUuid.get(attractionCategory.getUuid());
+//                if(attractionCategoryHeader != null)
+//                {
+//                    attractionCategoryHeader.reorderChildren(attractions);
+//                    return attractionCategoryHeader;
+//                }
+//                else
+//                {
+//                    Log.e(Constants.LOG_TAG, String.format("AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory::" +
+//                            "AttractionCategoryHeader for %s does not exist", attractionCategory));
+//                    return null;
+//                }
+//            }
+//            else
+//            {
+//                Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: " +
+//                        "AttractionCategoryHeaders not created yet");
+//            }
+//        }
+//        else
+//        {
+//            Log.v(Constants.LOG_TAG, "AttractionCategoryHeaderProvider.getUpdatedAttractionCategoryHeaderForAttractionsOfSameCategory:: no attractions passed");
+//        }
+//
+//
+//        return null;
+//    }
 }
