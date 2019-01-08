@@ -53,7 +53,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final AdapterType adapterType;
 
-    private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
     private final boolean selectMultipleItems;
@@ -89,7 +88,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.items.addAll(this.initializeItems(request.elements, 0));
 
-        this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
@@ -301,8 +299,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
                 }
-
-                viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
             }
             else
             {
@@ -315,11 +311,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
 
-            for(Map.Entry<Integer, Set<Class<? extends IElement>>> entry : this.typesByTypeface.entrySet())
+            for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
             {
-                if(entry.getValue().contains(item.getClass()))
+                if(typeByTypeface.getValue().contains(item.getClass()))
                 {
-                    viewHolder.textViewName.setTypeface(null, entry.getKey());
+                    viewHolder.textViewName.setTypeface(null, typeByTypeface.getKey());
                     break;
                 }
             }
@@ -344,8 +340,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
                 }
-                else
-                if(this.recyclerOnClickListener != null)
+                else if(this.recyclerOnClickListener != null)
                 {
                     viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
                     viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
@@ -456,27 +451,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
         this.decreaseRideCountOnClickListener = decreaseOnClickListener;
-    }
-
-    private View.OnClickListener getExpansionOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                final IElement item = (IElement) view.getTag();
-
-                if(!expandedItems.contains(item))
-                {
-                    expandItem(item);
-                }
-                else
-                {
-                    collapseItem(item);
-                }
-            }
-        };
     }
 
     public void toggleExpansion(IElement item)
@@ -855,7 +829,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void setItems(List<IElement> items)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
         this.generationByItem.clear();
 
@@ -867,7 +841,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void updateItems(List<IElement> items)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating [%d] items...", items.size()));
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updating [%d] items...", items.size()));
 
         for(IElement item : items)
         {
@@ -879,7 +853,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 notifyItemChanged(this.items.indexOf(item));
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updated %s", items));
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItems:: updated %s", items));
             }
             else
             {
@@ -900,7 +874,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             notifyItemChanged(this.items.indexOf(item));
             this.scrollToItem(item);
 
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: updated %s", item));
+            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.updateItem:: updated %s", item));
         }
         else
         {
@@ -996,7 +970,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(this.items.contains(item) && this.recyclerView != null)
         {
             recyclerView.scrollToPosition(items.indexOf(item));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to %s", item));
+            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to %s", item));
         }
     }
 

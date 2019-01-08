@@ -145,9 +145,9 @@ public class SortElementsActivity extends BaseActivity
 
                     if(position < viewModel.elementsToSort.size() - 1)
                     {
-                        Log.d(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
-                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position +1));
-                        Collections.swap(viewModel.elementsToSort, position, position +1);
+                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
+                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
+                        Collections.swap(viewModel.elementsToSort, position, position + 1);
                     }
                     else
                     {
@@ -177,10 +177,10 @@ public class SortElementsActivity extends BaseActivity
 
                     if(position > 0)
                     {
-                        Log.d(Constants.LOG_TAG, "SortElementsActivity.createActionDialog.onClick:: swapping elements");
+                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp.onClick:: swapping elements");
 
-                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position -1));
-                        Collections.swap(viewModel.elementsToSort, position, position -1);
+                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
+                        Collections.swap(viewModel.elementsToSort, position, position - 1);
                     }
                     else
                     {

@@ -337,7 +337,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: isVisible[%s]", isVisible));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: floating action button isVisible[%s]", isVisible));
 
             if(isVisible)
             {
@@ -352,10 +352,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void disableFloatingActionButton()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling floating action button...");
-
-        if(floatingActionButton != null)
+        if(this.floatingActionButton != null)
         {
+            Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling floating action button...");
+
             this.floatingActionButton.hide();
             this.floatingActionButton = null;
         }
@@ -363,22 +363,27 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void animateFloatingActionButtonTransition(Drawable icon)
     {
-        this.floatingActionButton.hide();
-
-        FloatingActionButton newFloatingActionButton;
-        if(this.floatingActionButton.getId() == R.id.floatingActionButton)
+        if(this.floatingActionButton != null)
         {
-            newFloatingActionButton = findViewById(R.id.floatingActionButton_Animation);
-        }
-        else
-        {
-            newFloatingActionButton = findViewById(R.id.floatingActionButton);
-        }
+            Log.d(Constants.LOG_TAG, "BaseActivity.animateFloatingActionButtonTransition:: animating floating action button transition...");
 
-        newFloatingActionButton.setOnClickListener(this.onClickListenerFloatingActionButton);
-        newFloatingActionButton.setImageDrawable(icon != null ? icon : this.floatingActionButton.getDrawable());
-        this.floatingActionButton = newFloatingActionButton;
-        this.floatingActionButton.show();
+            this.floatingActionButton.hide();
+
+            FloatingActionButton newFloatingActionButton;
+            if(this.floatingActionButton.getId() == R.id.floatingActionButton)
+            {
+                newFloatingActionButton = findViewById(R.id.floatingActionButton_Animation);
+            }
+            else
+            {
+                newFloatingActionButton = findViewById(R.id.floatingActionButton);
+            }
+
+            newFloatingActionButton.setOnClickListener(this.onClickListenerFloatingActionButton);
+            newFloatingActionButton.setImageDrawable(icon != null ? icon : this.floatingActionButton.getDrawable());
+            this.floatingActionButton = newFloatingActionButton;
+            this.floatingActionButton.show();
+        }
     }
 
     protected void addHelpOverlayFragment(String title, CharSequence message)
