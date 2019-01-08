@@ -169,6 +169,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
                 parent.reorderChildren(resultElements);
 
+                this.updateContentRecyclerView(true);
+
                 String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 if(selectedElementUuidString != null)
                 {
@@ -181,8 +183,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
 
                 super.markForUpdate(parent);
-
-                this.updateContentRecyclerView(true);
             }
             else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
             {

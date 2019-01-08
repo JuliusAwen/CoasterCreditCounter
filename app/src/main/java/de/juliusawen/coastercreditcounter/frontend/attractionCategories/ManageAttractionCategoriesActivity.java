@@ -167,7 +167,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
                 App.content.setAttractionCategories(ConvertTool.convertElementsToType(resultElements, AttractionCategory.class));
-                this.viewModel.contentRecyclerViewAdapter.setItems(resultElements);
+                updateContentRecyclerView(true);
 
                 if(resultElement != null)
                 {
