@@ -18,5 +18,5 @@ public class BaseActivityViewModel extends ViewModel
     Set<IElement> elementsToUpdate = new HashSet<>();
     Set<IElement> elementsToDelete = new HashSet<>();
 
-    public boolean writeToExternalStoragePermissionNeededToInitialize;
+    boolean writeToExternalStoragePermissionNeededToInitialize;
 }

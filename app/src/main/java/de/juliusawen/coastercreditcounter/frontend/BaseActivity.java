@@ -180,7 +180,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(helpOverlayFragment != null)
+        if(this.helpOverlayFragment != null)
         {
             if(menu.findItem(Selection.HELP.ordinal()) == null)
             {

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -38,6 +40,12 @@ public class App extends Application
         Log.i(Constants.LOG_TAG, "App.onCreate:: creating app...");
 
         super.onCreate();
+
+        if(LeakCanary.isInAnalyzerProcess(this))
+        {
+            return;
+        }
+        LeakCanary.install(this);
 
         App.isInitialized = false;
 
