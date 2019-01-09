@@ -319,14 +319,13 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     {
         dialog.dismiss();
 
-        Snackbar snackbar;
-        switch(requestCode)
+        if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            case Constants.ALERT_DIALOG_REQUEST_CODE_DELETE:
+            switch(requestCode)
             {
-                if(which == DialogInterface.BUTTON_POSITIVE)
+                case Constants.ALERT_DIALOG_REQUEST_CODE_DELETE:
                 {
-                    snackbar = Snackbar.make(
+                    Snackbar snackbar = Snackbar.make(
                             findViewById(android.R.id.content),
                             getString(R.string.action_confirm_delete_text, viewModel.longClickedAttractionCategory.getName()),
                             Snackbar.LENGTH_LONG);

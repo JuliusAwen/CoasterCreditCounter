@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
@@ -45,16 +44,19 @@ public abstract class Attraction extends Element implements IAttraction
     }
 
     @Override
-    public void deleteElementAndDescendants()
+    public void deleteElement()
     {
-        Log.d(Constants.LOG_TAG, String.format("Attraction.deleteElementAndDescendants:: deleting %s and children", this));
+        Log.d(Constants.LOG_TAG, String.format("Attraction.deleteElement:: deleting %s and removing from AttractionCategory...", this));
 
-        for(IElement child : this.getChildren())
+        if(this.attractionCategory != null)
         {
-            child.deleteElementAndDescendants();
+            this.attractionCategory.deleteChild(this);
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("Attraction.deleteElement:: %s has no AttractionCategory", this));
         }
 
-        this.attractionCategory.deleteChild(this);
         this.getParent().deleteChild(this);
     }
 

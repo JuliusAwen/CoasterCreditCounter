@@ -300,31 +300,15 @@ public abstract class Element implements IElement
         this.parent = parent;
     }
 
-    public void insertElements(IElement newElement, List<IElement> children)
-    {
-        Log.d(Constants.LOG_TAG, String.format("Element.insertElements:: inserting %s into %s", newElement, this));
-        newElement.addChildrenAndSetParents(new ArrayList<>(children));
-        for(IElement child : children)
-        {
-            this.deleteChild(child);
-        }
-        this.addChildAndSetParent(newElement);
-    }
-
     public void relocateElement(IElement newParent)
     {
         this.parent.getChildren().remove(this);
         newParent.addChildAndSetParent(this);
     }
 
-    public void deleteElementAndDescendants()
+    public void deleteElement()
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.removeElementAndDescendants:: deleting %s and descendants", this));
-
-        for(IElement child : new ArrayList<>(this.children))
-        {
-            child.deleteElementAndDescendants();
-        }
+        Log.d(Constants.LOG_TAG, String.format("Element.deleteElement:: deleting %s...", this));
         this.parent.deleteChild(this);
     }
 
@@ -346,7 +330,7 @@ public abstract class Element implements IElement
 
     public void removeElement()
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s", this));
+        Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s...", this));
 
         int index = this.parent.getIndexOfChild(this);
 
@@ -372,6 +356,5 @@ public abstract class Element implements IElement
         {
             return this.getParent().isDescendantOf(ancestor);
         }
-
     }
 }

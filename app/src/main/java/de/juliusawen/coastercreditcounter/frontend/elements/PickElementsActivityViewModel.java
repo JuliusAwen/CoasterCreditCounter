@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHe
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class PickElementsActivityViewModel extends ViewModel
+class PickElementsActivityViewModel extends ViewModel
 {
     List<IElement> elementsToPickFrom;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;

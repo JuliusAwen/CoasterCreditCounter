@@ -10,8 +10,8 @@ public enum Selection
 
     MAINTAIN,
 
-    EDIT_ELEMENT,
     EDIT_LOCATION,
+    EDIT_PARK,
     EDIT_ATTRACTION_CATEGORY,
 
     DELETE_ELEMENT,

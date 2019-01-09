@@ -87,13 +87,6 @@ public abstract class Constants
 
 
 
-
-    public static final String PAYLOAD_UPDATE_RIDE_COUNT = "de.juliusawen.coding.payload_update_ride_count";
-
-
-
-
-
     public static final int ALERT_DIALOG_REQUEST_CODE_DELETE = 0;
     public static final int ALERT_DIALOG_REQUEST_CODE_REMOVE = 1;
     public static final int ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE = 3;
@@ -102,6 +95,7 @@ public abstract class Constants
 
 
     public static final int REQUEST_CREATE_LOCATION = Request.CREATE_LOCATION.ordinal();
+    public static final int REQUEST_CREATE_PARK = Request.CREATE_PARK.ordinal();
     public static final int REQUEST_CREATE_VISIT = Request.CREATE_VISIT.ordinal();
     public static final int REQUEST_CREATE_ATTRACTION_CATEGORY = Request.CREATE_ATTRACTION_CATEGORY.ordinal();
 
@@ -114,6 +108,7 @@ public abstract class Constants
     public static final int REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS = Request.APPLY_CATEGORY_TO_ATTRACTIONS.ordinal();
 
     public static final int REQUEST_EDIT_LOCATION = Request.EDIT_LOCATION.ordinal();
+    public static final int REQUEST_EDIT_PARK = Request.EDIT_PARK.ordinal();
     public static final int REQUEST_EDIT_ATTRACTION_CATEGORY = Request.EDIT_ATTRACTION_CATEGORY.ordinal();
 
     public static final int REQUEST_SORT_LOCATIONS = Request.SORT_LOCATIONS.ordinal();
@@ -131,7 +126,9 @@ public abstract class Constants
 enum Request
 {
     CREATE_LOCATION,
-    CREATE_VISIT, CREATE_ATTRACTION_CATEGORY,
+    CREATE_PARK,
+    CREATE_VISIT,
+    CREATE_ATTRACTION_CATEGORY,
 
     SHOW_LOCATION,
     SHOW_PARK,
@@ -142,6 +139,7 @@ enum Request
     APPLY_CATEGORY_TO_ATTRACTIONS,
 
     EDIT_LOCATION,
+    EDIT_PARK,
     EDIT_ATTRACTION_CATEGORY,
 
     SORT_LOCATIONS,

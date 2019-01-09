@@ -4,8 +4,8 @@ import android.view.MenuItem;
 
 import androidx.lifecycle.ViewModel;
 
-public class NavigationHubActivityViewModel extends ViewModel
+class NavigationHubActivityViewModel extends ViewModel
 {
-    public MenuItem selectedMenuItem;
-    public String exportFileAbsolutePath;
+    MenuItem selectedMenuItem;
+    String exportFileAbsolutePath;
 }

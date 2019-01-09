@@ -58,7 +58,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             super.addToolbar();
             super.addToolbarMenuIcon();
-            super.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), getString(R.string.subtitle_navigation_hub));
+            super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
         }
     }
 

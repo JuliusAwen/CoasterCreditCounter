@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/navigation_drawer_header_vertical_spacing"
-            android:text="@string/title_app_name"/>
+            android:text="@string/name_app"/>
 
         <TextView
             style="@style/TextAppearance.AppCompat.Subhead"

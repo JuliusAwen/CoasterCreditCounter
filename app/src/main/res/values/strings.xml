@@ -1,22 +1,31 @@
 <resources>
 
+    <!--names-->
+    <string name="name_app">CoasterCreditCounter</string>
+    <string name="name_default_attraction_category">uncategorized</string>
+
+
     <!--activity titles & subtitles-->
-    <string name="title_app_name">CoasterCreditCounter</string>
+    <string name="title_help">Help: %1$s</string>
+
     <string name="subtitle_navigation_hub">Navigation Hub</string>
 
-    <string name="title_help">Help: %1$s</string>
+    <string name="title_relocate">Relocate</string>
+    <string name="subtitle_relocate">select new parent location for \'%1$s\'</string>
+
 
     <string name="title_locations">Locations</string>
     <string name="title_locations_sort">Sort Locations</string>
     <string name="title_locations_pick">Pick Locations</string>
+    <string name="title_location_edit">Edit Location</string>
     <string name="subtitle_locations_pick_description">to add to the new location</string>
     <string name="subtitle_location_create">create child location</string>
-    <string name="subtitle_location_relocate">select new parent location for \'%1$s\'</string>
-    <string name="title_location_edit">Edit Location</string>
 
 
     <string name="title_parks_sort">Sort Parks</string>
     <string name="title_parks_pick">Pick Parks</string>
+    <string name="title_park_edit">Edit Park</string>
+    <string name="subtitle_park_create">create park</string>
     <string name="subtitle_parks_pick_description">to add to the new location</string>
     <string name="subtitle_park_show_tab_overview">Overview</string>
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
@@ -39,7 +48,6 @@
     <string name="title_visit_show">Visit</string>
 
 
-
     <!--navigation drawer-->
     <string name="group_title_navigation_drawer_manage">Manage</string>
     <string name="group_title_navigation_import_export">Import/Export</string>
@@ -52,7 +60,6 @@
 
     <string name="item_navigation_drawer_import">Import</string>
     <string name="item_navigation_drawer_export">Export</string>
-
 
 
     <!--menu entries-->
@@ -82,7 +89,6 @@
     <string name="selection_relocate">relocate</string>
 
 
-
     <!--general texts-->
     <string name="text_ok">OK</string>
     <string name="text_accept">Accept</string>
@@ -92,10 +98,6 @@
     <string name="text_select_all">select all</string>
     <string name="text_deselect_all">deselect all</string>
     <string name="text_add_children">add children</string>
-
-
-    <!--names-->
-    <string name="name_default_attraction_category">uncategorized</string>
 
 
 
@@ -138,7 +140,6 @@
     <string name="description_increase">increase ride count</string>
 
 
-
     <!--action texts -->
     <string name="action_undo_title">UNDO</string>
     <string name="action_undo_delete_text">\'%1$s\' deleted</string>
@@ -150,14 +151,13 @@
     <string name="action_confirm_remove_text">Confirm removal of \'%1$s\'</string>
 
 
-
     <!--hint texts-->
     <string name="hint_enter_location_name">Enter location name</string>
+    <string name="hint_enter_park_name">Enter park name</string>
     <string name="hint_edit_location_name">Edit location name</string>
     <string name="hint_enter_string">Enter string</string>
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
     <string name="hint_search_content">Search content</string>
-
 
 
     <!--error messages-->
@@ -213,6 +213,10 @@
     </string>
 
     <string name="help_text_create_location">
+        \n <li>Help not yet available...</li>
+    </string>
+
+    <string name="help_text_create_park">
         \n <li>Help not yet available...</li>
     </string>
 

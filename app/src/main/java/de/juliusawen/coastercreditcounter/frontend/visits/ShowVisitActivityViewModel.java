@@ -5,7 +5,7 @@ import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHe
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class ShowVisitActivityViewModel extends ViewModel
+class ShowVisitActivityViewModel extends ViewModel
 {
     Visit visit;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;

@@ -41,7 +41,7 @@ public interface IElement
     int getIndexOfChild(IElement child);
 
     void deleteChild(IElement child);
-    void deleteElementAndDescendants();
+    void deleteElement();
 
     boolean isDescendantOf(IElement ancestor);
 

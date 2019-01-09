@@ -112,7 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         //Todo: introduce SplashScreen
         this.addToolbar();
-        this.setToolbarTitleAndSubtitle(getString(R.string.title_app_name), null);
+        this.setToolbarTitleAndSubtitle(getString(R.string.name_app), null);
 
         if(this.viewModel.isInitializingApp)
         {

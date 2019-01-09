@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
@@ -136,11 +137,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void setSelectionModeEnabled(boolean enabled)
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled [%S]", enabled));
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", enabled));
         ShowLocationsActivity.super.setToolbarTitleAndSubtitle(
-                getString(R.string.title_locations),
-                enabled ? getString(R.string.subtitle_location_relocate, this.viewModel.longClickedElement.getName())
-                        : null);
+                enabled ? getString(R.string.title_relocate) : getString(R.string.title_locations),
+                enabled ? getString(R.string.subtitle_relocate, this.viewModel.longClickedElement.getName()) : null);
         this.viewModel.selectionMode = enabled;
     }
 
@@ -148,9 +148,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
         if(resultCode == RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CREATE_LOCATION)
+            if(requestCode == Constants.REQUEST_CREATE_LOCATION || requestCode == Constants.REQUEST_CREATE_PARK)
             {
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
@@ -184,7 +185,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 super.markForUpdate(parent);
             }
-            else if(requestCode == Constants.REQUEST_EDIT_LOCATION)
+            else if(requestCode == Constants.REQUEST_EDIT_LOCATION || requestCode == Constants.REQUEST_EDIT_PARK)
             {
                 IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
 
@@ -288,36 +289,53 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private PopupMenu getRecyclerViewItemPopupMenu(View view)
     {
         PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, view);
-        Menu mainMenu = popupMenu.getMenu();
-
-        mainMenu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit);
-
-        Menu submenuAdd = mainMenu.addSubMenu(Menu.NONE, Selection.ADD.ordinal(), Menu.NONE, R.string.selection_add);
-        submenuAdd.add(Menu.NONE, Selection.CREATE_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
-        submenuAdd.add(Menu.NONE, Selection.CREATE_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
-
-        boolean sortLocationsEnabled = this.viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
-        boolean sortParksEnabled = this.viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
-        if(sortLocationsEnabled || sortParksEnabled)
-        {
-            Menu submenuSort = mainMenu.addSubMenu(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort);
-
-            submenuSort.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations).setEnabled(sortLocationsEnabled);
-            submenuSort.add(Menu.NONE, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks).setEnabled(sortParksEnabled);
-        }
-        else
-        {
-            mainMenu.add(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort).setEnabled(false);
-        }
-
-        mainMenu.add(Menu.NONE, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
-                .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
-        mainMenu.add(Menu.NONE, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove)
-                .setEnabled(this.viewModel.longClickedElement.hasChildren() && !isRootLocation(this.viewModel.longClickedElement));
-        mainMenu.add(Menu.NONE, Selection.RELOCATE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_relocate)
-                .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
-
+        this.populatePopupMenu(popupMenu.getMenu());
         return popupMenu;
+    }
+
+    private void populatePopupMenu(Menu menu)
+    {
+        if(this.viewModel.longClickedElement instanceof Location)
+        {
+            Menu submenuAdd = menu.addSubMenu(Menu.NONE, Selection.ADD.ordinal(), Menu.NONE, R.string.selection_add);
+            submenuAdd.add(Menu.NONE, Selection.CREATE_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
+            submenuAdd.add(Menu.NONE, Selection.CREATE_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
+
+            boolean sortLocationsEnabled = this.viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
+            boolean sortParksEnabled = this.viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
+            if(sortLocationsEnabled || sortParksEnabled)
+            {
+                Menu submenuSort = menu.addSubMenu(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort);
+
+                submenuSort.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations).setEnabled(sortLocationsEnabled);
+                submenuSort.add(Menu.NONE, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks).setEnabled(sortParksEnabled);
+            }
+            else
+            {
+                menu.add(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort).setEnabled(false);
+            }
+        }
+
+        if(this.viewModel.longClickedElement instanceof Location)
+        {
+            menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit);
+        }
+        else if(this.viewModel.longClickedElement instanceof Park)
+        {
+            menu.add(Menu.NONE, Selection.EDIT_PARK.ordinal(), Menu.NONE, R.string.selection_edit);
+        }
+
+        menu.add(Menu.NONE, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
+                .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
+
+        if(this.viewModel.longClickedElement instanceof Location)
+        {
+            menu.add(Menu.NONE, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove)
+                    .setEnabled(this.viewModel.longClickedElement.hasChildren() && !isRootLocation(this.viewModel.longClickedElement));
+        }
+
+        menu.add(Menu.NONE, Selection.RELOCATE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_relocate)
+                .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
     }
 
     private PopupMenu.OnMenuItemClickListener getOnMenuItemClickListener()
@@ -338,12 +356,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         return true;
 
                     case CREATE_PARK:
-                        //Todo: implement create park
-                        Toaster.notYetImplemented(ShowLocationsActivity.this);
+                        ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_PARK, viewModel.longClickedElement);
                         return true;
 
                     case EDIT_LOCATION:
                         ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_LOCATION, viewModel.longClickedElement);
+                        return true;
+
+                    case EDIT_PARK:
+                        ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_PARK, viewModel.longClickedElement);
                         return true;
 
                     case DELETE_ELEMENT:
@@ -439,7 +460,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                                 ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
 
                                 App.content.removeElementAndDescendants(viewModel.longClickedElement);
-                                viewModel.longClickedElement.deleteElementAndDescendants();
+
+                                viewModel.longClickedElement.deleteElement();
+                                if(viewModel.longClickedElement instanceof Park)
+                                {
+                                    for(IOnSiteAttraction onSiteAttraction : viewModel.longClickedElement.getChildrenAsType(IOnSiteAttraction.class))
+                                    {
+                                        onSiteAttraction.deleteElement();
+                                    }
+                                }
 
                                 updateContentRecyclerView(true);
                             }

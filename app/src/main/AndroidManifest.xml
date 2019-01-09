@@ -6,11 +6,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="de.juliusawen.coastercreditcounter.backend.application.App"
+        android:name=".backend.application.App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/title_app_name"
+        android:label="@string/name_app"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -18,6 +18,7 @@
         <activity android:name=".frontend.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,7 +30,7 @@
         <activity android:name=".frontend.TestActivity" />
         <activity android:name=".frontend.visits.CreateVisitActivity" />
         <activity android:name=".frontend.attractionCategories.ManageAttractionCategoriesActivity" />
-        <activity android:name=".frontend.navigationHub.NavigationHubActivity"/>
+        <activity android:name=".frontend.navigationHub.NavigationHubActivity" />
         <activity
             android:name=".frontend.locations.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
@@ -44,7 +45,7 @@
             android:name=".backend.persistency.PersistenceService"
             android:exported="false" />
 
-
+        <activity android:name=".frontend.parks.CreateParkActivity"/>
     </application>
 
 </manifest>

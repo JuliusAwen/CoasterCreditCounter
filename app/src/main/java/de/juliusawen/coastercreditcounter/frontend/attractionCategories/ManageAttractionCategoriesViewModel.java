@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 
 class ManageAttractionCategoriesViewModel extends ViewModel
 {
-    public AttractionCategory longClickedAttractionCategory;
-    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-    public AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
+    AttractionCategory longClickedAttractionCategory;
+    ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    AttractionCategoryHeaderProvider attractionCategoryHeaderProvider;
 }

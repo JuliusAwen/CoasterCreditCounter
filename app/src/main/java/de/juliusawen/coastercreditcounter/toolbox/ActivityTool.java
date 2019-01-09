@@ -19,6 +19,7 @@ import de.juliusawen.coastercreditcounter.frontend.elements.PickElementsActivity
 import de.juliusawen.coastercreditcounter.frontend.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.frontend.locations.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.frontend.locations.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.frontend.parks.CreateParkActivity;
 import de.juliusawen.coastercreditcounter.frontend.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.frontend.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitActivity;
@@ -94,6 +95,11 @@ public abstract class ActivityTool
             type = EditElementActivity.class;
             toolbarTitle = context.getString(R.string.title_location_edit);
         }
+        else if(requestCode == Constants.REQUEST_EDIT_PARK)
+        {
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_park_edit);
+        }
         else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
         {
             type = EditElementActivity.class;
@@ -121,11 +127,14 @@ public abstract class ActivityTool
     public static void startActivityCreateForResult(Context context, int requestCode, IElement parentElement)
     {
         Class type;
-        String hint;
 
         if(requestCode == Constants.REQUEST_CREATE_LOCATION)
         {
             type = CreateLocationActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CREATE_PARK)
+        {
+            type = CreateParkActivity.class;
         }
         else if(requestCode == Constants.REQUEST_CREATE_VISIT)
         {
@@ -136,9 +145,10 @@ public abstract class ActivityTool
             type = CreateSimpleStringActivity.class;
         }
 
+        Intent intent = new Intent(context, type);
+
         if(parentElement != null)
         {
-            Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
@@ -147,8 +157,6 @@ public abstract class ActivityTool
         }
         else
         {
-            Intent intent = new Intent(context, type);
-
             if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
             {
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.frontend.locations;
+package de.juliusawen.coastercreditcounter.frontend.parks;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,31 +15,31 @@ import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class CreateLocationActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
+public class CreateParkActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
 {
-    private CreateLocationActivityViewModel viewModel;
+    private CreateParkActivityViewModel viewModel;
     private EditText editText;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateLocationsActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateParkActivity.onCreate:: creating activity...");
 
-        setContentView(R.layout.activity_create_location);
+        setContentView(R.layout.activity_create_park);
         super.onCreate(savedInstanceState);
 
         if(App.isInitialized)
         {
-            this.editText = findViewById(R.id.editTextCreateLocation);
+            this.editText = findViewById(R.id.editTextCreatePark);
 
-            this.viewModel = ViewModelProviders.of(this).get(CreateLocationActivityViewModel.class);
+            this.viewModel = ViewModelProviders.of(this).get(CreateParkActivityViewModel.class);
 
             if(this.viewModel.parentLocation == null)
             {
@@ -48,11 +48,11 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
             super.addConfirmDialogFragment();
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park));
 
             super.addToolbar();
             super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
+            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create));
 
             this.createEditText();
         }
@@ -62,7 +62,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
     public void onConfirmDialogFragmentInteraction(View view)
     {
         ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        Log.i(Constants.LOG_TAG, String.format("CreateLocationsActivity.onConfirmDialogFragment:: [%S] selected", buttonFunction));
+        Log.i(Constants.LOG_TAG, String.format("CreateParkActivity.onConfirmDialogFragment:: [%S] selected", buttonFunction));
 
         switch (buttonFunction)
         {
@@ -71,10 +71,10 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                 break;
 
             case CANCEL:
-                if(this.viewModel.newLocation != null)
+                if(this.viewModel.newPark != null)
                 {
-                    App.content.removeElement(this.viewModel.newLocation);
-                    Log.d(Constants.LOG_TAG, String.format("CreateLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newLocation));
+                    App.content.removeElement(this.viewModel.newPark);
+                    Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newPark));
                 }
 
                 this.returnResult(RESULT_CANCELED);
@@ -89,7 +89,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(Constants.LOG_TAG, String.format("CreateParkActivity.onClickEditorAction:: actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -108,15 +108,15 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
 
     private void handleOnEditorActionDone()
     {
-        if(this.createLocation())
+        if(this.createPark())
         {
-                Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: adding child %s to parent %s",
-                        this.viewModel.newLocation, this.viewModel.parentLocation));
+            Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.handleOnEditorActionDone:: adding child %s to parent %s",
+                    this.viewModel.newPark, this.viewModel.parentLocation));
 
-                this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newLocation);
+            this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newPark);
 
-                Log.v(Constants.LOG_TAG, String.format( "CreateLocationsActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
-                this.returnResult(RESULT_OK);
+            Log.v(Constants.LOG_TAG, String.format( "CreateParkActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
+            this.returnResult(RESULT_OK);
         }
         else
         {
@@ -124,33 +124,33 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         }
     }
 
-    private boolean createLocation()
+    private boolean createPark()
     {
         boolean success = false;
-        Location location = Location.create(this.editText.getText().toString(), null);
+        Park park = Park.create(this.editText.getText().toString(), null);
 
-        if(location != null)
+        if(park != null)
         {
-            this.viewModel.newLocation = location;
-            App.content.addElement(this.viewModel.newLocation);
+            this.viewModel.newPark = park;
+            App.content.addElement(this.viewModel.newPark);
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.createLocation:: create %s success[%S]", this.viewModel.newLocation, success));
+        Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.createLocation:: create %s success[%S]", this.viewModel.newPark, success));
 
         return success;
     }
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateParkActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: returning new %s", this.viewModel.newLocation));
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newLocation.getUuid().toString());
+            Log.i(Constants.LOG_TAG, String.format("CreateParkActivity.returnResult:: returning new %s", this.viewModel.newPark));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newPark.getUuid().toString());
         }
 
         setResult(resultCode, intent);
