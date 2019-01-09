@@ -3,6 +3,7 @@
     <!--names-->
     <string name="name_app">CoasterCreditCounter</string>
     <string name="name_default_attraction_category">uncategorized</string>
+    <string name="name_default_manufacturer">unknown</string>
 
 
     <!--activity titles & subtitles-->

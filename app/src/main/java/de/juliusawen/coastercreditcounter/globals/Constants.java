@@ -42,6 +42,7 @@ public abstract class Constants
     public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
     public static final String JSON_STRING_IS_DEFAULT = "is default";
+    public static final String JSON_STRING_MANUFACTURER = "manufacturer";
 
 
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class StockAttraction extends Attraction implements IOnSiteAttraction
@@ -67,6 +68,28 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     }
 
     @Override
+    public void setAttractionCategory(AttractionCategory attractionCategory)
+    {
+        String errorMessage = String.format("StockAttraction.setAttractionCategory:: %s: StockAttractions cannot have AttractionCategory", this);
+        Log.e(Constants.LOG_TAG, errorMessage);
+        throw new IllegalStateException(errorMessage);
+    }
+
+    @Override
+    public Manufacturer getManufacturer()
+    {
+        return this.blueprint.getManufacturer();
+    }
+
+    @Override
+    public void setManufacturer(Manufacturer manufacturer)
+    {
+        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions cannot have Manufacturer", this);
+        Log.e(Constants.LOG_TAG, errorMessage);
+        throw new IllegalStateException(errorMessage);
+    }
+
+    @Override
     public void increaseTotalRideCount(int increment)
     {
         this.blueprint.increaseTotalRideCount(increment);
@@ -86,6 +109,5 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
             Log.d(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
                     this, decrement, this.getTotalRideCount()));
         }
-
     }
 }

@@ -9,13 +9,16 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class Attraction extends Element implements IAttraction
 {
-    protected AttractionCategory attractionCategory = null;
+    private Manufacturer manufacturer;
+    private AttractionCategory attractionCategory;
     private int untracktedRideCount;
     private int totalRideCount;
+
 
     protected Attraction(String name, int untrackedRideCount, UUID uuid)
     {
@@ -52,9 +55,10 @@ public abstract class Attraction extends Element implements IAttraction
         {
             this.attractionCategory.deleteChild(this);
         }
-        else
+
+        if(this.manufacturer != null)
         {
-            Log.v(Constants.LOG_TAG, String.format("Attraction.deleteElement:: %s has no AttractionCategory", this));
+            this.manufacturer.deleteChild(this);
         }
 
         this.getParent().deleteChild(this);
@@ -62,6 +66,12 @@ public abstract class Attraction extends Element implements IAttraction
 
     public AttractionCategory getAttractionCategory()
     {
+        if(this.attractionCategory == null)
+        {
+            Log.e(Constants.LOG_TAG, String.format("Attraction.getAttractionCategory:: %s has no AttractionCategory - using default", this));
+            this.attractionCategory = AttractionCategory.getDefault();
+        }
+
         return this.attractionCategory;
     }
 
@@ -80,6 +90,35 @@ public abstract class Attraction extends Element implements IAttraction
         this.attractionCategory = attractionCategory;
 
         Log.d(Constants.LOG_TAG,  String.format("Attraction.setAttractionCategory:: set %s's attraction category to %s", this, attractionCategory));
+    }
+
+    public Manufacturer getManufacturer()
+    {
+        if(this.manufacturer == null)
+        {
+            Log.e(Constants.LOG_TAG, String.format("Attraction.getManufacturer:: %s has no Manufacturer - using default", this));
+            this.manufacturer = Manufacturer.getDefault();
+        }
+
+        return this.manufacturer;
+    }
+
+    @Override
+    public void setManufacturer(Manufacturer manufacturer)
+    {
+        if(this.manufacturer != null)
+        {
+            this.manufacturer.deleteChild(this);
+        }
+
+        if(!manufacturer.containsChild(this))
+        {
+            manufacturer.addChild(this);
+        }
+
+        this.manufacturer = manufacturer;
+
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.Override:: set %s's manufacturer to %s", this, manufacturer));
     }
 
     public int getUntracktedRideCount()

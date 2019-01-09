@@ -19,6 +19,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -50,6 +51,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         attractionCategories.add(attractionCategoryFamilyRides);
         attractionCategories.add(attractionCategoryWaterRides);
         attractionCategories.add(attractionCategoryNonRollerCoasters);
+
+        Manufacturer bolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard Ingénieurs Conseils SA", null);
+        Manufacturer intamin = Manufacturer.create("Intamin Amusement Rides", null);
+        Manufacturer vekoma = Manufacturer.create("Vekoma Rides Manufacturing B.V.", null);
+        Manufacturer huss = Manufacturer.create("Huss Park Attractions GmbH", null);
+
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.add(bolligerAndMabillard);
+        manufacturers.add(intamin);
+        manufacturers.add(vekoma);
+        manufacturers.add(huss);
 
 
         // create Nodes
@@ -102,10 +114,12 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         CoasterBlueprint suspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", 4, null);
+        suspendedLoopingCoaster.setManufacturer(vekoma);
         suspendedLoopingCoaster.setAttractionCategory(attractionCategoryRollerCoasters);
         blueprints.add(suspendedLoopingCoaster);
 
         CoasterBlueprint boomerang = CoasterBlueprint.create("Boomerang", 2, null);
+        suspendedLoopingCoaster.setManufacturer(vekoma);
         boomerang.setAttractionCategory(attractionCategoryRollerCoasters);
         blueprints.add(boomerang);
 
@@ -141,20 +155,36 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         taron.setAttractionCategory(attractionCategoryRollerCoasters);
+        taron.setManufacturer(intamin);
+
         blackMamba.setAttractionCategory(attractionCategoryRollerCoasters);
+        blackMamba.setManufacturer(bolligerAndMabillard);
+
         coloradoAdventure.setAttractionCategory(attractionCategoryRollerCoasters);
+        coloradoAdventure.setManufacturer(vekoma);
+
         raik.setAttractionCategory(attractionCategoryRollerCoasters);
+        raik.setManufacturer(vekoma);
+
         templeOfTheNightHawk.setAttractionCategory(attractionCategoryRollerCoasters);
+        templeOfTheNightHawk.setManufacturer(vekoma);
+
         winjasFear.setAttractionCategory(attractionCategoryRollerCoasters);
         winjasForce.setAttractionCategory(attractionCategoryRollerCoasters);
 
         hollywoodTour.setAttractionCategory(attractionCategoryWaterRides);
         chiapas.setAttractionCategory(attractionCategoryWaterRides);
         riverQuest.setAttractionCategory(attractionCategoryWaterRides);
+
         mysteryCastle.setAttractionCategory(attractionCategoryThrillRides);
+        mysteryCastle.setManufacturer(intamin);
+
         talocan.setAttractionCategory(attractionCategoryThrillRides);
+        talocan.setManufacturer(huss);
 
         fengJuPalace.setAttractionCategory(attractionCategoryFamilyRides);
+        fengJuPalace.setManufacturer(vekoma);
+
         geisterRiksha.setAttractionCategory(attractionCategoryFamilyRides);
         mausAuChocolat.setAttractionCategory(attractionCategoryFamilyRides);
         wellenflug.setAttractionCategory(attractionCategoryFamilyRides);
@@ -188,13 +218,21 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction bounty = CustomAttraction.create("Bounty", 0, null);
 
         krake.setAttractionCategory(attractionCategoryRollerCoasters);
+        krake.setManufacturer(bolligerAndMabillard);
+
         flugDerDaemonen.setAttractionCategory(attractionCategoryRollerCoasters);
+        flugDerDaemonen.setManufacturer(bolligerAndMabillard);
+
         desertRace.setAttractionCategory(attractionCategoryRollerCoasters);
+        desertRace.setManufacturer(intamin);
+
         bigLoop.setAttractionCategory(attractionCategoryRollerCoasters);
         grottenblitz.setAttractionCategory(attractionCategoryRollerCoasters);
         indyBlitz.setAttractionCategory(attractionCategoryRollerCoasters);
         bobbahn.setAttractionCategory(attractionCategoryRollerCoasters);
+
         colossos.setAttractionCategory(attractionCategoryRollerCoasters);
+        colossos.setManufacturer(intamin);
 
         scream.setAttractionCategory(attractionCategoryThrillRides);
 
@@ -214,9 +252,16 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction dodgem = CustomAttraction.create("Dodgem", 0, null);
 
         steelVengeance.setAttractionCategory(attractionCategoryRollerCoasters);
+
         valravn.setAttractionCategory(attractionCategoryRollerCoasters);
+        valravn.setManufacturer(bolligerAndMabillard);
+
         maverick.setAttractionCategory(attractionCategoryRollerCoasters);
+        maverick.setManufacturer(intamin);
+
         gatekeeper.setAttractionCategory(attractionCategoryRollerCoasters);
+        gatekeeper.setManufacturer(bolligerAndMabillard);
+
         dodgem.setAttractionCategory(attractionCategoryFamilyRides);
 
 
@@ -236,7 +281,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         drako.setAttractionCategory(attractionCategoryRollerCoasters);
         robinHood.setAttractionCategory(attractionCategoryRollerCoasters);
         xpressPlatform13.setAttractionCategory(attractionCategoryRollerCoasters);
+
         goliath.setAttractionCategory(attractionCategoryRollerCoasters);
+        goliath.setManufacturer(intamin);
+
         lostGravity.setAttractionCategory(attractionCategoryRollerCoasters);
 
         CustomAttraction excalibur = CustomAttraction.create("Excalibur", 1, null);
@@ -247,6 +295,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction theTomahawk = CustomAttraction.create("The Tomahawk", 0, null);
 
         excalibur.setAttractionCategory(attractionCategoryThrillRides);
+        excalibur.setManufacturer(huss);
+
         gForce.setAttractionCategory(attractionCategoryThrillRides);
         spaceShot.setAttractionCategory(attractionCategoryThrillRides);
         spinningVibe.setAttractionCategory(attractionCategoryThrillRides);
@@ -275,7 +325,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         laGrandeRoue.setAttractionCategory(attractionCategoryFamilyRides);
         leTourDesJardins.setAttractionCategory(attractionCategoryFamilyRides);
         losSombreros.setAttractionCategory(attractionCategoryFamilyRides);
+
         merlinsMagicCastle.setAttractionCategory(attractionCategoryFamilyRides);
+        merlinsMagicCastle.setManufacturer(vekoma);
+
         merrieGoround.setAttractionCategory(attractionCategoryFamilyRides);
         pavillonDeThe.setAttractionCategory(attractionCategoryFamilyRides);
         spaceKidz.setAttractionCategory(attractionCategoryFamilyRides);
@@ -520,13 +573,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit.setOpenVisit(visitToday);
 
         content.addElement(germany); //adding one location is enough - content is searching for root from there
+        this.flattenContentTree(App.content.getRootLocation());
+
+        Manufacturer.createAndSetDefault();
+        manufacturers.add(Manufacturer.getDefault());
+        content.addElements(ConvertTool.convertElementsToType(manufacturers, IElement.class));
 
         AttractionCategory.createAndSetDefault();
         attractionCategories.add(AttractionCategory.getDefault());
         content.setAttractionCategories(attractionCategories);
 
         content.addElements(ConvertTool.convertElementsToType(blueprints, IElement.class));
-        this.flattenContentTree(App.content.getRootLocation());
 
         return true;
     }

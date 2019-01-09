@@ -380,11 +380,24 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(AttractionCategory.getDefault() == null)
         {
+            Log.e(Constants.LOG_TAG, "JsonHandler.createAttractionCategories:: no default AttractionCategory found - using fallback");
+
             AttractionCategory.createAndSetDefault();
             attractionCategories.add(AttractionCategory.getDefault());
         }
 
         return attractionCategories;
+    }
+
+    private void applyAttractionCategories(Content content)
+    {
+        for(AttractionCategory attractionCategory : content.getAttractionCategories())
+        {
+            for(IAttraction attraction : attractionCategory.getChildrenAsType(Attraction.class))
+            {
+                attraction.setAttractionCategory(attractionCategory);
+            }
+        }
     }
 
     private List<TemporaryElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
@@ -462,17 +475,6 @@ public class JsonHandler implements IDatabaseWrapper
         }
 
         return temporaryElements;
-    }
-
-    private void applyAttractionCategories(Content content)
-    {
-        for(AttractionCategory attractionCategory : content.getAttractionCategories())
-        {
-            for(IAttraction attraction : attractionCategory.getChildrenAsType(Attraction.class))
-            {
-                attraction.setAttractionCategory(attractionCategory);
-            }
-        }
     }
 
     private void entangleElements(List<TemporaryElement> elements, Content content)
