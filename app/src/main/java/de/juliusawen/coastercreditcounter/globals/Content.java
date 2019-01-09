@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.globals;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
@@ -20,13 +18,11 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Content
 {
-    private Map<UUID, IElement> elementsByUuid = new HashMap<>();
-    private List<AttractionCategory> attractionCategories = new ArrayList<>();
+    private Map<UUID, IElement> elementsByUuid = new LinkedHashMap<>();
     private Location rootLocation;
 
     private boolean isRestoreBackupPossible;
     private Map<UUID, IElement> backupElements = null;
-    private List<AttractionCategory> backupAttractionCategories = null;
     private Location backupRootLocation = null;
 
     private final Persistence persistence;
@@ -85,7 +81,7 @@ public class Content
         }
         else
         {
-            //Todo: implement default content creation for non-debug builds
+            //Todo: implement default content creation for non-debug builds ("use developers content")
             Log.e(Constants.LOG_TAG, "Content.useDefaults:: creating default content for non-debug build not yet implemented");
             throw new IllegalStateException();
         }
@@ -154,7 +150,6 @@ public class Content
         {
             this.rootLocation = null;
             this.elementsByUuid.clear();
-            this.attractionCategories.clear();
 
             Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
         }
@@ -167,7 +162,6 @@ public class Content
     private boolean backup()
     {
         this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
-        this.backupAttractionCategories = new ArrayList<>(this.attractionCategories);
         this.backupRootLocation = this.rootLocation;
 
         this.isRestoreBackupPossible = true;
@@ -180,16 +174,14 @@ public class Content
     {
         if(this.isRestoreBackupPossible)
         {
-            if(this.backupElements != null && this.backupAttractionCategories != null && this.backupRootLocation != null)
+                if(this.backupElements != null && this.backupRootLocation != null)
             {
                 this.elementsByUuid = new LinkedHashMap<>(this.backupElements);
-                this.attractionCategories = new ArrayList<>(backupAttractionCategories);
                 this.rootLocation = this.backupRootLocation;
 
                 this.isRestoreBackupPossible = false;
 
                 this.backupElements = null;
-                this.backupAttractionCategories = null;
                 this.backupRootLocation = null;
 
                 Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
@@ -255,34 +247,6 @@ public class Content
         return content;
     }
 
-    public List<AttractionCategory> getAttractionCategories()
-    {
-        return this.attractionCategories;
-    }
-
-    public void setAttractionCategories(List<AttractionCategory> attractionCategories)
-    {
-        this.attractionCategories = attractionCategories;
-        Log.v(Constants.LOG_TAG, String.format("Content.setAttractionCategories:: [%d] AttractionCategories set", attractionCategories.size()));
-    }
-
-    public void addAttractionCategory(AttractionCategory attractionCategory)
-    {
-        this.addAttractionCategoryAtIndex(this.attractionCategories.size(), attractionCategory);
-    }
-
-    public void addAttractionCategoryAtIndex(int index, AttractionCategory attractionCategory)
-    {
-        this.attractionCategories.add(index, attractionCategory);
-        Log.v(Constants.LOG_TAG, String.format("Content.addAttractionCategoryAtIndex:: %s added at index [%d] of [%d]", attractionCategory, index, this.attractionCategories.size() - 1));
-    }
-
-    public void removeAttractionCategory(AttractionCategory attractionCategory)
-    {
-        this.attractionCategories.remove(attractionCategory);
-        Log.d(Constants.LOG_TAG, String.format("Content.removeAttractionCategory:: %s removed", attractionCategory));
-    }
-
     public ArrayList<String> getUuidStringsFromElements(List<IElement> elements)
     {
         ArrayList<String> uuidStrings = new ArrayList<>();
@@ -317,30 +281,9 @@ public class Content
         }
         else
         {
-            AttractionCategory attractionCategory = this.getAttractionCategoryByUuid(uuid);
-            if(attractionCategory != null)
-            {
-                return attractionCategory;
-            }
-            else
-            {
-                Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
-                return null;
-            }
+            Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
+            return null;
         }
-    }
-
-    public AttractionCategory getAttractionCategoryByUuid(UUID uuid)
-    {
-        for(AttractionCategory attractionCategory : this.attractionCategories)
-        {
-            if(attractionCategory.getUuid().equals(uuid))
-            {
-                return attractionCategory;
-            }
-        }
-
-        return null;
     }
 
     public void addElements(List<IElement> elements)
@@ -372,6 +315,15 @@ public class Content
         {
             Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: %s removed", element));
             this.elementsByUuid.remove(element.getUuid());
+        }
+    }
+
+    public void reorderElements(List<IElement> elements)
+    {
+        for(IElement element : elements)
+        {
+            this.removeElement(element);
+            this.addElement(element);
         }
     }
 }

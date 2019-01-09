@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.Visi
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class JsonHandler implements IDatabaseWrapper
@@ -246,7 +247,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 List<TemporaryElement> temporaryAttractionCategories =
                         this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
-                content.setAttractionCategories(this.createAttractionCategories(temporaryAttractionCategories, content));
+                content.addElements(ConvertTool.convertElementsToType(this.createAttractionCategories(temporaryAttractionCategories, content), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
@@ -391,7 +392,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private void applyAttractionCategories(Content content)
     {
-        for(AttractionCategory attractionCategory : content.getAttractionCategories())
+        for(AttractionCategory attractionCategory : content.getContentAsType(AttractionCategory.class))
         {
             for(IAttraction attraction : attractionCategory.getChildrenAsType(Attraction.class))
             {
@@ -604,7 +605,7 @@ public class JsonHandler implements IDatabaseWrapper
 
 
             jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
-                    content.getAttractionCategories().isEmpty() ? JSONObject.NULL : this.createJsonArray(new ArrayList<IElement>(content.getAttractionCategories())));
+                    content.getContentOfType(AttractionCategory.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionCategory.class)));
 
             Log.v(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
             return jsonObject;

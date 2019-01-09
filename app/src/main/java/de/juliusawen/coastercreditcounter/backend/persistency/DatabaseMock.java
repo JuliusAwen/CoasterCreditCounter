@@ -24,6 +24,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.Visi
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
+import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -39,6 +40,8 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
+        Stopwatch stopwatch = new Stopwatch(true);
+
         AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides", null);
         AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides", null);
         AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters", null);
@@ -581,9 +584,11 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         AttractionCategory.createAndSetDefault();
         attractionCategories.add(AttractionCategory.getDefault());
-        content.setAttractionCategories(attractionCategories);
+        content.addElements(ConvertTool.convertElementsToType(attractionCategories, IElement.class));
 
         content.addElements(ConvertTool.convertElementsToType(blueprints, IElement.class));
+
+        Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
 
         return true;
     }

@@ -84,7 +84,7 @@ public abstract class SortTool
         if(attractionCategoryHeaders.size() > 1)
         {
             List<IElement> sortedAttractionCategoryHeaders = new ArrayList<>();
-            List<AttractionCategory> attractionCategories = App.content.getAttractionCategories();
+            List<AttractionCategory> attractionCategories = App.content.getContentAsType(AttractionCategory.class);
 
             Log.v(Constants.LOG_TAG,  String.format("SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
                     " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));

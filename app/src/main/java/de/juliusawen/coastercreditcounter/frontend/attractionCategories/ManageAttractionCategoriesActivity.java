@@ -70,7 +70,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 childTypesToExpand.add(ICategorized.class);
 
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                        ConvertTool.convertElementsToType(App.content.getAttractionCategories(), IElement.class),
+                        App.content.getContentOfType(AttractionCategory.class),
                         null,
                         childTypesToExpand);
 
@@ -97,7 +97,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     {
         menu.clear();
 
-        if(App.content.getAttractionCategories().size() > 1)
+        if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
         {
             menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
         }
@@ -118,7 +118,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 ActivityTool.startActivitySortForResult(
                         this,
                         Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
-                        new ArrayList<IElement>(App.content.getAttractionCategories()));
+                        App.content.getContentOfType(AttractionCategory.class));
                 return true;
             }
 
@@ -145,7 +145,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
                 if(attractionCategory != null)
                 {
-                    App.content.addAttractionCategory(attractionCategory);
+                    App.content.addElement(attractionCategory);
                     this.markForCreation(attractionCategory);
                     updateContentRecyclerView(true);
                 }
@@ -166,7 +166,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                App.content.setAttractionCategories(ConvertTool.convertElementsToType(resultElements, AttractionCategory.class));
+                App.content.reorderElements(resultElements);
                 updateContentRecyclerView(true);
 
                 if(resultElement != null)
@@ -362,7 +362,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                                 markForDeletion(viewModel.longClickedAttractionCategory, false);
 
-                                App.content.removeAttractionCategory(viewModel.longClickedAttractionCategory);
+                                App.content.removeElement(viewModel.longClickedAttractionCategory);
 
                                 updateContentRecyclerView(true);
                             }
@@ -400,7 +400,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         if(resetContent)
         {
             Log.d(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(ConvertTool.convertElementsToType(App.content.getAttractionCategories(), IElement.class));
+            this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(AttractionCategory.class));
         }
         else
         {

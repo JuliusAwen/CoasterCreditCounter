@@ -24,7 +24,7 @@ public class AppConfig
     private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = true;
     private final boolean createExportFileIfNonexistent = true;
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = true;
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
 
     private final boolean validateContent = true;
 
