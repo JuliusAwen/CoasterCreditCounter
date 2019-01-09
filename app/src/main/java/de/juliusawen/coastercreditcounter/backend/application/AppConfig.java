@@ -13,17 +13,22 @@ public class AppConfig
 
     private final String databaseWrapperToUse = JSON_HANDLER;
 
-    private final boolean isDebugBuild = true;
-    private final boolean useExternalStorage = true;
-    private final boolean reinitializeContentFromDatabaseMock = false;
-    private final boolean createExportFileIfNotExists = true;
+    private final String contentFileName = "CoasterCreditCounterExport.json";
+    private final String settingsFileName = "Settings.json";
 
-    private final boolean validateContent = true;
+
+    private final boolean isDebugBuild = true;
 
     private final boolean jumpToTestActivityOnStart = false;
 
-    private final String contentFileName = "CoasterCreditCounterExport.json";
-    private final String settingsFileName = "Settings.json";
+    private final boolean useExternalStorage = true;
+    private final boolean alwaysImportFromDatabaseMock = true;
+    private final boolean createExportFileIfNonexistent = true;
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
+
+    private final boolean validateContent = true;
+
+
 
     AppConfig()
     {
@@ -38,40 +43,34 @@ public class AppConfig
         return String.format(
                 Constants.LOG_DIVIDER + "\n" +
                         "databaseWrapperToUse [%s]\n" +
-                        "isDebugBuild [%S]\n" +
-                        "useExternalStorage [%S]\n" +
-                        "reinitializeContentFromDatabaseMock [%S]\n" +
-                        "createExportFileIfNotExists [%S]\n" +
-                        "validateContent [%S]\n" +
-                        "jumpToTestActivityOnStart [%S]\n" +
                         "contentFileName [%s]\n" +
                         "settingsFileName [%s]\n" +
+                        "isDebugBuild [%S]\n" +
+                        "jumpToTestActivityOnStart [%S]\n" +
+                        "useExternalStorage [%S]\n" +
+                        "createExportFileIfNonexistent [%S]\n" +
+                        "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
+                        "validateContent [%S]\n" +
+
                         Constants.LOG_DIVIDER,
                 this.databaseWrapperToUse(),
-                this.isDebugBuild(),
-                this.useExternalStorage(),
-                this.reinitializeContentFromDatabaseMock(),
-                this.createExportFileIfNotExists(),
-                this.validateContent(),
-                this.jumpToTestActivityOnStart(),
                 this.getContentFileName(),
-                this.getSettingsFileName()
+                this.getSettingsFileName(),
+                this.isDebugBuild(),
+                this.jumpToTestActivityOnStart(),
+                this.useExternalStorage(),
+
+                this.createExportFileIfNotExists(),
+                this.reinitializeContentFromDatabaseMock(),
+                this.validateContent()
         );
     }
 
-    boolean isDebugBuild()
-    {
-        return this.isDebugBuild;
-    }
+
 
     public String databaseWrapperToUse()
     {
         return this.databaseWrapperToUse;
-    }
-
-    public boolean jumpToTestActivityOnStart()
-    {
-        return this.jumpToTestActivityOnStart;
     }
 
     public String getContentFileName()
@@ -84,23 +83,41 @@ public class AppConfig
         return this.settingsFileName;
     }
 
-    public boolean createExportFileIfNotExists()
+
+
+    public boolean isDebugBuild()
     {
-        return createExportFileIfNotExists;
+        return this.isDebugBuild;
+    }
+
+    public boolean jumpToTestActivityOnStart()
+    {
+        return this.isDebugBuild && this.jumpToTestActivityOnStart;
     }
 
     public boolean useExternalStorage()
     {
-        return useExternalStorage;
+        return this.isDebugBuild && this.useExternalStorage;
     }
 
-    public boolean validateContent()
+    public boolean alwaysImportFromDatabaseMock()
     {
-        return this.validateContent;
+        return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
+    }
+
+    public boolean createExportFileIfNotExists()
+    {
+        return this.isDebugBuild && this.createExportFileIfNonexistent;
     }
 
     public boolean reinitializeContentFromDatabaseMock()
     {
-        return reinitializeContentFromDatabaseMock;
+        return this.isDebugBuild && this.useDefaultContentFromDatabaseMockOnStartup;
     }
+
+    public boolean validateContent()
+    {
+        return this.isDebugBuild && this.validateContent;
+    }
+
 }

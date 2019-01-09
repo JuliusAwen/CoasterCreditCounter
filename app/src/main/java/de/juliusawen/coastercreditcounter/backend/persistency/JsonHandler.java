@@ -66,11 +66,13 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Stopwatch stopwatchImport = new Stopwatch(true);
 
-        if(App.DEBUG && App.config.reinitializeContentFromDatabaseMock())
+        content.clear();
+
+        if((!App.isInitialized && App.config.reinitializeContentFromDatabaseMock()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: reinitializing content from DatabaseMock");
+            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: importing default content from DatabaseMock");
             boolean success = this.useAndExportDefaultContent(content);
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: reinitializing content from DatabaseMock - took [%d]ms", stopwatchImport.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing default content from DatabaseMock successful[%S]- took [%d]ms", success, stopwatchImport.stop()));
             return success;
         }
         else
@@ -87,11 +89,12 @@ public class JsonHandler implements IDatabaseWrapper
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content successful - took [%d]ms", stopwatchImport.stop()));
                 return true;
             }
-            else if(App.DEBUG && App.config.createExportFileIfNotExists())
+            else if(App.config.createExportFileIfNotExists())
             {
                 Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
                 boolean success = this.useAndExportDefaultContent(content);
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content - took [%d]ms", stopwatchImport.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms",
+                        success, stopwatchImport.stop()));
                 return success;
             }
             else
@@ -112,7 +115,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        if(App.DEBUG && App.config.useExternalStorage())
+        if(App.config.useExternalStorage())
         {
             Log.e(Constants.LOG_TAG, ("JsonHandler.loadContent:: running DEBUG build - using external json..."));
             return this.importContent(content);
@@ -148,8 +151,6 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!jsonString.isEmpty())
         {
-            content.clear();
-
             if(this.addChildlessOrphanElements(jsonString, content))
             {
                 this.entangleElements(this.temporaryLocations, content);
@@ -533,7 +534,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
-        if(App.DEBUG && App.config.useExternalStorage())
+        if(App.config.useExternalStorage())
         {
             Log.e(Constants.LOG_TAG, ("JsonHandler.saveContent:: running DEBUG build - using external json..."));
             return this.exportContent(content);

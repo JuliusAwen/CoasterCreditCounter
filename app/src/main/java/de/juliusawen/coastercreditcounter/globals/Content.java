@@ -56,7 +56,7 @@ public class Content
 
         if(this.persistence.loadContent(this))
         {
-            if(App.DEBUG && App.config.validateContent() && this.validate())
+            if(App.config.validateContent() && this.validate())
             {
                 Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
                 return true;
