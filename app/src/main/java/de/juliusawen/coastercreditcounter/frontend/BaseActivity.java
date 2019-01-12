@@ -511,6 +511,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     public void hideProgressBar()
     {
         this.progressBar.setVisibility(View.GONE);
+        this.progressBar = null;
     }
 
     protected boolean requestPermissionWriteExternalStorage()

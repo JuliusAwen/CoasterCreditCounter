@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
 public class Location extends Element
 {
@@ -38,7 +39,9 @@ public class Location extends Element
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            JsonTool.putChildren(jsonObject, this);
 
             Log.v(Constants.LOG_TAG, String.format("Location.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

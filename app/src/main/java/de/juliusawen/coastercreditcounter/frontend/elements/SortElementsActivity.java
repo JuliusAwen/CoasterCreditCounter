@@ -28,6 +28,7 @@ import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 public class SortElementsActivity extends BaseActivity
 {
     private SortElementsActivityViewModel viewModel;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,10 +54,10 @@ public class SortElementsActivity extends BaseActivity
 
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
             }
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewSortElements);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setHasFixedSize(true);
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
 
@@ -69,6 +70,13 @@ public class SortElementsActivity extends BaseActivity
 
             this.createActionDialog();
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     @Override

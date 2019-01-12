@@ -2,11 +2,15 @@ package de.juliusawen.coastercreditcounter.backend.objects.orphanElements;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
 public class Manufacturer extends OrphanElement implements IOrphanElement
 {
@@ -15,6 +19,27 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
     private Manufacturer(String name, UUID uuid)
     {
         super(name, uuid);
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
+
+            Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Manufacturer.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 
     public static Manufacturer create(String name, UUID uuid)
@@ -42,12 +67,6 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
 
     public static Manufacturer getDefault()
     {
-        //TODO: remove workaround when Manufacturers are properly imported via JsonHandler
-        if(Manufacturer.defaultManufacturer == null)
-        {
-            Manufacturer.createAndSetDefault();
-        }
-
         return Manufacturer.defaultManufacturer;
     }
 

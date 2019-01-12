@@ -39,6 +39,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public  class ShowAttractionsFragment extends Fragment
 {
     private ShowAttractionsFragmentViewModel viewModel;
+    private RecyclerView recyclerView;
 
     public ShowAttractionsFragment() {}
 
@@ -94,9 +95,16 @@ public  class ShowAttractionsFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        this.recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroyView();
     }
 
     @Override

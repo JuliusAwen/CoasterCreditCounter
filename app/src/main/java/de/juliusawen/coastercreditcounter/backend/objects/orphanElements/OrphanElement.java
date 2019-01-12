@@ -10,6 +10,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
 public abstract class OrphanElement extends Element implements IElement, IOrphanElement
 {
@@ -23,7 +24,9 @@ public abstract class OrphanElement extends Element implements IElement, IOrphan
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, true));
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            JsonTool.putChildren(jsonObject, this);
 
             Log.v(Constants.LOG_TAG, String.format("OrphanElement.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

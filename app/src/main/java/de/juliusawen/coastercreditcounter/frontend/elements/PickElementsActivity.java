@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class PickElementsActivity extends BaseActivity
 {
     private PickElementsActivityViewModel viewModel;
+    private RecyclerView recyclerView;
     private TextView textViewSelectOrDeselectAll;
     private RadioButton radioButtonSelectOrDeselectAll;
 
@@ -80,10 +81,10 @@ public class PickElementsActivity extends BaseActivity
                 }
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewPickElements);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setHasFixedSize(true);
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             super.addToolbar();
             super.addToolbarHomeButton();
@@ -96,6 +97,13 @@ public class PickElementsActivity extends BaseActivity
 
             this.addSelectOrDeselectAllBar();
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     private void decorateFloatingActionButton()

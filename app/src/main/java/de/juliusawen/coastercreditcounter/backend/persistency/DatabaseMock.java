@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
@@ -581,12 +582,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         Manufacturer.createAndSetDefault();
         manufacturers.add(Manufacturer.getDefault());
         content.addElements(ConvertTool.convertElementsToType(manufacturers, IElement.class));
+        this.setDefaultManufacturers();
 
         AttractionCategory.createAndSetDefault();
         attractionCategories.add(AttractionCategory.getDefault());
         content.addElements(ConvertTool.convertElementsToType(attractionCategories, IElement.class));
 
         content.addElements(ConvertTool.convertElementsToType(blueprints, IElement.class));
+
 
         Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
 
@@ -598,6 +601,22 @@ public final class DatabaseMock implements IDatabaseWrapper
         for(IOnSiteAttraction attraction : attractions)
         {
             visit.addChildAndSetParent(VisitedAttraction.create(attraction));
+        }
+    }
+
+    private void setDefaultManufacturers()
+    {
+        List<IAttraction> manufacturedAttractions = new ArrayList<>();
+        manufacturedAttractions.addAll(App.content.getContentAsType(IBlueprint.class));
+        manufacturedAttractions.addAll(App.content.getContentAsType(CustomAttraction.class));
+        manufacturedAttractions.addAll(App.content.getContentAsType(CustomCoaster.class));
+
+        for(IAttraction attraction : manufacturedAttractions)
+        {
+            if(attraction.getManufacturer() == null)
+            {
+                attraction.setManufacturer(Manufacturer.getDefault());
+            }
         }
     }
 

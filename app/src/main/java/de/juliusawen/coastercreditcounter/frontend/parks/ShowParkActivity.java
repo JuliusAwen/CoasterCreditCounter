@@ -41,7 +41,7 @@ public class ShowParkActivity extends BaseActivity
     private static final int ATTRACTIONS = 1;
     private static final int VISITS = 2;
     
-    ShowParkActivityViewModel viewModel;
+    private ShowParkActivityViewModel viewModel;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)

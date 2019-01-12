@@ -39,6 +39,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ShowVisitsFragment extends Fragment
 {
     private ShowVisitsFragmentViewModel viewModel;
+    private RecyclerView recyclerView;
 
     public ShowVisitsFragment() {}
 
@@ -89,12 +90,17 @@ public class ShowVisitsFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onViewCreated:: RecyclerView initialized");
+        this.recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

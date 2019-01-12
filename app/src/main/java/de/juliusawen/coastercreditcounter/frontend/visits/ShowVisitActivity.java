@@ -39,6 +39,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ShowVisitActivity extends BaseActivity
 {
     private ShowVisitActivityViewModel viewModel;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -86,9 +87,9 @@ public class ShowVisitActivity extends BaseActivity
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             if(!this.allAttractionsAdded())
             {
@@ -101,6 +102,13 @@ public class ShowVisitActivity extends BaseActivity
                 super.disableFloatingActionButton();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     private void decorateFloatingActionButton()

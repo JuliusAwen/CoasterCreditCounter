@@ -42,6 +42,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ShowLocationsActivityViewModel viewModel;
+    private RecyclerView recyclerView;
     private boolean actionConfirmed;
 
     @Override
@@ -54,8 +55,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(App.isInitialized)
         {
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
-
             this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
 
             if(this.viewModel.currentLocation == null)
@@ -79,8 +78,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewShowLocations);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             super.addToolbar();
             super.addToolbarHomeButton();
@@ -88,6 +88,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     @Override

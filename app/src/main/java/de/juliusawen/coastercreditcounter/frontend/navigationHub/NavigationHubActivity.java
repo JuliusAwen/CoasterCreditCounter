@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.frontend.navigationHub;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -104,7 +105,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
 
         //Todo: remove
-        navigationMenu.findItem(R.id.navigationItem_ManageManufacturers).setEnabled(false);
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
     }
 
@@ -227,7 +227,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        this.exportContent();
+                        this.startExportContent();
                     }
                 }
                 break;
@@ -265,7 +265,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    this.exportContent();
+                    this.startExportContent();
                 }
                 break;
             }
@@ -274,59 +274,149 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    this.importContent();
+                    this.startImportContent();
                 }
                 break;
             }
         }
     }
 
-    private void importContent()
+    private void startImportContent()
     {
-        if(!App.persistence.importContent())
+        if(this.viewModel.isImporting)
         {
-            Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.error_import_fail, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: app is importing...");
+            this.showProgressBar();
         }
         else
         {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.information_import_success), Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.importContent.onSnackbarClick:: restoring content backup...");
+            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: starting async import...");
 
-                    if(App.content.restoreBackup())
-                    {
-                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
-                    }
-                    else
-                    {
-                        Log.e(Constants.LOG_TAG, "NavigationHubActivity.importContent.onSnackbarClick:: restoring content backup failed!");
-                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.error_undo_not_possible));
-                    }
-                }
-            });
-            snackbar.show();
+            this.viewModel.isImporting = true;
+            this.showProgressBar();
+            new ImportContent().execute(this);
         }
     }
 
-    private void exportContent()
+    private static class ImportContent extends AsyncTask<NavigationHubActivity, Void, NavigationHubActivity>
     {
-        String toast;
-
-        if(App.persistence.exportContent())
+        @Override
+        protected NavigationHubActivity doInBackground(NavigationHubActivity... navigationHubActivities)
         {
-            toast = getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath());
-            this.setMenuItemImportAvailability();
+            NavigationHubActivity navigationHubActivity = navigationHubActivities[0];
+
+            boolean success = App.persistence.importContent();
+
+            if(success)
+            {
+                return navigationHubActivity;
+            }
+
+            navigationHubActivity.reportImportContentFailed();
+
+            String message = "Import failed";
+            Log.e(Constants.LOG_TAG, String.format("NavigationHubActivity.importContent.doInBackground:: %s", message));
+            throw new IllegalStateException(message);
+        }
+
+        @Override
+        protected void onPostExecute(NavigationHubActivity navigationHubActivity)
+        {
+            super.onPostExecute(navigationHubActivity);
+            navigationHubActivity.finishImportContent();
+        }
+    }
+
+    public void reportImportContentFailed()
+    {
+        Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.error_import_fail, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+    }
+
+    public void finishImportContent()
+    {
+        Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: finishing import...");
+        this.hideProgressBar();
+
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.information_import_success), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent.onSnackbarClick:: restoring content backup...");
+
+                if(App.content.restoreBackup())
+                {
+                    Toaster.makeToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent.onSnackbarClick:: restoring content backup failed!");
+                    Toaster.makeToast(NavigationHubActivity.this, getString(R.string.error_undo_not_possible));
+                }
+            }
+        });
+        snackbar.show();
+    }
+
+    private void startExportContent()
+    {
+        if(this.viewModel.isExporting)
+        {
+            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: app is exporting...");
+            this.showProgressBar();
         }
         else
         {
-            toast = getString(R.string.error_export_fail);
+            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: starting async export...");
+
+            this.viewModel.isExporting = true;
+            this.showProgressBar();
+            new ExportContent().execute(this);
+        }
+    }
+
+    private static class ExportContent extends AsyncTask<NavigationHubActivity, Void, NavigationHubActivity>
+    {
+        @Override
+        protected NavigationHubActivity doInBackground(NavigationHubActivity... navigationHubActivities)
+        {
+            NavigationHubActivity navigationHubActivity = navigationHubActivities[0];
+
+            boolean success = App.persistence.exportContent();
+
+            if(success)
+            {
+                return navigationHubActivity;
+            }
+
+            navigationHubActivity.reportExportContentFailed();
+
+            String message = "Export failed";
+            Log.e(Constants.LOG_TAG, String.format("NavigationHubActivity.ExportContent.doInBackground:: %s", message));
+            throw new IllegalStateException(message);
         }
 
-        Toaster.makeLongToast(NavigationHubActivity.this, toast);
+        @Override
+        protected void onPostExecute(NavigationHubActivity navigationHubActivity)
+        {
+            super.onPostExecute(navigationHubActivity);
+            navigationHubActivity.finishExportContent();
+        }
+    }
+
+    public void reportExportContentFailed()
+    {
+        Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.error_export_fail));
+    }
+
+    public void finishExportContent()
+    {
+        Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportExport:: finishing import/export...");
+
+        this.hideProgressBar();
+        this.setMenuItemImportAvailability();
+        Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
     }
 }
 

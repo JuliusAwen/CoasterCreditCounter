@@ -2,10 +2,6 @@ package de.juliusawen.coastercreditcounter.backend.objects.elements;
 
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,42 +64,6 @@ public abstract class Element implements IElement
     public String toString()
     {
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
-    }
-
-    public static JSONObject toJson(IElement element, boolean parseChildren) throws JSONException
-    {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            jsonObject.put(Constants.JSON_STRING_NAME, element.getName());
-            jsonObject.put(Constants.JSON_STRING_UUID, element.getUuid().toString());
-
-            JSONArray jsonArrayChildren = new JSONArray();
-
-            if(element.getChildren().isEmpty() || !parseChildren)
-            {
-                jsonObject.put(Constants.JSON_STRING_CHILDREN, JSONObject.NULL);
-            }
-            else
-            {
-                for(IElement child : element.getChildren())
-                {
-                    jsonArrayChildren.put(child.getUuid().toString());
-                }
-
-                jsonObject.put(Constants.JSON_STRING_CHILDREN, jsonArrayChildren);
-            }
-
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-
-            Log.e(Constants.LOG_TAG, String.format("Element.toJson:: creation for %s failed with JSONException [%s]", element, e.getMessage()));
-            throw e;
-        }
     }
 
     public String getName()

@@ -51,6 +51,7 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ManageAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ManageAttractionCategoriesViewModel viewModel;
+    private RecyclerView recyclerView;
     private boolean actionConfirmed;
 
     @Override
@@ -82,16 +83,12 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
 
-                //TODO: remove workaround when Manufacturers are properly imported via JsonHandler
-                if(App.config.reinitializeContentFromDatabaseMock())
-                {
-                    Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
-                    typesToDisplayManufacturer.add(CustomCoaster.class);
-                    typesToDisplayManufacturer.add(CustomAttraction.class);
-                    typesToDisplayManufacturer.add(CoasterBlueprint.class);
-                    typesToDisplayManufacturer.add(AttractionBlueprint.class);
-                    this.viewModel.contentRecyclerViewAdapter.setTypesToDisplayManufacturer(typesToDisplayManufacturer);
-                }
+                Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
+                typesToDisplayManufacturer.add(CustomCoaster.class);
+                typesToDisplayManufacturer.add(CustomAttraction.class);
+                typesToDisplayManufacturer.add(CoasterBlueprint.class);
+                typesToDisplayManufacturer.add(AttractionBlueprint.class);
+                this.viewModel.contentRecyclerViewAdapter.setTypesToDisplayManufacturer(typesToDisplayManufacturer);
 
                 Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
                 typesToDisplayLocation.add(CustomCoaster.class);
@@ -102,9 +99,9 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                 this.viewModel.contentRecyclerViewAdapter.setTypesToDisplayLocation(typesToDisplayLocation);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             super.addToolbar();
             super.addToolbarHomeButton();
@@ -115,6 +112,13 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             super.addFloatingActionButton();
             this.decorateFloatingActionButton();
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     @Override

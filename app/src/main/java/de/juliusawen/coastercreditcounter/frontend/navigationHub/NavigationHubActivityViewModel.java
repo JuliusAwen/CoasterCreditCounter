@@ -8,4 +8,6 @@ class NavigationHubActivityViewModel extends ViewModel
 {
     MenuItem selectedMenuItem;
     String exportFileAbsolutePath;
+    boolean isImporting;
+    boolean isExporting;
 }

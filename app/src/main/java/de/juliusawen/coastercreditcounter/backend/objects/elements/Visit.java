@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
 public class Visit extends Element
 {
@@ -75,7 +76,8 @@ public class Visit extends Element
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
+
+            JsonTool.putNameAndUuid(jsonObject, this);
 
             jsonObject.put(Constants.JSON_STRING_DAY, this.getCalendar().get(Calendar.DAY_OF_MONTH));
             jsonObject.put(Constants.JSON_STRING_MONTH, this.getCalendar().get(Calendar.MONTH));

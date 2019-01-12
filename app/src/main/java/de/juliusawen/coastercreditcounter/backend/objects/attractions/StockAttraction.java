@@ -7,10 +7,10 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
 public class StockAttraction extends Attraction implements IOnSiteAttraction
 {
@@ -46,7 +46,8 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         try
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_STRING_ELEMENT, Element.toJson(this, false));
+
+            JsonTool.putNameAndUuid(jsonObject, this);
             jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 
