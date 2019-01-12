@@ -25,6 +25,14 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="manufacturer_text_view" parent="standard_text_view">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="location_text_view" parent="standard_text_view">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="standard_button" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>

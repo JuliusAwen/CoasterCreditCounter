@@ -42,11 +42,11 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
+        AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters", null);
         AttractionCategory attractionCategoryThrillRides = AttractionCategory.create("Thrill Rides", null);
         AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides", null);
-        AttractionCategory attractionCategoryRollerCoasters = AttractionCategory.create("RollerCoasters", null);
-        AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters", null);
         AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides", null);
+        AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters", null);
 
         List<AttractionCategory> attractionCategories = new ArrayList<>();
         attractionCategories.add(attractionCategoryRollerCoasters);
@@ -122,7 +122,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         blueprints.add(suspendedLoopingCoaster);
 
         CoasterBlueprint boomerang = CoasterBlueprint.create("Boomerang", 2, null);
-        suspendedLoopingCoaster.setManufacturer(vekoma);
+        boomerang.setManufacturer(vekoma);
         boomerang.setAttractionCategory(attractionCategoryRollerCoasters);
         blueprints.add(boomerang);
 

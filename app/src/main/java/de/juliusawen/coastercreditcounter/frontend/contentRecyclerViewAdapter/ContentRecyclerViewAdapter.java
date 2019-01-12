@@ -27,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
@@ -62,6 +65,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
+
+    private Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
+    private Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
+
 
     enum ViewType
     {
@@ -126,14 +133,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         final LinearLayout linearLayout;
         final ImageView imageViewExpandToggle;
+        final TextView textViewManufacturer;
         final TextView textViewName;
+        final TextView textViewLocation;
+
 
         ViewHolderItem(View view)
         {
             super(view);
             this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerViewItem);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
-            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem);
+            this.textViewManufacturer = view.findViewById(R.id.textViewRecyclerViewItem_Manufacturer);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
+            this.textViewLocation = view.findViewById(R.id.textViewRecyclerViewItem_Location);
         }
     }
 
@@ -325,7 +337,60 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
 
             viewHolder.textViewName.setText(item.getName());
-            viewHolder.textViewName.setTag(item);
+
+            boolean displayManufacturer = false;
+            for(Class type : this.typesToDisplayManufacturer)
+            {
+                if(type.equals(item.getClass()))
+                {
+                    displayManufacturer = true;
+                    break;
+                }
+            }
+
+            if(displayManufacturer)
+            {
+                viewHolder.textViewManufacturer.setVisibility(View.VISIBLE);
+                viewHolder.textViewManufacturer.setText(((Attraction)item).getManufacturer().getName());
+            }
+            else
+            {
+                viewHolder.textViewManufacturer.setVisibility(View.GONE);
+            }
+
+            boolean displayLocation = false;
+            for(Class type : this.typesToDisplayLocation)
+            {
+                if(type.equals(item.getClass()))
+                {
+                    displayLocation = true;
+                    break;
+                }
+            }
+
+            if(displayLocation)
+            {
+                viewHolder.textViewLocation.setVisibility(View.VISIBLE);
+
+                String locationName;
+
+                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                {
+                    locationName = "Blueprint";
+                    viewHolder.textViewLocation.setTypeface(null, Typeface.ITALIC);
+                }
+                else
+                {
+                    locationName = item.getParent().getName();
+                    viewHolder.textViewLocation.setTypeface(null, Typeface.NORMAL);
+                }
+
+                viewHolder.textViewLocation.setText(locationName);
+            }
+            else
+            {
+                viewHolder.textViewLocation.setVisibility(View.GONE);
+            }
 
             viewHolder.itemView.setTag(item);
 
@@ -908,5 +973,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setTypefaceForType:: unknown typeface");
         }
+    }
+
+    public void setTypesToDisplayManufacturer(Set<Class<? extends IAttraction>> types)
+    {
+        this.typesToDisplayManufacturer = types;
+    }
+
+    public void setTypesToDisplayLocation(Set<Class<? extends IAttraction>> types)
+    {
+        this.typesToDisplayLocation = types;
     }
 }

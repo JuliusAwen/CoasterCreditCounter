@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
@@ -25,8 +26,13 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.ICategorized;
+import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
@@ -75,6 +81,25 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         childTypesToExpand);
 
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+
+                //TODO: remove workaround when Manufacturers are properly imported via JsonHandler
+                if(App.config.reinitializeContentFromDatabaseMock())
+                {
+                    Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
+                    typesToDisplayManufacturer.add(CustomCoaster.class);
+                    typesToDisplayManufacturer.add(CustomAttraction.class);
+                    typesToDisplayManufacturer.add(CoasterBlueprint.class);
+                    typesToDisplayManufacturer.add(AttractionBlueprint.class);
+                    this.viewModel.contentRecyclerViewAdapter.setTypesToDisplayManufacturer(typesToDisplayManufacturer);
+                }
+
+                Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
+                typesToDisplayLocation.add(CustomCoaster.class);
+                typesToDisplayLocation.add(CustomAttraction.class);
+                typesToDisplayLocation.add(StockAttraction.class);
+                typesToDisplayLocation.add(CoasterBlueprint.class);
+                typesToDisplayLocation.add(AttractionBlueprint.class);
+                this.viewModel.contentRecyclerViewAdapter.setTypesToDisplayLocation(typesToDisplayLocation);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             RecyclerView recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);

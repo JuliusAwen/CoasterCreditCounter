@@ -42,6 +42,12 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
 
     public static Manufacturer getDefault()
     {
+        //TODO: remove workaround when Manufacturers are properly imported via JsonHandler
+        if(Manufacturer.defaultManufacturer == null)
+        {
+            Manufacturer.createAndSetDefault();
+        }
+
         return Manufacturer.defaultManufacturer;
     }
 
