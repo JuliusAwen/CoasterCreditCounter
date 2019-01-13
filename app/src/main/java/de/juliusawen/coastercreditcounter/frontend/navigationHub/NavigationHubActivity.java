@@ -161,11 +161,13 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
                 break;
             }
+
             case R.id.navigationItem_ManageManufacturers:
             {
-                Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
                 break;
             }
+
             case R.id.navigationItem_ManageModels:
             {
                 Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");

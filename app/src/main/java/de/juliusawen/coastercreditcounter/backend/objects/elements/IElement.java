@@ -33,6 +33,8 @@ public interface IElement
     List<IElement> getChildren();
     List<IElement> getChildrenOfType(Class<? extends IElement> type);
     <T extends IElement> List<T> getChildrenAsType(Class<T> type);
+
+    int getChildCount();
     int getChildCountOfType(Class<? extends IElement> type);
 
     boolean hasChildrenOfType(Class<? extends IElement> type);

@@ -53,6 +53,7 @@
     <string name="error_remove_failed">Removal failed…</string>
     <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected!</string>
+    <string name="error_missing_text">-text is missing-</string>
 
 
     <!--GENERIC DIALOG TEXTS-->
@@ -152,26 +153,39 @@
     <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="title_attraction_category_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
-    <string name="subtitle_attraction_category_apply_to_attractions">to apply category to</string>
+    <string name="subtitle_attraction_category_assign_to_attractions">to assign category to</string>
 
-    <string name="selection_apply_to_attractions">apply to attractions</string>
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
-
-    <string name="alert_dialog_message_delete_attraction_category_with_children">
-        %1$d attraction(s) are in this category - do you really want to delete category \'%2$s\'?
-        \n(attractions will be sorted into default category \'%3$s\')
-    </string>
-    <string name="alert_dialog_message_delete_attraction_category_without_children">Do you really want to delete category \'%1$s\'?</string>
-
-    <string name="information_applied_category_to_attractions">applied category \'%1$s\' to %2$d attractions</string>
-    <string name="information_set_as_default">\'%1$s\' set as default category</string>
 
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
 
-
-
     <!--MANUFACTURERS-->
     <string name="name_default_manufacturer">unknown</string>
+
+    <string name="title_manufacturers">Manufacturers</string>
+    <string name="title_manufacturer_create">Create Manufacturer</string>
+    <string name="title_manufacturers_sort">Sort Manufacturers</string>
+    <string name="title_manufacturer_edit">Edit Manufacturer</string>
+    <string name="subtitle_manufacturer_assign_to_attractions">to assign manufacturer to</string>
+
+    <string name="selection_sort_manufacturers">sort manufacturers</string>
+
+    <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
+
+
+    <!--ORPHAN ELEMENTS-->
+    <string name="selection_assign_to_attractions">assign to attractions</string>
+
+    <string name="alert_dialog_message_delete_orphan_element_has_children">
+        %1$d attraction(s) are assigned - do you really want to delete \'%2$s\'?
+        \n(default \'%3$s\' will be assigned to attractions)
+    </string>
+    <string name="alert_dialog_message_delete_orphan_element_has_no_children">Do you really want to delete \'%1$s\'?</string>
+
+
+    <string name="information_assigned_to_attractions">assigned \'%1$s\' to %2$d attractions</string>
+    <string name="information_set_as_default">\'%1$s\' set as default</string>
+
 
 
 
@@ -250,7 +264,9 @@
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_attraction_category">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_create_attraction_category">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
 
 </resources>

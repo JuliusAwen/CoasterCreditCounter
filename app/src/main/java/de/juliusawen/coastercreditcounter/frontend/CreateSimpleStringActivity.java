@@ -36,6 +36,7 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
             this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
 
             Intent intent = getIntent();
+            String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
             String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
             String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
             String hint = intent.getStringExtra(Constants.EXTRA_HINT);
@@ -50,7 +51,7 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
 
             super.addToolbar();
             super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.getString(R.string.title_attraction_category_create), null);
+            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
         }
     }
 

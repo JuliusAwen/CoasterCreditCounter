@@ -65,18 +65,41 @@ public abstract class ActivityTool
 
     public static void startActivityManage(Context context, int requestCode)
     {
-        Class type = null;
+        String type = null;
+        String toolbarTitle;
+        String helpTitle;
+        String helpText;
 
         switch(requestCode)
         {
             case Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES:
-                type = ManageOrphanElementsActivity.class;
+                type = Constants.TYPE_ATTRACTION_CATEGORY;
+                toolbarTitle = context.getString(R.string.title_attraction_categories);
+                helpTitle = context.getString(R.string.title_attraction_categories);
+                helpText = context.getString(R.string.help_text_manage_attraction_category);
                 break;
+
+            case Constants.REQUEST_CODE_MANAGE_MANUFACTURERS:
+                type = Constants.TYPE_MANUFACTURER;
+                toolbarTitle = context.getString(R.string.title_manufacturers);
+                helpTitle = context.getString(R.string.title_manufacturers);
+                helpText = context.getString(R.string.help_text_manage_manufacturer);
+                break;
+
+                default:
+                    toolbarTitle = context.getString(R.string.error_missing_text);
+                    helpTitle = context.getString(R.string.error_missing_text);
+                    helpText = context.getString(R.string.error_missing_text);
         }
 
         if(type != null)
         {
-            Intent intent = new Intent(context, type);
+            Intent intent = new Intent(context, ManageOrphanElementsActivity.class);
+            intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, type);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
+            intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
+            intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
+
             context.startActivity(intent);
 
             Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityManage:: started [%s]",
@@ -92,7 +115,7 @@ public abstract class ActivityTool
     public static void startActivityEditForResult(Context context, int requestCode, IElement element)
     {
         Class type = null;
-        String toolbarTitle = null;
+        String toolbarTitle = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -109,6 +132,11 @@ public abstract class ActivityTool
             case Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_attraction_category_edit);
+                break;
+
+            case Constants.REQUEST_CODE_EDIT_MANUFACTURER:
+                type = EditElementActivity.class;
+                toolbarTitle = context.getString(R.string.title_manufacturer_edit);
                 break;
         }
 
@@ -166,12 +194,23 @@ public abstract class ActivityTool
         }
         else
         {
-            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+            switch(requestCode)
             {
-                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
-                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
-                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
+                case Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY:
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
+                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
+                    break;
+
+                case Constants.REQUEST_CODE_CREATE_MANUFACTURER:
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_manufacturer_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_manufacturer_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_manufacturer));
+                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_manufacturer_name));
+                    break;
             }
+
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
@@ -184,7 +223,7 @@ public abstract class ActivityTool
 
     public static void startActivitySortForResult(Context context, int requestCode, List<IElement> elementsToSort)
     {
-        String toolbarTitle = null;
+        String toolbarTitle;
 
         switch(requestCode)
         {
@@ -203,9 +242,16 @@ public abstract class ActivityTool
             case Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES:
                 toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
                 break;
+
+            case Constants.REQUEST_CODE_SORT_MANUFACTURERS:
+                toolbarTitle = context.getString(R.string.title_manufacturers_sort);
+                break;
+
+                default:
+                    toolbarTitle = context.getString(R.string.error_missing_text);
         }
 
-        if(toolbarTitle != null)
+        if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
         {
             Intent intent = new Intent(context, SortElementsActivity.class);
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
@@ -217,16 +263,15 @@ public abstract class ActivityTool
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start activity: unknown request code [%s]"
-                    , requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
-        String toolbarTitle = null;
-        String toolbarSubtitle = null;
+        String toolbarTitle;
+        String toolbarSubtitle;
 
         switch(requestCode)
         {
@@ -245,13 +290,22 @@ public abstract class ActivityTool
                 toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
                 break;
 
-            case Constants.REQUEST_CODE_APPLY_CATEGORY_TO_ATTRACTIONS:
+            case Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
                 break;
+
+            case Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_attractions_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
+                break;
+
+                default:
+                    toolbarTitle = context.getString(R.string.error_missing_text);
+                    toolbarSubtitle = context.getString(R.string.error_missing_text);
         }
 
-        if(toolbarTitle != null)
+        if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
         {
             Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
@@ -264,8 +318,7 @@ public abstract class ActivityTool
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start activity: unknown request code [%s]"
-                    , requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }

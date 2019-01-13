@@ -70,12 +70,6 @@ public abstract class Attraction extends Element implements IAttraction
 
     public AttractionCategory getAttractionCategory()
     {
-        if(this.attractionCategory == null)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.getAttractionCategory:: %s has no AttractionCategory - using default", this));
-            this.attractionCategory = AttractionCategory.getDefault();
-        }
-
         return this.attractionCategory;
     }
 
@@ -98,12 +92,6 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Manufacturer getManufacturer()
     {
-        if(this.manufacturer == null)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.getManufacturer:: %s has no Manufacturer - using default", this));
-            this.manufacturer = Manufacturer.getDefault();
-        }
-
         return this.manufacturer;
     }
 
