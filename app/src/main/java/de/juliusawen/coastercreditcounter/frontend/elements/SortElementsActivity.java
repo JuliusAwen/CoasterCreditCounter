@@ -21,7 +21,6 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
@@ -83,8 +82,8 @@ public class SortElementsActivity extends BaseActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(Menu.NONE, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
-        menu.add(Menu.NONE, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
+        menu.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+        menu.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -92,16 +91,15 @@ public class SortElementsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.onOptionItemSelected:: [%S] selected", selection));
-        switch (selection)
+        Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
+        switch (item.getItemId())
         {
-            case SORT_ASCENDING:
+            case Constants.SELECTION_SORT_ASCENDING:
                 SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;
 
-            case SORT_DESCENDING:
+            case Constants.SELECTION_SORT_DESCENDING:
                 SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;

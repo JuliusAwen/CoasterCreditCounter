@@ -57,13 +57,13 @@ public class HelpOverlayFragment extends Fragment
             this.viewModel.helpOverlayFragmentTitle = getArguments().getString(Constants.FRAGMENT_ARG_HELP_TITLE);
             if(this.viewModel.helpOverlayFragmentTitle == null)
             {
-                this.viewModel.helpOverlayFragmentTitle = getString(R.string.title_help, getString(R.string.help_title_not_available));
+                this.viewModel.helpOverlayFragmentTitle = getString(R.string.title_help, getString(R.string.help_title_not_yet_available));
             }
 
             this.viewModel.helpOverlayFragmentMessage = getArguments().getCharSequence(Constants.FRAGMENT_ARG_HELP_MESSAGE);
             if(this.viewModel.helpOverlayFragmentMessage == null)
             {
-                this.viewModel.helpOverlayFragmentMessage = getString(R.string.help_text_not_available);
+                this.viewModel.helpOverlayFragmentMessage = getString(R.string.help_text_not_yet_available);
             }
         }
     }

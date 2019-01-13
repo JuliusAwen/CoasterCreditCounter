@@ -13,8 +13,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
-import de.juliusawen.coastercreditcounter.frontend.attractionCategories.ManageAttractionCategoriesActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
+import de.juliusawen.coastercreditcounter.frontend.elements.ManageOrphanElementsActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.SortElementsActivity;
 import de.juliusawen.coastercreditcounter.frontend.locations.CreateLocationActivity;
@@ -31,17 +31,19 @@ public abstract class ActivityTool
     {
         Class type = null;
 
-        if(requestCode == Constants.REQUEST_SHOW_LOCATION)
+        switch(requestCode)
         {
-            type = ShowLocationsActivity.class;
-        }
-        else if(requestCode == Constants.REQUEST_SHOW_PARK)
-        {
-            type = ShowParkActivity.class;
-        }
-        else if(requestCode == Constants.REQUEST_SHOW_VISIT)
-        {
-            type = ShowVisitActivity.class;
+            case Constants.REQUEST_CODE_SHOW_LOCATION:
+                type = ShowLocationsActivity.class;
+                break;
+
+            case Constants.REQUEST_CODE_SHOW_PARK:
+                type = ShowParkActivity.class;
+                break;
+
+            case Constants.REQUEST_CODE_SHOW_VISIT:
+                type = ShowVisitActivity.class;
+                break;
         }
 
         if(type != null)
@@ -65,9 +67,11 @@ public abstract class ActivityTool
     {
         Class type = null;
 
-        if(requestCode == Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES)
+        switch(requestCode)
         {
-            type = ManageAttractionCategoriesActivity.class;
+            case Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES:
+                type = ManageOrphanElementsActivity.class;
+                break;
         }
 
         if(type != null)
@@ -90,20 +94,22 @@ public abstract class ActivityTool
         Class type = null;
         String toolbarTitle = null;
 
-        if(requestCode == Constants.REQUEST_EDIT_LOCATION)
+        switch(requestCode)
         {
-            type = EditElementActivity.class;
-            toolbarTitle = context.getString(R.string.title_location_edit);
-        }
-        else if(requestCode == Constants.REQUEST_EDIT_PARK)
-        {
-            type = EditElementActivity.class;
-            toolbarTitle = context.getString(R.string.title_park_edit);
-        }
-        else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
-        {
-            type = EditElementActivity.class;
-            toolbarTitle = context.getString(R.string.title_attraction_category_edit);
+            case Constants.REQUEST_CODE_EDIT_LOCATION:
+                type = EditElementActivity.class;
+                toolbarTitle = context.getString(R.string.title_location_edit);
+                break;
+
+            case Constants.REQUEST_CODE_EDIT_PARK:
+                type = EditElementActivity.class;
+                toolbarTitle = context.getString(R.string.title_park_edit);
+                break;
+
+            case Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY:
+                type = EditElementActivity.class;
+                toolbarTitle = context.getString(R.string.title_attraction_category_edit);
+                break;
         }
 
         if(type != null)
@@ -128,21 +134,24 @@ public abstract class ActivityTool
     {
         Class type;
 
-        if(requestCode == Constants.REQUEST_CREATE_LOCATION)
+        switch(requestCode)
         {
-            type = CreateLocationActivity.class;
-        }
-        else if(requestCode == Constants.REQUEST_CREATE_PARK)
-        {
-            type = CreateParkActivity.class;
-        }
-        else if(requestCode == Constants.REQUEST_CREATE_VISIT)
-        {
-            type = CreateVisitActivity.class;
-        }
-        else
-        {
-            type = CreateSimpleStringActivity.class;
+            case Constants.REQUEST_CODE_CREATE_LOCATION:
+                type = CreateLocationActivity.class;
+                break;
+
+            case Constants.REQUEST_CODE_CREATE_PARK:
+                type = CreateParkActivity.class;
+                break;
+
+            case Constants.REQUEST_CODE_CREATE_VISIT:
+                type = CreateVisitActivity.class;
+                break;
+
+            default:
+                type = CreateSimpleStringActivity.class;
+                break;
+
         }
 
         Intent intent = new Intent(context, type);
@@ -157,7 +166,7 @@ public abstract class ActivityTool
         }
         else
         {
-            if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
+            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
             {
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
@@ -177,21 +186,23 @@ public abstract class ActivityTool
     {
         String toolbarTitle = null;
 
-        if(requestCode == Constants.REQUEST_SORT_LOCATIONS)
+        switch(requestCode)
         {
-            toolbarTitle = context.getString(R.string.title_locations_sort);
-        }
-        else if(requestCode == Constants.REQUEST_SORT_PARKS)
-        {
-            toolbarTitle = context.getString(R.string.title_parks_sort);
-        }
-        else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
-        {
-            toolbarTitle = context.getString(R.string.title_attractions_sort);
-        }
-        else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
-        {
-            toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
+            case Constants.REQUEST_CODE_SORT_LOCATIONS:
+                toolbarTitle = context.getString(R.string.title_locations_sort);
+                break;
+
+            case Constants.REQUEST_CODE_SORT_PARKS:
+                toolbarTitle = context.getString(R.string.title_parks_sort);
+                break;
+
+            case Constants.REQUEST_CODE_SORT_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_attractions_sort);
+                break;
+
+            case Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES:
+                toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
+                break;
         }
 
         if(toolbarTitle != null)
@@ -217,25 +228,27 @@ public abstract class ActivityTool
         String toolbarTitle = null;
         String toolbarSubtitle = null;
 
-        if(requestCode == Constants.REQUEST_PICK_LOCATIONS)
+        switch(requestCode)
         {
-            toolbarTitle = context.getString(R.string.title_locations_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
-        }
-        else if(requestCode == Constants.REQUEST_PICK_PARKS)
-        {
-            toolbarTitle = context.getString(R.string.title_parks_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
-        }
-        else if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
-        {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
-        }
-        else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
-        {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
+            case Constants.REQUEST_CODE_PICK_LOCATIONS:
+                toolbarTitle = context.getString(R.string.title_locations_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
+                break;
+
+            case Constants.REQUEST_CODE_PICK_PARKS:
+                toolbarTitle = context.getString(R.string.title_parks_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
+                break;
+
+            case Constants.REQUEST_CODE_PICK_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_attractions_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
+                break;
+
+            case Constants.REQUEST_CODE_APPLY_CATEGORY_TO_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_attractions_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_apply_to_attractions);
+                break;
         }
 
         if(toolbarTitle != null)

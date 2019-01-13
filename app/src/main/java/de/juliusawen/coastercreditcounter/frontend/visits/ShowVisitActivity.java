@@ -127,7 +127,7 @@ public class ShowVisitActivity extends BaseActivity
 
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
-                        Constants.REQUEST_PICK_ATTRACTIONS,
+                        Constants.REQUEST_CODE_PICK_ATTRACTIONS,
                         new ArrayList<IElement>(allAttractions));
             }
         });
@@ -144,36 +144,42 @@ public class ShowVisitActivity extends BaseActivity
         {
             List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-            if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
+            switch(requestCode)
             {
-                for(IElement element : resultElements)
+                case Constants.REQUEST_CODE_PICK_ATTRACTIONS:
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
-                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction);
+                    for(IElement element : resultElements)
+                    {
+                        VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                        this.viewModel.visit.addChildAndSetParent(visitedAttraction);
+                        App.content.addElement(visitedAttraction);
 
-                    super.markForCreation(visitedAttraction);
-                }
+                        super.markForCreation(visitedAttraction);
+                    }
 
-                List<IElement> categorizedAttractions =
-                        this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
-                                new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-                this.viewModel.contentRecyclerViewAdapter.setItems(categorizedAttractions);
-
-                super.markForUpdate(this.viewModel.visit);
-            }
-            else if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
-            {
-                IElement parent = resultElements.get(0).getParent();
-                if(parent != null)
-                {
-                    this.viewModel.visit.reorderChildren(resultElements);
-                    Log.d(Constants.LOG_TAG,
-                            String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
-
-                    updateContentRecyclerView(true);
+                    List<IElement> categorizedAttractions =
+                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
+                                    new ArrayList<IAttraction>(this.viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
+                    this.viewModel.contentRecyclerViewAdapter.setItems(categorizedAttractions);
 
                     super.markForUpdate(this.viewModel.visit);
+                    break;
+                }
+
+                case Constants.REQUEST_CODE_SORT_ATTRACTIONS:
+                {
+                    IElement parent = resultElements.get(0).getParent();
+                    if(parent != null)
+                    {
+                        this.viewModel.visit.reorderChildren(resultElements);
+                        Log.d(Constants.LOG_TAG,
+                                String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
+
+                        updateContentRecyclerView(true);
+
+                        super.markForUpdate(this.viewModel.visit);
+                    }
+                    break;
                 }
             }
         }

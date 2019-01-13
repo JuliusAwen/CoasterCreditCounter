@@ -36,7 +36,6 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragme
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
@@ -182,9 +181,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.helpOverlayFragment != null)
         {
-            if(menu.findItem(Selection.HELP.ordinal()) == null)
+            if(menu.findItem(Constants.SELECTION_HELP) == null)
             {
-                menu.add(Menu.NONE, Selection.HELP.ordinal(), Menu.NONE, R.string.selection_help);
+                menu.add(Menu.NONE, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
             }
         }
 
@@ -194,11 +193,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Selection selection = Selection.values()[item.getItemId()];
-        switch (selection)
+        switch (item.getItemId())
         {
-            case HELP:
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", selection));
+            case Constants.SELECTION_HELP:
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", item.getItemId()));
                 this.setHelpOverlayVisibility(true);
                 return true;
 
@@ -520,7 +518,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
 
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
             return false;
         }
 
@@ -529,7 +527,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-        if(requestCode == Constants.REQUEST_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
+        if(requestCode == Constants.REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
         {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.frontend.attractionCategories;
+package de.juliusawen.coastercreditcounter.frontend.elements;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -41,30 +41,29 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class ManageAttractionCategoriesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
+public class ManageOrphanElementsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private ManageAttractionCategoriesViewModel viewModel;
+    private ManageOrphanElementsViewModel viewModel;
     private RecyclerView recyclerView;
     private boolean actionConfirmed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ManageAttractionCategoriesActivity.onCreate:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ManageOrphanElementsActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_attraction_categories);
         super.onCreate(savedInstanceState);
 
         if(App.isInitialized)
         {
-            this.viewModel = ViewModelProviders.of(this).get(ManageAttractionCategoriesViewModel.class);
+            this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
 
             if(this.viewModel.attractionCategoryHeaderProvider == null)
             {
@@ -107,7 +106,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(getString(R.string.title_attraction_categories), null);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories)), getString(R.string.help_text_show_attraction_category));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_attraction_categories)), getString(R.string.help_text_manage_attraction_category));
 
             super.addFloatingActionButton();
             this.decorateFloatingActionButton();
@@ -128,7 +127,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
 
         if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
         {
-            menu.add(Menu.NONE, Selection.SORT_ATTRACTION_CATEGORIES.ordinal(), Menu.NONE, R.string.selection_sort_attraction_categories);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -137,16 +136,15 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onOptionItemSelected:: [%S] selected", selection));
+        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
 
-        switch(selection)
+        switch(item.getItemId())
         {
-            case SORT_ATTRACTION_CATEGORIES:
+            case Constants.SELECTION_SORT_ATTRACTION_CATEGORIES:
             {
                 ActivityTool.startActivitySortForResult(
                         this,
-                        Constants.REQUEST_SORT_ATTRACTION_CATEGORIES,
+                        Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
                         App.content.getContentOfType(AttractionCategory.class));
                 return true;
             }
@@ -159,70 +157,80 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
             IElement resultElement = ResultTool.fetchResultElement(data);
 
-            if(requestCode == Constants.REQUEST_CREATE_ATTRACTION_CATEGORY)
+            switch(requestCode)
             {
-                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                Log.d(Constants.LOG_TAG,
-                        String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory [%s]", createdString));
-
-                AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
-                if(attractionCategory != null)
+                case Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY:
                 {
-                    App.content.addElement(attractionCategory);
-                    this.markForCreation(attractionCategory);
+                    String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+                    Log.d(Constants.LOG_TAG,
+                            String.format("ManageOrphanElementsActivity.onActivityResult<CreateAttractionCategory>:: creating AttractionCategory [%s]", createdString));
+
+                    AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
+                    if(attractionCategory != null)
+                    {
+                        App.content.addElement(attractionCategory);
+                        this.markForCreation(attractionCategory);
+                        updateContentRecyclerView(true);
+                    }
+                    else
+                    {
+                        Toaster.makeToast(this, getString(R.string.error_creation_failed));
+
+                        Log.e(Constants.LOG_TAG,
+                                String.format("ManageOrphanElementsActivity.onActivityResult<CreateAttractionCategory>:: not able to create AttractionCategory [%s]", createdString));
+                    }
+                    break;
+                }
+
+                case Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY:
+                {
+                    this.markForUpdate(resultElement);
+                    updateContentRecyclerView(false);
+                    break;
+                }
+
+                case Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES:
+                {
+                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+                    App.content.reorderElements(resultElements);
                     updateContentRecyclerView(true);
+
+                    if(resultElement != null)
+                    {
+                        Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...",
+                                resultElement));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+                    }
+
+                    this.markForUpdate(resultElements);
+                    break;
                 }
-                else
+
+                case Constants.REQUEST_CODE_APPLY_CATEGORY_TO_ATTRACTIONS:
                 {
-                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
+                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                    Log.e(Constants.LOG_TAG,
-                            String.format("ManageAttractionCategoriesActivity.onActivityResult<CreateAttractionCategory>:: not able to create AttractionCategory [%s]", createdString));
+                    for(IElement element : resultElements)
+                    {
+                        ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
+                        super.markForUpdate(element);
+                    }
+
+                    Toaster.makeToast(this, getString(R.string.information_applied_category_to_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
+
+                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<ApplyCategoryToAttractions>:: applied %s to [%d] attractions",
+                            this.viewModel.longClickedAttractionCategory, resultElements.size()));
+
+                    updateContentRecyclerView(true);
+                    break;
                 }
-            }
-            else if(requestCode == Constants.REQUEST_EDIT_ATTRACTION_CATEGORY)
-            {
-                this.markForUpdate(resultElement);
-                updateContentRecyclerView(false);
-            }
-            else if(requestCode == Constants.REQUEST_SORT_ATTRACTION_CATEGORIES)
-            {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                App.content.reorderElements(resultElements);
-                updateContentRecyclerView(true);
-
-                if(resultElement != null)
-                {
-                    Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<SortAttractionCategory>:: scrolling to selected element %s...",
-                            resultElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
-                }
-
-                this.markForUpdate(resultElements);
-            }
-            else if(requestCode == Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS)
-            {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                for(IElement element : resultElements)
-                {
-                    ((Attraction)element).setAttractionCategory(this.viewModel.longClickedAttractionCategory);
-                    super.markForUpdate(element);
-                }
-
-                Toaster.makeToast(this, getString(R.string.information_count_of_categorized_attractions, this.viewModel.longClickedAttractionCategory.getName(), resultElements.size()));
-
-                Log.d(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onActivityResult<ApplyCategoryToAttractions>:: applied %s to [%d] attractions",
-                        this.viewModel.longClickedAttractionCategory, resultElements.size()));
-
-                updateContentRecyclerView(true);
             }
         }
     }
@@ -236,7 +244,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 Element element = (Element)view.getTag();
 
-                if(AttractionCategory.class.isInstance(element))
+                if(element instanceof AttractionCategory)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -247,40 +255,64 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             {
                 Element element = (Element)view.getTag();
 
-                if(AttractionCategory.class.isInstance(element))
+                if(element instanceof AttractionCategory)
                 {
                     viewModel.longClickedAttractionCategory = (AttractionCategory) element;
-                    Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onLongClick:: %s long clicked", viewModel.longClickedAttractionCategory));
+                    Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onLongClick:: %s long clicked", viewModel.longClickedAttractionCategory));
 
-                    PopupMenu popupMenu = new PopupMenu(ManageAttractionCategoriesActivity.this, view);
+                    PopupMenu popupMenu = new PopupMenu(ManageOrphanElementsActivity.this, view);
 
-                    popupMenu.getMenu().add(0, Selection.EDIT_ATTRACTION_CATEGORY.ordinal(), Menu.NONE, R.string.selection_edit);
+                    popupMenu.getMenu().add(0, Constants.SELECTION_APPLY_TO_ATTRACTIONS, Menu.NONE, R.string.selection_apply_to_attractions)
+                            .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
 
-                    popupMenu.getMenu().add(0, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
+                    popupMenu.getMenu().add(0, Constants.SELECTION_EDIT_ATTRACTION_CATEGORY, Menu.NONE, R.string.selection_edit);
+
+                    popupMenu.getMenu().add(0, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete)
                             .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
 
-                    popupMenu.getMenu().add(0, Selection.APPLY_TO_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_apply_to_attractions)
-                            .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
+                    popupMenu.getMenu().add(0, Constants.SELECTION_SET_AS_DEFAULT, Menu.NONE, R.string.selection_set_as_default)
+                            .setEnabled(!viewModel.longClickedAttractionCategory.equals(AttractionCategory.getDefault()));
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
                         @Override
                         public boolean onMenuItemClick(MenuItem item)
                         {
-                            Selection selection = Selection.values()[item.getItemId()];
-                            Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick:: [%S] selected", selection));
+                            Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick:: [%S] selected", item.getItemId()));
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
-                            switch(selection)
+                            switch(item.getItemId())
                             {
-                                case EDIT_ATTRACTION_CATEGORY:
+                                case Constants.SELECTION_APPLY_TO_ATTRACTIONS:
                                 {
-                                    ActivityTool.startActivityEditForResult(ManageAttractionCategoriesActivity.this,
-                                            Constants.REQUEST_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedAttractionCategory);
+                                    List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+
+                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                                    {
+                                        if(attraction.getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
+                                        {
+                                            Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
+                                                    "removing %s from pick list - is already in %s", attraction, viewModel.longClickedAttractionCategory));
+                                            attractions.remove(attraction);
+                                        }
+                                    }
+
+                                    ActivityTool.startActivityPickForResult(
+                                            ManageOrphanElementsActivity.this,
+                                            Constants.REQUEST_CODE_APPLY_CATEGORY_TO_ATTRACTIONS,
+                                            attractions);
+
                                     return true;
                                 }
 
-                                case DELETE_ELEMENT:
+                                case Constants.SELECTION_EDIT_ATTRACTION_CATEGORY:
+                                {
+                                    ActivityTool.startActivityEditForResult(ManageOrphanElementsActivity.this,
+                                            Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedAttractionCategory);
+                                    return true;
+                                }
+
+                                case Constants.SELECTION_DELETE_ELEMENT:
                                 {
                                     String alertDialogMessage;
                                     if(viewModel.longClickedAttractionCategory.hasChildren())
@@ -302,31 +334,27 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                                             alertDialogMessage,
                                             getString(R.string.text_accept),
                                             getString(R.string.text_cancel),
-                                            Constants.ALERT_DIALOG_REQUEST_CODE_DELETE);
+                                            Constants.REQUEST_CODE_DELETE);
 
                                     alertDialogFragmentDelete.setCancelable(false);
                                     alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
                                     return true;
                                 }
 
-                                case APPLY_TO_ATTRACTIONS:
+                                case Constants.SELECTION_SET_AS_DEFAULT:
                                 {
-                                    List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+                                    String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedAttractionCategory.getName());
 
-                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                    {
-                                        if(attraction.getAttractionCategory().equals(viewModel.longClickedAttractionCategory))
-                                        {
-                                            Log.v(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                    "removing %s from pick list - is already in %s", attraction, viewModel.longClickedAttractionCategory));
-                                            attractions.remove(attraction);
-                                        }
-                                    }
+                                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                                            R.drawable.ic_baseline_warning,
+                                            getString(R.string.alert_dialog_title_set_as_default),
+                                            alterDialogMessage,
+                                            getString(R.string.text_accept),
+                                            getString(R.string.text_cancel),
+                                            Constants.REQUEST_CODE_SET_AS_DEFAULT);
 
-                                    ActivityTool.startActivityPickForResult(
-                                            ManageAttractionCategoriesActivity.this,
-                                            Constants.REQUEST_APPLY_CATEGORY_TO_ATTRACTIONS,
-                                            attractions);
+                                    alertDialogFragmentDelete.setCancelable(false);
+                                    alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
 
                                     return true;
                                 }
@@ -352,7 +380,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
         {
             switch(requestCode)
             {
-                case Constants.ALERT_DIALOG_REQUEST_CODE_DELETE:
+                case Constants.REQUEST_CODE_DELETE:
                 {
                     Snackbar snackbar = Snackbar.make(
                             findViewById(android.R.id.content),
@@ -365,7 +393,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                         public void onClick(View view)
                         {
                             actionConfirmed = true;
-                            Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesActivity.onSnackbarClick:: action <delete> confirmed");
+                            Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarClick:: action <DELETE> confirmed");
                         }
                     });
 
@@ -378,7 +406,7 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                             {
                                 actionConfirmed = false;
 
-                                Log.i(Constants.LOG_TAG, String.format("ManageAttractionCategoriesActivity.onSnackbarDismissed<delete>:: deleting %s...",
+                                Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: deleting %s...",
                                         viewModel.longClickedAttractionCategory));
 
                                 List<IAttraction> children = new ArrayList<>(viewModel.longClickedAttractionCategory.getChildrenAsType(IAttraction.class));
@@ -397,14 +425,29 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
                             }
                             else
                             {
-                                Log.d(Constants.LOG_TAG, "ManageAttractionCategoriesActivity.onSnackbarDismissed<delete>:: action not confirmed - doing nothing");
+                                Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: action not confirmed - doing nothing");
                             }
                         }
                     });
 
                     snackbar.show();
+                    break;
                 }
-                break;
+
+                case Constants.REQUEST_CODE_SET_AS_DEFAULT:
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory",
+                            this.viewModel.longClickedAttractionCategory));
+
+                    super.markForUpdate(AttractionCategory.getDefault());
+
+                    AttractionCategory.setDefault(this.viewModel.longClickedAttractionCategory);
+                    super.markForUpdate(this.viewModel.longClickedAttractionCategory);
+
+                    Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedAttractionCategory.getName()));
+
+                    break;
+                }
             }
         }
     }
@@ -417,8 +460,8 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
-                ActivityTool.startActivityCreateForResult(ManageAttractionCategoriesActivity.this, Constants.REQUEST_CREATE_ATTRACTION_CATEGORY, null);
+                Log.i(Constants.LOG_TAG, "ManageOrphanElementsViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
+                ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
             }
         });
         super.setFloatingActionButtonVisibility(true);
@@ -428,12 +471,12 @@ public class ManageAttractionCategoriesActivity extends BaseActivity implements 
     {
         if(resetContent)
         {
-            Log.d(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: resetting content...");
+            Log.d(Constants.LOG_TAG, "ManageOrphanElementsViewModel.updateContentRecyclerView:: resetting content...");
             this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(AttractionCategory.class));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ManageAttractionCategoriesViewModel.updateContentRecyclerView:: notifying data set changes...");
+            Log.d(Constants.LOG_TAG, "ManageOrphanElementsViewModel.updateContentRecyclerView:: notifying data set changes...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

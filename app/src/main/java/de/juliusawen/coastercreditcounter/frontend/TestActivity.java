@@ -88,6 +88,6 @@ public class TestActivity extends BaseActivity
 
     private void startActivity()
     {
-        ActivityTool.startActivityShow(this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES, null);
+        ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES, null);
     }
 }

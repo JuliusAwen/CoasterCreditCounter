@@ -922,9 +922,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
         this.generationByItem.clear();
+        int generation = 0;
 
         this.items.clear();
-        this.items.addAll(this.initializeItems(items, 0));
+        this.items.addAll(this.initializeItems(items, generation));
 
         notifyDataSetChanged();
     }

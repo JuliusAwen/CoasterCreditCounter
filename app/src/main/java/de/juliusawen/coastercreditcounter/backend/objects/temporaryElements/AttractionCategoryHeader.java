@@ -19,7 +19,6 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
 public class AttractionCategoryHeader extends OrphanElement implements IElement, ITemporaryElement
@@ -55,19 +54,18 @@ public class AttractionCategoryHeader extends OrphanElement implements IElement,
 
         if(longClickedElement.getChildCountOfType(Attraction.class) > 1 || longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
         {
-            popupMenu.getMenu().add(0, Selection.SORT_ATTRACTIONS.ordinal(), Menu.NONE, R.string.selection_sort_attractions);
+            popupMenu.getMenu().add(0, Constants.SELECTION_SORT_ATTRACTIONS, Menu.NONE, R.string.selection_sort_attractions);
 
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
             {
                 @Override
                 public boolean onMenuItemClick(MenuItem item)
                 {
-                    Selection selection = Selection.values()[item.getItemId()];
-                    Log.i(Constants.LOG_TAG, String.format("AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick.onMenuItemClick:: [%S] selected", selection));
+                    Log.i(Constants.LOG_TAG, String.format("AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick.onMenuItemClick:: [%S] selected", item.getItemId()));
 
-                    switch (selection)
+                    switch (item.getItemId())
                     {
-                        case SORT_ATTRACTIONS:
+                        case Constants.SELECTION_SORT_ATTRACTIONS:
                         {
                             List<IElement> attractions = new ArrayList<>();
 
@@ -82,7 +80,7 @@ public class AttractionCategoryHeader extends OrphanElement implements IElement,
 
                             ActivityTool.startActivitySortForResult(
                                     Objects.requireNonNull(context),
-                                    Constants.REQUEST_SORT_ATTRACTIONS,
+                                    Constants.REQUEST_CODE_SORT_ATTRACTIONS,
                                     attractions);
 
                             return true;

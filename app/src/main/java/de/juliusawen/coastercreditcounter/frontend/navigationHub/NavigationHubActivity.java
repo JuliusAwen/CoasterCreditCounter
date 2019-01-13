@@ -151,14 +151,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             case R.id.navigationItem_BrowseContent:
             {
                 Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
-                ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_SHOW_LOCATION, App.content.getRootLocation());
+                ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
                 break;
             }
 
             case R.id.navigationItem_ManageCategories:
             {
                 Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
-                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_MANAGE_ATTRACTION_CATEGORIES);
+                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
                 break;
             }
             case R.id.navigationItem_ManageManufacturers:
@@ -188,7 +188,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_overwrite_content),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT
+                                Constants.REQUEST_CODE_OVERWRITE_CONTENT
                         );
 
                         alertDialogFragmentOverwriteFile.setCancelable(false);
@@ -219,7 +219,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_overwrite_file),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE
+                                Constants.REQUEST_OVERWRITE_FILE
                         );
 
                         alertDialogFragmentOverwriteFile.setCancelable(false);
@@ -261,7 +261,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         switch(requestCode)
         {
-            case Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_FILE:
+            case Constants.REQUEST_OVERWRITE_FILE:
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
@@ -270,7 +270,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 break;
             }
 
-            case Constants.ALERT_DIALOG_REQUEST_CODE_OVERWRITE_CONTENT:
+            case Constants.REQUEST_CODE_OVERWRITE_CONTENT:
             {
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {

@@ -35,7 +35,6 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -102,8 +101,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-        menu.add(Menu.NONE, Selection.EXPAND_ALL.ordinal(), Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.add(Menu.NONE, Selection.COLLAPSE_ALL.ordinal(), Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -111,16 +110,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: [%S] selected", selection));
+        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
 
-        switch(selection)
+        switch(item.getItemId())
         {
-            case EXPAND_ALL:
+            case Constants.SELECTION_EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
                 break;
 
-            case COLLAPSE_ALL:
+            case Constants.SELECTION_COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
                 break;
         }
@@ -158,47 +156,58 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(resultCode == RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CREATE_LOCATION || requestCode == Constants.REQUEST_CREATE_PARK)
+            switch(requestCode)
             {
-                String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
-
-                super.markForCreation(resultElement);
-                super.markForUpdate(resultElement.getParent());
-
-                this.updateContentRecyclerView(true);
-            }
-            else if(requestCode == Constants.REQUEST_SORT_LOCATIONS || requestCode == Constants.REQUEST_SORT_PARKS)
-            {
-                List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
-
-                IElement parent = resultElements.get(0).getParent();
-                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
-                parent.reorderChildren(resultElements);
-
-                this.updateContentRecyclerView(true);
-
-                String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                if(selectedElementUuidString != null)
+                case Constants.REQUEST_CODE_CREATE_LOCATION:
+                case Constants.REQUEST_CODE_CREATE_PARK:
                 {
-                    IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
-                }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
+                    String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                    IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
+
+                    super.markForCreation(resultElement);
+                    super.markForUpdate(resultElement.getParent());
+
+                    this.updateContentRecyclerView(true);
+                    break;
                 }
 
-                super.markForUpdate(parent);
-            }
-            else if(requestCode == Constants.REQUEST_EDIT_LOCATION || requestCode == Constants.REQUEST_EDIT_PARK)
-            {
-                IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                case Constants.REQUEST_CODE_SORT_LOCATIONS:
+                case Constants.REQUEST_CODE_SORT_PARKS:
+                {
+                    List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+                    List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
-                super.markForUpdate(editedElement);
+                    IElement parent = resultElements.get(0).getParent();
+                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
+                    parent.reorderChildren(resultElements);
 
-                this.updateContentRecyclerView(false);
+                    this.updateContentRecyclerView(true);
+
+                    String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                    if(selectedElementUuidString != null)
+                    {
+                        IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
+                    }
+
+                    super.markForUpdate(parent);
+                    break;
+                }
+
+                case Constants.REQUEST_CODE_EDIT_LOCATION:
+                case Constants.REQUEST_CODE_EDIT_PARK:
+                {
+                    IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+
+                    super.markForUpdate(editedElement);
+
+                    this.updateContentRecyclerView(false);
+                    break;
+                }
             }
         }
     }
@@ -222,7 +231,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     }
                     else if(Park.class.isInstance(element))
                     {
-                        ActivityTool.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_SHOW_PARK, element);
+                        ActivityTool.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_CODE_SHOW_PARK, element);
                     }
                 }
                 else
@@ -270,7 +279,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_relocate, viewModel.longClickedElement.getName(), element.getName()),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.ALERT_DIALOG_REQUEST_CODE_RELOCATE
+                                Constants.REQUEST_CODE_RELOCATE
                         );
 
                         alertDialogFragmentRelocate.setCancelable(false);
@@ -304,44 +313,43 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         if(this.viewModel.longClickedElement instanceof Location)
         {
-            Menu submenuAdd = menu.addSubMenu(Menu.NONE, Selection.ADD.ordinal(), Menu.NONE, R.string.selection_add);
-            submenuAdd.add(Menu.NONE, Selection.CREATE_LOCATION.ordinal(), Menu.NONE, R.string.selection_add_location);
-            submenuAdd.add(Menu.NONE, Selection.CREATE_PARK.ordinal(), Menu.NONE, R.string.selection_add_park);
+            Menu submenuAdd = menu.addSubMenu(Menu.NONE, Constants.SELECTION_ADD, Menu.NONE, R.string.selection_add);
+            submenuAdd.add(Menu.NONE, Constants.SELECTION_CREATE_LOCATION, Menu.NONE, R.string.selection_add_location);
+            submenuAdd.add(Menu.NONE, Constants.SELECTION_CREATE_PARK, Menu.NONE, R.string.selection_add_park);
 
             boolean sortLocationsEnabled = this.viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
             boolean sortParksEnabled = this.viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
             if(sortLocationsEnabled || sortParksEnabled)
             {
-                Menu submenuSort = menu.addSubMenu(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort);
+                Menu submenuSort = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT, Menu.NONE, R.string.selection_sort);
 
-                submenuSort.add(Menu.NONE, Selection.SORT_LOCATIONS.ordinal(), Menu.NONE, R.string.selection_sort_locations).setEnabled(sortLocationsEnabled);
-                submenuSort.add(Menu.NONE, Selection.SORT_PARKS.ordinal(), Menu.NONE, R.string.selection_sort_parks).setEnabled(sortParksEnabled);
+                submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_LOCATIONS, Menu.NONE, R.string.selection_sort_locations).setEnabled(sortLocationsEnabled);
+                submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_PARKS, Menu.NONE, R.string.selection_sort_parks).setEnabled(sortParksEnabled);
             }
             else
             {
-                menu.add(Menu.NONE, Selection.SORT.ordinal(), Menu.NONE, R.string.selection_sort).setEnabled(false);
+                menu.add(Menu.NONE, Constants.SELECTION_SORT, Menu.NONE, R.string.selection_sort).setEnabled(false);
             }
         }
 
         if(this.viewModel.longClickedElement instanceof Location)
         {
-            menu.add(Menu.NONE, Selection.EDIT_LOCATION.ordinal(), Menu.NONE, R.string.selection_edit);
+            menu.add(Menu.NONE, Constants.SELECTION_EDIT_LOCATION, Menu.NONE, R.string.selection_edit);
         }
         else if(this.viewModel.longClickedElement instanceof Park)
         {
-            menu.add(Menu.NONE, Selection.EDIT_PARK.ordinal(), Menu.NONE, R.string.selection_edit);
+            menu.add(Menu.NONE, Constants.SELECTION_EDIT_PARK, Menu.NONE, R.string.selection_edit);
         }
 
-        menu.add(Menu.NONE, Selection.DELETE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_delete)
-                .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
+        menu.add(Menu.NONE, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete).setEnabled(!isRootLocation(this.viewModel.longClickedElement));
 
         if(this.viewModel.longClickedElement instanceof Location)
         {
-            menu.add(Menu.NONE, Selection.REMOVE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_remove)
+            menu.add(Menu.NONE, Constants.SELECTION_REMOVE_ELEMENT, Menu.NONE, R.string.selection_remove)
                     .setEnabled(this.viewModel.longClickedElement.hasChildren() && !isRootLocation(this.viewModel.longClickedElement));
         }
 
-        menu.add(Menu.NONE, Selection.RELOCATE_ELEMENT.ordinal(), Menu.NONE, R.string.selection_relocate)
+        menu.add(Menu.NONE, Constants.SELECTION_RELOCATE_ELEMENT, Menu.NONE, R.string.selection_relocate)
                 .setEnabled(!isRootLocation(this.viewModel.longClickedElement));
     }
 
@@ -352,36 +360,35 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                Selection selection = Selection.values()[item.getItemId()];
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onPopupMenuItemLongClick:: [%S] selected", selection));
+                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                switch (selection)
+                switch (item.getItemId())
                 {
-                    case CREATE_LOCATION:
-                        ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_LOCATION, viewModel.longClickedElement);
+                    case Constants.SELECTION_CREATE_LOCATION:
+                        ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_LOCATION, viewModel.longClickedElement);
                         return true;
 
-                    case CREATE_PARK:
-                        ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CREATE_PARK, viewModel.longClickedElement);
+                    case Constants.SELECTION_CREATE_PARK:
+                        ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_PARK, viewModel.longClickedElement);
                         return true;
 
-                    case EDIT_LOCATION:
-                        ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_LOCATION, viewModel.longClickedElement);
+                    case Constants.SELECTION_EDIT_LOCATION:
+                        ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_LOCATION, viewModel.longClickedElement);
                         return true;
 
-                    case EDIT_PARK:
-                        ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_EDIT_PARK, viewModel.longClickedElement);
+                    case Constants.SELECTION_EDIT_PARK:
+                        ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_PARK, viewModel.longClickedElement);
                         return true;
 
-                    case DELETE_ELEMENT:
+                    case Constants.SELECTION_DELETE_ELEMENT:
                         AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                                 R.drawable.ic_baseline_warning,
                                 getString(R.string.alert_dialog_title_delete_element),
                                 getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.ALERT_DIALOG_REQUEST_CODE_DELETE
+                                Constants.REQUEST_CODE_DELETE
                         );
 
                         alertDialogFragmentDelete.setCancelable(false);
@@ -389,34 +396,34 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                         return true;
 
-                    case REMOVE_ELEMENT:
+                    case Constants.SELECTION_REMOVE_ELEMENT:
                         AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
                                 R.drawable.ic_baseline_warning,
                                 getString(R.string.alert_dialog_title_remove_element),
                                 getString(R.string.alert_dialog_message_remove_element, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.ALERT_DIALOG_REQUEST_CODE_REMOVE
+                                Constants.REQUEST_CODE_REMOVE
                         );
                         alertDialogFragmentRemove.setCancelable(false);
                         alertDialogFragmentRemove.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
                         return true;
 
-                    case RELOCATE_ELEMENT:
+                    case Constants.SELECTION_RELOCATE_ELEMENT:
                         ShowLocationsActivity.this.setSelectionModeEnabled(true);
                         return true;
 
-                    case SORT_LOCATIONS:
+                    case Constants.SELECTION_SORT_LOCATIONS:
                         ActivityTool.startActivitySortForResult(
                                 ShowLocationsActivity.this,
-                                Constants.REQUEST_SORT_LOCATIONS,
+                                Constants.REQUEST_CODE_SORT_LOCATIONS,
                                 viewModel.longClickedElement.getChildrenOfType(Location.class));
                         return true;
 
-                    case SORT_PARKS:
+                    case Constants.SELECTION_SORT_PARKS:
                         ActivityTool.startActivitySortForResult(
                                 ShowLocationsActivity.this,
-                                Constants.REQUEST_SORT_PARKS,
+                                Constants.REQUEST_CODE_SORT_PARKS,
                                 viewModel.longClickedElement.getChildrenOfType(Park.class));
                         return true;
 
@@ -438,7 +445,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             switch(requestCode)
             {
-                case Constants.ALERT_DIALOG_REQUEST_CODE_DELETE:
+                case Constants.REQUEST_CODE_DELETE:
                 {
                     snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
 
@@ -491,7 +498,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     break;
                 }
 
-                case Constants.ALERT_DIALOG_REQUEST_CODE_REMOVE:
+                case Constants.REQUEST_CODE_REMOVE:
                 {
                     snackbar = Snackbar.make(findViewById(android.R.id.content),
                             getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
@@ -538,7 +545,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     break;
                 }
 
-                case Constants.ALERT_DIALOG_REQUEST_CODE_RELOCATE:
+                case Constants.REQUEST_CODE_RELOCATE:
                 {
                     Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onAlertDialogClick<RELOCATE>:: relocating %s to %s...",
                             this.viewModel.longClickedElement, this.viewModel.newParent));

@@ -29,7 +29,7 @@
         <activity android:name=".frontend.visits.ShowVisitActivity" />
         <activity android:name=".frontend.TestActivity" />
         <activity android:name=".frontend.visits.CreateVisitActivity" />
-        <activity android:name=".frontend.attractionCategories.ManageAttractionCategoriesActivity" />
+        <activity android:name=".frontend.elements.ManageOrphanElementsActivity" />
         <activity android:name=".frontend.navigationHub.NavigationHubActivity" />
         <activity
             android:name=".frontend.locations.CreateLocationActivity"

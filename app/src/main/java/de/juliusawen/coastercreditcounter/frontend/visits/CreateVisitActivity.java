@@ -82,18 +82,22 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_PICK_ATTRACTIONS)
+            switch(requestCode)
             {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                for(IElement element : resultElements)
+                case Constants.REQUEST_CODE_PICK_ATTRACTIONS:
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
-                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction);
-                }
+                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                this.returnResult(Activity.RESULT_OK);
+                    for(IElement element : resultElements)
+                    {
+                        VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                        this.viewModel.visit.addChildAndSetParent(visitedAttraction);
+                        App.content.addElement(visitedAttraction);
+                    }
+
+                    this.returnResult(Activity.RESULT_OK);
+                    break;
+                }
             }
         }
         else if(resultCode == Activity.RESULT_CANCELED)
@@ -266,7 +270,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 {
                     ActivityTool.startActivityPickForResult(
                             CreateVisitActivity.this,
-                            Constants.REQUEST_PICK_ATTRACTIONS,
+                            Constants.REQUEST_CODE_PICK_ATTRACTIONS,
                             new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)

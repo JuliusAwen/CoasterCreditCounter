@@ -31,7 +31,6 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -105,17 +104,16 @@ public class ShowVisitsFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Selection selection = Selection.values()[item.getItemId()];
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onOptionItemSelected:: [%s] selected", selection));
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onOptionItemSelected:: [%s] selected", item.getItemId()));
 
-        switch(selection)
+        switch(item.getItemId())
         {
-            case SORT_ASCENDING:
+            case Constants.SELECTION_SORT_ASCENDING:
                 Visit.setSortOrder(SortOrder.ASCENDING);
                 this.updateContentRecyclerView(false);
                 return true;
 
-            case SORT_DESCENDING:
+            case Constants.SELECTION_SORT_DESCENDING:
                 Visit.setSortOrder(SortOrder.DESCENDING);
                 this.updateContentRecyclerView(false);
                 return true;
@@ -132,12 +130,16 @@ public class ShowVisitsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CREATE_VISIT)
+            switch(requestCode)
             {
-                this.updateContentRecyclerView(true);
+                case Constants.REQUEST_CODE_CREATE_VISIT:
+                {
+                    this.updateContentRecyclerView(true);
 
-                IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, visit);
+                    IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
+                    break;
+                }
             }
         }
     }
@@ -172,7 +174,7 @@ public class ShowVisitsFragment extends Fragment
                 Element element = (Element) view.getTag();
                 if(Visit.class.isInstance(element))
                 {
-                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_SHOW_VISIT, element);
+                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
                 }
                 else if(YearHeader.class.isInstance(element))
                 {

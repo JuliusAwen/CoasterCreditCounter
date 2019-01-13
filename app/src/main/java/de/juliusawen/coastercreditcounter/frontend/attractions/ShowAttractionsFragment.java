@@ -116,26 +116,30 @@ public  class ShowAttractionsFragment extends Fragment
         {
             IElement selectedElement = ResultTool.fetchResultElement(data);
 
-            if(requestCode == Constants.REQUEST_SORT_ATTRACTIONS)
+            switch(requestCode)
             {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                IElement parent = resultElements.get(0).getParent();
-                if(parent != null)
+                case Constants.REQUEST_CODE_SORT_ATTRACTIONS:
                 {
-                    this.viewModel.park.reorderChildren(resultElements);
-                    Log.d(Constants.LOG_TAG,
-                            String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
+                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(
-                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
-                                    new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
-
-                    if(selectedElement != null)
+                    IElement parent = resultElements.get(0).getParent();
+                    if(parent != null)
                     {
-                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
+                        this.viewModel.park.reorderChildren(resultElements);
+                        Log.d(Constants.LOG_TAG,
+                                String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
+
+                        this.viewModel.contentRecyclerViewAdapter.setItems(
+                                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
+                                        new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
+
+                        if(selectedElement != null)
+                        {
+                            Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                            this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
+                        }
                     }
+                    break;
                 }
             }
         }

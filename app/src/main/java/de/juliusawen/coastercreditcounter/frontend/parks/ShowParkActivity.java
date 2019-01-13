@@ -30,7 +30,6 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.Selection;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -83,8 +82,8 @@ public class ShowParkActivity extends BaseActivity
 
         if(this.viewModel.currentTab == VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {
-            menu.add(Menu.NONE, Selection.SORT_ASCENDING.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
-            menu.add(Menu.NONE, Selection.SORT_DESCENDING.ordinal(), Menu.NONE, R.string.selection_sort_descending);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -205,7 +204,7 @@ public class ShowParkActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CREATE_VISIT, viewModel.park);
+                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
             }
         });
     }
