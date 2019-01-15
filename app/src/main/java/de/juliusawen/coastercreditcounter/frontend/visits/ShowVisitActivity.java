@@ -81,11 +81,11 @@ public class ShowVisitActivity extends BaseActivity
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
-                this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
 
             this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
