@@ -64,11 +64,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         if(App.isInitialized)
         {
             this.viewModel.isInitializingApp = false;
-
-            if(this.helpOverlayFragment != null)
-            {
-                this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
-            }
         }
         else
         {
@@ -81,6 +76,20 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             else
             {
                 this.requestWriteToExternalStoragePermissionForDebugBuild();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(App.isInitialized)
+        {
+            if(this.helpOverlayFragment != null)
+            {
+                this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
             }
         }
     }
@@ -308,14 +317,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void addFloatingActionButton()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating floating action button...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
-    }
-
-    protected FloatingActionButton getFloatingActionButton()
-    {
-        return this.floatingActionButton;
     }
 
     public void setFloatingActionButtonIcon(Drawable icon)
@@ -339,7 +343,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: floating action button isVisible[%s]", isVisible));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: FloatingActionButton isVisible[%s]", isVisible));
 
             if(isVisible)
             {
@@ -356,7 +360,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling floating action button...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling FloatingActionButton...");
 
             this.floatingActionButton.hide();
             this.floatingActionButton = null;
@@ -367,7 +371,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.animateFloatingActionButtonTransition:: animating floating action button transition...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.animateFloatingActionButtonTransition:: animating FloatingActionButton transition...");
 
             this.floatingActionButton.hide();
 
@@ -394,7 +398,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         if(this.helpOverlayFragment == null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: creating fragment...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment...");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
@@ -403,7 +407,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using fragment...");
+            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using HelpOverlayFragment");
         }
     }
 
@@ -423,7 +427,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.helpOverlayFragment != null)
         {
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: isVisible[%s]", isVisible));
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible[%s]", isVisible));
 
             if(isVisible)
             {
@@ -446,7 +450,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
         if(this.confirmDialogFragment == null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating confirm dialog fragment...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating ConfirmDialogFragment...");
 
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
@@ -455,7 +459,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using fragment...");
+            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using ConfirmDialogFagment...");
         }
     }
 
@@ -606,8 +610,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         this.viewModel.elementsToDelete.add(element);
     }
-
-
 
     protected void synchronizePersistency()
     {
