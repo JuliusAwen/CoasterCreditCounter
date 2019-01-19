@@ -173,11 +173,11 @@ public  class ShowAttractionsFragment extends Fragment
             {
                 Element element = (Element) view.getTag();
 
-                if(Attraction.class.isInstance(element))
+                if(element instanceof Attraction)
                 {
                     Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
                 }
-                else if(AttractionCategoryHeader.class.isInstance(element))
+                else if(element instanceof AttractionCategoryHeader)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -186,7 +186,7 @@ public  class ShowAttractionsFragment extends Fragment
             @Override
             public boolean onLongClick(View view)
             {
-                if((AttractionCategoryHeader.class.isInstance(view.getTag())))
+                if(view.getTag() instanceof AttractionCategoryHeader)
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
                 }
