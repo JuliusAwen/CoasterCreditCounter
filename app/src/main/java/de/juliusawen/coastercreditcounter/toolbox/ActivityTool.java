@@ -30,20 +30,17 @@ public abstract class ActivityTool
     public static void startActivityShow(Context context, int requestCode, IElement element)
     {
         Class type = null;
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_SHOW_LOCATION)
         {
-            case Constants.REQUEST_CODE_SHOW_LOCATION:
-                type = ShowLocationsActivity.class;
-                break;
-
-            case Constants.REQUEST_CODE_SHOW_PARK:
-                type = ShowParkActivity.class;
-                break;
-
-            case Constants.REQUEST_CODE_SHOW_VISIT:
-                type = ShowVisitActivity.class;
-                break;
+            type = ShowLocationsActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SHOW_PARK)
+        {
+            type = ShowParkActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SHOW_VISIT)
+        {
+            type = ShowVisitActivity.class;
         }
 
         if(type != null)
@@ -65,34 +62,32 @@ public abstract class ActivityTool
 
     public static void startActivityManage(Context context, int requestCode)
     {
-        String type = null;
+        int type = Constants.TYPE_NONE;
         String toolbarTitle;
         String helpTitle;
         String helpText;
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES)
         {
-            case Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES:
-                type = Constants.TYPE_ATTRACTION_CATEGORY;
-                toolbarTitle = context.getString(R.string.title_attraction_categories);
-                helpTitle = context.getString(R.string.title_attraction_categories);
-                helpText = context.getString(R.string.help_text_manage_attraction_category);
-                break;
-
-            case Constants.REQUEST_CODE_MANAGE_MANUFACTURERS:
-                type = Constants.TYPE_MANUFACTURER;
-                toolbarTitle = context.getString(R.string.title_manufacturers);
-                helpTitle = context.getString(R.string.title_manufacturers);
-                helpText = context.getString(R.string.help_text_manage_manufacturer);
-                break;
-
-                default:
-                    toolbarTitle = context.getString(R.string.error_missing_text);
-                    helpTitle = context.getString(R.string.error_missing_text);
-                    helpText = context.getString(R.string.error_missing_text);
+            type = Constants.TYPE_ATTRACTION_CATEGORY;
+            toolbarTitle = context.getString(R.string.title_attraction_categories);
+            helpTitle = context.getString(R.string.title_attraction_categories);
+            helpText = context.getString(R.string.help_text_manage_attraction_category);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_MANAGE_MANUFACTURERS)
+        {
+            type = Constants.TYPE_MANUFACTURER;
+            toolbarTitle = context.getString(R.string.title_manufacturers);
+            helpTitle = context.getString(R.string.title_manufacturers);
+            helpText = context.getString(R.string.help_text_manage_manufacturer);
+        }
+        else
+        {
+            toolbarTitle = context.getString(R.string.error_missing_text);
+            helpTitle = context.getString(R.string.error_missing_text);
+            helpText = context.getString(R.string.error_missing_text);
         }
 
-        if(type != null)
+        if(type != Constants.TYPE_NONE)
         {
             Intent intent = new Intent(context, ManageOrphanElementsActivity.class);
             intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, type);
@@ -116,28 +111,25 @@ public abstract class ActivityTool
     {
         Class type = null;
         String toolbarTitle = context.getString(R.string.error_missing_text);
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_EDIT_LOCATION)
         {
-            case Constants.REQUEST_CODE_EDIT_LOCATION:
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_location_edit);
-                break;
-
-            case Constants.REQUEST_CODE_EDIT_PARK:
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_park_edit);
-                break;
-
-            case Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY:
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_attraction_category_edit);
-                break;
-
-            case Constants.REQUEST_CODE_EDIT_MANUFACTURER:
-                type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_manufacturer_edit);
-                break;
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_location_edit);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_PARK)
+        {
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_park_edit);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY)
+        {
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_attraction_category_edit);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_MANUFACTURER)
+        {
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_manufacturer_edit);
         }
 
         if(type != null)
@@ -161,25 +153,21 @@ public abstract class ActivityTool
     public static void startActivityCreateForResult(Context context, int requestCode, IElement parentElement)
     {
         Class type;
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_CREATE_LOCATION)
         {
-            case Constants.REQUEST_CODE_CREATE_LOCATION:
-                type = CreateLocationActivity.class;
-                break;
-
-            case Constants.REQUEST_CODE_CREATE_PARK:
-                type = CreateParkActivity.class;
-                break;
-
-            case Constants.REQUEST_CODE_CREATE_VISIT:
-                type = CreateVisitActivity.class;
-                break;
-
-            default:
-                type = CreateSimpleStringActivity.class;
-                break;
-
+            type = CreateLocationActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_CREATE_PARK)
+        {
+            type = CreateParkActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
+        {
+            type = CreateVisitActivity.class;
+        }
+        else
+        {
+            type = CreateSimpleStringActivity.class;
         }
 
         Intent intent = new Intent(context, type);
@@ -194,23 +182,20 @@ public abstract class ActivityTool
         }
         else
         {
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
             {
-                case Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
-                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
-                    break;
-
-                case Constants.REQUEST_CODE_CREATE_MANUFACTURER:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_manufacturer_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_manufacturer_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_manufacturer));
-                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_manufacturer_name));
-                    break;
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
             }
-
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
+            {
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_manufacturer_create));
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_manufacturer_create));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_manufacturer));
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_manufacturer_name));
+            }
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
@@ -224,31 +209,29 @@ public abstract class ActivityTool
     public static void startActivitySortForResult(Context context, int requestCode, List<IElement> elementsToSort)
     {
         String toolbarTitle;
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_SORT_LOCATIONS)
         {
-            case Constants.REQUEST_CODE_SORT_LOCATIONS:
-                toolbarTitle = context.getString(R.string.title_locations_sort);
-                break;
-
-            case Constants.REQUEST_CODE_SORT_PARKS:
-                toolbarTitle = context.getString(R.string.title_parks_sort);
-                break;
-
-            case Constants.REQUEST_CODE_SORT_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_sort);
-                break;
-
-            case Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES:
-                toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
-                break;
-
-            case Constants.REQUEST_CODE_SORT_MANUFACTURERS:
-                toolbarTitle = context.getString(R.string.title_manufacturers_sort);
-                break;
-
-                default:
-                    toolbarTitle = context.getString(R.string.error_missing_text);
+            toolbarTitle = context.getString(R.string.title_locations_sort);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_PARKS)
+        {
+            toolbarTitle = context.getString(R.string.title_parks_sort);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTIONS)
+        {
+            toolbarTitle = context.getString(R.string.title_attractions_sort);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES)
+        {
+            toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_MANUFACTURERS)
+        {
+            toolbarTitle = context.getString(R.string.title_manufacturers_sort);
+        }
+        else
+        {
+            toolbarTitle = context.getString(R.string.error_missing_text);
         }
 
         if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
@@ -270,44 +253,43 @@ public abstract class ActivityTool
 
     public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
+        Intent intent = new Intent(context, PickElementsActivity.class);
+
         String toolbarTitle;
         String toolbarSubtitle;
-
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_CODE_PICK_LOCATIONS)
         {
-            case Constants.REQUEST_CODE_PICK_LOCATIONS:
-                toolbarTitle = context.getString(R.string.title_locations_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
-                break;
-
-            case Constants.REQUEST_CODE_PICK_PARKS:
-                toolbarTitle = context.getString(R.string.title_parks_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
-                break;
-
-            case Constants.REQUEST_CODE_PICK_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
-                break;
-
-            case Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
-                break;
-
-            case Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
-                break;
-
-                default:
-                    toolbarTitle = context.getString(R.string.error_missing_text);
-                    toolbarSubtitle = context.getString(R.string.error_missing_text);
+            toolbarTitle = context.getString(R.string.title_locations_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_PARKS)
+        {
+            toolbarTitle = context.getString(R.string.title_parks_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+        {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS)
+        {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+        {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
+        }
+        else
+        {
+            toolbarTitle = context.getString(R.string.error_missing_text);
+            toolbarSubtitle = context.getString(R.string.error_missing_text);
         }
 
         if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
         {
-            Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);

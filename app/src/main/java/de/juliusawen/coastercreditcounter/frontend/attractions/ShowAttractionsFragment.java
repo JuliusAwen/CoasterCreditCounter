@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -20,15 +19,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -71,11 +68,6 @@ public  class ShowAttractionsFragment extends Fragment
             }
         }
 
-        if(this.viewModel.attractionCategoryHeaderProvider == null)
-        {
-            this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-        }
-
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
@@ -116,30 +108,22 @@ public  class ShowAttractionsFragment extends Fragment
         {
             IElement selectedElement = ResultTool.fetchResultElement(data);
 
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTIONS)
             {
-                case Constants.REQUEST_CODE_SORT_ATTRACTIONS:
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+                IElement parent = resultElements.get(0).getParent();
+                if(parent != null)
                 {
-                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
+                    this.viewModel.park.reorderChildren(resultElements);
 
-                    IElement parent = resultElements.get(0).getParent();
-                    if(parent != null)
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+
+                    if(selectedElement != null)
                     {
-                        this.viewModel.park.reorderChildren(resultElements);
-                        Log.d(Constants.LOG_TAG,
-                                String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.park));
-
-                        this.viewModel.contentRecyclerViewAdapter.setItems(
-                                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(
-                                        new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))));
-
-                        if(selectedElement != null)
-                        {
-                            Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                            this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
-                        }
+                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
                     }
-                    break;
                 }
             }
         }
@@ -150,6 +134,7 @@ public  class ShowAttractionsFragment extends Fragment
     {
         super.onDetach();
         this.viewModel = null;
+        this.recyclerView = null;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
@@ -158,9 +143,9 @@ public  class ShowAttractionsFragment extends Fragment
         childTypesToExpand.add(Attraction.class);
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(new ArrayList<IAttraction>(this.viewModel.park.getChildrenAsType(IOnSiteAttraction.class))),
-                null,
-                childTypesToExpand);
+                this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
+                childTypesToExpand,
+                Constants.TYPE_ATTRACTION_CATEGORY);
 
     }
 

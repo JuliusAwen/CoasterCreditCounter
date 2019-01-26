@@ -85,7 +85,7 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     @Override
     public void setManufacturer(Manufacturer manufacturer)
     {
-        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions cannot have Manufacturer", this);
+        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions cannot have MANUFACTURER", this);
         Log.e(Constants.LOG_TAG, errorMessage);
         throw new IllegalStateException(errorMessage);
     }

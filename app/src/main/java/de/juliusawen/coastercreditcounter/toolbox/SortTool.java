@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class SortTool
@@ -87,7 +87,7 @@ public abstract class SortTool
             List<AttractionCategory> attractionCategories = App.content.getContentAsType(AttractionCategory.class);
 
             Log.v(Constants.LOG_TAG,  String.format("SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
-                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
+                    " sorting [%d] AttractionCategoryHeaders based on [%d] ATTRACTION_CATEGORY", attractionCategoryHeaders.size(), attractionCategories.size()));
 
             List<AttractionCategoryHeader> castedAttractionCategoryHeaders = ConvertTool.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
 

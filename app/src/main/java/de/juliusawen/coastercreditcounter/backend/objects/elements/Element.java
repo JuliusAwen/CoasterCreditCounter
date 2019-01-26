@@ -140,7 +140,7 @@ public abstract class Element implements IElement
 
     public void addChildAndSetParentAtIndex(int index, IElement child)
     {
-        if(!OrphanElement.class.isInstance(this))
+        if(!(this instanceof OrphanElement))
         {
             if(!this.containsChild(child))
             {
@@ -172,8 +172,7 @@ public abstract class Element implements IElement
         {
             this.getChildren().removeAll(children);
             this.getChildren().addAll(children);
-            Log.v(Constants.LOG_TAG,
-                    String.format("Element.reorderChildren:: %s -> [%d] children removed and then added again in given order", this, children.size()));
+            Log.v(Constants.LOG_TAG, String.format("Element.reorderChildren:: %s -> [%d] children removed and then added again in given order", this, children.size()));
         }
         else
         {

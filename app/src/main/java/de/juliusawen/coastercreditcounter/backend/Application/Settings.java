@@ -87,7 +87,7 @@ public class Settings
             Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order for park visits is [%S]", this.getDefaultSortOrderParkVisits().toString()));
         }
 
-        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.getExpandLatestYearInListByDefault()));
+        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
 
         String dayNames[] = new DateFormatSymbols().getWeekdays();
         Log.d(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
@@ -108,7 +108,7 @@ public class Settings
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrderParkVisits().ordinal());
-            jsonObject.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.getExpandLatestYearInListByDefault());
+            jsonObject.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
             jsonObject.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
             jsonObject.put(Constants.JSON_STRING_DEFAULT_INCREMENT, this.getDefaultIncrement());
 
@@ -148,7 +148,7 @@ public class Settings
         this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
     }
 
-    public boolean getExpandLatestYearInListByDefault()
+    public boolean expandLatestYearInListByDefault()
     {
         return expandLatestYearInListByDefault;
     }

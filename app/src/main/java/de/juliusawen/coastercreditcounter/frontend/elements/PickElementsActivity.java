@@ -17,18 +17,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -56,27 +54,29 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
             }
 
-            if(this.viewModel.attractionCategoryHeaderProvider == null)
-            {
-                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-            }
-
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
-                if(!this.viewModel.elementsToPickFrom.isEmpty() && (this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction))
+                if(this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction)
                 {
                     HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(Attraction.class);
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.attractionCategoryHeaderProvider.getCategorizedAttractions(ConvertTool.convertElementsToType(this.viewModel.elementsToPickFrom, IAttraction.class)),
+                            this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
-                            true);
+                            true,
+                            Constants.TYPE_ATTRACTION_CATEGORY);
+
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
                 }
                 else
                 {
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, null, true);
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            true,
+                            Constants.TYPE_NONE);
+
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                 }
             }
@@ -222,7 +222,7 @@ public class PickElementsActivity extends BaseActivity
             List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
             for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
             {
-                if(!OrphanElement.class.isInstance(element))
+                if(!(element instanceof OrphanElement))
                 {
                     selectedElementsWithoutOrphanElements.add(element);
                 }

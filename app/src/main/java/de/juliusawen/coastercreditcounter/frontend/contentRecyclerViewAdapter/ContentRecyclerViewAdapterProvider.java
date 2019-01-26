@@ -10,14 +10,14 @@ public abstract class ContentRecyclerViewAdapterProvider
 {
     public static ContentRecyclerViewAdapter getExpandableContentRecyclerViewAdapter(
             List<IElement> parentElements,
-            Set<IElement> initiallyExpandedElements,
-            Set<Class<? extends IElement>> childTypesToExpand)
+            Set<Class<? extends IElement>> childTypesToExpand,
+            int groupByType)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.EXPANDABLE;
         request.elements = parentElements;
-        request.initiallyExpandedElements = initiallyExpandedElements;
         request.relevantChildTypes = childTypesToExpand;
+        request.groupType = groupByType;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
         contentRecyclerViewAdapter.setHasStableIds(true);
@@ -27,13 +27,15 @@ public abstract class ContentRecyclerViewAdapterProvider
     public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
             List<IElement> elements,
             Set<Class<? extends IElement>> childTypesToExpand,
-            boolean selectMultiple)
+            boolean selectMultiple,
+            int groupByType)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.SELECTABLE;
         request.elements = elements;
         request.relevantChildTypes = childTypesToExpand;
         request.selectMultiple = selectMultiple;
+        request.groupType = groupByType;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
         contentRecyclerViewAdapter.setHasStableIds(true);
@@ -42,12 +44,14 @@ public abstract class ContentRecyclerViewAdapterProvider
 
     public static ContentRecyclerViewAdapter getCountableContentRecyclerViewAdapter(
             List<IElement> parentElements,
-            Set<Class<? extends IElement>> childTypesToExpand)
+            Set<Class<? extends IElement>> childTypesToExpand,
+            int groupByType)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.adapterType = AdapterType.COUNTABLE;
         request.elements = parentElements;
         request.relevantChildTypes = childTypesToExpand;
+        request.groupType = groupByType;
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
         contentRecyclerViewAdapter.setHasStableIds(true);

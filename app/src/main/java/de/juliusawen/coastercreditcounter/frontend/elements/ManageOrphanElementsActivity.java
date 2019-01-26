@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
@@ -60,49 +59,35 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
 
-            if(this.viewModel.type_to_manage == null)
-            {
-                this.viewModel.type_to_manage = getIntent().getStringExtra(Constants.EXTRA_TYPE_TO_MANAGE);
-            }
 
-            if(this.viewModel.attractionCategoryHeaderProvider == null)
-            {
-                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-            }
+            this.viewModel.typeToManage = getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, Constants.TYPE_NONE);
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                 childTypesToExpand.add(ICategorized.class);
 
-                switch(this.viewModel.type_to_manage)
+                if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                 {
-                    case Constants.TYPE_ATTRACTION_CATEGORY:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                App.content.getContentOfType(AttractionCategory.class),
-                                null,
-                                childTypesToExpand);
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(AttractionCategory.class),
+                            childTypesToExpand,
+                            Constants.TYPE_NONE);
 
-                        this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
-                        this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
-
-                        break;
-                    }
-
-                    case Constants.TYPE_MANUFACTURER:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                App.content.getContentOfType(Manufacturer.class),
-                                null,
-                                childTypesToExpand);
-
-                        this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
-                        this.viewModel.contentRecyclerViewAdapter.displayAttractionCategories(true);
-
-                        break;
-                    }
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
                 }
+                else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(Manufacturer.class),
+                            childTypesToExpand,
+                            Constants.TYPE_NONE);
+
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.displayAttractionCategories(true);
+                }
+
                 this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
             }
 
@@ -142,24 +127,19 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         menu.clear();
 
-        switch(this.viewModel.type_to_manage)
-        {
-            case Constants.TYPE_ATTRACTION_CATEGORY:
-            {
-                if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
-                {
-                    menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
-                }
-                break;
-            }
 
-            case Constants.TYPE_MANUFACTURER:
+        if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
+        {
+            if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
             {
-                if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
-                {
-                    menu.add(Menu.NONE, Constants.SELECTION_SORT_MANUFACTURERS, Menu.NONE, R.string.selection_sort_manufacturers);
-                }
-                break;
+                menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
+            }
+        }
+        else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+        {
+            if(App.content.getContentOfType(AttractionCategory.class).size() > 1)
+            {
+                menu.add(Menu.NONE, Constants.SELECTION_SORT_MANUFACTURERS, Menu.NONE, R.string.selection_sort_manufacturers);
             }
         }
 
@@ -171,28 +151,27 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
 
-        switch(item.getItemId())
+        int id = item.getItemId();
+        if(id == Constants.SELECTION_SORT_ATTRACTION_CATEGORIES)
         {
-            case Constants.SELECTION_SORT_ATTRACTION_CATEGORIES:
-            {
-                ActivityTool.startActivitySortForResult(
-                        this,
-                        Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
-                        App.content.getContentOfType(AttractionCategory.class));
-                return true;
-            }
+            ActivityTool.startActivitySortForResult(
+                    this,
+                    Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
+                    App.content.getContentOfType(AttractionCategory.class));
+            return true;
+        }
 
-            case Constants.SELECTION_SORT_MANUFACTURERS:
-            {
-                ActivityTool.startActivitySortForResult(
-                        this,
-                        Constants.REQUEST_CODE_SORT_MANUFACTURERS,
-                        App.content.getContentOfType(Manufacturer.class));
-                return true;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
+        else if(id == Constants.SELECTION_SORT_MANUFACTURERS)
+        {
+            ActivityTool.startActivitySortForResult(
+                    this,
+                    Constants.REQUEST_CODE_SORT_MANUFACTURERS,
+                    App.content.getContentOfType(Manufacturer.class));
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -205,118 +184,100 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             IElement resultElement = ResultTool.fetchResultElement(data);
 
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
             {
-                case Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY:
+                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+                Log.d(Constants.LOG_TAG,
+                        String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", createdString));
+
+                AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
+                if(attractionCategory != null)
                 {
-                    String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                    Log.d(Constants.LOG_TAG,
-                            String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", createdString));
-
-                    AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
-                    if(attractionCategory != null)
-                    {
-                        App.content.addElement(attractionCategory);
-                        this.markForCreation(attractionCategory);
-                        updateContentRecyclerView(true);
-                    }
-                    else
-                    {
-                        Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                        Log.e(Constants.LOG_TAG,
-                                String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: not able to create AttractionCategory [%s]", createdString));
-                    }
-                    break;
-                }
-
-                case Constants.REQUEST_CODE_CREATE_MANUFACTURER:
-                {
-                    String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                    Log.d(Constants.LOG_TAG,
-                            String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", createdString));
-
-                    Manufacturer manufacturer = Manufacturer.create(createdString, null);
-                    if(manufacturer != null)
-                    {
-                        App.content.addElement(manufacturer);
-                        this.markForCreation(manufacturer);
-                        updateContentRecyclerView(true);
-                    }
-                    else
-                    {
-                        Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                        Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: not able to create Manufacturer [%s]", createdString));
-                    }
-                    break;
-                }
-
-                case Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY:
-                {
-                    this.markForUpdate(resultElement);
-                    updateContentRecyclerView(false);
-                    break;
-                }
-
-                case Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES:
-                case Constants.REQUEST_CODE_SORT_MANUFACTURERS:
-                {
-                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                    App.content.reorderElements(resultElements);
+                    App.content.addElement(attractionCategory);
+                    this.markForCreation(attractionCategory);
                     updateContentRecyclerView(true);
+                }
+                else
+                {
+                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
 
-                    if(resultElement != null)
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SORT>:: scrolling to selected element %s...",
-                                resultElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
-                    }
-
-                    this.markForUpdate(resultElements);
-                    break;
+                    Log.e(Constants.LOG_TAG,
+                            String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: not able to create AttractionCategory [%s]", createdString));
                 }
 
-                case Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                case Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            }
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
+            {
+                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+                Log.d(Constants.LOG_TAG,
+                        String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: creating MANUFACTURER [%s]", createdString));
+
+                Manufacturer manufacturer = Manufacturer.create(createdString, null);
+                if(manufacturer != null)
                 {
-                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                    switch(this.viewModel.type_to_manage)
-                    {
-                        case Constants.TYPE_ATTRACTION_CATEGORY:
-                        {
-                            for(IElement element : resultElements)
-                            {
-                                ((Attraction)element).setAttractionCategory((AttractionCategory)this.viewModel.longClickedElement);
-                                super.markForUpdate(element);
-                            }
-                            break;
-                        }
-
-                        case Constants.TYPE_MANUFACTURER:
-                        {
-                            for(IElement element : resultElements)
-                            {
-                                ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
-                                super.markForUpdate(element);
-                            }
-                            break;
-                        }
-                    }
-
-                    updateContentRecyclerView(false);
-
-                    Toaster.makeToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
-
-                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
-                            this.viewModel.longClickedElement, resultElements.size()));
-
+                    App.content.addElement(manufacturer);
+                    this.markForCreation(manufacturer);
                     updateContentRecyclerView(true);
-                    break;
+                }
+                else
+                {
+                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
+
+                    Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: not able to create MANUFACTURER [%s]", createdString));
                 }
             }
+            else if(requestCode == Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY)
+            {
+                this.markForUpdate(resultElement);
+                updateContentRecyclerView(false);
+            }
+            else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES || requestCode == Constants.REQUEST_CODE_SORT_MANUFACTURERS)
+            {
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+                App.content.reorderElements(resultElements);
+                updateContentRecyclerView(true);
+
+                if(resultElement != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SORT>:: scrolling to selected element %s...",
+                            resultElement));
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+                }
+
+                this.markForUpdate(resultElements);
+            }
+            else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+            {
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+                if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
+                {
+                    for(IElement element : resultElements)
+                    {
+                        ((Attraction)element).setAttractionCategory((AttractionCategory)this.viewModel.longClickedElement);
+                        super.markForUpdate(element);
+                    }
+                }
+                else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                {
+                    for(IElement element : resultElements)
+                    {
+                        ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
+                        super.markForUpdate(element);
+                    }
+                }
+
+                updateContentRecyclerView(false);
+
+                Toaster.makeToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
+
+                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
+                        this.viewModel.longClickedElement, resultElements.size()));
+
+                updateContentRecyclerView(true);
+            }
+
         }
     }
 
@@ -344,21 +305,14 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 {
                     boolean isDefault = false;
 
-                    switch(viewModel.type_to_manage)
+                    if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                     {
-                        case Constants.TYPE_ATTRACTION_CATEGORY:
-                        {
-                            isDefault = viewModel.longClickedElement.equals(AttractionCategory.getDefault());
-                            break;
-                        }
-
-                        case Constants.TYPE_MANUFACTURER:
-                        {
-                            isDefault = viewModel.longClickedElement.equals(Manufacturer.getDefault());
-                            break;
-                        }
+                        isDefault = viewModel.longClickedElement.equals(AttractionCategory.getDefault());
                     }
-
+                    else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                    {
+                        isDefault = viewModel.longClickedElement.equals(Manufacturer.getDefault());
+                    }
 
                     Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
 
@@ -383,137 +337,128 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick:: [%S] selected", item.getItemId()));
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
-                            switch(item.getItemId())
+                            int id = item.getItemId();
+
+                            if(id == Constants.SELECTION_ASSIGN_TO_ATTRACTIONS)
                             {
-                                case Constants.SELECTION_ASSIGN_TO_ATTRACTIONS:
+                                List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+
+                                if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                                 {
-                                    List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
-                                    switch(viewModel.type_to_manage)
+                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
                                     {
-                                        case Constants.TYPE_ATTRACTION_CATEGORY:
+                                        if(attraction.getAttractionCategory().equals(viewModel.longClickedElement))
                                         {
-                                            for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                            {
-                                                if(attraction.getAttractionCategory().equals(viewModel.longClickedElement))
-                                                {
-                                                    Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                            "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                                    attractions.remove(attraction);
-                                                }
-                                            }
-
-                                            ActivityTool.startActivityPickForResult(
-                                                    ManageOrphanElementsActivity.this,
-                                                    Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                                    attractions);
-                                            break;
-                                        }
-
-                                        case Constants.TYPE_MANUFACTURER:
-                                        {
-                                            for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                            {
-                                                if(attraction.getManufacturer().equals(viewModel.longClickedElement))
-                                                {
-                                                    Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                            "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                                    attractions.remove(attraction);
-                                                }
-                                            }
-
-                                            ActivityTool.startActivityPickForResult(
-                                                    ManageOrphanElementsActivity.this,
-                                                    Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
-                                                    attractions);
-                                            break;
+                                            Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
+                                                    "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                            attractions.remove(attraction);
                                         }
                                     }
 
-                                    return true;
+                                    ActivityTool.startActivityPickForResult(
+                                            ManageOrphanElementsActivity.this,
+                                            Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS,
+                                            attractions);
                                 }
-
-                                case Constants.SELECTION_EDIT_ELEMENT:
+                                else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                                 {
-                                    switch(viewModel.type_to_manage)
+                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
                                     {
-                                        case Constants.TYPE_ATTRACTION_CATEGORY:
-                                            ActivityTool.startActivityEditForResult(
-                                                    ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
-                                            break;
-
-                                        case Constants.TYPE_MANUFACTURER:
-                                            ActivityTool.startActivityEditForResult(
-                                                    ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_MANUFACTURER, viewModel.longClickedElement);
-                                            break;
+                                        if(attraction.getManufacturer().equals(viewModel.longClickedElement))
+                                        {
+                                            Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
+                                                    "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                            attractions.remove(attraction);
+                                        }
                                     }
 
-                                    return true;
+                                    ActivityTool.startActivityPickForResult(
+                                            ManageOrphanElementsActivity.this,
+                                            Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
+                                            attractions);
                                 }
 
-                                case Constants.SELECTION_DELETE_ELEMENT:
+                                return true;
+                            }
+
+                            else if(id == Constants.SELECTION_EDIT_ELEMENT)
+                            {
+                                if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                                 {
-                                    String alertDialogMessage;
-                                    if(viewModel.longClickedElement.hasChildren())
+                                    ActivityTool.startActivityEditForResult(
+                                            ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
+                                }
+                                else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                                {
+                                    ActivityTool.startActivityEditForResult( ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_MANUFACTURER, viewModel.longClickedElement);
+                                }
+
+                                return true;
+                            }
+
+                            else if(id == Constants.SELECTION_DELETE_ELEMENT)
+                            {
+                                String alertDialogMessage;
+                                if(viewModel.longClickedElement.hasChildren())
+                                {
+                                    String defaultName;
+
+                                    if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                                     {
-                                        String defaultName;
-                                        switch(viewModel.type_to_manage)
-                                        {
-                                            case Constants.TYPE_ATTRACTION_CATEGORY:
-                                                defaultName = AttractionCategory.getDefault().getName();
-                                                break;
-
-                                            case Constants.TYPE_MANUFACTURER:
-                                                defaultName = Manufacturer.getDefault().getName();
-                                                break;
-
-                                            default:
-                                                defaultName = getString(R.string.error_missing_text);
-                                        }
-
-                                        alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_children,
-                                                viewModel.longClickedElement.getChildCount(),
-                                                viewModel.longClickedElement.getName(),
-                                                defaultName);
+                                        defaultName = AttractionCategory.getDefault().getName();
+                                    }
+                                    else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                                    {
+                                        defaultName = Manufacturer.getDefault().getName();
                                     }
                                     else
                                     {
-                                        alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_no_children,
-                                                viewModel.longClickedElement.getName());
+                                        defaultName = getString(R.string.error_missing_text);
                                     }
 
-                                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                                            R.drawable.ic_baseline_warning,
-                                            getString(R.string.alert_dialog_title_delete_element),
-                                            alertDialogMessage,
-                                            getString(R.string.text_accept),
-                                            getString(R.string.text_cancel),
-                                            Constants.REQUEST_CODE_DELETE);
-
-                                    alertDialogFragmentDelete.setCancelable(false);
-                                    alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                                    return true;
+                                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_children,
+                                            viewModel.longClickedElement.getChildCount(),
+                                            viewModel.longClickedElement.getName(),
+                                            defaultName);
                                 }
-
-                                case Constants.SELECTION_SET_AS_DEFAULT:
+                                else
                                 {
-                                    String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedElement.getName());
-
-                                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                                            R.drawable.ic_baseline_warning,
-                                            getString(R.string.alert_dialog_title_set_as_default),
-                                            alterDialogMessage,
-                                            getString(R.string.text_accept),
-                                            getString(R.string.text_cancel),
-                                            Constants.REQUEST_CODE_SET_AS_DEFAULT);
-
-                                    alertDialogFragmentDelete.setCancelable(false);
-                                    alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-
-                                    return true;
+                                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_no_children,
+                                            viewModel.longClickedElement.getName());
                                 }
 
-                                default:
-                                    return false;
+                                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                                        R.drawable.ic_baseline_warning,
+                                        getString(R.string.alert_dialog_title_delete_element),
+                                        alertDialogMessage,
+                                        getString(R.string.text_accept),
+                                        getString(R.string.text_cancel),
+                                        Constants.REQUEST_CODE_DELETE);
+
+                                alertDialogFragmentDelete.setCancelable(false);
+                                alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                                return true;
+                            }
+                            else if(id == Constants.SELECTION_SET_AS_DEFAULT)
+                            {
+                                String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedElement.getName());
+
+                                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                                        R.drawable.ic_baseline_warning,
+                                        getString(R.string.alert_dialog_title_set_as_default),
+                                        alterDialogMessage,
+                                        getString(R.string.text_accept),
+                                        getString(R.string.text_cancel),
+                                        Constants.REQUEST_CODE_SET_AS_DEFAULT);
+
+                                alertDialogFragmentDelete.setCancelable(false);
+                                alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
                             }
                         }
                     });
@@ -531,93 +476,82 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_DELETE)
             {
-                case Constants.REQUEST_CODE_DELETE:
+                Snackbar snackbar = Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                        Snackbar.LENGTH_LONG);
+
+                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
                 {
-                    Snackbar snackbar = Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
-                            Snackbar.LENGTH_LONG);
-
-                    snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
+                    @Override
+                    public void onClick(View view)
                     {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            actionConfirmed = true;
-                            Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarClick:: action <DELETE> confirmed");
-                        }
-                    });
+                        actionConfirmed = true;
+                        Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarClick:: action <DELETE> confirmed");
+                    }
+                });
 
-                    snackbar.addCallback(new Snackbar.Callback()
-                    {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event)
-                        {
-                            if(actionConfirmed)
-                            {
-                                actionConfirmed = false;
-
-                                Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
-
-                                List<IAttraction> children = new ArrayList<>(viewModel.longClickedElement.getChildrenAsType(IAttraction.class));
-
-                                for(IAttraction child : children)
-                                {
-                                    child.setAttractionCategory(AttractionCategory.getDefault());
-                                    markForUpdate(child);
-                                }
-
-                                markForDeletion(viewModel.longClickedElement, false);
-
-                                App.content.removeElement(viewModel.longClickedElement);
-
-                                updateContentRecyclerView(true);
-                            }
-                            else
-                            {
-                                Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: action not confirmed - doing nothing");
-                            }
-                        }
-                    });
-
-                    snackbar.show();
-                    break;
-                }
-
-                case Constants.REQUEST_CODE_SET_AS_DEFAULT:
+                snackbar.addCallback(new Snackbar.Callback()
                 {
-                    switch(this.viewModel.type_to_manage)
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event)
                     {
-                        case Constants.TYPE_ATTRACTION_CATEGORY:
+                        if(actionConfirmed)
                         {
-                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory",
-                                    this.viewModel.longClickedElement));
+                            actionConfirmed = false;
 
-                            super.markForUpdate(AttractionCategory.getDefault());
+                            Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            AttractionCategory.setDefault((AttractionCategory)this.viewModel.longClickedElement);
-                            super.markForUpdate(this.viewModel.longClickedElement);
+                            List<IAttraction> children = new ArrayList<>(viewModel.longClickedElement.getChildrenAsType(IAttraction.class));
 
-                            Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
-                            break;
+                            for(IAttraction child : children)
+                            {
+                                child.setAttractionCategory(AttractionCategory.getDefault());
+                                markForUpdate(child);
+                            }
+
+                            markForDeletion(viewModel.longClickedElement, false);
+
+                            App.content.removeElement(viewModel.longClickedElement);
+
+                            updateContentRecyclerView(true);
                         }
-
-                        case Constants.TYPE_MANUFACTURER:
+                        else
                         {
-                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Manufacturer",
-                                    this.viewModel.longClickedElement));
-
-                            super.markForUpdate(Manufacturer.getDefault());
-
-                            Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
-                            super.markForUpdate(this.viewModel.longClickedElement);
-
-                            Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
-                            break;
+                            Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.onSnackbarDismissed<DELETE>:: action not confirmed - doing nothing");
                         }
                     }
+                });
+
+                snackbar.show();
+            }
+            else if(requestCode == Constants.REQUEST_CODE_SET_AS_DEFAULT)
+            {
+                if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory",
+                            this.viewModel.longClickedElement));
+
+                    super.markForUpdate(AttractionCategory.getDefault());
+
+                    AttractionCategory.setDefault((AttractionCategory)this.viewModel.longClickedElement);
+                    super.markForUpdate(this.viewModel.longClickedElement);
+
+                    Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
+                }
+                else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default MANUFACTURER",
+                            this.viewModel.longClickedElement));
+
+                    super.markForUpdate(Manufacturer.getDefault());
+
+                    Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
+                    super.markForUpdate(this.viewModel.longClickedElement);
+
+                    Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                 }
             }
         }
@@ -633,15 +567,13 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 Log.i(Constants.LOG_TAG, "ManageOrphanElementsViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                switch(viewModel.type_to_manage)
+                if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                 {
-                    case Constants.TYPE_ATTRACTION_CATEGORY:
-                        ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
-                        break;
-
-                    case Constants.TYPE_MANUFACTURER:
-                        ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
-                        break;
+                    ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
+                }
+                else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                {
+                    ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
                 }
             }
         });
@@ -654,15 +586,13 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             Log.d(Constants.LOG_TAG, "ManageOrphanElementsViewModel.updateContentRecyclerView:: resetting content...");
 
-            switch(this.viewModel.type_to_manage)
+            if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
             {
-                case Constants.TYPE_ATTRACTION_CATEGORY:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(AttractionCategory.class));
-                    break;
-
-                case Constants.TYPE_MANUFACTURER:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Manufacturer.class));
-                    break;
+                this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(AttractionCategory.class));
+            }
+            else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+            {
+                this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Manufacturer.class));
             }
         }
         else

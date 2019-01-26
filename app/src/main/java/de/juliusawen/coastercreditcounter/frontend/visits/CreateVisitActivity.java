@@ -15,7 +15,6 @@ import java.util.UUID;
 
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.Utilities.AttractionCategoryHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
@@ -54,11 +53,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            if(this.viewModel.attractionCategoryHeaderProvider == null)
-            {
-                this.viewModel.attractionCategoryHeaderProvider = new AttractionCategoryHeaderProvider();
-            }
-
             super.addToolbar();
             super.addToolbarHomeButton();
             this.decorateToolbar();
@@ -82,22 +76,18 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(resultCode == Activity.RESULT_OK)
         {
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
             {
-                case Constants.REQUEST_CODE_PICK_ATTRACTIONS:
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+                for(IElement element : resultElements)
                 {
-                    List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                    for(IElement element : resultElements)
-                    {
-                        VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
-                        this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                        App.content.addElement(visitedAttraction);
-                    }
-
-                    this.returnResult(Activity.RESULT_OK);
-                    break;
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
+                    App.content.addElement(visitedAttraction);
                 }
+
+                this.returnResult(Activity.RESULT_OK);
             }
         }
         else if(resultCode == Activity.RESULT_CANCELED)

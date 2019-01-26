@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -21,12 +19,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.YearHeader;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -106,20 +104,22 @@ public class ShowVisitsFragment extends Fragment
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onOptionItemSelected:: [%s] selected", item.getItemId()));
 
-        switch(item.getItemId())
+        int id = item.getItemId();
+        if(id == Constants.SELECTION_SORT_ASCENDING)
         {
-            case Constants.SELECTION_SORT_ASCENDING:
-                Visit.setSortOrder(SortOrder.ASCENDING);
-                this.updateContentRecyclerView(false);
-                return true;
-
-            case Constants.SELECTION_SORT_DESCENDING:
-                Visit.setSortOrder(SortOrder.DESCENDING);
-                this.updateContentRecyclerView(false);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+            Visit.setSortOrder(SortOrder.ASCENDING);
+            this.updateContentRecyclerView();
+            return true;
+        }
+        else if(id == Constants.SELECTION_SORT_DESCENDING)
+        {
+            Visit.setSortOrder(SortOrder.DESCENDING);
+            this.updateContentRecyclerView();
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -130,16 +130,12 @@ public class ShowVisitsFragment extends Fragment
 
         if(resultCode == Activity.RESULT_OK)
         {
-            switch(requestCode)
+            if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
             {
-                case Constants.REQUEST_CODE_CREATE_VISIT:
-                {
-                    this.updateContentRecyclerView(true);
+                this.updateContentRecyclerView();
 
-                    IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
-                    break;
-                }
+                IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
             }
         }
     }
@@ -149,19 +145,18 @@ public class ShowVisitsFragment extends Fragment
     {
         super.onDetach();
         this.viewModel = null;
+        this.recyclerView = null;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        List<IElement> categorizedVisits = this.getCategorizedVisits();
-
         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
         childTypesToExpand.add(Visit.class);
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                categorizedVisits,
-                App.settings.getExpandLatestYearInListByDefault() ? Collections.singleton((IElement)YearHeader.getLatestYearHeader(categorizedVisits)) : null,
-                childTypesToExpand);
+                this.viewModel.park.getChildrenOfType(Visit.class),
+                childTypesToExpand,
+                Constants.TYPE_YEAR);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
@@ -172,11 +167,11 @@ public class ShowVisitsFragment extends Fragment
             public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
-                if(Visit.class.isInstance(element))
+                if(element instanceof Visit)
                 {
                     ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
                 }
-                else if(YearHeader.class.isInstance(element))
+                else if(element instanceof YearHeader)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -191,29 +186,9 @@ public class ShowVisitsFragment extends Fragment
         };
     }
 
-    private void updateContentRecyclerView(boolean expandLatestYearHeaderAccordingToSettings)
+    private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: updating RecyclerView...");
-
-        if(this.viewModel.park.getChildCountOfType(Visit.class) > 0)
-        {
-            List<IElement> categorizedVisits = this.getCategorizedVisits();
-
-            this.viewModel.contentRecyclerViewAdapter.setItems(categorizedVisits);
-
-            if(expandLatestYearHeaderAccordingToSettings && App.settings.getExpandLatestYearInListByDefault())
-            {
-                this.viewModel.contentRecyclerViewAdapter.expandItem(YearHeader.getLatestYearHeader(categorizedVisits));
-            }
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: no elements to update");
-        }
-    }
-
-    private List<IElement> getCategorizedVisits()
-    {
-        return YearHeader.fetchCategorizedVisits(Visit.sortVisitsByDateAccordingToSortOrder(this.viewModel.park.getChildrenAsType(Visit.class)));
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 }

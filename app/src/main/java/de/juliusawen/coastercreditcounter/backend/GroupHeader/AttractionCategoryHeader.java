@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
+package de.juliusawen.coastercreditcounter.backend.GroupHeader;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,11 +17,12 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.ITemporaryElement;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public class AttractionCategoryHeader extends OrphanElement implements IElement, ITemporaryElement
+public class AttractionCategoryHeader extends GroupHeader implements IElement, ITemporaryElement
 {
     private final AttractionCategory attractionCategory;
 
@@ -63,31 +64,28 @@ public class AttractionCategoryHeader extends OrphanElement implements IElement,
                 {
                     Log.i(Constants.LOG_TAG, String.format("AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick.onMenuItemClick:: [%S] selected", item.getItemId()));
 
-                    switch (item.getItemId())
+                    int id = item.getItemId();
+
+                    if(id == Constants.SELECTION_SORT_ATTRACTIONS)
                     {
-                        case Constants.SELECTION_SORT_ATTRACTIONS:
+                        List<IElement> attractions = new ArrayList<>();
+
+                        if(longClickedElement.hasChildrenOfType(Attraction.class))
                         {
-                            List<IElement> attractions = new ArrayList<>();
-
-                            if(longClickedElement.hasChildrenOfType(Attraction.class))
-                            {
-                                attractions = longClickedElement.getChildrenOfType(Attraction.class);
-                            }
-                            else if(longClickedElement.hasChildrenOfType(VisitedAttraction.class))
-                            {
-                                attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
-                            }
-
-                            ActivityTool.startActivitySortForResult(
-                                    Objects.requireNonNull(context),
-                                    Constants.REQUEST_CODE_SORT_ATTRACTIONS,
-                                    attractions);
-
-                            return true;
+                            attractions = longClickedElement.getChildrenOfType(Attraction.class);
                         }
-                        default:
-                            return false;
+                        else if(longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+                        {
+                            attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                        }
+
+                        ActivityTool.startActivitySortForResult(
+                                Objects.requireNonNull(context),
+                                Constants.REQUEST_CODE_SORT_ATTRACTIONS,
+                                attractions);
                     }
+
+                    return true;
                 }
             });
             popupMenu.show();

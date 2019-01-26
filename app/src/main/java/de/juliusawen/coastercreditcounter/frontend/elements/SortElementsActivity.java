@@ -49,7 +49,7 @@ public class SortElementsActivity extends BaseActivity
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter =
-                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false, Constants.TYPE_NONE);
 
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
             }
@@ -92,20 +92,24 @@ public class SortElementsActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item)
     {
         Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
-        switch (item.getItemId())
+
+        int id = item.getItemId();
+
+        if(id == Constants.SELECTION_SORT_ASCENDING)
         {
-            case Constants.SELECTION_SORT_ASCENDING:
-                SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-                return true;
-
-            case Constants.SELECTION_SORT_DESCENDING:
-                SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+            SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+            return true;
+        }
+        else if(id == Constants.SELECTION_SORT_DESCENDING)
+        {
+            SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
         }
     }
 

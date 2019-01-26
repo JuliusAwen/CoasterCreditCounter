@@ -375,7 +375,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(Manufacturer.getDefault() == null)
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default MANUFACTURER found - using default as fallback");
 
             Manufacturer.createAndSetDefault();
             manufacturers.add(Manufacturer.getDefault());
@@ -520,7 +520,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer", uuid));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a MANUFACTURER", uuid));
             return null;
         }
     }

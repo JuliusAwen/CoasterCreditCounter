@@ -6,13 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -166,73 +161,5 @@ public class Visit extends Element
     {
         Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to [%s]", sortOrder.toString()));
         Visit.sortOrder = sortOrder;
-    }
-
-    public static List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
-    {
-        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
-        {
-            visits = Visit.sortAscendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
-        }
-        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
-        {
-            visits = Visit.sortDescendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
-        }
-
-        return visits;
-    }
-
-    private static List<Visit> sortDescendingByDate(List<Visit> visits)
-    {
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
-        }
-
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        List<Visit> sortedVisits = new ArrayList<>();
-        for(String dateString : dateStrings)
-        {
-            sortedVisits.add(0, visitsByDateString.get(dateString));
-        }
-
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: [%d] visits sorted", visits.size()));
-        return sortedVisits;
-    }
-
-    private static List<Visit> sortAscendingByDate(List<Visit> visits)
-    {
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
-        }
-
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        List<Visit> sortedVisits = new ArrayList<>();
-        for(String dateString : dateStrings)
-        {
-            sortedVisits.add(visitsByDateString.get(dateString));
-        }
-
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: [%d] visits sorted", visits.size()));
-
-        return sortedVisits;
     }
 }

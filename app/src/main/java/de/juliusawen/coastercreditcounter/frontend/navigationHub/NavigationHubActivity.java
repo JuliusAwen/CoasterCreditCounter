@@ -261,24 +261,18 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         dialog.dismiss();
 
-        switch(requestCode)
+        if(requestCode == Constants.REQUEST_OVERWRITE_FILE)
         {
-            case Constants.REQUEST_OVERWRITE_FILE:
+            if(which == DialogInterface.BUTTON_POSITIVE)
             {
-                if(which == DialogInterface.BUTTON_POSITIVE)
-                {
-                    this.startExportContent();
-                }
-                break;
+                this.startExportContent();
             }
-
-            case Constants.REQUEST_CODE_OVERWRITE_CONTENT:
+        }
+        else if(requestCode == Constants.REQUEST_CODE_OVERWRITE_CONTENT)
+        {
+            if(which == DialogInterface.BUTTON_POSITIVE)
             {
-                if(which == DialogInterface.BUTTON_POSITIVE)
-                {
-                    this.startImportContent();
-                }
-                break;
+                this.startImportContent();
             }
         }
     }

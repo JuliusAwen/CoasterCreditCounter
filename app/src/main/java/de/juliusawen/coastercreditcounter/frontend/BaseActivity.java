@@ -202,16 +202,16 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
-        {
-            case Constants.SELECTION_HELP:
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", item.getItemId()));
-                this.setHelpOverlayVisibility(true);
-                return true;
+        int id = item.getItemId();
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if(id == Constants.SELECTION_HELP)
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", item.getItemId()));
+            this.setHelpOverlayVisibility(true);
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

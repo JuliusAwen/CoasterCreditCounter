@@ -70,9 +70,6 @@ public abstract class Constants
     public static final String EXTRA_ELEMENTS_TO_DELETE_UUIDS = "de.juliusawen.coding.extra_elements_to_delete_uuids";
     public static final String EXTRA_TYPE_TO_MANAGE = "de.juliusawen.coding.extra_type_to_manage";
 
-    public static final String TYPE_ATTRACTION_CATEGORY = "de.juliusawen.coding.type_attraction_category";
-    public static final String TYPE_MANUFACTURER = "de.juliusawen.coding.type_manufacturer";
-
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
     public static final String FRAGMENT_ARG_HELP_MESSAGE = "de.juliusawen.coding.fragment_arg_help_message";
@@ -90,79 +87,175 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
 
-    public static  final int SELECTION_ADD = 100;
+    public static  final int SELECTION_ADD = Selection.ADD.ordinal();
 
-    public static  final int SELECTION_CREATE_LOCATION = 200;
-    public static  final int SELECTION_CREATE_PARK = 300;
+    public static  final int SELECTION_CREATE_LOCATION = Selection.CREATE_LOCATION.ordinal();
+    public static  final int SELECTION_CREATE_PARK = Selection.CREATE_PARK.ordinal();
 
-    public static  final int SELECTION_EDIT_LOCATION = 400;
-    public static  final int SELECTION_EDIT_PARK = 500;
-    public static  final int SELECTION_EDIT_ELEMENT = 600;
+    public static  final int SELECTION_EDIT_LOCATION = Selection.EDIT_LOCATION.ordinal();
+    public static  final int SELECTION_EDIT_PARK = Selection.EDIT_PARK.ordinal();
+    public static  final int SELECTION_EDIT_ELEMENT = Selection.EDIT_ELEMENT.ordinal();
 
-    public static  final int SELECTION_DELETE_ELEMENT = 700;
-    public static  final int SELECTION_REMOVE_ELEMENT = 800;
-    public static  final int SELECTION_RELOCATE_ELEMENT = 900;
+    public static  final int SELECTION_DELETE_ELEMENT = Selection.DELETE_ELEMENT.ordinal();
+    public static  final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
+    public static  final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
 
-    public static  final int SELECTION_SORT = 1000;
-    public static  final int SELECTION_SORT_LOCATIONS = 1100;
-    public static  final int SELECTION_SORT_PARKS = 1200;
-    public static  final int SELECTION_SORT_ATTRACTIONS = 1300;
-    public static  final int SELECTION_SORT_ATTRACTION_CATEGORIES = 1400;
-    public static  final int SELECTION_SORT_MANUFACTURERS = 1410;
+    public static  final int SELECTION_SORT = Selection.SORT.ordinal();
+    public static  final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
+    public static  final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
+    public static  final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
+    public static  final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
+    public static  final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
 
-    public static  final int SELECTION_SORT_ASCENDING = 1500;
-    public static  final int SELECTION_SORT_DESCENDING = 1600;
+    public static  final int SELECTION_SORT_ASCENDING = Selection.SORT_ASCENDING.ordinal();
+    public static  final int SELECTION_SORT_DESCENDING = Selection.SORT_DESCENDING.ordinal();
 
-    public static  final int SELECTION_EXPAND_ALL = 1700;
-    public static  final int SELECTION_COLLAPSE_ALL = 1800;
+    public static  final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
+    public static  final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
-    public static  final int SELECTION_ASSIGN_TO_ATTRACTIONS = 1900;
-    public static  final int SELECTION_SET_AS_DEFAULT = 2000;
+    public static  final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
+    public static  final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
 
-    public static  final int SELECTION_HELP = 2100;
-
-
-
-    public static final int REQUEST_CODE_CREATE_LOCATION = 100;
-    public static final int REQUEST_CODE_CREATE_PARK = 200;
-    public static final int REQUEST_CODE_CREATE_VISIT = 300;
-    public static final int REQUEST_CODE_CREATE_ATTRACTION_CATEGORY = 400;
-    public static final int REQUEST_CODE_CREATE_MANUFACTURER = 410;
-
-    public static final int REQUEST_CODE_SHOW_LOCATION = 500;
-    public static final int REQUEST_CODE_SHOW_PARK = 600;
-    public static final int REQUEST_CODE_SHOW_VISIT = 700;
-
-    public static final int REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES = 800;
-    public static final int REQUEST_CODE_MANAGE_MANUFACTURERS = 810;
-
-    public static final int REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS = 900;
-    public static final int REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS = 910;
-
-    public static final int REQUEST_CODE_EDIT_LOCATION = 1000;
-    public static final int REQUEST_CODE_EDIT_PARK = 1100;
-    public static final int REQUEST_CODE_EDIT_ATTRACTION_CATEGORY = 1200;
-    public static final int REQUEST_CODE_EDIT_MANUFACTURER = 1210;
-
-    public static final int REQUEST_CODE_SORT_LOCATIONS = 1300;
-    public static final int REQUEST_CODE_SORT_PARKS = 1400;
-    public static final int REQUEST_CODE_SORT_ATTRACTIONS = 1500;
-    public static final int REQUEST_CODE_SORT_ATTRACTION_CATEGORIES = 1600;
-    public static final int REQUEST_CODE_SORT_MANUFACTURERS = 1610;
+    public static  final int SELECTION_HELP = Selection.HELP.ordinal();
 
 
-    public static final int REQUEST_CODE_PICK_LOCATIONS = 1700;
-    public static final int REQUEST_CODE_PICK_PARKS = 1800;
-    public static final int REQUEST_CODE_PICK_ATTRACTIONS = 1900;
 
-    public static final int REQUEST_CODE_DELETE = 2000;
-    public static final int REQUEST_CODE_REMOVE = 2100;
+    public static final int REQUEST_CODE_CREATE_LOCATION = RequestCode.CREATE_LOCATION.ordinal();
+    public static final int REQUEST_CODE_CREATE_PARK = RequestCode.CREATE_PARK.ordinal();
+    public static final int REQUEST_CODE_CREATE_VISIT = RequestCode.CREATE_VISIT.ordinal();
+    public static final int REQUEST_CODE_CREATE_ATTRACTION_CATEGORY = RequestCode.CREATE_ATTRACTION_CATEGORY.ordinal();
+    public static final int REQUEST_CODE_CREATE_MANUFACTURER = RequestCode.CREATE_MANUFACTURER.ordinal();
 
-    public static final int REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = 2200;
-    public static final int REQUEST_OVERWRITE_FILE = 2300;
-    public static final int REQUEST_CODE_OVERWRITE_CONTENT = 2400;
+    public static final int REQUEST_CODE_SHOW_LOCATION = RequestCode.SHOW_LOCATION.ordinal();
+    public static final int REQUEST_CODE_SHOW_PARK = RequestCode.SHOW_PARK.ordinal();
+    public static final int REQUEST_CODE_SHOW_VISIT = RequestCode.SHOW_VISIT.ordinal();
 
-    public static final int REQUEST_CODE_RELOCATE = 2500;
+    public static final int REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES = RequestCode.MANAGE_ATTRACTION_CATEGORIES.ordinal();
+    public static final int REQUEST_CODE_MANAGE_MANUFACTURERS = RequestCode.MANAGE_MANUFACTURERS.ordinal();
 
-    public static final int REQUEST_CODE_SET_AS_DEFAULT = 2600;
+    public static final int REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS = RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS.ordinal();
+    public static final int REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS = RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS.ordinal();
+
+    public static final int REQUEST_CODE_EDIT_LOCATION = RequestCode.EDIT_LOCATION.ordinal();
+    public static final int REQUEST_CODE_EDIT_PARK = RequestCode.EDIT_PARK.ordinal();
+    public static final int REQUEST_CODE_EDIT_ATTRACTION_CATEGORY = RequestCode.EDIT_ATTRACTION_CATEGORY.ordinal();
+    public static final int REQUEST_CODE_EDIT_MANUFACTURER = RequestCode.EDIT_MANUFACTURER.ordinal();
+
+    public static final int REQUEST_CODE_SORT_LOCATIONS = RequestCode.SORT_LOCATIONS.ordinal();
+    public static final int REQUEST_CODE_SORT_PARKS = RequestCode.SORT_PARKS.ordinal();
+    public static final int REQUEST_CODE_SORT_ATTRACTIONS = RequestCode.SORT_ATTRACTIONS.ordinal();
+    public static final int REQUEST_CODE_SORT_ATTRACTION_CATEGORIES = RequestCode.SORT_ATTRACTION_CATEGORIES.ordinal();
+    public static final int REQUEST_CODE_SORT_MANUFACTURERS = RequestCode.SORT_MANUFACTURERS.ordinal();
+
+
+    public static final int REQUEST_CODE_PICK_LOCATIONS = RequestCode.PICK_LOCATIONS.ordinal();
+    public static final int REQUEST_CODE_PICK_PARKS = RequestCode.PICK_PARKS.ordinal();
+    public static final int REQUEST_CODE_PICK_ATTRACTIONS = RequestCode.PICK_ATTRACTIONS.ordinal();
+
+    public static final int REQUEST_CODE_DELETE = RequestCode.DELETE.ordinal();
+    public static final int REQUEST_CODE_REMOVE = RequestCode.REMOVE.ordinal();
+
+    public static final int REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal();
+    public static final int REQUEST_OVERWRITE_FILE = RequestCode.OVERWRITE_FILE.ordinal();
+    public static final int REQUEST_CODE_OVERWRITE_CONTENT = RequestCode.OVERWRITE_CONTENT.ordinal();
+
+    public static final int REQUEST_CODE_RELOCATE = RequestCode.RELOCATE.ordinal();
+
+    public static final int REQUEST_CODE_SET_AS_DEFAULT = RequestCode.SET_AS_DEFAULT.ordinal();
+
+
+
+    public static final int TYPE_NONE = Type.NONE.ordinal();
+    public static final int TYPE_ATTRACTION_CATEGORY = Type.ATTRACTION_CATEGORY.ordinal();
+    public static final int TYPE_MANUFACTURER = Type.MANUFACTURER.ordinal();
+    public static final int TYPE_YEAR = Type.YEAR.ordinal();
+
+    private enum Selection
+    {
+        ADD,
+
+        CREATE_LOCATION,
+        CREATE_PARK,
+
+        EDIT_LOCATION,
+        EDIT_PARK,
+        EDIT_ELEMENT,
+
+        DELETE_ELEMENT,
+        REMOVE_ELEMENT,
+        RELOCATE_ELEMENT,
+
+        SORT,
+        SORT_LOCATIONS,
+        SORT_PARKS,
+        SORT_ATTRACTIONS,
+        SORT_ATTRACTION_CATEGORIES,
+        SORT_MANUFACTURERS,
+
+        SORT_ASCENDING,
+        SORT_DESCENDING,
+
+        EXPAND_ALL,
+        COLLAPSE_ALL,
+
+        ASSIGN_TO_ATTRACTIONS,
+        SET_AS_DEFAULT,
+
+        HELP,
+    }
+
+    private enum RequestCode
+    {
+        CREATE_LOCATION,
+        CREATE_PARK,
+        CREATE_VISIT,
+        CREATE_ATTRACTION_CATEGORY,
+        CREATE_MANUFACTURER,
+
+        SHOW_LOCATION,
+        SHOW_PARK,
+        SHOW_VISIT,
+
+        MANAGE_ATTRACTION_CATEGORIES,
+        MANAGE_MANUFACTURERS,
+
+        ASSIGN_CATEGORY_TO_ATTRACTIONS,
+        ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
+
+        EDIT_LOCATION,
+        EDIT_PARK,
+        EDIT_ATTRACTION_CATEGORY,
+        EDIT_MANUFACTURER,
+
+        SORT_LOCATIONS,
+        SORT_PARKS,
+        SORT_ATTRACTIONS,
+        SORT_ATTRACTION_CATEGORIES,
+        SORT_MANUFACTURERS,
+
+        PICK_LOCATIONS,
+        PICK_PARKS,
+        PICK_ATTRACTIONS,
+
+        DELETE,
+        REMOVE,
+
+        PERMISSION_CODE_WRITE_EXTERNAL_STORAGE,
+        OVERWRITE_FILE,
+        OVERWRITE_CONTENT,
+
+        RELOCATE,
+
+        SET_AS_DEFAULT,
+    }
+
+    private enum Type
+    {
+        NONE,
+        ATTRACTION_CATEGORY,
+        MANUFACTURER,
+        LOCATION,
+        YEAR,
+    }
 }
+

@@ -25,11 +25,11 @@ public class Location extends Element
             name = name.trim();
 
             location = new Location(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("LOCATION.create:: %s created.", location.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("LOCATION.create:: invalid name[%s] - location not created.", name));
         }
         return location;
     }
@@ -43,13 +43,13 @@ public class Location extends Element
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            Log.v(Constants.LOG_TAG, String.format("Location.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(Constants.LOG_TAG, String.format("LOCATION.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Location.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("LOCATION.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

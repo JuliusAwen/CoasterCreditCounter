@@ -25,6 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
@@ -34,9 +37,9 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoas
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
@@ -45,19 +48,25 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    private final int GENERATION_ZERO = 0;
+
     private RecyclerView recyclerView;
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
     private View.OnClickListener increaseRideCountOnClickListener;
     private View.OnClickListener decreaseRideCountOnClickListener;
 
-    private final List<IElement> items = new ArrayList<>();
+    private GroupHeaderProvider groupHeaderProvider;
+
+    private List<IElement> originalItems;
+    private List<IElement> items = new ArrayList<>();
 
     private final Map<IElement, Integer> generationByItem = new LinkedHashMap<>();
 
     private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
 
     private final AdapterType adapterType;
+    private int groupType;
 
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
@@ -77,7 +86,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean displayAttractionCategories;
     private boolean displayLocations;
 
-
     enum ViewType
     {
         ITEM,
@@ -89,23 +97,41 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         this.adapterType = request.adapterType;
         this.selectMultipleItems = request.selectMultiple;
+        this.groupType = request.groupType;
 
+        this.initializeTypesToDisplay();
         this.initializeTypesByTypeface();
 
-        if(request.initiallyExpandedElements != null)
-        {
-            this.expandedItems.addAll(request.initiallyExpandedElements);
-        }
+        this.groupHeaderProvider = new GroupHeaderProvider();
 
         if(request.relevantChildTypes != null)
         {
             this.relevantChildTypes.addAll(request.relevantChildTypes);
         }
 
-        this.items.addAll(this.initializeItems(request.elements, 0));
+        this.setItems(request.elements);
 
         this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
+    }
+
+    private void initializeTypesToDisplay()
+    {
+        this.typesToDisplayLocation.add(CustomCoaster.class);
+        this.typesToDisplayLocation.add(CustomAttraction.class);
+        this.typesToDisplayLocation.add(StockAttraction.class);
+        this.typesToDisplayLocation.add(CoasterBlueprint.class);
+        this.typesToDisplayLocation.add(AttractionBlueprint.class);
+
+        this.typesToDisplayManufacturer.add(CustomCoaster.class);
+        this.typesToDisplayManufacturer.add(CustomAttraction.class);
+        this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
+        this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
+
+        this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
+        this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
+        this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
+        this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
     }
 
     private List<IElement> initializeItems(List<IElement> items, int generation)
@@ -348,12 +374,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             Class type = item.getClass();
 
-            if(this.typesToDisplayManufacturer.contains(type))
+            if(this.displayManufacturers && this.typesToDisplayManufacturer.contains(type))
             {
                 viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
                 viewHolder.textViewDetailAbove.setText(((Attraction)item).getManufacturer().getName());
             }
-            else if(typesToDisplayAttractionCategory.contains(type))
+            else if(this.displayAttractionCategories && typesToDisplayAttractionCategory.contains(type))
             {
                 viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
                 viewHolder.textViewDetailAbove.setText(((IAttraction)item).getAttractionCategory().getName());
@@ -363,7 +389,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder.textViewDetailAbove.setVisibility(View.GONE);
             }
 
-            if(this.typesToDisplayLocation.contains(type))
+            if(this.displayLocations && this.typesToDisplayLocation.contains(type))
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
 
@@ -806,7 +832,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(parent != null && this.allRelevantChildrenAreSelected(parent))
         {
-            selectedItemsInOrderOfSelection.add(parent);
+            this.selectedItemsInOrderOfSelection.add(parent);
             notifyItemChanged(items.indexOf(parent));
             Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectParentIfAllRelevantChildrenAreSelected:: parent %s selected", parent));
         }
@@ -815,7 +841,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(parent != null && !allRelevantChildrenAreSelected(parent))
         {
-            selectedItemsInOrderOfSelection.remove(parent);
+            this.selectedItemsInOrderOfSelection.remove(parent);
             notifyItemChanged(items.indexOf(parent));
             Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectParentIfNotAllRelevantChildrenAreSelected:: parent %s deselected", parent));
         }
@@ -827,7 +853,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         List<IElement> relevantChildren = this.getRelevantChildren(parent);
         if(parent != null && !relevantChildren.isEmpty())
         {
-            relevantChildren.removeAll(selectedItemsInOrderOfSelection);
+            relevantChildren.removeAll(this.selectedItemsInOrderOfSelection);
             allRelevantChildrenAreSelected = relevantChildren.isEmpty();
         }
         return allRelevantChildrenAreSelected;
@@ -916,12 +942,47 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
+        this.originalItems = items;
         this.generationByItem.clear();
-        int generation = 0;
-
         this.items.clear();
-        this.items.addAll(this.initializeItems(items, generation));
 
+        this.groupItemsByType(this.groupType);
+    }
+
+    public void groupItemsByType(int groupType)
+    {
+        this.groupType = groupType;
+
+        List<IElement> groupedItems = new ArrayList<>();
+
+        if(groupType == Constants.TYPE_NONE)
+        {
+            groupedItems = this.originalItems;
+        }
+        else if(groupType == Constants.TYPE_ATTRACTION_CATEGORY)
+        {
+            groupedItems = this.groupHeaderProvider.groupByAttractionCategories(ConvertTool.convertElementsToType(this.originalItems, IAttraction.class));
+        }
+        //        else if(groupType.equals(GroupType.MANUFACTURER))
+        //        {
+        //
+        //        }
+        //        else if(groupType.equals(GroupType.LOCATION))
+        //        {
+        //
+        //        }
+        else if(groupType == Constants.TYPE_YEAR)
+        {
+            groupedItems = this.groupHeaderProvider.groupByYear(ConvertTool.convertElementsToType(this.originalItems, Visit.class));
+
+            if(App.settings.expandLatestYearInListByDefault())
+            {
+                YearHeader latestYearHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
+                this.expandedItems.add(latestYearHeader);
+            }
+        }
+
+        this.items = this.initializeItems(groupedItems, GENERATION_ZERO);
         notifyDataSetChanged();
     }
 
@@ -973,41 +1034,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void displayManufacturers(boolean display)
     {
-        if(this.typesToDisplayManufacturer.isEmpty())
-        {
-            this.typesToDisplayManufacturer.add(CustomCoaster.class);
-            this.typesToDisplayManufacturer.add(CustomAttraction.class);
-            this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
-            this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
-        }
-
         this.displayManufacturers = display;
     }
 
     public void displayAttractionCategories(boolean display)
     {
-        if(this.typesToDisplayAttractionCategory.isEmpty())
-        {
-            this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
-            this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
-            this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
-            this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
-        }
-
         this.displayAttractionCategories = display;
     }
 
     public void displayLocations(boolean display)
     {
-        if(this.typesToDisplayLocation.isEmpty())
-        {
-            this.typesToDisplayLocation.add(CustomCoaster.class);
-            this.typesToDisplayLocation.add(CustomAttraction.class);
-            this.typesToDisplayLocation.add(StockAttraction.class);
-            this.typesToDisplayLocation.add(CoasterBlueprint.class);
-            this.typesToDisplayLocation.add(AttractionBlueprint.class);
-        }
-
         this.displayLocations = display;
     }
 }
