@@ -20,8 +20,6 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 
-import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
-
 public class Persistence
 {
     private IDatabaseWrapper databaseWrapper;
@@ -138,11 +136,11 @@ public class Persistence
         {
             if(directory.mkdirs())
             {
-                Log.d(LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
+                Log.d(Constants.LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
             }
             else
             {
-                Log.e(LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getAbsolutePath()));
+                Log.e(Constants.LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getAbsolutePath()));
             }
         }
         return directory;
@@ -156,14 +154,14 @@ public class Persistence
             outputStreamWriter.write(input);
             outputStreamWriter.close();
 
-            Log.d(LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
+            Log.d(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
 
             return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            Log.e(LOG_TAG, String.format("Persistence.writeStringToInternalFile:: Exception while writing string to internal file [%s] [%s]", fileName, e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: Exception while writing string to internal file [%s] [%s]", fileName, e.getMessage()));
             return false;
         }
     }
@@ -178,22 +176,22 @@ public class Persistence
                 fileOutputStream.write(input.getBytes());
                 fileOutputStream.close();
 
-                Log.d(LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file written to external storage [%s]", file.getAbsolutePath()));
+                Log.d(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file written to external storage [%s]", file.getAbsolutePath()));
 
                 return true;
             }
             catch(FileNotFoundException e)
             {
-                Log.e(LOG_TAG, String.format("Persistence.writeStringToExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
+                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
             }
             catch(IOException e)
             {
-                Log.e(LOG_TAG, String.format("Persistence.writeStringToExternalFile:: IOException: [%s]: [%s]", file.getAbsolutePath(), e.getMessage()));
+                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: IOException: [%s]: [%s]", file.getAbsolutePath(), e.getMessage()));
             }
         }
         else
         {
-            Log.e(LOG_TAG, String.format("Persistence.writeStringToExternalFile:: External storage is not writeable for [%s]", file.getAbsolutePath()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: External storage is not writeable for [%s]", file.getAbsolutePath()));
         }
 
         return false;
@@ -215,7 +213,7 @@ public class Persistence
         }
         catch (FileNotFoundException e)
         {
-            Log.e(LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exists: [%s]", fileName, e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exists: [%s]", fileName, e.getMessage()));
         }
         return output;
     }
@@ -232,7 +230,7 @@ public class Persistence
         }
         catch (FileNotFoundException e)
         {
-            Log.e(LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exists: [%s]", file.getAbsolutePath(), e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exists: [%s]", file.getAbsolutePath(), e.getMessage()));
         }
         return output;
     }
@@ -259,7 +257,7 @@ public class Persistence
         }
         catch (IOException e)
         {
-            Log.e(LOG_TAG, String.format("Persistence.readStringFromFile:: IOException: [%s]", e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromFile:: IOException: [%s]", e.getMessage()));
         }
 
         return output;
@@ -268,7 +266,7 @@ public class Persistence
     public boolean fileExists(String absolutePath)
     {
         File file = new File(absolutePath);
-        Log.v(LOG_TAG, String.format("Persistence.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
+        Log.v(Constants.LOG_TAG, String.format("Persistence.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
         return file.exists();
     }
 }

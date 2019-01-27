@@ -82,8 +82,10 @@ public class SortElementsActivity extends BaseActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-        menu.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-        menu.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+
+        Menu submenuSort = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT, Menu.NONE, R.string.selection_sort);
+        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 
         return super.onPrepareOptionsMenu(menu);
     }

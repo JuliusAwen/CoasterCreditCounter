@@ -51,11 +51,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final int GENERATION_ZERO = 0;
 
     private RecyclerView recyclerView;
-
-    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
-    private View.OnClickListener increaseRideCountOnClickListener;
-    private View.OnClickListener decreaseRideCountOnClickListener;
-
     private GroupHeaderProvider groupHeaderProvider;
 
     private List<IElement> originalItems;
@@ -63,28 +58,31 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final Map<IElement, Integer> generationByItem = new LinkedHashMap<>();
 
-    private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
-
     private final AdapterType adapterType;
     private int groupType;
 
+    private final boolean selectMultipleItems;
+    private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
+
+    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+    private View.OnClickListener increaseRideCountOnClickListener;
+    private View.OnClickListener decreaseRideCountOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
-    private final boolean selectMultipleItems;
     private final List<IElement> selectedItemsInOrderOfSelection = new ArrayList<>();
     private final Set<IElement> expandedItems = new HashSet<>();
 
-    @SuppressLint("UseSparseArrays")
-    private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
+    private boolean displayManufacturers;
+    private boolean displayAttractionCategories;
+    private boolean displayLocations;
 
     private Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
     private Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
     private Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
 
-    private boolean displayManufacturers;
-    private boolean displayAttractionCategories;
-    private boolean displayLocations;
+    @SuppressLint("UseSparseArrays")
+    private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
 
     enum ViewType
     {
@@ -96,8 +94,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
         this.adapterType = request.adapterType;
-        this.selectMultipleItems = request.selectMultiple;
         this.groupType = request.groupType;
+        this.selectMultipleItems = request.selectMultiple;
 
         this.initializeTypesToDisplay();
         this.initializeTypesByTypeface();
@@ -115,23 +113,53 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
-    private void initializeTypesToDisplay()
+
+    public void setItems(List<IElement> items)
     {
-        this.typesToDisplayLocation.add(CustomCoaster.class);
-        this.typesToDisplayLocation.add(CustomAttraction.class);
-        this.typesToDisplayLocation.add(StockAttraction.class);
-        this.typesToDisplayLocation.add(CoasterBlueprint.class);
-        this.typesToDisplayLocation.add(AttractionBlueprint.class);
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
-        this.typesToDisplayManufacturer.add(CustomCoaster.class);
-        this.typesToDisplayManufacturer.add(CustomAttraction.class);
-        this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
-        this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
+        this.originalItems = items;
+        this.generationByItem.clear();
+        this.items.clear();
 
-        this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
-        this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
-        this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
-        this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
+        this.groupItemsByType(this.groupType);
+    }
+
+    public void groupItemsByType(int groupType)
+    {
+        this.groupType = groupType;
+
+        List<IElement> groupedItems = new ArrayList<>();
+
+        if(groupType == Constants.TYPE_NONE)
+        {
+            groupedItems = this.originalItems;
+        }
+        else if(groupType == Constants.TYPE_ATTRACTION_CATEGORY)
+        {
+            groupedItems = this.groupHeaderProvider.groupByAttractionCategories(ConvertTool.convertElementsToType(this.originalItems, IAttraction.class));
+        }
+        //        else if(groupType.equals(GroupType.MANUFACTURER))
+        //        {
+        //
+        //        }
+        //        else if(groupType.equals(GroupType.LOCATION))
+        //        {
+        //
+        //        }
+        else if(groupType == Constants.TYPE_YEAR)
+        {
+            groupedItems = this.groupHeaderProvider.groupByYear(ConvertTool.convertElementsToType(this.originalItems, Visit.class));
+
+            if(App.settings.expandLatestYearInListByDefault())
+            {
+                YearHeader latestYearHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
+                this.expandedItems.add(latestYearHeader);
+            }
+        }
+
+        this.items = this.initializeItems(groupedItems, GENERATION_ZERO);
+        notifyDataSetChanged();
     }
 
     private List<IElement> initializeItems(List<IElement> items, int generation)
@@ -154,6 +182,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         return initializedItems;
+    }
+
+    private void initializeTypesToDisplay()
+    {
+        this.typesToDisplayLocation.add(CustomCoaster.class);
+        this.typesToDisplayLocation.add(CustomAttraction.class);
+        this.typesToDisplayLocation.add(StockAttraction.class);
+        this.typesToDisplayLocation.add(CoasterBlueprint.class);
+        this.typesToDisplayLocation.add(AttractionBlueprint.class);
+
+        this.typesToDisplayManufacturer.add(CustomCoaster.class);
+        this.typesToDisplayManufacturer.add(CustomAttraction.class);
+        this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
+        this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
+
+        this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
+        this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
+        this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
+        this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
     }
 
     private void initializeTypesByTypeface()
@@ -936,54 +983,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyItemMoved(index1, index2);
 
         this.scrollToItem(item1);
-    }
-
-    public void setItems(List<IElement> items)
-    {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
-
-        this.originalItems = items;
-        this.generationByItem.clear();
-        this.items.clear();
-
-        this.groupItemsByType(this.groupType);
-    }
-
-    public void groupItemsByType(int groupType)
-    {
-        this.groupType = groupType;
-
-        List<IElement> groupedItems = new ArrayList<>();
-
-        if(groupType == Constants.TYPE_NONE)
-        {
-            groupedItems = this.originalItems;
-        }
-        else if(groupType == Constants.TYPE_ATTRACTION_CATEGORY)
-        {
-            groupedItems = this.groupHeaderProvider.groupByAttractionCategories(ConvertTool.convertElementsToType(this.originalItems, IAttraction.class));
-        }
-        //        else if(groupType.equals(GroupType.MANUFACTURER))
-        //        {
-        //
-        //        }
-        //        else if(groupType.equals(GroupType.LOCATION))
-        //        {
-        //
-        //        }
-        else if(groupType == Constants.TYPE_YEAR)
-        {
-            groupedItems = this.groupHeaderProvider.groupByYear(ConvertTool.convertElementsToType(this.originalItems, Visit.class));
-
-            if(App.settings.expandLatestYearInListByDefault())
-            {
-                YearHeader latestYearHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
-                this.expandedItems.add(latestYearHeader);
-            }
-        }
-
-        this.items = this.initializeItems(groupedItems, GENERATION_ZERO);
-        notifyDataSetChanged();
     }
 
     public void scrollToItem(IElement item)

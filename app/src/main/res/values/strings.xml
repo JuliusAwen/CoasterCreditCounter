@@ -26,8 +26,8 @@
     <string name="selection_remove">remove</string>
     <string name="selection_relocate">relocate</string>
 
-    <string name="selection_sort_ascending">sort ascending</string>
-    <string name="selection_sort_descending">sort descending</string>
+    <string name="selection_sort_ascending">ascending</string>
+    <string name="selection_sort_descending">descending</string>
 
     <string name="selection_expand_all">expand all</string>
     <string name="selection_collapse_all">collapse all</string>
