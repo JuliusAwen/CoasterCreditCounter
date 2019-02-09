@@ -56,10 +56,10 @@ public final class DatabaseMock implements IDatabaseWrapper
         attractionCategories.add(attractionCategoryWaterRides);
         attractionCategories.add(attractionCategoryNonRollerCoasters);
 
-        Manufacturer bolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard Ingénieurs Conseils SA", null);
-        Manufacturer intamin = Manufacturer.create("Intamin Amusement Rides", null);
-        Manufacturer vekoma = Manufacturer.create("Vekoma Rides Manufacturing B.V.", null);
-        Manufacturer huss = Manufacturer.create("Huss Park Attractions GmbH", null);
+        Manufacturer bolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard", null);
+        Manufacturer intamin = Manufacturer.create("Intamin", null);
+        Manufacturer vekoma = Manufacturer.create("Vekoma", null);
+        Manufacturer huss = Manufacturer.create("Huss", null);
 
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(bolligerAndMabillard);
