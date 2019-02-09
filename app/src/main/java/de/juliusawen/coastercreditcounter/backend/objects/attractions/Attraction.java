@@ -13,6 +13,9 @@ import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufac
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
+/**
+ * Abstract base class for all Attractions containing all base methods
+ */
 public abstract class Attraction extends Element implements IAttraction
 {
     private Manufacturer manufacturer;

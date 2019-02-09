@@ -7,6 +7,10 @@ import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
 
+
+/**
+ * Base interface for all attractions
+ */
 public interface IAttraction extends IElement
 {
     JSONObject toJson() throws JSONException;

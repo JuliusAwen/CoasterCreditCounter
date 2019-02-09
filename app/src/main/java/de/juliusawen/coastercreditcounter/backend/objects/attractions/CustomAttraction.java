@@ -6,6 +6,12 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
+/**
+ * Individual attraction located at a particular park
+ *
+ * Parent: Park
+ * Children: none
+ */
 public class CustomAttraction extends Attraction implements IOnSiteAttraction, ICategorized
 {
     private CustomAttraction(String name, int untrackedRideCount, UUID uuid)

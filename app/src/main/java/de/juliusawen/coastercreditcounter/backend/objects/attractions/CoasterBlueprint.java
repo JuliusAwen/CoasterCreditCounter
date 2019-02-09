@@ -11,6 +11,9 @@ import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphan
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
+/**
+ * Blueprint for coasters from which StockAttraction is created
+ */
 public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElement
 {
     private CoasterBlueprint(String name, int untrackedRideCount, UUID uuid)
