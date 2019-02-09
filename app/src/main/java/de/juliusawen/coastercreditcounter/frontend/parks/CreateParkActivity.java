@@ -71,12 +71,6 @@ public class CreateParkActivity extends BaseActivity implements ConfirmDialogFra
                 break;
 
             case CANCEL:
-                if(this.viewModel.newPark != null)
-                {
-                    App.content.removeElement(this.viewModel.newPark);
-                    Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newPark));
-                }
-
                 this.returnResult(RESULT_CANCELED);
                 break;
         }
@@ -132,7 +126,6 @@ public class CreateParkActivity extends BaseActivity implements ConfirmDialogFra
         if(park != null)
         {
             this.viewModel.newPark = park;
-            App.content.addElement(this.viewModel.newPark);
             success = true;
         }
 
@@ -151,6 +144,7 @@ public class CreateParkActivity extends BaseActivity implements ConfirmDialogFra
         {
             Log.i(Constants.LOG_TAG, String.format("CreateParkActivity.returnResult:: returning new %s", this.viewModel.newPark));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newPark.getUuid().toString());
+            super.markForCreation(this.viewModel.newPark);
         }
 
         setResult(resultCode, intent);

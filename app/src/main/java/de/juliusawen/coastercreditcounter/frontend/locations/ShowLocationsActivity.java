@@ -453,8 +453,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
                             ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
 
-                            App.content.removeElementAndDescendants(viewModel.longClickedElement);
-
                             viewModel.longClickedElement.deleteElement();
                             if(viewModel.longClickedElement instanceof Park)
                             {
@@ -506,7 +504,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, false);
                             ShowLocationsActivity.super.markForUpdate(parent);
 
-                            App.content.removeElement(viewModel.longClickedElement);
                             viewModel.longClickedElement.removeElement();
 
                             updateContentRecyclerView(true);

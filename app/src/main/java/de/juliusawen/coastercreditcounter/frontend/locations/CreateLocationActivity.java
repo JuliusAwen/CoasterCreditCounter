@@ -71,12 +71,6 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
                 break;
 
             case CANCEL:
-                if(this.viewModel.newLocation != null)
-                {
-                    App.content.removeElement(this.viewModel.newLocation);
-                    Log.d(Constants.LOG_TAG, String.format("CreateLocationActivity.onConfirmDialogFragmentInteraction:: canceled -> removed %s", this.viewModel.newLocation));
-                }
-
                 this.returnResult(RESULT_CANCELED);
                 break;
         }
@@ -132,7 +126,6 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         if(location != null)
         {
             this.viewModel.newLocation = location;
-            App.content.addElement(this.viewModel.newLocation);
             success = true;
         }
 
@@ -151,6 +144,7 @@ public class CreateLocationActivity extends BaseActivity implements ConfirmDialo
         {
             Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: returning new %s", this.viewModel.newLocation));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newLocation.getUuid().toString());
+            super.markForCreation(this.viewModel.newLocation);
         }
 
         setResult(resultCode, intent);

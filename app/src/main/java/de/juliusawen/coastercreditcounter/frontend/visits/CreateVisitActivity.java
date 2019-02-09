@@ -84,7 +84,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 {
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction);
+                    App.content.addElement(visitedAttraction); //cannot mark for creation --> is TemporaryElement
                 }
 
                 this.returnResult(Activity.RESULT_OK);
@@ -193,7 +193,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         this.viewModel.visit = Visit.create(calendar, null);
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
-        App.content.addElement(this.viewModel.visit);
 
 //        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
 //        {
@@ -230,8 +229,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         super.markForUpdate(this.viewModel.park);
 
         this.viewModel.park.deleteChild(this.viewModel.existingVisit);
-        App.content.removeElementAndDescendants(this.viewModel.existingVisit);
-
         this.viewModel.existingVisit = null;
     }
 
@@ -302,9 +299,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: returning %s", this.viewModel.visit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.visit.getUuid().toString());
-
-            super.markForCreation(this.viewModel.visit);
-            super.markForCreation(this.viewModel.visit.getChildren());
         }
 
         setResult(resultCode, intent);

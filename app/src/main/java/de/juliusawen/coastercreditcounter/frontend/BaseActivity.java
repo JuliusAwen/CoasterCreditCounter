@@ -571,6 +571,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
         this.viewModel.elementsToCreate.add(element);
+        App.content.addElement(element);
     }
 
     protected void markForUpdate(List<IElement> elements)
@@ -598,6 +599,9 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
         Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
+
+        this.viewModel.elementsToDelete.add(element);
+
         if(deleteDescendants && element.hasChildren())
         {
             for(IElement child : element.getChildren())
@@ -607,8 +611,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                     this.markForDeletion(child, true);
                 }
             }
+            App.content.removeElementAndDescendants(element);
         }
-        this.viewModel.elementsToDelete.add(element);
+        else
+        {
+            App.content.removeElement(element);
+        }
     }
 
     protected void synchronizePersistency()

@@ -193,7 +193,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
                 if(attractionCategory != null)
                 {
-                    App.content.addElement(attractionCategory);
                     this.markForCreation(attractionCategory);
                     updateContentRecyclerView(true);
                 }
@@ -215,7 +214,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 Manufacturer manufacturer = Manufacturer.create(createdString, null);
                 if(manufacturer != null)
                 {
-                    App.content.addElement(manufacturer);
                     this.markForCreation(manufacturer);
                     updateContentRecyclerView(true);
                 }
@@ -513,9 +511,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             }
 
                             markForDeletion(viewModel.longClickedElement, false);
-
-                            App.content.removeElement(viewModel.longClickedElement);
-
                             updateContentRecyclerView(true);
                         }
                         else

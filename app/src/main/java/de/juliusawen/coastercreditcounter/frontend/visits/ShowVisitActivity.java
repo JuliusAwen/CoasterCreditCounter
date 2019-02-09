@@ -145,7 +145,6 @@ public class ShowVisitActivity extends BaseActivity
                 {
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction);
 
                     super.markForCreation(visitedAttraction);
                 }
@@ -232,7 +231,6 @@ public class ShowVisitActivity extends BaseActivity
                 Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getAddRideOnClickListener.onClick:: adding ride to %s for %s", visitedAttraction, visitedAttraction.getParent()));
 
                 Ride ride = visitedAttraction.addRide();
-                App.content.addElement(ride);
 
                 ShowVisitActivity.super.markForCreation(ride);
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
