@@ -251,8 +251,10 @@ public class ShowVisitActivity extends BaseActivity
                 Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getDeleteRideOnClickListener.onClick:: deleting latest ride on %s for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                if(visitedAttraction.deleteLatestRide())
+                Ride ride = visitedAttraction.deleteLatestRide();
+                if(ride != null)
                 {
+                    ShowVisitActivity.super.markForDeletion(ride, false);
                     ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                     updateContentRecyclerView(false);
                 }

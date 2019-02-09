@@ -93,22 +93,22 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         return ride;
     }
 
-    public boolean deleteLatestRide()
+    public Ride deleteLatestRide()
     {
         if(this.hasChildren())
         {
-            IElement ride = this.getChildren().get(this.getChildCount() -1);
+            Ride ride = (Ride)this.getChildren().get(this.getChildCount() -1);
             this.getChildren().remove(ride);
 
             Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.deleteLatestRide:: removed %s from %s for %s", ride, this, this.getOnSiteAttraction().getParent()));
 
             this.onSiteAttraction.decreaseTotalRideCount(App.settings.getDefaultIncrement());
-            return true;
+            return ride;
         }
         else
         {
             Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.deleteLatestRide:: no ride to remove from %s for %s", this, this.getOnSiteAttraction().getParent()));
-            return false;
+            return null;
         }
     }
 
