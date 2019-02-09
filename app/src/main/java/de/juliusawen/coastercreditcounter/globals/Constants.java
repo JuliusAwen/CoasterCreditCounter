@@ -7,7 +7,8 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
-    public static final String SIMPLE_DATE_FORMAT_FULL_PATTERN = "dd. MMMM yyyy";
+    public static final String SIMPLE_DATE_FORMAT_DATETIME_PATTERN = "dd. MMMM yyyy HH:mm:ss";
+    public static final String SIMPLE_DATE_FORMAT_DATE_PATTERN = "dd. MMMM yyyy";
     public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
 
 

@@ -233,7 +233,7 @@ public class ShowVisitActivity extends BaseActivity
 
                 visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
 
-                ShowVisitActivity.super.markForUpdate(visitedAttraction);
+                ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
         };
@@ -253,7 +253,7 @@ public class ShowVisitActivity extends BaseActivity
 
                 if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
                 {
-                    ShowVisitActivity.super.markForUpdate(visitedAttraction);
+                    ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                     updateContentRecyclerView(false);
                 }
             }

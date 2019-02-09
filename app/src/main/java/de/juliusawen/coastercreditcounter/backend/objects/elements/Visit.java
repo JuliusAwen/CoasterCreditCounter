@@ -34,23 +34,17 @@ public class Visit extends Element
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
-        return Visit.createInstance(calendar, uuid);
+        return Visit.create(calendar, uuid);
     }
 
     public static Visit create(Calendar calendar, UUID uuid)
     {
-        return Visit.createInstance(calendar, uuid);
-    }
-
-    private static Visit createInstance(Calendar calendar, UUID uuid)
-    {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_FULL_PATTERN, Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
         Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
-        Log.v(Constants.LOG_TAG,  String.format("Visit.createInstance:: %s created.", visit.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
         return visit;
     }
-
 
     @Override
     @NonNull

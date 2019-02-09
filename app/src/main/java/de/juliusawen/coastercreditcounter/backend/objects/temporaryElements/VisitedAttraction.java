@@ -6,15 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
+/**
+ * Container used in order to be able to sort attraction for every individual visit
+ *
+ * Parent: Park
+ * Children: Rides
+ */
 public class VisitedAttraction extends Attraction implements ITemporaryElement
 {
     private final IOnSiteAttraction onSiteAttraction;
+    private final List<Ride> rides = new ArrayList<>();
 
+    @Deprecated
     private int rideCount = 0;
 
     private VisitedAttraction(String name, IOnSiteAttraction onSiteAttraction, UUID uuid)
@@ -41,8 +52,21 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
     public int getRideCount()
     {
         return this.rideCount;
+//        return this.rides.size();
     }
 
+    public void addRide()
+    {
+        Ride ride = Ride.create(((Visit)this.getParent()).getCalendar(), null);
+        this.rides.add(ride);
+
+        Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.addRide:: added ride %s to %s for %s",
+                ride, this, this.getOnSiteAttraction().getParent()));
+
+        this.onSiteAttraction.increaseTotalRideCount(App.settings.getDefaultIncrement());
+    }
+
+    @Deprecated
     public void increaseRideCount(int increment)
     {
         this.rideCount += increment;
@@ -52,6 +76,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         this.onSiteAttraction.increaseTotalRideCount(increment);
     }
 
+    @Deprecated
     public boolean decreaseRideCount(int decrement)
     {
         if((this.rideCount - decrement) >= 0)
