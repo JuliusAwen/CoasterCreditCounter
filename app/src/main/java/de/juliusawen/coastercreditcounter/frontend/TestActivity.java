@@ -44,7 +44,7 @@ public class TestActivity extends BaseActivity
             //        this.createContentRecyclerAdapter();
             //        this.createLoremIpsum();
 
-//            this.startActivity();
+//            this.startActivityViaIntent();
         }
     }
 

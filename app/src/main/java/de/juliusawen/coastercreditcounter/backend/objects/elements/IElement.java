@@ -18,17 +18,15 @@ public interface IElement
     boolean setName(String name);
 
     UUID getUuid();
-    long getItemId();
 
     IElement getParent();
     void setParent(IElement parent);
 
     void addChild(IElement child);
-    void addChildrenAndSetParents(List<IElement> children);
-    void addChildrenAndSetParentsAtIndex(int index, List<IElement> children);
-    void addChildrenAndSetParent(List<UUID> childUuids);
     void addChildAndSetParent(IElement child);
     void addChildAndSetParentAtIndex(int index, IElement child);
+    void addChildrenAndSetParent(List<UUID> childUuids);
+    void addChildrenAndSetParentsAtIndex(int index, List<IElement> children);
 
     List<IElement> getChildren();
     List<IElement> getChildrenOfType(Class<? extends IElement> type);

@@ -19,9 +19,7 @@ public abstract class ContentRecyclerViewAdapterProvider
         request.relevantChildTypes = childTypesToExpand;
         request.groupType = groupByType;
 
-        ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
-        contentRecyclerViewAdapter.setHasStableIds(true);
-        return contentRecyclerViewAdapter;
+        return new ContentRecyclerViewAdapter(request);
     }
 
     public static ContentRecyclerViewAdapter getSelectableContentRecyclerViewAdapter(
@@ -37,9 +35,7 @@ public abstract class ContentRecyclerViewAdapterProvider
         request.selectMultiple = selectMultiple;
         request.groupType = groupByType;
 
-        ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
-        contentRecyclerViewAdapter.setHasStableIds(true);
-        return contentRecyclerViewAdapter;
+        return new ContentRecyclerViewAdapter(request);
     }
 
     public static ContentRecyclerViewAdapter getCountableContentRecyclerViewAdapter(
@@ -53,8 +49,6 @@ public abstract class ContentRecyclerViewAdapterProvider
         request.relevantChildTypes = childTypesToExpand;
         request.groupType = groupByType;
 
-        ContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapter(request);
-        contentRecyclerViewAdapter.setHasStableIds(true);
-        return contentRecyclerViewAdapter;
+        return new ContentRecyclerViewAdapter(request);
     }
 }

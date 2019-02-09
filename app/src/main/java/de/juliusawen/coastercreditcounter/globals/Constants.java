@@ -69,6 +69,7 @@ public abstract class Constants
     public static final String EXTRA_ELEMENTS_TO_UPDATE_UUIDS = "de.juliusawen.coding.extra_elements_to_update_uuids";
     public static final String EXTRA_ELEMENTS_TO_DELETE_UUIDS = "de.juliusawen.coding.extra_elements_to_delete_uuids";
     public static final String EXTRA_TYPE_TO_MANAGE = "de.juliusawen.coding.extra_type_to_manage";
+    public static final String EXTRA_REQUEST_CODE = "de.juliusawen.coding.extra_request_code";
 
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
@@ -101,14 +102,23 @@ public abstract class Constants
     public static  final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
 
     public static  final int SELECTION_SORT = Selection.SORT.ordinal();
+    public static  final int SELECTION_SORT_BY = Selection.SORT_BY.ordinal();
     public static  final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
     public static  final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
     public static  final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
     public static  final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
     public static  final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
 
-    public static  final int SELECTION_SORT_ASCENDING = Selection.SORT_ASCENDING.ordinal();
-    public static  final int SELECTION_SORT_DESCENDING = Selection.SORT_DESCENDING.ordinal();
+    public static  final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
+    public static  final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
+
+    public static  final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
+    public static  final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
+    public static  final int SELECTION_SORT_BY_MANUFACTURER_DESCENDING = Selection.SORT_BY_MANUFACTURER_DESCENDING.ordinal();
+
+    public static  final int SELECTION_SORT_BY_LOCATION = Selection.SORT_BY_LOCATION.ordinal();
+    public static  final int SELECTION_SORT_BY_LOCATION_ASCENDING = Selection.SORT_BY_LOCATION_ASCENDING.ordinal();
+    public static  final int SELECTION_SORT_BY_LOCATION_DESCENDING = Selection.SORT_BY_LOCATION_DESCENDING.ordinal();
 
     public static  final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static  final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
@@ -186,14 +196,23 @@ public abstract class Constants
         RELOCATE_ELEMENT,
 
         SORT,
+        SORT_BY,
         SORT_LOCATIONS,
         SORT_PARKS,
         SORT_ATTRACTIONS,
         SORT_ATTRACTION_CATEGORIES,
         SORT_MANUFACTURERS,
 
-        SORT_ASCENDING,
-        SORT_DESCENDING,
+        ASCENDING,
+        DESCENDING,
+
+        SORT_BY_MANUFACTURER,
+        SORT_BY_MANUFACTURER_ASCENDING,
+        SORT_BY_MANUFACTURER_DESCENDING,
+
+        SORT_BY_LOCATION,
+        SORT_BY_LOCATION_ASCENDING,
+        SORT_BY_LOCATION_DESCENDING,
 
         EXPAND_ALL,
         COLLAPSE_ALL,

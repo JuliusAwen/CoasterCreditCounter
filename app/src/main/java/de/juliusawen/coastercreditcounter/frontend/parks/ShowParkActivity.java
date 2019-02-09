@@ -82,8 +82,8 @@ public class ShowParkActivity extends BaseActivity
 
         if(this.viewModel.currentTab == VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+            menu.add(Menu.NONE, Constants.SELECTION_ASCENDING, Menu.NONE, R.string.selection_ascending);
+            menu.add(Menu.NONE, Constants.SELECTION_DESCENDING, Menu.NONE, R.string.selection_descending);
         }
 
         return super.onPrepareOptionsMenu(menu);

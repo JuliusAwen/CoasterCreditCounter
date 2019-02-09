@@ -21,13 +21,22 @@
     <!--GENERIC SELECTIONS-->
     <string name="selection_add">add</string>
     <string name="selection_sort">sort</string>
+    <string name="selection_sort_by">sort by</string>
     <string name="selection_edit">edit</string>
     <string name="selection_delete">delete</string>
     <string name="selection_remove">remove</string>
     <string name="selection_relocate">relocate</string>
 
-    <string name="selection_sort_ascending">ascending</string>
-    <string name="selection_sort_descending">descending</string>
+    <string name="selection_ascending">ascending</string>
+    <string name="selection_descending">descending</string>
+
+    <string name="selection_sort_by_manufacturer">manufacturer</string>
+    <string name="selection_sort_by_manufacturer_ascending">ascending</string>
+    <string name="selection_sort_by_manufacturer_descending">descending</string>
+
+    <string name="selection_sort_by_location">location</string>
+    <string name="selection_sort_by_location_ascending">ascending</string>
+    <string name="selection_sort_by_location_descending">descending</string>
 
     <string name="selection_expand_all">expand all</string>
     <string name="selection_collapse_all">collapse all</string>
@@ -91,7 +100,7 @@
     <string name="title_locations_sort">Sort Locations</string>
     <string name="title_locations_pick">Pick Locations</string>
     <string name="title_location_edit">Edit Location</string>
-    <string name="subtitle_locations_pick_description">to add to the new location</string>
+    <string name="subtitle_locations_pick_description_to_add_to_new_location">to add to the new location</string>
     <string name="subtitle_location_create">create child location</string>
 
     <string name="selection_sort_locations">sort locations</string>
@@ -107,7 +116,7 @@
     <string name="title_parks_pick">Pick Parks</string>
     <string name="title_park_edit">Edit Park</string>
     <string name="subtitle_park_create">create park</string>
-    <string name="subtitle_parks_pick_description">to add to the new location</string>
+    <string name="subtitle_parks_pick_description_to_add_to_new_location">to add to the new location</string>
     <string name="subtitle_park_show_tab_overview">Overview</string>
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
     <string name="subtitle_park_show_tab_visits">Visits</string>
@@ -137,7 +146,7 @@
     <!--ATTRACTIONS-->
     <string name="title_attractions_sort">Sort Attractions</string>
     <string name="title_attractions_pick">Pick Attractions</string>
-    <string name="subtitle_attractions_description_pick">to add to your visit</string>
+    <string name="subtitle_attractions_description_pick_to_add_to_visit">to add to your visit</string>
 
     <string name="selection_sort_attractions">sort attractions</string>
 

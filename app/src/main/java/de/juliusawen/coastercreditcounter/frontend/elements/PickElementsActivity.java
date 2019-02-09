@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -20,7 +22,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -28,6 +29,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class PickElementsActivity extends BaseActivity
@@ -49,6 +51,11 @@ public class PickElementsActivity extends BaseActivity
         {
             this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
 
+            if(this.viewModel.requestCode == -1)
+            {
+                this.viewModel.requestCode = getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, -1);
+            }
+
             if(this.viewModel.elementsToPickFrom == null)
             {
                 this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
@@ -56,7 +63,9 @@ public class PickElementsActivity extends BaseActivity
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
-                if(this.viewModel.elementsToPickFrom.get(0) instanceof IAttraction)
+                if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
                 {
                     HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(Attraction.class);
@@ -68,6 +77,13 @@ public class PickElementsActivity extends BaseActivity
                             Constants.TYPE_ATTRACTION_CATEGORY);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+
+                    if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+                    {
+                        this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
+                        this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
+                    }
                 }
                 else
                 {
@@ -83,7 +99,6 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
             this.recyclerView = findViewById(R.id.recyclerViewPickElements);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setHasFixedSize(true);
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             super.addToolbar();
@@ -104,6 +119,65 @@ public class PickElementsActivity extends BaseActivity
     {
         this.recyclerView.setAdapter(null);
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+        if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+        {
+            Menu submenuSortBy = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY, Menu.NONE, R.string.selection_sort_by);
+            Menu submenuSortByManufacturer = submenuSortBy.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER, Menu.NONE, R.string.selection_sort_by_manufacturer);
+            Menu submenuSortByLocation = submenuSortBy.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION, Menu.NONE, R.string.selection_sort_by_location);
+
+            submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING, Menu.NONE, R.string.selection_sort_by_manufacturer_ascending);
+            submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING, Menu.NONE, R.string.selection_sort_by_manufacturer_descending);
+
+            submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_ASCENDING, Menu.NONE, R.string.selection_sort_by_location_ascending);
+            submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_DESCENDING, Menu.NONE, R.string.selection_sort_by_location_descending);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
+
+        int id = item.getItemId();
+
+        if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING)
+        {
+            viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+            return true;
+        }
+        else if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING)
+        {
+            viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+            return true;
+        }
+        else if(id == Constants.SELECTION_SORT_BY_LOCATION_ASCENDING)
+        {
+            viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+            return true;
+        }
+        else if(id == Constants.SELECTION_SORT_BY_LOCATION_DESCENDING)
+        {
+            viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void decorateFloatingActionButton()
@@ -190,7 +264,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public boolean onLongClick(View view)
             {
-                return false;
+                return true;
             }
         };
     }

@@ -15,8 +15,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 public abstract class Element implements IElement
 {
     private final UUID uuid;
-    private final long itemId;
-
     private String name;
 
     private IElement parent = null;
@@ -26,7 +24,6 @@ public abstract class Element implements IElement
     {
         this.setName(name);
         this.uuid = uuid;
-        this.itemId = uuid.getMostSignificantBits() & Long.MAX_VALUE;
     }
 
     @Override
@@ -98,19 +95,6 @@ public abstract class Element implements IElement
     public UUID getUuid()
     {
         return this.uuid;
-    }
-
-    public long getItemId()
-    {
-        return this.itemId;
-    }
-
-    public void addChildrenAndSetParents(List<IElement> children)
-    {
-        for (IElement child : children)
-        {
-            this.addChildAndSetParent(child);
-        }
     }
 
     public void addChildAndSetParent(IElement child)

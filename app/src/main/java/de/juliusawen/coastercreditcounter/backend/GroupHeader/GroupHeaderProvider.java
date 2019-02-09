@@ -188,7 +188,7 @@ public class GroupHeaderProvider
             List<AttractionCategory> attractionCategories = App.content.getContentAsType(AttractionCategory.class);
 
             Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
-                    " sorting [%d] AttractionCategoryHeaders based on [%d] ATTRACTION_CATEGORY", attractionCategoryHeaders.size(), attractionCategories.size()));
+                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
 
             List<AttractionCategoryHeader> castedAttractionCategoryHeaders = ConvertTool.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
 

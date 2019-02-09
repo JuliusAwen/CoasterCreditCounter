@@ -159,6 +159,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         this.items = this.initializeItems(groupedItems, GENERATION_ZERO);
+
         notifyDataSetChanged();
     }
 
@@ -353,12 +354,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public int getItemCount()
     {
         return this.items.size();
-    }
-
-    @Override
-    public long getItemId(int position)
-    {
-        return this.items.get(position).getItemId();
     }
 
     @Override
@@ -672,7 +667,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: added child %s at index [%d] - generation [%d]", child, index, generation));
                 }
 
-                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(this.items.indexOf(item), 0);
+
+                //scroll to item above expanded item (if any)
+                index = this.items.indexOf(item);
+                if(index > 0)
+                {
+                    index--;
+                }
+                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
             }
         }
         else
@@ -744,7 +746,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: removed child %s at index [%d]", child, index));
                 }
 
-                this.recyclerView.scrollToPosition(items.indexOf(item));
+                this.scrollToItem(item);
 
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsed item %s", item));
             }

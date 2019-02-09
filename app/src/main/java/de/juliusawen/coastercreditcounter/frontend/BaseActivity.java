@@ -171,7 +171,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         if(App.config.jumpToTestActivityOnStart())
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
-            ActivityTool.startActivity(this, TestActivity.class);
+            ActivityTool.startActivityViaClass(this, TestActivity.class);
         }
         else
         {
@@ -181,7 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            ActivityTool.startActivity(this, intent);
+            ActivityTool.startActivityViaIntent(this, intent);
         }
     }
 

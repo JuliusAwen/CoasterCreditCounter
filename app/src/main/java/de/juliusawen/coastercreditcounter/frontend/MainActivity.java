@@ -19,6 +19,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-        ActivityTool.startActivity(this, NavigationHubActivity.class);
+        ActivityTool.startActivityViaClass(this, NavigationHubActivity.class);
     }
 }

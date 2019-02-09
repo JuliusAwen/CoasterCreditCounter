@@ -253,45 +253,34 @@ public abstract class ActivityTool
 
     public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
-        Intent intent = new Intent(context, PickElementsActivity.class);
-
-        String toolbarTitle;
-        String toolbarSubtitle;
+        String toolbarSubtitle = null;
         if(requestCode == Constants.REQUEST_CODE_PICK_LOCATIONS)
         {
-            toolbarTitle = context.getString(R.string.title_locations_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description);
+            toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description_to_add_to_new_location);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_PARKS)
         {
-            toolbarTitle = context.getString(R.string.title_parks_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description);
+            toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description_to_add_to_new_location);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS)
         {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
         {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
         }
-        else
-        {
-            toolbarTitle = context.getString(R.string.error_missing_text);
-            toolbarSubtitle = context.getString(R.string.error_missing_text);
-        }
 
-        if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
+        if(toolbarSubtitle != null)
         {
+            Intent intent = new Intent(context, PickElementsActivity.class);
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_locations_pick));
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             ((Activity)context).startActivityForResult(intent, requestCode);
 
@@ -305,19 +294,19 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivity(Context context, Intent intent)
+    public static void startActivityViaIntent(Context context, Intent intent)
     {
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s] over given intent...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityViaIntent:: starting [%s] via given intent...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);
     }
 
-    public static void startActivity(Context context, Class type)
+    public static void startActivityViaClass(Context context, Class type)
     {
         Intent intent = new Intent(context, type);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivity:: starting [%s] over given class type...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityViaClass:: starting [%s] via given class type...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);
