@@ -11,7 +11,6 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.IOrphanElement;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -52,15 +51,8 @@ public class Content
 
         if(this.persistence.loadContent(this))
         {
-            if(App.config.validateContent() && this.validate())
-            {
-                Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
-                return true;
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("Content.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
-            }
+            Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
+            return true;
         }
         else
         {
@@ -86,62 +78,6 @@ public class Content
             throw new IllegalStateException();
         }
 
-    }
-
-    public boolean validate()
-    {
-        //Todo: extend validation
-        Stopwatch stopwatch = new Stopwatch(true);
-        Log.i(Constants.LOG_TAG, "Content.validate:: validating content...");
-
-        if(this.validateParentChildRelations(new ArrayList<>(this.elementsByUuid.values()))
-
-                )
-        {
-            Log.i(Constants.LOG_TAG, String.format("Content.validate:: validation successful - took [%d]ms", stopwatch.stop()));
-            return true;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("Content.validate:: validation failed - took [%d]ms", stopwatch.stop()));
-            return false;
-        }
-    }
-
-    private boolean validateParentChildRelations(List<IElement> elements)
-    {
-        for(IElement element : elements)
-        {
-            if(element.getParent() == null)
-            {
-                if(!(element instanceof IOrphanElement) && !element.equals(this.getRootLocation()))
-                {
-                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: %s missing parent", element));
-                    return false;
-                }
-            }
-            else
-            {
-                if(!element.getParent().getChildren().contains(element))
-                {
-                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: parent %s does not have child %s", element.getParent(), element));
-                    return false;
-                }
-            }
-
-            for(Location child : element.getChildrenAsType(Location.class))
-            {
-                if(child.getParent() != element)
-                {
-                    Log.e(Constants.LOG_TAG, String.format("Content.validateParentChildRelations:: FAILED: child %s has unexpected parent %s - expected parent is %s",
-                            child, child.getParent(), element));
-                    return false;
-                }
-            }
-        }
-
-        Log.d(Constants.LOG_TAG, "Content.validateParentChildRelations:: SUCCESS");
-        return true;
     }
 
     public void clear()

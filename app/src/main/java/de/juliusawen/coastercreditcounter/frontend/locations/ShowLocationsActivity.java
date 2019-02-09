@@ -163,7 +163,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                 IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
 
-                super.markForCreation(resultElement);
                 super.markForUpdate(resultElement.getParent());
 
                 this.updateContentRecyclerView(true);

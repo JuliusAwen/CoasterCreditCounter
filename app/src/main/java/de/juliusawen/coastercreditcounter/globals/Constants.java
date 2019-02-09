@@ -7,9 +7,9 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
-    public static final String SIMPLE_DATE_FORMAT_DATETIME_PATTERN = "dd. MMMM yyyy HH:mm:ss";
     public static final String SIMPLE_DATE_FORMAT_DATE_PATTERN = "dd. MMMM yyyy";
     public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
+    public static final String SIMPLE_DATE_FORMAT_TIME_PATTERN = "HH:mm:ss";
 
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
@@ -21,6 +21,7 @@ public abstract class Constants
     public static final String JSON_STRING_LOCATIONS = "locations";
     public static final String JSON_STRING_PARKS = "parks";
     public static final String JSON_STRING_VISITS = "visits";
+    public static final String JSON_STRING_RIDES = "rides";
     public static final String JSON_STRING_ATTRACTIONS = "attractions";
     public static final String JSON_STRING_ATTRACTION_BLUEPRINTS = "attraction blueprints";
     public static final String JSON_STRING_COASTER_BLUEPRINTS = "coaster blueprints";
@@ -35,7 +36,11 @@ public abstract class Constants
     public static final String JSON_STRING_DAY = "day";
     public static final String JSON_STRING_MONTH = "month";
     public static final String JSON_STRING_YEAR = "year";
-    public static final String JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS = "ride count by attractions";
+    public static final String JSON_STRING_HOUR = "hour";
+    public static final String JSON_STRING_MINUTE = "minute";
+    public static final String JSON_STRING_SECOND = "second";
+
+    public static final String JSON_STRING_RIDES_BY_ATTRACTIONS = "rides by attractions";
     public static final String JSON_STRING_BLUEPRINT = "blueprint";
 
     public static final String JSON_STRING_UNTRACKED_RIDE_COUNT = "untracked ride count";

@@ -10,6 +10,10 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
+/**
+ * Parent: Location
+ * Children: CustomCoaster, CustomAttraction, StockAttraction, Visit
+ */
 public class Park extends Element
 {
     private Park(String name, UUID uuid)

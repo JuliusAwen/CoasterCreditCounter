@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttractio
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -78,8 +79,8 @@ public class ShowVisitActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getAddRideOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDeleteRideOnClickListener());
 
             this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -219,7 +220,7 @@ public class ShowVisitActivity extends BaseActivity
         };
     }
 
-    private View.OnClickListener getIncreaseRideCountOnClickListener()
+    private View.OnClickListener getAddRideOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -228,18 +229,19 @@ public class ShowVisitActivity extends BaseActivity
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.increaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s",
-                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getAddRideOnClickListener.onClick:: adding ride to %s for %s", visitedAttraction, visitedAttraction.getParent()));
 
-                visitedAttraction.increaseRideCount(App.settings.getDefaultIncrement());
+                Ride ride = visitedAttraction.addRide();
+                App.content.addElement(ride);
 
+                ShowVisitActivity.super.markForCreation(ride);
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
         };
     }
 
-    private View.OnClickListener getDecreaseRideCountOnClickListener()
+    private View.OnClickListener getDeleteRideOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -248,10 +250,10 @@ public class ShowVisitActivity extends BaseActivity
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.decreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s",
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getDeleteRideOnClickListener.onClick:: deleting latest ride on %s for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                if(visitedAttraction.decreaseRideCount(App.settings.getDefaultIncrement()))
+                if(visitedAttraction.deleteLatestRide())
                 {
                     ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                     updateContentRecyclerView(false);

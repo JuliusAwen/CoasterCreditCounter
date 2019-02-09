@@ -113,7 +113,7 @@ public abstract class Attraction extends Element implements IAttraction
 
         this.manufacturer = manufacturer;
 
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.Override:: set %s's manufacturer to %s", this, manufacturer));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's manufacturer to %s", this, manufacturer));
     }
 
     public int getUntracktedRideCount()

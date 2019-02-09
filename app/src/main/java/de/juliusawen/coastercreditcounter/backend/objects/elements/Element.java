@@ -46,14 +46,7 @@ public abstract class Element implements IElement
             return false;
         }
 
-        if(element.getUuid() != null && element.getUuid().equals(this.getUuid()))
-        {
-            return true;
-        }
-        else
-        {
-            return element.getName() != null && element.getName().equals(this.getName());
-        }
+        return element.getUuid() != null && element.getUuid().equals(this.getUuid());
     }
 
     @Override
@@ -73,6 +66,7 @@ public abstract class Element implements IElement
         if(!name.trim().isEmpty())
         {
             this.name = name.trim();
+
             return true;
         }
         else
@@ -204,7 +198,6 @@ public abstract class Element implements IElement
     {
         return this.children;
     }
-
 
     public List<IElement> getChildrenOfType(Class<? extends IElement> type)
     {

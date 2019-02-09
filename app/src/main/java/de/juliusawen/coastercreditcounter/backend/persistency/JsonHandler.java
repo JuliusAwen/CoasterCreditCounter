@@ -10,8 +10,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttra
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
@@ -47,7 +50,10 @@ public class JsonHandler implements IDatabaseWrapper
         public int day;
         public int month;
         public int year;
-        public final Map<UUID, Integer> rideCountByAttractionUuids = new LinkedHashMap<>();
+        public int hour;
+        public int minute;
+        public int second;
+        public final Map<UUID, List<UUID>> ridesByAttractions = new LinkedHashMap<>();
         public UUID blueprintUuid;
         public UUID attractionCategoryUuid;
         public UUID manufacturerUuid;
@@ -261,6 +267,12 @@ public class JsonHandler implements IDatabaseWrapper
                         this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_RIDES))
+            {
+                List<TemporaryElement> temporaryRides = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_RIDES));
+                content.addElements(this.createRides(temporaryRides));
+            }
         }
         catch(JSONException e)
         {
@@ -308,15 +320,34 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryElement.year = jsonObjectItem.getInt(Constants.JSON_STRING_YEAR);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_HOUR) && !jsonObjectItem.isNull(Constants.JSON_STRING_MINUTE) && !jsonObjectItem.isNull(Constants.JSON_STRING_SECOND))
                 {
-                    JSONArray jsonArrayRideCountByAttractions = jsonObjectItem.getJSONArray(Constants.JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS);
+                    temporaryElement.hour = jsonObjectItem.getInt(Constants.JSON_STRING_HOUR);
+                    temporaryElement.minute = jsonObjectItem.getInt(Constants.JSON_STRING_MINUTE);
+                    temporaryElement.second = jsonObjectItem.getInt(Constants.JSON_STRING_SECOND);
+                }
 
-                    for(int j = 0; j < jsonArrayRideCountByAttractions.length(); j++)
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS))
+                {
+                    JSONArray jsonArrayRidesByAttractions = jsonObjectItem.getJSONArray(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS);
+
+                    for(int j = 0; j < jsonArrayRidesByAttractions.length(); j++)
                     {
-                        JSONObject jsonObjectRideCountByAttraction = jsonArrayRideCountByAttractions.getJSONObject(j);
-                        String key = jsonObjectRideCountByAttraction.names().getString(0);
-                        temporaryElement.rideCountByAttractionUuids.put(UUID.fromString(key), jsonObjectRideCountByAttraction.getInt(key));
+                        JSONObject jsonObjectRidesByAttraction = jsonArrayRidesByAttractions.getJSONObject(j);
+                        String key = jsonObjectRidesByAttraction.names().getString(0);
+
+                        UUID attractionUuid = UUID.fromString(key);
+                        temporaryElement.ridesByAttractions.put(attractionUuid, new LinkedList<UUID>());
+
+                        if(!jsonObjectRidesByAttraction.isNull(key))
+                        {
+                            JSONArray jsonArrayRides = jsonObjectRidesByAttraction.getJSONArray(key);
+
+                            for(int k = 0; k < jsonArrayRides.length(); k++)
+                            {
+                                Objects.requireNonNull(temporaryElement.ridesByAttractions.get(attractionUuid)).add(UUID.fromString(jsonArrayRides.getString(k)));
+                            }
+                        }
                     }
                 }
 
@@ -511,6 +542,17 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
+    private List<IElement> createRides(List<TemporaryElement> temporaryElements)
+    {
+        List<IElement> elements = new ArrayList<>();
+        for(TemporaryElement temporaryElement : temporaryElements)
+        {
+            Ride element = Ride.create(temporaryElement.hour, temporaryElement.minute, temporaryElement.second, temporaryElement.uuid);
+            elements.add(element);
+        }
+        return elements;
+    }
+
     private Manufacturer getManufacturerFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
@@ -553,13 +595,14 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryVisit : temporaryVisits)
         {
             Visit visit = (Visit)content.getContentByUuid(temporaryVisit.uuid);
-            for(Map.Entry<UUID, Integer> rideCountByAttractionUuid : temporaryVisit.rideCountByAttractionUuids.entrySet())
+            for(Map.Entry<UUID, List<UUID>> ridesByAttractionUuid : temporaryVisit.ridesByAttractions.entrySet())
             {
-                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) content.getContentByUuid(rideCountByAttractionUuid.getKey()));
+                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction)content.getContentByUuid(ridesByAttractionUuid.getKey()));
 
-                if(rideCountByAttractionUuid.getValue() != 0)
+                List<UUID> rideUuids = ridesByAttractionUuid.getValue();
+                for(UUID rideUuid : rideUuids)
                 {
-                    visitedAttraction.increaseRideCount(rideCountByAttractionUuid.getValue());
+                    visitedAttraction.addChildAndSetParent(content.getContentByUuid(rideUuid));
                 }
 
                 visit.addChildAndSetParent(visitedAttraction);
@@ -645,6 +688,9 @@ public class JsonHandler implements IDatabaseWrapper
 
             jsonObject.put(Constants.JSON_STRING_VISITS,
                     content.getContentOfType(Visit.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Visit.class)));
+
+            jsonObject.put(Constants.JSON_STRING_RIDES,
+                    content.getContentOfType(Ride.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Ride.class)));
 
 
             JSONObject jsonObjectAttractions = new JSONObject();

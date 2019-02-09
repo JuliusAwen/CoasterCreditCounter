@@ -17,6 +17,10 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
+/**
+ * Parent: Park
+ * Children: VisitedAttraction
+ */
 public class Visit extends Element
 {
     private static Visit openVisit;
@@ -72,16 +76,15 @@ public class Visit extends Element
             jsonObject.put(Constants.JSON_STRING_MONTH, this.getCalendar().get(Calendar.MONTH));
             jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
 
-            int counter = 0;
-            JSONArray jsonArrayRideCountByAttraction = new JSONArray();
+            boolean hasVisitedAttractions = false;
+            JSONArray jsonArrayRidesByAttractions = new JSONArray();
             for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
             {
-                JSONObject jsonObjectRideCountByAttraction = new JSONObject();
-                jsonObjectRideCountByAttraction.put(visitedAttraction.getOnSiteAttraction().getUuid().toString(), visitedAttraction.getRideCount());
-                jsonArrayRideCountByAttraction.put(jsonObjectRideCountByAttraction);
-                counter ++;
+                JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
+                jsonArrayRidesByAttractions.put(jsonObjectRideCountByAttraction);
+                hasVisitedAttractions = true;
             }
-            jsonObject.put(Constants.JSON_STRING_RIDE_COUNT_BY_ATTRACTIONS, counter > 0 ? jsonArrayRideCountByAttraction : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS, hasVisitedAttractions ? jsonArrayRidesByAttractions : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
@@ -93,6 +96,7 @@ public class Visit extends Element
             throw e;
         }
     }
+
     public Calendar getCalendar()
     {
         return this.calendar;

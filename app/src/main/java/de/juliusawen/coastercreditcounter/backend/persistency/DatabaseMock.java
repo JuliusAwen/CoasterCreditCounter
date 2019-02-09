@@ -498,76 +498,77 @@ public final class DatabaseMock implements IDatabaseWrapper
         Visit visitPhantasialand181214 = Visit.create(2018, 11, 14, null);
 
         VisitedAttraction visitedTaron = VisitedAttraction.create(taron);
-        visitedTaron.increaseRideCount(5);
         visitPhantasialand181214.addChildAndSetParent(visitedTaron);
 
         VisitedAttraction visitedBlackMamba = VisitedAttraction.create(blackMamba);
-        visitedBlackMamba.increaseRideCount(2);
         visitPhantasialand181214.addChildAndSetParent(visitedBlackMamba);
 
         VisitedAttraction visitedWinjasFear = VisitedAttraction.create(winjasFear);
-        visitedWinjasFear.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedWinjasFear);
 
         VisitedAttraction visitedWinjasForce = VisitedAttraction.create(winjasForce);
-        visitedWinjasForce.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedWinjasForce);
 
         VisitedAttraction visitedTempleOfTheNightHawk = VisitedAttraction.create(templeOfTheNightHawk);
-        visitedTempleOfTheNightHawk.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedTempleOfTheNightHawk);
 
         VisitedAttraction visitedColoradoAdventure = VisitedAttraction.create(coloradoAdventure);
-        visitedColoradoAdventure.increaseRideCount(2);
         visitPhantasialand181214.addChildAndSetParent(visitedColoradoAdventure);
 
         VisitedAttraction visitedRaik = VisitedAttraction.create(raik);
-        visitedRaik.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedRaik);
 
         VisitedAttraction visitedTalocan = VisitedAttraction.create(talocan);
-        visitedTalocan.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedTalocan);
 
         VisitedAttraction visitedMysteryCastle = VisitedAttraction.create(mysteryCastle);
-        visitedMysteryCastle.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedMysteryCastle);
 
         VisitedAttraction visitedWuermlingExpress = VisitedAttraction.create(wuermlingExpress);
-        visitedWuermlingExpress.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedWuermlingExpress);
 
         VisitedAttraction visitedTikal = VisitedAttraction.create(tikal);
-        visitedTikal.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedTikal);
 
         VisitedAttraction visitedVerruecktesHotelTartueff = VisitedAttraction.create(verruecktesHotelTartueff);
-        visitedVerruecktesHotelTartueff.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedVerruecktesHotelTartueff);
 
         VisitedAttraction visitedWellenflug = VisitedAttraction.create(wellenflug);
-        visitedWellenflug.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedWellenflug);
 
         VisitedAttraction visitedMausAuChocolat = VisitedAttraction.create(mausAuChocolat);
-        visitedMausAuChocolat.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedMausAuChocolat);
 
         VisitedAttraction visitedGeisterRiksha = VisitedAttraction.create(geisterRiksha);
-        visitedGeisterRiksha.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedGeisterRiksha);
 
         VisitedAttraction visitedFengJuPalace = VisitedAttraction.create(fengJuPalace);
-        visitedFengJuPalace.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedFengJuPalace);
 
         VisitedAttraction visitedHollywoodTour = VisitedAttraction.create(hollywoodTour);
-        visitedHollywoodTour.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedHollywoodTour);
 
         VisitedAttraction visitedChiapas = VisitedAttraction.create(chiapas);
-        visitedChiapas.increaseRideCount(1);
         visitPhantasialand181214.addChildAndSetParent(visitedChiapas);
+
+        this.addRides(visitedTaron, 5);
+        this.addRides(visitedBlackMamba, 2);
+        this.addRides(visitedWinjasFear, 1);
+        this.addRides(visitedWinjasForce, 1);
+        this.addRides(visitedTempleOfTheNightHawk, 1);
+        this.addRides(visitedColoradoAdventure, 2);
+        this.addRides(visitedRaik, 1);
+        this.addRides(visitedTalocan, 1);
+        this.addRides(visitedMysteryCastle, 1);
+        this.addRides(visitedWuermlingExpress, 1);
+        this.addRides(visitedTikal, 1);
+        this.addRides(visitedVerruecktesHotelTartueff, 1);
+        this.addRides(visitedWellenflug, 1);
+        this.addRides(visitedMausAuChocolat, 1);
+        this.addRides(visitedGeisterRiksha, 1);
+        this.addRides(visitedFengJuPalace, 1);
+        this.addRides(visitedHollywoodTour, 1);
+        this.addRides(visitedChiapas, 1);
 
         phantasialand.addChildAndSetParent(visitPhantasialand181214);
 
@@ -617,6 +618,14 @@ public final class DatabaseMock implements IDatabaseWrapper
             {
                 attraction.setManufacturer(Manufacturer.getDefault());
             }
+        }
+    }
+
+    private void addRides(VisitedAttraction visitedAttraction, int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            visitedAttraction.addRide();
         }
     }
 

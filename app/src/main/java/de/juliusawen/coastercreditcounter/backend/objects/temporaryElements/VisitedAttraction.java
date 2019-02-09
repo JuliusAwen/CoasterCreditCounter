@@ -2,6 +2,10 @@ package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +13,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
@@ -23,10 +28,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 public class VisitedAttraction extends Attraction implements ITemporaryElement
 {
     private final IOnSiteAttraction onSiteAttraction;
-    private final List<Ride> rides = new ArrayList<>();
-
-    @Deprecated
-    private int rideCount = 0;
 
     private VisitedAttraction(String name, IOnSiteAttraction onSiteAttraction, UUID uuid)
     {
@@ -44,6 +45,32 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         return visitedAttraction;
     }
 
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            boolean hasRides = false;
+            JSONArray rides = new JSONArray();
+            for(IElement ride : this.getChildren())
+            {
+                rides.put(ride.getUuid());
+                hasRides = true;
+            }
+            jsonObject.put(this.onSiteAttraction.getUuid().toString(), hasRides ? rides : JSONObject.NULL);
+
+            Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
+    }
+
     public IOnSiteAttraction getOnSiteAttraction()
     {
         return this.onSiteAttraction;
@@ -51,49 +78,36 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
 
     public int getRideCount()
     {
-        return this.rideCount;
-//        return this.rides.size();
+        return this.getChildCount();
     }
 
-    public void addRide()
+    public Ride addRide()
     {
         Ride ride = Ride.create(((Visit)this.getParent()).getCalendar(), null);
-        this.rides.add(ride);
+        this.addChild(ride);
 
-        Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.addRide:: added ride %s to %s for %s",
-                ride, this, this.getOnSiteAttraction().getParent()));
+        Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.addRide:: added %s to %s for %s", ride, this, this.getOnSiteAttraction().getParent()));
 
         this.onSiteAttraction.increaseTotalRideCount(App.settings.getDefaultIncrement());
+
+        return ride;
     }
 
-    @Deprecated
-    public void increaseRideCount(int increment)
+    public boolean deleteLatestRide()
     {
-        this.rideCount += increment;
-        Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.increaseRideCount:: increased %s's ride count for %s by [%d] to [%d]",
-                this.getOnSiteAttraction(), this.getParent() == null ? "[visit not yet set]" : this.getParent().toString(), increment, this.getRideCount()));
-
-        this.onSiteAttraction.increaseTotalRideCount(increment);
-    }
-
-    @Deprecated
-    public boolean decreaseRideCount(int decrement)
-    {
-        if((this.rideCount - decrement) >= 0)
+        if(this.hasChildren())
         {
-            this.rideCount -= decrement;
-            Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.decreaseRideCount:: decreased %s's ride count for %s by [%d] to [%d]",
-                    this.getOnSiteAttraction(), this.getParent(), decrement, this.getRideCount()));
+            IElement ride = this.getChildren().get(this.getChildCount() -1);
+            this.getChildren().remove(ride);
 
-            this.onSiteAttraction.decreaseTotalRideCount(decrement);
+            Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.deleteLatestRide:: removed %s from %s for %s", ride, this, this.getOnSiteAttraction().getParent()));
 
+            this.onSiteAttraction.decreaseTotalRideCount(App.settings.getDefaultIncrement());
             return true;
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.decreaseRideCount:: %s's total ride count for [%s] is [%d]: decreasing by [%d] would make it negative - not decreasing",
-                    this.getOnSiteAttraction(), this.getParent(), this.getRideCount(), decrement));
-
+            Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.deleteLatestRide:: no ride to remove from %s for %s", this, this.getOnSiteAttraction().getParent()));
             return false;
         }
     }
