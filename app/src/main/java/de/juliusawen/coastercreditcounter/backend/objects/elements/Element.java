@@ -49,7 +49,6 @@ public abstract class Element implements IElement
         return element.getUuid() != null && element.getUuid().equals(this.getUuid());
     }
 
-    @Override
     @NonNull
     public String toString()
     {
@@ -247,7 +246,6 @@ public abstract class Element implements IElement
         Log.d(Constants.LOG_TAG, String.format("Element.deleteElement:: deleting %s...", this));
         this.parent.deleteChild(this);
     }
-
 
     public void deleteChild(IElement child)
     {

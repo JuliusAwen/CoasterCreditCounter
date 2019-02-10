@@ -28,11 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -206,7 +206,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public boolean onLongClick(final View view)
             {
-                viewModel.longClickedElement = (Element) view.getTag();
+                viewModel.longClickedVisit = (Element) view.getTag();
 
                 PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
                 popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
@@ -245,7 +245,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                             AlertDialogFragment.newInstance(
                                     R.drawable.ic_baseline_warning,
                                     getString(R.string.alert_dialog_title_delete_element),
-                                    getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
+                                    getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedVisit.getName()),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
                                     Constants.REQUEST_CODE_DELETE,
@@ -284,7 +284,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
-                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                        getString(R.string.action_confirm_delete_text, viewModel.longClickedVisit.getName()),
                         Snackbar.LENGTH_LONG);
 
                 snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
@@ -293,7 +293,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                     public void onClick(View view)
                     {
                         actionConfirmed = true;
-                        Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                        Log.i(Constants.LOG_TAG, "ShowVisitsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
                     }
                 });
 
@@ -306,30 +306,25 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                         {
                             actionConfirmed = false;
 
-                            Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+                            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedVisit));
 
-                            if(ShowVisitsFragment.this.showVisitsFragmentAlertDialogInteraction != null)
+                            for(VisitedAttraction visitedAttraction : viewModel.longClickedVisit.getChildrenAsType(VisitedAttraction.class))
                             {
-                               ShowVisitsFragment.this.showVisitsFragmentAlertDialogInteraction.onShowVisitsFragmentAlertDialogInteraction(
-                                       viewModel.longClickedElement, true,
-                                       viewModel.longClickedElement.getParent()
-                               );
+                                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
                             }
 
-                            viewModel.longClickedElement.deleteElement();
-                            if(viewModel.longClickedElement instanceof Park)
-                            {
-                                for(IOnSiteAttraction onSiteAttraction : viewModel.longClickedElement.getChildrenAsType(IOnSiteAttraction.class))
-                                {
-                                    onSiteAttraction.deleteElement();
-                                }
-                            }
+                            viewModel.longClickedVisit.deleteElement();
+
+                            ShowVisitsFragment.this.showVisitsFragmentAlertDialogInteraction.deleteVisit(
+                                    viewModel.longClickedVisit,
+                                    viewModel.longClickedVisit.getParent()
+                            );
 
                             updateContentRecyclerView();
                         }
                         else
                         {
-                            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
+                            Log.d(Constants.LOG_TAG, "ShowVisitsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
                         }
                     }
                 });
@@ -347,6 +342,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public interface ShowVisitsFragmentAlertDialogInteraction
     {
-        void onShowVisitsFragmentAlertDialogInteraction(IElement elementToDelete, boolean deleteDescendants, IElement elementToUpdate);
+        void deleteVisit(IElement elementToDelete, IElement elementToUpdate);
     }
 }

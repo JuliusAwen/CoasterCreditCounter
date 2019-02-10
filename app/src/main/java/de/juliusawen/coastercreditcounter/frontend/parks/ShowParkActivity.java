@@ -211,10 +211,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void onShowVisitsFragmentAlertDialogInteraction(IElement elementToDelete, boolean deleteDescendants, IElement elementToUpdate)
+    public void deleteVisit(IElement visitToDelete, IElement parkToUpdate)
     {
-        super.markForDeletion(elementToDelete, deleteDescendants);
-        super.markForUpdate(elementToUpdate);
+        super.markForDeletion(visitToDelete, true);
+        super.markForUpdate(parkToUpdate);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

@@ -569,9 +569,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void markForCreation(IElement element)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
-        this.viewModel.elementsToCreate.add(element);
-        App.content.addElement(element);
+        if(!(element instanceof ITemporaryElement))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
+            this.viewModel.elementsToCreate.add(element);
+            App.content.addElement(element);
+        }
     }
 
     protected void markForUpdate(List<IElement> elements)
@@ -584,8 +587,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void markForUpdate(IElement element)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
-        this.viewModel.elementsToUpdate.add(element);
+        if(!(element instanceof ITemporaryElement))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
+            this.viewModel.elementsToUpdate.add(element);
+        }
     }
 
     protected void markForDeletion(List<IElement> elements, boolean deleteDescendants)
@@ -598,22 +604,20 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
-
-        this.viewModel.elementsToDelete.add(element);
+        if(!(element instanceof ITemporaryElement))
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
+            this.viewModel.elementsToDelete.add(element);
+            App.content.removeElement(element);
+        }
 
         if(deleteDescendants && element.hasChildren())
         {
             for(IElement child : element.getChildren())
             {
-                if(!(child instanceof ITemporaryElement))
-                {
-                    this.markForDeletion(child, true);
-                }
+                this.markForDeletion(child, true);
             }
-//            App.content.removeElementAndDescendants(element);
         }
-        App.content.removeElement(element);
     }
 
     protected void synchronizePersistency()
@@ -621,22 +625,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence.");
-
-            for(IElement element : this.viewModel.elementsToCreate)
-            {
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: creating %s", element));
-            }
-
-            for(IElement element : this.viewModel.elementsToUpdate)
-            {
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: updating %s", element));
-            }
-
-            for(IElement element : this.viewModel.elementsToDelete)
-            {
-                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: deleting %s", element));
-            }
-
 
             if(!App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
             {

@@ -116,14 +116,10 @@ public class ShowVisitActivity extends BaseActivity
             {
                 Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                List<IAttraction> allAttractions = new ArrayList<IAttraction>(viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
-                List<IAttraction> visitedAttractions = new ArrayList<IAttraction>(VisitedAttraction.getOnSiteAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-                allAttractions.removeAll(visitedAttractions);
-
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_CODE_PICK_ATTRACTIONS,
-                        new ArrayList<IElement>(allAttractions));
+                        new ArrayList<IElement>(getNotYetAddedAttractions()));
             }
         });
 
@@ -266,25 +262,37 @@ public class ShowVisitActivity extends BaseActivity
     {
         if(this.viewModel.visit != null)
         {
-            List<IAttraction> allAttractions = new ArrayList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
-            List<IAttraction> addedAttractions = new ArrayList<IAttraction>(VisitedAttraction.getOnSiteAttractions(viewModel.visit.getChildrenAsType(VisitedAttraction.class)));
-            allAttractions.removeAll(addedAttractions);
-
-            if(allAttractions.size() > 0)
+            List<IAttraction> notYetAddedAttractions = this.getNotYetAddedAttractions();
+            if(notYetAddedAttractions.size() > 0)
             {
-                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", allAttractions.size()));
+                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", notYetAddedAttractions.size()));
             }
             else
             {
                 Log.i(Constants.LOG_TAG, "ShowVisitActivity.allAttractionsAdded:: all attractions added");
             }
 
-            return allAttractions.isEmpty();
+            return notYetAddedAttractions.isEmpty();
         }
         else
         {
             return false;
         }
+    }
+
+    private List<IAttraction> getNotYetAddedAttractions()
+    {
+        List<IAttraction> visitedAttractions = new ArrayList<>();
+        for(VisitedAttraction visitedAttraction : viewModel.visit.getChildrenAsType(VisitedAttraction.class))
+        {
+            visitedAttractions.add(visitedAttraction.getOnSiteAttraction());
+        }
+
+        List<IAttraction> allAttractions = new ArrayList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
+
+        allAttractions.removeAll(visitedAttractions);
+
+        return allAttractions;
     }
 
     private void updateContentRecyclerView(boolean resetContent)

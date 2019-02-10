@@ -9,5 +9,5 @@ class ShowVisitsFragmentViewModel extends ViewModel
 {
     Park park;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-    IElement longClickedElement;
+    IElement longClickedVisit;
 }

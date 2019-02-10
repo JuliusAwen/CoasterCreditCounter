@@ -6,9 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -119,13 +117,15 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         return this.onSiteAttraction.getAttractionCategory();
     }
 
-    public static List<IOnSiteAttraction> getOnSiteAttractions(List<VisitedAttraction> visitedAttractions)
+    @Override
+    public void increaseTotalRideCount(int increment)
     {
-        List<IOnSiteAttraction> onSiteAttractions = new ArrayList<>();
-        for(VisitedAttraction visitedAttraction : visitedAttractions)
-        {
-            onSiteAttractions.add(visitedAttraction.getOnSiteAttraction());
-        }
-        return onSiteAttractions;
+        this.onSiteAttraction.increaseTotalRideCount(increment);
+    }
+
+    @Override
+    public void decreaseTotalRideCount(int decrement)
+    {
+        this.onSiteAttraction.decreaseTotalRideCount(decrement);
     }
 }
