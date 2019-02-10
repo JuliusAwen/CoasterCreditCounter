@@ -431,7 +431,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                         alertDialogMessage,
                                         getString(R.string.text_accept),
                                         getString(R.string.text_cancel),
-                                        Constants.REQUEST_CODE_DELETE);
+                                        Constants.REQUEST_CODE_DELETE,
+                                        false);
 
                                 alertDialogFragmentDelete.setCancelable(false);
                                 alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
@@ -447,7 +448,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                         alterDialogMessage,
                                         getString(R.string.text_accept),
                                         getString(R.string.text_cancel),
-                                        Constants.REQUEST_CODE_SET_AS_DEFAULT);
+                                        Constants.REQUEST_CODE_SET_AS_DEFAULT,
+                                        false);
 
                                 alertDialogFragmentDelete.setCancelable(false);
                                 alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);

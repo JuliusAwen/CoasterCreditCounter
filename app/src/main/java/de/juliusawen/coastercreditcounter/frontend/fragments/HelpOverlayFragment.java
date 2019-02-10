@@ -98,14 +98,14 @@ public class HelpOverlayFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                HelpOverlayFragment.this.onCloseButtonPressed(view);
+                HelpOverlayFragment.this.onCloseButtonClick(view);
             }
         });
     }
 
-    private void onCloseButtonPressed(View view)
+    private void onCloseButtonClick(View view)
     {
-        if (this.helpOverlayFragmentInteractionListener != null)
+        if(this.helpOverlayFragmentInteractionListener != null)
         {
             this.helpOverlayFragmentInteractionListener.onHelpOverlayFragmentInteraction(view);
         }

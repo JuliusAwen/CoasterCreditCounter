@@ -190,7 +190,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_overwrite_content),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.REQUEST_CODE_OVERWRITE_CONTENT
+                                Constants.REQUEST_CODE_OVERWRITE_CONTENT,
+                                false
                         );
 
                         alertDialogFragmentOverwriteFile.setCancelable(false);
@@ -221,7 +222,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_overwrite_file),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.REQUEST_OVERWRITE_FILE
+                                Constants.REQUEST_OVERWRITE_FILE,
+                                false
                         );
 
                         alertDialogFragmentOverwriteFile.setCancelable(false);

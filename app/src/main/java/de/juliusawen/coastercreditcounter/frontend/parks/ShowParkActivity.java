@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -34,7 +35,7 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class ShowParkActivity extends BaseActivity
+public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentAlertDialogInteraction
 {
     private static final int OVERVIEW = 0;
     private static final int ATTRACTIONS = 1;
@@ -207,6 +208,13 @@ public class ShowParkActivity extends BaseActivity
                 ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
             }
         });
+    }
+
+    @Override
+    public void onShowVisitsFragmentAlertDialogInteraction(IElement elementToDelete, boolean deleteDescendants, IElement elementToUpdate)
+    {
+        super.markForDeletion(elementToDelete, deleteDescendants);
+        super.markForUpdate(elementToUpdate);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

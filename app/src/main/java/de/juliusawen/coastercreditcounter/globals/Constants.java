@@ -9,7 +9,7 @@ public abstract class Constants
 
     public static final String SIMPLE_DATE_FORMAT_DATE_PATTERN = "dd. MMMM yyyy";
     public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
-    public static final String SIMPLE_DATE_FORMAT_TIME_PATTERN = "HH:mm:ss";
+    public static final String SIMPLE_DATE_FORMAT_TIME_PATTERN = "HH:mm";
 
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
@@ -38,7 +38,6 @@ public abstract class Constants
     public static final String JSON_STRING_YEAR = "year";
     public static final String JSON_STRING_HOUR = "hour";
     public static final String JSON_STRING_MINUTE = "minute";
-    public static final String JSON_STRING_SECOND = "second";
 
     public static final String JSON_STRING_RIDES_BY_ATTRACTIONS = "rides by attractions";
     public static final String JSON_STRING_BLUEPRINT = "blueprint";
@@ -87,6 +86,7 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT = "de.juliusawen.coding.fragment_arg_alert_dialog_negative_button_text";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE = "de.juliusawen.coding.fragment_arg_alert_dialog_negative_request_code";
     public static final String FRAGMENT_ARG_PARK_UUID = "de.juliusawen.coding.fragment_arg_park_uuid";
+    public static final String FRAGMENT_ARG_IS_CHILD_FRAGMENT = "de.juliusawen.coding.fragment_arg_is_child_fragment";
 
 
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.fragment_tag_help_overlay";

@@ -65,8 +65,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
-    private View.OnClickListener increaseRideCountOnClickListener;
-    private View.OnClickListener decreaseRideCountOnClickListener;
+    private View.OnClickListener addRideOnClickListener;
+    private View.OnClickListener deleteRideOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
@@ -501,15 +501,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
 
         viewHolder.imageViewIncrease.setTag(child);
-        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.increaseRideCountOnClickListener != null)
+        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.addRideOnClickListener != null)
         {
-            viewHolder.imageViewIncrease.setOnClickListener(this.increaseRideCountOnClickListener);
+            viewHolder.imageViewIncrease.setOnClickListener(this.addRideOnClickListener);
         }
 
         viewHolder.imageViewDecrease.setTag(child);
-        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.decreaseRideCountOnClickListener != null)
+        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.deleteRideOnClickListener != null)
         {
-            viewHolder.imageViewDecrease.setOnClickListener(this.decreaseRideCountOnClickListener);
+            viewHolder.imageViewDecrease.setOnClickListener(this.deleteRideOnClickListener);
         }
     }
 
@@ -575,14 +575,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.recyclerOnClickListener = onClickListener;
     }
 
-    public void setIncreaseRideCountOnClickListener(View.OnClickListener increaseOnClickListener)
+    public void addRideOnClickListener(View.OnClickListener increaseOnClickListener)
     {
-        this.increaseRideCountOnClickListener = increaseOnClickListener;
+        this.addRideOnClickListener = increaseOnClickListener;
     }
 
-    public void setDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
+    public void deleteRideOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
-        this.decreaseRideCountOnClickListener = decreaseOnClickListener;
+        this.deleteRideOnClickListener = decreaseOnClickListener;
     }
 
     private View.OnClickListener getExpansionOnClickListener()

@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -16,7 +14,9 @@ public class AlertDialogFragment extends DialogFragment
 {
     public AlertDialogFragment() {}
 
-    public static AlertDialogFragment newInstance(int iconResource, String title, String message, String positiveButtonText, String negativeButtonText, int requestCode)
+    public AlertDialogListener alertDialogListener;
+
+    public static AlertDialogFragment newInstance(int iconResource, String title, String message, String positiveButtonText, String negativeButtonText, int requestCode, boolean isChildFragment)
     {
         Log.v(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
                 "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
@@ -31,6 +31,7 @@ public class AlertDialogFragment extends DialogFragment
         args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT, positiveButtonText);
         args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT, negativeButtonText);
         args.putInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE, requestCode);
+        args.putBoolean(Constants.FRAGMENT_ARG_IS_CHILD_FRAGMENT, isChildFragment);
         alertDialogFragment.setArguments(args);
 
         return alertDialogFragment;
@@ -51,7 +52,16 @@ public class AlertDialogFragment extends DialogFragment
         final String positiveButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT);
         final String negativeButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT);
         final int requestCode = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE);
-        final AlertDialogListener alertDialogListener = (AlertDialogListener) getActivity();
+
+        if(args.getBoolean(Constants.FRAGMENT_ARG_IS_CHILD_FRAGMENT))
+        {
+            this.alertDialogListener = (AlertDialogListener) getParentFragment();
+        }
+        else
+        {
+            this.alertDialogListener = (AlertDialogListener) getActivity();
+        }
+
 
         return new AlertDialog.Builder(getActivity())
                 .setIcon(iconResource)
@@ -63,7 +73,7 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
-                        Objects.requireNonNull(alertDialogListener).onAlertDialogClick(requestCode, dialog, which);
+                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
                     }
                 })
                 .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener()
@@ -72,11 +82,10 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
-                        Objects.requireNonNull(alertDialogListener).onAlertDialogClick(requestCode, dialog, which);
+                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
                     }
                 })
                 .create();
-
     }
 
     public interface AlertDialogListener

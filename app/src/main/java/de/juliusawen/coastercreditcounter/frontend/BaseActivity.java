@@ -611,19 +611,32 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                     this.markForDeletion(child, true);
                 }
             }
-            App.content.removeElementAndDescendants(element);
+//            App.content.removeElementAndDescendants(element);
         }
-        else
-        {
-            App.content.removeElement(element);
-        }
+        App.content.removeElement(element);
     }
 
     protected void synchronizePersistency()
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence...");
+            Log.d(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence.");
+
+            for(IElement element : this.viewModel.elementsToCreate)
+            {
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: creating %s", element));
+            }
+
+            for(IElement element : this.viewModel.elementsToUpdate)
+            {
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: updating %s", element));
+            }
+
+            for(IElement element : this.viewModel.elementsToDelete)
+            {
+                Log.d(Constants.LOG_TAG, String.format("BaseActivity.synchronizePersistency:: deleting %s", element));
+            }
+
 
             if(!App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
             {

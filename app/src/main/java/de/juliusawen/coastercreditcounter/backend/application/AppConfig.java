@@ -51,8 +51,8 @@ public class AppConfig
                         "createExportFileIfNonexistent [%S]\n" +
                         "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
                         "validateContent [%S]\n" +
-
                         Constants.LOG_DIVIDER,
+
                 this.databaseWrapperToUse(),
                 this.getContentFileName(),
                 this.getSettingsFileName(),
@@ -61,7 +61,7 @@ public class AppConfig
                 this.useExternalStorage(),
 
                 this.createExportFileIfNotExists(),
-                this.reinitializeContentFromDatabaseMock(),
+                this.useDefaultContentFromDatabaseMockOnStartup(),
                 this.validateContent()
         );
     }
@@ -110,7 +110,7 @@ public class AppConfig
         return this.isDebugBuild && this.createExportFileIfNonexistent;
     }
 
-    public boolean reinitializeContentFromDatabaseMock()
+    public boolean useDefaultContentFromDatabaseMockOnStartup()
     {
         return this.isDebugBuild && this.useDefaultContentFromDatabaseMockOnStartup;
     }

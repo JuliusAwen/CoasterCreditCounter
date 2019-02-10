@@ -24,12 +24,11 @@ public class Ride extends Element
         this.calendar = calendar;
     }
 
-    public static Ride create(int hour, int minute, int second, UUID uuid)
+    public static Ride create(int hour, int minute, UUID uuid)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);
 
         return Ride.create(calendar, uuid);
     }
@@ -69,7 +68,6 @@ public class Ride extends Element
 
             jsonObject.put(Constants.JSON_STRING_HOUR, this.calendar.get(Calendar.HOUR_OF_DAY));
             jsonObject.put(Constants.JSON_STRING_MINUTE, this.calendar.get(Calendar.MINUTE));
-            jsonObject.put(Constants.JSON_STRING_SECOND, this.calendar.get(Calendar.SECOND));
 
             Log.v(Constants.LOG_TAG, String.format("Ride.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
@@ -82,15 +80,16 @@ public class Ride extends Element
         }
     }
 
-    public void setRideTime(int hour, int minute, int second)
+    public void setRideTime(int hour, int minute)
     {
         this.calendar.set(Calendar.HOUR_OF_DAY, hour);
         this.calendar.set(Calendar.MINUTE, minute);
-        this.calendar.set(Calendar.SECOND, second);
-
-        Log.d(Constants.LOG_TAG, String.format("Ride.setTime:: set time for %s to [%d:%d:%d] - changing name...", this, hour, minute, second));
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_TIME_PATTERN, Locale.getDefault());
-        super.setName(simpleDateFormat.format(this.calendar.getTime()));
+        String time = simpleDateFormat.format(this.calendar.getTime());
+
+        Log.d(Constants.LOG_TAG, String.format("Ride.setTime:: set time for %s to [%s] - changing name...", this, time));
+
+        super.setName(time);
     }
 }

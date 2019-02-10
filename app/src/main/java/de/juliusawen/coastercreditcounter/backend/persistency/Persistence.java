@@ -96,31 +96,6 @@ public class Persistence
 
     public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
-        int size;
-
-        size = elementsToCreate.size();
-        elementsToCreate.removeAll(elementsToDelete);
-        if(elementsToCreate.size() != size)
-        {
-            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: removed [%d] elements from ElementsToCreate - since they will be deleted anyway",
-                    size - elementsToCreate.size()));
-        }
-
-        size = elementsToUpdate.size();
-        elementsToUpdate.removeAll(elementsToDelete);
-        if(elementsToUpdate.size() != size)
-        {
-            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: removed [%d] elements from ElementsToUpdate - since they will be deleted anyway",
-                    size - elementsToUpdate.size()));
-        }
-
-        size = elementsToUpdate.size();
-        elementsToUpdate.removeAll(elementsToCreate);
-        if(elementsToUpdate.size() != size)
-        {
-            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: removed [%d] elements from ElementsToUpdate - since they will be created in updated state anyway",
-                    size - elementsToUpdate.size()));
-        }
 
         Log.i(Constants.LOG_TAG, String.format("Persistence.synchronize:: creating [%d], updating [%d], deleting [%d] elements...",
                 elementsToCreate.size(), elementsToUpdate.size(), elementsToDelete.size()));

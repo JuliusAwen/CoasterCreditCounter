@@ -39,14 +39,14 @@ public class PersistenceService extends IntentService
                     this.create(intent);
                     break;
 
-                case Constants.ACTION_UPDATE:
-
-                    this.update(intent);
-                    break;
-
                 case Constants.ACTION_DELETE:
 
                     this.delete(intent);
+                    break;
+
+                case Constants.ACTION_UPDATE:
+
+                    this.update(intent);
                     break;
 
                 case Constants.ACTION_SAVE:
@@ -77,21 +77,6 @@ public class PersistenceService extends IntentService
         }
     }
 
-    private void update(Intent intent)
-    {
-        Set<IElement> elementsToUpdate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_UPDATE_UUIDS)));
-        Log.v(Constants.LOG_TAG, String.format("PersistenceService.update:: updating [%d] elements...", elementsToUpdate.size()));
-
-        if(databaseWrapper.update(elementsToUpdate))
-        {
-            Log.d(Constants.LOG_TAG, "PersistenceService.update:: elements updated successfully");
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "PersistenceService.update:: updating elements failed");
-        }
-    }
-
     private void delete(Intent intent)
     {
         Set<IElement> elementsToDelete = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_DELETE_UUIDS)));
@@ -105,6 +90,21 @@ public class PersistenceService extends IntentService
         else
         {
             Log.e(Constants.LOG_TAG, "PersistenceService.delete:: deleting elements failed");
+        }
+    }
+
+    private void update(Intent intent)
+    {
+        Set<IElement> elementsToUpdate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_UPDATE_UUIDS)));
+        Log.v(Constants.LOG_TAG, String.format("PersistenceService.update:: updating [%d] elements...", elementsToUpdate.size()));
+
+        if(databaseWrapper.update(elementsToUpdate))
+        {
+            Log.d(Constants.LOG_TAG, "PersistenceService.update:: elements updated successfully");
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "PersistenceService.update:: updating elements failed");
         }
     }
 

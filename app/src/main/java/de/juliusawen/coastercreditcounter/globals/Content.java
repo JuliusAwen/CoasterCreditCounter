@@ -236,14 +236,14 @@ public class Content
         this.elementsByUuid.put(element.getUuid(), element);
     }
 
-    public void removeElementAndDescendants(IElement element)
-    {
-        for(IElement child : element.getChildren())
-        {
-            this.removeElementAndDescendants(child);
-        }
-        this.removeElement(element);
-    }
+//    public void removeElementAndDescendants(IElement element)
+//    {
+//        for(IElement child : element.getChildren())
+//        {
+//            this.removeElementAndDescendants(child);
+//        }
+//        this.removeElement(element);
+//    }
 
     public void removeElement(IElement element)
     {

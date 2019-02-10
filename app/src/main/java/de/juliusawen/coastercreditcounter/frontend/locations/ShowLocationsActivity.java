@@ -269,7 +269,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_relocate, viewModel.longClickedElement.getName(), element.getName()),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.REQUEST_CODE_RELOCATE
+                                Constants.REQUEST_CODE_RELOCATE,
+                                false
                         );
 
                         alertDialogFragmentRelocate.setCancelable(false);
@@ -377,7 +378,14 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 else if(id == Constants.SELECTION_DELETE_ELEMENT)
                 {
-                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(R.drawable.ic_baseline_warning, getString(R.string.alert_dialog_title_delete_element), getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()), getString(R.string.text_accept), getString(R.string.text_cancel), Constants.REQUEST_CODE_DELETE);
+                    AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                            R.drawable.ic_baseline_warning,
+                            getString(R.string.alert_dialog_title_delete_element),
+                            getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
+                            getString(R.string.text_accept),
+                            getString(R.string.text_cancel),
+                            Constants.REQUEST_CODE_DELETE,
+                            false);
 
 
                     alertDialogFragmentDelete.setCancelable(false);
@@ -387,7 +395,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 else if(id == Constants.SELECTION_REMOVE_ELEMENT)
                 {
-                    AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(R.drawable.ic_baseline_warning, getString(R.string.alert_dialog_title_remove_element), getString(R.string.alert_dialog_message_remove_element, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()), getString(R.string.text_accept), getString(R.string.text_cancel), Constants.REQUEST_CODE_REMOVE);
+                    AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
+                            R.drawable.ic_baseline_warning,
+                            getString(R.string.alert_dialog_title_remove_element),
+                            getString(R.string.alert_dialog_message_remove_element, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
+                            getString(R.string.text_accept),
+                            getString(R.string.text_cancel),
+                            Constants.REQUEST_CODE_REMOVE,
+                            false);
+
                     alertDialogFragmentRemove.setCancelable(false);
                     alertDialogFragmentRemove.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
                     return true;

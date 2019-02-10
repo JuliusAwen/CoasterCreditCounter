@@ -75,7 +75,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         content.clear();
 
-        if((!App.isInitialized && App.config.reinitializeContentFromDatabaseMock()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
+        if((!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: importing default content from DatabaseMock");
             boolean success = this.useAndExportDefaultContent(content);
@@ -320,11 +320,10 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryElement.year = jsonObjectItem.getInt(Constants.JSON_STRING_YEAR);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_HOUR) && !jsonObjectItem.isNull(Constants.JSON_STRING_MINUTE) && !jsonObjectItem.isNull(Constants.JSON_STRING_SECOND))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_HOUR) && !jsonObjectItem.isNull(Constants.JSON_STRING_MINUTE))
                 {
                     temporaryElement.hour = jsonObjectItem.getInt(Constants.JSON_STRING_HOUR);
                     temporaryElement.minute = jsonObjectItem.getInt(Constants.JSON_STRING_MINUTE);
-                    temporaryElement.second = jsonObjectItem.getInt(Constants.JSON_STRING_SECOND);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS))
@@ -547,7 +546,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            Ride element = Ride.create(temporaryElement.hour, temporaryElement.minute, temporaryElement.second, temporaryElement.uuid);
+            Ride element = Ride.create(temporaryElement.hour, temporaryElement.minute, temporaryElement.uuid);
             elements.add(element);
         }
         return elements;

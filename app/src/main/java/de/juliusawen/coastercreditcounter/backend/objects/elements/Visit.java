@@ -102,6 +102,18 @@ public class Visit extends Element
         return this.calendar;
     }
 
+    public void setDate(int year, int month, int day)
+    {
+        this.calendar.set(year, month, day);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
+        String date = simpleDateFormat.format(this.calendar.getTime());
+
+        Log.d(Constants.LOG_TAG, String.format("Visit.setDate:: set date for %s to [%s] - changing name...", this, date));
+
+        super.setName(date);
+    }
+
     public static void setOpenVisit(Element visit)
     {
         if(visit != null)

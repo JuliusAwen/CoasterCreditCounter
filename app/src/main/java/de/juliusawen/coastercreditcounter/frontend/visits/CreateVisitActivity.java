@@ -176,7 +176,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_message_visit_already_exists),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
-                ALERT_DIALOG_VISIT_ALREADY_EXISTS
+                ALERT_DIALOG_VISIT_ALREADY_EXISTS,
+                false
         );
         alertDialogFragment.setCancelable(false);
         alertDialogFragment.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
@@ -193,6 +194,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         this.viewModel.visit = Visit.create(calendar, null);
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
+
+        super.markForCreation(this.viewModel.visit);
+        super.markForUpdate(this.viewModel.park);
 
 //        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
 //        {
@@ -239,7 +243,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_title_add_attractions_to_visit),
                 getString(R.string.alert_dialog_message_add_attractions_to_visit),
                 getString(R.string.text_accept),
-                getString(R.string.text_cancel), ALERT_DIALOG_PICK_ATTRACTIONS
+                getString(R.string.text_cancel), ALERT_DIALOG_PICK_ATTRACTIONS,
+                false
         );
         alertDialogFragment.setCancelable(false);
         alertDialogFragment.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);

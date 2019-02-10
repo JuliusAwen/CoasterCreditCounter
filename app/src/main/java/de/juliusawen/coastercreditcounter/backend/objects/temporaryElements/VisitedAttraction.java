@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,7 +84,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
 
     public Ride addRide()
     {
-        Ride ride = Ride.create(((Visit)this.getParent()).getCalendar(), null);
+        Ride ride = Ride.create((Calendar)((Visit)this.getParent()).getCalendar().clone(), null);
         this.addChild(ride);
 
         Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.addRide:: added %s to %s for %s", ride, this, this.getOnSiteAttraction().getParent()));

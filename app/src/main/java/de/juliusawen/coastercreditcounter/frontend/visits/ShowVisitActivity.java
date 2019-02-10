@@ -79,8 +79,8 @@ public class ShowVisitActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.setIncreaseRideCountOnClickListener(this.getAddRideOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.setDecreaseRideCountOnClickListener(this.getDeleteRideOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.addRideOnClickListener(this.getAddRideOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.deleteRideOnClickListener(this.getRemoveRideOnClickListener());
 
             this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -239,7 +239,7 @@ public class ShowVisitActivity extends BaseActivity
         };
     }
 
-    private View.OnClickListener getDeleteRideOnClickListener()
+    private View.OnClickListener getRemoveRideOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -248,7 +248,7 @@ public class ShowVisitActivity extends BaseActivity
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getDeleteRideOnClickListener.onClick:: deleting latest ride on %s for %s",
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getRemoveRideOnClickListener.onClick:: deleting latest ride on %s for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 Ride ride = visitedAttraction.deleteLatestRide();
