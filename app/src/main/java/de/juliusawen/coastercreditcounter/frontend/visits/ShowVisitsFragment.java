@@ -383,15 +383,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            //Todo: remove if Visit.deleteElement works
-//                            for(VisitedAttraction visitedAttraction : viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
-//                            {
-//                                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
-//                            }
-
                             ShowVisitsFragment.this.showVisitsFragmentInteraction.deleteVisit(viewModel.longClickedElement);
                             viewModel.longClickedElement.deleteElementAndDescendants();
-
                             updateContentRecyclerView();
                         }
                         else

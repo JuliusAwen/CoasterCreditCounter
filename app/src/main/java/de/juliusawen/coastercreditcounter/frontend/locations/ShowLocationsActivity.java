@@ -467,18 +467,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                             ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
                             ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
-
                             viewModel.longClickedElement.deleteElementAndDescendants();
-                            //Todo: remove if DeleteElementAndChildren stuff works
-//                            viewModel.longClickedElement.deleteElement();
-//                            if(viewModel.longClickedElement instanceof Park)
-//                            {
-//                                for(IOnSiteAttraction onSiteAttraction : viewModel.longClickedElement.getChildrenAsType(IOnSiteAttraction.class))
-//                                {
-//                                    onSiteAttraction.deleteElement();
-//                                }
-//                            }
-
                             updateContentRecyclerView(true);
                         }
                         else

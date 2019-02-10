@@ -104,7 +104,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         Log.d(Constants.LOG_TAG, String.format("NavigationHubActivity.setMenuItemImportAvailability:: import enabled [%S]", enabled));
 
 
-        //Todo: remove
+        //Todo: remove setEnabled(false)
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
     }
 

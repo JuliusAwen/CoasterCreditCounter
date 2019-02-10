@@ -331,17 +331,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-        //Todo: remove if VisitedAttraction.deleteElementAndChildren works
-//        for(VisitedAttraction visitedAttraction : this.viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
-//        {
-//            visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
-//        }
-
         ShowVisitActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
         ShowVisitActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
-
         this.viewModel.longClickedElement.deleteElementAndDescendants();
-
         updateContentRecyclerView(true);
     }
 
