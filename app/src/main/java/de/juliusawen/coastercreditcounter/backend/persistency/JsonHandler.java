@@ -19,21 +19,21 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.application.Settings;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoaster;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IBlueprint;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.AttractionBlueprint;
+import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.backend.attractions.IBlueprint;
+import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Location;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Ride;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
@@ -603,6 +603,7 @@ public class JsonHandler implements IDatabaseWrapper
                 {
                     visitedAttraction.addChildAndSetParent(content.getContentByUuid(rideUuid));
                 }
+                visitedAttraction.getOnSiteAttraction().increaseTotalRideCount(rideUuids.size());
 
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);

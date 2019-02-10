@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.elements;
+package de.juliusawen.coastercreditcounter.backend.elements;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +15,7 @@ public interface IElement
     JSONObject toJson() throws JSONException;
 
     String getName();
+    String getFullName();
     boolean setName(String name);
 
     UUID getUuid();

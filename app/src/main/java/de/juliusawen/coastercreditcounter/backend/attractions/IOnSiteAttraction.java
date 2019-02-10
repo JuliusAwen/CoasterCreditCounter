@@ -1,6 +1,6 @@
-package de.juliusawen.coastercreditcounter.backend.objects.attractions;
+package de.juliusawen.coastercreditcounter.backend.attractions;
 
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 
 /**
  * Marks attraction as concrete inidividual entity located at a particular location - can be StockAttraction or CustomAttraction/-Coaster

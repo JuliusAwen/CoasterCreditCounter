@@ -1,8 +1,8 @@
 package de.juliusawen.coastercreditcounter.frontend.parks;
 
 import androidx.lifecycle.ViewModel;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Location;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
 
 class CreateParkActivityViewModel extends ViewModel
 {

@@ -10,7 +10,7 @@ import java.util.Set;
 
 import androidx.annotation.Nullable;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class PersistenceService extends IntentService

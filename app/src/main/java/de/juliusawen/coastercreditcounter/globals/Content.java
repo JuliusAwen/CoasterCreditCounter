@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Location;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
@@ -232,7 +232,7 @@ public class Content
 
     public void addElement(IElement element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element));
+        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element.getFullName()));
         this.elementsByUuid.put(element.getUuid(), element);
     }
 

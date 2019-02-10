@@ -16,12 +16,12 @@ import java.util.UUID;
 import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -31,9 +31,6 @@ import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private CreateVisitActivityViewModel viewModel;
-
-    private static final int ALERT_DIALOG_PICK_ATTRACTIONS = 0;
-    private static final int ALERT_DIALOG_VISIT_ALREADY_EXISTS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -175,7 +172,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_message_visit_already_exists),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
-                ALERT_DIALOG_VISIT_ALREADY_EXISTS,
+                Constants.REQUEST_CODE_HANDLE_EXISTING_VISIT,
                 false
         );
         alertDialogFragment.setCancelable(false);
@@ -224,7 +221,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_title_add_attractions_to_visit),
                 getString(R.string.alert_dialog_message_add_attractions_to_visit),
                 getString(R.string.text_accept),
-                getString(R.string.text_cancel), ALERT_DIALOG_PICK_ATTRACTIONS,
+                getString(R.string.text_cancel),
+                Constants.REQUEST_CODE_PICK_ATTRACTIONS,
                 false
         );
         alertDialogFragment.setCancelable(false);
@@ -235,43 +233,39 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
-        switch(requestCode)
+
+        if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
-            case ALERT_DIALOG_PICK_ATTRACTIONS:
+            if(which == DialogInterface.BUTTON_POSITIVE)
             {
-                if(which == DialogInterface.BUTTON_POSITIVE)
+                ActivityTool.startActivityPickForResult(
+                        CreateVisitActivity.this,
+                        Constants.REQUEST_CODE_PICK_ATTRACTIONS,
+                        new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
+            }
+            else if(which == DialogInterface.BUTTON_NEGATIVE)
+            {
+                returnResult(Activity.RESULT_OK);
+            }
+        }
+        else if(requestCode == Constants.REQUEST_CODE_HANDLE_EXISTING_VISIT)
+        {
+            if(which == DialogInterface.BUTTON_POSITIVE)
+            {
+                this.createVisit(viewModel.calendar);
+
+                if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
                 {
-                    ActivityTool.startActivityPickForResult(
-                            CreateVisitActivity.this,
-                            Constants.REQUEST_CODE_PICK_ATTRACTIONS,
-                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
+                    showPickAttractionsDialog();
                 }
-                else if(which == DialogInterface.BUTTON_NEGATIVE)
+                else
                 {
                     returnResult(Activity.RESULT_OK);
                 }
-                break;
             }
-            case ALERT_DIALOG_VISIT_ALREADY_EXISTS:
+            else if(which == DialogInterface.BUTTON_NEGATIVE)
             {
-                if(which == DialogInterface.BUTTON_POSITIVE)
-                {
-                    this.createVisit(viewModel.calendar);
-
-                    if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
-                    {
-                        showPickAttractionsDialog();
-                    }
-                    else
-                    {
-                        returnResult(Activity.RESULT_OK);
-                    }
-                }
-                else if(which == DialogInterface.BUTTON_NEGATIVE)
-                {
-                    returnResult(Activity.RESULT_CANCELED);
-                }
-                break;
+                returnResult(Activity.RESULT_CANCELED);
             }
         }
     }

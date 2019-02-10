@@ -24,9 +24,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
@@ -35,7 +35,7 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentAlertDialogInteraction
+public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction
 {
     private static final int OVERVIEW = 0;
     private static final int ATTRACTIONS = 1;
@@ -211,10 +211,16 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void deleteVisit(IElement visitToDelete, IElement parkToUpdate)
+    public void deleteVisit(IElement visitToDelete)
     {
         super.markForDeletion(visitToDelete, true);
-        super.markForUpdate(parkToUpdate);
+        super.markForUpdate(visitToDelete.getParent());
+    }
+
+    @Override
+    public void updateVisit(IElement visitToUpdate)
+    {
+        super.markForUpdate(visitToUpdate);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter

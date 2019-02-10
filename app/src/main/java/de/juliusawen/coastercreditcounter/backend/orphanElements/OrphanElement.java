@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.orphanElements;
+package de.juliusawen.coastercreditcounter.backend.orphanElements;
 
 import android.util.Log;
 
@@ -7,8 +7,8 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Element;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 

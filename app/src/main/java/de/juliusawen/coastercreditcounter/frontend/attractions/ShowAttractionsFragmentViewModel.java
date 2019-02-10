@@ -1,7 +1,7 @@
 package de.juliusawen.coastercreditcounter.frontend.attractions;
 
 import androidx.lifecycle.ViewModel;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
 class ShowAttractionsFragmentViewModel extends ViewModel

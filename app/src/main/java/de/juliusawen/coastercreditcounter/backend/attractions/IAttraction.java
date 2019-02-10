@@ -1,11 +1,11 @@
-package de.juliusawen.coastercreditcounter.backend.objects.attractions;
+package de.juliusawen.coastercreditcounter.backend.attractions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 
 
 /**
@@ -22,4 +22,6 @@ public interface IAttraction extends IElement
     int getTotalRideCount();
     void increaseTotalRideCount(int increment);
     void decreaseTotalRideCount(int decrement);
+    int getUntracktedRideCount();
+    void setUntracktedRideCount(int untracktedRideCount);
 }

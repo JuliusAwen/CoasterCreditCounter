@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.attractions;
+package de.juliusawen.coastercreditcounter.backend.attractions;
 
 import android.util.Log;
 

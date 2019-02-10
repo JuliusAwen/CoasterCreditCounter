@@ -222,7 +222,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                 getString(R.string.alert_dialog_message_overwrite_file),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
-                                Constants.REQUEST_OVERWRITE_FILE,
+                                Constants.REQUEST_CODE_OVERWRITE_FILE,
                                 false
                         );
 
@@ -263,7 +263,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         dialog.dismiss();
 
-        if(requestCode == Constants.REQUEST_OVERWRITE_FILE)
+        if(requestCode == Constants.REQUEST_CODE_OVERWRITE_FILE)
         {
             if(which == DialogInterface.BUTTON_POSITIVE)
             {

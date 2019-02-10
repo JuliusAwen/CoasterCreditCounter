@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.elements;
+package de.juliusawen.coastercreditcounter.backend.elements;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
@@ -102,16 +102,52 @@ public class Visit extends Element
         return this.calendar;
     }
 
-    public void setDate(int year, int month, int day)
+    public void setDateAndAdjustName(int year, int month, int day)
     {
         this.calendar.set(year, month, day);
+        this.setName();
+    }
 
+    public void setDateAndAdjustName(Calendar calendar)
+    {
+        this.calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        this.setName();
+        this.setDateInRides(calendar);
+    }
+
+    private void setName()
+    {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
         String date = simpleDateFormat.format(this.calendar.getTime());
 
-        Log.d(Constants.LOG_TAG, String.format("Visit.setDate:: set date for %s to [%s] - changing name...", this, date));
+        Log.d(Constants.LOG_TAG, String.format("Visit.setName:: set date for %s to [%s] - changing name...", this, date));
 
         super.setName(date);
+    }
+
+    private void setDateInRides(Calendar calendar)
+    {
+        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+        {
+            for(Ride ride : visitedAttraction.getChildrenAsType(Ride.class))
+            {
+                ride.setRideDate(calendar);
+            }
+        }
+    }
+
+    private boolean isOpenVisit()
+    {
+        return Visit.getOpenVisit() != null && this.equals(Visit.getOpenVisit());
+    }
+
+
+
+
+
+    public static Element getOpenVisit()
+    {
+        return Visit.openVisit;
     }
 
     public static void setOpenVisit(Element visit)
@@ -126,16 +162,6 @@ public class Visit extends Element
             Log.i(Constants.LOG_TAG,"Visit.setOpenVisit:: open visit cleared");
             Visit.openVisit = null;
         }
-    }
-
-    public static Element getOpenVisit()
-    {
-        return Visit.openVisit;
-    }
-
-    private boolean isOpenVisit()
-    {
-        return Visit.getOpenVisit() != null && this.equals(Visit.getOpenVisit());
     }
 
     public static boolean validateOpenVisit()

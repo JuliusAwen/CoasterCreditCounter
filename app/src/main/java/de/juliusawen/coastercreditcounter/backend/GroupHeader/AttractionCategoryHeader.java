@@ -13,12 +13,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.ITemporaryElement;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.elements.Element;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 

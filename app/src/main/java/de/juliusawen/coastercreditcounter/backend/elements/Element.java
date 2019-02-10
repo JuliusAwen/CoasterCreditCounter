@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.elements;
+package de.juliusawen.coastercreditcounter.backend.elements;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class Element implements IElement

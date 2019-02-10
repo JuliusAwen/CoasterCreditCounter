@@ -29,18 +29,18 @@ import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategory
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CoasterBlueprint;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.CustomCoaster;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.StockAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.AttractionBlueprint;
+import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
@@ -506,6 +506,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.imageViewIncrease.setOnClickListener(this.addRideOnClickListener);
         }
 
+        //Todo: refactor --> ShowRides/ShowRide
         viewHolder.imageViewDecrease.setTag(child);
         if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.deleteRideOnClickListener != null)
         {

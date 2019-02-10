@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.Element;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Ride;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -304,7 +304,7 @@ public class ShowVisitActivity extends BaseActivity
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: notifying data set changes...");
+            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: notifying data set changed...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

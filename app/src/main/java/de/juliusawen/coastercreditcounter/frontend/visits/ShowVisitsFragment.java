@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.frontend.visits;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,10 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.PopupMenu;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,11 +31,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Element;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.Element;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -40,13 +43,14 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
 {
     private ShowVisitsFragmentViewModel viewModel;
     private RecyclerView recyclerView;
     private boolean actionConfirmed;
-    private ShowVisitsFragmentAlertDialogInteraction showVisitsFragmentAlertDialogInteraction;
+    private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
 
     public ShowVisitsFragment() {}
 
@@ -155,13 +159,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         super.onAttach(context);
 
-        if(context instanceof ShowVisitsFragment.ShowVisitsFragmentAlertDialogInteraction)
+        if(context instanceof ShowVisitsFragmentInteraction)
         {
-            this.showVisitsFragmentAlertDialogInteraction = (ShowVisitsFragment.ShowVisitsFragmentAlertDialogInteraction) context;
+            this.showVisitsFragmentInteraction = (ShowVisitsFragmentInteraction) context;
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement ShowVisitsFragmentAlertDialogInteraction");
+            throw new RuntimeException(context.toString() + " must implement ShowVisitsFragmentInteraction");
         }
     }
 
@@ -171,7 +175,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         super.onDetach();
         this.viewModel = null;
         this.recyclerView = null;
-        this.showVisitsFragmentAlertDialogInteraction = null;
+        this.showVisitsFragmentInteraction = null;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
@@ -206,12 +210,19 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public boolean onLongClick(final View view)
             {
-                viewModel.longClickedVisit = (Element) view.getTag();
+                viewModel.longClickedElement = (IElement) view.getTag();
 
-                PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
-                popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
-                popupMenu.show();
-                return false;
+                if(viewModel.longClickedElement instanceof Visit)
+                {
+                    PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
+                    popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
+                    popupMenu.show();
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
         };
     }
@@ -245,7 +256,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                             AlertDialogFragment.newInstance(
                                     R.drawable.ic_baseline_warning,
                                     getString(R.string.alert_dialog_title_delete_element),
-                                    getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedVisit.getName()),
+                                    getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
                                     Constants.REQUEST_CODE_DELETE,
@@ -258,8 +269,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 }
                 else if(id == Constants.SELECTION_EDIT_ELEMENT)
                 {
-
-
+                    pickDate();
                     return true;
                 }
                 else
@@ -268,6 +278,75 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 }
             }
         };
+    }
+
+    private void pickDate()
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.pickDate:: picking date for visit in %s", this.viewModel.park));
+
+        this.viewModel.calendar = (Calendar)((Visit)this.viewModel.longClickedElement).getCalendar().clone();
+        int year = this.viewModel.calendar.get(Calendar.YEAR);
+        int month = this.viewModel.calendar.get(Calendar.MONTH);
+        int day = this.viewModel.calendar.get(Calendar.DAY_OF_MONTH);
+
+        this.viewModel.datePickerDialog = new DatePickerDialog(Objects.requireNonNull(ShowVisitsFragment.this.getContext()), new DatePickerDialog.OnDateSetListener()
+        {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day)
+            {
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDateSet:: picked date: year[%d], month[%d], day[%d]", year, month, day));
+                viewModel.calendar.set(year, month, day);
+
+                if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
+                {
+                    if(doesVisitExist(viewModel.calendar))
+                    {
+                        viewModel.datePickerDialog.dismiss();
+                        Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
+                    }
+                    else
+                    {
+                        ((Visit)viewModel.longClickedElement).setDateAndAdjustName(viewModel.calendar);
+                        ShowVisitsFragment.this.showVisitsFragmentInteraction.updateVisit(viewModel.longClickedElement);
+                        updateContentRecyclerView();
+                    }
+                }
+                else
+                {
+                    Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onDateSet:: same date picked - doing nothing");
+                }
+
+                viewModel.datePickerDialog.dismiss();
+            }
+        }, year, month, day);
+
+
+
+        this.viewModel.datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_cancel), new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int position)
+            {
+                viewModel.datePickerDialog.dismiss();
+            }
+        });
+
+        this.viewModel.datePickerDialog.getDatePicker().setFirstDayOfWeek(App.settings.getFirstDayOfTheWeek());
+        this.viewModel.datePickerDialog.setCancelable(false);
+        this.viewModel.datePickerDialog.setCanceledOnTouchOutside(false);
+        this.viewModel.datePickerDialog.show();
+    }
+
+    private boolean doesVisitExist(Calendar calendar)
+    {
+        for(Visit exisingVisit : viewModel.park.getChildrenAsType(Visit.class))
+        {
+            if(Visit.isSameDay(exisingVisit.getCalendar(), calendar))
+            {
+                Log.v(Constants.LOG_TAG, String.format("ShowVisitsFragment.doesVisitExist:: %s already exists", exisingVisit));
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -279,12 +358,11 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-
             if(requestCode == Constants.REQUEST_CODE_DELETE)
             {
                 snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
-                        getString(R.string.action_confirm_delete_text, viewModel.longClickedVisit.getName()),
+                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
                         Snackbar.LENGTH_LONG);
 
                 snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
@@ -306,19 +384,16 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                         {
                             actionConfirmed = false;
 
-                            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedVisit));
+                            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            for(VisitedAttraction visitedAttraction : viewModel.longClickedVisit.getChildrenAsType(VisitedAttraction.class))
+                            for(VisitedAttraction visitedAttraction : viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
                             {
                                 visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
                             }
 
-                            viewModel.longClickedVisit.deleteElement();
+                            viewModel.longClickedElement.deleteElement();
 
-                            ShowVisitsFragment.this.showVisitsFragmentAlertDialogInteraction.deleteVisit(
-                                    viewModel.longClickedVisit,
-                                    viewModel.longClickedVisit.getParent()
-                            );
+                            ShowVisitsFragment.this.showVisitsFragmentInteraction.deleteVisit(viewModel.longClickedElement);
 
                             updateContentRecyclerView();
                         }
@@ -340,8 +415,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 
-    public interface ShowVisitsFragmentAlertDialogInteraction
+    public interface ShowVisitsFragmentInteraction
     {
-        void deleteVisit(IElement elementToDelete, IElement elementToUpdate);
+        void deleteVisit(IElement visitToDelete);
+        void updateVisit(IElement visitToDelete);
     }
 }

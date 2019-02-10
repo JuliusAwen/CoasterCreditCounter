@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import androidx.lifecycle.ViewModel;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 
 public class BaseActivityViewModel extends ViewModel
 {

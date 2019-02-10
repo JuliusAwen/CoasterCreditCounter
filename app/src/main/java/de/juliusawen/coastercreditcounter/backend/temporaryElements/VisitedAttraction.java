@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.objects.temporaryElements;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements;
 
 import android.util.Log;
 
@@ -10,12 +10,13 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.backend.objects.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Ride;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.objects.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Ride;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 /**
@@ -117,12 +118,21 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         return this.onSiteAttraction.getAttractionCategory();
     }
 
+
+    @Override
+    public Manufacturer getManufacturer()
+    {
+        return this.onSiteAttraction.getManufacturer();
+    }
+
+    @Deprecated
     @Override
     public void increaseTotalRideCount(int increment)
     {
         this.onSiteAttraction.increaseTotalRideCount(increment);
     }
 
+    @Deprecated
     @Override
     public void decreaseTotalRideCount(int decrement)
     {

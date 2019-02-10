@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.objects.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.ManageOrphanElementsActivity;

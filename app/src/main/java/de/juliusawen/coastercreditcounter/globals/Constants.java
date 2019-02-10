@@ -172,12 +172,14 @@ public abstract class Constants
     public static final int REQUEST_CODE_REMOVE = RequestCode.REMOVE.ordinal();
 
     public static final int REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal();
-    public static final int REQUEST_OVERWRITE_FILE = RequestCode.OVERWRITE_FILE.ordinal();
+    public static final int REQUEST_CODE_OVERWRITE_FILE = RequestCode.OVERWRITE_FILE.ordinal();
     public static final int REQUEST_CODE_OVERWRITE_CONTENT = RequestCode.OVERWRITE_CONTENT.ordinal();
 
     public static final int REQUEST_CODE_RELOCATE = RequestCode.RELOCATE.ordinal();
 
     public static final int REQUEST_CODE_SET_AS_DEFAULT = RequestCode.SET_AS_DEFAULT.ordinal();
+
+    public static final int REQUEST_CODE_HANDLE_EXISTING_VISIT = RequestCode.HANDLE_EXISTING_VISIT.ordinal();
 
 
 
@@ -272,6 +274,8 @@ public abstract class Constants
         RELOCATE,
 
         SET_AS_DEFAULT,
+
+        HANDLE_EXISTING_VISIT,
     }
 
     private enum Type

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
-import de.juliusawen.coastercreditcounter.backend.objects.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
