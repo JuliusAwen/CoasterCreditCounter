@@ -132,7 +132,7 @@ public class Persistence
         if(elementsToDelete.size() != size)
         {
             Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: removed [%d] elements from ElementsToDelete - since they won't be created anyway",
-                    size - elementsToUpdate.size()));
+                    size - elementsToDelete.size()));
         }
 
         Log.i(Constants.LOG_TAG, String.format("Persistence.synchronize:: creating [%d], updating [%d], deleting [%d] elements...",

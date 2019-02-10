@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -84,7 +85,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
     public Ride addRide()
     {
         Ride ride = Ride.create((Calendar)((Visit)this.getParent()).getCalendar().clone(), null);
-        this.addChild(ride);
+        this.addChildAndSetParent(ride);
 
         Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.addRide:: added %s to %s for %s", ride, this, this.getOnSiteAttraction().getParent()));
 
@@ -110,6 +111,17 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
             Log.d(Constants.LOG_TAG, String.format("VisitedAttraction.deleteLatestRide:: no ride to remove from %s for %s", this, this.getOnSiteAttraction().getParent()));
             return null;
         }
+    }
+
+    @Override
+    public void deleteElementAndDescendants()
+    {
+        this.onSiteAttraction.decreaseTotalRideCount(this.getChildCount());
+        for(IElement ride : new ArrayList<>(this.getChildren()))
+        {
+            ride.deleteElement();
+        }
+//        super.deleteElement();
     }
 
     @Override

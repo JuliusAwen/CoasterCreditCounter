@@ -35,7 +35,6 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -272,10 +271,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                     pickDate();
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
         };
     }
@@ -386,14 +383,14 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            for(VisitedAttraction visitedAttraction : viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
-                            {
-                                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
-                            }
-
-                            viewModel.longClickedElement.deleteElement();
+                            //Todo: remove if Visit.deleteElement works
+//                            for(VisitedAttraction visitedAttraction : viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
+//                            {
+//                                visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
+//                            }
 
                             ShowVisitsFragment.this.showVisitsFragmentInteraction.deleteVisit(viewModel.longClickedElement);
+                            viewModel.longClickedElement.deleteElementAndDescendants();
 
                             updateContentRecyclerView();
                         }

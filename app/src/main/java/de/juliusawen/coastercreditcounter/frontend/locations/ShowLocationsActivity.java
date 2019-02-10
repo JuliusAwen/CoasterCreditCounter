@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
@@ -469,14 +468,16 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
                             ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
 
-                            viewModel.longClickedElement.deleteElement();
-                            if(viewModel.longClickedElement instanceof Park)
-                            {
-                                for(IOnSiteAttraction onSiteAttraction : viewModel.longClickedElement.getChildrenAsType(IOnSiteAttraction.class))
-                                {
-                                    onSiteAttraction.deleteElement();
-                                }
-                            }
+                            viewModel.longClickedElement.deleteElementAndDescendants();
+                            //Todo: remove if DeleteElementAndChildren stuff works
+//                            viewModel.longClickedElement.deleteElement();
+//                            if(viewModel.longClickedElement instanceof Park)
+//                            {
+//                                for(IOnSiteAttraction onSiteAttraction : viewModel.longClickedElement.getChildrenAsType(IOnSiteAttraction.class))
+//                                {
+//                                    onSiteAttraction.deleteElement();
+//                                }
+//                            }
 
                             updateContentRecyclerView(true);
                         }

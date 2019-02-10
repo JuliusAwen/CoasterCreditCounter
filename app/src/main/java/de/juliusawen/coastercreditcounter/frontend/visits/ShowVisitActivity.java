@@ -1,11 +1,17 @@
 package de.juliusawen.coastercreditcounter.frontend.visits;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,16 +36,18 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class ShowVisitActivity extends BaseActivity
+public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ShowVisitActivityViewModel viewModel;
     private RecyclerView recyclerView;
+    private boolean actionConfirmed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -199,20 +207,142 @@ public class ShowVisitActivity extends BaseActivity
             @Override
             public boolean onLongClick(View view)
             {
-                Element element = (Element) view.getTag();
+                viewModel.longClickedElement = (Element) view.getTag();
 
-                if(element instanceof AttractionCategoryHeader)
+                if(viewModel.longClickedElement instanceof AttractionCategoryHeader)
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
                 }
-                else if(element instanceof Attraction)
+                else if(viewModel.longClickedElement instanceof Attraction)
                 {
-                    Toaster.makeToast(ShowVisitActivity.this, element + " long clicked");
+                    PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
+                    popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
+                    popupMenu.show();
+                    return false;
                 }
 
                 return true;
             }
         };
+    }
+
+    private PopupMenu getRecyclerViewItemPopupMenu(View view)
+    {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        this.populatePopupMenu(popupMenu.getMenu());
+        return popupMenu;
+    }
+
+    private void populatePopupMenu(Menu menu)
+    {
+        menu.add(Menu.NONE, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete);
+    }
+
+    private PopupMenu.OnMenuItemClickListener getOnMenuItemClickListener()
+    {
+        return new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
+
+                int id = item.getItemId();
+                if(id == Constants.SELECTION_DELETE_ELEMENT)
+                {
+                    if(viewModel.longClickedElement.getChildCount() > 0)
+                    {
+                        AlertDialogFragment alertDialogFragmentDelete =
+                                AlertDialogFragment.newInstance(
+                                        R.drawable.ic_baseline_warning,
+                                        getString(R.string.alert_dialog_title_delete_element),
+                                        getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
+                                        getString(R.string.text_accept),
+                                        getString(R.string.text_cancel),
+                                        Constants.REQUEST_CODE_DELETE,
+                                        false);
+
+                        alertDialogFragmentDelete.setCancelable(false);
+                        alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+
+                        return true;
+                    }
+                    else
+                    {
+                        deleteVisitedAttraction();
+                    }
+                }
+
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    {
+        dialog.dismiss();
+
+        Snackbar snackbar;
+
+        if(which == DialogInterface.BUTTON_POSITIVE)
+        {
+            if(requestCode == Constants.REQUEST_CODE_DELETE)
+            {
+
+                snackbar = Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                        Snackbar.LENGTH_LONG);
+
+                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        actionConfirmed = true;
+                        Log.i(Constants.LOG_TAG, "ShowVisitActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                    }
+                });
+
+                snackbar.addCallback(new Snackbar.Callback()
+                {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event)
+                    {
+                        if(actionConfirmed)
+                        {
+                            actionConfirmed = false;
+                            deleteVisitedAttraction();
+                        }
+                        else
+                        {
+                            Log.d(Constants.LOG_TAG, "ShowVisitActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
+                        }
+                    }
+                });
+
+                snackbar.show();
+            }
+        }
+    }
+
+    private void deleteVisitedAttraction()
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+
+        //Todo: remove if VisitedAttraction.deleteElementAndChildren works
+//        for(VisitedAttraction visitedAttraction : this.viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class))
+//        {
+//            visitedAttraction.getOnSiteAttraction().decreaseTotalRideCount(visitedAttraction.getChildCount());
+//        }
+
+        ShowVisitActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
+        ShowVisitActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
+
+        this.viewModel.longClickedElement.deleteElementAndDescendants();
+
+        updateContentRecyclerView(true);
     }
 
     private View.OnClickListener getAddRideOnClickListener()

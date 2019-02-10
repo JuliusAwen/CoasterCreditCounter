@@ -136,6 +136,16 @@ public class Visit extends Element
         }
     }
 
+    @Override
+    public void deleteElementAndDescendants()
+    {
+        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+        {
+            visitedAttraction.deleteElementAndDescendants();
+        }
+        super.deleteElement();
+    }
+
     private boolean isOpenVisit()
     {
         return Visit.getOpenVisit() != null && this.equals(Visit.getOpenVisit());

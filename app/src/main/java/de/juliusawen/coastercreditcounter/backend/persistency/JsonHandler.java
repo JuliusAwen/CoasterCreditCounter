@@ -52,7 +52,6 @@ public class JsonHandler implements IDatabaseWrapper
         public int year;
         public int hour;
         public int minute;
-        public int second;
         public final Map<UUID, List<UUID>> ridesByAttractions = new LinkedHashMap<>();
         public UUID blueprintUuid;
         public UUID attractionCategoryUuid;
@@ -603,7 +602,11 @@ public class JsonHandler implements IDatabaseWrapper
                 {
                     visitedAttraction.addChildAndSetParent(content.getContentByUuid(rideUuid));
                 }
-                visitedAttraction.getOnSiteAttraction().increaseTotalRideCount(rideUuids.size());
+
+                if(rideUuids.size() > 0)
+                {
+                    visitedAttraction.getOnSiteAttraction().increaseTotalRideCount(rideUuids.size());
+                }
 
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);

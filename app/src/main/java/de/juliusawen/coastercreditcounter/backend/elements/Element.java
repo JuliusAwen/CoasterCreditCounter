@@ -241,9 +241,17 @@ public abstract class Element implements IElement
         newParent.addChildAndSetParent(this);
     }
 
+    public void deleteElementAndDescendants()
+    {
+        for(IElement child : new ArrayList<>(this.getChildren()))
+        {
+            child.deleteElementAndDescendants();
+        }
+        this.deleteElement();
+    }
+
     public void deleteElement()
     {
-        Log.d(Constants.LOG_TAG, String.format("Element.deleteElement:: deleting %s...", this));
         this.parent.deleteChild(this);
     }
 

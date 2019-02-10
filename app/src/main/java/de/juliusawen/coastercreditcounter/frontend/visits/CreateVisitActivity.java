@@ -208,7 +208,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit.getFullName()));
 
         super.markForDeletion(this.viewModel.existingVisit, true);
-        this.viewModel.existingVisit.deleteElement();
+        this.viewModel.existingVisit.deleteElementAndDescendants();
         this.viewModel.existingVisit = null;
 
         super.markForUpdate(this.viewModel.park);

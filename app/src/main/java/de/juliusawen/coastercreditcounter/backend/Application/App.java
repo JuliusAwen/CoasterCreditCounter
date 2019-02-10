@@ -77,12 +77,12 @@ public class App extends Application
 //                        e.printStackTrace();
 //                    }
 
-        App.content = Content.getInstance(App.persistence);
         App.settings = Settings.getInstance(App.persistence);
+        App.content = Content.getInstance(App.persistence);
 
-        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Content> and <Settings>...");
+        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
 
-        if(App.content.initialize() && App.settings.initialize())
+        if(App.settings.initialize() && App.content.initialize())
         {
             App.isInitialized = true;
             return true;
