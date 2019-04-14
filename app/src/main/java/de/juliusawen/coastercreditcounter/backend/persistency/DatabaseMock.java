@@ -307,6 +307,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomCoaster colossos = CustomCoaster.create("Colossos", 0, null);
 
         CustomAttraction scream = CustomAttraction.create("Scream", 0, null);
+        scream.setManufacturer(intamin);
+
         CustomAttraction mountainRafting = CustomAttraction.create("Mountain Rafting", 0, null);
         CustomAttraction wildwasserbahn = CustomAttraction.create("Wildwasserbahn", 0, null);
         CustomAttraction ghostbusters5D = CustomAttraction.create("Ghostbusters 5D", 1, null);

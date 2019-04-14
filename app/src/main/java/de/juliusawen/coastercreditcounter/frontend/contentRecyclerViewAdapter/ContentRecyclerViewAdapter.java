@@ -197,6 +197,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.typesToDisplayManufacturer.add(CustomAttraction.class);
         this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
         this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
+        this.typesToDisplayManufacturer.add(StockAttraction.class);
 
         this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
         this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
@@ -439,6 +440,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                 {
+                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
                     locationName = "Blueprint";
                     viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
                 }

@@ -142,11 +142,13 @@ public  class ShowAttractionsFragment extends Fragment
         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
         childTypesToExpand.add(Attraction.class);
 
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+        ContentRecyclerViewAdapter contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand,
                 Constants.TYPE_ATTRACTION_CATEGORY);
+        contentRecyclerViewAdapter.displayManufacturers(true);
 
+        return contentRecyclerViewAdapter;
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
