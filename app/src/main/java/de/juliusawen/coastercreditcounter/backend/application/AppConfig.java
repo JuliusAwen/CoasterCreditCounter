@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings("FieldCanBeLocal") //
 public class AppConfig
 {
     private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
@@ -24,7 +24,7 @@ public class AppConfig
     private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = false;
     private final boolean createExportFileIfNonexistent = true;
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = true;
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
 
     private final boolean validateContent = true;
 
@@ -66,8 +66,6 @@ public class AppConfig
         );
     }
 
-
-
     public String databaseWrapperToUse()
     {
         return this.databaseWrapperToUse;
@@ -82,8 +80,6 @@ public class AppConfig
     {
         return this.settingsFileName;
     }
-
-
 
     public boolean isDebugBuild()
     {
@@ -119,5 +115,4 @@ public class AppConfig
     {
         return this.isDebugBuild && this.validateContent;
     }
-
 }
