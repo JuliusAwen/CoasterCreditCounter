@@ -163,7 +163,6 @@ public abstract class Constants
     public static final int REQUEST_CODE_SORT_ATTRACTION_CATEGORIES = RequestCode.SORT_ATTRACTION_CATEGORIES.ordinal();
     public static final int REQUEST_CODE_SORT_MANUFACTURERS = RequestCode.SORT_MANUFACTURERS.ordinal();
 
-
     public static final int REQUEST_CODE_PICK_LOCATIONS = RequestCode.PICK_LOCATIONS.ordinal();
     public static final int REQUEST_CODE_PICK_PARKS = RequestCode.PICK_PARKS.ordinal();
     public static final int REQUEST_CODE_PICK_ATTRACTIONS = RequestCode.PICK_ATTRACTIONS.ordinal();

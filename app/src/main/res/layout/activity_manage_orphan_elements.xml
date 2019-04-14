@@ -11,7 +11,7 @@
         layout="@layout/floating_action_button"/>
 
     <LinearLayout
-        android:id="@+id/linearLayoutShowAttractionCategories"
+        android:id="@+id/linearLayoutManageOrphanElements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -20,7 +20,7 @@
             layout="@layout/toolbar"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewShowAttractionCategories"
+            android:id="@+id/recyclerViewManageOrphanElements"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
