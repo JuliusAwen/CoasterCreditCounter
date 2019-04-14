@@ -52,7 +52,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ManageOrphanElementsActivity.onCreate:: creating activity...");
 
-        setContentView(R.layout.activity_show_attraction_categories);
+        setContentView(R.layout.activity_manage_orphan_elements);
         super.onCreate(savedInstanceState);
 
         if(App.isInitialized)
@@ -94,7 +94,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             if(this.viewModel.contentRecyclerViewAdapter != null)
             {
                 this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-                this.recyclerView = findViewById(R.id.recyclerViewShowAttractionCategories);
+                this.recyclerView = findViewById(R.id.recyclerViewManageOrphanElements);
                 this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
             }
