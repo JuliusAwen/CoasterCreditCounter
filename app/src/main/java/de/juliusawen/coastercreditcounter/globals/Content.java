@@ -77,7 +77,6 @@ public class Content
             Log.e(Constants.LOG_TAG, "Content.useDefaults:: creating default content for non-debug build not yet implemented");
             throw new IllegalStateException();
         }
-
     }
 
     public void clear()

@@ -60,15 +60,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         Manufacturer intamin = Manufacturer.create("Intamin", null);
         Manufacturer vekoma = Manufacturer.create("Vekoma", null);
         Manufacturer huss = Manufacturer.create("Huss", null);
+        Manufacturer pinfari = Manufacturer.create("Pinfari", null);
 
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(bolligerAndMabillard);
         manufacturers.add(intamin);
         manufacturers.add(vekoma);
         manufacturers.add(huss);
+        manufacturers.add(pinfari);
 
 
-        // create Nodes
+        // create Locations
         Location earth = Location.create("Earth", null);
 
         Location europe = Location.create("Europe", null);
@@ -97,19 +99,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Location bruehl = Location.create("Brühl", null);
         Location soltau = Location.create("Soltau", null);
 
-
         Location biddinghuizen = Location.create("Biddinghuizen", null);
-
-        Park phantasialand = Park.create("Phantasialand", null);
-        Park heidePark = Park.create("Heide Park Resort", null);
-        Park freimarkt = Park.create("Freimarkt", null);
-        Park osterwiese = Park.create("Osterwiese", null);
-
-        Park cedarPoint = Park.create("Cedar Point", null);
-        Park sixFlagsMagicMountain = Park.create("Six Flags Magic Mountain", null);
-
-        Park walibiHolland = Park.create("Walibi Holland", null);
-
 
 
 
@@ -127,13 +117,15 @@ public final class DatabaseMock implements IDatabaseWrapper
         boomerang.setAttractionCategory(attractionCategoryRollerCoasters);
         blueprints.add(boomerang);
 
+        CoasterBlueprint bigAppleMB28 = CoasterBlueprint.create("Big Apple MB28", 1, null);
+        bigAppleMB28.setManufacturer(pinfari);
+        bigAppleMB28.setAttractionCategory(attractionCategoryRollerCoasters);
+        blueprints.add(bigAppleMB28);
 
 
 
-
-
-
-        //Create Attractions
+        //PHANTASIALAND
+        Park phantasialand = Park.create("Phantasialand", null);
 
         CustomCoaster taron = CustomCoaster.create("Taron", 38, null);
         CustomCoaster blackMamba = CustomCoaster.create("Black Mamba", 18, null);
@@ -197,8 +189,110 @@ public final class DatabaseMock implements IDatabaseWrapper
         pferdekarusell.setAttractionCategory(attractionCategoryFamilyRides);
         wuermlingExpress.setAttractionCategory(attractionCategoryFamilyRides);
 
+        phantasialand.addChildAndSetParent(taron);
+        phantasialand.addChildAndSetParent(blackMamba);
+        phantasialand.addChildAndSetParent(coloradoAdventure);
+        phantasialand.addChildAndSetParent(raik);
+        phantasialand.addChildAndSetParent(templeOfTheNightHawk);
+        phantasialand.addChildAndSetParent(winjasFear);
+        phantasialand.addChildAndSetParent(winjasForce);
+
+        phantasialand.addChildAndSetParent(mysteryCastle);
+        phantasialand.addChildAndSetParent(hollywoodTour);
+        phantasialand.addChildAndSetParent(chiapas);
+        phantasialand.addChildAndSetParent(talocan);
+        phantasialand.addChildAndSetParent(fengJuPalace);
+        phantasialand.addChildAndSetParent(geisterRiksha);
+        phantasialand.addChildAndSetParent(mausAuChocolat);
+        phantasialand.addChildAndSetParent(wellenflug);
+        phantasialand.addChildAndSetParent(tikal);
+        phantasialand.addChildAndSetParent(verruecktesHotelTartueff);
+        phantasialand.addChildAndSetParent(riverQuest);
+        phantasialand.addChildAndSetParent(pferdekarusell);
+        phantasialand.addChildAndSetParent(wuermlingExpress);
 
 
+        Visit visitPhantasialand181214 = Visit.create(2018, 11, 14, null);
+        phantasialand.addChildAndSetParent(visitPhantasialand181214);
+
+        VisitedAttraction visitedTaron = VisitedAttraction.create(taron);
+        visitPhantasialand181214.addChildAndSetParent(visitedTaron);
+
+        VisitedAttraction visitedBlackMamba = VisitedAttraction.create(blackMamba);
+        visitPhantasialand181214.addChildAndSetParent(visitedBlackMamba);
+
+        VisitedAttraction visitedWinjasFear = VisitedAttraction.create(winjasFear);
+        visitPhantasialand181214.addChildAndSetParent(visitedWinjasFear);
+
+        VisitedAttraction visitedWinjasForce = VisitedAttraction.create(winjasForce);
+        visitPhantasialand181214.addChildAndSetParent(visitedWinjasForce);
+
+        VisitedAttraction visitedTempleOfTheNightHawk = VisitedAttraction.create(templeOfTheNightHawk);
+        visitPhantasialand181214.addChildAndSetParent(visitedTempleOfTheNightHawk);
+
+        VisitedAttraction visitedColoradoAdventure = VisitedAttraction.create(coloradoAdventure);
+        visitPhantasialand181214.addChildAndSetParent(visitedColoradoAdventure);
+
+        VisitedAttraction visitedRaik = VisitedAttraction.create(raik);
+        visitPhantasialand181214.addChildAndSetParent(visitedRaik);
+
+        VisitedAttraction visitedTalocan = VisitedAttraction.create(talocan);
+        visitPhantasialand181214.addChildAndSetParent(visitedTalocan);
+
+        VisitedAttraction visitedMysteryCastle = VisitedAttraction.create(mysteryCastle);
+        visitPhantasialand181214.addChildAndSetParent(visitedMysteryCastle);
+
+        VisitedAttraction visitedWuermlingExpress = VisitedAttraction.create(wuermlingExpress);
+        visitPhantasialand181214.addChildAndSetParent(visitedWuermlingExpress);
+
+        VisitedAttraction visitedTikal = VisitedAttraction.create(tikal);
+        visitPhantasialand181214.addChildAndSetParent(visitedTikal);
+
+        VisitedAttraction visitedVerruecktesHotelTartueff = VisitedAttraction.create(verruecktesHotelTartueff);
+        visitPhantasialand181214.addChildAndSetParent(visitedVerruecktesHotelTartueff);
+
+        VisitedAttraction visitedWellenflug = VisitedAttraction.create(wellenflug);
+        visitPhantasialand181214.addChildAndSetParent(visitedWellenflug);
+
+        VisitedAttraction visitedMausAuChocolat = VisitedAttraction.create(mausAuChocolat);
+        visitPhantasialand181214.addChildAndSetParent(visitedMausAuChocolat);
+
+        VisitedAttraction visitedGeisterRiksha = VisitedAttraction.create(geisterRiksha);
+        visitPhantasialand181214.addChildAndSetParent(visitedGeisterRiksha);
+
+        VisitedAttraction visitedFengJuPalace = VisitedAttraction.create(fengJuPalace);
+        visitPhantasialand181214.addChildAndSetParent(visitedFengJuPalace);
+
+        VisitedAttraction visitedHollywoodTour = VisitedAttraction.create(hollywoodTour);
+        visitPhantasialand181214.addChildAndSetParent(visitedHollywoodTour);
+
+        VisitedAttraction visitedChiapas = VisitedAttraction.create(chiapas);
+        visitPhantasialand181214.addChildAndSetParent(visitedChiapas);
+
+        this.addRides(visitedTaron, 5);
+        this.addRides(visitedBlackMamba, 2);
+        this.addRides(visitedWinjasFear, 1);
+        this.addRides(visitedWinjasForce, 1);
+        this.addRides(visitedTempleOfTheNightHawk, 1);
+        this.addRides(visitedColoradoAdventure, 2);
+        this.addRides(visitedRaik, 1);
+        this.addRides(visitedTalocan, 1);
+        this.addRides(visitedMysteryCastle, 1);
+        this.addRides(visitedWuermlingExpress, 1);
+        this.addRides(visitedTikal, 1);
+        this.addRides(visitedVerruecktesHotelTartueff, 1);
+        this.addRides(visitedWellenflug, 1);
+        this.addRides(visitedMausAuChocolat, 1);
+        this.addRides(visitedGeisterRiksha, 1);
+        this.addRides(visitedFengJuPalace, 1);
+        this.addRides(visitedHollywoodTour, 1);
+        this.addRides(visitedChiapas, 1);
+
+
+
+
+        //HEIDE PARK
+        Park heidePark = Park.create("Heide Park Resort", null);
 
         CustomCoaster krake = CustomCoaster.create("Krake", 22, null);
         CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen", 19, null);
@@ -206,7 +300,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomCoaster bigLoop = CustomCoaster.create("Big Loop", 3, null);
 
         StockAttraction limit = StockAttraction.create("Limit", suspendedLoopingCoaster, 2, null);
-
 
         CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz", 2, null);
         CustomCoaster indyBlitz = CustomCoaster.create("Indy-Blitz", 1, null);
@@ -220,6 +313,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction monorail = CustomAttraction.create("Monorail", 0, null);
         CustomAttraction screamie = CustomAttraction.create("Screamie", 0, null);
         CustomAttraction bounty = CustomAttraction.create("Bounty", 0, null);
+        CustomAttraction drachengrotte = CustomAttraction.create("Drachengrotte", 0, null);
+        CustomAttraction laola = CustomAttraction.create("La Ola", 0, null);
+        CustomAttraction panoramabahn = CustomAttraction.create("Panoramabahn", 0, null);
+        CustomAttraction hickshimmelsstuermer = CustomAttraction.create("Hick's Himmelsstürmer", 0 , null);
+        CustomAttraction kaeptnsToern = CustomAttraction.create("Käpt'ns Törn", 0, null);
 
         krake.setAttractionCategory(attractionCategoryRollerCoasters);
         krake.setManufacturer(bolligerAndMabillard);
@@ -242,12 +340,98 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         mountainRafting.setAttractionCategory(attractionCategoryWaterRides);
         wildwasserbahn.setAttractionCategory(attractionCategoryWaterRides);
+        drachengrotte.setAttractionCategory(attractionCategoryWaterRides);
+        kaeptnsToern.setAttractionCategory(attractionCategoryWaterRides);
 
         ghostbusters5D.setAttractionCategory(attractionCategoryFamilyRides);
         monorail.setAttractionCategory(attractionCategoryFamilyRides);
         screamie.setAttractionCategory(attractionCategoryFamilyRides);
         bounty.setAttractionCategory(attractionCategoryFamilyRides);
+        laola.setAttractionCategory(attractionCategoryFamilyRides);
+        panoramabahn.setAttractionCategory(attractionCategoryFamilyRides);
+        hickshimmelsstuermer.setAttractionCategory(attractionCategoryFamilyRides);
 
+        heidePark.addChildAndSetParent(krake);
+        heidePark.addChildAndSetParent(flugDerDaemonen);
+        heidePark.addChildAndSetParent(desertRace);
+        heidePark.addChildAndSetParent(bigLoop);
+        heidePark.addChildAndSetParent(limit);
+        heidePark.addChildAndSetParent(grottenblitz);
+        heidePark.addChildAndSetParent(indyBlitz);
+        heidePark.addChildAndSetParent(bobbahn);
+        heidePark.addChildAndSetParent(colossos);
+        heidePark.addChildAndSetParent(monorail);
+        heidePark.addChildAndSetParent(mountainRafting);
+        heidePark.addChildAndSetParent(wildwasserbahn);
+        heidePark.addChildAndSetParent(ghostbusters5D);
+        heidePark.addChildAndSetParent(screamie);
+        heidePark.addChildAndSetParent(bounty);
+        heidePark.addChildAndSetParent(scream);
+        heidePark.addChildAndSetParent(drachengrotte);
+        heidePark.addChildAndSetParent(laola);
+        heidePark.addChildAndSetParent(panoramabahn);
+        heidePark.addChildAndSetParent(hickshimmelsstuermer);
+        heidePark.addChildAndSetParent(kaeptnsToern);
+
+
+        Visit visit00 = Visit.create(2018, 2, 30, null);
+        this.addAttractionsToVisit(visit00, heidePark.getChildrenAsType(IOnSiteAttraction.class));
+        heidePark.addChildAndSetParent(visit00);
+
+
+        Visit visitHeidePark20190407 = Visit.create(2019, 3, 7, null);
+        heidePark.addChildAndSetParent(visitHeidePark20190407);
+
+        VisitedAttraction visitedDesertRace = VisitedAttraction.create(desertRace);
+        visitHeidePark20190407.addChildAndSetParent(visitedDesertRace);
+
+        VisitedAttraction visitedGrottenblitz = VisitedAttraction.create(grottenblitz);
+        visitHeidePark20190407.addChildAndSetParent(visitedGrottenblitz);
+
+        VisitedAttraction visitedKrake = VisitedAttraction.create(krake);
+        visitHeidePark20190407.addChildAndSetParent(visitedKrake);
+
+        VisitedAttraction visitedFlugDerDaemonen = VisitedAttraction.create(flugDerDaemonen);
+        visitHeidePark20190407.addChildAndSetParent(visitedFlugDerDaemonen);
+
+        VisitedAttraction visitedScream = VisitedAttraction.create(scream);
+        visitHeidePark20190407.addChildAndSetParent(visitedScream);
+
+        VisitedAttraction visitedScreamie = VisitedAttraction.create(screamie);
+        visitHeidePark20190407.addChildAndSetParent(visitedScreamie);
+
+        VisitedAttraction visitedBounty = VisitedAttraction.create(bounty);
+        visitHeidePark20190407.addChildAndSetParent(visitedBounty);
+
+        VisitedAttraction visitedPanoramabahn = VisitedAttraction.create(panoramabahn);
+        visitHeidePark20190407.addChildAndSetParent(visitedPanoramabahn);
+
+        VisitedAttraction visitedMountainRafting = VisitedAttraction.create(mountainRafting);
+        visitHeidePark20190407.addChildAndSetParent(visitedMountainRafting);
+
+        VisitedAttraction visitedDrachengrotte = VisitedAttraction.create(drachengrotte);
+        visitHeidePark20190407.addChildAndSetParent(visitedDrachengrotte);
+
+        VisitedAttraction visitedKaeptnsToern = VisitedAttraction.create(kaeptnsToern);
+        visitHeidePark20190407.addChildAndSetParent(visitedKaeptnsToern);
+
+        this.addRides(visitedDesertRace, 3);
+        this.addRides(visitedGrottenblitz, 1);
+        this.addRides(visitedKrake, 3);
+        this.addRides(visitedFlugDerDaemonen, 3);
+        this.addRides(visitedScream, 1);
+        this.addRides(visitedScreamie, 1);
+        this.addRides(visitedBounty, 1);
+        this.addRides(visitedPanoramabahn, 1);
+        this.addRides(visitedMountainRafting, 1);
+        this.addRides(visitedDrachengrotte, 1);
+        this.addRides(visitedKaeptnsToern, 1);
+
+
+
+
+        //CEDAR POINT
+        Park cedarPoint = Park.create("Cedar Point", null);
 
         CustomCoaster steelVengeance = CustomCoaster.create("Steel Vengeance", 0, null);
         CustomCoaster valravn = CustomCoaster.create("Valravn", 0, null);
@@ -268,10 +452,31 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         dodgem.setAttractionCategory(attractionCategoryFamilyRides);
 
+        cedarPoint.addChildAndSetParent(steelVengeance);
+        cedarPoint.addChildAndSetParent(valravn);
+        cedarPoint.addChildAndSetParent(maverick);
+        cedarPoint.addChildAndSetParent(gatekeeper);
+        cedarPoint.addChildAndSetParent(dodgem);
+
+        Visit visit01 = Visit.create(2018, 0, 1, null);
+        Visit visit02 = Visit.create(2018, 1, 2, null);
+        Visit visit03 = Visit.create(2018, 2, 3, null);
+        Visit visit04 = Visit.create(2017, 3, 4, null);
+        Visit visit05 = Visit.create(2017, 4, 5, null);
+        Visit visit06 = Visit.create(2016, 5, 6, null);
+        cedarPoint.addChildAndSetParent(visit06);
+        cedarPoint.addChildAndSetParent(visit05);
+        cedarPoint.addChildAndSetParent(visit04);
+        cedarPoint.addChildAndSetParent(visit03);
+        cedarPoint.addChildAndSetParent(visit02);
+        cedarPoint.addChildAndSetParent(visit01);
 
 
 
 
+
+        //WALIBI HOLLAND
+        Park walibiHolland = Park.create("Walibi Holland", null);
 
         StockAttraction elCondor = StockAttraction.create("El Condor", suspendedLoopingCoaster, 1, null);
         StockAttraction speedOfSound = StockAttraction.create("Speed of Sound", boomerang, 2, null);
@@ -352,47 +557,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         elRioGrande.setAttractionCategory(attractionCategoryWaterRides);
         splashBattle.setAttractionCategory(attractionCategoryWaterRides);
 
-        // build tree
-        phantasialand.addChildAndSetParent(taron);
-        phantasialand.addChildAndSetParent(blackMamba);
-        phantasialand.addChildAndSetParent(coloradoAdventure);
-        phantasialand.addChildAndSetParent(raik);
-        phantasialand.addChildAndSetParent(templeOfTheNightHawk);
-        phantasialand.addChildAndSetParent(winjasFear);
-        phantasialand.addChildAndSetParent(winjasForce);
-
-        phantasialand.addChildAndSetParent(mysteryCastle);
-        phantasialand.addChildAndSetParent(hollywoodTour);
-        phantasialand.addChildAndSetParent(chiapas);
-        phantasialand.addChildAndSetParent(talocan);
-        phantasialand.addChildAndSetParent(fengJuPalace);
-        phantasialand.addChildAndSetParent(geisterRiksha);
-        phantasialand.addChildAndSetParent(mausAuChocolat);
-        phantasialand.addChildAndSetParent(wellenflug);
-        phantasialand.addChildAndSetParent(tikal);
-        phantasialand.addChildAndSetParent(verruecktesHotelTartueff);
-        phantasialand.addChildAndSetParent(riverQuest);
-        phantasialand.addChildAndSetParent(pferdekarusell);
-        phantasialand.addChildAndSetParent(wuermlingExpress);
-
-        
-
-        heidePark.addChildAndSetParent(krake);
-        heidePark.addChildAndSetParent(flugDerDaemonen);
-        heidePark.addChildAndSetParent(desertRace);
-        heidePark.addChildAndSetParent(bigLoop);
-        heidePark.addChildAndSetParent(limit);
-        heidePark.addChildAndSetParent(grottenblitz);
-        heidePark.addChildAndSetParent(indyBlitz);
-        heidePark.addChildAndSetParent(bobbahn);
-        heidePark.addChildAndSetParent(colossos);
-        heidePark.addChildAndSetParent(monorail);
-        heidePark.addChildAndSetParent(mountainRafting);
-        heidePark.addChildAndSetParent(wildwasserbahn);
-        heidePark.addChildAndSetParent(ghostbusters5D);
-        heidePark.addChildAndSetParent(screamie);
-        heidePark.addChildAndSetParent(bounty);
-        heidePark.addChildAndSetParent(scream);
 
         walibiHolland.addChildAndSetParent(drako);
         walibiHolland.addChildAndSetParent(elCondor);
@@ -430,6 +594,49 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(elRioGrande);
         walibiHolland.addChildAndSetParent(splashBattle);
 
+
+        Visit visit07 = Visit.create(2019, 0, 1, null);
+        this.addAttractionsToVisit(visit07, walibiHolland.getChildrenAsType(IOnSiteAttraction.class));
+        walibiHolland.addChildAndSetParent(visit07);
+
+
+
+        // OSTERWIESE
+        Park osterwiese = Park.create("Osterwiese", null);
+
+        CustomCoaster crazyMouse = CustomCoaster.create("Crazy Mouse", 0, null);
+        crazyMouse.setAttractionCategory(attractionCategoryRollerCoasters);
+        osterwiese.addChildAndSetParent(crazyMouse);
+
+        StockAttraction tomDerTiger = StockAttraction.create("Tom der Tiger", bigAppleMB28, 0, null);
+        osterwiese.addChildAndSetParent(tomDerTiger);
+
+        Visit visitOsterwiese20190413 = Visit.create(2019, 3, 13, null);
+        osterwiese.addChildAndSetParent(visitOsterwiese20190413);
+
+        VisitedAttraction visitedCrazyMouse = VisitedAttraction.create(crazyMouse);
+        visitOsterwiese20190413.addChildAndSetParent(visitedCrazyMouse);
+        this.addRides(visitedCrazyMouse, 1);
+
+        VisitedAttraction visitedTomDerTiger = VisitedAttraction.create(tomDerTiger);
+        visitOsterwiese20190413.addChildAndSetParent(visitedTomDerTiger);
+        this.addRides(visitedTomDerTiger, 1);
+
+
+        //FREIMARKT
+        Park freimarkt = Park.create("Freimarkt", null);
+
+        Visit visitToday = Visit.create(Calendar.getInstance(), null);
+        freimarkt.addChildAndSetParent(visitToday);
+        Visit.setOpenVisit(visitToday);
+
+
+        //SFMM
+        Park sixFlagsMagicMountain = Park.create("Six Flags Magic Mountain", null);
+
+
+
+        //LOCATIONS TREE
         bruehl.addChildAndSetParent(phantasialand);
         soltau.addChildAndSetParent(heidePark);
         bremen.addChildAndSetParent(freimarkt);
@@ -461,121 +668,15 @@ public final class DatabaseMock implements IDatabaseWrapper
         europe.addChildAndSetParent(germany);
         europe.addChildAndSetParent(netherlands);
 
-        cedarPoint.addChildAndSetParent(steelVengeance);
-        cedarPoint.addChildAndSetParent(valravn);
-        cedarPoint.addChildAndSetParent(maverick);
-        cedarPoint.addChildAndSetParent(gatekeeper);
-        cedarPoint.addChildAndSetParent(dodgem);
-
         usa.addChildAndSetParent(cedarPoint);
         usa.addChildAndSetParent(sixFlagsMagicMountain);
 
         earth.addChildAndSetParent(europe);
         earth.addChildAndSetParent(usa);
 
-        Visit visit0 = Visit.create(2018, 2, 30, null);
-        this.addAttractionsToVisit(visit0, heidePark.getChildrenAsType(IOnSiteAttraction.class));
-        heidePark.addChildAndSetParent(visit0);
-
-        Visit visit1 = Visit.create(2018, 0, 1, null);
-        Visit visit2 = Visit.create(2018, 1, 2, null);
-        Visit visit3 = Visit.create(2018, 2, 3, null);
-        Visit visit4 = Visit.create(2017, 3, 4, null);
-        Visit visit5 = Visit.create(2017, 4, 5, null);
-        Visit visit6 = Visit.create(2016, 5, 6, null);
-        cedarPoint.addChildAndSetParent(visit6);
-        cedarPoint.addChildAndSetParent(visit5);
-        cedarPoint.addChildAndSetParent(visit4);
-        cedarPoint.addChildAndSetParent(visit3);
-        cedarPoint.addChildAndSetParent(visit2);
-        cedarPoint.addChildAndSetParent(visit1);
-
-        Visit visit7 = Visit.create(2019, 0, 1, null);
-        this.addAttractionsToVisit(visit7, walibiHolland.getChildrenAsType(IOnSiteAttraction.class));
-        walibiHolland.addChildAndSetParent(visit7);
 
 
-        Visit visitPhantasialand181214 = Visit.create(2018, 11, 14, null);
-
-        VisitedAttraction visitedTaron = VisitedAttraction.create(taron);
-        visitPhantasialand181214.addChildAndSetParent(visitedTaron);
-
-        VisitedAttraction visitedBlackMamba = VisitedAttraction.create(blackMamba);
-        visitPhantasialand181214.addChildAndSetParent(visitedBlackMamba);
-
-        VisitedAttraction visitedWinjasFear = VisitedAttraction.create(winjasFear);
-        visitPhantasialand181214.addChildAndSetParent(visitedWinjasFear);
-
-        VisitedAttraction visitedWinjasForce = VisitedAttraction.create(winjasForce);
-        visitPhantasialand181214.addChildAndSetParent(visitedWinjasForce);
-
-        VisitedAttraction visitedTempleOfTheNightHawk = VisitedAttraction.create(templeOfTheNightHawk);
-        visitPhantasialand181214.addChildAndSetParent(visitedTempleOfTheNightHawk);
-
-        VisitedAttraction visitedColoradoAdventure = VisitedAttraction.create(coloradoAdventure);
-        visitPhantasialand181214.addChildAndSetParent(visitedColoradoAdventure);
-
-        VisitedAttraction visitedRaik = VisitedAttraction.create(raik);
-        visitPhantasialand181214.addChildAndSetParent(visitedRaik);
-
-        VisitedAttraction visitedTalocan = VisitedAttraction.create(talocan);
-        visitPhantasialand181214.addChildAndSetParent(visitedTalocan);
-
-        VisitedAttraction visitedMysteryCastle = VisitedAttraction.create(mysteryCastle);
-        visitPhantasialand181214.addChildAndSetParent(visitedMysteryCastle);
-
-        VisitedAttraction visitedWuermlingExpress = VisitedAttraction.create(wuermlingExpress);
-        visitPhantasialand181214.addChildAndSetParent(visitedWuermlingExpress);
-
-        VisitedAttraction visitedTikal = VisitedAttraction.create(tikal);
-        visitPhantasialand181214.addChildAndSetParent(visitedTikal);
-
-        VisitedAttraction visitedVerruecktesHotelTartueff = VisitedAttraction.create(verruecktesHotelTartueff);
-        visitPhantasialand181214.addChildAndSetParent(visitedVerruecktesHotelTartueff);
-
-        VisitedAttraction visitedWellenflug = VisitedAttraction.create(wellenflug);
-        visitPhantasialand181214.addChildAndSetParent(visitedWellenflug);
-
-        VisitedAttraction visitedMausAuChocolat = VisitedAttraction.create(mausAuChocolat);
-        visitPhantasialand181214.addChildAndSetParent(visitedMausAuChocolat);
-
-        VisitedAttraction visitedGeisterRiksha = VisitedAttraction.create(geisterRiksha);
-        visitPhantasialand181214.addChildAndSetParent(visitedGeisterRiksha);
-
-        VisitedAttraction visitedFengJuPalace = VisitedAttraction.create(fengJuPalace);
-        visitPhantasialand181214.addChildAndSetParent(visitedFengJuPalace);
-
-        VisitedAttraction visitedHollywoodTour = VisitedAttraction.create(hollywoodTour);
-        visitPhantasialand181214.addChildAndSetParent(visitedHollywoodTour);
-
-        VisitedAttraction visitedChiapas = VisitedAttraction.create(chiapas);
-        visitPhantasialand181214.addChildAndSetParent(visitedChiapas);
-
-        this.addRides(visitedTaron, 5);
-        this.addRides(visitedBlackMamba, 2);
-        this.addRides(visitedWinjasFear, 1);
-        this.addRides(visitedWinjasForce, 1);
-        this.addRides(visitedTempleOfTheNightHawk, 1);
-        this.addRides(visitedColoradoAdventure, 2);
-        this.addRides(visitedRaik, 1);
-        this.addRides(visitedTalocan, 1);
-        this.addRides(visitedMysteryCastle, 1);
-        this.addRides(visitedWuermlingExpress, 1);
-        this.addRides(visitedTikal, 1);
-        this.addRides(visitedVerruecktesHotelTartueff, 1);
-        this.addRides(visitedWellenflug, 1);
-        this.addRides(visitedMausAuChocolat, 1);
-        this.addRides(visitedGeisterRiksha, 1);
-        this.addRides(visitedFengJuPalace, 1);
-        this.addRides(visitedHollywoodTour, 1);
-        this.addRides(visitedChiapas, 1);
-
-        phantasialand.addChildAndSetParent(visitPhantasialand181214);
-
-
-        Visit visitToday = Visit.create(Calendar.getInstance(), null);
-        freimarkt.addChildAndSetParent(visitToday);
-        Visit.setOpenVisit(visitToday);
+        //MISC
 
         content.addElement(germany); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
