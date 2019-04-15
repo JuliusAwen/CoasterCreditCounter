@@ -35,6 +35,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    private final int SELECTION_USE_INTERNAL_STORAGE = 9999;
+    private final int SELECTION_USE_EXTERNAL_STORAGE = 6666;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -80,6 +83,26 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+        if(App.config.isDebugBuild())
+        {
+            if(App.config.useExternalStorage())
+            {
+                menu.add(Menu.NONE, this.SELECTION_USE_INTERNAL_STORAGE, Menu.NONE, "use internal storage");
+            }
+            else
+            {
+                menu.add(Menu.NONE, this.SELECTION_USE_EXTERNAL_STORAGE, Menu.NONE, "use external storage");
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(!this.viewModel.isExporting && !this.viewModel.isImporting)
@@ -93,6 +116,20 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     return true;
                 }
             }
+
+            if(item.getItemId() == this.SELECTION_USE_INTERNAL_STORAGE)
+            {
+                App.config.setUseExternalStorage(false);
+                Toaster.makeToast(this, "USING INTERNAL STORAGE - loading...");
+                App.persistence.loadContent(App.content);
+            }
+            else if(item.getItemId() == this.SELECTION_USE_EXTERNAL_STORAGE)
+            {
+                App.config.setUseExternalStorage(true);
+                Toaster.makeToast(this, "USING EXTERNAL STORAGE - importing...");
+                this.startImportContent();
+            }
+
             return super.onOptionsItemSelected(item);
         }
         else
