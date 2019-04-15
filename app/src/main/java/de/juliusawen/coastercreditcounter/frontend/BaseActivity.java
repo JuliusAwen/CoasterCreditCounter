@@ -75,7 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             }
             else
             {
-                this.requestWriteToExternalStoragePermissionForDebugBuild();
+                this.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization();
             }
         }
     }
@@ -101,7 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         this.synchronizePersistency();
     }
 
-    private void requestWriteToExternalStoragePermissionForDebugBuild()
+    private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()
     {
         this.viewModel.writeToExternalStoragePermissionNeededToInitialize = true;
 
@@ -111,8 +111,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuild:: not able to initialize app without permission to write to external storage" +
-                    " (change configuration <useExternalStorage> to 'false' or grant permission!)");
+            Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization:: " +
+                    "not able to initialize app without permission to write to external storage (change configuration <useExternalStorage> to 'false' or grant permission!)");
         }
     }
 
