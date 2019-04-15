@@ -82,16 +82,23 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId())
+        if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
-            case android.R.id.home:
+            switch(item.getItemId())
             {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
-                this.drawerLayout.openDrawer(GravityCompat.START);
-                return true;
+                case android.R.id.home:
+                {
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
+                    this.drawerLayout.openDrawer(GravityCompat.START);
+                    return true;
+                }
             }
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        else
+        {
+            return true;
+        }
     }
 
     private void setMenuItemImportAvailability()
@@ -110,13 +117,16 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        switch(keyCode)
+        if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
-            case KeyEvent.KEYCODE_BACK:
+            switch(keyCode)
             {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
-                this.closeNavigationDrawer();
-                return true;
+                case KeyEvent.KEYCODE_BACK:
+                {
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
+                    this.closeNavigationDrawer();
+                    return true;
+                }
             }
         }
         return true;
@@ -145,96 +155,99 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private boolean onNavigationItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-        switch(id)
+        if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
-            case R.id.navigationItem_BrowseContent:
+            int id = item.getItemId();
+            switch(id)
             {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
-                ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
-                break;
-            }
-
-            case R.id.navigationItem_ManageCategories:
-            {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
-                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
-                break;
-            }
-
-            case R.id.navigationItem_ManageManufacturers:
-            {
-                ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
-                break;
-            }
-
-            case R.id.navigationItem_ManageModels:
-            {
-                Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
-                break;
-            }
-
-            case R.id.navigationItem_Import:
-            {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");
-
-                if(this.requestPermissionWriteExternalStorage(item))
+                case R.id.navigationItem_BrowseContent:
                 {
-                    if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
-                    {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-
-                        AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
-                                R.drawable.ic_baseline_warning,
-                                getString(R.string.alert_dialog_title_overwrite_content),
-                                getString(R.string.alert_dialog_message_overwrite_content),
-                                getString(R.string.text_accept),
-                                getString(R.string.text_cancel),
-                                Constants.REQUEST_CODE_OVERWRITE_CONTENT,
-                                false
-                        );
-
-                        alertDialogFragmentOverwriteFile.setCancelable(false);
-                        alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                    }
-                    else
-                    {
-                        String message = String.format("Import file %s does not exist!", this.viewModel.exportFileAbsolutePath);
-                        Log.e(LOG_TAG, String.format("NavigationHubActivity.onNavigationItemSelected<navigationItem_Import>:: %s", message));
-                        Toaster.makeLongToast(NavigationHubActivity.this, message);
-                    }
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
+                    ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
+                    break;
                 }
-                break;
-            }
-            case R.id.navigationItem_Export:
-            {
-                Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Export> selected");
 
-                if(this.requestPermissionWriteExternalStorage(item))
+                case R.id.navigationItem_ManageCategories:
                 {
-                    if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
-                    {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-
-                        AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
-                                R.drawable.ic_baseline_warning,
-                                getString(R.string.alert_dialog_title_overwrite_file),
-                                getString(R.string.alert_dialog_message_overwrite_file),
-                                getString(R.string.text_accept),
-                                getString(R.string.text_cancel),
-                                Constants.REQUEST_CODE_OVERWRITE_FILE,
-                                false
-                        );
-
-                        alertDialogFragmentOverwriteFile.setCancelable(false);
-                        alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                    }
-                    else
-                    {
-                        this.startExportContent();
-                    }
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
+                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
+                    break;
                 }
-                break;
+
+                case R.id.navigationItem_ManageManufacturers:
+                {
+                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
+                    break;
+                }
+
+                case R.id.navigationItem_ManageModels:
+                {
+                    Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                    break;
+                }
+
+                case R.id.navigationItem_Import:
+                {
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");
+
+                    if(this.requestPermissionWriteExternalStorage(item))
+                    {
+                        if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
+                        {
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+
+                            AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
+                                    R.drawable.ic_baseline_warning,
+                                    getString(R.string.alert_dialog_title_overwrite_content),
+                                    getString(R.string.alert_dialog_message_overwrite_content),
+                                    getString(R.string.text_accept),
+                                    getString(R.string.text_cancel),
+                                    Constants.REQUEST_CODE_OVERWRITE_CONTENT,
+                                    false
+                            );
+
+                            alertDialogFragmentOverwriteFile.setCancelable(false);
+                            alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                        }
+                        else
+                        {
+                            String message = String.format("Import file %s does not exist!", this.viewModel.exportFileAbsolutePath);
+                            Log.e(LOG_TAG, String.format("NavigationHubActivity.onNavigationItemSelected<navigationItem_Import>:: %s", message));
+                            Toaster.makeLongToast(NavigationHubActivity.this, message);
+                        }
+                    }
+                    break;
+                }
+                case R.id.navigationItem_Export:
+                {
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Export> selected");
+
+                    if(this.requestPermissionWriteExternalStorage(item))
+                    {
+                        if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
+                        {
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+
+                            AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
+                                    R.drawable.ic_baseline_warning,
+                                    getString(R.string.alert_dialog_title_overwrite_file),
+                                    getString(R.string.alert_dialog_message_overwrite_file),
+                                    getString(R.string.text_accept),
+                                    getString(R.string.text_cancel),
+                                    Constants.REQUEST_CODE_OVERWRITE_FILE,
+                                    false
+                            );
+
+                            alertDialogFragmentOverwriteFile.setCancelable(false);
+                            alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                        }
+                        else
+                        {
+                            this.startExportContent();
+                        }
+                    }
+                    break;
+                }
             }
         }
 
