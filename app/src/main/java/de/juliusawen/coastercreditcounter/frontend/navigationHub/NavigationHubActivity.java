@@ -334,6 +334,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: finishing import...");
         this.hideProgressBar();
+        this.viewModel.isImporting = false;
 
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.information_import_success), Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.action_undo_title, new View.OnClickListener()
@@ -414,6 +415,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.hideProgressBar();
         this.setMenuItemImportAvailability();
+        this.viewModel.isExporting = false;
         Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
     }
 }
