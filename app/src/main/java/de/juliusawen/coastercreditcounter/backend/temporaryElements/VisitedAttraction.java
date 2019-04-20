@@ -121,7 +121,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         {
             ride.deleteElement();
         }
-//        super.deleteElement();
+        super.deleteElement();
     }
 
     @Override
