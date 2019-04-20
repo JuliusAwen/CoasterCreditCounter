@@ -11,6 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -19,10 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
@@ -128,14 +129,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        switch(keyCode)
+        if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            case KeyEvent.KEYCODE_BACK:
-                if(this.viewModel.selectionMode)
-                {
-                    this.setSelectionModeEnabled(false);
-                    return true;
-                }
+            if(this.viewModel.selectionMode)
+            {
+                this.setSelectionModeEnabled(false);
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }

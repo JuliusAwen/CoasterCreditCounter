@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,9 +25,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
@@ -51,7 +52,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final int GENERATION_ZERO = 0;
 
     private RecyclerView recyclerView;
-    private GroupHeaderProvider groupHeaderProvider;
+    private final GroupHeaderProvider groupHeaderProvider;
 
     private List<IElement> originalItems;
     private List<IElement> items = new ArrayList<>();
@@ -77,9 +78,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean displayAttractionCategories;
     private boolean displayLocations;
 
-    private Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
-    private Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
-    private Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
+    private final Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
+    private final Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
+    private final Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
 
     @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();

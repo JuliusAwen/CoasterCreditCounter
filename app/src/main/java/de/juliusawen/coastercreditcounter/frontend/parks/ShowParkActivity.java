@@ -10,18 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.Locale;
-import java.util.Objects;
-import java.util.UUID;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -231,7 +232,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         private final String parkUuid;
 
-        private final Drawable tabTitleDrawables[] = new Drawable[]
+        private final Drawable[] tabTitleDrawables = new Drawable[]
                 {
                         DrawableTool.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
                         DrawableTool.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),

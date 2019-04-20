@@ -4,18 +4,19 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import androidx.annotation.Nullable;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class PersistenceService extends IntentService
 {
-    IDatabaseWrapper databaseWrapper;
+    final IDatabaseWrapper databaseWrapper;
 
     public PersistenceService()
     {

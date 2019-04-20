@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
@@ -88,12 +89,10 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
 
                 boolean handled = false;
 
-                switch (actionId)
+                if(actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    case EditorInfo.IME_ACTION_DONE:
-                        handleOnEditorActionDone();
-                        handled = true;
-                        break;
+                    handleOnEditorActionDone();
+                    handled = true;
                 }
 
                 return handled;

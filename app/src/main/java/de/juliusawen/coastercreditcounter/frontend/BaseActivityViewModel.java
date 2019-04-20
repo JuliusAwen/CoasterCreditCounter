@@ -1,9 +1,10 @@
 package de.juliusawen.coastercreditcounter.frontend;
 
+import androidx.lifecycle.ViewModel;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 
 public class BaseActivityViewModel extends ViewModel
@@ -14,9 +15,9 @@ public class BaseActivityViewModel extends ViewModel
     public String helpOverlayFragmentTitle;
     public CharSequence helpOverlayFragmentMessage;
 
-    Set<IElement> elementsToCreate = new HashSet<>();
-    Set<IElement> elementsToUpdate = new HashSet<>();
-    Set<IElement> elementsToDelete = new HashSet<>();
+    final Set<IElement> elementsToCreate = new HashSet<>();
+    final Set<IElement> elementsToUpdate = new HashSet<>();
+    final Set<IElement> elementsToDelete = new HashSet<>();
 
     boolean writeToExternalStoragePermissionNeededToInitialize;
 }

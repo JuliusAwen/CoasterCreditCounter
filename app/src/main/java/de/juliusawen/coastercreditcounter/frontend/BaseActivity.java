@@ -13,12 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +22,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -218,12 +219,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     public void onHelpOverlayFragmentInteraction(View view)
     {
         ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        switch (buttonFunction)
+        if(buttonFunction == ButtonFunction.CLOSE)
         {
-            case CLOSE:
-                Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%s] selected", buttonFunction));
-                this.setHelpOverlayVisibility(false);
-                break;
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%s] selected", buttonFunction));
+            this.setHelpOverlayVisibility(false);
         }
     }
 
@@ -304,13 +303,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        switch(keyCode)
+        if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            case KeyEvent.KEYCODE_BACK:
-                Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
-                Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
-                finish();
-                return true;
+            Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+            finish();
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }

@@ -10,14 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -107,14 +108,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
-            switch(item.getItemId())
+            if(item.getItemId() == android.R.id.home)
             {
-                case android.R.id.home:
-                {
-                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
-                    this.drawerLayout.openDrawer(GravityCompat.START);
-                    return true;
-                }
+                Log.d(LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
+                this.drawerLayout.openDrawer(GravityCompat.START);
+                return true;
             }
 
             if(item.getItemId() == this.SELECTION_USE_INTERNAL_STORAGE)
@@ -156,14 +154,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
-            switch(keyCode)
+            if(keyCode == KeyEvent.KEYCODE_BACK)
             {
-                case KeyEvent.KEYCODE_BACK:
-                {
-                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
-                    this.closeNavigationDrawer();
-                    return true;
-                }
+                Log.d(LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
+                this.closeNavigationDrawer();
+                return true;
             }
         }
         return true;
