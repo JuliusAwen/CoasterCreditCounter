@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.backend.application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 @SuppressWarnings("FieldCanBeLocal") //
@@ -14,17 +15,23 @@ public class AppConfig
     private final String databaseWrapperToUse = JSON_HANDLER;
 
     private final String contentFileName = "CoasterCreditCounterExport.json";
+    private final String developersContentFileName = "JA.CoasterCreditCounterExport.json";
     private final String settingsFileName = "Settings.json";
 
 
     private final boolean isDebugBuild = true;
 
+    //below is just working when isDebugBuild = true
     private final boolean jumpToTestActivityOnStart = false;
 
-    private boolean useExternalStorage = true;
+    private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = false;
     private final boolean createExportFileIfNonexistent = true;
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
+
+    private boolean useDevelopersContent = false;
+    //above is just working when isDebugBuild = true
+
 
     private final boolean validateContent = true;
 
@@ -73,7 +80,7 @@ public class AppConfig
 
     public String getContentFileName()
     {
-        return this.contentFileName;
+        return this.useDevelopersContent() ? this.developersContentFileName : this.contentFileName;
     }
 
     public String getSettingsFileName()
@@ -96,11 +103,6 @@ public class AppConfig
         return this.isDebugBuild && this.useExternalStorage;
     }
 
-    public void setUseExternalStorage(boolean useExternalStorage)
-    {
-        this.useExternalStorage = useExternalStorage;
-    }
-
     public boolean alwaysImportFromDatabaseMock()
     {
         return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
@@ -114,6 +116,17 @@ public class AppConfig
     public boolean useDefaultContentFromDatabaseMockOnStartup()
     {
         return this.isDebugBuild && this.useDefaultContentFromDatabaseMockOnStartup;
+    }
+
+    public boolean useDevelopersContent()
+    {
+         return this.isDebugBuild && this.useDevelopersContent;
+    }
+
+    public void setUseDevelopersContent(boolean useDevelopersContent)
+    {
+        this.useDevelopersContent = useDevelopersContent;
+        Log.e(Constants.LOG_TAG,  String.format("AppConfig.setUseDevelopersContent:: useDevelopersContent set to [%S]", useDevelopersContent));
     }
 
     public boolean validateContent()

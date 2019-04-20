@@ -92,7 +92,8 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(this.fetchContent(jsonString, content))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content successful - took [%d]ms", stopwatchImport.stop()));
+                Log.i(Constants.LOG_TAG,
+                        String.format("JsonHandler.importContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
                 return true;
             }
             else if(App.config.createExportFileIfNotExists())
@@ -105,7 +106,8 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content failed - took [%d]ms", stopwatchImport.stop()));
+                Log.e(Constants.LOG_TAG,
+                        String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
                 return false;
             }
         }
@@ -625,17 +627,20 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(App.persistence.writeStringToExternalFile(file , jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,  String.format("Content.export:: exporting content to external json successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG,
+                        String.format("Content.export:: exporting content to external json [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("Content.export:: exporting content failed: could not write to external json - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG,
+                        String.format("Content.export:: exporting content failed: could not write to external json [%s] - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.export:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG,
+                    String.format("Content.export:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;

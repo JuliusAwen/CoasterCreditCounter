@@ -36,8 +36,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private final int SELECTION_USE_INTERNAL_STORAGE = 9999;
-    private final int SELECTION_USE_EXTERNAL_STORAGE = 6666;
+    private final int SELECTION_USE_DEV_CONTENT = 9999;
+    private final int SELECTION_USE_MOCK_CONTENT = 6666;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,7 +52,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
             if(this.viewModel.exportFileAbsolutePath == null)
             {
-                this.viewModel.exportFileAbsolutePath = App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
+                this.setExportFileAbsolutPath();
             }
 
             this.drawerLayout = findViewById(R.id.navigationDrawer);
@@ -90,13 +90,13 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(App.config.isDebugBuild())
         {
-            if(App.config.useExternalStorage())
+            if(App.config.useDevelopersContent())
             {
-                menu.add(Menu.NONE, this.SELECTION_USE_INTERNAL_STORAGE, Menu.NONE, "use internal storage");
+                menu.add(Menu.NONE, this.SELECTION_USE_MOCK_CONTENT, Menu.NONE, "use mocked content");
             }
             else
             {
-                menu.add(Menu.NONE, this.SELECTION_USE_EXTERNAL_STORAGE, Menu.NONE, "use external storage");
+                menu.add(Menu.NONE, this.SELECTION_USE_DEV_CONTENT, Menu.NONE, "use developers content");
             }
         }
 
@@ -115,16 +115,18 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 return true;
             }
 
-            if(item.getItemId() == this.SELECTION_USE_INTERNAL_STORAGE)
+            if(item.getItemId() == this.SELECTION_USE_DEV_CONTENT)
             {
-                App.config.setUseExternalStorage(false);
-                Toaster.makeToast(this, "USING INTERNAL STORAGE - loading...");
-                App.persistence.loadContent(App.content);
+                Toaster.makeToast(this, "USING DEVELOPERS CONTENT - importing...");
+                App.config.setUseDevelopersContent(true);
+                this.setExportFileAbsolutPath();
+                this.startImportContent();
             }
-            else if(item.getItemId() == this.SELECTION_USE_EXTERNAL_STORAGE)
+            else if(item.getItemId() == this.SELECTION_USE_MOCK_CONTENT)
             {
-                App.config.setUseExternalStorage(true);
-                Toaster.makeToast(this, "USING EXTERNAL STORAGE - importing...");
+                Toaster.makeToast(this, "USING MOCKED CONTENT - importing...");
+                App.config.setUseDevelopersContent(false);
+                this.setExportFileAbsolutPath();
                 this.startImportContent();
             }
 
@@ -134,6 +136,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             return true;
         }
+    }
+
+    private void setExportFileAbsolutPath()
+    {
+        this.viewModel.exportFileAbsolutePath = App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
     }
 
     private void setMenuItemImportAvailability()
@@ -461,7 +468,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.hideProgressBar();
         this.setMenuItemImportAvailability();
         this.viewModel.isExporting = false;
-        Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath()));
+        Toaster.makeLongToast(NavigationHubActivity.this,
+                getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName()));
     }
 }
 

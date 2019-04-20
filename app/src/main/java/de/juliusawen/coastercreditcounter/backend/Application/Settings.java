@@ -89,7 +89,7 @@ public class Settings
 
         Log.d(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
 
-        String dayNames[] = new DateFormatSymbols().getWeekdays();
+        String[] dayNames = new DateFormatSymbols().getWeekdays();
         Log.d(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
 
         Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%S]", this.getDefaultIncrement()));
