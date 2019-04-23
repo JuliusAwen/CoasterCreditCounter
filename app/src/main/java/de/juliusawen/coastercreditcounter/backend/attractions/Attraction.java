@@ -124,7 +124,7 @@ public abstract class Attraction extends Element implements IAttraction
     public void setStatus(Status status)
     {
         this.status = status;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's status to %s", this, manufacturer));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's status to %s", this, status));
     }
 
     public int getUntracktedRideCount()

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
@@ -94,20 +93,6 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     public void setManufacturer(Manufacturer manufacturer)
     {
         String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions cannot have Manufacturer", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
-        throw new IllegalStateException(errorMessage);
-    }
-
-    @Override
-    public Status getStatus()
-    {
-        return this.blueprint.getStatus();
-    }
-
-    @Override
-    public void setStatus(Status status)
-    {
-        String errorMessage = String.format("StockAttraction.setStatus:: %s: StockAttractions cannot have status", this);
         Log.e(Constants.LOG_TAG, errorMessage);
         throw new IllegalStateException(errorMessage);
     }

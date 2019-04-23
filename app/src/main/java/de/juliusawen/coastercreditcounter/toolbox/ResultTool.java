@@ -23,7 +23,7 @@ public abstract class ResultTool
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "ResultTool.fetchResultElement:: no selected element fetched");
+            Log.d(Constants.LOG_TAG, "ResultTool.fetchResultElement:: no selected element fetched");
         }
 
         return selectedElement;

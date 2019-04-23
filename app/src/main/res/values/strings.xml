@@ -188,7 +188,10 @@
     <string name="title_statuses_sort">Sort Statuses</string>
     <string name="title_status_edit">Edit Status</string>
     <string name="selection_sort_statuses">sort statuses</string>
+    <string name="selection_change_status">change status</string>
     <string name="hint_enter_status_name">Enter status name</string>
+    <string name="title_status_pick">Pick Status</string>
+    <string name="subtitle_status_assign_to_attraction">to assign to attraction</string>
 
 
     <!--ORPHAN ELEMENTS-->

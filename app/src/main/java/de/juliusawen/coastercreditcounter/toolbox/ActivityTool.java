@@ -303,6 +303,11 @@ public abstract class ActivityTool
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
         }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+        {
+            toolbarTitle = context.getString(R.string.title_status_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_status_assign_to_attraction);
+        }
 
         if(toolbarSubtitle != null)
         {

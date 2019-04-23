@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -39,6 +40,7 @@ public class PickElementsActivity extends BaseActivity
     private RecyclerView recyclerView;
     private TextView textViewSelectOrDeselectAll;
     private RadioButton radioButtonSelectOrDeselectAll;
+    private boolean useSelectOrDeselectAllBar = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -89,6 +91,18 @@ public class PickElementsActivity extends BaseActivity
                         this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
                         this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
                     }
+                }
+                else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+                {
+                    this.useSelectOrDeselectAllBar = false;
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            false,
+                            Constants.TYPE_NONE);
+
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                 }
                 else
                 {
@@ -211,7 +225,7 @@ public class PickElementsActivity extends BaseActivity
     private void addSelectOrDeselectAllBar()
     {
         LinearLayout linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
-        linearLayoutSelectAll.setVisibility(View.VISIBLE);
+        linearLayoutSelectAll.setVisibility(this.useSelectOrDeselectAllBar ? View.VISIBLE : View.GONE);
 
         this.textViewSelectOrDeselectAll = linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
 
@@ -298,17 +312,27 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
-            for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+            if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
             {
-                if(!(element instanceof OrphanElement))
+                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+            }
+            else
+            {
+                List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
+
+                for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                 {
-                    selectedElementsWithoutOrphanElements.add(element);
+                    if(!(element instanceof OrphanElement))
+                    {
+                        selectedElementsWithoutOrphanElements.add(element);
+                    }
                 }
+
+                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
             }
 
-            Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
-            intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
         }
 
         setResult(resultCode, intent);

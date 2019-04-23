@@ -1,13 +1,17 @@
 package de.juliusawen.coastercreditcounter.frontend.attractions;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,10 +31,12 @@ import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -38,6 +44,7 @@ public  class ShowAttractionsFragment extends Fragment
 {
     private ShowAttractionsFragmentViewModel viewModel;
     private RecyclerView recyclerView;
+    private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
 
     public ShowAttractionsFragment() {}
 
@@ -127,6 +134,30 @@ public  class ShowAttractionsFragment extends Fragment
                     }
                 }
             }
+            else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+            {
+                Attraction attraction = (Attraction)this.viewModel.longClickedElement;
+                attraction.setStatus((Status)selectedElement);
+                Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<PickStatus>:: updated %s's status to %s...", attraction, selectedElement));
+
+                this.showAttractionsFragmentInteraction.updateAttraction(attraction);
+                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+
+        if(context instanceof ShowAttractionsFragment.ShowAttractionsFragmentInteraction)
+        {
+            this.showAttractionsFragmentInteraction = (ShowAttractionsFragment.ShowAttractionsFragmentInteraction) context;
+        }
+        else
+        {
+            throw new RuntimeException(context.toString() + " must implement ShowAttractionsFragmentInteraction");
         }
     }
 
@@ -136,6 +167,7 @@ public  class ShowAttractionsFragment extends Fragment
         super.onDetach();
         this.viewModel = null;
         this.recyclerView = null;
+        this.showAttractionsFragmentInteraction = null;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
@@ -179,8 +211,42 @@ public  class ShowAttractionsFragment extends Fragment
                 {
                     AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
                 }
+                else
+                {
+                    viewModel.longClickedElement = (IElement)view.getTag();
+
+                    PopupMenu popupMenu = new PopupMenu(getContext(), view);
+                    popupMenu.getMenu().add(0, Constants.SELECTION_CHANGE_STATUS, Menu.NONE, R.string.selection_change_status);
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
+                        {
+                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onMenuItemClick:: [%S] selected", item.getItemId()));
+
+                            int id = item.getItemId();
+
+                            if(id == Constants.SELECTION_CHANGE_STATUS)
+                            {
+                                ActivityTool.startActivityPickForResult(
+                                        getContext(),
+                                        Constants.REQUEST_CODE_PICK_STATUS,
+                                        App.content.getContentOfType(Status.class));
+                            }
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
+                }
+
                 return true;
             }
         };
+    }
+
+    public interface ShowAttractionsFragmentInteraction
+    {
+        void updateAttraction(IElement attractionToUpdate);
     }
 }

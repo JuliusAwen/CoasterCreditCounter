@@ -36,7 +36,7 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction
+public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
 {
     private static final int OVERVIEW = 0;
     private static final int ATTRACTIONS = 1;
@@ -222,6 +222,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     public void updateVisit(IElement visitToUpdate)
     {
         super.markForUpdate(visitToUpdate);
+    }
+
+    @Override
+    public void updateAttraction(IElement attractionToUpdate)
+    {
+        super.markForUpdate(attractionToUpdate);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter
