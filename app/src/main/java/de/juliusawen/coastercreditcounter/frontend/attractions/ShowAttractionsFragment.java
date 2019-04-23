@@ -9,15 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -147,6 +148,7 @@ public  class ShowAttractionsFragment extends Fragment
                 childTypesToExpand,
                 Constants.TYPE_ATTRACTION_CATEGORY);
         contentRecyclerViewAdapter.displayManufacturers(true);
+        contentRecyclerViewAdapter.displayStatus(true);
 
         return contentRecyclerViewAdapter;
     }

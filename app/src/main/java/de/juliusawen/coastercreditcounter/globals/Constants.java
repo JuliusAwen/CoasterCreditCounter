@@ -43,11 +43,15 @@ public abstract class Constants
     public static final String JSON_STRING_BLUEPRINT = "blueprint";
 
     public static final String JSON_STRING_UNTRACKED_RIDE_COUNT = "untracked ride count";
+
     public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
     public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
-    public static final String JSON_STRING_IS_DEFAULT = "is default";
     public static final String JSON_STRING_MANUFACTURER = "manufacturer";
+    public static final String JSON_STRING_MANUFACTURERS = "manufacturers";
+    public static final String JSON_STRING_STATUS = "status";
+    public static final String JSON_STRING_STATUSES = "statuses";
 
+    public static final String JSON_STRING_IS_DEFAULT = "is default";
 
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
     public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";
@@ -114,6 +118,7 @@ public abstract class Constants
     public static  final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
     public static  final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
     public static  final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
+    public static  final int SELECTION_SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
 
     public static  final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
     public static  final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
@@ -141,6 +146,7 @@ public abstract class Constants
     public static final int REQUEST_CODE_CREATE_VISIT = RequestCode.CREATE_VISIT.ordinal();
     public static final int REQUEST_CODE_CREATE_ATTRACTION_CATEGORY = RequestCode.CREATE_ATTRACTION_CATEGORY.ordinal();
     public static final int REQUEST_CODE_CREATE_MANUFACTURER = RequestCode.CREATE_MANUFACTURER.ordinal();
+    public static final int REQUEST_CODE_CREATE_STATUS = RequestCode.CREATE_STATUS.ordinal();
 
     public static final int REQUEST_CODE_SHOW_LOCATION = RequestCode.SHOW_LOCATION.ordinal();
     public static final int REQUEST_CODE_SHOW_PARK = RequestCode.SHOW_PARK.ordinal();
@@ -148,6 +154,7 @@ public abstract class Constants
 
     public static final int REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES = RequestCode.MANAGE_ATTRACTION_CATEGORIES.ordinal();
     public static final int REQUEST_CODE_MANAGE_MANUFACTURERS = RequestCode.MANAGE_MANUFACTURERS.ordinal();
+    public static final int REQUEST_CODE_MANAGE_STATUSES = RequestCode.MANAGE_STATUSES.ordinal();
 
     public static final int REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS = RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS.ordinal();
     public static final int REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS = RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS.ordinal();
@@ -156,12 +163,14 @@ public abstract class Constants
     public static final int REQUEST_CODE_EDIT_PARK = RequestCode.EDIT_PARK.ordinal();
     public static final int REQUEST_CODE_EDIT_ATTRACTION_CATEGORY = RequestCode.EDIT_ATTRACTION_CATEGORY.ordinal();
     public static final int REQUEST_CODE_EDIT_MANUFACTURER = RequestCode.EDIT_MANUFACTURER.ordinal();
+    public static final int REQUEST_CODE_EDIT_STATUS = RequestCode.EDIT_STATUS.ordinal();
 
     public static final int REQUEST_CODE_SORT_LOCATIONS = RequestCode.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_CODE_SORT_PARKS = RequestCode.SORT_PARKS.ordinal();
     public static final int REQUEST_CODE_SORT_ATTRACTIONS = RequestCode.SORT_ATTRACTIONS.ordinal();
     public static final int REQUEST_CODE_SORT_ATTRACTION_CATEGORIES = RequestCode.SORT_ATTRACTION_CATEGORIES.ordinal();
     public static final int REQUEST_CODE_SORT_MANUFACTURERS = RequestCode.SORT_MANUFACTURERS.ordinal();
+    public static final int REQUEST_CODE_SORT_STATUSES = RequestCode.SORT_STATUSES.ordinal();
 
     public static final int REQUEST_CODE_PICK_LOCATIONS = RequestCode.PICK_LOCATIONS.ordinal();
     public static final int REQUEST_CODE_PICK_PARKS = RequestCode.PICK_PARKS.ordinal();
@@ -185,6 +194,7 @@ public abstract class Constants
     public static final int TYPE_NONE = Type.NONE.ordinal();
     public static final int TYPE_ATTRACTION_CATEGORY = Type.ATTRACTION_CATEGORY.ordinal();
     public static final int TYPE_MANUFACTURER = Type.MANUFACTURER.ordinal();
+    public static final int TYPE_STATUS = Type.STATUS.ordinal();
     public static final int TYPE_YEAR = Type.YEAR.ordinal();
 
     private enum Selection
@@ -209,6 +219,7 @@ public abstract class Constants
         SORT_ATTRACTIONS,
         SORT_ATTRACTION_CATEGORIES,
         SORT_MANUFACTURERS,
+        SORT_STATUSES,
 
         ASCENDING,
         DESCENDING,
@@ -237,6 +248,7 @@ public abstract class Constants
         CREATE_VISIT,
         CREATE_ATTRACTION_CATEGORY,
         CREATE_MANUFACTURER,
+        CREATE_STATUS,
 
         SHOW_LOCATION,
         SHOW_PARK,
@@ -244,6 +256,7 @@ public abstract class Constants
 
         MANAGE_ATTRACTION_CATEGORIES,
         MANAGE_MANUFACTURERS,
+        MANAGE_STATUSES,
 
         ASSIGN_CATEGORY_TO_ATTRACTIONS,
         ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
@@ -252,12 +265,14 @@ public abstract class Constants
         EDIT_PARK,
         EDIT_ATTRACTION_CATEGORY,
         EDIT_MANUFACTURER,
+        EDIT_STATUS,
 
         SORT_LOCATIONS,
         SORT_PARKS,
         SORT_ATTRACTIONS,
         SORT_ATTRACTION_CATEGORIES,
         SORT_MANUFACTURERS,
+        SORT_STATUSES,
 
         PICK_LOCATIONS,
         PICK_PARKS,
@@ -282,8 +297,8 @@ public abstract class Constants
         NONE,
         ATTRACTION_CATEGORY,
         MANUFACTURER,
-        LOCATION,
         YEAR,
+        STATUS,
     }
 }
 

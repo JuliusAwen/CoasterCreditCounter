@@ -23,6 +23,10 @@
                     android:id="@+id/navigationItem_ManageModels"
                     android:title="@string/item_navigation_drawer_manage_models"
                     android:icon="@drawable/ic_baseline_build"/>
+                <item
+                    android:id="@+id/navigationItem_ManageStatuses"
+                    android:title="@string/item_navigation_drawer_manage_statuses"
+                    android:icon="@drawable/ic_baseline_build"/>
             </menu>
         </item>
     </group>

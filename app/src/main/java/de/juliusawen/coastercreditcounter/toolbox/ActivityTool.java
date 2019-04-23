@@ -80,6 +80,13 @@ public abstract class ActivityTool
             helpTitle = context.getString(R.string.title_manufacturers);
             helpText = context.getString(R.string.help_text_manage_manufacturer);
         }
+        else if(requestCode == Constants.REQUEST_CODE_MANAGE_STATUSES)
+        {
+            type = Constants.TYPE_STATUS;
+            toolbarTitle = context.getString(R.string.title_statuses);
+            helpTitle = context.getString(R.string.title_statuses);
+            helpText = context.getString(R.string.help_text_manage_status);
+        }
         else
         {
             toolbarTitle = context.getString(R.string.error_missing_text);
@@ -130,6 +137,11 @@ public abstract class ActivityTool
         {
             type = EditElementActivity.class;
             toolbarTitle = context.getString(R.string.title_manufacturer_edit);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_STATUS)
+        {
+            type = EditElementActivity.class;
+            toolbarTitle = context.getString(R.string.title_status_edit);
         }
 
         if(type != null)
@@ -196,6 +208,13 @@ public abstract class ActivityTool
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_manufacturer));
                 intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_manufacturer_name));
             }
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
+            {
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_status_create));
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_status_create));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_status));
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_status_name));
+            }
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
@@ -229,6 +248,10 @@ public abstract class ActivityTool
         {
             toolbarTitle = context.getString(R.string.title_manufacturers_sort);
         }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_STATUSES)
+        {
+            toolbarTitle = context.getString(R.string.title_statuses_sort);
+        }
         else
         {
             toolbarTitle = context.getString(R.string.error_missing_text);
@@ -253,25 +276,31 @@ public abstract class ActivityTool
 
     public static void startActivityPickForResult(Context context, int requestCode, List<IElement> elementsToPickFrom)
     {
+        String toolbarTitle = null;
         String toolbarSubtitle = null;
         if(requestCode == Constants.REQUEST_CODE_PICK_LOCATIONS)
         {
+            toolbarTitle = context.getString(R.string.title_locations_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description_to_add_to_new_location);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_PARKS)
         {
+            toolbarTitle = context.getString(R.string.title_parks_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description_to_add_to_new_location);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS)
         {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
         {
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
         }
 
@@ -280,7 +309,7 @@ public abstract class ActivityTool
             Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_locations_pick));
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             ((Activity)context).startActivityForResult(intent, requestCode);
 

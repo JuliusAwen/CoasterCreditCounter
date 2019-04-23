@@ -77,10 +77,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean displayManufacturers;
     private boolean displayAttractionCategories;
     private boolean displayLocations;
+    private boolean displayStatus;
 
     private final Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
+    private final Set<Class<? extends IAttraction>> typesToDisplayStatus = new HashSet<>();
 
     @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
@@ -191,8 +193,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.typesToDisplayLocation.add(CustomCoaster.class);
         this.typesToDisplayLocation.add(CustomAttraction.class);
         this.typesToDisplayLocation.add(StockAttraction.class);
-        this.typesToDisplayLocation.add(CoasterBlueprint.class);
-        this.typesToDisplayLocation.add(AttractionBlueprint.class);
+        this.typesToDisplayLocation.add(CoasterBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+        this.typesToDisplayLocation.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
 
         this.typesToDisplayManufacturer.add(CustomCoaster.class);
         this.typesToDisplayManufacturer.add(CustomAttraction.class);
@@ -204,6 +206,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
         this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
         this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
+
+        this.typesToDisplayStatus.add(CustomCoaster.class);
+        this.typesToDisplayStatus.add(CustomAttraction.class);
+        this.typesToDisplayStatus.add(StockAttraction.class);
     }
 
     private void initializeTypesByTypeface()
@@ -452,6 +458,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 viewHolder.textViewDetailBelow.setText(locationName);
+            }
+            else if(this.displayStatus && this.typesToDisplayStatus.contains(type))
+            {
+                viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
+
+                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
+                viewHolder.textViewDetailBelow.setText(((IAttraction)item).getStatus().getName());
             }
             else
             {
@@ -1050,5 +1063,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void displayLocations(boolean display)
     {
         this.displayLocations = display;
+    }
+
+    public void displayStatus(boolean display)
+    {
+        this.displayStatus = display;
     }
 }

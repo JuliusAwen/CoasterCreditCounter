@@ -10,6 +10,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
 
@@ -18,8 +19,9 @@ import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
  */
 public abstract class Attraction extends Element implements IAttraction
 {
-    private Manufacturer manufacturer;
     private AttractionCategory attractionCategory;
+    private Manufacturer manufacturer;
+    private Status status;
     private int untracktedRideCount;
     private int totalRideCount;
 
@@ -38,9 +40,10 @@ public abstract class Attraction extends Element implements IAttraction
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.manufacturer.getUuid());
-            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORY, this.attractionCategory.getUuid());
-            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.untracktedRideCount);
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORY, this.getAttractionCategory().getUuid());
+            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
+            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 
             Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
@@ -71,7 +74,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public AttractionCategory getAttractionCategory()
     {
-        return this.attractionCategory;
+        return this.attractionCategory == null ? AttractionCategory.getDefault() : this.attractionCategory;
     }
 
     public void setAttractionCategory(AttractionCategory attractionCategory)
@@ -93,7 +96,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Manufacturer getManufacturer()
     {
-        return this.manufacturer;
+        return this.manufacturer == null ? Manufacturer.getDefault() : this.manufacturer;
     }
 
     public void setManufacturer(Manufacturer manufacturer)
@@ -111,6 +114,17 @@ public abstract class Attraction extends Element implements IAttraction
         this.manufacturer = manufacturer;
 
         Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's manufacturer to %s", this, manufacturer));
+    }
+
+    public Status getStatus()
+    {
+        return this.status == null ? Status.getDefault() : this.status;
+    }
+
+    public void setStatus(Status status)
+    {
+        this.status = status;
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's status to %s", this, manufacturer));
     }
 
     public int getUntracktedRideCount()

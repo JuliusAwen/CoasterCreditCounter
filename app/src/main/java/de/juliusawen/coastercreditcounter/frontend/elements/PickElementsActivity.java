@@ -11,13 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -78,7 +79,11 @@ public class PickElementsActivity extends BaseActivity
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
 
-                    if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                    if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+                    {
+                        this.viewModel.contentRecyclerViewAdapter.displayStatus(true);
+                    }
+                    else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
                             || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
                     {
                         this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);

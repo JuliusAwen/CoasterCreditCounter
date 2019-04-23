@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
-import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
@@ -21,6 +20,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -48,14 +48,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         AttractionCategory attractionCategoryFamilyRides = AttractionCategory.create("Family Rides", null);
         AttractionCategory attractionCategoryWaterRides = AttractionCategory.create("Water Rides", null);
         AttractionCategory attractionCategoryNonRollerCoasters = AttractionCategory.create("Non-Roller Coasters", null);
+        AttractionCategory.createAndSetDefault();
 
         List<AttractionCategory> attractionCategories = new ArrayList<>();
+        attractionCategories.add(AttractionCategory.getDefault());
         attractionCategories.add(attractionCategoryRollerCoasters);
         attractionCategories.add(attractionCategoryThrillRides);
         attractionCategories.add(attractionCategoryFamilyRides);
         attractionCategories.add(attractionCategoryWaterRides);
         attractionCategories.add(attractionCategoryNonRollerCoasters);
 
+        Manufacturer.createAndSetDefault();
         Manufacturer bolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard", null);
         Manufacturer intamin = Manufacturer.create("Intamin", null);
         Manufacturer vekoma = Manufacturer.create("Vekoma", null);
@@ -63,11 +66,25 @@ public final class DatabaseMock implements IDatabaseWrapper
         Manufacturer pinfari = Manufacturer.create("Pinfari", null);
 
         List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.add(Manufacturer.getDefault());
         manufacturers.add(bolligerAndMabillard);
         manufacturers.add(intamin);
         manufacturers.add(vekoma);
         manufacturers.add(huss);
         manufacturers.add(pinfari);
+
+        Status.createAndSetDefault();
+        Status closedForRefurbishment = Status.create("closed for refurbishment", null);
+        Status defunct = Status.create("defunct", null);
+        Status converted = Status.create("converted", null);
+
+        List<Status> statuses = new ArrayList<>();
+        statuses.add(Status.getDefault());
+        statuses.add(closedForRefurbishment);
+        statuses.add(defunct);
+        statuses.add(converted);
+
+
 
 
         // create Locations
@@ -484,15 +501,19 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction speedOfSound = StockAttraction.create("Speed of Sound", boomerang, 2, null);
 
         CustomCoaster drako = CustomCoaster.create("Drako", 2, null);
-        CustomCoaster robinHood = CustomCoaster.create("Robin Hood", 2, null);
-        CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13", 2, null);
-        CustomCoaster goliath = CustomCoaster.create("Goliath", 7, null);
+        drako.setAttractionCategory(attractionCategoryRollerCoasters);
+
         CustomCoaster lostGravity = CustomCoaster.create("Lost Gravity", 7, null);
 
-        drako.setAttractionCategory(attractionCategoryRollerCoasters);
+        CustomCoaster robinHood = CustomCoaster.create("Robin Hood", 2, null);
         robinHood.setAttractionCategory(attractionCategoryRollerCoasters);
+        robinHood.setManufacturer(vekoma);
+        robinHood.setStatus(converted);
+
+        CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13", 2, null);
         xpressPlatform13.setAttractionCategory(attractionCategoryRollerCoasters);
 
+        CustomCoaster goliath = CustomCoaster.create("Goliath", 7, null);
         goliath.setAttractionCategory(attractionCategoryRollerCoasters);
         goliath.setManufacturer(intamin);
 
@@ -680,20 +701,14 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         //MISC
 
+
         content.addElement(germany); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
 
-        Manufacturer.createAndSetDefault();
-        manufacturers.add(Manufacturer.getDefault());
         content.addElements(ConvertTool.convertElementsToType(manufacturers, IElement.class));
-        this.setDefaultManufacturers();
-
-        AttractionCategory.createAndSetDefault();
-        attractionCategories.add(AttractionCategory.getDefault());
         content.addElements(ConvertTool.convertElementsToType(attractionCategories, IElement.class));
-
+        content.addElements(ConvertTool.convertElementsToType(statuses, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(blueprints, IElement.class));
-
 
         Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
 
@@ -705,22 +720,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         for(IOnSiteAttraction attraction : attractions)
         {
             visit.addChildAndSetParent(VisitedAttraction.create(attraction));
-        }
-    }
-
-    private void setDefaultManufacturers()
-    {
-        List<IAttraction> manufacturedAttractions = new ArrayList<>();
-        manufacturedAttractions.addAll(App.content.getContentAsType(IBlueprint.class));
-        manufacturedAttractions.addAll(App.content.getContentAsType(CustomAttraction.class));
-        manufacturedAttractions.addAll(App.content.getContentAsType(CustomCoaster.class));
-
-        for(IAttraction attraction : manufacturedAttractions)
-        {
-            if(attraction.getManufacturer() == null)
-            {
-                attraction.setManufacturer(Manufacturer.getDefault());
-            }
         }
     }
 

@@ -225,6 +225,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     break;
                 }
 
+                case R.id.navigationItem_ManageStatuses:
+                {
+                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
+                    break;
+                }
+
                 case R.id.navigationItem_Import:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");

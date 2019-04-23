@@ -33,6 +33,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Ride;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -54,9 +55,10 @@ public class JsonHandler implements IDatabaseWrapper
         public int minute;
         public final Map<UUID, List<UUID>> ridesByAttractions = new LinkedHashMap<>();
         public UUID blueprintUuid;
+        public int untrackedRideCount;
         public UUID attractionCategoryUuid;
         public UUID manufacturerUuid;
-        public int untrackedRideCount;
+        public UUID statusUuid;
         public boolean isDefault;
     }
 
@@ -70,54 +72,62 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean importContent(Content content)
     {
-        Stopwatch stopwatchImport = new Stopwatch(true);
+
 
         content.clear();
 
         if((!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: importing default content from DatabaseMock");
-            boolean success = this.useAndExportDefaultContent(content);
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing default content from DatabaseMock successful[%S]- took [%d]ms", success, stopwatchImport.stop()));
+            Stopwatch stopwatch = new Stopwatch(true);
+            boolean success = this.provideDefaultContent(content);
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: creating, exporting and importing default content from DatabaseMock successful[%S]- took [%d]ms",
+                    success, stopwatch.stop()));
             return success;
         }
         else
         {
-            Log.d(Constants.LOG_TAG, ("JsonHandler.importContent:: reading external json string..."));
-            Stopwatch stopwatchRead = new Stopwatch(true);
+            return this.readExternalJsonStringAndFetchContent(content);
+        }
+    }
+    private boolean readExternalJsonStringAndFetchContent(Content content)
+    {
+        Log.d(Constants.LOG_TAG, ("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string..."));
+        Stopwatch stopwatchImport = new Stopwatch(true);
+        Stopwatch stopwatchRead = new Stopwatch(true);
 
-            File file = new File(App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
-            String jsonString = App.persistence.readStringFromExternalFile(file);
-            Log.v(Constants.LOG_TAG, String.format("JsonHandler.importContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
+        File file = new File(App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
+        String jsonString = App.persistence.readStringFromExternalFile(file);
+        Log.v(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
 
-            if(this.fetchContent(jsonString, content))
-            {
-                Log.i(Constants.LOG_TAG,
-                        String.format("JsonHandler.importContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
-                return true;
-            }
-            else if(App.config.createExportFileIfNotExists())
-            {
-                Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
-                boolean success = this.useAndExportDefaultContent(content);
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms",
-                        success, stopwatchImport.stop()));
-                return success;
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG,
-                        String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
-                return false;
-            }
+        if(this.fetchContent(jsonString, content))
+        {
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms",
+                    App.config.getContentFileName(), stopwatchImport.stop()));
+            return true;
+        }
+        else if(App.config.createExportFileIfNotExists())
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
+            boolean success = this.provideDefaultContent(content);
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms",
+                    success, stopwatchImport.stop()));
+            return success;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,
+                    String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+            return false;
         }
     }
 
-    private boolean useAndExportDefaultContent(Content content)
+    private boolean provideDefaultContent(Content content)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.useAndExportDefaultContent:: creating default content and exporting to external json...");
+        Log.e(Constants.LOG_TAG, "JsonHandler.provideDefaultContent:: creating default content and exporting to external json...");
         content.useDefaults();
-        return this.exportContent(content);
+        this.exportContent(content);
+        return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-AttractionCategories/-Statuses (lazy sloppy mock implementation)
     }
 
     @Override
@@ -193,10 +203,17 @@ public class JsonHandler implements IDatabaseWrapper
         {
             JSONObject jsonObjectContent = new JSONObject(jsonString);
 
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURER))
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
+            {
+                List<TemporaryElement> temporaryStatuses =
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
+                content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
+            }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURERS))
             {
                 List<TemporaryElement> temporaryManufacturers =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURER));
+                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
                 content.addElements(ConvertTool.convertElementsToType(this.createManufacturers(temporaryManufacturers), IElement.class));
             }
 
@@ -366,6 +383,11 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryElement.attractionCategoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_ATTRACTION_CATEGORY));
                 }
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_STATUS))
+                {
+                    temporaryElement.statusUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_STATUS));
+                }
+
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT))
                 {
                     temporaryElement.untrackedRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT);
@@ -389,6 +411,32 @@ public class JsonHandler implements IDatabaseWrapper
         return temporaryElements;
     }
 
+    private List<Status> createStatuses(List<TemporaryElement> temporaryElements)
+    {
+        List<Status> statuses = new ArrayList<>();
+        for(TemporaryElement temporaryElement : temporaryElements)
+        {
+            Status status = Status.create(temporaryElement.name, temporaryElement.uuid);
+
+            if(temporaryElement.isDefault)
+            {
+                Status.setDefault(status);
+            }
+
+            statuses.add(status);
+        }
+
+        if(Status.getDefault() == null)
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
+
+            Status.createAndSetDefault();
+            statuses.add(Status.getDefault());
+        }
+
+        return statuses;
+    }
+
     private List<Manufacturer> createManufacturers(List<TemporaryElement> temporaryElements)
     {
         List<Manufacturer> manufacturers = new ArrayList<>();
@@ -406,7 +454,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(Manufacturer.getDefault() == null)
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default MANUFACTURER found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
 
             Manufacturer.createAndSetDefault();
             manufacturers.add(Manufacturer.getDefault());
@@ -511,6 +559,7 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
             element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
             elements.add(element);
@@ -524,6 +573,7 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
             element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
             elements.add(element);
@@ -553,6 +603,20 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
+    private Status getStatusFromUuid(UUID uuid, Content content)
+    {
+        IElement element = content.getContentByUuid(uuid);
+        if(element instanceof Status)
+        {
+            return (Status) element;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
+            return Status.getDefault();
+        }
+    }
+
     private Manufacturer getManufacturerFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
@@ -562,8 +626,8 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a MANUFACTURER", uuid));
-            return null;
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - using default", uuid));
+            return Manufacturer.getDefault();
         }
     }
 
@@ -576,8 +640,8 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getAttractionCategoryFromUuid:: fetched Element for UUID [%s] is not an AttractionCategory", uuid));
-            return null;
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getAttractionCategoryFromUuid:: fetched Element for UUID [%s] is not an AttractionCategory - using default", uuid));
+            return AttractionCategory.getDefault();
         }
     }
 
@@ -719,11 +783,14 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 
 
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER,
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURERS,
                     content.getContentOfType(Manufacturer.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Manufacturer.class)));
 
             jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
                     content.getContentOfType(AttractionCategory.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionCategory.class)));
+
+            jsonObject.put(Constants.JSON_STRING_STATUSES,
+                    content.getContentOfType(Status.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Status.class)));
 
             Log.v(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
             return jsonObject;

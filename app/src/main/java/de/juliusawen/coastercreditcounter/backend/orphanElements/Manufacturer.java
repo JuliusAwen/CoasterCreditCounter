@@ -31,13 +31,13 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
             JsonTool.putNameAndUuid(jsonObject, this);
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
 
-            Log.v(Constants.LOG_TAG, String.format("MANUFACTURER.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("MANUFACTURER.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Manufacturer.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }
@@ -50,11 +50,11 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
             name = name.trim();
 
             manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("MANUFACTURER.create:: %s created", manufacturer));
+            Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("MANUFACTURER.create:: invalid name[%s] - manufacturer not created", name));
+            Log.e(Constants.LOG_TAG,  String.format("Manufacturer.create:: invalid name[%s] - manufacturer not created", name));
         }
         return manufacturer;
     }
@@ -62,7 +62,7 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
     public static void setDefault(Manufacturer manufacturer)
     {
         Manufacturer.defaultManufacturer = manufacturer;
-        Log.i(Constants.LOG_TAG, String.format("MANUFACTURER.setDefault:: set %s as default manufacturer", manufacturer));
+        Log.i(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: set %s as default manufacturer", manufacturer));
     }
 
     public static Manufacturer getDefault()

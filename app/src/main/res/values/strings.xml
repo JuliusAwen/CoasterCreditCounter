@@ -166,9 +166,7 @@
     <string name="title_attraction_category_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
     <string name="subtitle_attraction_category_assign_to_attractions">to assign category to</string>
-
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
-
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
 
     <!--MANUFACTURERS-->
@@ -179,10 +177,18 @@
     <string name="title_manufacturers_sort">Sort Manufacturers</string>
     <string name="title_manufacturer_edit">Edit Manufacturer</string>
     <string name="subtitle_manufacturer_assign_to_attractions">to assign manufacturer to</string>
-
     <string name="selection_sort_manufacturers">sort manufacturers</string>
-
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
+
+    <!--STATUS-->
+    <string name="name_default_status">operational</string>
+
+    <string name="title_statuses">Statuses</string>
+    <string name="title_status_create">Create Status</string>
+    <string name="title_statuses_sort">Sort Statuses</string>
+    <string name="title_status_edit">Edit Status</string>
+    <string name="selection_sort_statuses">sort statuses</string>
+    <string name="hint_enter_status_name">Enter status name</string>
 
 
     <!--ORPHAN ELEMENTS-->
@@ -212,6 +218,7 @@
     <string name="item_navigation_drawer_manage_categories">Categories</string>
     <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>
     <string name="item_navigation_drawer_manage_models">Models</string>
+    <string name="item_navigation_drawer_manage_statuses">Statuses</string>
 
     <string name="item_navigation_drawer_import">Import</string>
     <string name="item_navigation_drawer_export">Export</string>
@@ -277,8 +284,10 @@
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_attraction_category">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_manufacturer">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_status">@string/help_text_not_yet_available</string>
     <string name="help_text_create_attraction_category">@string/help_text_not_yet_available</string>
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_status">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
 
 </resources>
