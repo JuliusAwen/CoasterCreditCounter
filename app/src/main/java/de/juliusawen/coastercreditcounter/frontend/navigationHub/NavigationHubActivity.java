@@ -115,19 +115,36 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 return true;
             }
 
-            if(item.getItemId() == this.SELECTION_USE_DEV_CONTENT)
+            if(App.config.isDebugBuild())
             {
-                Toaster.makeToast(this, "USING DEVELOPERS CONTENT - importing...");
-                App.config.setUseDevelopersContent(true);
-                this.setExportFileAbsolutPath();
-                this.startImportContent();
-            }
-            else if(item.getItemId() == this.SELECTION_USE_MOCK_CONTENT)
-            {
-                Toaster.makeToast(this, "USING MOCKED CONTENT - importing...");
-                App.config.setUseDevelopersContent(false);
-                this.setExportFileAbsolutPath();
-                this.startImportContent();
+                if(item.getItemId() == this.SELECTION_USE_DEV_CONTENT)
+                {
+                    App.config.setUseDevelopersContent(true);
+                    this.setExportFileAbsolutPath();
+
+                    AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
+                            R.drawable.ic_baseline_warning,
+                            "Import Dev Content?",
+                            String.format("Export file absolute path set to %s.\n\n" +
+                                    "WARNING:\n" +
+                                    "Importing from that source could lead to JSON inconsistencies!\n" +
+                                    "Current JSON file state is overwritten when changes take place!", this.viewModel.exportFileAbsolutePath),
+                            getString(R.string.text_accept),
+                            getString(R.string.text_cancel),
+                            Constants.REQUEST_CODE_OVERWRITE_CONTENT,
+                            false
+                    );
+
+                    alertDialogFragmentOverwriteFile.setCancelable(false);
+                    alertDialogFragmentOverwriteFile.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                }
+                else if(item.getItemId() == this.SELECTION_USE_MOCK_CONTENT)
+                {
+                    Toaster.makeToast(this, "USING MOCKED CONTENT - importing...");
+                    App.config.setUseDevelopersContent(false);
+                    this.setExportFileAbsolutPath();
+                    this.startImportContent();
+                }
             }
 
             return super.onOptionsItemSelected(item);
@@ -239,8 +256,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     {
                         if(App.persistence.fileExists(this.viewModel.exportFileAbsolutePath))
                         {
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-
                             AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
                                     R.drawable.ic_baseline_warning,
                                     getString(R.string.alert_dialog_title_overwrite_content),
@@ -252,7 +267,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                             );
 
                             alertDialogFragmentOverwriteFile.setCancelable(false);
-                            alertDialogFragmentOverwriteFile.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                            alertDialogFragmentOverwriteFile.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
                         }
                         else
                         {
