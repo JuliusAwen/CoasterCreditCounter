@@ -57,6 +57,7 @@
 
     <!--GENERIC ERROR MESSAGES-->
     <string name="error_name_not_valid">Name is not valid!</string>
+    <string name="error_number_not_valid">Number is not valid!</string>
     <string name="error_undo_not_possible">UNDO not possible…</string>
     <string name="error_delete_failed">Deletion failed…</string>
     <string name="error_remove_failed">Removal failed…</string>
@@ -81,6 +82,7 @@
 
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
+    <string name="hint_untracked_ride_count">Enter number of untracked rides</string>
 
 
     <!--GENERIC DESCRIPTIONS-->
@@ -89,11 +91,11 @@
     <string name="description_close">@string/text_close</string>
     <string name="description_image_view">image</string>
 
+    <!-- ATTRACTION TYPES-->
+    <string name="spinner_text_attraction_type">Attraction Type:</string>
 
-
-
-
-
+    <string name="attraction_type_roller_coaster">Roller Coaster</string>
+    <string name="attraction_type_non_roller_coaster">Non-Roller Coaster</string>
 
     <!--LOCATIONS-->
     <string name="title_locations">Locations</string>
@@ -108,7 +110,6 @@
 
     <string name="hint_enter_location_name">Enter location name</string>
     <string name="hint_edit_location_name">Edit location name</string>
-
 
 
     <!--PARKS-->
@@ -127,7 +128,6 @@
     <string name="hint_enter_park_name">Enter park name</string>
 
     <string name="description_tab_titles_show_park">overview/attractions/visits</string>
-
 
 
     <!--VISITS-->
@@ -156,6 +156,12 @@
     <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
     <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
 
+    <string name="hint_enter_attraction_name">Enter attraction name</string>
+
+    <string name="title_custom_attraction_create">Create Attraction</string>
+    <string name="subtitle_custom_attraction_create">for %1$s</string>
+
+    <string name="title_custom_attraction_edit">Edit Attraction</string>
 
 
     <!--ATTRACTION CATEGORIES-->
@@ -168,6 +174,7 @@
     <string name="subtitle_attraction_category_assign_to_attractions">to assign category to</string>
     <string name="selection_sort_attraction_categories">sort attraction categories</string>
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
+    <string name="spinner_text_attraction_category">Attraction Category:</string>
 
     <!--MANUFACTURERS-->
     <string name="name_default_manufacturer">unknown</string>
@@ -179,6 +186,7 @@
     <string name="subtitle_manufacturer_assign_to_attractions">to assign manufacturer to</string>
     <string name="selection_sort_manufacturers">sort manufacturers</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
+    <string name="spinner_text_manufacturer">Manufacturer:</string>
 
     <!--STATUS-->
     <string name="name_default_status">operational</string>
@@ -192,6 +200,7 @@
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="title_status_pick">Pick Status</string>
     <string name="subtitle_status_assign_to_attraction">to assign to attraction</string>
+    <string name="spinner_text_status">Status:</string>
 
 
     <!--ORPHAN ELEMENTS-->
@@ -206,8 +215,6 @@
 
     <string name="information_assigned_to_attractions">assigned \'%1$s\' to %2$d attractions</string>
     <string name="information_set_as_default">\'%1$s\' set as default</string>
-
-
 
 
     <!--NAVIGATION HUB-->
@@ -243,10 +250,8 @@
     <string name="information_restore_content_backup_success">Content restored</string>
 
 
-
     <!--SEARCH-->
     <string name="hint_search_content">Search content</string>
-
 
 
     <!--HELP-->
@@ -292,5 +297,7 @@
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_create_status">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_or_edit_custom_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_custom_attraction">@string/help_text_not_yet_available</string>
 
 </resources>

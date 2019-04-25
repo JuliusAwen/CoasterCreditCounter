@@ -149,6 +149,7 @@ public abstract class Constants
     public static final int REQUEST_CODE_CREATE_ATTRACTION_CATEGORY = RequestCode.CREATE_ATTRACTION_CATEGORY.ordinal();
     public static final int REQUEST_CODE_CREATE_MANUFACTURER = RequestCode.CREATE_MANUFACTURER.ordinal();
     public static final int REQUEST_CODE_CREATE_STATUS = RequestCode.CREATE_STATUS.ordinal();
+    public static final int REQUEST_CODE_CREATE_CUSTOM_ATTRACTION = RequestCode.CREATE_CUSTOM_ATTRACTION.ordinal();
 
     public static final int REQUEST_CODE_SHOW_LOCATION = RequestCode.SHOW_LOCATION.ordinal();
     public static final int REQUEST_CODE_SHOW_PARK = RequestCode.SHOW_PARK.ordinal();
@@ -166,6 +167,7 @@ public abstract class Constants
     public static final int REQUEST_CODE_EDIT_ATTRACTION_CATEGORY = RequestCode.EDIT_ATTRACTION_CATEGORY.ordinal();
     public static final int REQUEST_CODE_EDIT_MANUFACTURER = RequestCode.EDIT_MANUFACTURER.ordinal();
     public static final int REQUEST_CODE_EDIT_STATUS = RequestCode.EDIT_STATUS.ordinal();
+    public static final int REQUEST_CODE_EDIT_CUSTOM_ATTRACTION = RequestCode.EDIT_CUSTOM_ATTRACTION.ordinal();
 
     public static final int REQUEST_CODE_SORT_LOCATIONS = RequestCode.SORT_LOCATIONS.ordinal();
     public static final int REQUEST_CODE_SORT_PARKS = RequestCode.SORT_PARKS.ordinal();
@@ -254,6 +256,7 @@ public abstract class Constants
         CREATE_ATTRACTION_CATEGORY,
         CREATE_MANUFACTURER,
         CREATE_STATUS,
+        CREATE_CUSTOM_ATTRACTION,
 
         SHOW_LOCATION,
         SHOW_PARK,
@@ -271,6 +274,7 @@ public abstract class Constants
         EDIT_ATTRACTION_CATEGORY,
         EDIT_MANUFACTURER,
         EDIT_STATUS,
+        EDIT_CUSTOM_ATTRACTION,
 
         SORT_LOCATIONS,
         SORT_PARKS,

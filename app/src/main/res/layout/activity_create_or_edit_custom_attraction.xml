@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".frontend.attractions.CreateOrEditCustomAttractionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/toolbar"/>
+
+        <EditText
+            style="@style/standard_edit_text"
+            android:id="@+id/editTextCreateOrEditAttractionName"
+            android:hint="@string/hint_enter_attraction_name"
+            tools:ignore="Autofill"/>
+
+        <LinearLayout
+            style="@style/standard_bar_layout"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/standard_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/spinner_text_attraction_type"/>
+
+            <Spinner
+                android:id="@+id/spinnerCreateOrEditAttraction_AttractionType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/standard_bar_layout"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/standard_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/spinner_text_manufacturer"/>
+
+            <Spinner
+                android:id="@+id/spinnerCreateOrEditAttraction_Manufacturer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/standard_bar_layout"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/standard_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/spinner_text_attraction_category"/>
+
+            <Spinner
+                android:id="@+id/spinnerCreateOrEditAttraction_AttractionCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/standard_bar_layout"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/standard_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/spinner_text_status"/>
+
+            <Spinner
+                android:id="@+id/spinnerCreateOrEditAttraction_Status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"/>
+        </LinearLayout>
+
+        <EditText
+            style="@style/standard_edit_text"
+            android:id="@+id/editTextCreateOrEditAttractionUntrackedRideCount"
+            android:hint="@string/hint_untracked_ride_count"
+            android:inputType="number"
+            tools:ignore="Autofill"/>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

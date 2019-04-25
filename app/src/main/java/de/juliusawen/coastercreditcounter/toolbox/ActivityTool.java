@@ -13,6 +13,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
+import de.juliusawen.coastercreditcounter.frontend.attractions.CreateOrEditCustomAttractionActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.ManageOrphanElementsActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.PickElementsActivity;
@@ -143,6 +144,11 @@ public abstract class ActivityTool
             type = EditElementActivity.class;
             toolbarTitle = context.getString(R.string.title_status_edit);
         }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
+        {
+            type = CreateOrEditCustomAttractionActivity.class;
+            toolbarTitle = context.getString(R.string.title_custom_attraction_edit);
+        }
 
         if(type != null)
         {
@@ -176,6 +182,10 @@ public abstract class ActivityTool
         else if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
         {
             type = CreateVisitActivity.class;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
+        {
+            type = CreateOrEditCustomAttractionActivity.class;
         }
         else
         {

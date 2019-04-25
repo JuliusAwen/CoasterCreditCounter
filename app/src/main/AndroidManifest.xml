@@ -35,6 +35,9 @@
             android:name=".frontend.locations.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
+            android:name=".frontend.attractions.CreateOrEditCustomAttractionActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
             android:name=".frontend.parks.CreateParkActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
@@ -43,6 +46,7 @@
         <activity
             android:name=".frontend.CreateSimpleStringActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
+
         <service
             android:name=".backend.persistency.PersistenceService"
             android:exported="false" />

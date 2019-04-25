@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_DetailAbove"
-                style="@style/manufacturer_text_view"
+                style="@style/detail_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"

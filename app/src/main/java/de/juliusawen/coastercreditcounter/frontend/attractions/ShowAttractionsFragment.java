@@ -140,7 +140,12 @@ public  class ShowAttractionsFragment extends Fragment
                 attraction.setStatus((Status)selectedElement);
                 Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<PickStatus>:: updated %s's status to %s...", attraction, selectedElement));
 
-                this.showAttractionsFragmentInteraction.updateAttraction(attraction);
+                this.showAttractionsFragmentInteraction.updateElement(attraction);
+                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+            }
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
+            {
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
                 this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
             }
         }
@@ -247,6 +252,6 @@ public  class ShowAttractionsFragment extends Fragment
 
     public interface ShowAttractionsFragmentInteraction
     {
-        void updateAttraction(IElement attractionToUpdate);
+        void updateElement(IElement elementToUpdate);
     }
 }

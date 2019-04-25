@@ -194,7 +194,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             @Override
             public void onClick(View view)
             {
-                Toaster.makeToast(ShowParkActivity.this, "fab interaction for ATTRACTIONS not yet implemented");
+                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
             }
         });
     }
@@ -225,9 +225,9 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void updateAttraction(IElement attractionToUpdate)
+    public void updateElement(IElement elementToUpdate)
     {
-        super.markForUpdate(attractionToUpdate);
+        super.markForUpdate(elementToUpdate);
     }
 
     public class TabPagerAdapter extends FragmentPagerAdapter
