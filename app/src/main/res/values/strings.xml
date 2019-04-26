@@ -141,7 +141,7 @@
 
     <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
     <string name="alert_dialog_message_visit_already_exists">Do you want to override existing visit? \n(existing data will be lost, ride counts will be adjusted)</string>
-    <string name="alert_dialog_message_delete_visited_attraction">Do you want to delete visited %1$s? \n(rides will be lost, ride count will be adjusted)</string>
+    <string name="alert_dialog_message_delete_visited_attraction">Do you want to delete visited %1$s? \n(tracked rides will be lost, ride count will be adjusted)</string>
 
     <string name="information_decreased_ride_count">decreased ride count for %1$d attractions</string>
 
@@ -158,6 +158,9 @@
 
     <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
     <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
+
+    <string name="alert_dialog_title_delete_attraction">DELETE ATTRACTION</string>
+    <string name="alert_dialog_message_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all tracked rides will be deleted as well)</string>
 
     <string name="hint_enter_attraction_name">Enter attraction name</string>
 

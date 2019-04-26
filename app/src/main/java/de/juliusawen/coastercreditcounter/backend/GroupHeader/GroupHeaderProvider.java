@@ -171,7 +171,9 @@ public class GroupHeaderProvider
     {
         for(IAttraction attraction : attractions)
         {
-            if(!this.formerAttractions.contains(attraction) || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+            if(attractions.size() != this.formerAttractions.size()
+                    || !this.formerAttractions.contains(attraction)
+                    || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
             {
                 return true;
             }

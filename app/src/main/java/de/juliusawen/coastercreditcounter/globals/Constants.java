@@ -106,8 +106,11 @@ public abstract class Constants
     public static  final int SELECTION_EDIT_LOCATION = Selection.EDIT_LOCATION.ordinal();
     public static  final int SELECTION_EDIT_PARK = Selection.EDIT_PARK.ordinal();
     public static  final int SELECTION_EDIT_ELEMENT = Selection.EDIT_ELEMENT.ordinal();
+    public static  final int SELECTION_CHANGE_STATUS = Selection.CHANGE_STATUS.ordinal();
 
     public static  final int SELECTION_DELETE_ELEMENT = Selection.DELETE_ELEMENT.ordinal();
+    public static  final int SELECTION_DELETE_ATTRACTION = Selection.DELETE_ATTRACTION.ordinal();
+
     public static  final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
     public static  final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
 
@@ -136,8 +139,6 @@ public abstract class Constants
 
     public static  final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
     public static  final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
-
-    public static  final int SELECTION_CHANGE_STATUS = Selection.CHANGE_STATUS.ordinal();
 
     public static  final int SELECTION_HELP = Selection.HELP.ordinal();
 
@@ -214,6 +215,8 @@ public abstract class Constants
         EDIT_ELEMENT,
 
         DELETE_ELEMENT,
+        DELETE_ATTRACTION,
+
         REMOVE_ELEMENT,
         RELOCATE_ELEMENT,
 

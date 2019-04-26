@@ -225,6 +225,13 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
+    public void deleteElement(IElement elementToDelete)
+    {
+        super.markForDeletion(elementToDelete, true);
+        super.markForUpdate(elementToDelete.getParent());
+    }
+
+    @Override
     public void updateElement(IElement elementToUpdate)
     {
         super.markForUpdate(elementToUpdate);

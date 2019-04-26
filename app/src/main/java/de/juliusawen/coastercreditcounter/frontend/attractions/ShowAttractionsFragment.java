@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.frontend.attractions;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,8 +20,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -31,20 +35,24 @@ import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public  class ShowAttractionsFragment extends Fragment
+public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
 {
     private ShowAttractionsFragmentViewModel viewModel;
     private RecyclerView recyclerView;
     private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
+    private boolean actionConfirmed;
 
     public ShowAttractionsFragment() {}
 
@@ -145,8 +153,7 @@ public  class ShowAttractionsFragment extends Fragment
             }
             else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
             {
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
-                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+                this.updateContentRecyclerView();
             }
         }
     }
@@ -221,6 +228,7 @@ public  class ShowAttractionsFragment extends Fragment
                     viewModel.longClickedElement = (IElement)view.getTag();
 
                     PopupMenu popupMenu = new PopupMenu(getContext(), view);
+                    popupMenu.getMenu().add(0, Constants.SELECTION_DELETE_ATTRACTION, Menu.NONE, R.string.selection_delete);
                     popupMenu.getMenu().add(0, Constants.SELECTION_CHANGE_STATUS, Menu.NONE, R.string.selection_change_status);
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
@@ -239,6 +247,22 @@ public  class ShowAttractionsFragment extends Fragment
                                         Constants.REQUEST_CODE_PICK_STATUS,
                                         App.content.getContentOfType(Status.class));
                             }
+                            else if(id == Constants.SELECTION_DELETE_ATTRACTION)
+                            {
+                                AlertDialogFragment alertDialogFragmentDelete =
+                                        AlertDialogFragment.newInstance(
+                                                R.drawable.ic_baseline_warning,
+                                                getString(R.string.alert_dialog_title_delete_attraction),
+                                                getString(R.string.alert_dialog_message_delete_attraction, viewModel.longClickedElement.getName()),
+                                                getString(R.string.text_accept),
+                                                getString(R.string.text_cancel),
+                                                Constants.REQUEST_CODE_DELETE,
+                                                true);
+
+                                alertDialogFragmentDelete.setCancelable(false);
+                                alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                            }
+
                             return true;
                         }
                     });
@@ -250,8 +274,80 @@ public  class ShowAttractionsFragment extends Fragment
         };
     }
 
+    @Override
+    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    {
+        dialog.dismiss();
+
+        Snackbar snackbar;
+
+        if(which == DialogInterface.BUTTON_POSITIVE)
+        {
+            if(requestCode == Constants.REQUEST_CODE_DELETE)
+            {
+                snackbar = Snackbar.make(
+                        Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
+                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                        Snackbar.LENGTH_LONG);
+
+                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        actionConfirmed = true;
+                        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                    }
+                });
+
+                snackbar.addCallback(new Snackbar.Callback()
+                {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event)
+                    {
+                        if(actionConfirmed)
+                        {
+                            actionConfirmed = false;
+
+                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+
+                            for(Visit visit : viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
+                            {
+                                for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
+                                {
+                                    if(visitedAttraction.getOnSiteAttraction().equals(viewModel.longClickedElement))
+                                    {
+                                        ShowAttractionsFragment.this.showAttractionsFragmentInteraction.deleteElement(visitedAttraction);
+                                        visitedAttraction.deleteElementAndDescendants();
+                                    }
+                                }
+                            }
+
+                            ShowAttractionsFragment.this.showAttractionsFragmentInteraction.deleteElement(viewModel.longClickedElement);
+                            viewModel.longClickedElement.deleteElementAndDescendants();
+                            updateContentRecyclerView();
+                        }
+                        else
+                        {
+                            Log.d(Constants.LOG_TAG, "ShowAttractionsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
+                        }
+                    }
+                });
+
+                snackbar.show();
+            }
+        }
+    }
+
+    private void updateContentRecyclerView()
+    {
+        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+    }
+
     public interface ShowAttractionsFragmentInteraction
     {
         void updateElement(IElement elementToUpdate);
+        void deleteElement(IElement elemtToDelete);
     }
 }
