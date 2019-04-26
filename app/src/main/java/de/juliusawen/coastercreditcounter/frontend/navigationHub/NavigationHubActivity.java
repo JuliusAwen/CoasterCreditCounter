@@ -130,7 +130,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                     "Importing from that source could lead to JSON inconsistencies!\n" +
                                     "Current JSON file state is overwritten when changes take place!", this.viewModel.exportFileAbsolutePath),
                             getString(R.string.text_accept),
-                            getString(R.string.text_cancel),
+                            getString(R.string.text_decline),
                             Constants.REQUEST_CODE_OVERWRITE_CONTENT,
                             false
                     );

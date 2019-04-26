@@ -18,6 +18,7 @@
             style="@style/standard_edit_text"
             android:id="@+id/editTextCreateSimpleString"
             android:hint="@string/hint_enter_string"
+            android:layout_margin="16dp"
             tools:ignore="Autofill" />
 
     </LinearLayout>

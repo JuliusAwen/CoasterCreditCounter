@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,6 +36,7 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragme
 import de.juliusawen.coastercreditcounter.frontend.spinnerAdapter.SpinnerAdapter;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateOrEditCustomAttractionActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
@@ -106,8 +108,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
                                 : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
             }
 
-            super.addConfirmDialogFragment();
-
             super.addHelpOverlayFragment(
                     getString(R.string.title_help, this.viewModel.isEditMode
                             ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
@@ -118,6 +118,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
 
+            super.addConfirmDialogFragment();
+
             this.createEditTextAttractionName();
             this.createAttractionTypesDictionary();
             this.createSpinnerAttractionType();
@@ -125,6 +127,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             this.createSpinnerAttractionCategory();
             this.createSpinnerStatus();
             this.createEditTextUntrackedRideCount();
+
+            this.setKeyboardDetector();
         }
     }
 
@@ -429,5 +433,28 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         setResult(resultCode, intent);
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
+    }
+
+    private void setKeyboardDetector()
+    {
+        final View activityRootView = findViewById(android.R.id.content);
+
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                int heightDifference = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+
+                if(heightDifference > ConvertTool.convertDpToPx(150))
+                {
+                    CreateOrEditCustomAttractionActivity.super.setConfirmDialogVisibilityWithoutFade(false);
+                }
+                else
+                {
+                    CreateOrEditCustomAttractionActivity.super.setConfirmDialogVisibilityWithoutFade(true);
+                }
+            }
+        });
     }
 }

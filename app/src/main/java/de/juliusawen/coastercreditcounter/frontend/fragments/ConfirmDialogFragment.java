@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -17,6 +19,7 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 public class ConfirmDialogFragment extends Fragment
 {
     private ConfirmDialogFragmentInteractionListener confirmDialogFragmentInteractionListener;
+    private LinearLayout linearLayoutFragmentConfirmDialog;
 
     public ConfirmDialogFragment() {}
 
@@ -39,6 +42,7 @@ public class ConfirmDialogFragment extends Fragment
         Log.v(Constants.LOG_TAG, "ConfirmDialogFragment.onViewCreated:: decorating view...");
         super.onViewCreated(view, savedInstanceState);
 
+        this.linearLayoutFragmentConfirmDialog = view.findViewById(R.id.linearLayoutFragmentConfirmDialog);
         Button buttonOk = view.findViewById(R.id.buttonConfirmDialogFragment_ok);
         buttonOk.setId(ButtonFunction.OK.ordinal());
         buttonOk.setText(R.string.text_ok);
@@ -95,6 +99,17 @@ public class ConfirmDialogFragment extends Fragment
     {
         super.onDetach();
         this.confirmDialogFragmentInteractionListener = null;
+        this.linearLayoutFragmentConfirmDialog = null;
+    }
+
+    public void hideDialog()
+    {
+        this.linearLayoutFragmentConfirmDialog.setVisibility(View.INVISIBLE);
+    }
+
+    public void showDialog()
+    {
+        this.linearLayoutFragmentConfirmDialog.setVisibility(View.VISIBLE);
     }
 
     public interface ConfirmDialogFragmentInteractionListener

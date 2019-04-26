@@ -233,9 +233,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             super(view);
             this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerViewItem);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
-            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_DetailAbove);
+            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_UpperDetail);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
-            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_DetailBelow);
+            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_LowerDetail);
         }
     }
 

@@ -11,11 +11,14 @@
     <!--GENERIC TEXTS-->
     <string name="text_ok">OK</string>
     <string name="text_accept">Accept</string>
+    <string name="text_decline">Decline</string>
     <string name="text_close">Close</string>
     <string name="text_cancel">Cancel</string>
 
     <string name="text_select_all">select all</string>
     <string name="text_deselect_all">deselect all</string>
+
+    <string name="text_untracked_rides">Untracked rides:</string>
 
 
     <!--GENERIC SELECTIONS-->
@@ -82,7 +85,7 @@
 
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
-    <string name="hint_untracked_ride_count">Enter number of untracked rides</string>
+    <string name="hint_untracked_ride_count">e.g. 4</string>
 
 
     <!--GENERIC DESCRIPTIONS-->

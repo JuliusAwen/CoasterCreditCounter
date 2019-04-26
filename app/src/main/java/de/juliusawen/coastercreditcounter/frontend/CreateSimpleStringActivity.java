@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateSimpleStringActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
@@ -53,6 +55,8 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
             super.addToolbar();
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+
+            this.setKeyboardDetector();
         }
     }
 
@@ -128,5 +132,28 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
         setResult(resultCode, intent);
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
+    }
+
+    private void setKeyboardDetector()
+    {
+        final View activityRootView = findViewById(android.R.id.content);
+
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                int heightDifference = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+
+                if(heightDifference > ConvertTool.convertDpToPx(150))
+                {
+                    CreateSimpleStringActivity.super.setConfirmDialogVisibilityWithoutFade(false);
+                }
+                else
+                {
+                    CreateSimpleStringActivity.super.setConfirmDialogVisibilityWithoutFade(true);
+                }
+            }
+        });
     }
 }

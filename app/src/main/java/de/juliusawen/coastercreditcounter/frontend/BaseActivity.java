@@ -429,11 +429,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
             if(isVisible)
             {
-                this.showFragment(this.helpOverlayFragment);
+                this.showFragmentFadeIn(this.helpOverlayFragment);
             }
             else
             {
-                this.hideFragment(this.helpOverlayFragment);
+                this.hideFragmentFadeOut(this.helpOverlayFragment);
             }
 
             this.viewModel.helpOverlayFragmentIsVisible = isVisible;
@@ -461,22 +461,56 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         }
     }
 
+    protected void addConfirmDialogFragment(View parentView)
+    {
+        this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+
+        if(this.confirmDialogFragment == null)
+        {
+            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating ConfirmDialogFragment...");
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
+            fragmentTransaction.add(parentView.getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using ConfirmDialogFagment...");
+        }
+    }
+
     protected void setConfirmDialogVisibility(boolean isVisible)
     {
         if(this.confirmDialogFragment != null)
         {
             if(isVisible)
             {
-                this.showFragment(this.confirmDialogFragment);
+                this.showFragmentFadeIn(this.confirmDialogFragment);
             }
             else
             {
-                this.hideFragment(this.confirmDialogFragment);
+                this.hideFragmentFadeOut(this.confirmDialogFragment);
             }
         }
     }
 
-    private void showFragment(Fragment fragment)
+    protected void setConfirmDialogVisibilityWithoutFade(boolean isVisible)
+    {
+        if(this.confirmDialogFragment != null)
+        {
+            if(isVisible)
+            {
+                this.confirmDialogFragment.showDialog();
+            }
+            else
+            {
+                this.confirmDialogFragment.hideDialog();
+            }
+        }
+    }
+
+    private void showFragmentFadeIn(Fragment fragment)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -485,11 +519,27 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 .commit();
     }
 
-    private void hideFragment(Fragment fragment)
+    private void hideFragmentFadeOut(Fragment fragment)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .hide(fragment)
+                .commit();
+    }
+
+    private void showFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .show(fragment)
+                .commit();
+    }
+
+    private void hideFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
                 .hide(fragment)
                 .commit();
     }
