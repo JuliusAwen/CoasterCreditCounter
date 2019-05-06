@@ -36,7 +36,6 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -142,14 +141,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                 }
             }
-            else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+            else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
             {
-                Attraction attraction = (Attraction)this.viewModel.longClickedElement;
-                attraction.setStatus((Status)selectedElement);
-                Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<PickStatus>:: updated %s's status to %s...", attraction, selectedElement));
-
-                this.showAttractionsFragmentInteraction.updateElement(attraction);
-                this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+                Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
+                this.showAttractionsFragmentInteraction.updateElement(selectedElement);
+                this.updateContentRecyclerView();
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
             }
             else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
             {
@@ -228,8 +225,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     viewModel.longClickedElement = (IElement)view.getTag();
 
                     PopupMenu popupMenu = new PopupMenu(getContext(), view);
+                    popupMenu.getMenu().add(0, Constants.SELECTION_EDIT_CUSTOM_ATTRACTION, Menu.NONE, R.string.selection_edit);
                     popupMenu.getMenu().add(0, Constants.SELECTION_DELETE_ATTRACTION, Menu.NONE, R.string.selection_delete);
-                    popupMenu.getMenu().add(0, Constants.SELECTION_CHANGE_STATUS, Menu.NONE, R.string.selection_change_status);
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
@@ -240,12 +237,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                             int id = item.getItemId();
 
-                            if(id == Constants.SELECTION_CHANGE_STATUS)
+                            if(id == Constants.SELECTION_EDIT_CUSTOM_ATTRACTION)
                             {
-                                ActivityTool.startActivityPickForResult(
+                                ActivityTool.startActivityEditForResult(
                                         getContext(),
-                                        Constants.REQUEST_CODE_PICK_STATUS,
-                                        App.content.getContentOfType(Status.class));
+                                        Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION,
+                                        viewModel.longClickedElement);
                             }
                             else if(id == Constants.SELECTION_DELETE_ATTRACTION)
                             {

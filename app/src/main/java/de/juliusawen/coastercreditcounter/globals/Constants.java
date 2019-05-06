@@ -98,49 +98,49 @@ public abstract class Constants
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
 
-    public static  final int SELECTION_ADD = Selection.ADD.ordinal();
+    public static final int SELECTION_ADD = Selection.ADD.ordinal();
 
-    public static  final int SELECTION_CREATE_LOCATION = Selection.CREATE_LOCATION.ordinal();
-    public static  final int SELECTION_CREATE_PARK = Selection.CREATE_PARK.ordinal();
+    public static final int SELECTION_CREATE_LOCATION = Selection.CREATE_LOCATION.ordinal();
+    public static final int SELECTION_CREATE_PARK = Selection.CREATE_PARK.ordinal();
 
-    public static  final int SELECTION_EDIT_LOCATION = Selection.EDIT_LOCATION.ordinal();
-    public static  final int SELECTION_EDIT_PARK = Selection.EDIT_PARK.ordinal();
-    public static  final int SELECTION_EDIT_ELEMENT = Selection.EDIT_ELEMENT.ordinal();
-    public static  final int SELECTION_CHANGE_STATUS = Selection.CHANGE_STATUS.ordinal();
+    public static final int SELECTION_EDIT_LOCATION = Selection.EDIT_LOCATION.ordinal();
+    public static final int SELECTION_EDIT_PARK = Selection.EDIT_PARK.ordinal();
+    public static final int SELECTION_EDIT_ELEMENT = Selection.EDIT_ELEMENT.ordinal();
+    public static final int SELECTION_EDIT_CUSTOM_ATTRACTION = Selection.EDIT_CUSTOM_ATTRACTION.ordinal();
 
-    public static  final int SELECTION_DELETE_ELEMENT = Selection.DELETE_ELEMENT.ordinal();
-    public static  final int SELECTION_DELETE_ATTRACTION = Selection.DELETE_ATTRACTION.ordinal();
+    public static final int SELECTION_DELETE_ELEMENT = Selection.DELETE_ELEMENT.ordinal();
+    public static final int SELECTION_DELETE_ATTRACTION = Selection.DELETE_ATTRACTION.ordinal();
 
-    public static  final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
-    public static  final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
+    public static final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
+    public static final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
 
-    public static  final int SELECTION_SORT = Selection.SORT.ordinal();
-    public static  final int SELECTION_SORT_BY = Selection.SORT_BY.ordinal();
-    public static  final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
-    public static  final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
-    public static  final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
-    public static  final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
-    public static  final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
-    public static  final int SELECTION_SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
+    public static final int SELECTION_SORT = Selection.SORT.ordinal();
+    public static final int SELECTION_SORT_BY = Selection.SORT_BY.ordinal();
+    public static final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
+    public static final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
+    public static final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
+    public static final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
+    public static final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
+    public static final int SELECTION_SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
 
-    public static  final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
-    public static  final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
+    public static final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
+    public static final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
 
-    public static  final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
-    public static  final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
-    public static  final int SELECTION_SORT_BY_MANUFACTURER_DESCENDING = Selection.SORT_BY_MANUFACTURER_DESCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER_DESCENDING = Selection.SORT_BY_MANUFACTURER_DESCENDING.ordinal();
 
-    public static  final int SELECTION_SORT_BY_LOCATION = Selection.SORT_BY_LOCATION.ordinal();
-    public static  final int SELECTION_SORT_BY_LOCATION_ASCENDING = Selection.SORT_BY_LOCATION_ASCENDING.ordinal();
-    public static  final int SELECTION_SORT_BY_LOCATION_DESCENDING = Selection.SORT_BY_LOCATION_DESCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_LOCATION = Selection.SORT_BY_LOCATION.ordinal();
+    public static final int SELECTION_SORT_BY_LOCATION_ASCENDING = Selection.SORT_BY_LOCATION_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_LOCATION_DESCENDING = Selection.SORT_BY_LOCATION_DESCENDING.ordinal();
 
-    public static  final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
-    public static  final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
+    public static final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
+    public static final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
-    public static  final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
-    public static  final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
+    public static final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
+    public static final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
 
-    public static  final int SELECTION_HELP = Selection.HELP.ordinal();
+    public static final int SELECTION_HELP = Selection.HELP.ordinal();
 
 
 
@@ -213,6 +213,7 @@ public abstract class Constants
         EDIT_LOCATION,
         EDIT_PARK,
         EDIT_ELEMENT,
+        EDIT_CUSTOM_ATTRACTION,
 
         DELETE_ELEMENT,
         DELETE_ATTRACTION,
@@ -245,8 +246,6 @@ public abstract class Constants
 
         ASSIGN_TO_ATTRACTIONS,
         SET_AS_DEFAULT,
-
-        CHANGE_STATUS,
 
         HELP,
     }

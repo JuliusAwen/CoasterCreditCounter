@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.attractions.Coaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
@@ -90,6 +91,11 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
                 {
                     this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
                 }
+
+                if(this.viewModel.parentPark == null)
+                {
+                    this.viewModel.parentPark = (Park) this.viewModel.attraction.getParent();
+                }
             }
             else if(this.viewModel.parentPark == null)
             {
@@ -153,6 +159,12 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
     private void createEditTextAttractionName()
     {
         this.editTextAttractionName.setOnEditorActionListener(this.getOnEditorActionListener());
+
+        if(this.viewModel.isEditMode)
+        {
+            this.editTextAttractionName.setText(this.viewModel.attraction.getName());
+            this.editTextAttractionName.setSelection(this.viewModel.attraction.getName().length());
+        }
     }
 
     private void createAttractionTypesDictionary()
@@ -164,29 +176,34 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
 
     private void createSpinnerAttractionType()
     {
+        this.spinnerAttractionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String item = parent.getItemAtPosition(position).toString();
+                viewModel.attractionType = attractionTypesById.get(item);
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerAttractionType.onItemSelected:: attraction type set to [%s]", item));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(this.attractionTypesById.keySet()));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinnerAttractionType.setAdapter(arrayAdapter);
+
         if(this.viewModel.isEditMode)
         {
-            this.spinnerAttractionType.setVisibility(View.GONE);
-        }
-        else
-        {
-            this.spinnerAttractionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            if(this.viewModel.attraction instanceof Coaster)
             {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-                {
-                    String item = parent.getItemAtPosition(position).toString();
-                    viewModel.attractionType = attractionTypesById.get(item);
-                    Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerAttractionType.onItemSelected:: attraction type set to [%s]", item));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(this.attractionTypesById.keySet()));
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            this.spinnerAttractionType.setAdapter(arrayAdapter);
+                this.spinnerAttractionCategory.setSelection(attractionType_RollerCoaster);
+            }
+            else
+            {
+                this.spinnerAttractionCategory.setSelection(attractionType_NonRollerCoaster);
+            }
         }
     }
 
@@ -198,7 +215,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 viewModel.manufacturer = (Manufacturer)parent.getItemAtPosition(position);
-                Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerManufacturer.onItemSelected:: manufacturer set to %s", viewModel.manufacturer));
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerManufacturer.onItemSelected:: manufacturer set to %s", viewModel.manufacturer));
             }
 
             @Override
@@ -210,7 +227,15 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         this.spinnerManufacturer.setAdapter(spinnerAdapter);
-        this.spinnerManufacturer.setSelection(manufacturers.indexOf(Manufacturer.getDefault()));
+
+        if(this.viewModel.isEditMode)
+        {
+            this.spinnerManufacturer.setSelection(manufacturers.indexOf(this.viewModel.attraction.getManufacturer()));
+        }
+        else
+        {
+            this.spinnerManufacturer.setSelection(manufacturers.indexOf(Manufacturer.getDefault()));
+        }
     }
 
     private void createSpinnerAttractionCategory()
@@ -221,7 +246,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 viewModel.attractionCategory = (AttractionCategory) parent.getItemAtPosition(position);
-                Log.d(Constants.LOG_TAG,
+                Log.v(Constants.LOG_TAG,
                         String.format("CreateOrEditCustomAttractionActivity.createSpinnerAttractionCategory.onItemSelected:: attraction category set to %s", viewModel.attractionCategory));
             }
 
@@ -234,7 +259,15 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         this.spinnerAttractionCategory.setAdapter(spinnerAdapter);
-        this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(AttractionCategory.getDefault()));
+
+        if(this.viewModel.isEditMode)
+        {
+            this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(this.viewModel.attraction.getAttractionCategory()));
+        }
+        else
+        {
+            this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(AttractionCategory.getDefault()));
+        }
     }
 
     private void createSpinnerStatus()
@@ -245,7 +278,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 viewModel.status = (Status) parent.getItemAtPosition(position);
-                Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerStatus.onItemSelected:: status set to %s", viewModel.status));
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createSpinnerStatus.onItemSelected:: status set to %s", viewModel.status));
             }
 
             @Override
@@ -257,12 +290,25 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         this.spinnerStatus.setAdapter(spinnerAdapter);
-        this.spinnerStatus.setSelection(statuses.indexOf(Status.getDefault()));
+
+        if(this.viewModel.isEditMode)
+        {
+            this.spinnerStatus.setSelection(statuses.indexOf(this.viewModel.attraction.getStatus()));
+        }
+        else
+        {
+            this.spinnerStatus.setSelection(statuses.indexOf(Status.getDefault()));
+        }
     }
 
     private void createEditTextUntrackedRideCount()
     {
         this.editTextUntrackedRideCount.setOnEditorActionListener(this.getOnEditorActionListener());
+
+        if(this.viewModel.isEditMode)
+        {
+            this.editTextUntrackedRideCount.setText(String.valueOf(this.viewModel.attraction.getUntracktedRideCount()));
+        }
     }
 
     private TextView.OnEditorActionListener getOnEditorActionListener()
@@ -292,7 +338,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         boolean somethingWentWrong = false;
 
         this.viewModel.name = this.editTextAttractionName.getText().toString();
-        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: attraction name set to [%s]", this.viewModel.name));
+        Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: attraction name set to [%s]", this.viewModel.name));
 
         String untrackedRideCountString = this.editTextUntrackedRideCount.getText().toString();
         try
@@ -305,10 +351,12 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             {
                 this.viewModel.untrackedRideCount = 0;
             }
-            Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: untracked ride count set to [%d]", this.viewModel.untrackedRideCount));
+            Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: untracked ride count set to [%d]", this.viewModel.untrackedRideCount));
         }
         catch(NumberFormatException nfe)
         {
+            Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+
             somethingWentWrong = true;
             Toaster.makeToast(this, getString(R.string.error_number_not_valid));
         }
@@ -364,7 +412,15 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
 
                 if(!somethingWentWrong)
                 {
-                    this.returnResult(RESULT_OK);
+                    if(somethingChanged)
+                    {
+                        this.returnResult(RESULT_OK);
+                    }
+                    else
+                    {
+                        this.returnResult(RESULT_CANCELED);
+                    }
+
                 }
             }
             else
@@ -410,10 +466,12 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             this.viewModel.attraction.setStatus(this.viewModel.status);
             this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
+            Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: created %s", this.viewModel.attraction.getFullName()));
+
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: create %s success[%S]", this.viewModel.attraction, success));
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: create - success[%S]", success));
 
         return success;
     }
@@ -428,6 +486,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         {
             Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.returnResult:: no changes - returning no element");
         }
 
         setResult(resultCode, intent);

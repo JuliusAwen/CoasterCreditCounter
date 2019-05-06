@@ -155,6 +155,7 @@ public abstract class ActivityTool
             Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             ((Activity)context).startActivityForResult(intent, requestCode);
 
             Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEditForResult:: started [%s] for %s",
