@@ -169,13 +169,18 @@ public class GroupHeaderProvider
 
     private boolean attractionsHaveChanged(List<IAttraction> attractions)
     {
-        for(IAttraction attraction : attractions)
+        if(attractions.size() != this.formerAttractions.size())
         {
-            if(attractions.size() != this.formerAttractions.size()
-                    || !this.formerAttractions.contains(attraction)
-                    || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+            return true;
+        }
+        else
+        {
+            for(IAttraction attraction : attractions)
             {
-                return true;
+                if(!this.formerAttractions.contains(attraction) || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+                {
+                    return true;
+                }
             }
         }
 
