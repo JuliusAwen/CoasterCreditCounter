@@ -516,7 +516,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
+            AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.uuid);
             element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
             element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
             elements.add(element);
@@ -529,7 +529,7 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new ArrayList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
+            CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.uuid);
             element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
             element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
             elements.add(element);

@@ -16,9 +16,9 @@ import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
  */
 public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElement
 {
-    private CoasterBlueprint(String name, int untrackedRideCount, UUID uuid)
+    private CoasterBlueprint(String name, UUID uuid)
     {
-        super(name, untrackedRideCount, uuid);
+        super(name, 0, uuid);
     }
 
     @Override
@@ -43,14 +43,14 @@ public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElem
         }
     }
 
-    public static CoasterBlueprint create(String name, int untrackedRideCount, UUID uuid)
+    public static CoasterBlueprint create(String name, UUID uuid)
     {
         CoasterBlueprint coasterBlueprint = null;
         name = name.trim();
 
         if(!name.isEmpty())
         {
-            coasterBlueprint = new CoasterBlueprint(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
+            coasterBlueprint = new CoasterBlueprint(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CoasterBlueprint.create:: %s created.", coasterBlueprint.getFullName()));
         }
         else

@@ -29,6 +29,7 @@ public class AppConfig
     private final boolean createExportFileIfNonexistent = true;
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
 
+    private final boolean enableUsageOfDevelopersContent = false;
     private boolean useDevelopersContent = false;
     //above is just working when isDebugBuild = true
 
@@ -58,6 +59,8 @@ public class AppConfig
                         "createExportFileIfNonexistent [%S]\n" +
                         "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
                         "validateContent [%S]\n" +
+                        "enableUsageOfDevelopersContent [%S]\n"+
+                        "useDevelopersContent [%S]\n" +
                         Constants.LOG_DIVIDER,
 
                 this.databaseWrapperToUse(),
@@ -69,7 +72,9 @@ public class AppConfig
 
                 this.createExportFileIfNotExists(),
                 this.useDefaultContentFromDatabaseMockOnStartup(),
-                this.validateContent()
+                this.validateContent(),
+                this.enableUsageOfDevelopersContent,
+                this.useDevelopersContent
         );
     }
 
@@ -132,5 +137,10 @@ public class AppConfig
     public boolean validateContent()
     {
         return this.isDebugBuild && this.validateContent;
+    }
+
+    public boolean usageOfDevelopersContentEnabled()
+    {
+        return this.isDebugBuild && this.enableUsageOfDevelopersContent;
     }
 }

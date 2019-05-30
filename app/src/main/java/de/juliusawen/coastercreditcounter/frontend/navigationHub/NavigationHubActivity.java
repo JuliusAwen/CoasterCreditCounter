@@ -90,13 +90,16 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(App.config.isDebugBuild())
         {
-            if(App.config.useDevelopersContent())
+            if(App.config.usageOfDevelopersContentEnabled())
             {
-                menu.add(Menu.NONE, this.SELECTION_USE_MOCK_CONTENT, Menu.NONE, "use mocked content");
-            }
-            else
-            {
-                menu.add(Menu.NONE, this.SELECTION_USE_DEV_CONTENT, Menu.NONE, "use developers content");
+                if(App.config.useDevelopersContent())
+                {
+                    menu.add(Menu.NONE, this.SELECTION_USE_MOCK_CONTENT, Menu.NONE, "use mocked content");
+                }
+                else
+                {
+                    menu.add(Menu.NONE, this.SELECTION_USE_DEV_CONTENT, Menu.NONE, "use developers content");
+                }
             }
         }
 
