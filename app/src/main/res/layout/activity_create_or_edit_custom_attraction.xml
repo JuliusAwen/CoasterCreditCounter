@@ -42,7 +42,8 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
 
                         <TextView
                             style="@style/spinner_label_text_view"
@@ -58,7 +59,7 @@
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_AttractionType"
                         style="@style/standard_image_holder"
-                        android:layout_height="@dimen/standard_bar_height"
+                        android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
@@ -75,7 +76,8 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
 
                         <TextView
                             style="@style/spinner_label_text_view"
@@ -91,7 +93,7 @@
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_Manufacturer"
                         style="@style/standard_image_holder"
-                        android:layout_height="@dimen/standard_bar_height"
+                        android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
@@ -107,7 +109,8 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
 
                         <TextView
                             style="@style/spinner_label_text_view"
@@ -123,7 +126,7 @@
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_AttractionCategory"
                         style="@style/standard_image_holder"
-                        android:layout_height="@dimen/standard_bar_height"
+                        android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
@@ -139,7 +142,8 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
 
                         <TextView
                             style="@style/spinner_label_text_view"
@@ -155,7 +159,7 @@
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_Status"
                         style="@style/standard_image_holder"
-                        android:layout_height="@dimen/standard_bar_height"
+                        android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
