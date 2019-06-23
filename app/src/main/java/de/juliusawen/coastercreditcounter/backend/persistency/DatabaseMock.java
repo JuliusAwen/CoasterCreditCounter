@@ -480,7 +480,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(wabWorldTour);
 
         CustomAttraction walibiExpress = CustomAttraction.create("Walibi Express", 0, null);
-        walibiExpress.setAttractionCategory(attractionCategories.FamilyRides);
+        walibiExpress.setAttractionCategory(attractionCategories.TransportRides);
         walibiHolland.addChildAndSetParent(walibiExpress);
 
         CustomAttraction walibisFunRecorder = CustomAttraction.create("Walibi's Fun Recorder", 0, null);
