@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -48,6 +50,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     private ManageOrphanElementsViewModel viewModel;
     private RecyclerView recyclerView;
     private boolean actionConfirmed;
+    private OrphanElement lastCreatedOrphanElement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -203,6 +206,24 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            if(this.lastCreatedOrphanElement != null)
+            {
+                this.returnResult(RESULT_OK);
+            }
+            else
+            {
+                this.returnResult(RESULT_CANCELED);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
@@ -220,6 +241,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
                 if(attractionCategory != null)
                 {
+                    this.lastCreatedOrphanElement = attractionCategory;
                     this.markForCreation(attractionCategory);
                     updateContentRecyclerView(true);
                 }
@@ -240,6 +262,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 Manufacturer manufacturer = Manufacturer.create(createdString, null);
                 if(manufacturer != null)
                 {
+                    this.lastCreatedOrphanElement = manufacturer;
                     this.markForCreation(manufacturer);
                     updateContentRecyclerView(true);
                 }
@@ -258,6 +281,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 Status status = Status.create(createdString, null);
                 if(status != null)
                 {
+                    this.lastCreatedOrphanElement = status;
                     this.markForCreation(status);
                     updateContentRecyclerView(true);
                 }
@@ -634,7 +658,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ManageOrphanElementsViewModel.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
                 if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                 {
@@ -657,7 +681,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         if(resetContent)
         {
-            Log.d(Constants.LOG_TAG, "ManageOrphanElementsViewModel.updateContentRecyclerView:: resetting content...");
+            Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.updateContentRecyclerView:: resetting content...");
 
             if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
             {
@@ -674,8 +698,25 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ManageOrphanElementsViewModel.updateContentRecyclerView:: notifying data set changes...");
+            Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.updateContentRecyclerView:: notifying data set changes...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void returnResult(int resultCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.returnResult:: resultCode[%d]", resultCode));
+
+        Intent intent = new Intent();
+
+        if(resultCode == RESULT_OK)
+        {
+            Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.returnResult:: returning new %s", this.lastCreatedOrphanElement));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedOrphanElement.getUuid().toString());
+        }
+
+        setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        finish();
     }
 }

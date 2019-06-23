@@ -36,6 +36,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Re
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -159,8 +160,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             if(requestCode == Constants.REQUEST_CODE_CREATE_LOCATION || requestCode == Constants.REQUEST_CODE_CREATE_PARK)
             {
-                String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                IElement resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
+                IElement resultElement = ResultTool.fetchResultElement(data);
 
                 super.markForUpdate(resultElement.getParent());
 
@@ -168,8 +168,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_CODE_SORT_LOCATIONS || requestCode == Constants.REQUEST_CODE_SORT_PARKS)
             {
-                List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-                List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
+                List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
                 IElement parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
@@ -192,7 +191,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_CODE_EDIT_LOCATION || requestCode == Constants.REQUEST_CODE_EDIT_PARK)
             {
-                IElement editedElement = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement editedElement = ResultTool.fetchResultElement(data);
 
                 super.markForUpdate(editedElement);
 

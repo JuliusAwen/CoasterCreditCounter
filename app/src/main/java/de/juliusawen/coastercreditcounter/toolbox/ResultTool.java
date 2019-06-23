@@ -15,18 +15,18 @@ public abstract class ResultTool
     public static IElement fetchResultElement(Intent data)
     {
         String resultElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-        IElement selectedElement = null;
+        IElement resultElement = null;
         if(resultElementUuidString != null)
         {
-            selectedElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
-            Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElement:: selected element %s fetched", selectedElement));
+            resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
+            Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElement:: selected element %s fetched", resultElement));
         }
         else
         {
             Log.d(Constants.LOG_TAG, "ResultTool.fetchResultElement:: no selected element fetched");
         }
 
-        return selectedElement;
+        return resultElement;
     }
 
     public static List<IElement> fetchResultElements(Intent data)

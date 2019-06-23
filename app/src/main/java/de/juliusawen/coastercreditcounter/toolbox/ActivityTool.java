@@ -61,7 +61,7 @@ public abstract class ActivityTool
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivityManage(Context context, int requestCode)
+    public static void startActivityManageForResult(Context context, int requestCode)
     {
         int type = Constants.TYPE_NONE;
         String toolbarTitle;
@@ -103,14 +103,14 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
 
-            context.startActivity(intent);
+            ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityManage:: started [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityManageForResult:: started [%s]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityManage:: unable to start activity: unknown request code [%d]", requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityManageForResult:: unable to start activity: unknown request code [%d]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }

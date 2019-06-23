@@ -16,6 +16,12 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.PopupMenu;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
@@ -23,11 +29,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -42,6 +43,7 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
@@ -147,7 +149,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 this.updateContentRecyclerView();
 
-                IElement visit = App.content.getContentByUuid(UUID.fromString(data.getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+                IElement visit = ResultTool.fetchResultElement(data);
                 ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
             }
         }

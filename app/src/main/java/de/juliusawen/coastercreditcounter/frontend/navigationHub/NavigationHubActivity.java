@@ -229,13 +229,13 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 case R.id.navigationItem_ManageCategories:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
-                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
+                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
                     break;
                 }
 
                 case R.id.navigationItem_ManageManufacturers:
                 {
-                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
+                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
                     break;
                 }
 
@@ -247,7 +247,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 case R.id.navigationItem_ManageStatuses:
                 {
-                    ActivityTool.startActivityManage(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
+                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
                     break;
                 }
 

@@ -142,14 +142,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             groupedItems = this.groupHeaderProvider.groupByAttractionCategories(ConvertTool.convertElementsToType(this.originalItems, IAttraction.class));
         }
-        //        else if(groupType.equals(GroupType.MANUFACTURER))
-        //        {
-        //
-        //        }
-        //        else if(groupType.equals(GroupType.LOCATION))
-        //        {
-        //
-        //        }
         else if(groupType == Constants.TYPE_YEAR)
         {
             groupedItems = this.groupHeaderProvider.groupByYear(ConvertTool.convertElementsToType(this.originalItems, Visit.class));

@@ -28,10 +28,10 @@
             android:contentDescription="@string/description_image_view"/>
 
         <LinearLayout
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/standard_bar_height"
-            android:layout_weight="1"
             android:gravity="center_vertical|start"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"

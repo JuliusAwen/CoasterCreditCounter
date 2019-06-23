@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.frontend;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -324,6 +325,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     {
         if(this.floatingActionButton != null)
         {
+            icon.setTint(Color.WHITE);
             this.floatingActionButton.setImageDrawable(icon);
         }
     }

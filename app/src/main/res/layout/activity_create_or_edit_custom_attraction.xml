@@ -33,66 +33,131 @@
 
                 <LinearLayout
                     style="@style/standard_bar_layout"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp">
 
-                    <TextView
-                        style="@style/spinner_label_text_view"
-                        android:text="@string/spinner_text_attraction_type"/>
-
-                    <Spinner
-                        android:id="@+id/spinnerCreateOrEditAttraction_AttractionType"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        style="@style/standard_bar_layout"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/spinner_label_text_view"
+                            android:text="@string/spinner_text_attraction_type"/>
+
+                        <Spinner
+                            android:id="@+id/spinnerCreateOrEditAttraction_AttractionType"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewCreateOrEditAttraction_AttractionType"
+                        style="@style/standard_image_holder"
+                        android:layout_height="@dimen/standard_bar_height"
+                        android:contentDescription="@string/description_image_view"/>
+
                 </LinearLayout>
 
                 <LinearLayout
                     style="@style/standard_bar_layout"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp">
 
-                    <TextView
-                        style="@style/spinner_label_text_view"
-                        android:text="@string/spinner_text_manufacturer"/>
-
-                    <Spinner
-                        android:id="@+id/spinnerCreateOrEditAttraction_Manufacturer"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        style="@style/standard_bar_layout"
+                        android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/spinner_label_text_view"
+                            android:text="@string/spinner_text_manufacturer"/>
+
+                        <Spinner
+                            android:id="@+id/spinnerCreateOrEditAttraction_Manufacturer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewCreateOrEditAttraction_Manufacturer"
+                        style="@style/standard_image_holder"
+                        android:layout_height="@dimen/standard_bar_height"
+                        android:contentDescription="@string/description_image_view"/>
+
                 </LinearLayout>
 
                 <LinearLayout
                     style="@style/standard_bar_layout"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp">
 
-                    <TextView
-                        style="@style/spinner_label_text_view"
-                        android:text="@string/spinner_text_attraction_category"/>
-
-                    <Spinner
-                        android:id="@+id/spinnerCreateOrEditAttraction_AttractionCategory"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        style="@style/standard_bar_layout"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/spinner_label_text_view"
+                            android:text="@string/spinner_text_attraction_category"/>
+
+                        <Spinner
+                            android:id="@+id/spinnerCreateOrEditAttraction_AttractionCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewCreateOrEditAttraction_AttractionCategory"
+                        style="@style/standard_image_holder"
+                        android:layout_height="@dimen/standard_bar_height"
+                        android:contentDescription="@string/description_image_view"/>
+
                 </LinearLayout>
 
                 <LinearLayout
                     style="@style/standard_bar_layout"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp">
 
-                    <TextView
-                        style="@style/spinner_label_text_view"
-                        android:text="@string/spinner_text_status"/>
-
-                    <Spinner
-                        android:id="@+id/spinnerCreateOrEditAttraction_Status"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        style="@style/standard_bar_layout"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/spinner_label_text_view"
+                            android:text="@string/spinner_text_status"/>
+
+                        <Spinner
+                            android:id="@+id/spinnerCreateOrEditAttraction_Status"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewCreateOrEditAttraction_Status"
+                        style="@style/standard_image_holder"
+                        android:layout_height="@dimen/standard_bar_height"
+                        android:contentDescription="@string/description_image_view"/>
+
                 </LinearLayout>
 
                 <LinearLayout
