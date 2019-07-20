@@ -190,6 +190,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 Constants.TYPE_ATTRACTION_CATEGORY);
         contentRecyclerViewAdapter.displayManufacturers(true);
         contentRecyclerViewAdapter.displayStatus(true);
+        contentRecyclerViewAdapter.displayTotalRideCount(true);
 
         return contentRecyclerViewAdapter;
     }

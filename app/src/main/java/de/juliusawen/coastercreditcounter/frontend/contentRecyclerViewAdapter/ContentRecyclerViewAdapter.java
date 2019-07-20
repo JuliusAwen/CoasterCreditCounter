@@ -78,11 +78,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean displayAttractionCategories;
     private boolean displayLocations;
     private boolean displayStatus;
+    private boolean displayTotalRideCount;
 
     private final Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayStatus = new HashSet<>();
+    private final Set<Class<? extends IAttraction>> typesToDisplayTotalRideCount = new HashSet<>();
 
     @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
@@ -202,6 +204,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.typesToDisplayStatus.add(CustomCoaster.class);
         this.typesToDisplayStatus.add(CustomAttraction.class);
         this.typesToDisplayStatus.add(StockAttraction.class);
+
+        this.typesToDisplayTotalRideCount.add(CustomCoaster.class);
+        this.typesToDisplayTotalRideCount.add(CustomAttraction.class);
+        this.typesToDisplayTotalRideCount.add(StockAttraction.class);
     }
 
     private void initializeTypesByTypeface()
@@ -451,12 +457,30 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 viewHolder.textViewDetailBelow.setText(locationName);
             }
-            else if(this.displayStatus && this.typesToDisplayStatus.contains(type))
+            else if((this.displayStatus && this.typesToDisplayStatus.contains(type) || (this.displayTotalRideCount && this.typesToDisplayTotalRideCount.contains(type))))
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
-
                 viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
-                viewHolder.textViewDetailBelow.setText(((IAttraction)item).getStatus().getName());
+
+                String text = "";
+
+                if(this.displayStatus)
+                {
+                    text += ((IAttraction)item).getStatus().getName();
+                }
+
+                if(this.displayStatus && this.displayTotalRideCount)
+                {
+                    text += " - ";
+                }
+
+                if(this.displayTotalRideCount)
+                {
+                    text += App.getContext().getString(R.string.text_total_rides) + " " + ((IAttraction)item).getTotalRideCount();
+                }
+
+
+                viewHolder.textViewDetailBelow.setText(text);
             }
             else
             {
@@ -1060,5 +1084,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void displayStatus(boolean display)
     {
         this.displayStatus = display;
+    }
+
+    public void displayTotalRideCount(boolean display)
+    {
+        this.displayTotalRideCount = display;
     }
 }
