@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -35,6 +36,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private TextView textViewTotalCoasterCreditCount;
+    private TextView textViewTotalCoasterRidesCount;
 
     private final int SELECTION_USE_DEV_CONTENT = 9999;
     private final int SELECTION_USE_MOCK_CONTENT = 6666;
@@ -54,6 +57,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 this.setExportFileAbsolutPath();
             }
+
+            this.textViewTotalCoasterCreditCount = findViewById(R.id.textViewNavigationHub_totalCoasterCreditsCount);
+            this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewNavigationHub_totalCoasterRidesCount);
 
             this.drawerLayout = findViewById(R.id.navigationDrawer);
             this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
@@ -75,6 +81,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+
+            this.setStatistics();
 
             for (int i = 0; i < this.navigationView.getMenu().size(); i++)
             {
@@ -156,6 +164,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             return true;
         }
+    }
+
+    private void setStatistics()
+    {
+        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.getTotalCoasterCreditsCount()));
+        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_coaster_rides, App.persistence.getTotalCoasterRidesCount()));
     }
 
     private void setExportFileAbsolutPath()

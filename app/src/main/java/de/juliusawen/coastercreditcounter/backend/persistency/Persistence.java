@@ -282,4 +282,14 @@ public class Persistence
         Log.v(Constants.LOG_TAG, String.format("Persistence.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
         return file.exists();
     }
+
+    public int getTotalCoasterCreditsCount()
+    {
+        return this.databaseWrapper.getTotalCoasterCreditsCount();
+    }
+
+    public int getTotalCoasterRidesCount()
+    {
+        return this.databaseWrapper.getTotalCoasterRidesCount();
+    }
 }

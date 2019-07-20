@@ -2,9 +2,10 @@ package de.juliusawen.coastercreditcounter.frontend.visits;
 
 import android.app.DatePickerDialog;
 
+import androidx.lifecycle.ViewModel;
+
 import java.util.Calendar;
 
-import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 

@@ -17,6 +17,32 @@
         <include
             layout="@layout/toolbar"/>
 
+        <TextView
+            android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
+            style="@style/standard_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:paddingStart="5dip"
+            android:paddingEnd="5dip"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
+            style="@style/standard_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:paddingStart="5dip"
+            android:paddingEnd="5dip"
+            android:textSize="24sp" />
+
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -25,8 +51,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/menu_navigation_drawer"
+        app:headerLayout="@layout/navigation_drawer_header"
         app:itemTextAppearance="@style/navigation_drawer_style"
-        app:headerLayout="@layout/navigation_drawer_header" />
+        app:menu="@menu/menu_navigation_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

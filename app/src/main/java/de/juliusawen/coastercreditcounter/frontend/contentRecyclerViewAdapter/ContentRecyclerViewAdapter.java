@@ -476,7 +476,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(this.displayTotalRideCount)
                 {
-                    text += App.getContext().getString(R.string.text_total_rides) + " " + ((IAttraction)item).getTotalRideCount();
+                    text += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
                 }
 
 

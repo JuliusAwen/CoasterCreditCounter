@@ -1,12 +1,12 @@
 package de.juliusawen.coastercreditcounter.backend.elements;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.UUID;
-
-import androidx.annotation.NonNull;
 
 public interface IElement
 {

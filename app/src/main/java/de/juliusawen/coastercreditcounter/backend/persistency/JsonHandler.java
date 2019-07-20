@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.backend.attractions.AttractionBlueprin
 import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
+import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
@@ -954,5 +955,49 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Log.e(Constants.LOG_TAG,  "JsonHandler.delete:: empty implementation to satisfy interface");
         return false;
+    }
+
+    @Override
+    public int getTotalCoasterCreditsCount()
+    {
+        int totalCoasterCreditsCount = 0;
+
+        for(IElement coaster : this.getAllCoasters())
+        {
+            if(((IAttraction)coaster).getTotalRideCount() > 0)
+            {
+                totalCoasterCreditsCount ++;
+            }
+        }
+
+        return totalCoasterCreditsCount;
+    }
+
+    @Override
+    public int getTotalCoasterRidesCount()
+    {
+        int totalCoasterRidesCount = 0;
+
+        for(IElement coaster : this.getAllCoasters())
+        {
+            totalCoasterRidesCount += ((IAttraction)coaster).getTotalRideCount();
+        }
+
+        return totalCoasterRidesCount;
+    }
+
+    private List<IElement> getAllCoasters()
+    {
+        List<IElement> coasters = App.content.getContentOfType(CustomCoaster.class);
+
+        for(StockAttraction stockAttraction : App.content.getContentAsType(StockAttraction.class))
+        {
+            if(stockAttraction.isCoaster())
+            {
+                coasters.add(stockAttraction);
+            }
+        }
+
+        return coasters;
     }
 }

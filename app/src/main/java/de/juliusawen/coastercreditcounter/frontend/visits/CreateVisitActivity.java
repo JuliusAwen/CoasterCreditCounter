@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-import androidx.lifecycle.ViewModelProviders;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;

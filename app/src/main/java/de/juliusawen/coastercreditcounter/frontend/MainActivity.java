@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.frontend.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;

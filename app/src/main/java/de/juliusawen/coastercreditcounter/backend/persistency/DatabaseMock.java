@@ -1211,7 +1211,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         wodan.setManufacturer(manufacturers.GCI);
         europaPark.addChildAndSetParent(wodan);
 
-        CustomCoaster eurosatCanCanCoaster = CustomCoaster.create("Eurosat - Can Can Coaster", 9, null);
+        CustomCoaster eurosatCanCanCoaster = CustomCoaster.create("Eurosat - Can Can Coaster", 0, null);
         eurosatCanCanCoaster.setAttractionCategory(attractionCategories.RollerCoasters);
         eurosatCanCanCoaster.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(eurosatCanCanCoaster);
@@ -1378,6 +1378,20 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: persistence not synchronized - DatabaseMock is not able to persist any data");
         return true;
+    }
+
+    @Override
+    public int getTotalCoasterCreditsCount()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.getTotalCoasterCreditsCount:: empty implementation to satisfy interface");
+        return 0;
+    }
+
+    @Override
+    public int getTotalCoasterRidesCount()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.getTotalCoasterRidesCount:: empty implementation to satisfy interface");
+        return 0;
     }
 
     @Override

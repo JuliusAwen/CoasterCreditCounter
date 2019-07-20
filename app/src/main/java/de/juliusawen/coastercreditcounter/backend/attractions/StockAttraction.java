@@ -118,4 +118,9 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
                     this, decrement, this.getTotalRideCount()));
         }
     }
+
+    public boolean isCoaster()
+    {
+        return this.blueprint instanceof CoasterBlueprint;
+    }
 }

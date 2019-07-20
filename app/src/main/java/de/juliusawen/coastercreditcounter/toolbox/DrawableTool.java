@@ -2,9 +2,10 @@ package de.juliusawen.coastercreditcounter.toolbox;
 
 import android.graphics.drawable.Drawable;
 
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import java.util.Objects;
 
-import androidx.core.graphics.drawable.DrawableCompat;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 
 public abstract class DrawableTool

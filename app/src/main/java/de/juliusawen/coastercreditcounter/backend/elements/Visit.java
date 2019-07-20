@@ -2,6 +2,8 @@ package de.juliusawen.coastercreditcounter.backend.elements;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +13,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
-import androidx.annotation.NonNull;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
