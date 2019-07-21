@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:background="@color/grey"
         android:paddingStart="27dp"
-        android:paddingEnd="27dp"/>
+        android:paddingEnd="27dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/standard_bar_height"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -33,13 +34,11 @@
             android:layout_height="wrap_content"
             android:minHeight="@dimen/standard_bar_height"
             android:gravity="center_vertical|start"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_UpperDetail"
-                style="@style/upper_detail_text_view"
+                style="@style/detail_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -54,7 +53,7 @@
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_LowerDetail"
-                style="@style/lower_detail_text_view"
+                style="@style/detail_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"

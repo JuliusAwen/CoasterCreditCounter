@@ -46,6 +46,8 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
+import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
+
 public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
 {
     private ShowAttractionsFragmentViewModel viewModel;
@@ -57,7 +59,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public static ShowAttractionsFragment newInstance(String uuidString)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionsFragment.newInstance:: instantiating fragment...");
+        Log.i(LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionsFragment.newInstance:: instantiating fragment...");
 
         ShowAttractionsFragment showAttractionsFragment =  new ShowAttractionsFragment();
         Bundle args = new Bundle();
@@ -70,7 +72,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowAttractionsFragment.onCreate:: creating fragment...");
+        Log.v(LOG_TAG, "ShowAttractionsFragment.onCreate:: creating fragment...");
         super.onCreate(savedInstanceState);
 
         this.viewModel = ViewModelProviders.of(this).get(ShowAttractionsFragmentViewModel.class);
@@ -117,7 +119,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -136,14 +138,14 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                     if(selectedElement != null)
                     {
-                        Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
+                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
                         this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
                     }
                 }
             }
             else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
             {
-                Log.d(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
+                Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
                 this.showAttractionsFragmentInteraction.updateElement(selectedElement);
                 this.updateContentRecyclerView();
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
@@ -177,6 +179,32 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         this.viewModel = null;
         this.recyclerView = null;
         this.showAttractionsFragmentInteraction = null;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == Constants.SELECTION_EXPAND_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.expandAll();
+        }
+        else if(item.getItemId() == Constants.SELECTION_COLLAPSE_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
@@ -234,7 +262,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         @Override
                         public boolean onMenuItemClick(MenuItem item)
                         {
-                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onMenuItemClick:: [%S] selected", item.getItemId()));
+                            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onMenuItemClick:: [%S] selected", item.getItemId()));
 
                             int id = item.getItemId();
 
@@ -294,7 +322,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     public void onClick(View view)
                     {
                         actionConfirmed = true;
-                        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                        Log.i(LOG_TAG, "ShowAttractionsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
                     }
                 });
 
@@ -307,7 +335,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         {
                             actionConfirmed = false;
 
-                            Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+                            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
                             for(Visit visit : viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
                             {
@@ -327,7 +355,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         }
                         else
                         {
-                            Log.d(Constants.LOG_TAG, "ShowAttractionsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
+                            Log.d(LOG_TAG, "ShowAttractionsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
                         }
                     }
                 });
@@ -339,7 +367,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     private void updateContentRecyclerView()
     {
-        Log.i(Constants.LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
+        Log.i(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
     }
 

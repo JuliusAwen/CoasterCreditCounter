@@ -6,65 +6,81 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <View
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:background="@color/grey"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp" />
-
     <LinearLayout
+        android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_OpenForEditing"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
-        tools:ignore="DisableBaselineAlignment">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <ImageView
-            style="@style/standard_image_holder"
-            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
-            android:contentDescription="@string/description_decrease"
-            android:layout_height="32dp"
-            android:layout_width="96dp"
-            android:background="@color/default_color"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_baseline_error_outline"/>
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp" />
 
         <LinearLayout
-            android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_Counter"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            tools:ignore="DisableBaselineAlignment">
 
-            <TextView
-                style="@style/standard_text_view"
-                android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
+            <ImageView
+                style="@style/standard_image_holder"
+                android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
+                android:contentDescription="@string/description_decrease"
+                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:background="@color/default_color"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_error_outline"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_Counter"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="bottom|center_horizontal"/>
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1">
 
-            <TextView
-                style="@style/standard_text_view"
-                android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
-                android:textSize="28sp"
+                <TextView
+                    style="@style/standard_text_view"
+                    android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom|center_horizontal"/>
+
+                <TextView
+                    style="@style/standard_text_view"
+                    android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/standard_image_holder"
+                android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
+                android:contentDescription="@string/description_increase"
+                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:background="@color/default_color"
                 android:layout_gravity="center"
-                android:gravity="center" />
+                android:src="@drawable/ic_baseline_error_outline"/>
 
         </LinearLayout>
 
-        <ImageView
-            style="@style/standard_image_holder"
-            android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
-            android:contentDescription="@string/description_increase"
-            android:layout_height="32dp"
-            android:layout_width="96dp"
-            android:background="@color/default_color"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_baseline_error_outline"/>
-
     </LinearLayout>
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/textViewRecyclerViewItemVisitedAttraction_PrettyPrint"
+        android:textSize="14sp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:visibility="gone"/>
 
 </LinearLayout>

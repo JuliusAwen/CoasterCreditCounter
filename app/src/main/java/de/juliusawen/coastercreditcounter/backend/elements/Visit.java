@@ -29,6 +29,8 @@ public class Visit extends Element
     private static SortOrder sortOrder = SortOrder.DESCENDING;
     private final Calendar calendar;
 
+    private boolean isOpenForEditing;
+
     private Visit(String name, UUID uuid, Calendar calendar)
     {
         super(name, uuid);
@@ -161,6 +163,7 @@ public class Visit extends Element
         if(visit != null)
         {
             Log.i(Constants.LOG_TAG, String.format("Visit.setCurrentVisit:: %s set as current visit", visit));
+            visit.setOpenForEditing(true);
             Visit.currentVisit = visit;
         }
         else
@@ -204,5 +207,16 @@ public class Visit extends Element
 
         Log.d(Constants.LOG_TAG, String.format("Visit.fetchVisitForYearAndDay:: No visit found for [%s]", StringTool.fetchSimpleDate(calendar)));
         return null;
+    }
+
+    public void setOpenForEditing(boolean open)
+    {
+        Log.d(Constants.LOG_TAG, String.format("Visit.setOpenForEditing:: %s is open for editing set to [%s]", this, open));
+        this.isOpenForEditing = open;
+    }
+
+    public boolean isOpenForEditing()
+    {
+        return this.isOpenForEditing;
     }
 }

@@ -44,6 +44,8 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
+import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
+
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ShowVisitActivityViewModel viewModel;
@@ -53,7 +55,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitActivity.onCreate:: creating activity...");
+        Log.i(LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitActivity.onCreate:: creating activity...");
 
         setContentView(R.layout.activity_show_visit);
         super.onCreate(savedInstanceState);
@@ -79,6 +81,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     public void onResume()
     {
         super.onResume();
+
+        invalidateOptionsMenu();
 
         if(App.isInitialized)
         {
@@ -115,6 +119,65 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.onDestroy();
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+        if(this.viewModel.visit.isOpenForEditing())
+        {
+            menu.add(Menu.NONE, Constants.SELECTION_CLOSE_VISIT_FOR_EDITING, Menu.NONE, "close visit for editing")
+                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_block, R.color.white))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            super.setFloatingActionButtonVisibility(true);
+        }
+        else
+        {
+            menu.add(Menu.NONE, Constants.SELECTION_OPEN_VISIT_FOR_EDITING, Menu.NONE, "open visit for editing")
+                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_create, R.color.white))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            super.setFloatingActionButtonVisibility(false);
+        }
+
+        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == Constants.SELECTION_EXPAND_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.expandAll();
+        }
+        else if(item.getItemId() == Constants.SELECTION_COLLAPSE_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        }
+        else if(item.getItemId() == Constants.SELECTION_OPEN_VISIT_FOR_EDITING)
+        {
+            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<OPEN_VISIT_FOR_EDITING>:: opening %s for editing...", this.viewModel.visit));
+            this.viewModel.visit.setOpenForEditing(true);
+            invalidateOptionsMenu();
+            this.updateContentRecyclerView(false);
+            return true;
+        }
+        else if(item.getItemId() == Constants.SELECTION_CLOSE_VISIT_FOR_EDITING)
+        {
+            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<CLOSE_VISIT_FOR_EDITING>:: closing %s for editing...", this.viewModel.visit));
+            this.viewModel.visit.setOpenForEditing(false);
+            invalidateOptionsMenu();
+            this.updateContentRecyclerView(false);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void decorateFloatingActionButton()
     {
         super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
@@ -123,7 +186,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i(LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
                 ActivityTool.startActivityPickForResult(
                         ShowVisitActivity.this,
@@ -138,7 +201,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -164,7 +227,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 if(parent != null)
                 {
                     this.viewModel.visit.reorderChildren(resultElements);
-                    Log.d(Constants.LOG_TAG,
+                    Log.d(LOG_TAG,
                             String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
                     updateContentRecyclerView(true);
@@ -246,7 +309,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
+                Log.i(LOG_TAG, String.format("ShowVisitActivity.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
 
                 int id = item.getItemId();
                 if(id == Constants.SELECTION_DELETE_ELEMENT)
@@ -302,7 +365,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     public void onClick(View view)
                     {
                         actionConfirmed = true;
-                        Log.i(Constants.LOG_TAG, "ShowVisitActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
+                        Log.i(LOG_TAG, "ShowVisitActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
                     }
                 });
 
@@ -318,7 +381,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         }
                         else
                         {
-                            Log.d(Constants.LOG_TAG, "ShowVisitActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
+                            Log.d(LOG_TAG, "ShowVisitActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
                         }
                     }
                 });
@@ -330,7 +393,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     private void deleteVisitedAttraction()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
+        Log.i(LOG_TAG, String.format("ShowVisitActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
         ShowVisitActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
         ShowVisitActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
@@ -347,7 +410,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getAddRideOnClickListener.onClick:: adding ride to %s for %s", visitedAttraction, visitedAttraction.getParent()));
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getAddRideOnClickListener.onClick:: adding ride to %s for %s", visitedAttraction, visitedAttraction.getParent()));
 
                 Ride ride = visitedAttraction.addRide();
 
@@ -367,7 +430,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitActivity.getRemoveRideOnClickListener.onClick:: deleting latest ride on %s for %s",
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getRemoveRideOnClickListener.onClick:: deleting latest ride on %s for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 Ride ride = visitedAttraction.deleteLatestRide();
@@ -388,11 +451,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             List<IAttraction> notYetAddedAttractions = this.getNotYetAddedAttractions();
             if(notYetAddedAttractions.size() > 0)
             {
-                Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", notYetAddedAttractions.size()));
+                Log.i(LOG_TAG, String.format("ShowVisitActivity.allAttractionsAdded:: [%d] attractions not added yet", notYetAddedAttractions.size()));
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "ShowVisitActivity.allAttractionsAdded:: all attractions added");
+                Log.i(LOG_TAG, "ShowVisitActivity.allAttractionsAdded:: all attractions added");
             }
 
             return notYetAddedAttractions.isEmpty();
@@ -422,12 +485,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         if(resetContent)
         {
-            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
+            Log.d(LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: notifying data set changed...");
+            Log.d(LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: notifying data set changed...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

@@ -20,6 +20,8 @@
 
     <string name="text_untracked_rides">Untracked rides:</string>
     <string name="text_total_rides">total rides: %1$d</string>
+    <string name="text_lower_detail_seperator">&#160;-&#160;</string>
+    <string name="text_blueprint_substitute">Blueprint</string>
 
     <string name="text_total_coaster_credits"><b>Total credits: %1$d</b></string>
     <string name="text_total_coaster_rides">Total rides: %1$d</string>
@@ -156,6 +158,8 @@
     <string name="description_increase">increase ride count</string>
 
     <string name="Button_text_open_current_visit">open current visit</string>
+
+    <string name="text_visited_attraction_pretty_print">%1$dx %2$s</string>
 
 
     <!--ATTRACTIONS-->

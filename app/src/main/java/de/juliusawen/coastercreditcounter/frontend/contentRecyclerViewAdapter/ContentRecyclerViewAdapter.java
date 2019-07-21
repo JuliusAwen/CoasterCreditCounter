@@ -38,6 +38,7 @@ import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
@@ -49,8 +50,6 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private final int GENERATION_ZERO = 0;
-
     private RecyclerView recyclerView;
     private final GroupHeaderProvider groupHeaderProvider;
 
@@ -155,7 +154,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        this.items = this.initializeItems(groupedItems, GENERATION_ZERO);
+        this.items = this.initializeItems(groupedItems, 0);
 
         notifyDataSetChanged();
     }
@@ -239,15 +238,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     static class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
     {
+        final LinearLayout linearLayoutEditable;
         final LinearLayout linearLayoutCounter;
         final TextView textViewName;
         final TextView textViewCount;
         final ImageView imageViewDecrease;
         final ImageView imageViewIncrease;
+        final TextView textViewPrettyPrint;
 
         ViewHolderVisitedAttraction(View view)
         {
             super(view);
+
+            this.linearLayoutEditable = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_OpenForEditing);
 
             this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_Counter);
 
@@ -259,6 +262,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
             this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+
+            this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
         }
     }
 
@@ -446,7 +451,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                 {
                     // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-                    locationName = "Blueprint";
+                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
                     viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
                 }
                 else
@@ -471,7 +476,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(this.displayStatus && this.displayTotalRideCount)
                 {
-                    text += " - ";
+                    text += App.getContext().getString(R.string.text_lower_detail_seperator);
                 }
 
                 if(this.displayTotalRideCount)
@@ -513,36 +518,50 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         //indentLayout based on generation
-        int padding = ConvertTool.convertDpToPx(14) * generation;
+        int padding = ConvertTool.convertDpToPx(
+                (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density)) * generation;
         viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
-        VisitedAttraction child = (VisitedAttraction) this.items.get(position);
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", child, position));
+        VisitedAttraction visitedAttraction = (VisitedAttraction) this.items.get(position);
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", visitedAttraction, position));
 
-        viewHolder.linearLayoutCounter.setTag(child);
-        if(!viewHolder.linearLayoutCounter.hasOnClickListeners() && this.recyclerOnClickListener != null)
+        if(((Visit)visitedAttraction.getParent()).isOpenForEditing())
         {
-            viewHolder.linearLayoutCounter.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-            viewHolder.linearLayoutCounter.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            viewHolder.textViewPrettyPrint.setVisibility(View.GONE);
+            viewHolder.linearLayoutEditable.setVisibility(View.VISIBLE);
+
+            viewHolder.linearLayoutCounter.setTag(visitedAttraction);
+            if(!viewHolder.linearLayoutCounter.hasOnClickListeners() && this.recyclerOnClickListener != null)
+            {
+                viewHolder.linearLayoutCounter.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                viewHolder.linearLayoutCounter.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            }
+
+            viewHolder.textViewName.setText(visitedAttraction.getName());
+            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.getRideCount()));
+
+            viewHolder.imageViewIncrease.setTag(visitedAttraction);
+            if(!viewHolder.imageViewIncrease.hasOnClickListeners() && this.addRideOnClickListener != null)
+            {
+                viewHolder.imageViewIncrease.setOnClickListener(this.addRideOnClickListener);
+            }
+
+            //Todo: refactor --> ShowRides/ShowRide
+            viewHolder.imageViewDecrease.setTag(visitedAttraction);
+            if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.deleteRideOnClickListener != null)
+            {
+                viewHolder.imageViewDecrease.setOnClickListener(this.deleteRideOnClickListener);
+            }
         }
-
-        viewHolder.textViewName.setText(child.getName());
-        viewHolder.textViewCount.setText(String.valueOf(child.getRideCount()));
-
-        viewHolder.imageViewIncrease.setTag(child);
-        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.addRideOnClickListener != null)
+        else
         {
-            viewHolder.imageViewIncrease.setOnClickListener(this.addRideOnClickListener);
-        }
+            viewHolder.linearLayoutEditable.setVisibility(View.GONE);
+            viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
 
-        //Todo: refactor --> ShowRides/ShowRide
-        viewHolder.imageViewDecrease.setTag(child);
-        if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.deleteRideOnClickListener != null)
-        {
-            viewHolder.imageViewDecrease.setOnClickListener(this.deleteRideOnClickListener);
+            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.getRideCount(), visitedAttraction.getName()));
         }
     }
 
@@ -674,6 +693,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         while(itemsCount != this.items.size());
 
+        scrollToItem(this.items.get(0));
+
         Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: all expanded");
     }
 
@@ -716,16 +737,27 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAllExpanded()
     {
         for(IElement item : this.items)
         {
             for(IElement relevantChild : this.getRelevantChildren(item))
             {
-                List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
-                if(!relevantGrandchildren.isEmpty())
+                if(relevantChild instanceof Location)
                 {
-                    if(!this.expandedItems.contains(relevantChild))
+                    List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
+                    if(!relevantGrandchildren.isEmpty())
+                    {
+                        if(!this.expandedItems.contains(relevantChild))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if(relevantChild instanceof Attraction || relevantChild instanceof VisitedAttraction)
+                {
+                    if(!this.expandedItems.contains(item))
                     {
                         return false;
                     }
@@ -790,6 +822,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAllCollapsed()
     {
         for(IElement item : this.items)

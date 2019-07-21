@@ -122,8 +122,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             menu.add(Menu.NONE, Constants.SELECTION_OPEN_CURRENT_VISIT, Menu.NONE, "open current visit")
                     .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "NavigationHubActivity OCV added");
         }
 
         return super.onPrepareOptionsMenu(menu);

@@ -1555,7 +1555,7 @@ class CoasterBlueprints
 {
     CoasterBlueprint SuspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", null);
     CoasterBlueprint Boomerang = CoasterBlueprint.create("Boomerang", null);
-    CoasterBlueprint BigAppleMB28 = CoasterBlueprint.create("Big Apple MB28", null);
+    CoasterBlueprint BigAppleMB28 = CoasterBlueprint.create("Big Apple", null);
     CoasterBlueprint SkyRocketII = CoasterBlueprint.create("Sky Rocker II", null);
 
     List<CoasterBlueprint> All = new LinkedList<>();
