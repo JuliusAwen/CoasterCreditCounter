@@ -7,10 +7,6 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_CREATE = "####### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
-    public static final String SIMPLE_DATE_FORMAT_DATE_PATTERN = "dd. MMMM yyyy";
-    public static final String SIMPLE_DATE_FORMAT_YEAR_PATTERN = "yyyy";
-    public static final String SIMPLE_DATE_FORMAT_TIME_PATTERN = "HH:mm";
-
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
@@ -122,6 +118,8 @@ public abstract class Constants
     public static final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
     public static final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
     public static final int SELECTION_SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
+
+    public static final int SELECTION_OPEN_CURRENT_VISIT = Selection.OPEN_CURRENT_VISIT.ordinal();
 
     public static final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
     public static final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
@@ -240,6 +238,8 @@ public abstract class Constants
         SORT_BY_LOCATION,
         SORT_BY_LOCATION_ASCENDING,
         SORT_BY_LOCATION_DESCENDING,
+
+        OPEN_CURRENT_VISIT,
 
         EXPAND_ALL,
         COLLAPSE_ALL,

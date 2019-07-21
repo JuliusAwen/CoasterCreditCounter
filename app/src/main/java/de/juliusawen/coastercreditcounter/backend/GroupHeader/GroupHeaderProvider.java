@@ -20,21 +20,15 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class GroupHeaderProvider
 {
-    private final DateFormat simpleDateFormat;
-
     private final Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByCategoryUuid = new HashMap<>();
     private List<IAttraction> formerAttractions;
     private List<IElement> formerGroupedAttractions;
 
     private final List<YearHeader> yearHeaders = new ArrayList<>();
-
-    public GroupHeaderProvider()
-    {
-        this.simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_YEAR_PATTERN, Locale.getDefault());
-    }
 
     public List<IElement> groupByAttractionCategories(List<IAttraction> attractions)
     {
@@ -241,7 +235,7 @@ public class GroupHeaderProvider
 
         for(Visit visit : visits)
         {
-            String year = String.valueOf(this.simpleDateFormat.format(visit.getCalendar().getTime()));
+            String year = String.valueOf(StringTool.fetchSimpleYear(visit.getCalendar()));
 
             IElement existingYearHeader = null;
             for(IElement yearHeader : groupedVisits)

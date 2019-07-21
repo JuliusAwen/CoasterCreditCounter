@@ -1381,20 +1381,6 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
-    public int getTotalCoasterCreditsCount()
-    {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.getTotalCoasterCreditsCount:: empty implementation to satisfy interface");
-        return 0;
-    }
-
-    @Override
-    public int getTotalCoasterRidesCount()
-    {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.getTotalCoasterRidesCount:: empty implementation to satisfy interface");
-        return 0;
-    }
-
-    @Override
     public boolean create(Set<IElement> elements)
     {
         Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: elements not created - DatabaseMock is not able to persist any data");
@@ -1414,6 +1400,29 @@ public final class DatabaseMock implements IDatabaseWrapper
         Log.e(Constants.LOG_TAG,  "DatabaseMock.delete:: elements not updated - DatabaseMock is not able to persist any data");
         return true;
     }
+
+    @Override
+    public int fetchTotalCoasterCreditsCount()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalCoasterCreditsCount:: empty implementation to satisfy interface");
+        return 0;
+    }
+
+    @Override
+    public int fetchTotalCoasterRidesCount()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalCoasterRidesCount:: empty implementation to satisfy interface");
+        return 0;
+    }
+
+    @Override
+    public Visit fetchCurrentVisit()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisit:: empty implementation to satisfy interface");
+        return null;
+    }
+
+
 }
 
 class AttractionCategories

@@ -3,6 +3,12 @@ package de.juliusawen.coastercreditcounter.toolbox;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import de.juliusawen.coastercreditcounter.backend.application.App;
+
 public abstract class StringTool
 {
     private static final String loremIpsum = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat," +
@@ -24,6 +30,25 @@ public abstract class StringTool
             " takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat," +
             " et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet." +
             " Lorem ipsum dolor sit amet, consetetur quis nostrud. ";
+
+    public static String getLoremIpsum(int words)
+    {
+        if(words < 1)
+        {
+            words = 2;
+        }
+        else if(words > 500)
+        {
+            words = 500;
+        }
+
+        int indexOfSpace = loremIpsum.indexOf(" ");
+        while(--words > 0 && indexOfSpace != -1)
+        {
+            indexOfSpace = loremIpsum.indexOf(" ", indexOfSpace + 1);
+        }
+        return loremIpsum.substring(0, indexOfSpace);
+    }
 
     public static SpannableString getSpannableString(String string, int typeface)
     {
@@ -47,22 +72,21 @@ public abstract class StringTool
         }
     }
 
-    public static String getLoremIpsum(int words)
+    public static String fetchSimpleDate(Calendar calendar)
     {
-        if(words < 1)
-        {
-            words = 2;
-        }
-        else if(words > 500)
-        {
-            words = 500;
-        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(App.config.getDateFormat(), Locale.getDefault());
+        return simpleDateFormat.format(calendar.getTime());
+    }
 
-        int indexOfSpace = loremIpsum.indexOf(" ");
-        while(--words > 0 && indexOfSpace != -1)
-        {
-            indexOfSpace = loremIpsum.indexOf(" ", indexOfSpace + 1);
-        }
-        return loremIpsum.substring(0, indexOfSpace);
+    public static String fetchSimpleYear(Calendar calendar)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(App.config.getYearFormat(), Locale.getDefault());
+        return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static String fetchSimpleTime(Calendar calendar)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(App.config.getTimeFormat(), Locale.getDefault());
+        return simpleDateFormat.format(calendar.getTime());
     }
 }

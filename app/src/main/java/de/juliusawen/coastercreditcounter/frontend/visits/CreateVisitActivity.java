@@ -111,7 +111,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
 
-                viewModel.existingVisit = getExistingVisit(viewModel.calendar);
+                viewModel.existingVisit = Visit.fetchVisitForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
                 if(viewModel.existingVisit != null)
                 {
                     viewModel.datePickerDialog.dismiss();
@@ -152,19 +152,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         this.viewModel.datePickerDialog.show();
     }
 
-    private Visit getExistingVisit(Calendar calendar)
-    {
-        for(Visit exisingVisit : viewModel.park.getChildrenAsType(Visit.class))
-        {
-            if(Visit.isSameDay(exisingVisit.getCalendar(), calendar))
-            {
-                Log.v(Constants.LOG_TAG, String.format("CreateVisitActivity.getExistingVisit:: %s already exists", exisingVisit));
-                return exisingVisit;
-            }
-        }
-        return null;
-    }
-
     private void showVisitAlreadyExistsDialog()
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
@@ -195,11 +182,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         super.markForCreation(this.viewModel.visit);
         super.markForUpdate(this.viewModel.park);
 
-//        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
-//        {
-//            Log.i(Constants.LOG_TAG, "CreateVisitActivity.pickDate:: created visit is today - set as open visit");
-//            Visit.setOpenVisit(this.viewModel.visit);
-//        }
+        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
+        {
+            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - setting as todays visit");
+            Visit.setCurrentVisit(this.viewModel.visit);
+        }
 
         this.decorateToolbar();
     }

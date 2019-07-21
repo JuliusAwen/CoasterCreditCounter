@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.backend.persistency;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.Content;
 
 public interface IDatabaseWrapper
@@ -16,6 +17,8 @@ public interface IDatabaseWrapper
 
     boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete);
 
-    int getTotalCoasterCreditsCount();
-    int getTotalCoasterRidesCount();
+    int fetchTotalCoasterCreditsCount();
+    int fetchTotalCoasterRidesCount();
+
+    Visit fetchCurrentVisit();
 }

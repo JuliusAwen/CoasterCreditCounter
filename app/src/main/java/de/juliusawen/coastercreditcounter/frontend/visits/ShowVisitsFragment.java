@@ -298,7 +298,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                 if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
                 {
-                    if(doesVisitExist(viewModel.calendar))
+                    if(Visit.fetchVisitForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class)) != null)
                     {
                         viewModel.datePickerDialog.dismiss();
                         Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
@@ -319,8 +319,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             }
         }, year, month, day);
 
-
-
         this.viewModel.datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_cancel), new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int position)
@@ -333,19 +331,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.viewModel.datePickerDialog.setCancelable(false);
         this.viewModel.datePickerDialog.setCanceledOnTouchOutside(false);
         this.viewModel.datePickerDialog.show();
-    }
-
-    private boolean doesVisitExist(Calendar calendar)
-    {
-        for(Visit exisingVisit : viewModel.park.getChildrenAsType(Visit.class))
-        {
-            if(Visit.isSameDay(exisingVisit.getCalendar(), calendar))
-            {
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitsFragment.doesVisitExist:: %s already exists", exisingVisit));
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

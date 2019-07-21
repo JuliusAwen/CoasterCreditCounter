@@ -36,6 +36,9 @@ public class AppConfig
 
     private final boolean validateContent = true;
 
+    public final String dateFormat = "dd. MMMM yyyy";
+    public final String yearFormat = "yyyy";
+    public final String timeFormat = "HH:mm";
 
 
     AppConfig()
@@ -142,5 +145,20 @@ public class AppConfig
     public boolean usageOfDevelopersContentEnabled()
     {
         return this.isDebugBuild && this.enableUsageOfDevelopersContent;
+    }
+
+    public String getDateFormat()
+    {
+        return this.dateFormat;
+    }
+
+    public String getYearFormat()
+    {
+        return this.yearFormat;
+    }
+
+    public String getTimeFormat()
+    {
+        return this.timeFormat;
     }
 }

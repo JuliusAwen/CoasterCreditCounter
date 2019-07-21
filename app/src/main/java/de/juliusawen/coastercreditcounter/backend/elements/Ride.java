@@ -7,13 +7,13 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class Ride extends Element
 {
@@ -36,8 +36,7 @@ public class Ride extends Element
 
     public static Ride create(Calendar calendar, UUID uuid)
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_TIME_PATTERN, Locale.getDefault());
-        Ride ride = new Ride(simpleDateFormat.format(calendar.getTime()), uuid == null ? UUID.randomUUID() : uuid, calendar);
+        Ride ride = new Ride(StringTool.fetchSimpleTime(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
         Log.v(Constants.LOG_TAG,  String.format("Ride.create:: %s created.", ride.getFullName()));
 
@@ -86,8 +85,7 @@ public class Ride extends Element
         this.calendar.set(Calendar.HOUR_OF_DAY, hour);
         this.calendar.set(Calendar.MINUTE, minute);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_TIME_PATTERN, Locale.getDefault());
-        String time = simpleDateFormat.format(this.calendar.getTime());
+        String time = StringTool.fetchSimpleTime(this.calendar);
 
         Log.d(Constants.LOG_TAG, String.format("Ride.setTime:: set time for %s to [%s] - changing name...", this, time));
 
@@ -100,9 +98,6 @@ public class Ride extends Element
         this.calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
         this.calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
-        String date = simpleDateFormat.format(this.calendar.getTime());
-
-        Log.d(Constants.LOG_TAG, String.format("Ride.setDate:: set date for %s to [%s]", this, date));
+        Log.d(Constants.LOG_TAG, String.format("Ride.setDate:: set date for %s to [%s]", this, StringTool.fetchSimpleDate(calendar)));
     }
 }

@@ -16,8 +16,6 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public class Settings
 {
-//    private boolean jumpToOpenVisitOnStart;
-
     //ShowPark - Visits
     private SortOrder defaultSortOrderParkVisits;
     private boolean expandLatestYearInListByDefault;
@@ -127,8 +125,6 @@ public class Settings
     {
         Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
 
-        //        this.setJumpToOpenVisitOnStart(false);
-
         this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
 
         this.setExpandLatestYearInListByDefault(true);
@@ -167,16 +163,6 @@ public class Settings
     {
         this.firstDayOfTheWeek = firstDayOfTheWeek;
     }
-
-//    public boolean jumpToOpenVisitOnStart()
-//    {
-//        return this.jumpToOpenVisitOnStart;
-//    }
-//
-//    void setJumpToOpenVisitOnStart(boolean jumpToOpenVisitOnStart)
-//    {
-//        this.jumpToOpenVisitOnStart = jumpToOpenVisitOnStart;
-//    }
 
     public int getDefaultIncrement()
     {

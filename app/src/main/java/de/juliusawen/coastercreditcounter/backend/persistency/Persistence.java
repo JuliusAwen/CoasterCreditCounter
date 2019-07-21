@@ -18,6 +18,7 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.application.Settings;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 
@@ -283,13 +284,18 @@ public class Persistence
         return file.exists();
     }
 
-    public int getTotalCoasterCreditsCount()
+    public int fetchTotalCoasterCreditsCount()
     {
-        return this.databaseWrapper.getTotalCoasterCreditsCount();
+        return this.databaseWrapper.fetchTotalCoasterCreditsCount();
     }
 
-    public int getTotalCoasterRidesCount()
+    public int fetchTotalCoasterRidesCount()
     {
-        return this.databaseWrapper.getTotalCoasterRidesCount();
+        return this.databaseWrapper.fetchTotalCoasterRidesCount();
+    }
+
+    public Visit fetchCurrentVisit()
+    {
+        return this.databaseWrapper.fetchCurrentVisit();
     }
 }

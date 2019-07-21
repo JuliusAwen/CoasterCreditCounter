@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
@@ -57,15 +58,6 @@ public class App extends Application
         App.persistence = Persistence.getInstance();
     }
 
-    @Override
-    public void onTerminate()
-    {
-        Log.e(Constants.LOG_TAG, "App.onTerminate:: app is terminated...");
-        App.isInitialized = false;
-
-        super.onTerminate();
-    }
-
     public static boolean initialize()
     {
 //                    try
@@ -80,9 +72,10 @@ public class App extends Application
         App.settings = Settings.getInstance(App.persistence);
         App.content = Content.getInstance(App.persistence);
 
+
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
 
-        if(App.settings.initialize() && App.content.initialize())
+        if(App.settings.initialize() && App.content.initialize() && App.initializeCurrentVisit())
         {
             App.isInitialized = true;
             return true;
@@ -91,5 +84,13 @@ public class App extends Application
         {
             return false;
         }
+    }
+
+    private static boolean initializeCurrentVisit()
+    {
+        Log.i(Constants.LOG_TAG, "App.initializeCurrentVisit:: initializing current visit...");
+        Visit.setCurrentVisit(App.persistence.fetchCurrentVisit());
+
+        return true;
     }
 }

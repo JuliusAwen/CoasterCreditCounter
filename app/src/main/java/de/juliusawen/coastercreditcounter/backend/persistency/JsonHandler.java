@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -910,17 +911,17 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(App.persistence.writeStringToInternalFile(App.config.getSettingsFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,  String.format("JsonHandler.saveSettings:: saving settings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("JsonHandler.saveSettings:: saving settings failed: could not write to json file - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings failed: could not write to json file - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("JsonHandler.saveSettings:: saving settings failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -939,27 +940,29 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "JsonHandler.create:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG, "JsonHandler.create:: empty implementation to satisfy interface");
         return false;
     }
 
     @Override
     public boolean update(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "JsonHandler.update:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG, "JsonHandler.update:: empty implementation to satisfy interface");
         return false;
     }
 
     @Override
     public boolean delete(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "JsonHandler.delete:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG, "JsonHandler.delete:: empty implementation to satisfy interface");
         return false;
     }
 
     @Override
-    public int getTotalCoasterCreditsCount()
+    public int fetchTotalCoasterCreditsCount()
     {
+        Stopwatch stopwatch = new Stopwatch(true);
+
         int totalCoasterCreditsCount = 0;
 
         for(IElement coaster : this.getAllCoasters())
@@ -970,12 +973,16 @@ public class JsonHandler implements IDatabaseWrapper
             }
         }
 
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterCreditsCount:: [%d] coaster credits found - took [%d]ms", totalCoasterCreditsCount, stopwatch.stop()));
+
         return totalCoasterCreditsCount;
     }
 
     @Override
-    public int getTotalCoasterRidesCount()
+    public int fetchTotalCoasterRidesCount()
     {
+        Stopwatch stopwatch = new Stopwatch(true);
+
         int totalCoasterRidesCount = 0;
 
         for(IElement coaster : this.getAllCoasters())
@@ -983,7 +990,22 @@ public class JsonHandler implements IDatabaseWrapper
             totalCoasterRidesCount += ((IAttraction)coaster).getTotalRideCount();
         }
 
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterRidesCount:: [%d] coaster rides found took [%d]ms", totalCoasterRidesCount, stopwatch.stop()));
+
         return totalCoasterRidesCount;
+    }
+
+    @Override
+    public Visit fetchCurrentVisit()
+    {
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        Calendar todaysCalendar = Calendar.getInstance();
+        Visit currentVisit = Visit.fetchVisitForYearAndDay(todaysCalendar, App.content.getContentAsType(Visit.class));
+
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisit:: fetching current visit took [%d]ms", stopwatch.stop()));
+
+        return currentVisit;
     }
 
     private List<IElement> getAllCoasters()

@@ -28,7 +28,8 @@
             android:layout_gravity="start"
             android:paddingStart="5dip"
             android:paddingEnd="5dip"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
@@ -41,7 +42,8 @@
             android:layout_gravity="start"
             android:paddingStart="5dip"
             android:paddingEnd="5dip"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

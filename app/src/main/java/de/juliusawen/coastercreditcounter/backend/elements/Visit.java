@@ -8,8 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -17,6 +17,7 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttra
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 /**
  * Parent: Park
@@ -24,9 +25,8 @@ import de.juliusawen.coastercreditcounter.toolbox.JsonTool;
  */
 public class Visit extends Element
 {
-    private static Visit openVisit;
+    private static Visit currentVisit;
     private static SortOrder sortOrder = SortOrder.DESCENDING;
-
     private final Calendar calendar;
 
     private Visit(String name, UUID uuid, Calendar calendar)
@@ -44,8 +44,7 @@ public class Visit extends Element
 
     public static Visit create(Calendar calendar, UUID uuid)
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
-        Visit visit = new Visit(simpleDateFormat.format(calendar.getTime()), uuid == null ? UUID.randomUUID() : uuid, calendar);
+        Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
         Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
         return visit;
@@ -118,8 +117,7 @@ public class Visit extends Element
 
     private void setName()
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.SIMPLE_DATE_FORMAT_DATE_PATTERN, Locale.getDefault());
-        String date = simpleDateFormat.format(this.calendar.getTime());
+        String date = StringTool.fetchSimpleDate(this.calendar);
 
         Log.d(Constants.LOG_TAG, String.format("Visit.setName:: set date for %s to [%s] - changing name...", this, date));
 
@@ -140,6 +138,12 @@ public class Visit extends Element
     @Override
     public void deleteElementAndDescendants()
     {
+
+        if(Visit.getCurrentVisit() != null && Visit.isCurrentVisit(this))
+        {
+            Visit.setCurrentVisit(null);
+        }
+
         for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
         {
             visitedAttraction.deleteElementAndDescendants();
@@ -147,51 +151,28 @@ public class Visit extends Element
         super.deleteElement();
     }
 
-    private boolean isOpenVisit()
+    public static Element getCurrentVisit()
     {
-        return Visit.getOpenVisit() != null && this.equals(Visit.getOpenVisit());
+        return Visit.currentVisit;
     }
 
-
-
-
-
-    public static Element getOpenVisit()
-    {
-        return Visit.openVisit;
-    }
-
-    public static void setOpenVisit(Element visit)
+    public static void setCurrentVisit(Visit visit)
     {
         if(visit != null)
         {
-            Log.i(Constants.LOG_TAG, String.format("Visit.setOpenVisit:: %s set as open visit", visit));
-            Visit.openVisit = (Visit) visit;
+            Log.i(Constants.LOG_TAG, String.format("Visit.setCurrentVisit:: %s set as current visit", visit));
+            Visit.currentVisit = visit;
         }
         else
         {
-            Log.i(Constants.LOG_TAG,"Visit.setOpenVisit:: open visit cleared");
-            Visit.openVisit = null;
+            Visit.currentVisit = null;
+            Log.i(Constants.LOG_TAG, "Visit.setCurrentVisit:: current visit is NULL");
         }
     }
 
-    public static boolean validateOpenVisit()
+    public static boolean isCurrentVisit(Visit visit)
     {
-        if(Visit.getOpenVisit() != null)
-        {
-            Calendar calendar = Calendar.getInstance();
-            Calendar visitCalender = Visit.openVisit.getCalendar();
-
-            if(Visit.isSameDay(calendar, visitCalender))
-            {
-                return true;
-            }
-            else
-            {
-                Visit.setOpenVisit(null);
-            }
-        }
-        return false;
+        return visit.equals(Visit.currentVisit);
     }
 
     public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)
@@ -208,5 +189,20 @@ public class Visit extends Element
     {
         Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to [%s]", sortOrder.toString()));
         Visit.sortOrder = sortOrder;
+    }
+
+    public static Visit fetchVisitForYearAndDay(Calendar calendar, List<Visit> visits)
+    {
+        for(Visit visit : visits)
+        {
+            if(Visit.isSameDay(visit.getCalendar(), calendar))
+            {
+                Log.d(Constants.LOG_TAG, String.format("Visit.fetchVisitForYearAndDay:: Found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
+                return visit;
+            }
+        }
+
+        Log.d(Constants.LOG_TAG, String.format("Visit.fetchVisitForYearAndDay:: No visit found for [%s]", StringTool.fetchSimpleDate(calendar)));
+        return null;
     }
 }

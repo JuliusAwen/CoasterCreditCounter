@@ -22,10 +22,12 @@ import com.google.android.material.snackbar.Snackbar;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -80,6 +82,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(App.isInitialized)
         {
+            invalidateOptionsMenu();
+
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
 
             this.setStatistics();
@@ -88,6 +92,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 this.navigationView.getMenu().getItem(i).setChecked(false);
             }
+
+            this.closeNavigationDrawer();
         }
     }
 
@@ -111,6 +117,15 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
         }
 
+        if(Visit.getCurrentVisit() != null)
+        {
+            menu.add(Menu.NONE, Constants.SELECTION_OPEN_CURRENT_VISIT, Menu.NONE, "open current visit")
+                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "NavigationHubActivity OCV added");
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -124,6 +139,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 Log.d(LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
                 this.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            }
+            else if(item.getItemId() == Constants.SELECTION_OPEN_CURRENT_VISIT)
+            {
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: opening visit %s...", Visit.getCurrentVisit()));
+                ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisit());
             }
 
             if(App.config.isDebugBuild())
@@ -166,12 +186,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    private void setStatistics()
-    {
-        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.getTotalCoasterCreditsCount()));
-        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_coaster_rides, App.persistence.getTotalCoasterRidesCount()));
-    }
-
     private void setExportFileAbsolutPath()
     {
         this.viewModel.exportFileAbsolutePath = App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName();
@@ -189,6 +203,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         //Todo: remove setEnabled(false)
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
+    }
+
+    private void setStatistics()
+    {
+        Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
+
+        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCoasterCreditsCount()));
+        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_coaster_rides, App.persistence.fetchTotalCoasterRidesCount()));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)

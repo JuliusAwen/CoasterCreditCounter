@@ -182,7 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
             Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); //this clears the stacktrace
             ActivityTool.startActivityViaIntent(this, intent);
         }
     }
