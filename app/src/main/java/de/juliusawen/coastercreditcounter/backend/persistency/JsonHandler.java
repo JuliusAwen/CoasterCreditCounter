@@ -990,7 +990,7 @@ public class JsonHandler implements IDatabaseWrapper
             totalCoasterRidesCount += ((IAttraction)coaster).getTotalRideCount();
         }
 
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterRidesCount:: [%d] coaster rides found took [%d]ms", totalCoasterRidesCount, stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterRidesCount:: [%d] coaster rides found - took [%d]ms", totalCoasterRidesCount, stopwatch.stop()));
 
         return totalCoasterRidesCount;
     }
