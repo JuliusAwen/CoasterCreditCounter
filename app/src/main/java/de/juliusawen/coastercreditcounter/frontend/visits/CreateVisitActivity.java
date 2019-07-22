@@ -81,11 +81,15 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 {
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction); //cannot mark for creation --> is TemporaryElement
+                    App.content.addElement(visitedAttraction);
+                    super.markForCreation(visitedAttraction);
                 }
+
+                super.markForUpdate(this.viewModel.visit);
 
                 this.returnResult(Activity.RESULT_OK);
             }
+
         }
         else if(resultCode == Activity.RESULT_CANCELED)
         {
@@ -184,7 +188,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
-            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - setting as todays visit");
+            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - setting as current visit");
             Visit.setCurrentVisit(this.viewModel.visit);
         }
 
@@ -270,6 +274,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
 
         setResult(resultCode, intent);
+        super.synchronizePersistency(); // has to be called manually as after finish() BaseActivity.onPause() is not called for some reason...
+
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
     }
