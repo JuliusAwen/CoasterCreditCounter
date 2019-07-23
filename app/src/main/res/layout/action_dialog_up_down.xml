@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/standard_bar_layout"
+    style="@style/standard_bar_layout_40"
     android:id="@+id/linearLayoutActionDialogUpDown"
     android:background="?android:attr/colorPrimary"
     android:elevation="6dp"
@@ -15,11 +15,9 @@
         android:background="?android:attr/selectableItemBackground">
 
     <ImageButton
-        style="@style/standard_image_holder"
+        style="@style/standard_image_holder_28"
         android:id="@+id/buttonActionDialogUpDown_Down"
         android:contentDescription="@string/description_ok"
-        android:layout_height="28dp"
-        android:layout_width="28dp"
         android:background="@android:color/transparent"
         android:clickable="false" />
 
@@ -40,11 +38,9 @@
         android:background="?android:attr/selectableItemBackground">
 
         <ImageButton
-            style="@style/standard_image_holder"
+            style="@style/standard_image_holder_28"
             android:id="@+id/buttonActionDialogUpDown_Up"
             android:contentDescription="@string/description_cancel"
-            android:layout_height="28dp"
-            android:layout_width="28dp"
             android:background="@android:color/transparent"
             android:clickable="false" />
 

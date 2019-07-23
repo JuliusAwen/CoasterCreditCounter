@@ -33,7 +33,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/standard_text_view"
+                    style="@style/standard_text_view_16"
                     android:id="@+id/textViewHelp_Title"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
@@ -43,7 +43,7 @@
                     android:layout_weight="1"/>
 
                 <ImageButton
-                    style="@style/standard_image_holder"
+                    style="@style/standard_image_holder_28"
                     android:id="@+id/imageButtonHelp_Close"
                     android:layout_height="30dp"
                     android:layout_marginBottom="16dp"

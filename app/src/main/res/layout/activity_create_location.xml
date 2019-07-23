@@ -15,7 +15,7 @@
             layout="@layout/toolbar"/>
 
         <EditText
-            style="@style/standard_edit_text"
+            style="@style/standard_edit_text_16"
             android:id="@+id/editTextCreateLocation"
             android:hint="@string/hint_enter_location_name"
             android:layout_margin="16dp"

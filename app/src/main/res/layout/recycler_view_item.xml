@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/standard_bar_layout"
+    style="@style/standard_bar_layout_40"
     android:id="@+id/linearLayoutRecyclerViewItem"
     android:background="@color/lightGrey"
     android:orientation="vertical"
@@ -20,11 +20,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="UseCompoundDrawables">
+        tools:ignore="UseCompoundDrawables"
+        android:background="@drawable/background_selectable_toggle">
 
         <ImageView
             android:id="@+id/imageViewRecyclerViewItem"
-            style="@style/selectable_image_holder"
+            style="@style/selectable_image_holder_28"
             android:layout_height="@dimen/standard_bar_height"
             android:contentDescription="@string/description_image_view"/>
 
@@ -38,7 +39,7 @@
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_UpperDetail"
-                style="@style/detail_text_view"
+                style="@style/detail_text_view_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -46,14 +47,14 @@
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_Name"
-                style="@style/standard_text_view"
+                style="@style/standard_text_view_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"/>
 
             <TextView
                 android:id="@+id/textViewRecyclerViewItem_LowerDetail"
-                style="@style/detail_text_view"
+                style="@style/detail_text_view_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"

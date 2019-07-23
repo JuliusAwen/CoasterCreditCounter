@@ -28,7 +28,7 @@
             android:visibility="gone" >
 
             <TextView
-                style="@style/standard_text_view"
+                style="@style/standard_text_view_16"
                 android:id="@+id/textViewPickElements_SelectAll"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

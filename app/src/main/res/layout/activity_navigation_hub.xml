@@ -19,30 +19,28 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
-            style="@style/standard_text_view"
+            style="@style/standard_text_view_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="14dp"
             android:gravity="start"
             android:layout_gravity="start"
             android:paddingStart="5dip"
             android:paddingEnd="5dip"
-            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
-            style="@style/standard_text_view"
+            style="@style/standard_text_view_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="14dp"
             android:gravity="start"
             android:layout_gravity="start"
             android:paddingStart="5dip"
             android:paddingEnd="5dip"
-            android:textSize="20sp"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -54,7 +52,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:itemTextAppearance="@style/navigation_drawer"
+        app:itemTextAppearance="@style/navigation_drawer_16"
         app:itemIconPadding="14dp"
         app:menu="@menu/menu_navigation_drawer" />
 

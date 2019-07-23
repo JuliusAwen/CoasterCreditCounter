@@ -16,7 +16,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    style="@style/standard_edit_text"
+                    style="@style/standard_edit_text_16"
                     android:id="@+id/editTextCreateOrEditAttractionName"
                     android:hint="@string/hint_enter_attraction_name"
                     android:textSize="16sp"
@@ -32,14 +33,15 @@
                     tools:ignore="Autofill"/>
 
                 <LinearLayout
-                    style="@style/standard_bar_layout"
+                    style="@style/standard_bar_layout_40"
                     android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
-                        style="@style/standard_bar_layout"
+                        style="@style/standard_bar_layout_40"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -47,33 +49,34 @@
                         android:layout_marginEnd="8dp">
 
                         <TextView
-                            style="@style/spinner_label_text_view"
+                            style="@style/spinner_label_text_view_16"
                             android:text="@string/spinner_text_attraction_type"/>
 
                         <Spinner
                             android:id="@+id/spinnerCreateOrEditAttraction_AttractionType"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_AttractionType"
-                        style="@style/standard_image_holder"
+                        style="@style/standard_image_holder_28"
                         android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/standard_bar_layout"
+                    style="@style/standard_bar_layout_40"
                     android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
-                        style="@style/standard_bar_layout"
+                        style="@style/standard_bar_layout_40"
                         android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -82,33 +85,34 @@
                         android:layout_marginEnd="8dp">
 
                         <TextView
-                            style="@style/spinner_label_text_view"
+                            style="@style/spinner_label_text_view_16"
                             android:text="@string/spinner_text_manufacturer"/>
 
                         <Spinner
                             android:id="@+id/spinnerCreateOrEditAttraction_Manufacturer"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_Manufacturer"
-                        style="@style/standard_image_holder"
+                        style="@style/standard_image_holder_28"
                         android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/standard_bar_layout"
+                    style="@style/standard_bar_layout_40"
                     android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
-                        style="@style/standard_bar_layout"
+                        style="@style/standard_bar_layout_40"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -116,33 +120,34 @@
                         android:layout_marginEnd="8dp">
 
                         <TextView
-                            style="@style/spinner_label_text_view"
+                            style="@style/spinner_label_text_view_16"
                             android:text="@string/spinner_text_attraction_category"/>
 
                         <Spinner
                             android:id="@+id/spinnerCreateOrEditAttraction_AttractionCategory"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_AttractionCategory"
-                        style="@style/standard_image_holder"
+                        style="@style/standard_image_holder_28"
                         android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/standard_bar_layout"
+                    style="@style/standard_bar_layout_40"
                     android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
-                        style="@style/standard_bar_layout"
+                        style="@style/standard_bar_layout_40"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -150,19 +155,19 @@
                         android:layout_marginEnd="8dp">
 
                         <TextView
-                            style="@style/spinner_label_text_view"
+                            style="@style/spinner_label_text_view_16"
                             android:text="@string/spinner_text_status"/>
 
                         <Spinner
                             android:id="@+id/spinnerCreateOrEditAttraction_Status"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/imageViewCreateOrEditAttraction_Status"
-                        style="@style/standard_image_holder"
+                        style="@style/standard_image_holder_28"
                         android:layout_height="@dimen/half_standard_bar_height"
                         android:contentDescription="@string/description_image_view"/>
 
@@ -174,7 +179,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/standard_text_view"
+                        style="@style/standard_text_view_16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="start"
@@ -187,7 +192,7 @@
 
                     <EditText
                         android:id="@+id/editTextCreateOrEditAttractionUntrackedRideCount"
-                        style="@style/standard_edit_text"
+                        style="@style/standard_edit_text_16"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="16dp"

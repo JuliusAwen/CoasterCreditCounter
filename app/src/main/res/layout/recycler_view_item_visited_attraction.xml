@@ -27,7 +27,7 @@
             tools:ignore="DisableBaselineAlignment">
 
             <ImageView
-                style="@style/standard_image_holder"
+                style="@style/standard_image_holder_28"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
                 android:contentDescription="@string/description_decrease"
                 android:layout_height="24dp"
@@ -45,14 +45,14 @@
                 android:layout_weight="1">
 
                 <TextView
-                    style="@style/standard_text_view"
+                    style="@style/standard_text_view_16"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="bottom|center_horizontal"/>
 
                 <TextView
-                    style="@style/standard_text_view"
+                    style="@style/standard_text_view_16"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
                     android:layout_gravity="center"
                     android:gravity="center" />
@@ -60,7 +60,7 @@
             </LinearLayout>
 
             <ImageView
-                style="@style/standard_image_holder"
+                style="@style/standard_image_holder_28"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
                 android:contentDescription="@string/description_increase"
                 android:layout_height="24dp"
@@ -74,7 +74,7 @@
     </LinearLayout>
 
     <TextView
-        style="@style/standard_text_view"
+        style="@style/standard_text_view_16"
         android:id="@+id/textViewRecyclerViewItemVisitedAttraction_PrettyPrint"
         android:textSize="14sp"
         android:layout_marginStart="48dp"

@@ -18,7 +18,7 @@
         android:paddingStart="16dp" >
 
         <TextView
-            style="@style/navigation_drawer_headline"
+            style="@style/navigation_drawer_headline_20"
             android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:text="@string/name_app"/>
 
         <TextView
-            style="@style/navigation_drawer_Subhead"
+            style="@style/navigation_drawer_Subhead_16"
             android:gravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
