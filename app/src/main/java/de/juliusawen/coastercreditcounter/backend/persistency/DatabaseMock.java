@@ -144,9 +144,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         chiapas.setManufacturer(manufacturers.Intamin);
         phantasialand.addChildAndSetParent(chiapas);
 
-        CustomAttraction talocan = CustomAttraction.create("Talocan", 0, null);
-        talocan.setAttractionCategory(attractionCategories.ThrillRides);
-        talocan.setManufacturer(manufacturers.Huss);
+        StockAttraction talocan = StockAttraction.create("Talocan", attractionBlueprints.SuspendedTopSpin, 0, null);
         phantasialand.addChildAndSetParent(talocan);
 
         CustomAttraction fengJuPalace = CustomAttraction.create("Feng Ju Palace", 0, null);
@@ -1585,6 +1583,7 @@ class CoasterBlueprints
 class AttractionBlueprints
 {
     AttractionBlueprint TopSpin = AttractionBlueprint.create("Top Spin", null);
+    AttractionBlueprint SuspendedTopSpin = AttractionBlueprint.create("Suspended Top Spin", null);
     AttractionBlueprint BreakDancer = AttractionBlueprint.create("Break Dancer", null);
     AttractionBlueprint DiskO = AttractionBlueprint.create("Disk'O", null);
     AttractionBlueprint Condor = AttractionBlueprint.create("Condor", null);
@@ -1597,6 +1596,9 @@ class AttractionBlueprints
     {
         TopSpin.setAttractionCategory(attractionCategories.ThrillRides);
         TopSpin.setManufacturer(manufacturers.Huss);
+
+        SuspendedTopSpin.setAttractionCategory(attractionCategories.ThrillRides);
+        SuspendedTopSpin.setManufacturer(manufacturers.Huss);
 
         BreakDancer.setAttractionCategory(attractionCategories.ThrillRides);
         BreakDancer.setManufacturer(manufacturers.Huss);
@@ -1614,6 +1616,7 @@ class AttractionBlueprints
         Ranger.setManufacturer(manufacturers.Huss);
 
         All.add(TopSpin);
+        All.add(SuspendedTopSpin);
         All.add(BreakDancer);
         All.add(DiskO);
         All.add(Condor);
