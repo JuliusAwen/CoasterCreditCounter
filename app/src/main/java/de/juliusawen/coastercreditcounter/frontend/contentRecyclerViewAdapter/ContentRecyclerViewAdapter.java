@@ -60,6 +60,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final AdapterType adapterType;
     private int groupType;
+    private boolean formatAsPrettyPrint;
 
     private final boolean selectMultipleItems;
     private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
@@ -221,6 +222,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     static class ViewHolderItem extends RecyclerView.ViewHolder
     {
         final LinearLayout linearLayout;
+        final View viewSeperator;
         final ImageView imageViewExpandToggle;
         final TextView textViewDetailAbove;
         final TextView textViewName;
@@ -231,6 +233,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             super(view);
             this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerViewItem);
+            this.viewSeperator = view.findViewById(R.id.viewRecyclerViewItem_Seperator);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
             this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_UpperDetail);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
@@ -390,147 +393,155 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
         //setExpandToggle
+        viewHolder.imageViewExpandToggle.setTag(item);
+        if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
         {
-            viewHolder.imageViewExpandToggle.setTag(item);
-            if(!this.getRelevantChildren(item).isEmpty())
+            if(this.expandedItems.contains(item))
             {
-                if(this.expandedItems.contains(item))
-                {
-                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
-                }
-                else
-                {
-                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
-                }
-
-                viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
+
+            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
         }
+        else
+        {
+            viewHolder.imageViewExpandToggle.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+        }
+
+        if(!this.formatAsPrettyPrint)
+        {
+            viewHolder.viewSeperator.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            viewHolder.viewSeperator.setVisibility(View.GONE);
+        }
+
 
 
         //decorate item
+
+        viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
+
+        //set typeface
+        for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
         {
-            viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
-
-            //set typeface
-            for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
+            if(typeByTypeface.getValue().contains(item.getClass()))
             {
-                if(typeByTypeface.getValue().contains(item.getClass()))
-                {
-                    viewHolder.textViewName.setTypeface(null, typeByTypeface.getKey());
-                    break;
-                }
-            }
-
-            if(this.specialStringResourcesByType.containsKey(item.getClass()))
-            {
-                if(item instanceof Visit)
-                {
-                    viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
-                }
-            }
-            else
-            {
-                viewHolder.textViewName.setText(item.getName());
-            }
-
-            //decorate detail aboce
-            Class type = item.getClass();
-
-            if(this.displayManufacturers && this.typesToDisplayManufacturer.contains(type))
-            {
-                viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
-                viewHolder.textViewDetailAbove.setText(((Attraction)item).getManufacturer().getName());
-            }
-            else if(this.displayAttractionCategories && typesToDisplayAttractionCategory.contains(type))
-            {
-                viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
-                viewHolder.textViewDetailAbove.setText(((IAttraction)item).getAttractionCategory().getName());
-            }
-            else
-            {
-                viewHolder.textViewDetailAbove.setVisibility(View.GONE);
-            }
-
-            //decorate detail below
-            if(this.displayLocations && this.typesToDisplayLocation.contains(type))
-            {
-                viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
-
-                String locationName;
-
-                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
-                {
-                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
-                    viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
-                }
-                else
-                {
-                    locationName = item.getParent().getName();
-                    viewHolder.textViewDetailBelow.setTypeface(null, Typeface.NORMAL);
-                }
-
-                viewHolder.textViewDetailBelow.setText(locationName);
-            }
-            else if((this.displayStatus && this.typesToDisplayStatus.contains(type) || (this.displayTotalRideCount && this.typesToDisplayTotalRideCount.contains(type))))
-            {
-                viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
-                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
-
-                String text = "";
-
-                if(this.displayStatus)
-                {
-                    text += ((IAttraction)item).getStatus().getName();
-                }
-
-                if(this.displayStatus && this.displayTotalRideCount)
-                {
-                    text += App.getContext().getString(R.string.text_lower_detail_seperator);
-                }
-
-                if(this.displayTotalRideCount)
-                {
-                    text += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
-                }
-
-
-                viewHolder.textViewDetailBelow.setText(text);
-            }
-            else
-            {
-                viewHolder.textViewDetailBelow.setVisibility(View.GONE);
-            }
-
-            viewHolder.itemView.setTag(item);
-
-            if(this.selectedItemsInOrderOfSelection.contains(item))
-            {
-                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
-            }
-            else
-            {
-                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
-            }
-
-            if(!viewHolder.itemView.hasOnClickListeners())
-            {
-                if(this.adapterType == AdapterType.SELECTABLE)
-                {
-                    viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
-                }
-                else if(this.recyclerOnClickListener != null)
-                {
-                    viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-                    viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-                }
+                viewHolder.textViewName.setTypeface(null, typeByTypeface.getKey());
+                break;
             }
         }
+
+        if(this.specialStringResourcesByType.containsKey(item.getClass()))
+        {
+            if(item instanceof Visit)
+            {
+                viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+            }
+        }
+        else
+        {
+            viewHolder.textViewName.setText(item.getName());
+        }
+
+        //decorate detail above
+        Class type = item.getClass();
+
+        if(this.displayManufacturers && this.typesToDisplayManufacturer.contains(type))
+        {
+            viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
+            viewHolder.textViewDetailAbove.setText(((Attraction)item).getManufacturer().getName());
+        }
+        else if(this.displayAttractionCategories && typesToDisplayAttractionCategory.contains(type))
+        {
+            viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
+            viewHolder.textViewDetailAbove.setText(((IAttraction)item).getAttractionCategory().getName());
+        }
+        else
+        {
+            viewHolder.textViewDetailAbove.setVisibility(View.GONE);
+        }
+
+        //decorate detail below
+        if(this.displayLocations && this.typesToDisplayLocation.contains(type))
+        {
+            viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
+
+            String locationName;
+
+            if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+            {
+                // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+                locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
+            }
+            else
+            {
+                locationName = item.getParent().getName();
+                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.NORMAL);
+            }
+
+            viewHolder.textViewDetailBelow.setText(locationName);
+        }
+        else if((this.displayStatus && this.typesToDisplayStatus.contains(type) || (this.displayTotalRideCount && this.typesToDisplayTotalRideCount.contains(type))))
+        {
+            viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
+            viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
+
+            String text = "";
+
+            if(this.displayStatus)
+            {
+                text += ((IAttraction)item).getStatus().getName();
+            }
+
+            if(this.displayStatus && this.displayTotalRideCount)
+            {
+                text += App.getContext().getString(R.string.text_lower_detail_seperator);
+            }
+
+            if(this.displayTotalRideCount)
+            {
+                text += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+            }
+
+
+            viewHolder.textViewDetailBelow.setText(text);
+        }
+        else
+        {
+            viewHolder.textViewDetailBelow.setVisibility(View.GONE);
+        }
+
+        viewHolder.itemView.setTag(item);
+
+        if(this.selectedItemsInOrderOfSelection.contains(item))
+        {
+            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
+        }
+        else
+        {
+            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
+        }
+
+        if(!viewHolder.itemView.hasOnClickListeners())
+        {
+            if(this.adapterType == AdapterType.SELECTABLE)
+            {
+                viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
+            }
+            else if(this.recyclerOnClickListener != null)
+            {
+                viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+            }
+        }
+
 
         //indentLayout based on generation
         int padding = ConvertTool.convertDpToPx(
@@ -543,7 +554,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         VisitedAttraction visitedAttraction = (VisitedAttraction) this.items.get(position);
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", visitedAttraction, position));
 
-        if(((Visit)visitedAttraction.getParent()).isOpenForEditing())
+        if(!this.formatAsPrettyPrint)
         {
             viewHolder.textViewPrettyPrint.setVisibility(View.GONE);
             viewHolder.linearLayoutEditable.setVisibility(View.VISIBLE);
@@ -1142,5 +1153,21 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void displayTotalRideCount(boolean display)
     {
         this.displayTotalRideCount = display;
+    }
+
+    public void formatAsPrettyPrint(boolean formatAsPrettyPrint)
+    {
+        this.formatAsPrettyPrint = formatAsPrettyPrint;
+
+        if(formatAsPrettyPrint)
+        {
+            this.expandAll();
+        }
+        else
+        {
+            this.collapseAll();
+        }
+
+        notifyDataSetChanged();
     }
 }

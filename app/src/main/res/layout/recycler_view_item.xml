@@ -9,13 +9,12 @@
     android:layout_height="wrap_content">
 
     <View
+        android:id="@+id/viewRecyclerViewItem_Seperator"
         android:layout_height="1dp"
         android:layout_width="match_parent"
         android:background="@color/grey"
         android:paddingStart="27dp"
-        android:paddingEnd="27dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="2dp"/>
+        android:paddingEnd="27dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

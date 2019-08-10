@@ -114,7 +114,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 IElement resultElement = ResultTool.fetchResultElement(data);
 
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<OPEN_CURRENT_VISIT>:: opening current visit %s...", resultElement));
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<SHORTCUT_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
 
                 ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
             }
@@ -144,7 +144,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(!Visit.getCurrentVisits().isEmpty())
         {
-            menu.add(Menu.NONE, Constants.SELECTION_OPEN_CURRENT_VISIT, Menu.NONE, "open current visit")
+            menu.add(Menu.NONE, Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT, Menu.NONE, "shortcut to current visit")
                     .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
@@ -163,11 +163,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 this.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
-            else if(item.getItemId() == Constants.SELECTION_OPEN_CURRENT_VISIT)
+            else if(item.getItemId() == Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT)
             {
                 if(Visit.getCurrentVisits().size() > 1)
                 {
-                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: [%d] current visits found - offering pick",
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: [%d] current visits found - offering pick",
                             Visit.getCurrentVisits().size()));
 
                     ActivityTool.startActivityPickForResult(
@@ -177,7 +177,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 }
                 else
                 {
-                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: only one current visit found - opening %s...",
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: only one current visit found - opening %s...",
                             Visit.getCurrentVisits().get(0)));
 
                     ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));

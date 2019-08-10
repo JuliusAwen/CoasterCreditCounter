@@ -99,16 +99,28 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            if(!this.allAttractionsAdded())
+            if(this.allAttractionsAdded())
+            {
+                super.disableFloatingActionButton();
+            }
+            else
             {
                 super.addFloatingActionButton();
                 this.decorateFloatingActionButton();
                 this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
             }
+
+            if(this.viewModel.visit.isEditingEnabled())
+            {
+                super.setFloatingActionButtonVisibility(true);
+            }
             else
             {
-                super.disableFloatingActionButton();
+                super.setFloatingActionButtonVisibility(false);
+                this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
             }
+
+            Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
         }
     }
 
@@ -124,21 +136,17 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         menu.clear();
 
-        if(this.viewModel.visit.isOpenForEditing())
+        if(this.viewModel.visit.isEditingEnabled())
         {
-            menu.add(Menu.NONE, Constants.SELECTION_CLOSE_VISIT_FOR_EDITING, Menu.NONE, "close visit for editing")
+            menu.add(Menu.NONE, Constants.SELECTION_DISABLE_EDITING, Menu.NONE, "disable editing")
                     .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_block, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            super.setFloatingActionButtonVisibility(true);
         }
         else
         {
-            menu.add(Menu.NONE, Constants.SELECTION_OPEN_VISIT_FOR_EDITING, Menu.NONE, "open visit for editing")
+            menu.add(Menu.NONE, Constants.SELECTION_ENABLE_EDITING, Menu.NONE, "enable for editing")
                     .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_create, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            super.setFloatingActionButtonVisibility(false);
         }
 
         menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
@@ -158,20 +166,26 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             this.viewModel.contentRecyclerViewAdapter.collapseAll();
         }
-        else if(item.getItemId() == Constants.SELECTION_OPEN_VISIT_FOR_EDITING)
+        else if(item.getItemId() == Constants.SELECTION_ENABLE_EDITING)
         {
-            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<OPEN_VISIT_FOR_EDITING>:: opening %s for editing...", this.viewModel.visit));
-            this.viewModel.visit.setOpenForEditing(true);
+            super.setFloatingActionButtonVisibility(true);
+            this.viewModel.visit.setEditingEnabled(true);
+            this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(false);
             invalidateOptionsMenu();
-            this.updateContentRecyclerView(false);
+
+            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
+
             return true;
         }
-        else if(item.getItemId() == Constants.SELECTION_CLOSE_VISIT_FOR_EDITING)
+        else if(item.getItemId() == Constants.SELECTION_DISABLE_EDITING)
         {
-            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<CLOSE_VISIT_FOR_EDITING>:: closing %s for editing...", this.viewModel.visit));
-            this.viewModel.visit.setOpenForEditing(false);
+            super.setFloatingActionButtonVisibility(false);
+            this.viewModel.visit.setEditingEnabled(false);
+            this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
             invalidateOptionsMenu();
-            this.updateContentRecyclerView(false);
+
+            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
+
             return true;
         }
 
@@ -194,8 +208,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         new ArrayList<IElement>(getNotYetAddedAttractions()));
             }
         });
-
-        super.setFloatingActionButtonVisibility(true);
     }
 
     @Override

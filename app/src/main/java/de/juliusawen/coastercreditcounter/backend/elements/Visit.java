@@ -30,7 +30,7 @@ public class Visit extends Element
     private static SortOrder sortOrder = SortOrder.DESCENDING;
     private final Calendar calendar;
 
-    private boolean isOpenForEditing;
+    private boolean isEditingEnabled;
 
     private Visit(String name, UUID uuid, Calendar calendar)
     {
@@ -165,7 +165,7 @@ public class Visit extends Element
         if(visit != null)
         {
             Log.i(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
-            visit.setOpenForEditing(true);
+            visit.setEditingEnabled(true);
             Visit.currentVisits.add(visit);
         }
     }
@@ -208,14 +208,14 @@ public class Visit extends Element
         return foundVisits;
     }
 
-    public void setOpenForEditing(boolean open)
+    public void setEditingEnabled(boolean enabled)
     {
-        Log.d(Constants.LOG_TAG, String.format("Visit.setOpenForEditing:: %s is open for editing set to [%s]", this, open));
-        this.isOpenForEditing = open;
+        Log.d(Constants.LOG_TAG, String.format("Visit.setEditingEnabled:: %s editing enabled set to [%s]", this, enabled));
+        this.isEditingEnabled = enabled;
     }
 
-    public boolean isOpenForEditing()
+    public boolean isEditingEnabled()
     {
-        return this.isOpenForEditing;
+        return this.isEditingEnabled;
     }
 }
