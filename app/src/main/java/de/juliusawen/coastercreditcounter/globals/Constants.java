@@ -75,6 +75,7 @@ public abstract class Constants
     public static final String EXTRA_ELEMENTS_TO_DELETE_UUIDS = "de.juliusawen.coding.extra_elements_to_delete_uuids";
     public static final String EXTRA_TYPE_TO_MANAGE = "de.juliusawen.coding.extra_type_to_manage";
     public static final String EXTRA_REQUEST_CODE = "de.juliusawen.coding.extra_request_code";
+    public static final String EXTRA_SIMPLE_PICK = "de.juliusawen.coding.extra_simple_pick";
 
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";
@@ -181,6 +182,7 @@ public abstract class Constants
     public static final int REQUEST_CODE_PICK_PARKS = RequestCode.PICK_PARKS.ordinal();
     public static final int REQUEST_CODE_PICK_ATTRACTIONS = RequestCode.PICK_ATTRACTIONS.ordinal();
     public static final int REQUEST_CODE_PICK_STATUS = RequestCode.PICK_STATUS.ordinal();
+    public static final int REQUEST_CODE_PICK_VISIT = RequestCode.PICK_VISIT.ordinal();
 
     public static final int REQUEST_CODE_DELETE = RequestCode.DELETE.ordinal();
     public static final int REQUEST_CODE_REMOVE = RequestCode.REMOVE.ordinal();
@@ -293,6 +295,7 @@ public abstract class Constants
         PICK_PARKS,
         PICK_ATTRACTIONS,
         PICK_STATUS,
+        PICK_VISIT,
 
         DELETE,
         REMOVE,

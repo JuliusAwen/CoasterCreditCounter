@@ -24,6 +24,7 @@ import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategory
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -58,6 +59,8 @@ public class PickElementsActivity extends BaseActivity
             {
                 this.viewModel.requestCode = getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, -1);
             }
+
+            this.viewModel.isSimplePick = getIntent().getBooleanExtra(Constants.EXTRA_SIMPLE_PICK, false);
 
             if(this.viewModel.elementsToPickFrom == null)
             {
@@ -104,6 +107,19 @@ public class PickElementsActivity extends BaseActivity
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                 }
+                else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT)
+                {
+                    this.useSelectOrDeselectAllBar = false;
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            false,
+                            Constants.TYPE_NONE);
+
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
+                }
                 else
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
@@ -124,8 +140,11 @@ public class PickElementsActivity extends BaseActivity
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButton();
+            if(!this.viewModel.isSimplePick)
+            {
+                super.addFloatingActionButton();
+                this.decorateFloatingActionButton();
+            }
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
 
@@ -267,15 +286,23 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(!view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
+                if(PickElementsActivity.this.viewModel.isSimplePick)
                 {
-                    changeRadioButtonToDeselectAll();
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: simple pick - return code <OK>");
+                    returnResult(RESULT_OK);
                 }
                 else
                 {
-                    if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+                    if(!view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
                     {
-                        changeRadioButtonToSelectAll();
+                        changeRadioButtonToDeselectAll();
+                    }
+                    else
+                    {
+                        if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+                        {
+                            changeRadioButtonToSelectAll();
+                        }
                     }
                 }
             }
@@ -312,7 +339,8 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+            if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT)
             {
                 Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());

@@ -289,6 +289,9 @@ public abstract class ActivityTool
     {
         String toolbarTitle = null;
         String toolbarSubtitle = null;
+
+        Intent intent = new Intent(context, PickElementsActivity.class);
+
         if(requestCode == Constants.REQUEST_CODE_PICK_LOCATIONS)
         {
             toolbarTitle = context.getString(R.string.title_locations_pick);
@@ -318,11 +321,20 @@ public abstract class ActivityTool
         {
             toolbarTitle = context.getString(R.string.title_status_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_status_assign_to_attraction);
+
+            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
         }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_VISIT)
+        {
+            toolbarTitle = context.getString(R.string.title_visit_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_visit_pick_to_open);
+
+            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
+        }
+
 
         if(toolbarSubtitle != null)
         {
-            Intent intent = new Intent(context, PickElementsActivity.class);
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);

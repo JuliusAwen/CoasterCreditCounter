@@ -10,6 +10,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 class PickElementsActivityViewModel extends ViewModel
 {
     int requestCode = -1;
+    boolean isSimplePick;
     List<IElement> elementsToPickFrom;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
 }

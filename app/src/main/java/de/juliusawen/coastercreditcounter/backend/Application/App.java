@@ -88,8 +88,11 @@ public class App extends Application
 
     private static boolean initializeCurrentVisit()
     {
-        Log.i(Constants.LOG_TAG, "App.initializeCurrentVisit:: initializing current visit...");
-        Visit.setCurrentVisit(App.persistence.fetchCurrentVisit());
+        Log.i(Constants.LOG_TAG, "App.initializeCurrentVisit:: initializing current visits...");
+        for(Visit visit : App.persistence.fetchCurrentVisits())
+        {
+            Visit.addCurrentVisit(visit);
+        }
 
         return true;
     }

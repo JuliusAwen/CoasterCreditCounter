@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.backend.persistency;
 
+import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -20,5 +21,5 @@ public interface IDatabaseWrapper
     int fetchTotalCoasterCreditsCount();
     int fetchTotalCoasterRidesCount();
 
-    Visit fetchCurrentVisit();
+    List<Visit> fetchCurrentVisits();
 }

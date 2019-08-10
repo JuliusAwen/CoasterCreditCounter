@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -294,8 +295,8 @@ public class Persistence
         return this.databaseWrapper.fetchTotalCoasterRidesCount();
     }
 
-    public Visit fetchCurrentVisit()
+    public List<Visit> fetchCurrentVisits()
     {
-        return this.databaseWrapper.fetchCurrentVisit();
+        return this.databaseWrapper.fetchCurrentVisits();
     }
 }

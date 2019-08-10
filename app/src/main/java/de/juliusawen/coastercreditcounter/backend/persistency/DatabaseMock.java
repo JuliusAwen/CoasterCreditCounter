@@ -1414,9 +1414,9 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
-    public Visit fetchCurrentVisit()
+    public List<Visit> fetchCurrentVisits()
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisit:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisits:: empty implementation to satisfy interface");
         return null;
     }
 

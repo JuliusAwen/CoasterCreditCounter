@@ -1,6 +1,8 @@
 package de.juliusawen.coastercreditcounter.frontend.navigationHub;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,14 +22,18 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -98,6 +104,25 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.i(Constants.LOG_TAG, String.format("NavigationHubActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
+        if(resultCode == Activity.RESULT_OK)
+        {
+            if(requestCode == Constants.REQUEST_CODE_PICK_VISIT)
+            {
+                IElement resultElement = ResultTool.fetchResultElement(data);
+
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<OPEN_CURRENT_VISIT>:: opening current visit %s...", resultElement));
+
+                ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
+            }
+
+        }
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
@@ -117,7 +142,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
         }
 
-        if(Visit.getCurrentVisit() != null)
+        if(!Visit.getCurrentVisits().isEmpty())
         {
             menu.add(Menu.NONE, Constants.SELECTION_OPEN_CURRENT_VISIT, Menu.NONE, "open current visit")
                     .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
@@ -140,8 +165,23 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             else if(item.getItemId() == Constants.SELECTION_OPEN_CURRENT_VISIT)
             {
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: opening visit %s...", Visit.getCurrentVisit()));
-                ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisit());
+                if(Visit.getCurrentVisits().size() > 1)
+                {
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: [%d] current visits found - offering pick",
+                            Visit.getCurrentVisits().size()));
+
+                    ActivityTool.startActivityPickForResult(
+                            this,
+                            Constants.REQUEST_CODE_PICK_VISIT,
+                            new ArrayList<IElement>(Visit.getCurrentVisits()));
+                }
+                else
+                {
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<OPEN_CURRENT_VISIT>:: only one current visit found - opening %s...",
+                            Visit.getCurrentVisits().get(0)));
+
+                    ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
+                }
             }
 
             if(App.config.isDebugBuild())
@@ -526,8 +566,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.hideProgressBar();
         this.setMenuItemImportAvailability();
         this.viewModel.isExporting = false;
-        Toaster.makeLongToast(NavigationHubActivity.this,
-                getString(R.string.information_export_success, App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName()));
+        Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success,
+                App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath() + "/" + App.config.getContentFileName()));
     }
 }
 

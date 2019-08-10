@@ -115,7 +115,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
 
-                viewModel.existingVisit = Visit.fetchVisitForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
+
+                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
+                viewModel.existingVisit = existingVisits.isEmpty() ? null : existingVisits.get(0);
                 if(viewModel.existingVisit != null)
                 {
                     viewModel.datePickerDialog.dismiss();
@@ -188,8 +190,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
-            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - setting as current visit");
-            Visit.setCurrentVisit(this.viewModel.visit);
+            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - adding to current visits");
+            Visit.addCurrentVisit(this.viewModel.visit);
         }
 
         this.decorateToolbar();

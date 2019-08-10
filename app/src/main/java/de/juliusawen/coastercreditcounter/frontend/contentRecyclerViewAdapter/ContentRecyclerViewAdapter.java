@@ -85,6 +85,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Set<Class<? extends IAttraction>> typesToDisplayStatus = new HashSet<>();
     private final Set<Class<? extends IAttraction>> typesToDisplayTotalRideCount = new HashSet<>();
 
+    private Map<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
+
     @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
 
@@ -414,6 +416,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
 
+            //set typeface
             for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
             {
                 if(typeByTypeface.getValue().contains(item.getClass()))
@@ -423,8 +426,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
 
-            viewHolder.textViewName.setText(item.getName());
+            if(this.specialStringResourcesByType.containsKey(item.getClass()))
+            {
+                if(item instanceof Visit)
+                {
+                    viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+                }
+            }
+            else
+            {
+                viewHolder.textViewName.setText(item.getName());
+            }
 
+            //decorate detail aboce
             Class type = item.getClass();
 
             if(this.displayManufacturers && this.typesToDisplayManufacturer.contains(type))
@@ -442,6 +456,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder.textViewDetailAbove.setVisibility(View.GONE);
             }
 
+            //decorate detail below
             if(this.displayLocations && this.typesToDisplayLocation.contains(type))
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
@@ -1097,6 +1112,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setTypefaceForType:: unknown typeface");
         }
+    }
+
+    public void setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
+    {
+        this.specialStringResourcesByType.put(type, stringResource);
     }
 
     public void displayManufacturers(boolean display)

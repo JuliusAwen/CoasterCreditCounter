@@ -996,16 +996,16 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
-    public Visit fetchCurrentVisit()
+    public List<Visit> fetchCurrentVisits()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
         Calendar todaysCalendar = Calendar.getInstance();
-        Visit currentVisit = Visit.fetchVisitForYearAndDay(todaysCalendar, App.content.getContentAsType(Visit.class));
+        List<Visit> currentVisits = Visit.fetchVisitsForYearAndDay(todaysCalendar, App.content.getContentAsType(Visit.class));
 
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisit:: fetching current visit took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisits:: fetching current visits took [%d]ms", stopwatch.stop()));
 
-        return currentVisit;
+        return currentVisits;
     }
 
     private List<IElement> getAllCoasters()

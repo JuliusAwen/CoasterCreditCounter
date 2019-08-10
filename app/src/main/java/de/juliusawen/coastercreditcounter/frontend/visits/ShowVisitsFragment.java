@@ -298,7 +298,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                 if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
                 {
-                    if(Visit.fetchVisitForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class)) != null)
+                    if(!Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class)).isEmpty())
                     {
                         viewModel.datePickerDialog.dismiss();
                         Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
