@@ -1414,13 +1414,18 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
+    public int fetchTotalVisitedParksCount()
+    {
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalVisitedParksCount:: empty implementation to satisfy interface");
+        return 0;
+    }
+
+    @Override
     public List<Visit> fetchCurrentVisits()
     {
         Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisits:: empty implementation to satisfy interface");
         return null;
     }
-
-
 }
 
 class AttractionCategories

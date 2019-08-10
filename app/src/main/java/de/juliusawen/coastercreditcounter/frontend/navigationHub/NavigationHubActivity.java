@@ -44,6 +44,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+
+    private TextView textViewTotalVisitedParksCount;
     private TextView textViewTotalCoasterCreditCount;
     private TextView textViewTotalCoasterRidesCount;
 
@@ -66,6 +68,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 this.setExportFileAbsolutPath();
             }
 
+            this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
             this.textViewTotalCoasterCreditCount = findViewById(R.id.textViewNavigationHub_totalCoasterCreditsCount);
             this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewNavigationHub_totalCoasterRidesCount);
 
@@ -247,6 +250,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
 
+        this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, App.persistence.fetchTotalVisitedParksCount()));
         this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCoasterCreditsCount()));
         this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_coaster_rides, App.persistence.fetchTotalCoasterRidesCount()));
     }

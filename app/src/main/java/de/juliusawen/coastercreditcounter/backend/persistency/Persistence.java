@@ -295,6 +295,11 @@ public class Persistence
         return this.databaseWrapper.fetchTotalCoasterRidesCount();
     }
 
+    public int fetchTotalVisitedParksCount()
+    {
+        return this.databaseWrapper.fetchTotalVisitedParksCount();
+    }
+
     public List<Visit> fetchCurrentVisits()
     {
         return this.databaseWrapper.fetchCurrentVisits();

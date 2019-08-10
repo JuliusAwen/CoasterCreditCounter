@@ -996,6 +996,37 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
+    public int fetchTotalVisitedParksCount()
+    {
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        int totalVisitedParksCount = 0;
+
+        for(Park park : App.content.getContentAsType(Park.class))
+        {
+            if(park.hasChildrenOfType(Visit.class))
+            {
+                totalVisitedParksCount += 1;
+            }
+            else
+            {
+                for(IAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
+                {
+                    if(attraction.getTotalRideCount() > 0)
+                    {
+                        totalVisitedParksCount += 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalVisitedParksCount:: [%d] visited parks found - took [%d]ms", totalVisitedParksCount, stopwatch.stop()));
+
+        return totalVisitedParksCount;
+    }
+
+    @Override
     public List<Visit> fetchCurrentVisits()
     {
         Stopwatch stopwatch = new Stopwatch(true);

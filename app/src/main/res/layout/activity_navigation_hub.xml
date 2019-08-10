@@ -18,6 +18,19 @@
             layout="@layout/toolbar"/>
 
         <TextView
+            android:id="@+id/textViewNavigationHub_totalVisitedParksCount"
+            style="@style/standard_text_view_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="14dp"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:paddingStart="5dip"
+            android:paddingEnd="5dip"
+            android:textStyle="bold"/>
+
+        <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
             style="@style/standard_text_view_16"
             android:layout_width="wrap_content"
