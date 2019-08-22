@@ -177,6 +177,11 @@ public class PickElementsActivity extends BaseActivity
             submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_ASCENDING, Menu.NONE, R.string.selection_sort_by_location_ascending);
             submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_DESCENDING, Menu.NONE, R.string.selection_sort_by_location_descending);
         }
+        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+        {
+            menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+            menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -190,32 +195,38 @@ public class PickElementsActivity extends BaseActivity
 
         if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING)
         {
-            viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
+            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-            return true;
         }
         else if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING)
         {
-            viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
+            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-            return true;
         }
         else if(id == Constants.SELECTION_SORT_BY_LOCATION_ASCENDING)
         {
-            viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
+            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-            return true;
         }
         else if(id == Constants.SELECTION_SORT_BY_LOCATION_DESCENDING)
         {
-            viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
+            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-            return true;
+        }
+        else if(id == Constants.SELECTION_EXPAND_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.expandAll();
+        }
+        else if(id == Constants.SELECTION_COLLAPSE_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.collapseAll();
         }
         else
         {
             return super.onOptionsItemSelected(item);
         }
+
+        return true;
     }
 
     private void decorateFloatingActionButton()
