@@ -38,9 +38,11 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
 {
-    private static final int OVERVIEW = 0;
-    private static final int ATTRACTIONS = 1;
-    private static final int VISITS = 2;
+    private static final int TAB_OVERVIEW = 0;
+    private static final int TAB_ATTRACTIONS = 1;
+    private static final int TAB_VISITS = 2;
+
+    private ViewPager viewPager;
     
     private ShowParkActivityViewModel viewModel;
     
@@ -63,7 +65,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             if(this.viewModel.currentTab == -1)
             {
-                this.viewModel.currentTab = OVERVIEW;
+                this.viewModel.currentTab = TAB_OVERVIEW;
             }
 
             super.addToolbar();
@@ -82,10 +84,17 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     {
         menu.clear();
 
-        if(this.viewModel.currentTab == VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+        if(this.viewModel.currentTab == TAB_VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {
             menu.add(Menu.NONE, Constants.SELECTION_ASCENDING, Menu.NONE, R.string.selection_ascending);
             menu.add(Menu.NONE, Constants.SELECTION_DESCENDING, Menu.NONE, R.string.selection_descending);
+        }
+        else if(this.viewModel.currentTab == TAB_ATTRACTIONS)
+        {
+            ShowAttractionsFragment showAttractionsFragment = (ShowAttractionsFragment)this.viewPager.getAdapter().instantiateItem(this.viewPager, viewPager.getCurrentItem());
+
+            menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!showAttractionsFragment.isAllExpanded());
+            menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!showAttractionsFragment.isAllCollapsed());
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -106,7 +115,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     {
         TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
 
-        ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
+        this.viewPager = findViewById(R.id.viewPagerShowPark);
         viewPager.setAdapter(tabPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayoutShowPark);
@@ -148,19 +157,19 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         switch(position)
         {
-            case OVERVIEW:
+            case TAB_OVERVIEW:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_overview));
                 this.decorateFloatingActionButtonShowParkOverview();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getText(R.string.help_text_show_park_overview));
                 break;
 
-            case ATTRACTIONS:
+            case TAB_ATTRACTIONS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getText(R.string.help_text_show_attractions));
                 break;
 
-            case VISITS:
+            case TAB_VISITS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getText(R.string.help_text_show_visits));
@@ -181,7 +190,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             @Override
             public void onClick(View view)
             {
-                Toaster.makeToast(ShowParkActivity.this, "fab interaction for OVERVIEW not yet implemented");
+                Toaster.makeToast(ShowParkActivity.this, "fab interaction for TAB_OVERVIEW not yet implemented");
             }
         });
     }
@@ -209,19 +218,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
             }
         });
-    }
-
-    @Override
-    public void deleteVisit(IElement visitToDelete)
-    {
-        super.markForDeletion(visitToDelete, true);
-        super.markForUpdate(visitToDelete.getParent());
-    }
-
-    @Override
-    public void updateVisit(IElement visitToUpdate)
-    {
-        super.markForUpdate(visitToUpdate);
     }
 
     @Override
@@ -292,13 +288,13 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             switch (position)
             {
-                case OVERVIEW:
+                case TAB_OVERVIEW:
                     this.showParkOverviewFragment = (ShowParkOverviewFragment) createdFragment;
                     break;
-                case ATTRACTIONS:
+                case TAB_ATTRACTIONS:
                     this.showAttractionsFragment = (ShowAttractionsFragment) createdFragment;
                     break;
-                case VISITS:
+                case TAB_VISITS:
                     this.showVisitsFragment = (ShowVisitsFragment) createdFragment;
                     break;
                 default:

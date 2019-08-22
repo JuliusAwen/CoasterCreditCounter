@@ -306,7 +306,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                     else
                     {
                         ((Visit)viewModel.longClickedElement).setDateAndAdjustName(viewModel.calendar);
-                        ShowVisitsFragment.this.showVisitsFragmentInteraction.updateVisit(viewModel.longClickedElement);
+                        ShowVisitsFragment.this.showVisitsFragmentInteraction.updateElement(viewModel.longClickedElement);
                         updateContentRecyclerView();
                     }
                 }
@@ -370,7 +370,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            ShowVisitsFragment.this.showVisitsFragmentInteraction.deleteVisit(viewModel.longClickedElement);
+                            ShowVisitsFragment.this.showVisitsFragmentInteraction.deleteElement(viewModel.longClickedElement);
                             viewModel.longClickedElement.deleteElementAndDescendants();
                             updateContentRecyclerView();
                         }
@@ -394,7 +394,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public interface ShowVisitsFragmentInteraction
     {
-        void deleteVisit(IElement visitToDelete);
-        void updateVisit(IElement visitToDelete);
+        void deleteElement(IElement elementToDelete);
+        void updateElement(IElement elementToDelete);
     }
 }

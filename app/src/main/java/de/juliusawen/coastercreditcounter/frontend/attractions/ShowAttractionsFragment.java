@@ -182,17 +182,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        menu.clear();
-
-        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
-
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item.getItemId() == Constants.SELECTION_EXPAND_ALL)
@@ -221,6 +210,16 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         contentRecyclerViewAdapter.displayTotalRideCount(true);
 
         return contentRecyclerViewAdapter;
+    }
+
+    public boolean isAllExpanded()
+    {
+        return this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
+    }
+
+    public boolean isAllCollapsed()
+    {
+        return this.viewModel.contentRecyclerViewAdapter.isAllCollapsed();
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
