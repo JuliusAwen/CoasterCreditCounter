@@ -475,7 +475,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
                 if(actionId == EditorInfo.IME_ACTION_DONE)
                 {
                     InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
                     textView.clearFocus();
                     handled = true;
                 }
