@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.frontend.attractions;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -122,8 +124,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             if(this.viewModel.toolbarSubtitle == null)
             {
                 this.viewModel.toolbarSubtitle = this.viewModel.isEditMode
-                                ? this.viewModel.attraction.getName()
-                                : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
+                        ? this.viewModel.attraction.getName()
+                        : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
             }
 
             super.addHelpOverlayFragment(
@@ -159,7 +161,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         switch (buttonFunction)
         {
             case OK:
-                handleOnEditorActionDone();
+                handleOnConfirmDialogFragmentInteractionOk();
                 break;
 
             case CANCEL:
@@ -470,9 +472,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
 
                 boolean handled = false;
 
-                if(actionId == EditorInfo.IME_ACTION_DONE)
+                if(actionId == EditorInfo.IME_ACTION_UNSPECIFIED)
                 {
-                    handleOnEditorActionDone();
+                    InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                     handled = true;
                 }
 
@@ -481,12 +484,12 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         };
     }
 
-    private void handleOnEditorActionDone()
+    private void handleOnConfirmDialogFragmentInteractionOk()
     {
         boolean somethingWentWrong = false;
 
         this.viewModel.name = this.editTextAttractionName.getText().toString();
-        Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: attraction name set to [%s]", this.viewModel.name));
+        Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: attraction name set to [%s]", this.viewModel.name));
 
         String untrackedRideCountString = this.editTextUntrackedRideCount.getText().toString();
         try
@@ -499,11 +502,11 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             {
                 this.viewModel.untrackedRideCount = 0;
             }
-            Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: untracked ride count set to [%d]", this.viewModel.untrackedRideCount));
+            Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: untracked ride count set to [%d]", this.viewModel.untrackedRideCount));
         }
         catch(NumberFormatException nfe)
         {
-            Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnEditorActionDone:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+            Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
 
             somethingWentWrong = true;
             Toaster.makeToast(this, getString(R.string.error_number_not_valid));
@@ -575,7 +578,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             {
                 if(this.createAttraction())
                 {
-                    Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: adding child %s to parent %s",
+                    Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnConfirmDialogFragmentInteractionOk:: adding child %s to parent %s",
                             this.viewModel.attraction, this.viewModel.parentPark));
 
                     this.viewModel.parentPark.addChildAndSetParent(this.viewModel.attraction);
