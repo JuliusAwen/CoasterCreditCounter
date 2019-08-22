@@ -31,7 +31,7 @@
                     android:textSize="16sp"
                     android:layout_margin="16dp"
                     tools:ignore="Autofill"
-                    android:imeOptions="actionNone"/>
+                    android:imeOptions="actionDone"/>
 
                 <LinearLayout
                     style="@style/standard_bar_layout_40"
@@ -201,7 +201,7 @@
                         android:inputType="number"
                         android:textSize="16sp"
                         tools:ignore="Autofill"
-                        android:imeOptions="actionNone"/>
+                        android:imeOptions="actionDone"/>
 
                 </LinearLayout>
 

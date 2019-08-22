@@ -472,10 +472,11 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
 
                 boolean handled = false;
 
-                if(actionId == EditorInfo.IME_ACTION_UNSPECIFIED)
+                if(actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                    textView.clearFocus();
                     handled = true;
                 }
 
