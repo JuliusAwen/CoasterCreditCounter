@@ -1476,7 +1476,7 @@ class Manufacturers
     Manufacturer ArrowDynamics = Manufacturer.create("Arrow Dynamics", null);
     Manufacturer Simworx = Manufacturer.create("Simworx", null);
     Manufacturer CCI = Manufacturer.create("Custom Coasters International", null);
-    Manufacturer RMC = Manufacturer.create("Rocky Mountain Constructions", null);
+    Manufacturer RMC = Manufacturer.create("Rocky Mountain Construction", null);
     Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer Amusement Rides", null);
     Manufacturer PremierRides = Manufacturer.create("Premier Rides", null);
     Manufacturer GCI = Manufacturer.create("Great Coasters International", null);
