@@ -193,6 +193,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         phantasialand.addChildAndSetParent(wuermlingExpress);
 
 
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides14122018 = new LinkedHashMap<>();
         rides14122018.put(taron, 5);
         rides14122018.put(blackMamba, 2);
@@ -220,30 +221,30 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park heidePark = Park.create("Heide Park", null);
         locations.Germany.addChildAndSetParent(heidePark);
 
-        CustomCoaster krake = CustomCoaster.create("Krake", 22, null);
+        CustomCoaster krake = CustomCoaster.create("Krake", 14, null);
         krake.setAttractionCategory(attractionCategories.RollerCoasters);
         krake.setManufacturer(manufacturers.BolligerAndMabillard);
         heidePark.addChildAndSetParent(krake);
 
-        CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen", 19, null);
+        CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen", 11, null);
         flugDerDaemonen.setAttractionCategory(attractionCategories.RollerCoasters);
         flugDerDaemonen.setManufacturer(manufacturers.BolligerAndMabillard);
         heidePark.addChildAndSetParent(flugDerDaemonen);
 
-        CustomCoaster desertRace = CustomCoaster.create("Desert Race", 18, null);
+        CustomCoaster desertRace = CustomCoaster.create("Desert Race", 10, null);
         desertRace.setAttractionCategory(attractionCategories.RollerCoasters);
         desertRace.setManufacturer(manufacturers.Intamin);
         heidePark.addChildAndSetParent(desertRace);
 
-        CustomCoaster bigLoop = CustomCoaster.create("Big Loop", 3, null);
+        CustomCoaster bigLoop = CustomCoaster.create("Big Loop", 2, null);
         bigLoop.setAttractionCategory(attractionCategories.RollerCoasters);
         bigLoop.setManufacturer(manufacturers.Vekoma);
         heidePark.addChildAndSetParent(bigLoop);
 
-        StockAttraction limit = StockAttraction.create("Limit", coasterBlueprints.SuspendedLoopingCoaster, 2, null);
+        StockAttraction limit = StockAttraction.create("Limit", coasterBlueprints.SuspendedLoopingCoaster, 1, null);
         heidePark.addChildAndSetParent(limit);
 
-        CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz", 2, null);
+        CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz", 1, null);
         grottenblitz.setAttractionCategory(attractionCategories.RollerCoasters);
         grottenblitz.setManufacturer(manufacturers.Mack);
         heidePark.addChildAndSetParent(grottenblitz);
@@ -253,7 +254,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         indyBlitz.setManufacturer(manufacturers.Zierer);
         heidePark.addChildAndSetParent(indyBlitz);
 
-        CustomCoaster bobbahn = CustomCoaster.create("Bobbahn", 2, null);
+        CustomCoaster bobbahn = CustomCoaster.create("Bobbahn", 1, null);
         bobbahn.setAttractionCategory(attractionCategories.RollerCoasters);
         bobbahn.setManufacturer(manufacturers.Mack);
         heidePark.addChildAndSetParent(bobbahn);
@@ -324,6 +325,20 @@ public final class DatabaseMock implements IDatabaseWrapper
         heidePark.addChildAndSetParent(kaeptnsToern);
 
 
+        // 2018
+        LinkedHashMap<IOnSiteAttraction, Integer> rides12102018 = new LinkedHashMap<>();
+        rides12102018.put(krake, 8);
+        rides12102018.put(flugDerDaemonen, 8);
+        rides12102018.put(desertRace, 8);
+        rides12102018.put(limit, 1);
+        rides12102018.put(bigLoop, 1);
+        rides12102018.put(grottenblitz, 1);
+        rides12102018.put(bobbahn, 1);
+        rides12102018.put(scream, 1);
+        heidePark.addChildAndSetParent(this.createVisit(12, 10, 2018, rides12102018));
+
+
+        // 2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides07042019 = new LinkedHashMap<>();
         rides07042019.put(desertRace, 3);
         rides07042019.put(grottenblitz, 1);
@@ -514,7 +529,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(splashBattle);
 
 
-
+        // 2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides01072019 = new LinkedHashMap<>();
         rides01072019.put(xpressPlatform13, 2);
         rides01072019.put(goliath, 5);
@@ -535,10 +550,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park osterwiese = Park.create("Bremer Osterwiese", null);
         locations.Germany.addChildAndSetParent(osterwiese);
 
+
         //2018
         CustomCoaster bergUndTal = CustomCoaster.create("Berg & Tal", 1, null);
         bergUndTal.setAttractionCategory(attractionCategories.RollerCoasters);
         osterwiese.addChildAndSetParent(bergUndTal);
+
 
         //2019
         CustomCoaster crazyMouse = CustomCoaster.create("Crazy Mouse", 0, null);
@@ -549,7 +566,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         osterwiese.addChildAndSetParent(tomDerTiger);
 
 
-
+        //2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides13042019 = new LinkedHashMap<>();
         rides13042019.put(crazyMouse, 1);
         rides13042019.put(tomDerTiger, 1);
@@ -646,6 +663,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         grandCanyonRapids.setManufacturer(manufacturers.Intamin);
         portAventura.addChildAndSetParent(grandCanyonRapids);
 
+
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides02102018 = new LinkedHashMap<>();
         rides02102018.put(shambhala, 14);
         rides02102018.put(dragonKhan, 2);
@@ -669,6 +688,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides04102018.put(grandCanyonRapids, 1);
         portAventura.addChildAndSetParent(this.createVisit(4, 10, 2018, rides04102018));
 
+
+        // 2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides02052019 = new LinkedHashMap<>();
         rides02052019.put(shambhala, 3);
         rides02052019.put(elDiablo, 1);
@@ -715,6 +736,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         racingLegends.setManufacturer(manufacturers.Simworx);
         ferrariLand.addChildAndSetParent(racingLegends);
 
+
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides02102018 = new LinkedHashMap<>();
         rides02102018.put(redForce, 6);
         rides02102018.put(juniorRedForce, 1);
@@ -723,6 +746,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides02102018.put(racingLegends, 1);
         ferrariLand.addChildAndSetParent(this.createVisit(2, 10, 2018, rides02102018));
 
+
+        // 2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides02052018 = new LinkedHashMap<>();
         rides02052018.put(redForce, 1);
         ferrariLand.addChildAndSetParent(this.createVisit(2, 5, 2019, rides02052018));
@@ -799,6 +824,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         slagharen.addChildAndSetParent(monorail);
 
 
+        // 2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides30062019 = new LinkedHashMap<>();
         rides30062019.put(goldrush, 3);
         rides30062019.put(minetrain, 1);
@@ -840,6 +866,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         anubis.setManufacturer(manufacturers.Intamin);
         holidayPark.addChildAndSetParent(anubis);
 
+
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides13062018 = new LinkedHashMap<>();
         rides13062018.put(expeditionGeForce, 2);
         rides13062018.put(skyScream, 2);
@@ -922,6 +950,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction NycTransformer = StockAttraction.create("NYC Transformer", attractionBlueprints.TopSpin, 0, null);
         movieParkGermany.addChildAndSetParent(NycTransformer);
 
+
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides11062018 = new LinkedHashMap<>();
         rides11062018.put(bermudaTriangle, 1);
         rides11062018.put(vanHelsingsFactory, 2);
@@ -946,57 +976,87 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park toverland = Park.create("Toverland", null);
         this.locations.Netherlands.addChildAndSetParent(toverland);
 
-        CustomCoaster troy = CustomCoaster.create("Troy", 10, null);
+        CustomCoaster troy = CustomCoaster.create("Troy", 0, null);
         troy.setAttractionCategory(attractionCategories.RollerCoasters);
         troy.setManufacturer(manufacturers.GCI);
         toverland.addChildAndSetParent(troy);
 
-        CustomCoaster dwervelwind = CustomCoaster.create("Dwervelwind", 20, null);
-        dwervelwind.setAttractionCategory(attractionCategories.RollerCoasters);
-        dwervelwind.setManufacturer(manufacturers.Mack);
-        toverland.addChildAndSetParent(dwervelwind);
-
-        CustomCoaster boosterBike = CustomCoaster.create("Booster Bike", 3, null);
-        boosterBike.setAttractionCategory(attractionCategories.RollerCoasters);
-        boosterBike.setManufacturer(manufacturers.Vekoma);
-        toverland.addChildAndSetParent(boosterBike);
-
-        CustomCoaster toosExpress = CustomCoaster.create("Toos-Express", 2, null);
-        toosExpress.setAttractionCategory(attractionCategories.RollerCoasters);
-        toosExpress.setManufacturer(manufacturers.Vekoma);
-        toverland.addChildAndSetParent(toosExpress);
-
-        CustomCoaster fenix = CustomCoaster.create("Fēnix", 1, null);
+        CustomCoaster fenix = CustomCoaster.create("Fēnix", 0, null);
         fenix.setAttractionCategory(attractionCategories.RollerCoasters);
         fenix.setManufacturer(manufacturers.BolligerAndMabillard);
         toverland.addChildAndSetParent(fenix);
 
-        CustomAttraction expeditionZork = CustomAttraction.create("Expedition Zork", 3, null);
+        CustomCoaster dwervelwind = CustomCoaster.create("Dwervelwind", 0, null);
+        dwervelwind.setAttractionCategory(attractionCategories.RollerCoasters);
+        dwervelwind.setManufacturer(manufacturers.Mack);
+        toverland.addChildAndSetParent(dwervelwind);
+
+        CustomCoaster boosterBike = CustomCoaster.create("Booster Bike", 0, null);
+        boosterBike.setAttractionCategory(attractionCategories.RollerCoasters);
+        boosterBike.setManufacturer(manufacturers.Vekoma);
+        toverland.addChildAndSetParent(boosterBike);
+
+        CustomCoaster toosExpress = CustomCoaster.create("Toos-Express", 0, null);
+        toosExpress.setAttractionCategory(attractionCategories.RollerCoasters);
+        toosExpress.setManufacturer(manufacturers.Vekoma);
+        toverland.addChildAndSetParent(toosExpress);
+
+        CustomAttraction expeditionZork = CustomAttraction.create("Expedition Zork", 0, null);
         expeditionZork.setAttractionCategory(attractionCategories.WaterRides);
         expeditionZork.setManufacturer(manufacturers.Mack);
         toverland.addChildAndSetParent(expeditionZork);
 
-        CustomAttraction maximusBlitzbahn = CustomAttraction.create("Maximus' Blitz Bahn", 1, null);
+        CustomAttraction maximusBlitzbahn = CustomAttraction.create("Maximus' Blitz Bahn", 0, null);
         maximusBlitzbahn.setAttractionCategory(attractionCategories.FamilyRides);
         toverland.addChildAndSetParent(maximusBlitzbahn);
 
-        CustomAttraction scorpios = CustomAttraction.create("Scorpios", 2, null);
+        CustomAttraction scorpios = CustomAttraction.create("Scorpios", 0, null);
         scorpios.setAttractionCategory(attractionCategories.FamilyRides);
         toverland.addChildAndSetParent(scorpios);
 
-        CustomAttraction djenguRiver = CustomAttraction.create("Djengu River", 2, null);
+        CustomAttraction djenguRiver = CustomAttraction.create("Djengu River", 0, null);
         djenguRiver.setAttractionCategory(attractionCategories.WaterRides);
         djenguRiver.setManufacturer(manufacturers.Hafema);
         toverland.addChildAndSetParent(djenguRiver);
 
-        CustomAttraction merlinsQuest = CustomAttraction.create("Merlin's Quest", 1, null);
+        CustomAttraction merlinsQuest = CustomAttraction.create("Merlin's Quest", 0, null);
         merlinsQuest.setAttractionCategory(attractionCategories.DarkRides);
         merlinsQuest.setManufacturer(manufacturers.Mack);
         toverland.addChildAndSetParent(merlinsQuest);
 
-        CustomAttraction villaFiasco = CustomAttraction.create("Villa Fiasco", 1, null);
+        CustomAttraction villaFiasco = CustomAttraction.create("Villa Fiasco", 0, null);
         villaFiasco.setAttractionCategory(attractionCategories.FamilyRides);
         toverland.addChildAndSetParent(villaFiasco);
+
+        CustomAttraction toverhuis = CustomAttraction.create("Toverhuis", 0, null);
+        toverhuis.setAttractionCategory(attractionCategories.FamilyRides);
+        toverland.addChildAndSetParent(toverhuis);
+
+
+        // 2018
+        LinkedHashMap<IOnSiteAttraction, Integer> rides24042018 = new LinkedHashMap<>();
+        rides24042018.put(troy, 4);
+        rides24042018.put(dwervelwind, 16);
+        rides24042018.put(expeditionZork, 2);
+        rides24042018.put(boosterBike, 2);
+        rides24042018.put(toosExpress, 1);
+        rides24042018.put(maximusBlitzbahn, 1);
+        rides24042018.put(scorpios, 1);
+        rides24042018.put(djenguRiver, 1);
+        rides24042018.put(villaFiasco, 1);
+        toverland.addChildAndSetParent(this.createVisit(24, 4, 2018, rides24042018));
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides07072018 = new LinkedHashMap<>();
+        rides07072018.put(troy, 6);
+        rides07072018.put(fenix, 1);
+        rides07072018.put(dwervelwind, 4);
+        rides07072018.put(boosterBike, 1);
+        rides07072018.put(toosExpress, 1);
+        rides07072018.put(expeditionZork, 1);
+        rides07072018.put(scorpios, 1);
+        rides07072018.put(djenguRiver, 1);
+        rides07072018.put(merlinsQuest, 1);
+        toverland.addChildAndSetParent(this.createVisit(7, 7, 2018, rides07072018));
     }
 
     private void mockEfteling()
@@ -1182,7 +1242,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         magicParkVerden.addChildAndSetParent(wildwasserbahn);
 
 
-
+        // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides09062018 = new LinkedHashMap<>();
         rides09062018.put(achterbahn, 4);
         rides09062018.put(wildwasserbahn, 1);
