@@ -13,25 +13,30 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class CreateSimpleStringActivity extends BaseActivity
+public class CreateSimpleElementActivity extends BaseActivity
 {
-    private CreateSimpleStringActivityViewModel viewModel;
+    private CreateSimpleElementActivityViewModel viewModel;
     private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.CreateSimpleStringActivity:: creating activity...");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.CreateSimpleElementActivity:: creating activity...");
 
-        setContentView(R.layout.activity_create_simple_string);
+        setContentView(R.layout.activity_create_simple_element);
         super.onCreate(savedInstanceState);
 
         if(App.isInitialized)
         {
-            this.editText = findViewById(R.id.editTextCreateSimpleString);
+            this.editText = findViewById(R.id.editTextCreateSimpleElement);
             this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
 
             Intent intent = getIntent();
@@ -42,7 +47,7 @@ public class CreateSimpleStringActivity extends BaseActivity
 
             this.editText.setHint(hint);
 
-            this.viewModel = ViewModelProviders.of(this).get(CreateSimpleStringActivityViewModel.class);
+            this.viewModel = ViewModelProviders.of(this).get(CreateSimpleElementActivityViewModel.class);
 
             super.addFloatingActionButton();
             this.decorateFloatingActionButton();
@@ -76,7 +81,7 @@ public class CreateSimpleStringActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateSimpleStringActivity.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.onEditorAction:: actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -106,14 +111,42 @@ public class CreateSimpleStringActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateSimpleStringActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateSimpleStringActivity.returnResult:: returning string <%s>", this.viewModel.createdString));
-            intent.putExtra(Constants.EXTRA_RESULT_STRING, this.viewModel.createdString);
+            IElement createdElement = null;
+            int requestCode = getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, -1);
+
+            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+            {
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", viewModel.createdString));
+                createdElement = AttractionCategory.create(viewModel.createdString, null);
+            }
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
+            {
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", viewModel.createdString));
+                createdElement = Manufacturer.create(viewModel.createdString, null);
+            }
+            else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
+            {
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_STATUS>:: creating Status [%s]", viewModel.createdString));
+
+                createdElement = Status.create(viewModel.createdString, null);
+            }
+
+            if(createdElement != null)
+            {
+                this.markForCreation(createdElement);
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, createdElement.getUuid());
+            }
+            else
+            {
+                Toaster.makeToast(this, getString(R.string.error_creation_failed));
+                Log.e(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE>:: not able to create [%s]", viewModel.createdString));
+            }
         }
 
         setResult(resultCode, intent);

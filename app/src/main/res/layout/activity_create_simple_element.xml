@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.CreateSimpleStringActivity">
+    tools:context=".frontend.CreateSimpleElementActivity">
 
     <include
         layout="@layout/floating_action_button"/>
@@ -20,7 +20,7 @@
 
         <EditText
             style="@style/StandardEditText_16"
-            android:id="@+id/editTextCreateSimpleString"
+            android:id="@+id/editTextCreateSimpleElement"
             android:hint="@string/hint_enter_string"
             android:layout_margin="16dp"
             tools:ignore="Autofill" />

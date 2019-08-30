@@ -12,7 +12,7 @@ import java.util.Objects;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
-import de.juliusawen.coastercreditcounter.frontend.CreateSimpleStringActivity;
+import de.juliusawen.coastercreditcounter.frontend.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.CreateOrEditCustomAttractionActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.EditElementActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.ManageOrphanElementsActivity;
@@ -190,7 +190,7 @@ public abstract class ActivityTool
         }
         else
         {
-            type = CreateSimpleStringActivity.class;
+            type = CreateSimpleElementActivity.class;
         }
 
         Intent intent = new Intent(context, type);
@@ -207,6 +207,7 @@ public abstract class ActivityTool
         {
             if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
             {
+                intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
                 intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));

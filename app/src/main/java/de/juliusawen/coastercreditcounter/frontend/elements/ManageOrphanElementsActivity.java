@@ -103,7 +103,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     );
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                 }
-
             }
 
             if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -233,70 +232,17 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
         IElement resultElement = ResultTool.fetchResultElement(data);
 
-        if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+        if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY
+            || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
+            || requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
         {
-            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", createdString));
-
-            AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
-            if(attractionCategory != null)
-            {
-                this.lastCreatedOrphanElement = attractionCategory;
-                this.markForCreation(attractionCategory);
-                updateContentRecyclerView(true);
-            }
-            else
-            {
-                Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                Log.e(Constants.LOG_TAG,
-                        String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: not able to create AttractionCategory [%s]", createdString));
-            }
-
-        }
-        else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
-        {
-            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", createdString));
-
-            Manufacturer manufacturer = Manufacturer.create(createdString, null);
-            if(manufacturer != null)
-            {
-                this.lastCreatedOrphanElement = manufacturer;
-                this.markForCreation(manufacturer);
-                updateContentRecyclerView(true);
-            }
-            else
-            {
-                Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: not able to create Manufacturer [%s]", createdString));
-            }
-        }
-        else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
-        {
-            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: creating Status [%s]", createdString));
-
-            Status status = Status.create(createdString, null);
-            if(status != null)
-            {
-                this.lastCreatedOrphanElement = status;
-                this.markForCreation(status);
-                updateContentRecyclerView(true);
-            }
-            else
-            {
-                Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: not able to create Status [%s]", createdString));
-            }
+            this.lastCreatedOrphanElement = (OrphanElement)resultElement;
+            updateContentRecyclerView(true);
         }
         else if(requestCode == Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY
                 || requestCode == Constants.REQUEST_CODE_EDIT_MANUFACTURER
                 || requestCode == Constants.REQUEST_CODE_EDIT_STATUS)
         {
-            this.markForUpdate(resultElement);
             updateContentRecyclerView(false);
         }
         else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES
