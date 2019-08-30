@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -165,17 +164,17 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         IElement pickedElement = ResultTool.fetchResultElement(data);
 
-        if(requestCode == Constants.REQUEST_CODE_MANAGE_MANUFACTURERS || requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
+        if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
         {
             this.textViewManufacturer.setText(pickedElement.getName());
             this.viewModel.manufacturer = (Manufacturer)pickedElement;
         }
-        else if(requestCode == Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES || requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
         {
             this.textViewAttractionCategory.setText(pickedElement.getName());
             this.viewModel.attractionCategory = (AttractionCategory)pickedElement;
         }
-        else if(requestCode == Constants.REQUEST_CODE_MANAGE_STATUSES || requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+        else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
             this.textViewStatus.setText(pickedElement.getName());
             this.viewModel.status = (Status)pickedElement;
@@ -322,10 +321,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutAttractionType()
     {
-        ImageView imageViewPlaceholder = findViewById(R.id.imageViewCreateOrEditAttraction_AttractionType);
-        imageViewPlaceholder.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_close, R.color.default_color));
-        imageViewPlaceholder.setVisibility(View.INVISIBLE);
-
         this.spinnerAttractionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -359,18 +354,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutManufacturer()
     {
-        ImageView imageViewManufacturer = findViewById(R.id.imageViewCreateOrEditAttraction_Manufacturer);
-        imageViewManufacturer.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.black));
-        imageViewManufacturer.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <AddManufacturer> selected");
-                ActivityTool.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
-            }
-        });
-
         findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer).setOnClickListener((new View.OnClickListener()
         {
             @Override
@@ -389,18 +372,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutAttractionCategory()
     {
-        ImageView imageViewAttractionCategory = findViewById(R.id.imageViewCreateOrEditAttraction_AttractionCategory);
-        imageViewAttractionCategory.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.black));
-        imageViewAttractionCategory.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <AddAttractionCategory> selected");
-                ActivityTool.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
-            }
-        });
-
         findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionCategory).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -419,18 +390,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutStatus()
     {
-        ImageView imageViewStatus = findViewById(R.id.imageViewCreateOrEditAttraction_Status);
-        imageViewStatus.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.black));
-        imageViewStatus.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.createLayoutStatus:: <AddStatus> selected");
-                ActivityTool.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
-            }
-        });
-
         findViewById(R.id.linearLayoutCreateOrEditAttraction_Status).setOnClickListener(new View.OnClickListener()
         {
             @Override

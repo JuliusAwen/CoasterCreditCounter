@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.frontend.elements;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,7 +34,9 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -112,6 +115,9 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+
+                    super.addFloatingActionButton();
+                    this.decorateFloatingActionButtonAdd();
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT)
                 {
@@ -149,7 +155,7 @@ public class PickElementsActivity extends BaseActivity
             if(!this.viewModel.isSimplePick)
             {
                 super.addFloatingActionButton();
-                this.decorateFloatingActionButton();
+                this.decorateFloatingActionButtonCheck();
             }
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
@@ -163,6 +169,33 @@ public class PickElementsActivity extends BaseActivity
     {
         this.recyclerView.setAdapter(null);
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
+        if(resultCode != Activity.RESULT_OK)
+        {
+            return;
+        }
+
+        if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY
+                || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
+                || requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
+        {
+            IElement returnElement = ResultTool.fetchResultElement(data);
+
+            if(returnElement != null)
+            {
+                returnResult(RESULT_OK, returnElement);
+            }
+            else
+            {
+                Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned");
+            }
+        }
     }
 
     @Override
@@ -235,7 +268,7 @@ public class PickElementsActivity extends BaseActivity
         return true;
     }
 
-    private void decorateFloatingActionButton()
+    private void decorateFloatingActionButtonCheck()
     {
         super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
@@ -245,13 +278,40 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: accepted - return code <OK>");
-                    returnResult(RESULT_OK);
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButtonCheck:: accepted - return code <OK>");
+                    returnResult(RESULT_OK, null);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton:: no element selected");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<Check>:: no element selected");
                     Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_no_entry_selected));
+                }
+            }
+        });
+        super.setFloatingActionButtonVisibility(true);
+    }
+
+    private void decorateFloatingActionButtonAdd()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onClickFloatingActionButton<Add>:: FloatingActionButton pressed");
+
+                if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+                {
+                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
+                }
+                else if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
+                {
+                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
+                }
+                else if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+                {
+                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_STATUS, null);
                 }
             }
         });
@@ -306,7 +366,7 @@ public class PickElementsActivity extends BaseActivity
                 if(PickElementsActivity.this.viewModel.isSimplePick)
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: simple pick - return code <OK>");
-                    returnResult(RESULT_OK);
+                    returnResult(RESULT_OK, null);
                 }
                 else
                 {
@@ -348,7 +408,7 @@ public class PickElementsActivity extends BaseActivity
         Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToDeselectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
-    private void returnResult(int resultCode)
+    private void returnResult(int resultCode, IElement element)
     {
         Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: resultCode[%d]", resultCode));
 
@@ -356,30 +416,37 @@ public class PickElementsActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
-            if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
-                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT
-                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
-                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+            if(element == null)
             {
-                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                }
+                else
+                {
+                    List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
+
+                    for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+                    {
+                        if(!(selectedElement instanceof OrphanElement))
+                        {
+                            selectedElementsWithoutOrphanElements.add(selectedElement);
+                        }
+                    }
+
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
+                }
             }
             else
             {
-                List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
-
-                for(IElement element : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
-                {
-                    if(!(element instanceof OrphanElement))
-                    {
-                        selectedElementsWithoutOrphanElements.add(element);
-                    }
-                }
-
-                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
-                intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
+                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning created %s", element));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             }
-
         }
 
         setResult(resultCode, intent);

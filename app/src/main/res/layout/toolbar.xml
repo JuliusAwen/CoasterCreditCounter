@@ -11,6 +11,4 @@
     android:background="?android:attr/colorPrimaryDark"
     android:elevation="8dp"
     android:visibility="gone"
-    app:contentInsetStart="0dp"
-    app:contentInsetLeft="0dp"
     app:popupTheme="@style/Theme.AppCompat.Light.NoActionBar"/>

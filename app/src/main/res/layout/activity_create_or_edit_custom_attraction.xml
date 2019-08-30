@@ -39,18 +39,13 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout_40"
+                    android:baselineAligned="false"
                     android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionType"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp">
-
-                    <ImageView
-                        style="@style/StandardImageHolder_28"
-                        android:id="@+id/imageViewCreateOrEditAttraction_AttractionType"
-                        android:layout_height="@dimen/half_standard_bar_height"
-                        android:contentDescription="@string/description_image_view"/>
 
                     <LinearLayout
                         style="@style/StandardBarLayout_40"
@@ -75,18 +70,13 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout_40"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
                     android:background="?selectableItemBackground">
-
-                    <ImageView
-                        style="@style/StandardImageHolder_28"
-                        android:id="@+id/imageViewCreateOrEditAttraction_Manufacturer"
-                        android:layout_height="@dimen/half_standard_bar_height"
-                        android:contentDescription="@string/description_image_view"/>
 
                     <LinearLayout
                         style="@style/StandardBarLayout_40"
@@ -111,18 +101,13 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout_40"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
                     android:background="?selectableItemBackground">
-
-                    <ImageView
-                        style="@style/StandardImageHolder_28"
-                        android:id="@+id/imageViewCreateOrEditAttraction_AttractionCategory"
-                        android:layout_height="@dimen/half_standard_bar_height"
-                        android:contentDescription="@string/description_image_view"/>
 
                     <LinearLayout
                         style="@style/StandardBarLayout_40"
@@ -147,18 +132,13 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout_40"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
                     android:background="?selectableItemBackground">
-
-                    <ImageView
-                        style="@style/StandardImageHolder_28"
-                        android:id="@+id/imageViewCreateOrEditAttraction_Status"
-                        android:layout_height="@dimen/half_standard_bar_height"
-                        android:contentDescription="@string/description_image_view"/>
 
                     <LinearLayout
                         style="@style/StandardBarLayout_40"

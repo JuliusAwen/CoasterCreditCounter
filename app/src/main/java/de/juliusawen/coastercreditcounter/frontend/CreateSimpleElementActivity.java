@@ -140,7 +140,7 @@ public class CreateSimpleElementActivity extends BaseActivity
             if(createdElement != null)
             {
                 this.markForCreation(createdElement);
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, createdElement.getUuid());
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, createdElement.getUuid().toString());
             }
             else
             {

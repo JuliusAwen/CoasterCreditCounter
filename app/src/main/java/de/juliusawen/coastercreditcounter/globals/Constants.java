@@ -69,7 +69,6 @@ public abstract class Constants
     public static final String EXTRA_HELP_TITLE = "de.juliusawen.coding.extra_help_title";
     public static final String EXTRA_HELP_TEXT = "de.juliusawen.coding.extra_help_text";
     public static final String EXTRA_HINT = "de.juliusawen.coding.extra_hint";
-    public static final String EXTRA_RESULT_STRING = "de.juliusawen.coding.extra_result_string";
     public static final String EXTRA_ELEMENTS_TO_CREATE_UUIDS = "de.juliusawen.coding.extra_elements_to_create_uuids";
     public static final String EXTRA_ELEMENTS_TO_UPDATE_UUIDS = "de.juliusawen.coding.extra_elements_to_update_uuids";
     public static final String EXTRA_ELEMENTS_TO_DELETE_UUIDS = "de.juliusawen.coding.extra_elements_to_delete_uuids";
@@ -91,7 +90,6 @@ public abstract class Constants
 
 
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.fragment_tag_help_overlay";
-    public static final String FRAGMENT_TAG_CONFIRM_DIALOG = "de.juliusawen.coding.fragment_tag_confirm_dialog";
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
 
 

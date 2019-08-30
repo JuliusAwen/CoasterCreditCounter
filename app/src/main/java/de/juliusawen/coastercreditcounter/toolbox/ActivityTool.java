@@ -207,7 +207,6 @@ public abstract class ActivityTool
         {
             if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
             {
-                intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
                 intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
@@ -227,6 +226,8 @@ public abstract class ActivityTool
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_status));
                 intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_status_name));
             }
+
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
