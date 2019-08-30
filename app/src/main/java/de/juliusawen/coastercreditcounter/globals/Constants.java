@@ -124,8 +124,8 @@ public abstract class Constants
     public static final int SELECTION_ENABLE_EDITING = Selection.ENABLE_EDITING.ordinal();
     public static final int SELECTION_DISABLE_EDITING = Selection.DISABLE_EDITING.ordinal();
 
-    public static final int SELECTION_ASCENDING = Selection.ASCENDING.ordinal();
-    public static final int SELECTION_DESCENDING = Selection.DESCENDING.ordinal();
+    public static final int SELECTION_SORT_ASCENDING = Selection.SORT_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_DESCENDING = Selection.SORT_DESCENDING.ordinal();
 
     public static final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
     public static final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
@@ -232,8 +232,8 @@ public abstract class Constants
         SORT_MANUFACTURERS,
         SORT_STATUSES,
 
-        ASCENDING,
-        DESCENDING,
+        SORT_ASCENDING,
+        SORT_DESCENDING,
 
         SORT_BY_MANUFACTURER,
         SORT_BY_MANUFACTURER_ASCENDING,

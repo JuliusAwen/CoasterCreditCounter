@@ -86,8 +86,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         if(this.viewModel.currentTab == TAB_VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
         {
-            menu.add(Menu.NONE, Constants.SELECTION_ASCENDING, Menu.NONE, R.string.selection_ascending);
-            menu.add(Menu.NONE, Constants.SELECTION_DESCENDING, Menu.NONE, R.string.selection_descending);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
         }
         else if(this.viewModel.currentTab == TAB_ATTRACTIONS)
         {

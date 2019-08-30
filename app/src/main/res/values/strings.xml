@@ -37,16 +37,11 @@
     <string name="selection_remove">remove</string>
     <string name="selection_relocate">relocate</string>
 
-    <string name="selection_ascending">ascending</string>
-    <string name="selection_descending">descending</string>
-
     <string name="selection_sort_by_manufacturer">manufacturer</string>
-    <string name="selection_sort_by_manufacturer_ascending">ascending</string>
-    <string name="selection_sort_by_manufacturer_descending">descending</string>
-
     <string name="selection_sort_by_location">location</string>
-    <string name="selection_sort_by_location_ascending">ascending</string>
-    <string name="selection_sort_by_location_descending">descending</string>
+
+    <string name="selection_sort_ascending">ascending</string>
+    <string name="selection_sort_descending">descending</string>
 
     <string name="selection_expand_all">expand all</string>
     <string name="selection_collapse_all">collapse all</string>
@@ -68,7 +63,7 @@
     <!--GENERIC ERROR MESSAGES-->
     <string name="error_name_not_valid">Name is not valid!</string>
     <string name="error_number_not_valid">Number is not valid!</string>
-    <string name="error_undo_not_possible">UNDO not possible…</string>
+    <string name="error_undo_not_possible">UNDO is not possible…</string>
     <string name="error_delete_failed">Deletion failed…</string>
     <string name="error_remove_failed">Removal failed…</string>
     <string name="error_creation_failed">Creation failed…</string>
@@ -115,8 +110,8 @@
     <string name="subtitle_locations_pick_description_to_add_to_new_location">to add to the new location</string>
     <string name="subtitle_location_create">create child location</string>
 
-    <string name="selection_sort_locations">sort locations</string>
-    <string name="selection_add_location">add location</string>
+    <string name="selection_sort_locations">locations</string>
+    <string name="selection_add_location">location</string>
 
     <string name="hint_enter_location_name">Enter location name</string>
     <string name="hint_edit_location_name">Edit location name</string>
@@ -132,8 +127,8 @@
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
     <string name="subtitle_park_show_tab_visits">Visits</string>
 
-    <string name="selection_sort_parks">sort parks</string>
-    <string name="selection_add_park">add park</string>
+    <string name="selection_sort_parks">parks</string>
+    <string name="selection_add_park">park</string>
 
     <string name="hint_enter_park_name">Enter park name</string>
 
@@ -201,7 +196,6 @@
 
     <!--MANUFACTURERS-->
     <string name="name_default_manufacturer">unknown</string>
-
     <string name="title_manufacturers">Manufacturers</string>
     <string name="title_manufacturer_create">Create Manufacturer</string>
     <string name="title_manufacturers_sort">Sort Manufacturers</string>
@@ -213,7 +207,6 @@
 
     <!--STATUS-->
     <string name="name_default_status">operational</string>
-
     <string name="title_statuses">Statuses</string>
     <string name="title_status_create">Create Status</string>
     <string name="title_statuses_sort">Sort Statuses</string>
