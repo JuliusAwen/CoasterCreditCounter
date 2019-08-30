@@ -178,7 +178,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             this.markForUpdate(resultElements);
         }
-        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                || requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
         {
             List<IElement> resultElements = ResultTool.fetchResultElements(data);
 
@@ -195,6 +197,14 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 for(IElement element : resultElements)
                 {
                     ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
+                    super.markForUpdate(element);
+                }
+            }
+            else if(this.viewModel.typeToManage == Constants.TYPE_STATUS)
+            {
+                for(IElement element : resultElements)
+                {
+                    ((Attraction)element).setStatus((Status) this.viewModel.longClickedElement);
                     super.markForUpdate(element);
                 }
             }
@@ -337,11 +347,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     PopupMenu popupMenu = new PopupMenu(ManageOrphanElementsActivity.this, view);
 
-                    if((viewModel.longClickedElement instanceof AttractionCategory) || (viewModel.longClickedElement instanceof Manufacturer))
-                    {
-                        popupMenu.getMenu().add(0, Constants.SELECTION_ASSIGN_TO_ATTRACTIONS, Menu.NONE, R.string.selection_assign_to_attractions)
-                                .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
-                    }
+                    popupMenu.getMenu().add(0, Constants.SELECTION_ASSIGN_TO_ATTRACTIONS, Menu.NONE, R.string.selection_assign_to_attractions)
+                            .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
 
                     popupMenu.getMenu().add(0, Constants.SELECTION_EDIT_ELEMENT, Menu.NONE, R.string.selection_edit);
 
@@ -397,6 +404,23 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                             Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
                                             attractions);
                                 }
+                                else if(viewModel.typeToManage == Constants.TYPE_STATUS)
+                                {
+                                    for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                                    {
+                                        if(attraction.getManufacturer().equals(viewModel.longClickedElement))
+                                        {
+                                            Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
+                                                    "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                            attractions.remove(attraction);
+                                        }
+                                    }
+
+                                    ActivityTool.startActivityPickForResult(
+                                            ManageOrphanElementsActivity.this,
+                                            Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS,
+                                            attractions);
+                                }
 
                                 return true;
                             }
@@ -433,6 +457,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                     else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                                     {
                                         defaultName = Manufacturer.getDefault().getName();
+                                    }
+                                    else if(viewModel.typeToManage == Constants.TYPE_STATUS)
+                                    {
+                                        defaultName = Status.getDefault().getName();
                                     }
                                     else
                                     {
@@ -535,7 +563,19 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                                 for(IAttraction child : children)
                                 {
-                                    child.setAttractionCategory(AttractionCategory.getDefault());
+                                    if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+                                    {
+                                        child.setManufacturer(Manufacturer.getDefault());
+                                    }
+                                    else if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
+                                    {
+                                        child.setAttractionCategory(AttractionCategory.getDefault());
+                                    }
+                                    else if(viewModel.typeToManage == Constants.TYPE_STATUS)
+                                    {
+                                        child.setStatus(Status.getDefault());
+                                    }
+
                                     markForUpdate(child);
                                 }
                             }

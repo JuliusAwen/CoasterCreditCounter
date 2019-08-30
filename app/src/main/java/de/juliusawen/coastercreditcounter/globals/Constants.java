@@ -161,6 +161,7 @@ public abstract class Constants
 
     public static final int REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS = RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS.ordinal();
     public static final int REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS = RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS.ordinal();
+    public static final int REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS = RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS.ordinal();
 
     public static final int REQUEST_CODE_EDIT_LOCATION = RequestCode.EDIT_LOCATION.ordinal();
     public static final int REQUEST_CODE_EDIT_PARK = RequestCode.EDIT_PARK.ordinal();
@@ -276,6 +277,7 @@ public abstract class Constants
 
         ASSIGN_CATEGORY_TO_ATTRACTIONS,
         ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
+        ASSIGN_STATUS_TO_ATTRACTIONS,
 
         EDIT_LOCATION,
         EDIT_PARK,

@@ -123,6 +123,16 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setStatus(Status status)
     {
+        if(this.status != null)
+        {
+            this.status.deleteChild(this);
+        }
+
+        if(!status.containsChild(this))
+        {
+            status.addChild(this);
+        }
+
         this.status = status;
         Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's status to %s", this, status));
     }

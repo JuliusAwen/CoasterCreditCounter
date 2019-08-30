@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -166,21 +167,36 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
         {
-            this.textViewManufacturer.setText(pickedElement.getName());
-            this.viewModel.manufacturer = (Manufacturer)pickedElement;
+            this.setTextOnTextView((Manufacturer)pickedElement);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
         {
-            this.textViewAttractionCategory.setText(pickedElement.getName());
-            this.viewModel.attractionCategory = (AttractionCategory)pickedElement;
+            this.setTextOnTextView((AttractionCategory) pickedElement);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
-            this.textViewStatus.setText(pickedElement.getName());
-            this.viewModel.status = (Status)pickedElement;
+            this.setTextOnTextView((Status)pickedElement);
         }
 
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
+    }
+
+    private void setTextOnTextView(Manufacturer element)
+    {
+        this.textViewManufacturer.setText(element.getName());
+        this.viewModel.manufacturer = element;
+    }
+
+    private void setTextOnTextView(AttractionCategory element)
+    {
+        this.textViewAttractionCategory.setText(element.getName());
+        this.viewModel.attractionCategory = element;
+    }
+
+    private void setTextOnTextView(Status element)
+    {
+        this.textViewStatus.setText(element.getName());
+        this.viewModel.status = element;
     }
 
     private void decorateFloatingActionButton()
@@ -276,7 +292,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             {
                                 returnResult(RESULT_CANCELED);
                             }
-
                         }
                     }
 
@@ -360,8 +375,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickManufacturer> selected");
-                ActivityTool.startActivityPickForResult(
-                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
+
+                List<IElement> elements = App.content.getContentOfType(Manufacturer.class);
+
+                if(elements.size() == 1)
+                {
+                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    setTextOnTextView((Manufacturer)elements.get(0));
+                }
+                else
+                {
+
+                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, elements);
+                }
             }
         }));
 
@@ -378,8 +404,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickAttractionCategory> selected");
-                ActivityTool.startActivityPickForResult(
-                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, App.content.getContentOfType(AttractionCategory.class));
+
+                List<IElement> elements = App.content.getContentOfType(AttractionCategory.class);
+
+                if(elements.size() == 1)
+                {
+                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    setTextOnTextView((AttractionCategory)elements.get(0));
+                }
+                else
+                {
+
+                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, elements);
+                }
             }
         });
 
@@ -396,8 +433,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickStatus> selected");
-                ActivityTool.startActivityPickForResult(
-                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, App.content.getContentOfType(Status.class));
+
+                List<IElement> elements = App.content.getContentOfType(Status.class);
+
+                if(elements.size() == 1)
+                {
+                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    setTextOnTextView((Status)elements.get(0));
+                }
+                else
+                {
+
+                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, elements);
+                }
             }
         });
 

@@ -309,17 +309,20 @@ public abstract class ActivityTool
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
         }
-        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
         {
-            toolbarTitle = context.getString(R.string.title_attraction_category_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_to_attraction);
-
-            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
+            toolbarTitle = context.getString(R.string.title_attractions_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS)
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_category_to);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+        {
+            toolbarTitle = context.getString(R.string.title_status_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_status_to_assign_status_to);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
         {
@@ -328,10 +331,12 @@ public abstract class ActivityTool
 
             intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
         }
-        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
         {
-            toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
+            toolbarTitle = context.getString(R.string.title_attraction_category_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_to_attraction);
+
+            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
@@ -349,7 +354,7 @@ public abstract class ActivityTool
         }
 
 
-        if(toolbarSubtitle != null)
+        if(toolbarTitle != null)
         {
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));

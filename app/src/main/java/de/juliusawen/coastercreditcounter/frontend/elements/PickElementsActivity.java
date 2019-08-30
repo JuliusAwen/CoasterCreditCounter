@@ -75,8 +75,9 @@ public class PickElementsActivity extends BaseActivity
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                         || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
                 {
                     HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(Attraction.class);
@@ -93,8 +94,10 @@ public class PickElementsActivity extends BaseActivity
                     {
                         this.viewModel.contentRecyclerViewAdapter.displayStatus(true);
                     }
-                    else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+                    else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+
                     {
                         this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
                         this.viewModel.contentRecyclerViewAdapter.displayLocations(true);

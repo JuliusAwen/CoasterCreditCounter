@@ -182,6 +182,20 @@
     <string name="title_custom_attraction_edit">Edit Attraction</string>
 
 
+    <!--MANUFACTURERS-->
+    <string name="name_default_manufacturer">unknown</string>
+    <string name="title_manufacturers">Manufacturers</string>
+    <string name="title_manufacturer_create">Create Manufacturer</string>
+    <string name="title_manufacturers_sort">Sort Manufacturers</string>
+    <string name="title_manufacturer_edit">Edit Manufacturer</string>
+    <string name="title_manufacturer_pick">Pick Manufacturer</string>
+    <string name="subtitle_manufacturer_to_assign_manufacturer_to">to assign manufacturer to</string>
+    <string name="subtitle_manufacturer_to_assign_to_attraction">to assign to attraction</string>
+    <string name="selection_sort_manufacturers">sort manufacturers</string>
+    <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
+    <string name="header_manufacturer">Manufacturer:</string>
+
+
     <!--ATTRACTION CATEGORIES-->
     <string name="name_default_attraction_category">uncategorized</string>
 
@@ -196,19 +210,6 @@
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
     <string name="spinner_text_attraction_category">Attraction Category:</string>
 
-    <!--MANUFACTURERS-->
-    <string name="name_default_manufacturer">unknown</string>
-    <string name="title_manufacturers">Manufacturers</string>
-    <string name="title_manufacturer_create">Create Manufacturer</string>
-    <string name="title_manufacturers_sort">Sort Manufacturers</string>
-    <string name="title_manufacturer_edit">Edit Manufacturer</string>
-    <string name="title_manufacturer_pick">Pick Manufacturer</string>
-    <string name="subtitle_manufacturer_to_assign_manufacturer_to">to assign manufacturer to</string>
-    <string name="subtitle_manufacturer_to_assign_to_attraction">to assign to attraction</string>
-    <string name="selection_sort_manufacturers">sort manufacturers</string>
-    <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
-    <string name="header_manufacturer">Manufacturer:</string>
-
     <!--STATUS-->
     <string name="name_default_status">operational</string>
     <string name="title_statuses">Statuses</string>
@@ -218,6 +219,7 @@
     <string name="selection_sort_statuses">sort statuses</string>
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="title_status_pick">Pick Status</string>
+    <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="subtitle_status_to_assign_to_attraction">to assign to attraction</string>
     <string name="spinner_text_status">Status:</string>
 
