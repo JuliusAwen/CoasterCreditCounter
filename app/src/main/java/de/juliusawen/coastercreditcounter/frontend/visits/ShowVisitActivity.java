@@ -326,6 +326,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 int id = item.getItemId();
                 if(id == Constants.SELECTION_DELETE_ELEMENT)
                 {
+                    //let user verify delete when any rides are counted
                     if(viewModel.longClickedElement.getChildCount() > 0)
                     {
                         AlertDialogFragment alertDialogFragmentDelete =
@@ -365,7 +366,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             if(requestCode == Constants.REQUEST_CODE_DELETE)
             {
-
                 snackbar = Snackbar.make(
                         findViewById(android.R.id.content),
                         getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 
-class CreateParkActivityViewModel extends ViewModel
+public class CreateParkActivityViewModel extends ViewModel
 {
     Location parentLocation;
     Park newPark;

@@ -6,7 +6,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-class ShowAttractionsFragmentViewModel extends ViewModel
+public class ShowAttractionsFragmentViewModel extends ViewModel
 {
     Park park;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;

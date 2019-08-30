@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 
-class ShowParkActivityViewModel extends ViewModel
+public class ShowParkActivityViewModel extends ViewModel
 {
     Park park;
     int currentTab = -1;

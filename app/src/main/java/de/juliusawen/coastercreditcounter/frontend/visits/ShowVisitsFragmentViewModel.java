@@ -10,7 +10,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-class ShowVisitsFragmentViewModel extends ViewModel
+public class ShowVisitsFragmentViewModel extends ViewModel
 {
     Park park;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;

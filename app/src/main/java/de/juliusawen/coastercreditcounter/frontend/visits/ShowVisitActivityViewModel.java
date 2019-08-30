@@ -6,7 +6,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-class ShowVisitActivityViewModel extends ViewModel
+public class ShowVisitActivityViewModel extends ViewModel
 {
     Visit visit;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
