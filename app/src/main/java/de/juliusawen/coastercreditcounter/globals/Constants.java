@@ -183,6 +183,8 @@ public abstract class Constants
     public static final int REQUEST_CODE_PICK_ATTRACTIONS = RequestCode.PICK_ATTRACTIONS.ordinal();
     public static final int REQUEST_CODE_PICK_STATUS = RequestCode.PICK_STATUS.ordinal();
     public static final int REQUEST_CODE_PICK_VISIT = RequestCode.PICK_VISIT.ordinal();
+    public static final int REQUEST_CODE_PICK_MANUFACTURER = RequestCode.PICK_MANUFACTURER.ordinal();
+    public static final int REQUEST_CODE_PICK_ATTRACTION_CATEGORY = RequestCode.PICK_ATTRACTION_CATEGORY.ordinal();
 
     public static final int REQUEST_CODE_DELETE = RequestCode.DELETE.ordinal();
     public static final int REQUEST_CODE_REMOVE = RequestCode.REMOVE.ordinal();
@@ -296,6 +298,8 @@ public abstract class Constants
         PICK_ATTRACTIONS,
         PICK_STATUS,
         PICK_VISIT,
+        PICK_MANUFACTURER,
+        PICK_ATTRACTION_CATEGORY,
 
         DELETE,
         REMOVE,

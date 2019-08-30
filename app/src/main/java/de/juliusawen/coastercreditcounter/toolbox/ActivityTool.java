@@ -307,20 +307,34 @@ public abstract class ActivityTool
             toolbarTitle = context.getString(R.string.title_attractions_pick);
             toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
         }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+        {
+            toolbarTitle = context.getString(R.string.title_attraction_category_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_to_attraction);
+
+            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
+        }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS)
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_assign_to_attractions);
+            toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_category_to);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
+        {
+            toolbarTitle = context.getString(R.string.title_manufacturer_pick);
+            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_to_attraction);
+
+            intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
         {
             toolbarTitle = context.getString(R.string.title_attractions_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_assign_to_attractions);
+            toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
             toolbarTitle = context.getString(R.string.title_status_pick);
-            toolbarSubtitle = context.getString(R.string.subtitle_status_assign_to_attraction);
+            toolbarSubtitle = context.getString(R.string.subtitle_status_to_assign_to_attraction);
 
             intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
         }

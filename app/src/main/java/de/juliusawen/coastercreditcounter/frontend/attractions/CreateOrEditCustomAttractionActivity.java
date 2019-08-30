@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +34,6 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
-import de.juliusawen.coastercreditcounter.frontend.spinnerAdapter.SpinnerAdapter;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
@@ -49,14 +47,15 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private EditText editTextAttractionName;
 
     private Spinner spinnerAttractionType;
-    private Spinner spinnerManufacturer;
-    private Spinner spinnerAttractionCategory;
-    private Spinner spinnerStatus;
+
+    private TextView textViewManufacturer;
+    private TextView textViewAttractionCategory;
+    private TextView textViewStatus;
 
     private EditText editTextUntrackedRideCount;
 
-    private final int attractionType_RollerCoaster = 1;
-    private final int attractionType_NonRollerCoaster = 2;
+    private final int attractionType_RollerCoaster = 0;
+    private final int attractionType_NonRollerCoaster = 1;
     private Map<String, Integer> attractionTypesById;
 
 
@@ -70,16 +69,13 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         if(App.isInitialized)
         {
-            ImageView imageViewPlaceholder = findViewById(R.id.imageViewCreateOrEditAttraction_AttractionType);
-            imageViewPlaceholder.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_close, R.color.default_color));
-            imageViewPlaceholder.setVisibility(View.INVISIBLE);
-
             this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
 
             this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
-            this.spinnerManufacturer = findViewById(R.id.spinnerCreateOrEditAttraction_Manufacturer);
-            this.spinnerAttractionCategory = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionCategory);
-            this.spinnerStatus = findViewById(R.id.spinnerCreateOrEditAttraction_Status);
+
+            this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
+            this.textViewAttractionCategory = findViewById(R.id.textViewCreateOrEditAttraction_AttractionCategory);
+            this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
 
             this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
@@ -138,8 +134,18 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
 
             this.createEditTextAttractionName();
-            this.createAttractionTypesDictionary();
-            this.createLayoutAttractionType();
+
+            if(viewModel.isEditMode)
+            {
+                findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionType).setVisibility(View.GONE);
+                Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onCreate:: Activity is in edit mode - hiding option to change attraction type");
+            }
+            else
+            {
+                this.createAttractionTypesDictionary();
+                this.createLayoutAttractionType();
+            }
+
             this.createLayoutManufacturer();
             this.createLayoutAttractionCategory();
             this.createLayoutStatus();
@@ -152,70 +158,30 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     {
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
-        IElement elementToSelect = ResultTool.fetchResultElement(data);
-
-        if(requestCode == Constants.REQUEST_CODE_MANAGE_MANUFACTURERS)
+        if(resultCode != RESULT_OK)
         {
-            if(elementToSelect == null)
-            {
-                elementToSelect = (IElement) this.spinnerManufacturer.getSelectedItem();
-            }
-
-            List<IElement> manufacturers = this.getManufacturers();
-
-            this.setSpinnerAdapter(this.spinnerManufacturer, manufacturers);
-
-            if(manufacturers.contains(elementToSelect))
-            {
-                this.spinnerManufacturer.setSelection(manufacturers.indexOf(elementToSelect));
-            }
-            else
-            {
-                this.spinnerManufacturer.setSelection(manufacturers.indexOf(Manufacturer.getDefault()));
-            }
-        }
-        else if(requestCode == Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES)
-        {
-            if(elementToSelect == null)
-            {
-                elementToSelect = (IElement) this.spinnerAttractionCategory.getSelectedItem();
-            }
-
-            List<IElement> attractionCategories = this.getAttractionCategories();
-
-            this.setSpinnerAdapter(this.spinnerAttractionCategory, attractionCategories);
-
-            if(attractionCategories.contains(elementToSelect))
-            {
-                this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(elementToSelect));
-            }
-            else
-            {
-                this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(Manufacturer.getDefault()));
-            }
-        }
-        else if(requestCode == Constants.REQUEST_CODE_MANAGE_STATUSES)
-        {
-            if(elementToSelect == null)
-            {
-                elementToSelect = (IElement) this.spinnerStatus.getSelectedItem();
-            }
-
-            List<IElement> statuses = this.getStatuses();
-
-            this.setSpinnerAdapter(this.spinnerStatus, statuses);
-
-            if(statuses.contains(elementToSelect))
-            {
-                this.spinnerStatus.setSelection(statuses.indexOf(elementToSelect));
-            }
-            else
-            {
-                this.spinnerStatus.setSelection(statuses.indexOf(Manufacturer.getDefault()));
-            }
+            return;
         }
 
-        Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: set spinner selection to [%s]", elementToSelect));
+        IElement pickedElement = ResultTool.fetchResultElement(data);
+
+        if(requestCode == Constants.REQUEST_CODE_MANAGE_MANUFACTURERS || requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
+        {
+            this.textViewManufacturer.setText(pickedElement.getName());
+            this.viewModel.manufacturer = (Manufacturer)pickedElement;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES || requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+        {
+            this.textViewAttractionCategory.setText(pickedElement.getName());
+            this.viewModel.attractionCategory = (AttractionCategory)pickedElement;
+        }
+        else if(requestCode == Constants.REQUEST_CODE_MANAGE_STATUSES || requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+        {
+            this.textViewStatus.setText(pickedElement.getName());
+            this.viewModel.status = (Status)pickedElement;
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
     }
 
     private void decorateFloatingActionButton()
@@ -314,23 +280,20 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
                         }
                     }
+
+                    if(createAttraction())
+                    {
+                        Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
+
+                        viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
+                        markForCreation(viewModel.attraction);
+                        markForUpdate(viewModel.parentPark);
+
+                        returnResult(RESULT_OK);
+                    }
                     else
                     {
-                        if(createAttraction())
-                        {
-                            Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s",
-                                    viewModel.attraction, viewModel.parentPark));
-
-                            viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
-                            markForCreation(viewModel.attraction);
-                            markForUpdate(viewModel.parentPark);
-
-                            returnResult(RESULT_OK);
-                        }
-                        else
-                        {
-                            Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
-                        }
+                        Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
                     }
                 }
             }
@@ -359,6 +322,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutAttractionType()
     {
+        ImageView imageViewPlaceholder = findViewById(R.id.imageViewCreateOrEditAttraction_AttractionType);
+        imageViewPlaceholder.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_close, R.color.default_color));
+        imageViewPlaceholder.setVisibility(View.INVISIBLE);
+
         this.spinnerAttractionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -366,7 +333,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             {
                 String item = parent.getItemAtPosition(position).toString();
                 viewModel.attractionType = attractionTypesById.get(item);
-                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createLayoutAttractionType.onItemSelected:: attraction type set to [%s]", item));
+                Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onItemSelected:: attraction type set to [%s]", item));
             }
 
             @Override
@@ -381,11 +348,11 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         {
             if(this.viewModel.attraction instanceof Coaster)
             {
-                this.spinnerAttractionCategory.setSelection(attractionType_RollerCoaster);
+                this.spinnerAttractionType.setSelection(attractionType_RollerCoaster);
             }
             else
             {
-                this.spinnerAttractionCategory.setSelection(attractionType_NonRollerCoaster);
+                this.spinnerAttractionType.setSelection(attractionType_NonRollerCoaster);
             }
         }
     }
@@ -399,36 +366,25 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.createLayoutManufacturer:: <AddManufacturer> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <AddManufacturer> selected");
                 ActivityTool.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
             }
         });
 
-        this.spinnerManufacturer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer).setOnClickListener((new View.OnClickListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onClick(View v)
             {
-                viewModel.manufacturer = (Manufacturer)parent.getItemAtPosition(position);
-                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createLayoutManufacturer.onItemSelected:: manufacturer set to %s", viewModel.manufacturer));
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickManufacturer> selected");
+                ActivityTool.startActivityPickForResult(
+                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
             }
+        }));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        List<IElement> manufacturers = this.getManufacturers();
-
-        this.setSpinnerAdapter(this.spinnerManufacturer, manufacturers);
-
-        if(this.viewModel.isEditMode)
-        {
-            this.spinnerManufacturer.setSelection(manufacturers.indexOf(this.viewModel.attraction.getManufacturer()));
-        }
-        else
-        {
-            this.spinnerManufacturer.setSelection(manufacturers.indexOf(Manufacturer.getDefault()));
-        }
+        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault();
+        this.textViewManufacturer.setText(manufacturer.getName());
+        this.viewModel.manufacturer = manufacturer;
     }
 
     private void createLayoutAttractionCategory()
@@ -440,37 +396,25 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.createLayoutAttractionCategory:: <AddCategory> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <AddAttractionCategory> selected");
                 ActivityTool.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
             }
         });
 
-        this.spinnerAttractionCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionCategory).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onClick(View v)
             {
-                viewModel.attractionCategory = (AttractionCategory) parent.getItemAtPosition(position);
-                Log.v(Constants.LOG_TAG,
-                        String.format("CreateOrEditCustomAttractionActivity.createLayoutAttractionCategory.onItemSelected:: attraction category set to %s", viewModel.attractionCategory));
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickAttractionCategory> selected");
+                ActivityTool.startActivityPickForResult(
+                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, App.content.getContentOfType(AttractionCategory.class));
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        List<IElement> attractionCategories = this.getAttractionCategories();
-
-        this.setSpinnerAdapter(this.spinnerAttractionCategory, attractionCategories);
-
-        if(this.viewModel.isEditMode)
-        {
-            this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(this.viewModel.attraction.getAttractionCategory()));
-        }
-        else
-        {
-            this.spinnerAttractionCategory.setSelection(attractionCategories.indexOf(AttractionCategory.getDefault()));
-        }
+        AttractionCategory attractionCategory = this.viewModel.isEditMode ? this.viewModel.attraction.getAttractionCategory() : AttractionCategory.getDefault();
+        this.textViewAttractionCategory.setText(attractionCategory.getName());
+        this.viewModel.attractionCategory = attractionCategory;
     }
 
     private void createLayoutStatus()
@@ -487,66 +431,20 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        this.spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        findViewById(R.id.linearLayoutCreateOrEditAttraction_Status).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onClick(View v)
             {
-                viewModel.status = (Status) parent.getItemAtPosition(position);
-                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createLayoutStatus.onItemSelected:: status set to %s", viewModel.status));
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickStatus> selected");
+                ActivityTool.startActivityPickForResult(
+                        CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, App.content.getContentOfType(Status.class));
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        List<IElement> statuses = this.getStatuses();
-
-        this.setSpinnerAdapter(this.spinnerStatus, statuses);
-
-        if(this.viewModel.isEditMode)
-        {
-            this.spinnerStatus.setSelection(statuses.indexOf(this.viewModel.attraction.getStatus()));
-        }
-        else
-        {
-            this.spinnerStatus.setSelection(statuses.indexOf(Status.getDefault()));
-        }
-    }
-
-    private List<IElement> getManufacturers()
-    {
-        List<IElement> manufacturers = App.content.getContentOfType(Manufacturer.class);
-        manufacturers.remove(Manufacturer.getDefault());
-        manufacturers.add(0, Manufacturer.getDefault());
-
-        return manufacturers;
-    }
-
-    private List<IElement> getAttractionCategories()
-    {
-        List<IElement> attractionCategories = App.content.getContentOfType(AttractionCategory.class);
-        attractionCategories.remove(AttractionCategory.getDefault());
-        attractionCategories.add(0, AttractionCategory.getDefault());
-
-        return attractionCategories;
-    }
-
-    private List<IElement> getStatuses()
-    {
-        List<IElement> statuses = App.content.getContentOfType(Status.class);
-        statuses.remove(Status.getDefault());
-        statuses.add(0, Status.getDefault());
-
-        return statuses;
-    }
-
-    private void setSpinnerAdapter(Spinner spinner, List<IElement> items)
-    {
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.spinner_item, items);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(spinnerAdapter);
+        Status status = this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : Status.getDefault();
+        this.textViewStatus.setText(status.getName());
+        this.viewModel.status = status;
     }
 
     private void createEditTextUntrackedRideCount()

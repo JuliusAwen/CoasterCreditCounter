@@ -25,6 +25,8 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -95,7 +97,9 @@ public class PickElementsActivity extends BaseActivity
                         this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
                     }
                 }
-                else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+                else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
                 {
                     this.useSelectOrDeselectAllBar = false;
 
@@ -106,6 +110,8 @@ public class PickElementsActivity extends BaseActivity
                             Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT)
                 {
@@ -351,7 +357,9 @@ public class PickElementsActivity extends BaseActivity
         if(resultCode == RESULT_OK)
         {
             if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
-                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT)
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
             {
                 Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());

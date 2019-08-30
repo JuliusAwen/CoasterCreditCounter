@@ -19,7 +19,7 @@
             layout="@layout/toolbar"/>
 
         <EditText
-            style="@style/standard_edit_text_16"
+            style="@style/StandardEditText_16"
             android:id="@+id/editTextEditElement"
             android:hint="@string/hint_edit_element_name"
             android:layout_margin="16dp"

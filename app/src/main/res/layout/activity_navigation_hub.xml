@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalVisitedParksCount"
-            style="@style/standard_text_view_16"
+            style="@style/StandardTextView_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="27dp"
@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
-            style="@style/standard_text_view_16"
+            style="@style/StandardTextView_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="27dp"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
-            style="@style/standard_text_view_16"
+            style="@style/StandardTextView_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="27dp"
@@ -65,7 +65,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:itemTextAppearance="@style/navigation_drawer_16"
+        app:itemTextAppearance="@style/NavigationDrawerItem_16"
         app:itemIconPadding="14dp"
         app:menu="@menu/menu_navigation_drawer" />
 

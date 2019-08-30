@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -24,10 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            tools:ignore="DisableBaselineAlignment">
+            android:background="?selectableItemBackground">
 
             <ImageView
-                style="@style/standard_image_holder_28"
+                style="@style/StandardImageHolder_28"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
                 android:contentDescription="@string/description_decrease"
                 android:layout_height="24dp"
@@ -45,14 +44,14 @@
                 android:layout_weight="1">
 
                 <TextView
-                    style="@style/standard_text_view_16"
+                    style="@style/StandardTextView_16"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="bottom|center_horizontal"/>
 
                 <TextView
-                    style="@style/standard_text_view_16"
+                    style="@style/StandardTextView_16"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
                     android:layout_gravity="center"
                     android:gravity="center" />
@@ -60,7 +59,7 @@
             </LinearLayout>
 
             <ImageView
-                style="@style/standard_image_holder_28"
+                style="@style/StandardImageHolder_28"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
                 android:contentDescription="@string/description_increase"
                 android:layout_height="24dp"
@@ -74,7 +73,7 @@
     </LinearLayout>
 
     <TextView
-        style="@style/standard_text_view_16"
+        style="@style/StandardTextView_16"
         android:id="@+id/textViewRecyclerViewItemVisitedAttraction_PrettyPrint"
         android:textSize="14sp"
         android:layout_marginStart="48dp"

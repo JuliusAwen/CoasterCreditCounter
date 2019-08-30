@@ -763,7 +763,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAllExpanded()
     {
         for(IElement item : this.items)
@@ -848,7 +847,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAllCollapsed()
     {
         for(IElement item : this.items)
@@ -1125,6 +1123,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    /**
+     *  set a string resource which replaces the element.getName() string for the given class
+     */
     public void setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
     {
         this.specialStringResourcesByType.put(type, stringResource);

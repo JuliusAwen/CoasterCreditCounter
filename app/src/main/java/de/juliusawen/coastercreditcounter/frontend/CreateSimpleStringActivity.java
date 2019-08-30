@@ -15,7 +15,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateSimpleStringActivity extends BaseActivity
 {
@@ -101,7 +100,7 @@ public class CreateSimpleStringActivity extends BaseActivity
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_name_not_valid));
+            returnResult(RESULT_CANCELED);
         }
     }
 

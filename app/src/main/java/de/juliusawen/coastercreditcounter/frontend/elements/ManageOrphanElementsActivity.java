@@ -64,7 +64,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
 
-
             this.viewModel.typeToManage = getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, Constants.TYPE_NONE);
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -142,7 +141,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.clear();
-
 
         if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
         {
@@ -228,125 +226,125 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
-        if(resultCode == Activity.RESULT_OK)
+        if(resultCode != Activity.RESULT_OK)
         {
-            IElement resultElement = ResultTool.fetchResultElement(data);
+            return;
+        }
 
-            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+        IElement resultElement = ResultTool.fetchResultElement(data);
+
+        if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+        {
+            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", createdString));
+
+            AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
+            if(attractionCategory != null)
             {
-                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                Log.d(Constants.LOG_TAG,
-                        String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", createdString));
-
-                AttractionCategory attractionCategory = AttractionCategory.create(createdString, null);
-                if(attractionCategory != null)
-                {
-                    this.lastCreatedOrphanElement = attractionCategory;
-                    this.markForCreation(attractionCategory);
-                    updateContentRecyclerView(true);
-                }
-                else
-                {
-                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                    Log.e(Constants.LOG_TAG,
-                            String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: not able to create AttractionCategory [%s]", createdString));
-                }
-
-            }
-            else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
-            {
-                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", createdString));
-
-                Manufacturer manufacturer = Manufacturer.create(createdString, null);
-                if(manufacturer != null)
-                {
-                    this.lastCreatedOrphanElement = manufacturer;
-                    this.markForCreation(manufacturer);
-                    updateContentRecyclerView(true);
-                }
-                else
-                {
-                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                    Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: not able to create Manufacturer [%s]", createdString));
-                }
-            }
-            else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
-            {
-                String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
-                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: creating Status [%s]", createdString));
-
-                Status status = Status.create(createdString, null);
-                if(status != null)
-                {
-                    this.lastCreatedOrphanElement = status;
-                    this.markForCreation(status);
-                    updateContentRecyclerView(true);
-                }
-                else
-                {
-                    Toaster.makeToast(this, getString(R.string.error_creation_failed));
-
-                    Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: not able to create Status [%s]", createdString));
-                }
-            }
-            else if(requestCode == Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY
-                    || requestCode == Constants.REQUEST_CODE_EDIT_MANUFACTURER
-                    || requestCode == Constants.REQUEST_CODE_EDIT_STATUS)
-            {
-                this.markForUpdate(resultElement);
-                updateContentRecyclerView(false);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES
-                    || requestCode == Constants.REQUEST_CODE_SORT_MANUFACTURERS
-                    || requestCode == Constants.REQUEST_CODE_SORT_STATUSES)
-            {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                App.content.reorderElements(resultElements);
-                updateContentRecyclerView(true);
-
-                if(resultElement != null)
-                {
-                    Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SORT>:: scrolling to selected element %s...", resultElement));
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
-                }
-
-                this.markForUpdate(resultElements);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
-            {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
-
-                if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
-                {
-                    for(IElement element : resultElements)
-                    {
-                        ((Attraction)element).setAttractionCategory((AttractionCategory)this.viewModel.longClickedElement);
-                        super.markForUpdate(element);
-                    }
-                }
-                else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
-                {
-                    for(IElement element : resultElements)
-                    {
-                        ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
-                        super.markForUpdate(element);
-                    }
-                }
-
-                updateContentRecyclerView(false);
-
-                Toaster.makeToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
-
-                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
-                        this.viewModel.longClickedElement, resultElements.size()));
-
+                this.lastCreatedOrphanElement = attractionCategory;
+                this.markForCreation(attractionCategory);
                 updateContentRecyclerView(true);
             }
+            else
+            {
+                Toaster.makeToast(this, getString(R.string.error_creation_failed));
 
+                Log.e(Constants.LOG_TAG,
+                        String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_ATTRACTION_CATEGORY>:: not able to create AttractionCategory [%s]", createdString));
+            }
+
+        }
+        else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
+        {
+            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", createdString));
+
+            Manufacturer manufacturer = Manufacturer.create(createdString, null);
+            if(manufacturer != null)
+            {
+                this.lastCreatedOrphanElement = manufacturer;
+                this.markForCreation(manufacturer);
+                updateContentRecyclerView(true);
+            }
+            else
+            {
+                Toaster.makeToast(this, getString(R.string.error_creation_failed));
+
+                Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_MANUFACTURER>:: not able to create Manufacturer [%s]", createdString));
+            }
+        }
+        else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
+        {
+            String createdString = data.getStringExtra(Constants.EXTRA_RESULT_STRING);
+            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: creating Status [%s]", createdString));
+
+            Status status = Status.create(createdString, null);
+            if(status != null)
+            {
+                this.lastCreatedOrphanElement = status;
+                this.markForCreation(status);
+                updateContentRecyclerView(true);
+            }
+            else
+            {
+                Toaster.makeToast(this, getString(R.string.error_creation_failed));
+
+                Log.e(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<CREATE_STATUS>:: not able to create Status [%s]", createdString));
+            }
+        }
+        else if(requestCode == Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY
+                || requestCode == Constants.REQUEST_CODE_EDIT_MANUFACTURER
+                || requestCode == Constants.REQUEST_CODE_EDIT_STATUS)
+        {
+            this.markForUpdate(resultElement);
+            updateContentRecyclerView(false);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES
+                || requestCode == Constants.REQUEST_CODE_SORT_MANUFACTURERS
+                || requestCode == Constants.REQUEST_CODE_SORT_STATUSES)
+        {
+            List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+            App.content.reorderElements(resultElements);
+            updateContentRecyclerView(true);
+
+            if(resultElement != null)
+            {
+                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SORT>:: scrolling to selected element %s...", resultElement));
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+            }
+
+            this.markForUpdate(resultElements);
+        }
+        else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+        {
+            List<IElement> resultElements = ResultTool.fetchResultElements(data);
+
+            if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
+            {
+                for(IElement element : resultElements)
+                {
+                    ((Attraction)element).setAttractionCategory((AttractionCategory)this.viewModel.longClickedElement);
+                    super.markForUpdate(element);
+                }
+            }
+            else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
+            {
+                for(IElement element : resultElements)
+                {
+                    ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
+                    super.markForUpdate(element);
+                }
+            }
+
+            updateContentRecyclerView(false);
+
+            Toaster.makeToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
+
+            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
+                    this.viewModel.longClickedElement, resultElements.size()));
+
+            updateContentRecyclerView(true);
         }
     }
 
