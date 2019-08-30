@@ -16,12 +16,11 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
-import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class EditElementActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
+public class EditElementActivity extends BaseActivity
 {
     private EditElementActivityViewModel viewModel;
 
@@ -32,12 +31,12 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.onCreate:: creating activity...");
 
-        setContentView(R.layout.activity_edit_location);
+        setContentView(R.layout.activity_edit_element);
         super.onCreate(savedInstanceState);
 
         if(App.isInitialized)
         {
-            this.editText = this.findViewById(android.R.id.content).findViewById(R.id.editTextEditLocation);
+            this.editText = findViewById(R.id.editTextEditElement);
 
             this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
 
@@ -46,34 +45,34 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
                 this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            super.addConfirmDialogFragment();
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
 
             super.addToolbar();
+            super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
 
             this.createEditText();
         }
     }
 
-    @Override
-    public void onConfirmDialogFragmentInteraction(View view)
+    private void decorateFloatingActionButton()
     {
-        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        Log.i(Constants.LOG_TAG, String.format("EditElementActivity.onConfirmDialogIntercation:: [%S] selected", buttonFunction));
-
-        switch (buttonFunction)
+        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
-            case OK:
-                handleOnEditorActionDone();
-                returnResult(RESULT_OK);
-                break;
-
-            case CANCEL:
-                returnResult(RESULT_CANCELED);
-                break;
-        }
+            @Override
+            public void onClick(View view)
+            {
+                if(handleOnEditorActionDone())
+                {
+                    returnResult(RESULT_OK);
+                }
+            }
+        });
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private void createEditText()
@@ -86,41 +85,38 @@ public class EditElementActivity extends BaseActivity implements ConfirmDialogFr
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                boolean handled = onClickEditorAction(actionId);
-                returnResult(RESULT_OK);
-                return handled;
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    Log.d(Constants.LOG_TAG, "EditElementActivity.onEditorAction<IME_ACTION_DONE>:: ");
+                    if(handleOnEditorActionDone())
+                    {
+                        returnResult(RESULT_OK);
+                    }
+                }
+
+                return true;
             }
         });
     }
 
-    private boolean onClickEditorAction(int actionId)
-    {
-        boolean handled = false;
-
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
-            Log.d(Constants.LOG_TAG, "EditElementActivity.onClickEditorAction<IME_ACTION_DONE>:: ");
-            this.handleOnEditorActionDone();
-            handled = true;
-        }
-        return handled;
-    }
-
-    private void handleOnEditorActionDone()
+    private boolean handleOnEditorActionDone()
     {
         String editText = this.editText.getText().toString();
         if(!this.viewModel.elementToEdit.getName().equals(editText))
         {
-            Log.i(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
+            Log.i(Constants.LOG_TAG, String.format("EditElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
             if(!this.viewModel.elementToEdit.setName(editText))
             {
                 Toaster.makeToast(this, getString(R.string.error_name_not_valid));
+                return false;
             }
         }
         else
         {
             Log.v(Constants.LOG_TAG, "EditElementActivity.createEditText:: name has not changed");
         }
+
+        return true;
     }
 
     private void returnResult(int resultCode)

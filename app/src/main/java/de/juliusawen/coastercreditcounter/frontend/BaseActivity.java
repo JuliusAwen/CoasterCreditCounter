@@ -34,7 +34,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
-import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
@@ -47,7 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     private Toolbar toolbar;
     private ActionBar actionBar;
     private HelpOverlayFragment helpOverlayFragment;
-    private ConfirmDialogFragment confirmDialogFragment;
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener onClickListenerFloatingActionButton;
     private View progressBar;
@@ -440,75 +438,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
 
             this.viewModel.helpOverlayFragmentIsVisible = isVisible;
             this.setFloatingActionButtonVisibility(!isVisible);
-            this.setConfirmDialogVisibility(!isVisible);
-        }
-    }
-
-    protected void addConfirmDialogFragment()
-    {
-        this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-
-        if(this.confirmDialogFragment == null)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating ConfirmDialogFragment...");
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
-            fragmentTransaction.add(findViewById(android.R.id.content).getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using ConfirmDialogFagment...");
-        }
-    }
-
-    protected void addConfirmDialogFragment(View parentView)
-    {
-        this.confirmDialogFragment = (ConfirmDialogFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-
-        if(this.confirmDialogFragment == null)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: creating ConfirmDialogFragment...");
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.confirmDialogFragment = ConfirmDialogFragment.newInstance();
-            fragmentTransaction.add(parentView.getId(), this.confirmDialogFragment, Constants.FRAGMENT_TAG_CONFIRM_DIALOG);
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addConfirmDialogFragment:: re-using ConfirmDialogFagment...");
-        }
-    }
-
-    protected void setConfirmDialogVisibility(boolean isVisible)
-    {
-        if(this.confirmDialogFragment != null)
-        {
-            if(isVisible)
-            {
-                this.showFragmentFadeIn(this.confirmDialogFragment);
-            }
-            else
-            {
-                this.hideFragmentFadeOut(this.confirmDialogFragment);
-            }
-        }
-    }
-
-    protected void setConfirmDialogVisibilityWithoutFade(boolean isVisible)
-    {
-        if(this.confirmDialogFragment != null)
-        {
-            if(isVisible)
-            {
-                this.confirmDialogFragment.showDialog();
-            }
-            else
-            {
-                this.confirmDialogFragment.hideDialog();
-            }
         }
     }
 

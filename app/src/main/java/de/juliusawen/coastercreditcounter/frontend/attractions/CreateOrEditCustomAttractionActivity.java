@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -36,17 +35,14 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
-import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.frontend.spinnerAdapter.SpinnerAdapter;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class CreateOrEditCustomAttractionActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
+public class CreateOrEditCustomAttractionActivity extends BaseActivity
 {
     private CreateOrEditCustomAttractionActivityViewModel viewModel;
 
@@ -128,6 +124,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
                         : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
             }
 
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
+
             super.addHelpOverlayFragment(
                     getString(R.string.title_help, this.viewModel.isEditMode
                             ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
@@ -138,8 +137,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
 
-            super.addConfirmDialogFragment();
-
             this.createEditTextAttractionName();
             this.createAttractionTypesDictionary();
             this.createLayoutAttractionType();
@@ -147,26 +144,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
             this.createLayoutAttractionCategory();
             this.createLayoutStatus();
             this.createEditTextUntrackedRideCount();
-
-            this.setKeyboardDetector();
-        }
-    }
-
-    @Override
-    public void onConfirmDialogFragmentInteraction(View view)
-    {
-        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onConfirmDialogFragment:: [%S] selected", buttonFunction));
-
-        switch (buttonFunction)
-        {
-            case OK:
-                handleOnConfirmDialogFragmentInteractionOk();
-                break;
-
-            case CANCEL:
-                this.returnResult(RESULT_CANCELED);
-                break;
         }
     }
 
@@ -239,6 +216,127 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         }
 
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: set spinner selection to [%s]", elementToSelect));
+    }
+
+    private void decorateFloatingActionButton()
+    {
+        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                boolean somethingWentWrong = false;
+
+                viewModel.name = editTextAttractionName.getText().toString();
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: attraction name set to [%s]", viewModel.name));
+
+                String untrackedRideCountString = editTextUntrackedRideCount.getText().toString();
+                try
+                {
+                    if(!untrackedRideCountString.trim().isEmpty())
+                    {
+                        viewModel.untrackedRideCount = Integer.parseInt(untrackedRideCountString);
+                    }
+                    else
+                    {
+                        viewModel.untrackedRideCount = 0;
+                    }
+                    Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: untracked ride count set to [%d]", viewModel.untrackedRideCount));
+                }
+                catch(NumberFormatException nfe)
+                {
+                    Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+
+                    somethingWentWrong = true;
+                    Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_number_not_valid));
+                }
+
+
+                if(!somethingWentWrong)
+                {
+                    if(viewModel.isEditMode)
+                    {
+                        boolean somethingChanged = false;
+
+                        if(!viewModel.attraction.getName().equals(viewModel.name))
+                        {
+                            if(viewModel.attraction.setName(viewModel.name))
+                            {
+                                somethingChanged = true;
+                            }
+                            else
+                            {
+                                somethingWentWrong = true;
+                                Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                            }
+                        }
+
+                        if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
+                        {
+                            viewModel.attraction.setManufacturer(viewModel.manufacturer);
+                            somethingChanged = true;
+                        }
+
+                        if(!viewModel.attraction.getAttractionCategory().equals(viewModel.attractionCategory))
+                        {
+                            viewModel.attraction.setAttractionCategory(viewModel.attractionCategory);
+                            somethingChanged = true;
+                        }
+
+                        if(!viewModel.attraction.getStatus().equals(viewModel.status))
+                        {
+                            viewModel.attraction.setStatus(viewModel.status);
+                            somethingChanged = true;
+                        }
+
+                        if(viewModel.attraction.getUntracktedRideCount() != viewModel.untrackedRideCount)
+                        {
+                            viewModel.attraction.setUntracktedRideCount(viewModel.untrackedRideCount);
+                            somethingChanged = true;
+                        }
+
+                        if(somethingChanged && !somethingWentWrong)
+                        {
+                            markForUpdate(viewModel.attraction);
+                        }
+
+                        if(!somethingWentWrong)
+                        {
+                            if(somethingChanged)
+                            {
+                                returnResult(RESULT_OK);
+                            }
+                            else
+                            {
+                                returnResult(RESULT_CANCELED);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        if(createAttraction())
+                        {
+                            Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s",
+                                    viewModel.attraction, viewModel.parentPark));
+
+                            viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
+                            markForCreation(viewModel.attraction);
+                            markForUpdate(viewModel.parentPark);
+
+                            returnResult(RESULT_OK);
+                        }
+                        else
+                        {
+                            Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                        }
+                    }
+                }
+            }
+        });
+
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private void createEditTextAttractionName()
@@ -485,117 +583,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         };
     }
 
-    private void handleOnConfirmDialogFragmentInteractionOk()
-    {
-        boolean somethingWentWrong = false;
-
-        this.viewModel.name = this.editTextAttractionName.getText().toString();
-        Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: attraction name set to [%s]", this.viewModel.name));
-
-        String untrackedRideCountString = this.editTextUntrackedRideCount.getText().toString();
-        try
-        {
-            if(!untrackedRideCountString.trim().isEmpty())
-            {
-                this.viewModel.untrackedRideCount = Integer.parseInt(untrackedRideCountString);
-            }
-            else
-            {
-                this.viewModel.untrackedRideCount = 0;
-            }
-            Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: untracked ride count set to [%d]", this.viewModel.untrackedRideCount));
-        }
-        catch(NumberFormatException nfe)
-        {
-            Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.handleOnConfirmDialogFragmentInteractionOk:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
-
-            somethingWentWrong = true;
-            Toaster.makeToast(this, getString(R.string.error_number_not_valid));
-        }
-
-
-        if(!somethingWentWrong)
-        {
-            if(this.viewModel.isEditMode)
-            {
-                boolean somethingChanged = false;
-
-                if(!this.viewModel.attraction.getName().equals(this.viewModel.name))
-                {
-                    if(this.viewModel.attraction.setName(this.viewModel.name))
-                    {
-                        somethingChanged = true;
-                    }
-                    else
-                    {
-                        somethingWentWrong = true;
-                        Toaster.makeToast(this, getString(R.string.error_name_not_valid));
-                    }
-                }
-
-                if(!this.viewModel.attraction.getManufacturer().equals(this.viewModel.manufacturer))
-                {
-                    this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
-                    somethingChanged = true;
-                }
-
-                if(!this.viewModel.attraction.getAttractionCategory().equals(this.viewModel.attractionCategory))
-                {
-                    this.viewModel.attraction.setAttractionCategory(this.viewModel.attractionCategory);
-                    somethingChanged = true;
-                }
-
-                if(!this.viewModel.attraction.getStatus().equals(this.viewModel.status))
-                {
-                    this.viewModel.attraction.setStatus(this.viewModel.status);
-                    somethingChanged = true;
-                }
-
-                if(this.viewModel.attraction.getUntracktedRideCount() != this.viewModel.untrackedRideCount)
-                {
-                    this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
-                    somethingChanged = true;
-                }
-
-                if(somethingChanged && !somethingWentWrong)
-                {
-                    super.markForUpdate(this.viewModel.attraction);
-                }
-
-                if(!somethingWentWrong)
-                {
-                    if(somethingChanged)
-                    {
-                        this.returnResult(RESULT_OK);
-                    }
-                    else
-                    {
-                        this.returnResult(RESULT_CANCELED);
-                    }
-
-                }
-            }
-            else
-            {
-                if(this.createAttraction())
-                {
-                    Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnConfirmDialogFragmentInteractionOk:: adding child %s to parent %s",
-                            this.viewModel.attraction, this.viewModel.parentPark));
-
-                    this.viewModel.parentPark.addChildAndSetParent(this.viewModel.attraction);
-                    super.markForCreation(this.viewModel.attraction);
-                    super.markForUpdate(this.viewModel.parentPark);
-
-                    this.returnResult(RESULT_OK);
-                }
-                else
-                {
-                    Toaster.makeToast(this, getString(R.string.error_name_not_valid));
-                }
-            }
-        }
-    }
-
     private boolean createAttraction()
     {
         boolean success = false;
@@ -647,28 +634,5 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity implement
         setResult(resultCode, intent);
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
-    }
-
-    private void setKeyboardDetector()
-    {
-        final View activityRootView = findViewById(android.R.id.content);
-
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-        {
-            @Override
-            public void onGlobalLayout()
-            {
-                int heightDifference = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-
-                if(heightDifference > ConvertTool.convertDpToPx(150))
-                {
-                    CreateOrEditCustomAttractionActivity.super.setConfirmDialogVisibilityWithoutFade(false);
-                }
-                else
-                {
-                    CreateOrEditCustomAttractionActivity.super.setConfirmDialogVisibilityWithoutFade(true);
-                }
-            }
-        });
     }
 }

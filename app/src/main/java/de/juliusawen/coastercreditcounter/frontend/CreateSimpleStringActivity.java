@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,13 +13,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.frontend.fragments.ConfirmDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
-public class CreateSimpleStringActivity extends BaseActivity implements ConfirmDialogFragment.ConfirmDialogFragmentInteractionListener
+public class CreateSimpleStringActivity extends BaseActivity
 {
     private CreateSimpleStringActivityViewModel viewModel;
     private EditText editText;
@@ -48,38 +45,29 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
 
             this.viewModel = ViewModelProviders.of(this).get(CreateSimpleStringActivityViewModel.class);
 
-            super.addConfirmDialogFragment();
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
 
             super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
 
             super.addToolbar();
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(toolbarTitle, null);
-
-            this.setKeyboardDetector();
         }
     }
 
-    @Override
-    public void onConfirmDialogFragmentInteraction(View view)
+    private void decorateFloatingActionButton()
     {
-        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
-        Log.i(Constants.LOG_TAG, String.format("CreateSimpleStringActivity.onConfirmDialogFragment:: [%S] selected", buttonFunction));
-
-        switch (buttonFunction)
+        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
-            case OK:
+            @Override
+            public void onClick(View view)
             {
                 handleOnEditorActionDone();
-                break;
             }
-
-            case CANCEL:
-            {
-                returnResult(RESULT_CANCELED);
-                break;
-            }
-        }
+        });
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private TextView.OnEditorActionListener getOnEditorActionListener()
@@ -132,28 +120,5 @@ public class CreateSimpleStringActivity extends BaseActivity implements ConfirmD
         setResult(resultCode, intent);
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();
-    }
-
-    private void setKeyboardDetector()
-    {
-        final View activityRootView = findViewById(android.R.id.content);
-
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-        {
-            @Override
-            public void onGlobalLayout()
-            {
-                int heightDifference = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-
-                if(heightDifference > ConvertTool.convertDpToPx(150))
-                {
-                    CreateSimpleStringActivity.super.setConfirmDialogVisibilityWithoutFade(false);
-                }
-                else
-                {
-                    CreateSimpleStringActivity.super.setConfirmDialogVisibilityWithoutFade(true);
-                }
-            }
-        });
     }
 }

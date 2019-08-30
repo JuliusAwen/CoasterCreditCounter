@@ -6,6 +6,7 @@
     <!--GENERIC TITLES AND SUBTITLES-->
     <string name="title_relocate">Relocate</string>
     <string name="subtitle_relocate">select new parent location for \'%1$s\'</string>
+    <string name="hint_edit_element_name">Edit element name</string>
 
 
     <!--GENERIC TEXTS-->
@@ -114,7 +115,6 @@
     <string name="selection_add_location">location</string>
 
     <string name="hint_enter_location_name">Enter location name</string>
-    <string name="hint_edit_location_name">Edit location name</string>
 
 
     <!--PARKS-->
@@ -132,7 +132,7 @@
 
     <string name="hint_enter_park_name">Enter park name</string>
 
-    <string name="description_tab_titles_show_park">overview/attractions/visits</string>
+    <string name="description_tab_title">title</string>
 
 
     <!--VISITS-->

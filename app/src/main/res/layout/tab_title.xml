@@ -7,6 +7,6 @@
     <ImageView
         style="@style/standard_image_holder_28"
         android:id="@+id/imageViewTabTitle"
-        android:contentDescription="@string/description_tab_titles_show_park"/>
+        android:contentDescription="@string/description_tab_title"/>
 
 </LinearLayout>

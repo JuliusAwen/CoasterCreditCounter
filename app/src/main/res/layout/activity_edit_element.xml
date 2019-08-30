@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".frontend.elements.EditElementActivity">
 
+    <include
+        layout="@layout/floating_action_button"/>
+
     <LinearLayout
         tools:ignore="UselessParent"
         android:layout_width="match_parent"
@@ -17,8 +20,8 @@
 
         <EditText
             style="@style/standard_edit_text_16"
-            android:id="@+id/editTextEditLocation"
-            android:hint="@string/hint_edit_location_name"
+            android:id="@+id/editTextEditElement"
+            android:hint="@string/hint_edit_element_name"
             android:layout_margin="16dp"
             tools:ignore="Autofill" />
 

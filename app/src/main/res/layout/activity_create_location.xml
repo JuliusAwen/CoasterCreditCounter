@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".frontend.locations.CreateLocationActivity">
 
+    <include
+        layout="@layout/floating_action_button"/>
+
     <LinearLayout
         tools:ignore="UselessParent"
         android:layout_width="match_parent"
