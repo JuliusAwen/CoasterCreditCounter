@@ -97,7 +97,7 @@
     <string name="description_image_view">image</string>
 
     <!-- ATTRACTION TYPES-->
-    <string name="spinner_text_attraction_type">Attraction Type:</string>
+    <string name="spinner_text_attraction_type">Type:</string>
 
     <string name="attraction_type_roller_coaster">Roller Coaster</string>
     <string name="attraction_type_non_roller_coaster">Non-Roller Coaster</string>
