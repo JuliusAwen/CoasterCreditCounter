@@ -135,6 +135,12 @@ public abstract class Constants
 
     public static final int SELECTION_SORT_BY_STATUS = Selection.SORT_BY_STATUS.ordinal();
 
+    public static final int SELECTION_GROUP_BY_PARK = Selection.GROUP_BY_STATUS.ordinal();
+    public static final int SELECTION_GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER.ordinal();
+    public static final int SELECTION_GROUP_BY_ATTRACTION_CATEGORY = Selection.GROUP_BY_ATTRACTION_CATEGORY.ordinal();
+    public static final int SELECTION_GROUP_BY_STATUS = Selection.GROUP_BY_STATUS.ordinal();
+
+
     public static final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
@@ -247,6 +253,11 @@ public abstract class Constants
         SORT_BY_LOCATION_DESCENDING,
 
         SORT_BY_STATUS,
+
+        GROUP_BY_PARK,
+        GROUP_BY_MANUFACTURER,
+        GROUP_BY_ATTRACTION_CATEGORY,
+        GROUP_BY_STATUS,
 
         SHORTCUT_TO_CURRENT_VISIT,
         ENABLE_EDITING,

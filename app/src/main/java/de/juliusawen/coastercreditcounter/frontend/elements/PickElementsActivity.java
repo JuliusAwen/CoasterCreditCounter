@@ -43,11 +43,18 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class PickElementsActivity extends BaseActivity
 {
+    private final int PARK = 0;
+    private final int MANUFACTURER = 1;
+    private final int ATTRACTION_CATEGORY = 2;
+    private final int STATUS = 3;
+
     private PickElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
     private TextView textViewSelectOrDeselectAll;
     private RadioButton radioButtonSelectOrDeselectAll;
     private boolean useSelectOrDeselectAllBar = true;
+
+    private int groupedBy = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,10 +82,7 @@ public class PickElementsActivity extends BaseActivity
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
-                if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+                if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
                 {
                     HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(Attraction.class);
@@ -90,19 +94,24 @@ public class PickElementsActivity extends BaseActivity
                             Constants.TYPE_ATTRACTION_CATEGORY);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                }
+                else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+                {
+                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(Attraction.class);
 
-                    if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
-                    }
-                    else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
-                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            childTypesToExpand,
+                            true,
+                            Constants.TYPE_ATTRACTION_CATEGORY);
 
-                    {
-                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
-                    }
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
@@ -139,10 +148,10 @@ public class PickElementsActivity extends BaseActivity
                 else
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            null,
-                            true,
-                            Constants.TYPE_NONE);
+                        this.viewModel.elementsToPickFrom,
+                        null,
+                        true,
+                        Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                 }
@@ -186,8 +195,8 @@ public class PickElementsActivity extends BaseActivity
         }
 
         if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY
-                || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
-                || requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
+            || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
+            || requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
         {
             IElement returnElement = ResultTool.fetchResultElement(data);
 
@@ -423,9 +432,9 @@ public class PickElementsActivity extends BaseActivity
             if(element == null)
             {
                 if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
-                        || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_VISIT
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
                 {
                     Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
