@@ -2,24 +2,18 @@ package de.juliusawen.coastercreditcounter.backend.GroupHeader;
 
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
+import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class GroupHeaderProvider
@@ -38,8 +32,7 @@ public class GroupHeaderProvider
         {
             if(!attractions.isEmpty())
             {
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: " +
-                        "initalizing AttractionCategoryHeaders for [%d] attractions...", attractions.size()));
+                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: initalizing AttractionCategoryHeaders for [%d] attractions...", attractions.size()));
 
                 for(IAttraction attraction : attractions)
                 {
@@ -74,7 +67,7 @@ public class GroupHeaderProvider
 
                 Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: [%d] AttractionCategoryHeaders grouped", groupedAttractions.size()));
 
-                groupedAttractions = this.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
+                groupedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
 
                 this.formerAttractions = attractions;
                 this.formerGroupedAttractions = groupedAttractions;
@@ -93,7 +86,7 @@ public class GroupHeaderProvider
         }
         else
         {
-            if(this.attractionsHaveChanged(attractions))
+            if(this.attractionsOrderHasChanged(attractions))
             {
                 for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByCategoryUuid.values())
                 {
@@ -153,7 +146,7 @@ public class GroupHeaderProvider
         }
         groupedAttractions.removeAll(emptyHeaders);
 
-        groupedAttractions = this.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
+        groupedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
 
         this.formerAttractions = attractions;
         this.formerGroupedAttractions = groupedAttractions;
@@ -161,7 +154,7 @@ public class GroupHeaderProvider
         return groupedAttractions;
     }
 
-    private boolean attractionsHaveChanged(List<IAttraction> attractions)
+    private boolean attractionsOrderHasChanged(List<IAttraction> attractions)
     {
         if(attractions.size() != this.formerAttractions.size())
         {
@@ -181,39 +174,6 @@ public class GroupHeaderProvider
         return false;
     }
 
-    private List<IElement> sortAttractionCategoryHeadersBasedOnCategoriesOrder(List<IElement> attractionCategoryHeaders)
-    {
-        if(attractionCategoryHeaders.size() > 1)
-        {
-            List<IElement> sortedAttractionCategoryHeaders = new ArrayList<>();
-            List<AttractionCategory> attractionCategories = App.content.getContentAsType(AttractionCategory.class);
-
-            Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
-                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
-
-            List<AttractionCategoryHeader> castedAttractionCategoryHeaders = ConvertTool.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
-
-            for(AttractionCategory attractionCategory : attractionCategories)
-            {
-                for(AttractionCategoryHeader attractionCategoryHeader : castedAttractionCategoryHeaders)
-                {
-                    if(attractionCategoryHeader.getAttractionCategory().equals(attractionCategory) && !sortedAttractionCategoryHeaders.contains(attractionCategoryHeader))
-                    {
-                        sortedAttractionCategoryHeaders.add(attractionCategoryHeader);
-                        break;
-                    }
-                }
-            }
-
-            return sortedAttractionCategoryHeaders;
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,"GroupHeaderProvider.sortAttractionCategoryHeadersBasedOnCategoriesOrder:: not sorted - list contains less than two elements");
-            return attractionCategoryHeaders;
-        }
-    }
-
     public List<IElement> groupByYear(List<Visit> visits)
     {
         if(visits.isEmpty())
@@ -229,7 +189,7 @@ public class GroupHeaderProvider
             yearHeader.getChildren().clear();
         }
 
-        visits = this.sortVisitsByDateAccordingToSortOrder(visits);
+        visits = SortTool.sortVisitsByDateAccordingToSortOrder(visits);
 
         List<IElement> groupedVisits = new ArrayList<>();
 
@@ -279,74 +239,6 @@ public class GroupHeaderProvider
         return groupedVisits;
     }
 
-    private List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
-    {
-        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
-        {
-            visits = this.sortAscendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
-        }
-        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
-        {
-            visits = this.sortDescendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
-        }
-
-        return visits;
-    }
-
-    private List<Visit> sortDescendingByDate(List<Visit> visits)
-    {
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
-        }
-
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        List<Visit> sortedVisits = new ArrayList<>();
-        for(String dateString : dateStrings)
-        {
-            sortedVisits.add(0, visitsByDateString.get(dateString));
-        }
-
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: [%d] visits sorted", visits.size()));
-        return sortedVisits;
-    }
-
-    private List<Visit> sortAscendingByDate(List<Visit> visits)
-    {
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("Visit.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
-        }
-
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        List<Visit> sortedVisits = new ArrayList<>();
-        for(String dateString : dateStrings)
-        {
-            sortedVisits.add(visitsByDateString.get(dateString));
-        }
-
-        Log.i(Constants.LOG_TAG, String.format("Visit.sortAscendingByDate:: [%d] visits sorted", visits.size()));
-
-        return sortedVisits;
-    }
-
     public YearHeader getLatestYearHeader(List<? extends IElement> yearHeaders)
     {
         YearHeader latestYearHeader = null;
@@ -365,7 +257,7 @@ public class GroupHeaderProvider
                 }
             }
 
-            Log.v(Constants.LOG_TAG,  String.format("YearHeader.getLatestYearHeader:: %s found as latest YearHeader in a list of [%d]", latestYearHeader, yearHeaders.size()));
+            Log.v(Constants.LOG_TAG, String.format("YearHeader.getLatestYearHeader:: %s found as latest YearHeader in a list of [%d]", latestYearHeader, yearHeaders.size()));
         }
 
         return latestYearHeader;

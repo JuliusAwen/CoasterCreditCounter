@@ -133,6 +133,8 @@ public abstract class Constants
     public static final int SELECTION_SORT_BY_LOCATION_ASCENDING = Selection.SORT_BY_LOCATION_ASCENDING.ordinal();
     public static final int SELECTION_SORT_BY_LOCATION_DESCENDING = Selection.SORT_BY_LOCATION_DESCENDING.ordinal();
 
+    public static final int SELECTION_SORT_BY_STATUS = Selection.SORT_BY_STATUS.ordinal();
+
     public static final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
@@ -243,6 +245,8 @@ public abstract class Constants
         SORT_BY_LOCATION,
         SORT_BY_LOCATION_ASCENDING,
         SORT_BY_LOCATION_DESCENDING,
+
+        SORT_BY_STATUS,
 
         SHORTCUT_TO_CURRENT_VISIT,
         ENABLE_EDITING,

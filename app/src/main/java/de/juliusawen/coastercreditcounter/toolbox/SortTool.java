@@ -2,14 +2,23 @@ package de.juliusawen.coastercreditcounter.toolbox;
 
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Visit;
+import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 
 public abstract class SortTool
 {
@@ -211,5 +220,106 @@ public abstract class SortTool
             Log.v(Constants.LOG_TAG,"SortTool.sortElementsBasedOnComparisonList:: not sorted - list contains only one element");
             return elementsToSort;
         }
+    }
+
+    public static List<IElement> sortAttractionCategoryHeadersBasedOnCategoriesOrder(List<IElement> attractionCategoryHeaders)
+    {
+        if(attractionCategoryHeaders.size() > 1)
+        {
+            List<IElement> sortedAttractionCategoryHeaders = new ArrayList<>();
+            List<AttractionCategory> attractionCategories = App.content.getContentAsType(AttractionCategory.class);
+
+            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder::" +
+                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", attractionCategoryHeaders.size(), attractionCategories.size()));
+
+            List<AttractionCategoryHeader> castedAttractionCategoryHeaders = ConvertTool.convertElementsToType(attractionCategoryHeaders, AttractionCategoryHeader.class);
+
+            for(AttractionCategory attractionCategory : attractionCategories)
+            {
+                for(AttractionCategoryHeader attractionCategoryHeader : castedAttractionCategoryHeaders)
+                {
+                    if(attractionCategoryHeader.getAttractionCategory().equals(attractionCategory) && !sortedAttractionCategoryHeaders.contains(attractionCategoryHeader))
+                    {
+                        sortedAttractionCategoryHeaders.add(attractionCategoryHeader);
+                        break;
+                    }
+                }
+            }
+
+            return sortedAttractionCategoryHeaders;
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG,"SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder:: not sorted - list contains less than two elements");
+            return attractionCategoryHeaders;
+        }
+    }
+
+    public static List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
+    {
+        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
+        {
+            visits = SortTool.sortAscendingByDate(visits);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
+        }
+        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
+        {
+            visits = SortTool.sortDescendingByDate(visits);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
+        }
+
+        return visits;
+    }
+
+    public static List<Visit> sortDescendingByDate(List<Visit> visits)
+    {
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+        HashMap<String, Visit> visitsByDateString = new HashMap<>();
+        for(Visit visit : visits)
+        {
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+        }
+
+        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        Collections.sort(dateStrings);
+
+        List<Visit> sortedVisits = new ArrayList<>();
+        for(String dateString : dateStrings)
+        {
+            sortedVisits.add(0, visitsByDateString.get(dateString));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: [%d] visits sorted", visits.size()));
+        return sortedVisits;
+    }
+
+    public static List<Visit> sortAscendingByDate(List<Visit> visits)
+    {
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+        HashMap<String, Visit> visitsByDateString = new HashMap<>();
+
+        for(Visit visit : visits)
+        {
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+        }
+
+        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        Collections.sort(dateStrings);
+
+        List<Visit> sortedVisits = new ArrayList<>();
+        for(String dateString : dateStrings)
+        {
+            sortedVisits.add(visitsByDateString.get(dateString));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("SortTool.sortAscendingByDate:: [%d] visits sorted", visits.size()));
+
+        return sortedVisits;
     }
 }
