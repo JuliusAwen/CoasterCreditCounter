@@ -246,7 +246,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             {
                 if(view.getTag() instanceof AttractionCategoryHeader)
                 {
-                    AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(getActivity(), view);
+                    AttractionCategoryHeader.handleOnGroupHeaderLongClick(getActivity(), view);
                 }
                 else
                 {

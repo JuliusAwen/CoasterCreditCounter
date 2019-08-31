@@ -287,7 +287,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 if(viewModel.longClickedElement instanceof AttractionCategoryHeader)
                 {
-                    AttractionCategoryHeader.handleOnAttractionCategoryHeaderLongClick(ShowVisitActivity.this, view);
+                    AttractionCategoryHeader.handleOnGroupHeaderLongClick(ShowVisitActivity.this, view);
                 }
                 else if(viewModel.longClickedElement instanceof Attraction)
                 {
