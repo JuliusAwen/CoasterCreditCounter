@@ -20,8 +20,10 @@
     <string name="text_deselect_all">deselect all</string>
 
     <string name="text_untracked_rides">Untracked rides:</string>
+
+    <string name="text_detail">%1$s%2$s%3$s%4$s%5$s</string>
     <string name="text_total_rides">total rides: %1$d</string>
-    <string name="text_lower_detail_seperator">&#160;-&#160;</string>
+
     <string name="text_blueprint_substitute">Blueprint</string>
 
     <string name="text_total_coaster_credits"><b>Total credits: %1$d</b></string>

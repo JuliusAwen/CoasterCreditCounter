@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
+import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
@@ -69,30 +70,29 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(ICategorized.class);
 
                 if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                 {
-                    childTypesToExpand.add(ICategorized.class);
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(AttractionCategory.class),
                             childTypesToExpand,
                             Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
-                    this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                 {
-                    childTypesToExpand.add(ICategorized.class);
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(Manufacturer.class),
                             childTypesToExpand,
                             Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.displayAttractionCategories(true);
-                    this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_STATUS)
                 {
@@ -101,7 +101,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             childTypesToExpand,
                             Constants.TYPE_NONE
                     );
+
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                 }
             }
 

@@ -205,9 +205,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand,
                 Constants.TYPE_ATTRACTION_CATEGORY);
-        contentRecyclerViewAdapter.displayManufacturers(true);
-        contentRecyclerViewAdapter.displayStatus(true);
-        contentRecyclerViewAdapter.displayTotalRideCount(true);
+
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW);
 
         return contentRecyclerViewAdapter;
     }

@@ -31,6 +31,7 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
+import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -92,15 +93,15 @@ public class PickElementsActivity extends BaseActivity
 
                     if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
                     {
-                        this.viewModel.contentRecyclerViewAdapter.displayStatus(true);
+                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                     }
                     else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                             || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
                             || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
 
                     {
-                        this.viewModel.contentRecyclerViewAdapter.displayManufacturers(true);
-                        this.viewModel.contentRecyclerViewAdapter.displayLocations(true);
+                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+                        this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
                     }
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS

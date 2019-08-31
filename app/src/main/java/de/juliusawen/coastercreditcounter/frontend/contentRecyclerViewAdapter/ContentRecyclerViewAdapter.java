@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter;
 
-import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +35,7 @@ import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
@@ -50,6 +50,22 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    public static class Detail
+    {
+        public static final int LOCATION = 0;
+        public static final int MANUFACTURER = 1;
+        public static final int ATTRACTION_CATEGORY = 2;
+        public static final int STATUS = 3;
+        public static final int TOTAL_RIDE_COUNT = 4;
+    }
+
+    public static class DisplayMode
+    {
+        public static final int OFF = 0;
+        public static final int ABOVE = 1;
+        public static final int BELOW = 2;
+    }
+
     private RecyclerView recyclerView;
     private final GroupHeaderProvider groupHeaderProvider;
 
@@ -74,22 +90,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final List<IElement> selectedItemsInOrderOfSelection = new ArrayList<>();
     private final Set<IElement> expandedItems = new HashSet<>();
 
-    private boolean displayManufacturers;
-    private boolean displayAttractionCategories;
-    private boolean displayLocations;
-    private boolean displayStatus;
-    private boolean displayTotalRideCount;
-
-    private final Set<Class<? extends IAttraction>> typesToDisplayManufacturer = new HashSet<>();
-    private final Set<Class<? extends IAttraction>> typesToDisplayAttractionCategory = new HashSet<>();
-    private final Set<Class<? extends IAttraction>> typesToDisplayLocation = new HashSet<>();
-    private final Set<Class<? extends IAttraction>> typesToDisplayStatus = new HashSet<>();
-    private final Set<Class<? extends IAttraction>> typesToDisplayTotalRideCount = new HashSet<>();
-
     private Map<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
 
-    @SuppressLint("UseSparseArrays")
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
+
+    private final Map<Integer, Set<Class<? extends IAttraction>>> typesByDetail = new HashMap<>();
+
+    private Map<Integer, Integer> displayModesByDetail = new HashMap<>();
 
     enum ViewType
     {
@@ -104,8 +111,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.groupType = request.groupType;
         this.selectMultipleItems = request.selectMultiple;
 
-        this.initializeTypesToDisplay();
         this.initializeTypesByTypeface();
+        this.initializeTypesByDetails();
+        this.initializeDisplayModesByDetail();
 
         this.groupHeaderProvider = new GroupHeaderProvider();
 
@@ -184,34 +192,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return initializedItems;
     }
 
-    private void initializeTypesToDisplay()
-    {
-        this.typesToDisplayLocation.add(CustomCoaster.class);
-        this.typesToDisplayLocation.add(CustomAttraction.class);
-        this.typesToDisplayLocation.add(StockAttraction.class);
-        this.typesToDisplayLocation.add(CoasterBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-        this.typesToDisplayLocation.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-
-        this.typesToDisplayManufacturer.add(CustomCoaster.class);
-        this.typesToDisplayManufacturer.add(CustomAttraction.class);
-        this.typesToDisplayManufacturer.add(CoasterBlueprint.class);
-        this.typesToDisplayManufacturer.add(AttractionBlueprint.class);
-        this.typesToDisplayManufacturer.add(StockAttraction.class);
-
-        this.typesToDisplayAttractionCategory.add(CustomCoaster.class);
-        this.typesToDisplayAttractionCategory.add(CustomAttraction.class);
-        this.typesToDisplayAttractionCategory.add(CoasterBlueprint.class);
-        this.typesToDisplayAttractionCategory.add(AttractionBlueprint.class);
-
-        this.typesToDisplayStatus.add(CustomCoaster.class);
-        this.typesToDisplayStatus.add(CustomAttraction.class);
-        this.typesToDisplayStatus.add(StockAttraction.class);
-
-        this.typesToDisplayTotalRideCount.add(CustomCoaster.class);
-        this.typesToDisplayTotalRideCount.add(CustomAttraction.class);
-        this.typesToDisplayTotalRideCount.add(StockAttraction.class);
-    }
-
     private void initializeTypesByTypeface()
     {
         this.typesByTypeface.put(Typeface.BOLD, new HashSet<Class<? extends IElement>>());
@@ -219,7 +199,54 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.typesByTypeface.put(Typeface.BOLD_ITALIC, new HashSet<Class<? extends IElement>>());
     }
 
-    static class ViewHolderItem extends RecyclerView.ViewHolder
+    private void initializeTypesByDetails()
+    {
+        Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
+        typesForWhichDisplayManufacturerDetail.add(CustomCoaster.class);
+        typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
+        typesForWhichDisplayManufacturerDetail.add(CoasterBlueprint.class);
+        typesForWhichDisplayManufacturerDetail.add(AttractionBlueprint.class);
+        typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
+        this.typesByDetail.put(Detail.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
+
+        Set<Class<? extends IAttraction>> typesForWhichDisplayLocationDetail = new HashSet<>();
+        typesForWhichDisplayLocationDetail.add(CustomCoaster.class);
+        typesForWhichDisplayLocationDetail.add(CustomAttraction.class);
+        typesForWhichDisplayLocationDetail.add(StockAttraction.class);
+        typesForWhichDisplayLocationDetail.add(CoasterBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+        typesForWhichDisplayLocationDetail.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+        this.typesByDetail.put(Detail.LOCATION, typesForWhichDisplayLocationDetail);
+
+        Set<Class<? extends IAttraction>> typesForWhichDisplayAttractionCategoryDetail = new HashSet<>();
+        typesForWhichDisplayAttractionCategoryDetail.add(CustomCoaster.class);
+        typesForWhichDisplayAttractionCategoryDetail.add(CustomAttraction.class);
+        typesForWhichDisplayAttractionCategoryDetail.add(CoasterBlueprint.class);
+        typesForWhichDisplayAttractionCategoryDetail.add(AttractionBlueprint.class);
+        this.typesByDetail.put(Detail.ATTRACTION_CATEGORY, typesForWhichDisplayAttractionCategoryDetail);
+
+        Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
+        typesForWhichDisplayStatusDetail.add(CustomCoaster.class);
+        typesForWhichDisplayStatusDetail.add(CustomAttraction.class);
+        typesForWhichDisplayStatusDetail.add(StockAttraction.class);
+        this.typesByDetail.put(Detail.STATUS, typesForWhichDisplayStatusDetail);
+
+        Set<Class<? extends IAttraction>> typesForWhichDisplayTotalRideCountDetail = new HashSet<>();
+        typesForWhichDisplayTotalRideCountDetail.add(CustomCoaster.class);
+        typesForWhichDisplayTotalRideCountDetail.add(CustomAttraction.class);
+        typesForWhichDisplayTotalRideCountDetail.add(StockAttraction.class);
+        this.typesByDetail.put(Detail.TOTAL_RIDE_COUNT, typesForWhichDisplayTotalRideCountDetail);
+    }
+
+    private void initializeDisplayModesByDetail()
+    {
+        this.displayModesByDetail.put(Detail.LOCATION, DisplayMode.OFF);
+        this.displayModesByDetail.put(Detail.MANUFACTURER, DisplayMode.OFF);
+        this.displayModesByDetail.put(Detail.ATTRACTION_CATEGORY, DisplayMode.OFF);
+        this.displayModesByDetail.put(Detail.STATUS, DisplayMode.OFF);
+        this.displayModesByDetail.put(Detail.TOTAL_RIDE_COUNT, DisplayMode.OFF);
+    }
+
+    private static class ViewHolderItem extends RecyclerView.ViewHolder
     {
         final LinearLayout linearLayout;
         final View viewSeperator;
@@ -241,7 +268,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    static class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
+    private static class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
     {
         final LinearLayout linearLayoutEditable;
         final LinearLayout linearLayoutCounter;
@@ -280,7 +307,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    static class ViewHolderBottomSpacer extends RecyclerView.ViewHolder
+    private static class ViewHolderBottomSpacer extends RecyclerView.ViewHolder
     {
         ViewHolderBottomSpacer(View view)
         {
@@ -392,6 +419,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderItem:: binding %s for position [%d] - generation [%d]...", item, position, generation));
 
 
+
         //setExpandToggle
         viewHolder.imageViewExpandToggle.setTag(item);
         if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
@@ -424,8 +452,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
         //decorate item
-
         viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
+
+
 
         //set typeface
         for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
@@ -449,75 +478,178 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.textViewName.setText(item.getName());
         }
 
+
+
         //decorate detail above
         Class type = item.getClass();
 
-        if(this.displayManufacturers && this.typesToDisplayManufacturer.contains(type))
+        boolean displayDetailAbove = false;
+        boolean displayDetailBelow = false;
+        for(Set<Class<? extends IAttraction>> types : this.typesByDetail.values())
         {
-            viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
-            viewHolder.textViewDetailAbove.setText(((Attraction)item).getManufacturer().getName());
+            if(types.contains(type))
+            {
+                displayDetailAbove = this.displayModesByDetail.containsValue(DisplayMode.ABOVE);
+                displayDetailBelow = this.displayModesByDetail.containsValue(DisplayMode.BELOW);
+                break;
+            }
         }
-        else if(this.displayAttractionCategories && typesToDisplayAttractionCategory.contains(type))
+
+
+        if(displayDetailAbove)
         {
             viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
-            viewHolder.textViewDetailAbove.setText(((IAttraction)item).getAttractionCategory().getName());
+
+            boolean detailDisplayed = false;
+
+            String locationName = "";
+            if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.ABOVE)
+            {
+                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                {
+                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                }
+                else if(item instanceof IOnSiteAttraction)
+                {
+                    locationName = item.getParent().getName();
+                }
+
+                detailDisplayed = true;
+            }
+
+            String manufacturerName = "";
+            if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.ABOVE)
+            {
+                if(detailDisplayed)
+                {
+                    manufacturerName += " ";
+                }
+                manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                detailDisplayed = true;
+            }
+
+            String attractionCategoryName = "";
+            if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.ABOVE)
+            {
+                if(detailDisplayed)
+                {
+                    attractionCategoryName += " ";
+                }
+                attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                detailDisplayed = true;
+            }
+
+            String statusName = "";
+            if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.ABOVE)
+            {
+                if(detailDisplayed)
+                {
+                    statusName += " ";
+                }
+                statusName += ((IAttraction)item).getStatus().getName();
+                detailDisplayed = true;
+            }
+
+            String totalRideCountString = "";
+            if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.ABOVE)
+            {
+                if(detailDisplayed)
+                {
+                    totalRideCountString = " - ";
+                }
+
+                totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+            }
+
+            viewHolder.textViewDetailAbove.setText(
+                    App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
         }
         else
         {
             viewHolder.textViewDetailAbove.setVisibility(View.GONE);
         }
 
+
+
         //decorate detail below
-        if(this.displayLocations && this.typesToDisplayLocation.contains(type))
+        if(displayDetailBelow)
         {
             viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
 
-            String locationName;
+            boolean detailDisplayed = false;
 
-            if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+            String locationName = "";
+            if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.BELOW)
             {
-                // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-                locationName = App.getContext().getString(R.string.text_blueprint_substitute);
-                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
-            }
-            else
-            {
-                locationName = item.getParent().getName();
-                viewHolder.textViewDetailBelow.setTypeface(null, Typeface.NORMAL);
-            }
+                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                {
+                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                }
+                else if(item instanceof IOnSiteAttraction)
+                {
+                    locationName = item.getParent().getName();
+                }
 
-            viewHolder.textViewDetailBelow.setText(locationName);
-        }
-        else if((this.displayStatus && this.typesToDisplayStatus.contains(type) || (this.displayTotalRideCount && this.typesToDisplayTotalRideCount.contains(type))))
-        {
-            viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
-            viewHolder.textViewDetailBelow.setTypeface(null, Typeface.ITALIC);
-
-            String text = "";
-
-            if(this.displayStatus)
-            {
-                text += ((IAttraction)item).getStatus().getName();
+                detailDisplayed = true;
             }
 
-            if(this.displayStatus && this.displayTotalRideCount)
+            String manufacturerName = "";
+            if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.BELOW)
             {
-                text += App.getContext().getString(R.string.text_lower_detail_seperator);
+                if(detailDisplayed)
+                {
+                    manufacturerName += " ";
+                }
+                manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                detailDisplayed = true;
             }
 
-            if(this.displayTotalRideCount)
+            String attractionCategoryName = "";
+            if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.BELOW)
             {
-                text += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+                if(detailDisplayed)
+                {
+                    attractionCategoryName += " ";
+                }
+                attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                detailDisplayed = true;
             }
 
+            String statusName = "";
+            if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.BELOW)
+            {
+                if(detailDisplayed)
+                {
+                    statusName += " ";
+                }
+                statusName += ((IAttraction)item).getStatus().getName();
+                detailDisplayed = true;
+            }
 
-            viewHolder.textViewDetailBelow.setText(text);
+            String totalRideCountString = "";
+            if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.BELOW)
+            {
+                if(detailDisplayed)
+                {
+                    totalRideCountString += " - ";
+                }
+
+                totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+            }
+
+            viewHolder.textViewDetailBelow.setText(
+                    App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
         }
         else
         {
             viewHolder.textViewDetailBelow.setVisibility(View.GONE);
         }
 
+
+
+        //misc stuff
         viewHolder.itemView.setTag(item);
 
         if(this.selectedItemsInOrderOfSelection.contains(item))
@@ -1131,29 +1263,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.specialStringResourcesByType.put(type, stringResource);
     }
 
-    public void displayManufacturers(boolean display)
+    public void setDisplayModeForDetail(int detail, int displayMode)
     {
-        this.displayManufacturers = display;
-    }
-
-    public void displayAttractionCategories(boolean display)
-    {
-        this.displayAttractionCategories = display;
-    }
-
-    public void displayLocations(boolean display)
-    {
-        this.displayLocations = display;
-    }
-
-    public void displayStatus(boolean display)
-    {
-        this.displayStatus = display;
-    }
-
-    public void displayTotalRideCount(boolean display)
-    {
-        this.displayTotalRideCount = display;
+        this.displayModesByDetail.put(detail, displayMode);
     }
 
     public void formatAsPrettyPrint(boolean formatAsPrettyPrint)
