@@ -19,11 +19,11 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalVisitedParksCount"
-            style="@style/StandardTextView_16"
+            style="@style/StandardTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
             android:layout_marginTop="14dp"
+            android:layout_marginStart="12dp"
             android:gravity="start"
             android:layout_gravity="start"
             android:paddingStart="5dip"
@@ -32,11 +32,11 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
-            style="@style/StandardTextView_16"
+            style="@style/StandardTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
             android:layout_marginTop="14dp"
+            android:layout_marginStart="12dp"
             android:gravity="start"
             android:layout_gravity="start"
             android:paddingStart="5dip"
@@ -45,11 +45,11 @@
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
-            style="@style/StandardTextView_16"
+            style="@style/StandardTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
             android:layout_marginTop="14dp"
+            android:layout_marginStart="12dp"
             android:gravity="start"
             android:layout_gravity="start"
             android:paddingStart="5dip"
@@ -65,8 +65,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:itemTextAppearance="@style/NavigationDrawerItem_16"
-        app:itemIconPadding="14dp"
+        app:itemTextAppearance="@style/NavigationDrawerItem"
+        app:itemIconPadding="12dp"
         app:menu="@menu/menu_navigation_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

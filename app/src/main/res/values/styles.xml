@@ -8,41 +8,52 @@
         <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
     </style>
 
-    <style name="StandardBarLayout_40" parent="AppTheme">
+    <style name="StandardBarLayout" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">56dp</item>
     </style>
 
-    <style name="ToolbarTitle_16" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">16sp</item>
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="ToolbarSubtitle_12" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+    <style name="ToolbarSubtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="StandardTextView" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="PrettyPrintTextView" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:gravity">start</item>
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="StandardTextView_16" parent="AppTheme">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">16sp</item>
+    <style name="PrettyPrintHeader" parent="PrettyPrintTextView">
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="DetailTextView_10" parent="StandardTextView_16">
-        <item name="android:textSize">10sp</item>
+    <style name="DetailTextView" parent="StandardTextView">
+        <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="CreateOrEditAttractionTextView_16" parent="StandardTextView_16">
+    <style name="CreateOrEditAttractionTextView" parent="StandardTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>
         <item name="android:paddingStart">5dip</item>
         <item name="android:paddingEnd">5dip</item>
-        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="StandardSpinnerItem_16" parent="AppTheme">
+    <style name="StandardSpinnerItem" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">16sp</item>
@@ -50,21 +61,30 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="StandardImageHolder_28" parent="AppTheme">
+    <style name="StandardImageHolder" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_height">32dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
-
     </style>
 
-    <style name="SelectableImageHolder_28" parent="StandardImageHolder_28">
+    <style name="SelectableImageHolder" parent="StandardImageHolder">
         <item name="android:background">@drawable/background_selectable_toggle</item>
     </style>
 
-    <style name="StandardEditText_16" parent="AppTheme">
+    <style name="IncreaseDecreaseImageHolder" parent="StandardImageHolder">
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_width">48dp</item>
+    </style>
+
+    <style name="ExpandToggleImageHolder" parent="StandardImageHolder">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:background">@color/default_color</item>
+    </style>
+
+    <style name="StandardEditText" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:inputType">textCapWords</item>
@@ -72,20 +92,20 @@
         <item name="android:imeOptions">actionDone|flagNoExtractUi</item>
         <item name="android:backgroundTint">@color/colorPrimaryDark</item>
         <item name="android:gravity">start</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="NavigationDrawerHeadline_20" parent="TextAppearance.AppCompat.Headline">
+    <style name="NavigationDrawerHeadline" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="NavigationDrawerSubhead_16" parent="TextAppearance.AppCompat.Subhead">
+    <style name="NavigationDrawerSubhead" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="NavigationDrawerItem_16">
-        <item name="android:textSize">16sp</item>
+    <style name="NavigationDrawerItem">
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="PopupMenuListView" parent="@style/Widget.AppCompat.ListView.DropDown">

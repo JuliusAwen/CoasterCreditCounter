@@ -254,6 +254,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         final TextView textViewDetailAbove;
         final TextView textViewName;
         final TextView textViewDetailBelow;
+        final LinearLayout linearLayoutPrettyPrint;
+        final TextView textViewPrettyPrint;
 
 
         ViewHolderItem(View view)
@@ -265,6 +267,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_UpperDetail);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
             this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_LowerDetail);
+            this.linearLayoutPrettyPrint = view.findViewById(R.id.linearLayoutRecyclerViewItem_PrettyPrint);
+            this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
         }
     }
 
@@ -419,266 +423,280 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderItem:: binding %s for position [%d] - generation [%d]...", item, position, generation));
 
 
-
-        //setExpandToggle
-        viewHolder.imageViewExpandToggle.setTag(item);
-        if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
+        if(!this.formatAsPrettyPrint)
         {
-            if(this.expandedItems.contains(item))
+            //setExpandToggle
+            viewHolder.imageViewExpandToggle.setTag(item);
+            if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+                if(this.expandedItems.contains(item))
+                {
+                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+                }
+                else
+                {
+                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+                }
+
+                viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+                viewHolder.imageViewExpandToggle.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
             }
 
-            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
+
+
+            //set typeface
+            viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
+
+            for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
+            {
+                if(typeByTypeface.getValue().contains(item.getClass()))
+                {
+                    viewHolder.textViewName.setTypeface(null, typeByTypeface.getKey());
+                    break;
+                }
+            }
+
+
+
+            //set special string respurce
+            if(this.specialStringResourcesByType.containsKey(item.getClass()))
+            {
+                if(item instanceof Visit)
+                {
+                    viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+                }
+            }
+            else
+            {
+                viewHolder.textViewName.setText(item.getName());
+            }
+
+
+
+            //decorate detail above
+            Class type = item.getClass();
+
+            boolean displayDetailAbove = false;
+            boolean displayDetailBelow = false;
+            for(Set<Class<? extends IAttraction>> types : this.typesByDetail.values())
+            {
+                if(types.contains(type))
+                {
+                    displayDetailAbove = this.displayModesByDetail.containsValue(DisplayMode.ABOVE);
+                    displayDetailBelow = this.displayModesByDetail.containsValue(DisplayMode.BELOW);
+                    break;
+                }
+            }
+
+
+            if(displayDetailAbove)
+            {
+                viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
+
+                boolean detailDisplayed = false;
+
+                String locationName = "";
+                if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.ABOVE)
+                {
+                    if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                    {
+                        // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+                        locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                    }
+                    else if(item instanceof IOnSiteAttraction)
+                    {
+                        locationName = item.getParent().getName();
+                    }
+
+                    detailDisplayed = true;
+                }
+
+                String manufacturerName = "";
+                if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.ABOVE)
+                {
+                    if(detailDisplayed)
+                    {
+                        manufacturerName += " ";
+                    }
+                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                    detailDisplayed = true;
+                }
+
+                String attractionCategoryName = "";
+                if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.ABOVE)
+                {
+                    if(detailDisplayed)
+                    {
+                        attractionCategoryName += " ";
+                    }
+                    attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                    detailDisplayed = true;
+                }
+
+                String statusName = "";
+                if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.ABOVE)
+                {
+                    if(detailDisplayed)
+                    {
+                        statusName += " ";
+                    }
+                    statusName += ((IAttraction)item).getStatus().getName();
+                    detailDisplayed = true;
+                }
+
+                String totalRideCountString = "";
+                if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.ABOVE)
+                {
+                    if(detailDisplayed)
+                    {
+                        totalRideCountString = " - ";
+                    }
+
+                    totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+                }
+
+                viewHolder.textViewDetailAbove.setText(
+                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
+            }
+            else
+            {
+                viewHolder.textViewDetailAbove.setVisibility(View.GONE);
+            }
+
+
+
+            //decorate detail below
+            if(displayDetailBelow)
+            {
+                viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
+
+                boolean detailDisplayed = false;
+
+                String locationName = "";
+                if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.BELOW)
+                {
+                    if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                    {
+                        // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+                        locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                    }
+                    else if(item instanceof IOnSiteAttraction)
+                    {
+                        locationName = item.getParent().getName();
+                    }
+
+                    detailDisplayed = true;
+                }
+
+                String manufacturerName = "";
+                if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.BELOW)
+                {
+                    if(detailDisplayed)
+                    {
+                        manufacturerName += " ";
+                    }
+                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                    detailDisplayed = true;
+                }
+
+                String attractionCategoryName = "";
+                if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.BELOW)
+                {
+                    if(detailDisplayed)
+                    {
+                        attractionCategoryName += " ";
+                    }
+                    attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                    detailDisplayed = true;
+                }
+
+                String statusName = "";
+                if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.BELOW)
+                {
+                    if(detailDisplayed)
+                    {
+                        statusName += " ";
+                    }
+                    statusName += ((IAttraction)item).getStatus().getName();
+                    detailDisplayed = true;
+                }
+
+                String totalRideCountString = "";
+                if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.BELOW)
+                {
+                    if(detailDisplayed)
+                    {
+                        totalRideCountString += " - ";
+                    }
+
+                    totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+                }
+
+                viewHolder.textViewDetailBelow.setText(
+                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
+            }
+            else
+            {
+                viewHolder.textViewDetailBelow.setVisibility(View.GONE);
+            }
+
+
+
+            //set tag
+            viewHolder.itemView.setTag(item);
+
+
+
+            //set onClickListeners
+            if(!viewHolder.itemView.hasOnClickListeners())
+            {
+                if(this.adapterType == AdapterType.SELECTABLE)
+                {
+                    viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
+                }
+                else if(this.recyclerOnClickListener != null)
+                {
+                    viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                    viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                }
+            }
+
+
+
+            //set background color
+            if(this.selectedItemsInOrderOfSelection.contains(item))
+            {
+                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
+            }
+            else
+            {
+                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
+            }
+
+
+
+            //indentLayout based on generation
+            int padding = ConvertTool.convertDpToPx(
+                    (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density)) * generation;
+            viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
+
+
+
+            //set visibility
+            viewHolder.linearLayout.setVisibility(View.VISIBLE);
+            viewHolder.linearLayoutPrettyPrint.setVisibility(View.GONE);
         }
         else
         {
-            viewHolder.imageViewExpandToggle.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+            //set visibility for pretty print
+            viewHolder.linearLayout.setVisibility(View.GONE);
+
+            viewHolder.textViewPrettyPrint.setText(item.getName());
+            viewHolder.linearLayoutPrettyPrint.setVisibility(View.VISIBLE);
         }
-
-        if(!this.formatAsPrettyPrint)
-        {
-            viewHolder.viewSeperator.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            viewHolder.viewSeperator.setVisibility(View.GONE);
-        }
-
-
-
-        //decorate item
-        viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
-
-
-
-        //set typeface
-        for(Map.Entry<Integer, Set<Class<? extends IElement>>> typeByTypeface : this.typesByTypeface.entrySet())
-        {
-            if(typeByTypeface.getValue().contains(item.getClass()))
-            {
-                viewHolder.textViewName.setTypeface(null, typeByTypeface.getKey());
-                break;
-            }
-        }
-
-        if(this.specialStringResourcesByType.containsKey(item.getClass()))
-        {
-            if(item instanceof Visit)
-            {
-                viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
-            }
-        }
-        else
-        {
-            viewHolder.textViewName.setText(item.getName());
-        }
-
-
-
-        //decorate detail above
-        Class type = item.getClass();
-
-        boolean displayDetailAbove = false;
-        boolean displayDetailBelow = false;
-        for(Set<Class<? extends IAttraction>> types : this.typesByDetail.values())
-        {
-            if(types.contains(type))
-            {
-                displayDetailAbove = this.displayModesByDetail.containsValue(DisplayMode.ABOVE);
-                displayDetailBelow = this.displayModesByDetail.containsValue(DisplayMode.BELOW);
-                break;
-            }
-        }
-
-
-        if(displayDetailAbove)
-        {
-            viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
-
-            boolean detailDisplayed = false;
-
-            String locationName = "";
-            if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.ABOVE)
-            {
-                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
-                {
-                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
-                }
-                else if(item instanceof IOnSiteAttraction)
-                {
-                    locationName = item.getParent().getName();
-                }
-
-                detailDisplayed = true;
-            }
-
-            String manufacturerName = "";
-            if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.ABOVE)
-            {
-                if(detailDisplayed)
-                {
-                    manufacturerName += " ";
-                }
-                manufacturerName += ((IAttraction)item).getManufacturer().getName();
-                detailDisplayed = true;
-            }
-
-            String attractionCategoryName = "";
-            if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.ABOVE)
-            {
-                if(detailDisplayed)
-                {
-                    attractionCategoryName += " ";
-                }
-                attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
-                detailDisplayed = true;
-            }
-
-            String statusName = "";
-            if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.ABOVE)
-            {
-                if(detailDisplayed)
-                {
-                    statusName += " ";
-                }
-                statusName += ((IAttraction)item).getStatus().getName();
-                detailDisplayed = true;
-            }
-
-            String totalRideCountString = "";
-            if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.ABOVE)
-            {
-                if(detailDisplayed)
-                {
-                    totalRideCountString = " - ";
-                }
-
-                totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
-            }
-
-            viewHolder.textViewDetailAbove.setText(
-                    App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
-        }
-        else
-        {
-            viewHolder.textViewDetailAbove.setVisibility(View.GONE);
-        }
-
-
-
-        //decorate detail below
-        if(displayDetailBelow)
-        {
-            viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
-
-            boolean detailDisplayed = false;
-
-            String locationName = "";
-            if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.BELOW)
-            {
-                if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
-                {
-                    // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-                    locationName = App.getContext().getString(R.string.text_blueprint_substitute);
-                }
-                else if(item instanceof IOnSiteAttraction)
-                {
-                    locationName = item.getParent().getName();
-                }
-
-                detailDisplayed = true;
-            }
-
-            String manufacturerName = "";
-            if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.BELOW)
-            {
-                if(detailDisplayed)
-                {
-                    manufacturerName += " ";
-                }
-                manufacturerName += ((IAttraction)item).getManufacturer().getName();
-                detailDisplayed = true;
-            }
-
-            String attractionCategoryName = "";
-            if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.BELOW)
-            {
-                if(detailDisplayed)
-                {
-                    attractionCategoryName += " ";
-                }
-                attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
-                detailDisplayed = true;
-            }
-
-            String statusName = "";
-            if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.BELOW)
-            {
-                if(detailDisplayed)
-                {
-                    statusName += " ";
-                }
-                statusName += ((IAttraction)item).getStatus().getName();
-                detailDisplayed = true;
-            }
-
-            String totalRideCountString = "";
-            if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.BELOW)
-            {
-                if(detailDisplayed)
-                {
-                    totalRideCountString += " - ";
-                }
-
-                totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
-            }
-
-            viewHolder.textViewDetailBelow.setText(
-                    App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
-        }
-        else
-        {
-            viewHolder.textViewDetailBelow.setVisibility(View.GONE);
-        }
-
-
-
-        //misc stuff
-        viewHolder.itemView.setTag(item);
-
-        if(this.selectedItemsInOrderOfSelection.contains(item))
-        {
-            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
-        }
-        else
-        {
-            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
-        }
-
-        if(!viewHolder.itemView.hasOnClickListeners())
-        {
-            if(this.adapterType == AdapterType.SELECTABLE)
-            {
-                viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
-            }
-            else if(this.recyclerOnClickListener != null)
-            {
-                viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-                viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-            }
-        }
-
-
-        //indentLayout based on generation
-        int padding = ConvertTool.convertDpToPx(
-                (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density)) * generation;
-        viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
@@ -717,9 +735,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         else
         {
             viewHolder.linearLayoutEditable.setVisibility(View.GONE);
-            viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
 
             viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.getRideCount(), visitedAttraction.getName()));
+            viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
         }
     }
 

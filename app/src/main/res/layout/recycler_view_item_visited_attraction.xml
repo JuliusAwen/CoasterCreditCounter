@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_OpenForEditing"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -26,13 +26,9 @@
             android:background="?selectableItemBackground">
 
             <ImageView
-                style="@style/StandardImageHolder_28"
+                style="@style/IncreaseDecreaseImageHolder"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
                 android:contentDescription="@string/description_decrease"
-                android:layout_height="24dp"
-                android:layout_width="48dp"
-                android:background="@color/default_color"
-                android:layout_gravity="center"
                 android:src="@drawable/ic_baseline_error_outline"/>
 
             <LinearLayout
@@ -44,14 +40,14 @@
                 android:layout_weight="1">
 
                 <TextView
-                    style="@style/StandardTextView_16"
+                    style="@style/StandardTextView"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Name"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="bottom|center_horizontal"/>
 
                 <TextView
-                    style="@style/StandardTextView_16"
+                    style="@style/StandardTextView"
                     android:id="@+id/textViewRecyclerViewItemVisitedAttraction_Count"
                     android:layout_gravity="center"
                     android:gravity="center" />
@@ -59,13 +55,9 @@
             </LinearLayout>
 
             <ImageView
-                style="@style/StandardImageHolder_28"
+                style="@style/IncreaseDecreaseImageHolder"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
                 android:contentDescription="@string/description_increase"
-                android:layout_height="24dp"
-                android:layout_width="48dp"
-                android:background="@color/default_color"
-                android:layout_gravity="center"
                 android:src="@drawable/ic_baseline_error_outline"/>
 
         </LinearLayout>
@@ -73,13 +65,10 @@
     </LinearLayout>
 
     <TextView
-        style="@style/StandardTextView_16"
+        style="@style/PrettyPrintTextView"
         android:id="@+id/textViewRecyclerViewItemVisitedAttraction_PrettyPrint"
-        android:textSize="14sp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:layout_gravity="start"
-        android:gravity="start"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:visibility="gone"/>
 
 </LinearLayout>

@@ -2,7 +2,7 @@
 
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/StandardSpinnerItem_16"
+    style="@style/StandardSpinnerItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="start"

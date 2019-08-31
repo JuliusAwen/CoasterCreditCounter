@@ -23,7 +23,7 @@
             layout="@layout/toolbar"/>
 
         <com.google.android.material.tabs.TabLayout
-            style="@style/StandardBarLayout_40"
+            style="@style/StandardBarLayout"
             android:id="@+id/tabLayoutShowPark"
             app:tabGravity="fill"
             app:tabMinWidth="100dp"

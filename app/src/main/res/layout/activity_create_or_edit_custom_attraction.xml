@@ -29,7 +29,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    style="@style/StandardEditText_16"
+                    style="@style/StandardEditText"
                     android:id="@+id/editTextCreateOrEditAttractionName"
                     android:hint="@string/hint_enter_attraction_name"
                     android:textSize="16sp"
@@ -38,7 +38,7 @@
                     android:imeOptions="actionDone"/>
 
                 <LinearLayout
-                    style="@style/StandardBarLayout_40"
+                    style="@style/StandardBarLayout"
                     android:baselineAligned="false"
                     android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionType"
                     android:orientation="horizontal"
@@ -48,7 +48,7 @@
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
-                        style="@style/StandardBarLayout_40"
+                        style="@style/StandardBarLayout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                         android:layout_marginStart="8dp">
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:text="@string/spinner_text_attraction_type"/>
 
                         <Spinner
@@ -69,7 +69,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/StandardBarLayout_40"
+                    style="@style/StandardBarLayout"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                     android:background="?selectableItemBackground">
 
                     <LinearLayout
-                        style="@style/StandardBarLayout_40"
+                        style="@style/StandardBarLayout"
                         android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -88,11 +88,11 @@
                         android:layout_marginStart="8dp">
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:text="@string/header_manufacturer"/>
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
 
                     </LinearLayout>
@@ -100,7 +100,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/StandardBarLayout_40"
+                    style="@style/StandardBarLayout"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:background="?selectableItemBackground">
 
                     <LinearLayout
-                        style="@style/StandardBarLayout_40"
+                        style="@style/StandardBarLayout"
                         android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionCategory"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -119,11 +119,11 @@
                         android:layout_marginStart="8dp">
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:text="@string/spinner_text_attraction_category"/>
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:id="@+id/textViewCreateOrEditAttraction_AttractionCategory"/>
 
                     </LinearLayout>
@@ -131,7 +131,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/StandardBarLayout_40"
+                    style="@style/StandardBarLayout"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                     android:background="?selectableItemBackground">
 
                     <LinearLayout
-                        style="@style/StandardBarLayout_40"
+                        style="@style/StandardBarLayout"
                         android:id="@+id/linearLayoutCreateOrEditAttraction_Status"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -150,11 +150,11 @@
                         android:layout_marginStart="8dp">
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:text="@string/spinner_text_status"/>
 
                         <TextView
-                            style="@style/CreateOrEditAttractionTextView_16"
+                            style="@style/CreateOrEditAttractionTextView"
                             android:id="@+id/textViewCreateOrEditAttraction_Status"/>
 
                     </LinearLayout>
@@ -167,7 +167,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/StandardTextView_16"
+                        style="@style/StandardTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="start"
@@ -180,7 +180,7 @@
 
                     <EditText
                         android:id="@+id/editTextCreateOrEditAttractionUntrackedRideCount"
-                        style="@style/StandardEditText_16"
+                        style="@style/StandardEditText"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="16dp"

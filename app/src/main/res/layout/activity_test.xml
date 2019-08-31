@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/textViewTestActivity"
-            style="@style/StandardTextView_16"
+            style="@style/StandardTextView"
             android:gravity="start"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

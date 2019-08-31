@@ -1,65 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/StandardBarLayout_40"
-    android:id="@+id/linearLayoutRecyclerViewItem"
-    android:background="@color/lightGrey"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/viewRecyclerViewItem_Seperator"
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:background="@color/grey"
-        android:paddingStart="27dp"
-        android:paddingEnd="27dp"/>
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="UseCompoundDrawables"
-        android:background="?selectableItemBackground">
-
-        <ImageView
-            android:id="@+id/imageViewRecyclerViewItem"
-            style="@style/SelectableImageHolder_28"
-            android:layout_height="@dimen/standard_bar_height"
-            android:contentDescription="@string/description_image_view"/>
+        android:id="@+id/linearLayoutRecyclerViewItem"
+        style="@style/StandardBarLayout"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/standard_bar_height"
-            android:gravity="center_vertical|start"
-            android:orientation="vertical">
+            android:background="?selectableItemBackground"
+            tools:ignore="UseCompoundDrawables">
 
-            <TextView
-                android:id="@+id/textViewRecyclerViewItem_UpperDetail"
-                style="@style/DetailTextView_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/imageViewRecyclerViewItem"
+                style="@style/ExpandToggleImageHolder"
+                android:contentDescription="@string/description_image_view" />
 
-            <TextView
-                android:id="@+id/textViewRecyclerViewItem_Name"
-                style="@style/StandardTextView_16"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"/>
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:layout_gravity="center"
+                android:minHeight="@dimen/standard_bar_height"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewRecyclerViewItem_LowerDetail"
-                style="@style/DetailTextView_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/textViewRecyclerViewItem_UpperDetail"
+                    style="@style/DetailTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="start"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textViewRecyclerViewItem_Name"
+                    style="@style/StandardTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start" />
+
+                <TextView
+                    android:id="@+id/textViewRecyclerViewItem_LowerDetail"
+                    style="@style/DetailTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="start"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
+
+        <View
+            android:id="@+id/viewRecyclerViewItem_Seperator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey"
+            android:paddingStart="27dp"
+            android:paddingEnd="27dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutRecyclerViewItem_PrettyPrint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_color"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textViewRecyclerViewItem_PrettyPrint"
+            style="@style/PrettyPrintHeader"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp" />
 
     </LinearLayout>
 
