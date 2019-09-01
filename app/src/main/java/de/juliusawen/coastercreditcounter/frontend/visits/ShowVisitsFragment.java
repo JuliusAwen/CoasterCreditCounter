@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
@@ -187,7 +188,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(Visit.class),
                 childTypesToExpand,
-                Constants.TYPE_YEAR);
+                GroupHeaderProvider.GroupType.YEAR);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()

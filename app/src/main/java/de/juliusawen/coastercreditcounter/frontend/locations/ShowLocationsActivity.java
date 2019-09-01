@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -72,7 +73,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                         new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
                         childTypesToExpand,
-                        Constants.TYPE_NONE);
+                        GroupHeaderProvider.GroupType.NONE);
 
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Location.class, Typeface.BOLD);
             }

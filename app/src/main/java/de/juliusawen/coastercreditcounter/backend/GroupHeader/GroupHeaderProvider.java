@@ -18,6 +18,16 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class GroupHeaderProvider
 {
+    public enum GroupType
+    {
+        NONE,
+        YEAR,
+        LOCATION,
+        ATTRACTION_CATEGORY,
+        MANUFACTURER,
+        STATUS
+    }
+
     private final Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByCategoryUuid = new HashMap<>();
     private List<IAttraction> formerAttractions;
     private List<IElement> formerGroupedAttractions;

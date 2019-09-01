@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
@@ -58,7 +59,7 @@ public class TestActivity extends BaseActivity
     {
         ContentRecyclerViewAdapter contentRecyclerViewAdapter =
                 ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.location.getChildrenOfType(Location.class), null, true, Constants.TYPE_NONE);
+                        this.location.getChildrenOfType(Location.class), null, true, GroupHeaderProvider.GroupType.NONE);
 
         contentRecyclerViewAdapter.setOnClickListener(new RecyclerOnClickListener.OnClickListener()
         {

@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
@@ -258,7 +259,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 this.viewModel.visit.getChildrenOfType(VisitedAttraction.class),
                 childTypesToExpand,
-                Constants.TYPE_ATTRACTION_CATEGORY);
+                GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

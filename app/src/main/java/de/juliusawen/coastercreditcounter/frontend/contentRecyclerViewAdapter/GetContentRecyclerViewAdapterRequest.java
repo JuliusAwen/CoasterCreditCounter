@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
-import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 
 class GetContentRecyclerViewAdapterRequest
@@ -19,5 +19,5 @@ class GetContentRecyclerViewAdapterRequest
 
     boolean selectMultiple = false;
 
-    int groupType = Constants.TYPE_NONE;
+    GroupHeaderProvider.GroupType groupType = GroupHeaderProvider.GroupType.NONE;
 }

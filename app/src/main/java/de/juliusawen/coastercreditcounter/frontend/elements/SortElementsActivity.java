@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
@@ -52,7 +53,7 @@ public class SortElementsActivity extends BaseActivity
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter =
-                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false, Constants.TYPE_NONE);
+                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false, GroupHeaderProvider.GroupType.NONE);
 
                 Set<Class<? extends IElement>> types = new HashSet<>();
                 for(IElement elementToSort : this.viewModel.elementsToSort)

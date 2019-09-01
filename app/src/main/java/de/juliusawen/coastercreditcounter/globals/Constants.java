@@ -217,8 +217,6 @@ public abstract class Constants
     public static final int TYPE_ATTRACTION_CATEGORY = Type.ATTRACTION_CATEGORY.ordinal();
     public static final int TYPE_MANUFACTURER = Type.MANUFACTURER.ordinal();
     public static final int TYPE_STATUS = Type.STATUS.ordinal();
-    public static final int TYPE_YEAR = Type.YEAR.ordinal();
-    public static final int TYPE_TOTAL_RIDE_COUNT = Type.TOTAL_RIDE_COUNT.ordinal();
 
     private enum Selection
     {
@@ -348,8 +346,6 @@ public abstract class Constants
         ATTRACTION_CATEGORY,
         MANUFACTURER,
         STATUS,
-        YEAR,
-        TOTAL_RIDE_COUNT
     }
 }
 

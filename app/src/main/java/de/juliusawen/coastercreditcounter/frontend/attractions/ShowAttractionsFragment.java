@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
@@ -204,11 +205,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand,
-                Constants.TYPE_ATTRACTION_CATEGORY);
+                GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
 
-        contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW);
 
         return contentRecyclerViewAdapter;
     }
