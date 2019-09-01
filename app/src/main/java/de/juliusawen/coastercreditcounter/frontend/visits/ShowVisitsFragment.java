@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -87,7 +87,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(YearHeader.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(SpecialGroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
 
@@ -203,7 +203,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 {
                     ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
                 }
-                else if(element instanceof YearHeader)
+                else if(element instanceof SpecialGroupHeader)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }

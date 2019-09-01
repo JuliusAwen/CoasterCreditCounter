@@ -158,6 +158,14 @@ public abstract class Element implements IElement
         }
     }
 
+    public void addChildren(List<IElement> children)
+    {
+        for(IElement child : children)
+        {
+            this.addChild(child);
+        }
+    }
+
     public void addChild(IElement child)
     {
         this.getChildren().add(child);

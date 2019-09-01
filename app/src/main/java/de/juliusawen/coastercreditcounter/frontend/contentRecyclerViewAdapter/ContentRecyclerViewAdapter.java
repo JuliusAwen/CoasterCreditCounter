@@ -28,7 +28,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.IGroupHeader;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.AttractionBlueprint;
@@ -36,6 +36,7 @@ import de.juliusawen.coastercreditcounter.backend.attractions.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IBlueprint;
 import de.juliusawen.coastercreditcounter.backend.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
@@ -66,6 +67,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         ABOVE,
         BELOW
     }
+
+    private enum ViewType
+    {
+        ITEM,
+        VISITED_ATTRACTION,
+        BOTTOM_SPACER
+    }
+
 
     private RecyclerView recyclerView;
     private final GroupHeaderProvider groupHeaderProvider;
@@ -98,13 +107,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Map<DetailType, Set<Class<? extends IAttraction>>> typesByDetail = new HashMap<>();
 
     private Map<DetailType, DisplayMode> displayModesByDetail = new HashMap<>();
-
-    enum ViewType
-    {
-        ITEM,
-        VISITED_ATTRACTION,
-        BOTTOM_SPACER
-    }
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
@@ -144,6 +146,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void groupItemsByType(GroupHeaderProvider.GroupType groupType)
     {
         this.groupType = groupType;
+        this.selectedItemsInOrderOfSelection.clear();
+        this.expandedItems.clear();
 
         List<IElement> groupedItems = new ArrayList<>();
 
@@ -153,23 +157,34 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 groupedItems = this.originalItems;
                 break;
 
+            case LOCATION:
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.LOCATION);
+                break;
+
             case ATTRACTION_CATEGORY:
-                groupedItems = this.groupHeaderProvider.groupByGroupType(this.originalItems, GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                break;
+
+            case MANUFACTURER:
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.MANUFACTURER);
+                break;
+
+            case STATUS:
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.STATUS);
                 break;
 
             case YEAR:
-                groupedItems = this.groupHeaderProvider.groupByGroupType(this.originalItems, GroupHeaderProvider.GroupType.YEAR);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.YEAR);
 
                 if(App.settings.expandLatestYearInListByDefault())
                 {
-                    YearHeader latestYearHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
-                    this.expandedItems.add(latestYearHeader);
+                    SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
+                    this.expandedItems.add(latestSpecialGroupHeader);
                 }
                 break;
         }
 
         this.items = this.initializeItems(groupedItems, 0);
-
         notifyDataSetChanged();
     }
 
@@ -680,8 +695,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
             //indentLayout based on generation
-            int padding = ConvertTool.convertDpToPx(
-                    (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density)) * generation;
+            int padding;
+            if(item instanceof SpecialGroupHeader || item instanceof IBlueprint)
+            {
+                 padding = ConvertTool.convertDpToPx(
+                         (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
+                         * (generation + 2);
+            }
+            else
+            {
+                padding = ConvertTool.convertDpToPx(
+                        (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
+                        * generation;
+            }
+
             viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
 
 
@@ -773,15 +800,34 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             IGroupHeader groupHeader = null;
 
-            switch(this.groupType)
+            if(item instanceof IBlueprint)
             {
-                case YEAR:
-                    Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.getParentOfRelevantChild<YEAR>:: this should not have been called...");
-                    break;
+                groupHeader = this.getGroupHeaderForGroupTypeFromItem(item);
+            }
+            else
+            {
+                switch(this.groupType)
+                {
+                    case YEAR:
+                        Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.getParentOfRelevantChild<YEAR>:: this should not have been called...");
+                        break;
 
-                case ATTRACTION_CATEGORY:
-                    groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getAttractionCategory());
-                    break;
+                    case LOCATION:
+                        groupHeader = this.getGroupHeaderForGroupTypeFromItem((item).getParent());
+                        break;
+
+                    case ATTRACTION_CATEGORY:
+                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getAttractionCategory());
+                        break;
+
+                    case MANUFACTURER:
+                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getManufacturer());
+                        break;
+
+                    case STATUS:
+                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getStatus());
+                        break;
+                }
             }
 
             return this.items.get(this.items.indexOf(groupHeader));
@@ -805,6 +851,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(((GroupHeader)item).getGroupElement().equals(groupElement))
                 {
                     return (GroupHeader)item;
+                }
+            }
+            else if(item instanceof SpecialGroupHeader)
+            {
+                if(item.getChildren().contains(groupElement))
+                {
+                    return (SpecialGroupHeader)item;
                 }
             }
         }

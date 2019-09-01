@@ -24,6 +24,7 @@ public interface IElement
     void setParent(IElement parent);
 
     void addChild(IElement child);
+    void addChildren(List<IElement> children);
     void addChildAndSetParent(IElement child);
     void addChildAndSetParentAtIndex(int index, IElement child);
     void addChildrenAndSetParent(List<UUID> childUuids);

@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.backend.temporaryElements;
 
-public interface ITemporaryElement
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+
+public interface ITemporaryElement extends IElement
 {
 }

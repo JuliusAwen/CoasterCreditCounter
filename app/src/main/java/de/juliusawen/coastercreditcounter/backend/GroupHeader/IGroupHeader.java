@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.backend.GroupHeader;
 
-public interface IGroupHeader
+import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+
+public interface IGroupHeader extends IElement
 {
 }
