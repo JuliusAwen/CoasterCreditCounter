@@ -11,6 +11,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <View
+            android:id="@+id/viewRecyclerViewItem_Seperator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey"
+            android:paddingStart="27dp"
+            android:paddingEnd="27dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,14 +67,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <View
-            android:id="@+id/viewRecyclerViewItem_Seperator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey"
-            android:paddingStart="27dp"
-            android:paddingEnd="27dp" />
 
     </LinearLayout>
 
