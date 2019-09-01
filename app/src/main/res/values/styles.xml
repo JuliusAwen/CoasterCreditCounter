@@ -80,7 +80,7 @@
     </style>
 
     <style name="ExpandToggleImageHolder" parent="StandardImageHolder">
-        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:background">@color/default_color</item>
     </style>
 

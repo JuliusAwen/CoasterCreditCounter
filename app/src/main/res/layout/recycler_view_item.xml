@@ -15,9 +15,7 @@
             android:id="@+id/viewRecyclerViewItem_Seperator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey"
-            android:paddingStart="27dp"
-            android:paddingEnd="27dp" />
+            android:background="@color/grey"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,6 +29,7 @@
                 android:contentDescription="@string/description_image_view" />
 
             <LinearLayout
+                android:id="@+id/linearLayoutRecyclerViewItem_Text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
