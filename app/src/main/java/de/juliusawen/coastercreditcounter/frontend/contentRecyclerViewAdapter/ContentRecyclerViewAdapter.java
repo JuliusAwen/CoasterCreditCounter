@@ -50,21 +50,15 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    public static class Detail
-    {
-        public static final int LOCATION = 0;
-        public static final int MANUFACTURER = 1;
-        public static final int ATTRACTION_CATEGORY = 2;
-        public static final int STATUS = 3;
-        public static final int TOTAL_RIDE_COUNT = 4;
-    }
+    public static final int LOCATION = 0;
+    public static final int MANUFACTURER = 1;
+    public static final int ATTRACTION_CATEGORY = 2;
+    public static final int STATUS = 3;
+    public static final int TOTAL_RIDE_COUNT = 4;
 
-    public static class DisplayMode
-    {
-        public static final int OFF = 0;
-        public static final int ABOVE = 1;
-        public static final int BELOW = 2;
-    }
+    public static final int DISPLAYMODE_OFF = 0;
+    public static final int DISPLAYMODE_ABOVE = 1;
+    public static final int DISPLAYMODE_BELOW = 2;
 
     private RecyclerView recyclerView;
     private final GroupHeaderProvider groupHeaderProvider;
@@ -207,7 +201,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         typesForWhichDisplayManufacturerDetail.add(CoasterBlueprint.class);
         typesForWhichDisplayManufacturerDetail.add(AttractionBlueprint.class);
         typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
-        this.typesByDetail.put(Detail.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
+        this.typesByDetail.put(MANUFACTURER, typesForWhichDisplayManufacturerDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayLocationDetail = new HashSet<>();
         typesForWhichDisplayLocationDetail.add(CustomCoaster.class);
@@ -215,35 +209,35 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         typesForWhichDisplayLocationDetail.add(StockAttraction.class);
         typesForWhichDisplayLocationDetail.add(CoasterBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
         typesForWhichDisplayLocationDetail.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-        this.typesByDetail.put(Detail.LOCATION, typesForWhichDisplayLocationDetail);
+        this.typesByDetail.put(LOCATION, typesForWhichDisplayLocationDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayAttractionCategoryDetail = new HashSet<>();
         typesForWhichDisplayAttractionCategoryDetail.add(CustomCoaster.class);
         typesForWhichDisplayAttractionCategoryDetail.add(CustomAttraction.class);
         typesForWhichDisplayAttractionCategoryDetail.add(CoasterBlueprint.class);
         typesForWhichDisplayAttractionCategoryDetail.add(AttractionBlueprint.class);
-        this.typesByDetail.put(Detail.ATTRACTION_CATEGORY, typesForWhichDisplayAttractionCategoryDetail);
+        this.typesByDetail.put(ATTRACTION_CATEGORY, typesForWhichDisplayAttractionCategoryDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
         typesForWhichDisplayStatusDetail.add(CustomCoaster.class);
         typesForWhichDisplayStatusDetail.add(CustomAttraction.class);
         typesForWhichDisplayStatusDetail.add(StockAttraction.class);
-        this.typesByDetail.put(Detail.STATUS, typesForWhichDisplayStatusDetail);
+        this.typesByDetail.put(STATUS, typesForWhichDisplayStatusDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayTotalRideCountDetail = new HashSet<>();
         typesForWhichDisplayTotalRideCountDetail.add(CustomCoaster.class);
         typesForWhichDisplayTotalRideCountDetail.add(CustomAttraction.class);
         typesForWhichDisplayTotalRideCountDetail.add(StockAttraction.class);
-        this.typesByDetail.put(Detail.TOTAL_RIDE_COUNT, typesForWhichDisplayTotalRideCountDetail);
+        this.typesByDetail.put(TOTAL_RIDE_COUNT, typesForWhichDisplayTotalRideCountDetail);
     }
 
     private void initializeDisplayModesByDetail()
     {
-        this.displayModesByDetail.put(Detail.LOCATION, DisplayMode.OFF);
-        this.displayModesByDetail.put(Detail.MANUFACTURER, DisplayMode.OFF);
-        this.displayModesByDetail.put(Detail.ATTRACTION_CATEGORY, DisplayMode.OFF);
-        this.displayModesByDetail.put(Detail.STATUS, DisplayMode.OFF);
-        this.displayModesByDetail.put(Detail.TOTAL_RIDE_COUNT, DisplayMode.OFF);
+        this.displayModesByDetail.put(LOCATION, DISPLAYMODE_OFF);
+        this.displayModesByDetail.put(MANUFACTURER, DISPLAYMODE_OFF);
+        this.displayModesByDetail.put(ATTRACTION_CATEGORY, DISPLAYMODE_OFF);
+        this.displayModesByDetail.put(STATUS, DISPLAYMODE_OFF);
+        this.displayModesByDetail.put(TOTAL_RIDE_COUNT, DISPLAYMODE_OFF);
     }
 
     private static class ViewHolderItem extends RecyclerView.ViewHolder
@@ -485,8 +479,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 if(types.contains(type))
                 {
-                    displayDetailAbove = this.displayModesByDetail.containsValue(DisplayMode.ABOVE);
-                    displayDetailBelow = this.displayModesByDetail.containsValue(DisplayMode.BELOW);
+                    displayDetailAbove = this.displayModesByDetail.containsValue(DISPLAYMODE_ABOVE);
+                    displayDetailBelow = this.displayModesByDetail.containsValue(DISPLAYMODE_BELOW);
                     break;
                 }
             }
@@ -499,7 +493,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 boolean detailDisplayed = false;
 
                 String locationName = "";
-                if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(LOCATION) == DISPLAYMODE_ABOVE)
                 {
                     if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                     {
@@ -515,7 +509,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String manufacturerName = "";
-                if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(MANUFACTURER) == DISPLAYMODE_ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -526,7 +520,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(ATTRACTION_CATEGORY) == DISPLAYMODE_ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -537,7 +531,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String statusName = "";
-                if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(STATUS) == DISPLAYMODE_ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -548,7 +542,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String totalRideCountString = "";
-                if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(TOTAL_RIDE_COUNT) == DISPLAYMODE_ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -576,7 +570,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 boolean detailDisplayed = false;
 
                 String locationName = "";
-                if(this.displayModesByDetail.get(Detail.LOCATION) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(LOCATION) == DISPLAYMODE_BELOW)
                 {
                     if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                     {
@@ -592,7 +586,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String manufacturerName = "";
-                if(this.displayModesByDetail.get(Detail.MANUFACTURER) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(MANUFACTURER) == DISPLAYMODE_BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -603,7 +597,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(Detail.ATTRACTION_CATEGORY) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(ATTRACTION_CATEGORY) == DISPLAYMODE_BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -614,7 +608,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String statusName = "";
-                if(this.displayModesByDetail.get(Detail.STATUS) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(STATUS) == DISPLAYMODE_BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -625,7 +619,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String totalRideCountString = "";
-                if(this.displayModesByDetail.get(Detail.TOTAL_RIDE_COUNT) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(TOTAL_RIDE_COUNT) == DISPLAYMODE_BELOW)
                 {
                     if(detailDisplayed)
                     {

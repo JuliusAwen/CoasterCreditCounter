@@ -80,8 +80,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                 {
@@ -91,8 +91,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             Constants.TYPE_NONE);
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_STATUS)
                 {
@@ -103,8 +103,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     );
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
             }
 

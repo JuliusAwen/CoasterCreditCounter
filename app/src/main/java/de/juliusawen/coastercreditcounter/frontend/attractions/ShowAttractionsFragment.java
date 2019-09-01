@@ -206,9 +206,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 childTypesToExpand,
                 Constants.TYPE_ATTRACTION_CATEGORY);
 
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
 
         return contentRecyclerViewAdapter;
     }

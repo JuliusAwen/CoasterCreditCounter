@@ -43,10 +43,11 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class PickElementsActivity extends BaseActivity
 {
-    private final int PARK = 0;
-    private final int MANUFACTURER = 1;
-    private final int ATTRACTION_CATEGORY = 2;
-    private final int STATUS = 3;
+    private static final int NONE = 0;
+    private static final int PARK = 1;
+    private static final int MANUFACTURER = 2;
+    private static final int ATTRACTION_CATEGORY = 3;
+    private static final int STATUS = 4;
 
     private PickElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
@@ -54,7 +55,7 @@ public class PickElementsActivity extends BaseActivity
     private RadioButton radioButtonSelectOrDeselectAll;
     private boolean useSelectOrDeselectAllBar = true;
 
-    private int groupedBy = -1;
+    private int contentIsGroupedBy = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -92,9 +93,10 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true,
                             Constants.TYPE_ATTRACTION_CATEGORY);
+                    this.contentIsGroupedBy = ATTRACTION_CATEGORY;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
@@ -108,10 +110,11 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true,
                             Constants.TYPE_ATTRACTION_CATEGORY);
+                    this.contentIsGroupedBy = ATTRACTION_CATEGORY;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.Detail.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
@@ -124,6 +127,7 @@ public class PickElementsActivity extends BaseActivity
                             null,
                             false,
                             Constants.TYPE_NONE);
+                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
@@ -141,6 +145,7 @@ public class PickElementsActivity extends BaseActivity
                             null,
                             false,
                             Constants.TYPE_NONE);
+                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
@@ -152,6 +157,7 @@ public class PickElementsActivity extends BaseActivity
                         null,
                         true,
                         Constants.TYPE_NONE);
+                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                 }
