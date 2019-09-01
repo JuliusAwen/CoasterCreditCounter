@@ -700,7 +700,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                  padding = ConvertTool.convertDpToPx(
                          (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
-                         * (generation + 2);
+                         * (generation + 1);
             }
             else
             {
