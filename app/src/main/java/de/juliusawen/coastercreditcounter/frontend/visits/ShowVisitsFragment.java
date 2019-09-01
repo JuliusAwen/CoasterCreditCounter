@@ -120,13 +120,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onOptionItemSelected:: [%s] selected", item.getItemId()));
 
         int id = item.getItemId();
-        if(id == Constants.SELECTION_SORT_ASCENDING)
+        if(id == Constants.SELECTION_SORT_BY_YEAR_ASCENDING)
         {
             Visit.setSortOrder(SortOrder.ASCENDING);
             this.updateContentRecyclerView();
             return true;
         }
-        else if(id == Constants.SELECTION_SORT_DESCENDING)
+        else if(id == Constants.SELECTION_SORT_BY_YEAR_DESCENDING)
         {
             Visit.setSortOrder(SortOrder.DESCENDING);
             this.updateContentRecyclerView();

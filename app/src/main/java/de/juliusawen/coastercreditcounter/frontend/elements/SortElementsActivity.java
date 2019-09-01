@@ -85,8 +85,8 @@ public class SortElementsActivity extends BaseActivity
         menu.clear();
 
         Menu submenuSort = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT, Menu.NONE, R.string.selection_sort);
-        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -98,13 +98,13 @@ public class SortElementsActivity extends BaseActivity
 
         int id = item.getItemId();
 
-        if(id == Constants.SELECTION_SORT_ASCENDING)
+        if(id == Constants.SELECTION_SORT_BY_NAME_ASCENDING)
         {
             this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
             return true;
         }
-        else if(id == Constants.SELECTION_SORT_DESCENDING)
+        else if(id == Constants.SELECTION_SORT_BY_NAME_DESCENDING)
         {
             this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);

@@ -109,6 +109,7 @@ public abstract class Constants
     public static final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
     public static final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
 
+
     public static final int SELECTION_SORT = Selection.SORT.ordinal();
     public static final int SELECTION_SORT_BY = Selection.SORT_BY.ordinal();
     public static final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
@@ -122,23 +123,26 @@ public abstract class Constants
     public static final int SELECTION_ENABLE_EDITING = Selection.ENABLE_EDITING.ordinal();
     public static final int SELECTION_DISABLE_EDITING = Selection.DISABLE_EDITING.ordinal();
 
-    public static final int SELECTION_SORT_ASCENDING = Selection.SORT_ASCENDING.ordinal();
-    public static final int SELECTION_SORT_DESCENDING = Selection.SORT_DESCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_NAME = Selection.SORT_BY_NAME.ordinal();
+    public static final int SELECTION_SORT_BY_NAME_ASCENDING = Selection.SORT_BY_NAME_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_NAME_DESCENDING = Selection.SORT_BY_NAME_DESCENDING.ordinal();
 
-    public static final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
-    public static final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
-    public static final int SELECTION_SORT_BY_MANUFACTURER_DESCENDING = Selection.SORT_BY_MANUFACTURER_DESCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_YEAR_ASCENDING = Selection.SORT_BY_YEAR_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_YEAR_DESCENDING = Selection.SORT_BY_YEAR_DESCENDING.ordinal();
 
     public static final int SELECTION_SORT_BY_LOCATION = Selection.SORT_BY_LOCATION.ordinal();
     public static final int SELECTION_SORT_BY_LOCATION_ASCENDING = Selection.SORT_BY_LOCATION_ASCENDING.ordinal();
     public static final int SELECTION_SORT_BY_LOCATION_DESCENDING = Selection.SORT_BY_LOCATION_DESCENDING.ordinal();
 
-    public static final int SELECTION_SORT_BY_STATUS = Selection.SORT_BY_STATUS.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER = Selection.SORT_BY_MANUFACTURER.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER_ASCENDING = Selection.SORT_BY_MANUFACTURER_ASCENDING.ordinal();
+    public static final int SELECTION_SORT_BY_MANUFACTURER_DESCENDING = Selection.SORT_BY_MANUFACTURER_DESCENDING.ordinal();
 
-    public static final int SELECTION_GROUP_BY_PARK = Selection.GROUP_BY_STATUS.ordinal();
+    public static final int SELECTION_SORT_BY_ATTRACTION_CATEGORY = Selection.SORT_BY_ATTRACTION_CATEGORY.ordinal();
+
+    public static final int SELECTION_GROUP_BY_LOCATION = Selection.GROUP_BY_LOCATION.ordinal();
     public static final int SELECTION_GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER.ordinal();
     public static final int SELECTION_GROUP_BY_ATTRACTION_CATEGORY = Selection.GROUP_BY_ATTRACTION_CATEGORY.ordinal();
-    public static final int SELECTION_GROUP_BY_STATUS = Selection.GROUP_BY_STATUS.ordinal();
 
 
     public static final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
@@ -209,10 +213,12 @@ public abstract class Constants
 
 
     public static final int TYPE_NONE = Type.NONE.ordinal();
+    public static final int TYPE_LOCATION = Type.LOCATION.ordinal();
     public static final int TYPE_ATTRACTION_CATEGORY = Type.ATTRACTION_CATEGORY.ordinal();
     public static final int TYPE_MANUFACTURER = Type.MANUFACTURER.ordinal();
     public static final int TYPE_STATUS = Type.STATUS.ordinal();
     public static final int TYPE_YEAR = Type.YEAR.ordinal();
+    public static final int TYPE_TOTAL_RIDE_COUNT = Type.TOTAL_RIDE_COUNT.ordinal();
 
     private enum Selection
     {
@@ -241,23 +247,28 @@ public abstract class Constants
         SORT_MANUFACTURERS,
         SORT_STATUSES,
 
-        SORT_ASCENDING,
-        SORT_DESCENDING,
+        SORT_BY_NAME,
+        SORT_BY_NAME_ASCENDING,
+        SORT_BY_NAME_DESCENDING,
 
-        SORT_BY_MANUFACTURER,
-        SORT_BY_MANUFACTURER_ASCENDING,
-        SORT_BY_MANUFACTURER_DESCENDING,
+        SORT_BY_YEAR_ASCENDING,
+        SORT_BY_YEAR_DESCENDING,
 
         SORT_BY_LOCATION,
         SORT_BY_LOCATION_ASCENDING,
         SORT_BY_LOCATION_DESCENDING,
 
-        SORT_BY_STATUS,
+        SORT_BY_MANUFACTURER,
+        SORT_BY_MANUFACTURER_ASCENDING,
+        SORT_BY_MANUFACTURER_DESCENDING,
 
-        GROUP_BY_PARK,
+        SORT_BY_ATTRACTION_CATEGORY,
+
+
+        GROUP_BY_LOCATION,
         GROUP_BY_MANUFACTURER,
         GROUP_BY_ATTRACTION_CATEGORY,
-        GROUP_BY_STATUS,
+
 
         SHORTCUT_TO_CURRENT_VISIT,
         ENABLE_EDITING,
@@ -333,10 +344,12 @@ public abstract class Constants
     private enum Type
     {
         NONE,
+        LOCATION,
         ATTRACTION_CATEGORY,
         MANUFACTURER,
-        YEAR,
         STATUS,
+        YEAR,
+        TOTAL_RIDE_COUNT
     }
 }
 

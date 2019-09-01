@@ -40,9 +40,15 @@
     <string name="selection_remove">remove</string>
     <string name="selection_relocate">relocate</string>
 
-    <string name="selection_sort_by_manufacturer">manufacturer</string>
+    <string name="selection_sort_by_name">name</string>
     <string name="selection_sort_by_location">location</string>
-    <string name="selection_sort_by_status">status</string>
+    <string name="selection_sort_by_manufacturer">manufacturer</string>
+    <string name="selection_sort_by_attraction_category">category</string>
+
+    <string name="selection_group_by_location">location</string>
+    <string name="selection_group_by_manufacturer">manufacturer</string>
+    <string name="selection_group_by_attraction_category">category</string>
+    <string name="selection_group_by_status">status</string>
 
     <string name="selection_sort_ascending">ascending</string>
     <string name="selection_sort_descending">descending</string>

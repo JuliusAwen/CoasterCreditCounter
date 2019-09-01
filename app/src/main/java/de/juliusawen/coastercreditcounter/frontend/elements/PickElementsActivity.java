@@ -24,7 +24,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
@@ -43,12 +45,6 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class PickElementsActivity extends BaseActivity
 {
-    private static final int NONE = 0;
-    private static final int PARK = 1;
-    private static final int MANUFACTURER = 2;
-    private static final int ATTRACTION_CATEGORY = 3;
-    private static final int STATUS = 4;
-
     private PickElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
     private TextView textViewSelectOrDeselectAll;
@@ -93,10 +89,10 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true,
                             Constants.TYPE_ATTRACTION_CATEGORY);
-                    this.contentIsGroupedBy = ATTRACTION_CATEGORY;
+                    this.contentIsGroupedBy = Constants.TYPE_ATTRACTION_CATEGORY;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
@@ -110,11 +106,11 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true,
                             Constants.TYPE_ATTRACTION_CATEGORY);
-                    this.contentIsGroupedBy = ATTRACTION_CATEGORY;
+                    this.contentIsGroupedBy = Constants.TYPE_ATTRACTION_CATEGORY;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
@@ -127,7 +123,6 @@ public class PickElementsActivity extends BaseActivity
                             null,
                             false,
                             Constants.TYPE_NONE);
-                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
@@ -145,7 +140,6 @@ public class PickElementsActivity extends BaseActivity
                             null,
                             false,
                             Constants.TYPE_NONE);
-                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
                     this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
@@ -157,7 +151,6 @@ public class PickElementsActivity extends BaseActivity
                         null,
                         true,
                         Constants.TYPE_NONE);
-                    this.contentIsGroupedBy = NONE;
 
                     this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                 }
@@ -223,17 +216,40 @@ public class PickElementsActivity extends BaseActivity
         menu.clear();
 
         if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-            || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS)
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
         {
             Menu submenuSortBy = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY, Menu.NONE, R.string.selection_sort_by);
-            Menu submenuSortByManufacturer = submenuSortBy.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER, Menu.NONE, R.string.selection_sort_by_manufacturer);
-            Menu submenuSortByLocation = submenuSortBy.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION, Menu.NONE, R.string.selection_sort_by_location);
+
+            Menu submenuSortByName = submenuSortBy.addSubMenu(
+                    Constants.SELECTION_SORT_BY_NAME, Constants.SELECTION_SORT_BY_NAME, Menu.NONE, R.string.selection_sort_by_name);
+
+            Menu submenuSortByLocation = submenuSortBy.addSubMenu(
+                    Constants.SELECTION_SORT_BY_LOCATION, Constants.SELECTION_SORT_BY_LOCATION, Menu.NONE, R.string.selection_sort_by_location);
+
+            submenuSortBy.addSubMenu(
+                    Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Menu.NONE, R.string.selection_sort_by_attraction_category);
+
+            Menu submenuSortByManufacturer = submenuSortBy.addSubMenu(
+                    Constants.SELECTION_SORT_BY_MANUFACTURER, Constants.SELECTION_SORT_BY_MANUFACTURER, Menu.NONE, R.string.selection_sort_by_manufacturer);
+
+
+            submenuSortByName.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+            submenuSortByName.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 
             submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
             submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 
             submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
             submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+
+            submenuSortBy.setGroupEnabled(Constants.SELECTION_SORT_BY_LOCATION, this.contentIsGroupedBy != Constants.TYPE_LOCATION);
+            submenuSortBy.setGroupEnabled(Constants.SELECTION_SORT_BY_MANUFACTURER, this.contentIsGroupedBy != Constants.TYPE_MANUFACTURER);
+            submenuSortBy.setGroupEnabled(Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, this.contentIsGroupedBy != Constants.TYPE_ATTRACTION_CATEGORY);
+
+
+            menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+            menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
@@ -251,7 +267,17 @@ public class PickElementsActivity extends BaseActivity
 
         int id = item.getItemId();
 
-        if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING)
+        if(id == Constants.SELECTION_SORT_BY_NAME_ASCENDING)
+        {
+            this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        }
+        else if(id == Constants.SELECTION_SORT_BY_NAME_DESCENDING)
+        {
+            this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        }
+        else if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING)
         {
             this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
             this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -426,6 +452,64 @@ public class PickElementsActivity extends BaseActivity
 
         Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToDeselectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
+
+    private void groupContentByType(int type)
+    {
+        List<IElement> groupedContent = new ArrayList<>();
+        for(IElement element : this.viewModel.elementsToPickFrom)
+        {
+            for(IAttraction attraction : new HashSet<>(element.getChildrenAsType(IAttraction.class)))
+            {
+                if(type == Constants.TYPE_LOCATION)
+                {
+                    groupedContent.add(attraction.getParent());
+                }
+                else if(type == Constants.TYPE_MANUFACTURER)
+                {
+                    groupedContent.add(attraction.getManufacturer());
+                }
+                else if(type == Constants.TYPE_ATTRACTION_CATEGORY)
+                {
+                    groupedContent.add(attraction.getAttractionCategory());
+                }
+                else if(type == Constants.TYPE_STATUS)
+                {
+                    groupedContent.add(attraction.getStatus());
+                }
+            }
+        }
+
+        this.viewModel.contentRecyclerViewAdapter.clearTypefaceForTypes();
+        this.viewModel.contentRecyclerViewAdapter.clearDisplayModeForDetails();
+
+        if(type == Constants.TYPE_LOCATION)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Park.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        }
+        else if(type == Constants.TYPE_MANUFACTURER)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        }
+        else if(type == Constants.TYPE_ATTRACTION_CATEGORY)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_MANUFACTURER, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        }
+        else if(type == Constants.TYPE_STATUS)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_LOCATION, ContentRecyclerViewAdapter.DISPLAYMODE_ABOVE);
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(Constants.TYPE_STATUS, ContentRecyclerViewAdapter.DISPLAYMODE_BELOW);
+        }
+
+        this.viewModel.contentRecyclerViewAdapter.setItems(groupedContent);
+    }
+
 
     private void returnResult(int resultCode, IElement element)
     {
