@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
@@ -52,7 +54,16 @@ public class SortElementsActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter =
                         ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false, Constants.TYPE_NONE);
 
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD);
+                Set<Class<? extends IElement>> types = new HashSet<>();
+                for(IElement elementToSort : this.viewModel.elementsToSort)
+                {
+                    types.add(elementToSort.getClass());
+                }
+
+                for(Class<? extends IElement> type : types)
+                {
+                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(type, Typeface.BOLD);
+                }
             }
             this.recyclerView = findViewById(R.id.recyclerViewSortElements);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
