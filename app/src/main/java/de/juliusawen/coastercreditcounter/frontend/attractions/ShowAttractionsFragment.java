@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
@@ -89,7 +89,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
@@ -237,7 +237,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 {
                     Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
                 }
-                else if(element instanceof AttractionCategoryHeader)
+                else if(element instanceof GroupHeader)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -246,9 +246,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             @Override
             public boolean onLongClick(View view)
             {
-                if(view.getTag() instanceof AttractionCategoryHeader)
+                if(view.getTag() instanceof GroupHeader)
                 {
-                    AttractionCategoryHeader.handleOnGroupHeaderLongClick(getActivity(), view);
+                    GroupHeader.handleOnGroupHeaderLongClick(getActivity(), view);
                 }
                 else
                 {

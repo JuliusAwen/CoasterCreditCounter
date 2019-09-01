@@ -17,17 +17,35 @@ import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 
-public abstract class GroupHeader extends OrphanElement
+public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
 {
-    public GroupHeader(String name, UUID uuid)
+    private final IElement groupElement;
+
+    private GroupHeader(String name, UUID uuid, IElement groupElement)
     {
         super(name, uuid);
+        this.groupElement = groupElement;
     }
 
+    public IElement getGroupElement()
+    {
+        return groupElement;
+    }
+
+    public static GroupHeader create(IElement groupItem)
+    {
+        GroupHeader groupHeader;
+        groupHeader = new GroupHeader(groupItem.getName(), UUID.randomUUID(), groupItem);
+
+        Log.v(Constants.LOG_TAG,  String.format("GroupHeader.create:: %s created", groupHeader.getFullName()));
+
+        return groupHeader;
+    }
     public static void handleOnGroupHeaderLongClick(final Context context, View view)
     {
         final Element longClickedElement = (Element) view.getTag();
@@ -43,7 +61,7 @@ public abstract class GroupHeader extends OrphanElement
                 @Override
                 public boolean onMenuItemClick(MenuItem item)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("AttractionCategoryHeader.handleOnGroupHeaderLongClick.onMenuItemClick:: [%S] selected", item.getItemId()));
+                    Log.i(Constants.LOG_TAG, String.format("GroupHeader.handleOnGroupHeaderLongClick.onMenuItemClick:: [%S] selected", item.getItemId()));
 
                     int id = item.getItemId();
 
@@ -60,10 +78,7 @@ public abstract class GroupHeader extends OrphanElement
                             attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
                         }
 
-                        ActivityTool.startActivitySortForResult(
-                                Objects.requireNonNull(context),
-                                Constants.REQUEST_CODE_SORT_ATTRACTIONS,
-                                attractions);
+                        ActivityTool.startActivitySortForResult(Objects.requireNonNull(context), Constants.REQUEST_CODE_SORT_ATTRACTIONS, attractions);
                     }
 
                     return true;

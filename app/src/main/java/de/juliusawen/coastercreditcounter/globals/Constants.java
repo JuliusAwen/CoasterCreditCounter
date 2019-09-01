@@ -346,6 +346,7 @@ public abstract class Constants
         ATTRACTION_CATEGORY,
         MANUFACTURER,
         STATUS,
+        
     }
 }
 

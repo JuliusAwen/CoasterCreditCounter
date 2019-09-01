@@ -2,18 +2,24 @@ package de.juliusawen.coastercreditcounter.backend.GroupHeader;
 
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.SortTool;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class GroupHeaderProvider
@@ -28,56 +34,88 @@ public class GroupHeaderProvider
         STATUS
     }
 
-    private final Map<UUID, AttractionCategoryHeader> attractionCategoryHeadersByCategoryUuid = new HashMap<>();
+    private final Map<UUID, GroupHeader> groupHeadersByGroupElementUuid = new HashMap<>();
     private List<IAttraction> formerAttractions;
     private List<IElement> formerGroupedAttractions;
 
     private final List<YearHeader> yearHeaders = new ArrayList<>();
 
-    public List<IElement> groupByAttractionCategories(List<IAttraction> attractions)
+    public List<IElement> groupByGroupType(List<IElement> elements, GroupType groupType)
     {
+        List<IAttraction> attractions;
+
+        switch(groupType)
+        {
+            case NONE:
+                return elements;
+
+            case YEAR:
+                return this.groupByYear(elements);
+
+                default:
+                    attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
+                    break;
+        }
+
         List<IElement> groupedAttractions = new ArrayList<>();
 
-        if(this.attractionCategoryHeadersByCategoryUuid.isEmpty())
+        if(this.groupHeadersByGroupElementUuid.isEmpty())
         {
             if(!attractions.isEmpty())
             {
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: initalizing AttractionCategoryHeaders for [%d] attractions...", attractions.size()));
+                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: initalizing GroupHeaders for [%d] attractions...", attractions.size()));
 
                 for(IAttraction attraction : attractions)
                 {
-                    AttractionCategoryHeader header;
-                    AttractionCategory category = attraction.getAttractionCategory();
-                    UUID categoryUuid = category.getUuid();
-
-                    header = this.attractionCategoryHeadersByCategoryUuid.get(categoryUuid);
-                    if(header != null)
+                    IElement groupElement = null;
+                    switch(groupType)
                     {
-                        header.addChild(attraction);
+                        case LOCATION:
+                            groupElement = attraction.getParent();
+                            break;
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: added %s to %s", attraction, header));
+                        case ATTRACTION_CATEGORY:
+                            groupElement = attraction.getAttractionCategory();
+                            break;
 
-                        if(!groupedAttractions.contains(header))
+                        case MANUFACTURER:
+                            groupElement = attraction.getManufacturer();
+                            break;
+
+                        case STATUS:
+                            groupElement = attraction.getStatus();
+                            break;
+                    }
+                    UUID groupElementUuid = groupElement.getUuid();
+
+                    GroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
+                    if(groupHeader != null)
+                    {
+                        groupHeader.addChild(attraction);
+
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: added %s to %s", attraction, groupHeader));
+
+                        if(!groupedAttractions.contains(groupHeader))
                         {
-                            groupedAttractions.add(header);
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: added %s to GroupedAttractions", header));
+                            groupedAttractions.add(groupHeader);
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: added %s to GroupedAttractions", groupHeader));
                         }
                     }
                     else
                     {
-                        header = AttractionCategoryHeader.create(category);
-                        this.attractionCategoryHeadersByCategoryUuid.put(categoryUuid, header);
-                        groupedAttractions.add(header);
+                        groupHeader = GroupHeader.create(groupElement);
+                        this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
+                        groupedAttractions.add(groupHeader);
 
-                        header.addChild(attraction);
+                        groupHeader.addChild(attraction);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: created new %s and added %s", header, attraction));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: created new %s and added %s", groupHeader, attraction));
                     }
                 }
 
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: [%d] AttractionCategoryHeaders grouped", groupedAttractions.size()));
+                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: [%d] GroupHeaders grouped", groupedAttractions.size()));
 
-                groupedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
+                groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
 
                 this.formerAttractions = attractions;
                 this.formerGroupedAttractions = groupedAttractions;
@@ -86,7 +124,7 @@ public class GroupHeaderProvider
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByAttractionCategories:: no attractions to categorize");
+                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByGroupType:: no attractions to categorize");
 
                 this.formerAttractions = attractions;
                 this.formerGroupedAttractions = groupedAttractions;
@@ -98,49 +136,67 @@ public class GroupHeaderProvider
         {
             if(this.attractionsOrderHasChanged(attractions))
             {
-                for(AttractionCategoryHeader attractionCategoryHeader : this.attractionCategoryHeadersByCategoryUuid.values())
+                for(GroupHeader groupHeader : this.groupHeadersByGroupElementUuid.values())
                 {
-                    attractionCategoryHeader.getChildren().clear();
+                    groupHeader.getChildren().clear();
                 }
 
                 for(IAttraction attraction : attractions)
                 {
-                    AttractionCategory category = attraction.getAttractionCategory();
-                    UUID categoryUuid = category.getUuid();
-
-                    AttractionCategoryHeader header = this.attractionCategoryHeadersByCategoryUuid.get(categoryUuid);
-                    if(header != null)
+                    IElement groupElement = null;
+                    switch(groupType)
                     {
-                        if(!header.getName().equals(category.getName()))
-                        {
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: changing name for %s to [%s]...", header, category.getName()));
+                        case LOCATION:
+                            groupElement = attraction.getParent();
+                            break;
 
-                            header.setName(category.getName());
+                        case ATTRACTION_CATEGORY:
+                            groupElement = attraction.getAttractionCategory();
+                            break;
+
+                        case MANUFACTURER:
+                            groupElement = attraction.getManufacturer();
+                            break;
+
+                        case STATUS:
+                            groupElement = attraction.getStatus();
+                            break;
+                    }
+                    UUID groupElementUuid = groupElement.getUuid();
+
+                    GroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
+                    if(groupHeader != null)
+                    {
+                        if(!groupHeader.getName().equals(groupElement.getName()))
+                        {
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: changing name for %s to [%s]...", groupHeader, groupElement.getName()));
+
+                            groupHeader.setName(groupElement.getName());
                         }
 
-                        if(!groupedAttractions.contains(header))
+                        if(!groupedAttractions.contains(groupHeader))
                         {
-                            groupedAttractions.add(header);
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: added %s to GroupedAttractions", header));
+                            groupedAttractions.add(groupHeader);
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: added %s to GroupedAttractions", groupHeader));
                         }
 
-                        header.addChild(attraction);
+                        groupHeader.addChild(attraction);
                     }
                     else
                     {
-                        header = AttractionCategoryHeader.create(category);
-                        this.attractionCategoryHeadersByCategoryUuid.put(categoryUuid, header);
-                        groupedAttractions.add(header);
+                        groupHeader = GroupHeader.create(groupElement);
+                        this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
+                        groupedAttractions.add(groupHeader);
 
-                        header.addChild(attraction);
+                        groupHeader.addChild(attraction);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: created new %s and added %s", header, attraction));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: created new %s and added %s", groupHeader, attraction));
                     }
                 }
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByAttractionCategories:: attractions have not changed - returning former GroupedAttractions");
+                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByGroupType:: attractions have not changed - returning former GroupedAttractions");
                 return this.formerGroupedAttractions;
             }
         }
@@ -151,12 +207,12 @@ public class GroupHeaderProvider
             if(!header.hasChildren())
             {
                 emptyHeaders.add(header);
-                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByAttractionCategories:: %s is empty - marked for deletion", header));
+                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByGroupType:: %s is empty - marked for deletion", header));
             }
         }
         groupedAttractions.removeAll(emptyHeaders);
 
-        groupedAttractions = SortTool.sortAttractionCategoryHeadersBasedOnCategoriesOrder(groupedAttractions);
+        groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
 
         this.formerAttractions = attractions;
         this.formerGroupedAttractions = groupedAttractions;
@@ -184,8 +240,52 @@ public class GroupHeaderProvider
         return false;
     }
 
-    public List<IElement> groupByYear(List<Visit> visits)
+    private List<IElement> sortGroupHeadersBasedOnGroupElementsOrder(List<IElement> groupHeaders, GroupType groupType)
     {
+        if(groupHeaders.size() > 1)
+        {
+            List<IElement> sortedGroupHeaders = new ArrayList<>();
+            List<IElement> groupElements = new ArrayList<>();
+
+            switch(groupType)
+            {
+                case YEAR:
+                    return groupHeaders;
+
+                case ATTRACTION_CATEGORY:
+                     groupElements = App.content.getContentOfType(AttractionCategory.class);
+                     break;
+            }
+
+            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortGroupHeadersBasedOnGroupElementsOrder::" +
+                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", groupHeaders.size(), groupElements.size()));
+
+            for(IElement groupElement : groupElements)
+            {
+                for(GroupHeader groupHeader : ConvertTool.convertElementsToType(groupHeaders, GroupHeader.class))
+                {
+                    if(groupHeader.getGroupElement().equals(groupElement) && !sortedGroupHeaders.contains(groupHeader))
+                    {
+                        sortedGroupHeaders.add(groupHeader);
+                        break;
+                    }
+                }
+            }
+
+            return sortedGroupHeaders;
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG,"SortTool.sortGroupHeadersBasedOnGroupElementsOrder:: not sorted - list contains less than two elements");
+            return groupHeaders;
+        }
+    }
+
+
+    private List<IElement> groupByYear(List<IElement> elements)
+    {
+        List<Visit> visits = ConvertTool.convertElementsToType(elements, Visit.class);
+
         if(visits.isEmpty())
         {
             Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByYear:: no elements found");
@@ -199,7 +299,7 @@ public class GroupHeaderProvider
             yearHeader.getChildren().clear();
         }
 
-        visits = SortTool.sortVisitsByDateAccordingToSortOrder(visits);
+        visits = this.sortVisitsByDateAccordingToSortOrder(visits);
 
         List<IElement> groupedVisits = new ArrayList<>();
 
@@ -247,6 +347,74 @@ public class GroupHeaderProvider
 
         Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: [%d] YearHeaders added", groupedVisits.size()));
         return groupedVisits;
+    }
+
+    private List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
+    {
+        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
+        {
+            visits = this.sortAscendingByDate(visits);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
+        }
+        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
+        {
+            visits = this.sortDescendingByDate(visits);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
+        }
+
+        return visits;
+    }
+
+    private List<Visit> sortDescendingByDate(List<Visit> visits)
+    {
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+        HashMap<String, Visit> visitsByDateString = new HashMap<>();
+        for(Visit visit : visits)
+        {
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+        }
+
+        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        Collections.sort(dateStrings);
+
+        List<Visit> sortedVisits = new ArrayList<>();
+        for(String dateString : dateStrings)
+        {
+            sortedVisits.add(0, visitsByDateString.get(dateString));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: [%d] visits sorted", visits.size()));
+        return sortedVisits;
+    }
+
+    private List<Visit> sortAscendingByDate(List<Visit> visits)
+    {
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+        HashMap<String, Visit> visitsByDateString = new HashMap<>();
+
+        for(Visit visit : visits)
+        {
+            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
+            visitsByDateString.put(dateString, visit);
+            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+        }
+
+        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        Collections.sort(dateStrings);
+
+        List<Visit> sortedVisits = new ArrayList<>();
+        for(String dateString : dateStrings)
+        {
+            sortedVisits.add(visitsByDateString.get(dateString));
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("SortTool.sortAscendingByDate:: [%d] visits sorted", visits.size()));
+
+        return sortedVisits;
     }
 
     public YearHeader getLatestYearHeader(List<? extends IElement> yearHeaders)

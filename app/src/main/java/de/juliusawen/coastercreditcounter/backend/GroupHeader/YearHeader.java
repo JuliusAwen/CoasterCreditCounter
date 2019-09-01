@@ -4,10 +4,11 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class YearHeader extends GroupHeader implements ITemporaryElement
+public class YearHeader extends OrphanElement implements ITemporaryElement
 {
     private YearHeader(String name, UUID uuid)
     {

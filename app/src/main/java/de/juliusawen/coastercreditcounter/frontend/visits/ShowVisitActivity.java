@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
@@ -90,7 +90,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategoryHeader.class, Typeface.BOLD);
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             this.viewModel.contentRecyclerViewAdapter.addRideOnClickListener(this.getAddRideOnClickListener());
@@ -271,7 +271,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 Element element = (Element) view.getTag();
 
-                if(element instanceof AttractionCategoryHeader)
+                if(element instanceof GroupHeader)
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -286,9 +286,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 viewModel.longClickedElement = (Element) view.getTag();
 
-                if(viewModel.longClickedElement instanceof AttractionCategoryHeader)
+                if(viewModel.longClickedElement instanceof GroupHeader)
                 {
-                    AttractionCategoryHeader.handleOnGroupHeaderLongClick(ShowVisitActivity.this, view);
+                    GroupHeader.handleOnGroupHeaderLongClick(ShowVisitActivity.this, view);
                 }
                 else if(viewModel.longClickedElement instanceof Attraction)
                 {

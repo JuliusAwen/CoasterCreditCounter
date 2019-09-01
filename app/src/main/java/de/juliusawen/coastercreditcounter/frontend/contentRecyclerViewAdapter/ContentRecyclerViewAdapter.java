@@ -25,8 +25,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.AttractionCategoryHeader;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.GroupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.GroupHeader.YearHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
@@ -153,11 +154,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
 
             case ATTRACTION_CATEGORY:
-                groupedItems = this.groupHeaderProvider.groupByAttractionCategories(ConvertTool.convertElementsToType(this.originalItems, IAttraction.class));
+                groupedItems = this.groupHeaderProvider.groupByGroupType(this.originalItems, GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
                 break;
 
             case YEAR:
-                groupedItems = this.groupHeaderProvider.groupByYear(ConvertTool.convertElementsToType(this.originalItems, Visit.class));
+                groupedItems = this.groupHeaderProvider.groupByGroupType(this.originalItems, GroupHeaderProvider.GroupType.YEAR);
 
                 if(App.settings.expandLatestYearInListByDefault())
                 {
@@ -770,8 +771,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(item instanceof Attraction)
         {
-            AttractionCategoryHeader attractionCategoryHeader = this.getAttractionCategoryHeaderForAttractionCategoryFromItem(((Attraction) item).getAttractionCategory());
-            return this.items.get(this.items.indexOf(attractionCategoryHeader));
+            IGroupHeader groupHeader = null;
+
+            switch(this.groupType)
+            {
+                case YEAR:
+                    Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.getParentOfRelevantChild<YEAR>:: this should not have been called...");
+                    break;
+
+                case ATTRACTION_CATEGORY:
+                    groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getAttractionCategory());
+                    break;
+            }
+
+            return this.items.get(this.items.indexOf(groupHeader));
         }
         else if(!(item instanceof OrphanElement))
         {
@@ -783,15 +796,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private AttractionCategoryHeader getAttractionCategoryHeaderForAttractionCategoryFromItem(AttractionCategory attractionCategory)
+    private IGroupHeader getGroupHeaderForGroupTypeFromItem(IElement groupElement)
     {
         for(IElement item : this.items)
         {
-            if(item instanceof AttractionCategoryHeader)
+            if(item instanceof GroupHeader)
             {
-                if(((AttractionCategoryHeader)item).getAttractionCategory().equals(attractionCategory))
+                if(((GroupHeader)item).getGroupElement().equals(groupElement))
                 {
-                    return (AttractionCategoryHeader) item;
+                    return (GroupHeader)item;
                 }
             }
         }
@@ -1199,7 +1212,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         for(IElement item : this.selectedItemsInOrderOfSelection)
         {
-            if(!(item instanceof AttractionCategoryHeader))
+            if(!(item instanceof IGroupHeader))
             {
                 selectedItems.add(item);
             }
@@ -1233,9 +1246,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             for(IElement element : this.items)
             {
-                if(element instanceof AttractionCategoryHeader)
+                if(element instanceof GroupHeader)
                 {
-                    if(((AttractionCategoryHeader)element).getAttractionCategory().equals(item))
+                    if(((GroupHeader)element).getGroupElement().equals(item))
                     {
                         item = element;
                         break;
