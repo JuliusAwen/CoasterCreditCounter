@@ -250,6 +250,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             }
         }
 
+        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -265,7 +268,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this,
                     Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
                     App.content.getContentOfType(AttractionCategory.class));
-            return true;
         }
         else if(id == Constants.SELECTION_SORT_MANUFACTURERS)
         {
@@ -273,7 +275,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this,
                     Constants.REQUEST_CODE_SORT_MANUFACTURERS,
                     App.content.getContentOfType(Manufacturer.class));
-            return true;
         }
         else if(id == Constants.SELECTION_SORT_STATUSES)
         {
@@ -281,12 +282,21 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this,
                     Constants.REQUEST_CODE_SORT_STATUSES,
                     App.content.getContentOfType(Status.class));
-            return true;
+        }
+        else if(id == Constants.SELECTION_EXPAND_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.expandAll();
+        }
+        else if(id == Constants.SELECTION_COLLAPSE_ALL)
+        {
+            this.viewModel.contentRecyclerViewAdapter.collapseAll();
         }
         else
         {
             return super.onOptionsItemSelected(item);
         }
+
+        return true;
     }
 
     @Override
