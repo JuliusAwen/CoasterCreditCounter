@@ -445,8 +445,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             //setExpandToggle
             viewHolder.imageViewExpandToggle.setTag(item);
+
             if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
             {
+                viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
+
                 if(this.expandedItems.contains(item))
                 {
                     viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
@@ -695,29 +698,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
             //indentLayout based on generation
-            int padding;
-            if(item instanceof SpecialGroupHeader)
-            {
-                 padding = ConvertTool.convertDpToPx(
-                         (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
-                         * (generation + 1);
-            }
-            else
-            {
-                padding = ConvertTool.convertDpToPx(
-                        (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
-                        * generation;
-            }
+            int padding = ConvertTool.convertDpToPx(
+                    (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
+                    * generation;
 
             viewHolder.linearLayoutItem.setPadding(padding, 0, padding, 0);
 
 
 
             //set visibility
-            viewHolder.linearLayoutItem.setVisibility(View.VISIBLE);
             viewHolder.linearLayoutPrettyPrint.setVisibility(View.GONE);
+            viewHolder.linearLayoutItem.setVisibility(View.VISIBLE);
         }
-        else
+        else //format as pretty print
         {
             //set visibility for pretty print
             viewHolder.linearLayoutItem.setVisibility(View.GONE);
