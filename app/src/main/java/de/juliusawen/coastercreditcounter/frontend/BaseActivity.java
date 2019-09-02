@@ -39,15 +39,17 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.IMenuAgentClient;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
-public abstract class BaseActivity extends AppCompatActivity implements HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private Toolbar toolbar;
     private ActionBar actionBar;
     private HelpOverlayFragment helpOverlayFragment;
     private FloatingActionButton floatingActionButton;
-    private View.OnClickListener onClickListenerFloatingActionButton;
+    private View.OnClickListener floatingActionButtonOnClickListener;
     private View progressBar;
 
     private BaseActivityViewModel viewModel;
@@ -100,6 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         super.onPause();
         this.synchronizePersistency();
     }
+
 
     private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()
     {
@@ -188,31 +191,52 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(this.helpOverlayFragment != null)
-        {
-            if(menu.findItem(Constants.SELECTION_HELP) == null)
-            {
-                menu.add(Menu.NONE, Constants.SELECTION_HELP, Menu.NONE, R.string.selection_help);
-            }
-        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected - not handled by derived class...", MenuAgent.getSelectionString(item.getItemId())));
+        return super.onOptionsItemSelected(item);
+    }
 
-        if(id == Constants.SELECTION_HELP)
+    // region handleOptionsMenuSelectionImplementations
+
+    public boolean handleOptionsMenuSelectionHelp()
+    {
+        if(this.helpOverlayFragment != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", item.getItemId()));
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionHelp:: showing HelpOverlay");
             this.setHelpOverlayVisibility(true);
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionHelp:: HelpOverlayFragment not added");
+            return false;
+        }
     }
+
+    @Override
+    public boolean handleOptionsMenuSelectionExpandAll()
+    {
+        return this.handleOptionsMenuSelectionNotImplemented();
+    }
+
+    @Override
+    public boolean handleOptionsMenuSelectionCollapseAll()
+    {
+        return this.handleOptionsMenuSelectionNotImplemented();
+    }
+
+    private boolean handleOptionsMenuSelectionNotImplemented()
+    {
+        Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionNotImplemented:: menu selection was not handled by derived class...");
+        return false;
+    }
+
+    // endregion handleOptionsMenuSelectionImplementations
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
@@ -333,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
         if(this.floatingActionButton != null)
         {
             this.floatingActionButton.setOnClickListener(onClickListener);
-            this.onClickListenerFloatingActionButton = onClickListener;
+            this.floatingActionButtonOnClickListener = onClickListener;
         }
     }
 
@@ -383,7 +407,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HelpOver
                 newFloatingActionButton = findViewById(R.id.floatingActionButton);
             }
 
-            newFloatingActionButton.setOnClickListener(this.onClickListenerFloatingActionButton);
+            newFloatingActionButton.setOnClickListener(this.floatingActionButtonOnClickListener);
             newFloatingActionButton.setImageDrawable(icon != null ? icon : this.floatingActionButton.getDrawable());
             this.floatingActionButton = newFloatingActionButton;
             this.floatingActionButton.show();

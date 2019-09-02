@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 
 public class PickElementsActivityViewModel extends ViewModel
 {
@@ -13,4 +14,5 @@ public class PickElementsActivityViewModel extends ViewModel
     boolean isSimplePick;
     List<IElement> elementsToPickFrom;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    MenuAgent optionsMenuAgent;
 }

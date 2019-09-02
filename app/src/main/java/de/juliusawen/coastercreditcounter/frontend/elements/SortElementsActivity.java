@@ -96,7 +96,7 @@ public class SortElementsActivity extends BaseActivity
     {
         menu.clear();
 
-        Menu submenuSort = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT, Menu.NONE, R.string.selection_sort);
+        Menu submenuSort = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.selection_sort_by);
         submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
         submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
 

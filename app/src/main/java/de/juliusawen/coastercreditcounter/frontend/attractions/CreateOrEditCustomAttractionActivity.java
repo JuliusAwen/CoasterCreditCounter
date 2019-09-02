@@ -167,33 +167,33 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
         {
-            this.setTextOnTextView((Manufacturer)pickedElement);
+            this.setText((Manufacturer)pickedElement);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
         {
-            this.setTextOnTextView((AttractionCategory) pickedElement);
+            this.setText((AttractionCategory) pickedElement);
         }
         else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
-            this.setTextOnTextView((Status)pickedElement);
+            this.setText((Status)pickedElement);
         }
 
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
     }
 
-    private void setTextOnTextView(Manufacturer element)
+    private void setText(Manufacturer element)
     {
         this.textViewManufacturer.setText(element.getName());
         this.viewModel.manufacturer = element;
     }
 
-    private void setTextOnTextView(AttractionCategory element)
+    private void setText(AttractionCategory element)
     {
         this.textViewAttractionCategory.setText(element.getName());
         this.viewModel.attractionCategory = element;
     }
 
-    private void setTextOnTextView(Status element)
+    private void setText(Status element)
     {
         this.textViewStatus.setText(element.getName());
         this.viewModel.status = element;
@@ -381,7 +381,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 if(elements.size() == 1)
                 {
                     Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
-                    setTextOnTextView((Manufacturer)elements.get(0));
+                    setText((Manufacturer)elements.get(0));
                 }
                 else
                 {
@@ -410,7 +410,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 if(elements.size() == 1)
                 {
                     Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
-                    setTextOnTextView((AttractionCategory)elements.get(0));
+                    setText((AttractionCategory)elements.get(0));
                 }
                 else
                 {
@@ -439,7 +439,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 if(elements.size() == 1)
                 {
                     Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
-                    setTextOnTextView((Status)elements.get(0));
+                    setText((Status)elements.get(0));
                 }
                 else
                 {
