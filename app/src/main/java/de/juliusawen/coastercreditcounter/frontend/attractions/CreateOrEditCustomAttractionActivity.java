@@ -35,9 +35,9 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateOrEditCustomAttractionActivity extends BaseActivity
@@ -120,19 +120,17 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                         : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
             }
 
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButton();
-
             super.addHelpOverlayFragment(
-                    getString(R.string.title_help, this.viewModel.isEditMode
+                        getString(R.string.title_help, this.viewModel.isEditMode
                             ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
                             : getString(R.string.title_custom_attraction_create)),
-                    getText(R.string.help_text_create_or_edit_custom_attraction));
+                        getText(R.string.help_text_create_or_edit_custom_attraction))
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle)
+                    .addFloatingActionButton();
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
-
+            this.decorateFloatingActionButton();
             this.createEditTextAttractionName();
 
             if(viewModel.isEditMode)
@@ -163,7 +161,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             return;
         }
 
-        IElement pickedElement = ResultTool.fetchResultElement(data);
+        IElement pickedElement = ResultFetcher.fetchResultElement(data);
 
         if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
         {
@@ -201,7 +199,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -300,8 +298,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                         Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
 
                         viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
-                        markForCreation(viewModel.attraction);
-                        markForUpdate(viewModel.parentPark);
+
+                        CreateOrEditCustomAttractionActivity.super
+                                .markForCreation(viewModel.attraction)
+                                .markForUpdate(viewModel.parentPark);
 
                         returnResult(RESULT_OK);
                     }
@@ -386,7 +386,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 else
                 {
 
-                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, elements);
                 }
             }
         }));
@@ -415,7 +415,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 else
                 {
 
-                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, elements);
                 }
             }
         });
@@ -443,8 +443,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 }
                 else
                 {
-
-                    ActivityTool.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, elements);
                 }
             }
         });

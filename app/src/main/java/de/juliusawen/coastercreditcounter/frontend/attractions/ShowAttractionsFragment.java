@@ -43,8 +43,8 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -124,11 +124,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(resultCode == Activity.RESULT_OK)
         {
-            IElement selectedElement = ResultTool.fetchResultElement(data);
+            IElement selectedElement = ResultFetcher.fetchResultElement(data);
 
             if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTIONS)
             {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
                 IElement parent = resultElements.get(0).getParent();
                 if(parent != null)
@@ -269,7 +269,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                             if(id == Constants.SELECTION_EDIT_CUSTOM_ATTRACTION)
                             {
-                                ActivityTool.startActivityEditForResult(
+                                ActivityDistributor.startActivityEditForResult(
                                         getContext(),
                                         Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION,
                                         viewModel.longClickedElement);

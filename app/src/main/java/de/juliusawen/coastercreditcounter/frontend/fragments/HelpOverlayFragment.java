@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivityViewModel;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class HelpOverlayFragment extends Fragment
 {
@@ -91,7 +91,7 @@ public class HelpOverlayFragment extends Fragment
         this.textViewMessage.setText(this.viewModel.helpOverlayFragmentMessage);
 
         ImageButton buttonBack = view.findViewById(R.id.imageButtonHelp_Close);
-        Drawable drawable = DrawableTool.getColoredDrawable(R.drawable.ic_baseline_close, R.color.white);
+        Drawable drawable = DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_close, R.color.white);
         buttonBack.setImageDrawable(drawable);
         buttonBack.setId(ButtonFunction.CLOSE.ordinal());
         buttonBack.setOnClickListener(new View.OnClickListener()

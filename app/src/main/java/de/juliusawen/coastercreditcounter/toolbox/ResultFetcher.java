@@ -10,7 +10,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public abstract class ResultTool
+public abstract class ResultFetcher
 {
     public static IElement fetchResultElement(Intent data)
     {
@@ -19,11 +19,11 @@ public abstract class ResultTool
         if(resultElementUuidString != null)
         {
             resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
-            Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElement:: selected element %s fetched", resultElement));
+            Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElement:: selected element %s fetched", resultElement));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ResultTool.fetchResultElement:: no selected element fetched");
+            Log.d(Constants.LOG_TAG, "ResultFetcher.fetchResultElement:: no selected element fetched");
         }
 
         return resultElement;
@@ -34,7 +34,7 @@ public abstract class ResultTool
         List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
         List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
-        Log.d(Constants.LOG_TAG, String.format("ResultTool.fetchResultElements:: [%d] result elements fetched", resultElements.size()));
+        Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElements:: [%d] result elements fetched", resultElements.size()));
 
         return resultElements;
     }

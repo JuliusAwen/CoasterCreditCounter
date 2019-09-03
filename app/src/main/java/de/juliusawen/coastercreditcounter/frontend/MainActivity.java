@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.frontend.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -20,6 +20,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-        ActivityTool.startActivityViaClass(this, NavigationHubActivity.class);
+        ActivityDistributor.startActivityViaClass(this, NavigationHubActivity.class);
     }
 }

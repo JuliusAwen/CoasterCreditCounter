@@ -37,8 +37,8 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryEl
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.IMenuAgentClient;
 import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
@@ -80,6 +80,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 this.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization();
             }
         }
+
+
     }
 
     @Override
@@ -174,7 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         if(App.config.jumpToTestActivityOnStart())
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
-            ActivityTool.startActivityViaClass(this, TestActivity.class);
+            ActivityDistributor.startActivityViaClass(this, TestActivity.class);
         }
         else
         {
@@ -184,7 +186,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); //this clears the stacktrace
-            ActivityTool.startActivityViaIntent(this, intent);
+            ActivityDistributor.startActivityViaIntent(this, intent);
         }
     }
 
@@ -249,7 +251,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    protected void addToolbar()
+    public BaseActivity addToolbar()
     {
         if(App.isInitialized)
         {
@@ -259,9 +261,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             setSupportActionBar(toolbar);
             this.actionBar = getSupportActionBar();
         }
+
+        return this;
     }
 
-    protected void addToolbarHomeButton()
+    public BaseActivity addToolbarHomeButton()
     {
         if(this.actionBar != null)
         {
@@ -279,26 +283,30 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 }
             });
         }
+
+        return this;
     }
 
-    protected void addToolbarMenuIcon()
+    public BaseActivity addToolbarMenuIcon()
     {
         if(this.actionBar != null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
 
             this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setHomeAsUpIndicator(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
+            this.actionBar.setHomeAsUpIndicator(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
         }
+
+        return this;
     }
 
-    protected void onToolbarHomeButtonBackClicked()
+    private  void onToolbarHomeButtonBackClicked()
     {
         Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button pressed...");
         this.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
     }
 
-    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
+    public BaseActivity setToolbarTitleAndSubtitle(String title, String subtitle)
     {
         if(this.actionBar != null)
         {
@@ -322,6 +330,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 this.actionBar.setSubtitle("");
             }
         }
+
+        return this;
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -336,32 +346,38 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void addFloatingActionButton()
+    public BaseActivity addFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
+
+        return this;
     }
 
-    public void setFloatingActionButtonIcon(Drawable icon)
+    public BaseActivity setFloatingActionButtonIcon(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
             icon.setTint(Color.WHITE);
             this.floatingActionButton.setImageDrawable(icon);
         }
+
+        return this;
     }
 
-    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    public BaseActivity setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         if(this.floatingActionButton != null)
         {
             this.floatingActionButton.setOnClickListener(onClickListener);
             this.floatingActionButtonOnClickListener = onClickListener;
         }
+
+        return this;
     }
 
-    protected void setFloatingActionButtonVisibility(boolean isVisible)
+    public BaseActivity setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.floatingActionButton != null)
         {
@@ -376,9 +392,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 this.floatingActionButton.hide();
             }
         }
+
+        return this;
     }
 
-    protected void disableFloatingActionButton()
+    public BaseActivity disableFloatingActionButton()
     {
         if(this.floatingActionButton != null)
         {
@@ -387,9 +405,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.floatingActionButton.hide();
             this.floatingActionButton = null;
         }
+
+        return this;
     }
 
-    protected void animateFloatingActionButtonTransition(Drawable icon)
+    public BaseActivity animateFloatingActionButtonTransition(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
@@ -412,9 +432,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.floatingActionButton = newFloatingActionButton;
             this.floatingActionButton.show();
         }
+
+        return this;
     }
 
-    protected void addHelpOverlayFragment(String title, CharSequence message)
+    public BaseActivity addHelpOverlayFragment(String title, CharSequence message)
     {
         this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
 
@@ -431,9 +453,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         {
             Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using HelpOverlayFragment");
         }
+
+        return this;
     }
 
-    protected void setHelpOverlayTitleAndMessage(String title, CharSequence message)
+    public BaseActivity setHelpOverlayTitleAndMessage(String title, CharSequence message)
     {
         if(this.helpOverlayFragment != null)
         {
@@ -443,9 +467,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             fragmentTransaction.hide(this.helpOverlayFragment);
             fragmentTransaction.commit();
         }
+
+        return this;
     }
 
-    protected void setHelpOverlayVisibility(boolean isVisible)
+    public BaseActivity setHelpOverlayVisibility(boolean isVisible)
     {
         if(this.helpOverlayFragment != null)
         {
@@ -463,6 +489,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.viewModel.helpOverlayFragmentIsVisible = isVisible;
             this.setFloatingActionButtonVisibility(!isVisible);
         }
+
+        return this;
     }
 
     private void showFragmentFadeIn(Fragment fragment)
@@ -499,7 +527,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 .commit();
     }
 
-    public void showProgressBar()
+    public BaseActivity showProgressBar()
     {
         if(this.progressBar == null)
         {
@@ -511,12 +539,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
 
         this.progressBar.setVisibility(View.VISIBLE);
+
+        return this;
     }
 
-    public void hideProgressBar()
+    public BaseActivity hideProgressBar()
     {
         this.progressBar.setVisibility(View.GONE);
         this.progressBar = null;
+
+        return this;
     }
 
     protected boolean requestPermissionWriteExternalStorage()
@@ -562,15 +594,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    protected void markForCreation(List<IElement> elements)
+    public BaseActivity markForCreation(List<IElement> elements)
     {
         for(IElement element : elements)
         {
             this.markForCreation(element);
         }
+        return this;
     }
 
-    protected void markForCreation(IElement element)
+    public BaseActivity markForCreation(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -578,34 +611,42 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.viewModel.elementsToCreate.add(element);
         }
         App.content.addElement(element);
+
+        return this;
     }
 
-    protected void markForUpdate(List<IElement> elements)
+    public BaseActivity markForUpdate(List<IElement> elements)
     {
         for(IElement element : elements)
         {
             this.markForUpdate(element);
         }
+
+        return this;
     }
 
-    protected void markForUpdate(IElement element)
+    public BaseActivity markForUpdate(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
         }
+
+        return this;
     }
 
-    protected void markForDeletion(List<IElement> elements, boolean deleteDescendants)
+    public BaseActivity markForDeletion(List<IElement> elements, boolean deleteDescendants)
     {
         for(IElement element : elements)
         {
             this.markForDeletion(element, deleteDescendants);
         }
+
+        return this;
     }
 
-    protected void markForDeletion(IElement element, boolean deleteDescendants)
+    public BaseActivity markForDeletion(IElement element, boolean deleteDescendants)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -621,9 +662,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             }
         }
         App.content.removeElement(element);
+
+        return this;
     }
 
-    protected void synchronizePersistency()
+    public BaseActivity synchronizePersistency()
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
@@ -643,5 +686,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         {
             Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
         }
+
+        return this;
     }
 }

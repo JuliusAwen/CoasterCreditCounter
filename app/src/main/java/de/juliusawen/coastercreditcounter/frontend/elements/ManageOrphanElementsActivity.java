@@ -41,10 +41,10 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ManageOrphanElementsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -121,13 +121,12 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
             String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText)
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(toolbarTitle, null)
+                    .addFloatingActionButton();
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-
-            super.addFloatingActionButton();
             this.decorateFloatingActionButton();
         }
     }
@@ -149,7 +148,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             return;
         }
 
-        IElement resultElement = ResultTool.fetchResultElement(data);
+        IElement resultElement = ResultFetcher.fetchResultElement(data);
 
         if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY
                 || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
@@ -168,7 +167,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 || requestCode == Constants.REQUEST_CODE_SORT_MANUFACTURERS
                 || requestCode == Constants.REQUEST_CODE_SORT_STATUSES)
         {
-            List<IElement> resultElements = ResultTool.fetchResultElements(data);
+            List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
             App.content.reorderElements(resultElements);
             updateContentRecyclerView(true);
@@ -179,13 +178,13 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
             }
 
-            this.markForUpdate(resultElements);
+            super.markForUpdate(resultElements);
         }
         else if(requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
                 || requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                 || requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
         {
-            List<IElement> resultElements = ResultTool.fetchResultElements(data);
+            List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
             if(this.viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
             {
@@ -264,21 +263,21 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         int id = item.getItemId();
         if(id == Constants.SELECTION_SORT_ATTRACTION_CATEGORIES)
         {
-            ActivityTool.startActivitySortForResult(
+            ActivityDistributor.startActivitySortForResult(
                     this,
                     Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
                     App.content.getContentOfType(AttractionCategory.class));
         }
         else if(id == Constants.SELECTION_SORT_MANUFACTURERS)
         {
-            ActivityTool.startActivitySortForResult(
+            ActivityDistributor.startActivitySortForResult(
                     this,
                     Constants.REQUEST_CODE_SORT_MANUFACTURERS,
                     App.content.getContentOfType(Manufacturer.class));
         }
         else if(id == Constants.SELECTION_SORT_STATUSES)
         {
-            ActivityTool.startActivitySortForResult(
+            ActivityDistributor.startActivitySortForResult(
                     this,
                     Constants.REQUEST_CODE_SORT_STATUSES,
                     App.content.getContentOfType(Status.class));
@@ -395,7 +394,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                         }
                                     }
 
-                                    ActivityTool.startActivityPickForResult(
+                                    ActivityDistributor.startActivityPickForResult(
                                             ManageOrphanElementsActivity.this,
                                             Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS,
                                             attractions);
@@ -412,7 +411,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                         }
                                     }
 
-                                    ActivityTool.startActivityPickForResult(
+                                    ActivityDistributor.startActivityPickForResult(
                                             ManageOrphanElementsActivity.this,
                                             Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
                                             attractions);
@@ -429,7 +428,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                         }
                                     }
 
-                                    ActivityTool.startActivityPickForResult(
+                                    ActivityDistributor.startActivityPickForResult(
                                             ManageOrphanElementsActivity.this,
                                             Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS,
                                             attractions);
@@ -442,15 +441,15 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             {
                                 if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                                 {
-                                    ActivityTool.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
+                                    ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
                                 }
                                 else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                                 {
-                                    ActivityTool.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_MANUFACTURER, viewModel.longClickedElement);
+                                    ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_MANUFACTURER, viewModel.longClickedElement);
                                 }
                                 else if(viewModel.typeToManage == Constants.TYPE_STATUS)
                                 {
-                                    ActivityTool.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_STATUS, viewModel.longClickedElement);
+                                    ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_EDIT_STATUS, viewModel.longClickedElement);
                                 }
 
                                 return true;
@@ -593,7 +592,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                                 }
                             }
 
-                            markForDeletion(viewModel.longClickedElement, false);
+                            ManageOrphanElementsActivity.super.markForDeletion(viewModel.longClickedElement, false);
                             updateContentRecyclerView(true);
                         }
                         else
@@ -612,10 +611,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(AttractionCategory.getDefault());
-
+                    super.markForUpdate(AttractionCategory.getDefault())
+                            .markForUpdate(this.viewModel.longClickedElement);
                     AttractionCategory.setDefault((AttractionCategory)this.viewModel.longClickedElement);
-                    super.markForUpdate(this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                 }
@@ -624,10 +622,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Manufacturer",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(Manufacturer.getDefault());
-
+                    super.markForUpdate(Manufacturer.getDefault())
+                            .markForUpdate(this.viewModel.longClickedElement);
                     Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
-                    super.markForUpdate(this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                 }
@@ -636,10 +633,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Status",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(Status.getDefault());
-
+                    super.markForUpdate(Status.getDefault())
+                            .markForUpdate(this.viewModel.longClickedElement);
                     Status.setDefault((Status) this.viewModel.longClickedElement);
-                    super.markForUpdate(this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                 }
@@ -649,7 +645,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -659,15 +655,15 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                 if(viewModel.typeToManage == Constants.TYPE_ATTRACTION_CATEGORY)
                 {
-                    ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
+                    ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
                 }
                 else if(viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                 {
-                    ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
+                    ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
                 }
                 else if(viewModel.typeToManage == Constants.TYPE_STATUS)
                 {
-                    ActivityTool.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_STATUS, null);
+                    ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, Constants.REQUEST_CODE_CREATE_STATUS, null);
                 }
             }
         });

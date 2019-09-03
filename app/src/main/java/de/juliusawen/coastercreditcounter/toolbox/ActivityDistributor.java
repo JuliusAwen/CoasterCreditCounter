@@ -26,7 +26,7 @@ import de.juliusawen.coastercreditcounter.frontend.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public abstract class ActivityTool
+public abstract class ActivityDistributor
 {
     public static void startActivityShow(Context context, int requestCode, IElement element)
     {
@@ -50,18 +50,18 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             context.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityShow:: started [%s] for %s",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityShow:: started [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
         }
         else
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
-                    "ActivityTool.startActivityShow:: unable to start activity: unknown request code [%d] for type %s", requestCode, element));
+                    "ActivityDistributor.startActivityShow:: unable to start activity: unknown request code [%d] for type %s", requestCode, element));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
-    public static void startActivityManageForResult(Context context, int requestCode)
+    public static  void startActivityManageForResult(Context context, int requestCode)
     {
         int type = Constants.TYPE_NONE;
         String toolbarTitle;
@@ -105,12 +105,12 @@ public abstract class ActivityTool
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityManageForResult:: started [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityManageForResult:: started [%s]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityManageForResult:: unable to start activity: unknown request code [%d]", requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown request code [%d]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
@@ -158,13 +158,13 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityEditForResult:: started [%s] for %s",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityEditForResult:: started [%s] for %s",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
         }
         else
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
-                    "ActivityTool.startActivityEditForResult:: unable to start activity: unknown request code [%d] for type [%s]", requestCode, element));
+                    "ActivityDistributor.startActivityEditForResult:: unable to start activity: unknown request code [%d] for type [%s]", requestCode, element));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
@@ -200,7 +200,7 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityCreateForResult:: started [%s] for %s  with request code [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: started [%s] for %s  with request code [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), parentElement, requestCode));
         }
         else
@@ -231,7 +231,7 @@ public abstract class ActivityTool
 
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityCreateForResult:: started [%s] for OrphanElement with request code [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: started [%s] for OrphanElement with request code [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), requestCode));
         }
 
@@ -277,12 +277,12 @@ public abstract class ActivityTool
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivitySortForResult:: started [%s] for [%d] elements with request code [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivitySortForResult:: started [%s] for [%d] elements with request code [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToSort.size(), requestCode));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivitySortForResult:: unable to start activity: unknown request code [%s]", requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivitySortForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
@@ -362,19 +362,19 @@ public abstract class ActivityTool
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             ((Activity)context).startActivityForResult(intent, requestCode);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityPickForResult:: started [%s] for [%d] elements with requestCode [%d]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityPickForResult:: started [%s] for [%d] elements with requestCode [%d]",
                     StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), elementsToPickFrom.size(), requestCode));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityTool.startActivityPickForResult:: unable to start activity: unknown request code [%s]", requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityPickForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
     }
 
     public static void startActivityViaIntent(Context context, Intent intent)
     {
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityViaIntent:: starting [%s] via given intent...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityViaIntent:: starting [%s] via given intent...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);
@@ -384,7 +384,7 @@ public abstract class ActivityTool
     {
         Intent intent = new Intent(context, type);
 
-        Log.i(Constants.LOG_TAG, String.format("ActivityTool.startActivityViaClass:: starting [%s] via given class type...",
+        Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityViaClass:: starting [%s] via given class type...",
                 StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
         context.startActivity(intent);

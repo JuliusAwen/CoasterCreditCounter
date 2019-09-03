@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -90,6 +90,6 @@ public class TestActivity extends BaseActivity
 
     private void startActivity()
     {
-        ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES, null);
+        ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES, null);
     }
 }

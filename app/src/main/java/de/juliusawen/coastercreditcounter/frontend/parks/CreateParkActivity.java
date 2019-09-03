@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateParkActivity extends BaseActivity
@@ -46,22 +46,20 @@ public class CreateParkActivity extends BaseActivity
                 this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            super.addFloatingActionButton();
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park))
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create))
+                    .addFloatingActionButton();
+
             this.decorateFloatingActionButton();
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park));
-
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create));
-
             this.createEditText();
         }
     }
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

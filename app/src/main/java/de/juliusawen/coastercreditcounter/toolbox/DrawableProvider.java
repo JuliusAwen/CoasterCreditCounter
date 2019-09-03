@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.backend.application.App;
 
-public abstract class DrawableTool
+public abstract class DrawableProvider
 {
     public static Drawable getColoredDrawable(int drawableId, int colorId)
     {

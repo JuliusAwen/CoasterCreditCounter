@@ -32,8 +32,8 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
@@ -68,12 +68,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 this.viewModel.currentTab = TAB_OVERVIEW;
             }
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-
-            super.addFloatingActionButton();
-
-            super.addHelpOverlayFragment(null, null);
+            super.addHelpOverlayFragment(null, null)
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .addFloatingActionButton();
 
             this.createTabPagerAdapter();
         }
@@ -158,21 +156,21 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         switch(position)
         {
             case TAB_OVERVIEW:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_overview));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_overview))
+                        .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getText(R.string.help_text_show_park_overview));
                 this.decorateFloatingActionButtonShowParkOverview();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getText(R.string.help_text_show_park_overview));
                 break;
 
             case TAB_ATTRACTIONS:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_attractions));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_attractions))
+                        .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getText(R.string.help_text_show_attractions));
                 this.decorateFloatingActionButtonShowParkAttractions();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getText(R.string.help_text_show_attractions));
                 break;
 
             case TAB_VISITS:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_visits));
+                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_visits))
+                        .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getText(R.string.help_text_show_visits));
                 this.decorateFloatingActionButtonShowParkVisits();
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getText(R.string.help_text_show_visits));
                 break;
 
             default:
@@ -184,8 +182,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
     private void decorateFloatingActionButtonShowParkOverview()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white))
+                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -197,25 +195,25 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
     private void decorateFloatingActionButtonShowParkAttractions()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
+                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
+                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
             }
         });
     }
     private void decorateFloatingActionButtonShowParkVisits()
     {
-        super.animateFloatingActionButtonTransition(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
+                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                ActivityTool.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
+                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
             }
         });
     }
@@ -223,8 +221,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     @Override
     public void deleteElement(IElement elementToDelete)
     {
-        super.markForDeletion(elementToDelete, true);
-        super.markForUpdate(elementToDelete.getParent());
+        super.markForDeletion(elementToDelete, true)
+                .markForUpdate(elementToDelete.getParent());
     }
 
     @Override
@@ -243,9 +241,9 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         private final Drawable[] tabTitleDrawables = new Drawable[]
                 {
-                        DrawableTool.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
-                        DrawableTool.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
-                        DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
                 };
 
         TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)

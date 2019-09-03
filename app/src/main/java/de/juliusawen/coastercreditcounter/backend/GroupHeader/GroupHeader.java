@@ -20,11 +20,12 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 
 public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
 {
     private final IElement groupElement;
+    private ActivityDistributor activityDistributor;
 
     private GroupHeader(String name, UUID uuid, IElement groupElement)
     {
@@ -78,7 +79,7 @@ public class GroupHeader extends OrphanElement implements IGroupHeader, IElement
                             attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
                         }
 
-                        ActivityTool.startActivitySortForResult(Objects.requireNonNull(context), Constants.REQUEST_CODE_SORT_ATTRACTIONS, attractions);
+                        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(context), Constants.REQUEST_CODE_SORT_ATTRACTIONS, attractions);
                     }
 
                     return true;

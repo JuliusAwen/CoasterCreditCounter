@@ -26,8 +26,8 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttra
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -50,8 +50,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
+            super.addToolbar()
+                    .addToolbarHomeButton();
+
             this.decorateToolbar();
 
             if(!this.viewModel.datePicked)
@@ -75,7 +76,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
             {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
                 for(IElement element : resultElements)
                 {
@@ -185,8 +186,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         this.viewModel.visit = Visit.create(calendar, null);
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
 
-        super.markForCreation(this.viewModel.visit);
-        super.markForUpdate(this.viewModel.park);
+        super.markForCreation(this.viewModel.visit)
+                .markForUpdate(this.viewModel.park);
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {
@@ -232,7 +233,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             if(which == DialogInterface.BUTTON_POSITIVE)
             {
-                ActivityTool.startActivityPickForResult(
+                ActivityDistributor.startActivityPickForResult(
                         CreateVisitActivity.this,
                         Constants.REQUEST_CODE_PICK_ATTRACTIONS,
                         new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
@@ -276,7 +277,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
 
         setResult(resultCode, intent);
-        super.synchronizePersistency(); // has to be called manually as after finish() BaseActivity.onPause() is not called for some reason...
+        super.synchronizePersistency(); // has to be called manually because after calling finish() BaseActivity.onPause() is not called for some strange reason...
 
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
         finish();

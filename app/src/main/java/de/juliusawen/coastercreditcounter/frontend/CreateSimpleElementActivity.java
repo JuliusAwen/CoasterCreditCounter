@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class CreateSimpleElementActivity extends BaseActivity
@@ -49,20 +49,19 @@ public class CreateSimpleElementActivity extends BaseActivity
 
             this.viewModel = ViewModelProviders.of(this).get(CreateSimpleElementActivityViewModel.class);
 
-            super.addFloatingActionButton();
+            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText)
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(toolbarTitle, null)
+                    .addFloatingActionButton();
+
             this.decorateFloatingActionButton();
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
         }
     }
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

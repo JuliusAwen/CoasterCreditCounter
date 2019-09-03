@@ -48,7 +48,7 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttra
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -463,7 +463,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+                viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
             }
 
 

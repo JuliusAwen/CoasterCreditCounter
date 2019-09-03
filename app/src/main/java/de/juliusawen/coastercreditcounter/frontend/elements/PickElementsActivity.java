@@ -37,10 +37,10 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -162,17 +162,16 @@ public class PickElementsActivity extends BaseActivity
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements))
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
             if(!this.viewModel.isSimplePick)
             {
                 super.addFloatingActionButton();
                 this.decorateFloatingActionButtonCheck();
             }
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
 
             this.addSelectOrDeselectAllBar();
         }
@@ -199,7 +198,7 @@ public class PickElementsActivity extends BaseActivity
             || requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER
             || requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
         {
-            IElement returnElement = ResultTool.fetchResultElement(data);
+            IElement returnElement = ResultFetcher.fetchResultElement(data);
 
             if(returnElement != null)
             {
@@ -411,7 +410,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButtonCheck()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -434,7 +433,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButtonAdd()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -444,15 +443,15 @@ public class PickElementsActivity extends BaseActivity
 
                 if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
                 {
-                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
+                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY, null);
                 }
                 else if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
                 {
-                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
+                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_MANUFACTURER, null);
                 }
                 else if(viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
                 {
-                    ActivityTool.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_STATUS, null);
+                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, Constants.REQUEST_CODE_CREATE_STATUS, null);
                 }
             }
         });

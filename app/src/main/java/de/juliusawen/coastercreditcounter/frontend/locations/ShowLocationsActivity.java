@@ -36,8 +36,8 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -83,11 +83,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
+            super.addToolbar()
+                    .addToolbarHomeButton()
+                    .addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
+
             this.setSelectionModeEnabled(this.viewModel.selectionMode);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
         }
     }
 
@@ -161,7 +162,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             if(requestCode == Constants.REQUEST_CODE_CREATE_LOCATION || requestCode == Constants.REQUEST_CODE_CREATE_PARK)
             {
-                IElement resultElement = ResultTool.fetchResultElement(data);
+                IElement resultElement = ResultFetcher.fetchResultElement(data);
 
                 super.markForUpdate(resultElement.getParent());
 
@@ -169,7 +170,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_CODE_SORT_LOCATIONS || requestCode == Constants.REQUEST_CODE_SORT_PARKS)
             {
-                List<IElement> resultElements = ResultTool.fetchResultElements(data);
+                List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
                 IElement parent = resultElements.get(0).getParent();
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
@@ -192,7 +193,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             }
             else if(requestCode == Constants.REQUEST_CODE_EDIT_LOCATION || requestCode == Constants.REQUEST_CODE_EDIT_PARK)
             {
-                IElement editedElement = ResultTool.fetchResultElement(data);
+                IElement editedElement = ResultFetcher.fetchResultElement(data);
 
                 super.markForUpdate(editedElement);
 
@@ -220,7 +221,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     }
                     else if(element instanceof Park)
                     {
-                        ActivityTool.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_CODE_SHOW_PARK, element);
+                        ActivityDistributor.startActivityShow(ShowLocationsActivity.this, Constants.REQUEST_CODE_SHOW_PARK, element);
                     }
                 }
                 else
@@ -357,22 +358,22 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 int id = item.getItemId();
                 if(id == Constants.SELECTION_CREATE_LOCATION)
                 {
-                    ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_LOCATION, viewModel.longClickedElement);
+                    ActivityDistributor.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_LOCATION, viewModel.longClickedElement);
                     return true;
                 }
                 else if(id == Constants.SELECTION_CREATE_PARK)
                 {
-                    ActivityTool.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_PARK, viewModel.longClickedElement);
+                    ActivityDistributor.startActivityCreateForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_CREATE_PARK, viewModel.longClickedElement);
                     return true;
                 }
                 else if(id == Constants.SELECTION_EDIT_LOCATION)
                 {
-                    ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_LOCATION, viewModel.longClickedElement);
+                    ActivityDistributor.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_LOCATION, viewModel.longClickedElement);
                     return true;
                 }
                 else if(id == Constants.SELECTION_EDIT_PARK)
                 {
-                    ActivityTool.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_PARK, viewModel.longClickedElement);
+                    ActivityDistributor.startActivityEditForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_EDIT_PARK, viewModel.longClickedElement);
                     return true;
                 }
                 else if(id == Constants.SELECTION_DELETE_ELEMENT)
@@ -414,12 +415,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 else if(id == Constants.SELECTION_SORT_LOCATIONS)
                 {
-                    ActivityTool.startActivitySortForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_SORT_LOCATIONS, viewModel.longClickedElement.getChildrenOfType(Location.class));
+                    ActivityDistributor.startActivitySortForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_SORT_LOCATIONS, viewModel.longClickedElement.getChildrenOfType(Location.class));
                     return true;
                 }
                 else if(id == Constants.SELECTION_SORT_PARKS)
                 {
-                    ActivityTool.startActivitySortForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_SORT_PARKS, viewModel.longClickedElement.getChildrenOfType(Park.class));
+                    ActivityDistributor.startActivitySortForResult(ShowLocationsActivity.this, Constants.REQUEST_CODE_SORT_PARKS, viewModel.longClickedElement.getChildrenOfType(Park.class));
                     return true;
                 }
                 else
@@ -465,8 +466,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                             Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
-                            ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
+                            ShowLocationsActivity.super
+                                    .markForDeletion(viewModel.longClickedElement, true)
+                                    .markForUpdate(viewModel.longClickedElement.getParent());
+
                             viewModel.longClickedElement.deleteElementAndDescendants();
                             updateContentRecyclerView(true);
                         }
@@ -507,8 +510,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                             IElement parent = viewModel.longClickedElement.getParent();
 
-                            ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, false);
-                            ShowLocationsActivity.super.markForUpdate(parent);
+                            ShowLocationsActivity.super
+                                    .markForDeletion(viewModel.longClickedElement, false)
+                                    .markForUpdate(parent);
 
                             viewModel.longClickedElement.removeElement();
 

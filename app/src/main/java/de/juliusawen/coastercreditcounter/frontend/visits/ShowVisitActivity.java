@@ -40,9 +40,9 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -70,11 +70,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit))
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
         }
     }
 
@@ -140,13 +139,13 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(this.viewModel.visit.isEditingEnabled())
         {
             menu.add(Menu.NONE, Constants.SELECTION_DISABLE_EDITING, Menu.NONE, "disable editing")
-                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_block, R.color.white))
+                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_block, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         else
         {
             menu.add(Menu.NONE, Constants.SELECTION_ENABLE_EDITING, Menu.NONE, "enable for editing")
-                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_create, R.color.white))
+                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_create, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -195,7 +194,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -203,7 +202,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 Log.i(LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                ActivityTool.startActivityPickForResult(
+                ActivityDistributor.startActivityPickForResult(
                         ShowVisitActivity.this,
                         Constants.REQUEST_CODE_PICK_ATTRACTIONS,
                         new ArrayList<IElement>(getNotYetAddedAttractions()));
@@ -218,7 +217,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(resultCode == Activity.RESULT_OK)
         {
-            List<IElement> resultElements = ResultTool.fetchResultElements(data);
+            List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
             if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
             {
@@ -408,8 +407,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         Log.i(LOG_TAG, String.format("ShowVisitActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-        ShowVisitActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
-        ShowVisitActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
+        ShowVisitActivity.super
+                .markForDeletion(this.viewModel.longClickedElement, true)
+                .markForUpdate(this.viewModel.longClickedElement.getParent());
         this.viewModel.longClickedElement.deleteElementAndDescendants();
         updateContentRecyclerView(true);
     }
@@ -427,8 +427,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 Ride ride = visitedAttraction.addRide();
 
-                ShowVisitActivity.super.markForCreation(ride);
-                ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
+                ShowVisitActivity.super
+                        .markForCreation(ride)
+                        .markForUpdate(ShowVisitActivity.this.viewModel.visit);
+
                 updateContentRecyclerView(false);
             }
         };
@@ -449,8 +451,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 Ride ride = visitedAttraction.deleteLatestRide();
                 if(ride != null)
                 {
-                    ShowVisitActivity.super.markForDeletion(ride, false);
-                    ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
+                    ShowVisitActivity.super
+                            .markForDeletion(ride, false)
+                            .markForUpdate(ShowVisitActivity.this.viewModel.visit);
                     updateContentRecyclerView(false);
                 }
             }

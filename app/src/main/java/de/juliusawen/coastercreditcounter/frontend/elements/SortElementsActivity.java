@@ -25,7 +25,7 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
 public class SortElementsActivity extends BaseActivity
@@ -71,13 +71,12 @@ public class SortElementsActivity extends BaseActivity
             this.recyclerView.setHasFixedSize(true);
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements))
+                    .addToolbar()
+                    .addToolbarHomeButton()
+                    .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null)
+                    .addFloatingActionButton();
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
-
-            super.addFloatingActionButton();
             this.decorateFloatingActionButton();
 
             this.createActionDialog();
@@ -130,7 +129,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -146,12 +145,12 @@ public class SortElementsActivity extends BaseActivity
     private void createActionDialog()
     {
         ImageButton buttonDown = findViewById(R.id.buttonActionDialogUpDown_Down);
-        buttonDown.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_arrow_downward, R.color.white));
+        buttonDown.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_downward, R.color.white));
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
         findViewById(R.id.frameLayoutDialogUpDown_Down).setOnClickListener(this.getActionDialogOnClickListenerDown());
 
         ImageButton buttonUp = findViewById(R.id.buttonActionDialogUpDown_Up);
-        buttonUp.setImageDrawable(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_arrow_upward, R.color.white));
+        buttonUp.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_upward, R.color.white));
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
         findViewById(R.id.frameLayoutDialogUpDown_Up).setOnClickListener(this.getActionDialogOnClickListenerUp());
     }

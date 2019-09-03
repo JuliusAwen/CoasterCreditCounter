@@ -31,9 +31,9 @@ import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -78,9 +78,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-            super.addToolbar();
-            super.addToolbarMenuIcon();
-            super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+            super.addToolbar()
+                    .addToolbarMenuIcon()
+                    .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
         }
     }
 
@@ -115,11 +115,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             if(requestCode == Constants.REQUEST_CODE_PICK_VISIT)
             {
-                IElement resultElement = ResultTool.fetchResultElement(data);
+                IElement resultElement = ResultFetcher.fetchResultElement(data);
 
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<SHORTCUT_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
 
-                ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
+                ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
             }
 
         }
@@ -148,7 +148,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(!Visit.getCurrentVisits().isEmpty())
         {
             menu.add(Menu.NONE, Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT, Menu.NONE, "shortcut to current visit")
-                    .setIcon(DrawableTool.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
+                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -173,7 +173,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: [%d] current visits found - offering pick",
                             Visit.getCurrentVisits().size()));
 
-                    ActivityTool.startActivityPickForResult(
+                    ActivityDistributor.startActivityPickForResult(
                             this,
                             Constants.REQUEST_CODE_PICK_VISIT,
                             new ArrayList<IElement>(Visit.getCurrentVisits()));
@@ -183,7 +183,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: only one current visit found - opening %s...",
                             Visit.getCurrentVisits().get(0)));
 
-                    ActivityTool.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
+                    ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
                 }
             }
 
@@ -300,20 +300,20 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 case R.id.navigationItem_BrowseContent:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
-                    ActivityTool.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
+                    ActivityDistributor.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
                     break;
                 }
 
                 case R.id.navigationItem_ManageCategories:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
-                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
                     break;
                 }
 
                 case R.id.navigationItem_ManageManufacturers:
                 {
-                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
                     break;
                 }
 
@@ -325,7 +325,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 case R.id.navigationItem_ManageStatuses:
                 {
-                    ActivityTool.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
                     break;
                 }
 
@@ -438,14 +438,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.isImporting)
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: app is importing...");
-            this.showProgressBar();
+            super.showProgressBar();
         }
         else
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: starting async import...");
 
             this.viewModel.isImporting = true;
-            this.showProgressBar();
+            super.showProgressBar();
             new ImportContent().execute(this);
         }
     }
@@ -487,7 +487,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     public void finishImportContent()
     {
         Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: finishing import...");
-        this.hideProgressBar();
+        super.hideProgressBar();
         this.viewModel.isImporting = false;
 
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.information_import_success), Snackbar.LENGTH_LONG);
@@ -517,14 +517,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.isExporting)
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: app is exporting...");
-            this.showProgressBar();
+            super.showProgressBar();
         }
         else
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: starting async export...");
 
             this.viewModel.isExporting = true;
-            this.showProgressBar();
+            super.showProgressBar();
             new ExportContent().execute(this);
         }
     }
@@ -567,7 +567,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportExport:: finishing import/export...");
 
-        this.hideProgressBar();
+        super.hideProgressBar();
         this.setMenuItemImportAvailability();
         this.viewModel.isExporting = false;
         Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success,

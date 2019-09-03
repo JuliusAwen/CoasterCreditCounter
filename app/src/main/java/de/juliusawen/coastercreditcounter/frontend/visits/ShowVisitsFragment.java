@@ -43,8 +43,8 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Re
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityTool;
-import de.juliusawen.coastercreditcounter.toolbox.ResultTool;
+import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
@@ -150,8 +150,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 this.updateContentRecyclerView();
 
-                IElement visit = ResultTool.fetchResultElement(data);
-                ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
+                IElement visit = ResultFetcher.fetchResultElement(data);
+                ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
             }
         }
     }
@@ -201,7 +201,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 Element element = (Element) view.getTag();
                 if(element instanceof Visit)
                 {
-                    ActivityTool.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
+                    ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
                 }
                 else if(element instanceof SpecialGroupHeader)
                 {
