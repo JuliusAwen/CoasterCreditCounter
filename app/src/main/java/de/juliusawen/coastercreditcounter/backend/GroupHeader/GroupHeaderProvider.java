@@ -133,18 +133,9 @@ public class GroupHeaderProvider
                     }
                 }
 
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: [%d] GroupHeaders grouped", groupedAttractions.size()));
-
+                Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created [%d] GroupHeaders", groupedAttractions.size()));
                 groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
-
-                if(!blueprints.isEmpty())
-                {
-                    Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: adding [%d] blueprints with own header", blueprints.size()));
-
-                    SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(App.getContext().getString(R.string.text_blueprint_special_group_header_name));
-                    blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
-                    groupedAttractions.add(blueprintGroupHeader);
-                }
+                this.addBlueprintsToGroupedAttractions(blueprints, groupedAttractions);
 
                 this.formerAttractions = attractions;
                 this.formerGroupedAttractions = groupedAttractions;
@@ -153,7 +144,7 @@ public class GroupHeaderProvider
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElementsByGroupType:: no attractions to categorize");
+                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElementsByGroupType:: no attractions to group");
 
                 this.formerGroupType = groupType;
                 this.formerAttractions = attractions;
@@ -237,21 +228,14 @@ public class GroupHeaderProvider
             if(!header.hasChildren())
             {
                 emptyHeaders.add(header);
-                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: %s is empty - marked for deletion", header));
+                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: %s is empty - marked for removal", header));
             }
         }
         groupedAttractions.removeAll(emptyHeaders);
 
+        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created [%d] GroupHeaders", groupedAttractions.size()));
         groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
-
-        if(!blueprints.isEmpty())
-        {
-            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: adding [%d] blueprints with own header", blueprints.size()));
-
-            SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(App.getContext().getString(R.string.text_blueprint_special_group_header_name));
-            blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
-            groupedAttractions.add(blueprintGroupHeader);
-        }
+        this.addBlueprintsToGroupedAttractions(blueprints, groupedAttractions);
 
         this.formerAttractions = attractions;
         this.formerGroupedAttractions = groupedAttractions;
@@ -329,6 +313,18 @@ public class GroupHeaderProvider
         {
             Log.v(Constants.LOG_TAG,"SortTool.sortGroupHeadersBasedOnGroupElementsOrder:: not sorted - list contains less than two elements");
             return groupHeaders;
+        }
+    }
+
+    private void addBlueprintsToGroupedAttractions(Set<IElement> blueprints, List<IElement> groupedAttractions)
+    {
+        if(!blueprints.isEmpty())
+        {
+            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.addBlueprintsToGroupedAttractions:: adding [%d] blueprint(s) with special header", blueprints.size()));
+
+            SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(App.getContext().getString(R.string.text_blueprint_special_group_header_name));
+            blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
+            groupedAttractions.add(blueprintGroupHeader);
         }
     }
 

@@ -80,8 +80,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 this.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization();
             }
         }
-
-
     }
 
     @Override
@@ -199,42 +197,60 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected - not handled by derived class...", MenuAgent.getSelectionString(item.getItemId())));
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", MenuAgent.getMenuItemString(item.getItemId())));
         return super.onOptionsItemSelected(item);
     }
 
     // region handleOptionsMenuSelectionImplementations
 
-    public boolean handleOptionsMenuSelectionHelp()
+    public boolean handleMenuItemHelpSelected()
     {
         if(this.helpOverlayFragment != null)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionHelp:: showing HelpOverlay");
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
             this.setHelpOverlayVisibility(true);
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionHelp:: HelpOverlayFragment not added");
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
             return false;
         }
     }
 
     @Override
-    public boolean handleOptionsMenuSelectionExpandAll()
+    public boolean handleMenuItemExpandAllSelected()
     {
-        return this.handleOptionsMenuSelectionNotImplemented();
+        return false;
     }
 
     @Override
-    public boolean handleOptionsMenuSelectionCollapseAll()
+    public boolean handleMenuItemCollapseAllSelected()
     {
-        return this.handleOptionsMenuSelectionNotImplemented();
+        return false;
     }
 
-    private boolean handleOptionsMenuSelectionNotImplemented()
+    @Override
+    public boolean handleMenuItemGroupByLocationSelected()
     {
-        Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuSelectionNotImplemented:: menu selection was not handled by derived class...");
+        return false;
+    }
+
+    @Override
+    public boolean handleMenuItemGroupByAttractionCategorySelected()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean handleMenuItemGroupByManufacturerSelected()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean handleMenuItemGroupByStatusSelected()
+    {
         return false;
     }
 

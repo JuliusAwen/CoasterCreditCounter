@@ -1325,6 +1325,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(typeface <= 3)
         {
             Objects.requireNonNull(this.typesByTypeface.get(typeface)).add(type);
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForType:: typeface [%d] set for [%s]", typeface, type));
         }
         else
         {

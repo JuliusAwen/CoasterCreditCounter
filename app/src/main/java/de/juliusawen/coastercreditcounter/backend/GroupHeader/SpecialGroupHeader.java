@@ -23,7 +23,7 @@ public class SpecialGroupHeader extends OrphanElement implements IGroupHeader, I
             name = name.trim();
 
             specialGroupHeader = new SpecialGroupHeader(name, UUID.randomUUID());
-            Log.v(Constants.LOG_TAG,  String.format("SpecialGroupHeader.create:: %s created", specialGroupHeader));
+            Log.v(Constants.LOG_TAG,  String.format("SpecialGroupHeader.create:: %s created", specialGroupHeader.getFullName()));
         }
         else
         {

@@ -2,8 +2,13 @@ package de.juliusawen.coastercreditcounter.toolbox;
 
 public interface IMenuAgentClient
 {
-    boolean handleOptionsMenuSelectionExpandAll();
-    boolean handleOptionsMenuSelectionCollapseAll();
+    boolean handleMenuItemExpandAllSelected();
+    boolean handleMenuItemCollapseAllSelected();
 
-    boolean handleOptionsMenuSelectionHelp();
+    boolean handleMenuItemGroupByLocationSelected();
+    boolean handleMenuItemGroupByAttractionCategorySelected();
+    boolean handleMenuItemGroupByManufacturerSelected();
+    boolean handleMenuItemGroupByStatusSelected();
+
+    boolean handleMenuItemHelpSelected();
 }
