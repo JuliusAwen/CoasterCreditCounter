@@ -140,20 +140,12 @@ public abstract class Constants
 
     public static final int SELECTION_SORT_BY_ATTRACTION_CATEGORY = Selection.SORT_BY_ATTRACTION_CATEGORY.ordinal();
 
-    public static final int SELECTION_GROUP_BY = Selection.GROUP_BY.ordinal();
-    public static final int SELECTION_GROUP_BY_LOCATION = Selection.GROUP_BY_LOCATION.ordinal();
-    public static final int SELECTION_GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER.ordinal();
-    public static final int SELECTION_GROUP_BY_ATTRACTION_CATEGORY = Selection.GROUP_BY_ATTRACTION_CATEGORY.ordinal();
-    public static final int SELECTION_GROUP_BY_STATUS = Selection.GROUP_BY_STATUS.ordinal();
-
 
     public static final int SELECTION_EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static final int SELECTION_COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
     public static final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
     public static final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
-
-    public static final int SELECTION_HELP = Selection.HELP.ordinal();
 
 
 
@@ -264,12 +256,6 @@ public abstract class Constants
 
         SORT_BY_ATTRACTION_CATEGORY,
 
-        GROUP_BY,
-        GROUP_BY_LOCATION,
-        GROUP_BY_MANUFACTURER,
-        GROUP_BY_ATTRACTION_CATEGORY,
-        GROUP_BY_STATUS,
-
 
         SHORTCUT_TO_CURRENT_VISIT,
         ENABLE_EDITING,
@@ -280,8 +266,6 @@ public abstract class Constants
 
         ASSIGN_TO_ATTRACTIONS,
         SET_AS_DEFAULT,
-
-        HELP
     }
 
     private enum RequestCode

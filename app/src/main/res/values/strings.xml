@@ -61,20 +61,6 @@
 
     <string name="selection_set_as_default">set as default</string>
 
-    <!--FLAT MENU ITEMS-->
-    <string name="flat_menu_item_help">help</string>
-
-    <string name="flat_menu_item_expand_all">expand all</string>
-    <string name="flat_menu_item_collapse_all">collapse all</string>
-
-
-    <!--DEEP MENU ITEMS-->
-    <string name="deep_menu_item_group_by">group by</string>
-    <string name="deep_menu_item_group_by_location">location</string>
-    <string name="deep_menu_item_group_by_manufacturer">manufacturer</string>
-    <string name="deep_menu_item_group_by_attraction_category">category</string>
-    <string name="deep_menu_item_group_by_status">status</string>
-
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>
     <string name="action_undo_delete_text">\'%1$s\' deleted</string>

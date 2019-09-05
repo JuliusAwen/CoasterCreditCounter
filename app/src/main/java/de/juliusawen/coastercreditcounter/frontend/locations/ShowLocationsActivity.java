@@ -117,10 +117,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(id == Constants.SELECTION_EXPAND_ALL)
         {
             this.viewModel.contentRecyclerViewAdapter.expandAll();
+            return true;
         }
         else if(id == Constants.SELECTION_COLLAPSE_ALL)
         {
             this.viewModel.contentRecyclerViewAdapter.collapseAll();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

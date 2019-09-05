@@ -40,7 +40,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.IMenuAgentClient;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -197,11 +196,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() <= MenuAgent.Selection.values().length) //Todo: remove this when switched to MenuAgent
-        {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", MenuAgent.getMenuItemString(item.getItemId())));
-        }
-
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected", item.getItemId()));
         return super.onOptionsItemSelected(item);
     }
 

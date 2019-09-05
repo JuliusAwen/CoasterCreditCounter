@@ -248,19 +248,20 @@ public class PickElementsActivity extends BaseActivity
                     Constants.SELECTION_SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER);
 
             this.viewModel.optionsMenuAgent
-                    .addMenuItemGroupByLocation(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
-                    .addMenuItemGroupByAttractionCategory(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .addMenuItemGroupByManufacturer(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
-                    .addMenuItemGroupByStatus(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
-                    .addMenuItemExpandAll(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .addMenuItemCollapseAll(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .addMenuItem(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
+                    .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                    .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
+                    .addMenuItem(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
+                    .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .addMenuItem(MenuAgent.HELP)
                     .create(menu);
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItemExpandAll(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .addMenuItemCollapseAll(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .create(menu);
         }
 
