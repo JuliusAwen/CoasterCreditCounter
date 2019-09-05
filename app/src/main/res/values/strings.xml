@@ -67,11 +67,6 @@
     <string name="flat_menu_item_expand_all">expand all</string>
     <string name="flat_menu_item_collapse_all">collapse all</string>
 
-    <string name="flat_menu_item_group_by_location">group by location</string>
-    <string name="flat_menu_item_group_by_manufacturer">group by manufacturer</string>
-    <string name="flat_menu_item_group_by_attraction_category">group by category</string>
-    <string name="flat_menu_item_group_by_status">group by status</string>
-
 
     <!--DEEP MENU ITEMS-->
     <string name="deep_menu_item_group_by">group by</string>

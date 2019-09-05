@@ -138,7 +138,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    public void setItems(List<IElement> items)
+    public ContentRecyclerViewAdapter setItems(List<IElement> items)
     {
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
@@ -147,6 +147,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.items.clear();
 
         this.groupItemsByType(this.groupType);
+
+        return this;
     }
 
     public ContentRecyclerViewAdapter groupItemsByType(GroupHeaderProvider.GroupType groupType)
@@ -1298,25 +1300,28 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void scrollToItem(IElement item)
     {
-        if(item instanceof AttractionCategory)
+        if(item != null)
         {
-            for(IElement element : this.items)
+            if(item instanceof AttractionCategory)
             {
-                if(element instanceof GroupHeader)
+                for(IElement element : this.items)
                 {
-                    if(((GroupHeader)element).getGroupElement().equals(item))
+                    if(element instanceof GroupHeader)
                     {
-                        item = element;
-                        break;
+                        if(((GroupHeader)element).getGroupElement().equals(item))
+                        {
+                            item = element;
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if(this.items.contains(item) && this.recyclerView != null)
-        {
-            recyclerView.scrollToPosition(items.indexOf(item));
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolled to %s", item));
+            if(this.items.contains(item) && this.recyclerView != null)
+            {
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolling to %s", item));
+                recyclerView.scrollToPosition(items.indexOf(item));
+            }
         }
     }
 
@@ -1345,12 +1350,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public void clearTypefaceForTypes()
+    public ContentRecyclerViewAdapter clearTypefaceForTypes()
     {
         for(Set<Class<? extends IElement>> types : this.typesByTypeface.values())
         {
             types.clear();
         }
+
+        return this;
     }
 
     /**

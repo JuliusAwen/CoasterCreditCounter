@@ -135,21 +135,16 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 {
                     this.viewModel.park.reorderChildren(resultElements);
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
+                            .scrollToItem(((Attraction)selectedElement).getAttractionCategory());
 
-                    if(selectedElement != null)
-                    {
-                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<SortAttractions>:: scrolling to selected element %s...", selectedElement));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(((Attraction)selectedElement).getAttractionCategory());
-                    }
                 }
             }
             else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
             {
                 Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
                 this.showAttractionsFragmentInteraction.updateElement(selectedElement);
-                this.updateContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                this.updateContentRecyclerView().scrollToItem(selectedElement);
             }
             else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
             {
@@ -366,10 +361,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         }
     }
 
-    private void updateContentRecyclerView()
+    private ContentRecyclerViewAdapter updateContentRecyclerView()
     {
         Log.i(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+
+        return this.viewModel.contentRecyclerViewAdapter;
     }
 
     public interface ShowAttractionsFragmentInteraction

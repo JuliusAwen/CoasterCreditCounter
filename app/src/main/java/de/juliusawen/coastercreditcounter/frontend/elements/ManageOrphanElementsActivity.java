@@ -163,13 +163,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
             App.content.reorderElements(resultElements);
-            updateContentRecyclerView(true);
-
-            if(resultElement != null)
-            {
-                Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult<SORT>:: scrolling to selected element %s...", resultElement));
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
-            }
+            updateContentRecyclerView(true).scrollToItem(resultElement);
 
             super.markForUpdate(resultElements);
         }
@@ -663,7 +657,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
+    private ContentRecyclerViewAdapter updateContentRecyclerView(boolean resetContent)
     {
         if(resetContent)
         {
@@ -687,6 +681,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             Log.d(Constants.LOG_TAG, "ManageOrphanElementsActivity.updateContentRecyclerView:: notifying data set changes...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
+
+        return this.viewModel.contentRecyclerViewAdapter;
     }
 
     private void returnResult(int resultCode)
