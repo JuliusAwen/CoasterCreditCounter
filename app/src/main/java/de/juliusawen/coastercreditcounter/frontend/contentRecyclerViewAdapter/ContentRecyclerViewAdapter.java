@@ -117,7 +117,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
         this.adapterType = request.adapterType;
-        this.groupType = request.groupType;
         this.selectMultipleItems = request.selectMultiple;
 
         this.initializeTypesByTypeface();
@@ -125,6 +124,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.initializeDisplayModesByDetail();
 
         this.groupHeaderProvider = new GroupHeaderProvider();
+        this.groupType = GroupHeaderProvider.GroupType.NONE;
 
         if(request.relevantChildTypes != null)
         {
@@ -149,7 +149,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.groupItemsByType(this.groupType);
     }
 
-    public void groupItemsByType(GroupHeaderProvider.GroupType groupType)
+    public ContentRecyclerViewAdapter groupItemsByType(GroupHeaderProvider.GroupType groupType)
     {
         this.groupType = groupType;
         this.selectedItemsInOrderOfSelection.clear();
@@ -192,6 +192,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.items = this.initializeItems(groupedItems, 0);
         notifyDataSetChanged();
+
+        return this;
     }
 
     private List<IElement> initializeItems(List<IElement> items, int generation)
@@ -863,9 +865,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return null;
     }
 
-    public void setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
+    public ContentRecyclerViewAdapter setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.recyclerOnClickListener = onClickListener;
+
+        return this;
     }
 
     public void addRideOnClickListener(View.OnClickListener increaseOnClickListener)
@@ -1326,7 +1330,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void setTypefaceForType(Class<? extends IElement> type, int typeface)
+    public ContentRecyclerViewAdapter setTypefaceForType(Class<? extends IElement> type, int typeface)
     {
         if(typeface <= 3)
         {
@@ -1337,6 +1341,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setTypefaceForType:: unknown typeface");
         }
+
+        return this;
     }
 
     public void clearTypefaceForTypes()
@@ -1350,14 +1356,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     /**
      *  set a string resource which replaces the element.getName() string for the given class
      */
-    public void setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
+    public ContentRecyclerViewAdapter setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
     {
         this.specialStringResourcesByType.put(type, stringResource);
+
+        return this;
     }
 
-    public void setDisplayModeForDetail(DetailType detailType, DisplayMode displayMode)
+    public ContentRecyclerViewAdapter setDisplayModeForDetail(DetailType detailType, DisplayMode displayMode)
     {
         this.displayModesByDetail.put(detailType, displayMode);
+
+        return this;
     }
 
     public void clearDisplayModeForDetails()

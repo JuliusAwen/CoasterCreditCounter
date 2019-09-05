@@ -187,8 +187,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(Visit.class),
-                childTypesToExpand,
-                GroupHeaderProvider.GroupType.YEAR);
+                childTypesToExpand)
+                .groupItemsByType(GroupHeaderProvider.GroupType.YEAR);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()

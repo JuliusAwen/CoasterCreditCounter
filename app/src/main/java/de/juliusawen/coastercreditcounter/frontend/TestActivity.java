@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -58,8 +57,7 @@ public class TestActivity extends BaseActivity
     private void createContentRecyclerAdapter()
     {
         ContentRecyclerViewAdapter contentRecyclerViewAdapter =
-                ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.location.getChildrenOfType(Location.class), null, true, GroupHeaderProvider.GroupType.NONE);
+                ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.location.getChildrenOfType(Location.class), null, true);
 
         contentRecyclerViewAdapter.setOnClickListener(new RecyclerOnClickListener.OnClickListener()
         {

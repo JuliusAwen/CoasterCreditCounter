@@ -257,8 +257,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(
                 this.viewModel.visit.getChildrenOfType(VisitedAttraction.class),
-                childTypesToExpand,
-                GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                childTypesToExpand)
+                .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

@@ -204,12 +204,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
-                childTypesToExpand,
-                GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                childTypesToExpand);
 
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
+                .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
+                .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW)
+                .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
 
         return contentRecyclerViewAdapter;
     }

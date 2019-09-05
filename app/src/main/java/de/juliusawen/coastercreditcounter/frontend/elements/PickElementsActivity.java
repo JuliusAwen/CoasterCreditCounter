@@ -90,11 +90,10 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
-                            true,
-                            GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
-
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                            true)
+                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
+                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
@@ -106,12 +105,11 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
-                            true,
-                            GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
-
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE);
-                    this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                            true)
+                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
+                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW)
+                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
@@ -122,12 +120,11 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             null,
-                            false,
-                            GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
-
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Manufacturer.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+                            false)
+                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
+                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
+                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -139,21 +136,17 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             null,
-                            false,
-                            GroupHeaderProvider.GroupType.NONE);
-
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(Status.class, Typeface.BOLD);
-                    this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
+                            false)
+                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
                 }
                 else
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.elementsToPickFrom,
-                        null,
-                        true,
-                        GroupHeaderProvider.GroupType.NONE);
-
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            true)
+                            .setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                 }
             }
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
