@@ -206,48 +206,15 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        menu.clear();
-
         if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
         {
-            Menu submenuSortBy = menu.addSubMenu(Menu.NONE, Constants.SELECTION_SORT_BY, Menu.NONE, R.string.selection_sort_by);
-
-            Menu submenuSortByName = submenuSortBy.addSubMenu(
-                    Constants.SELECTION_SORT_BY_NAME, Constants.SELECTION_SORT_BY_NAME, Menu.NONE, R.string.selection_sort_by_name);
-
-            Menu submenuSortByLocation = submenuSortBy.addSubMenu(
-                    Constants.SELECTION_SORT_BY_LOCATION, Constants.SELECTION_SORT_BY_LOCATION, Menu.NONE, R.string.selection_sort_by_location);
-
-            Menu submenuSortByAttractionCategory = submenuSortBy.addSubMenu(
-                    Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Menu.NONE, R.string.selection_sort_by_attraction_category);
-
-            Menu submenuSortByManufacturer = submenuSortBy.addSubMenu(
-                    Constants.SELECTION_SORT_BY_MANUFACTURER, Constants.SELECTION_SORT_BY_MANUFACTURER, Menu.NONE, R.string.selection_sort_by_manufacturer);
-
-            submenuSortByName.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            submenuSortByName.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
-
-            submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            submenuSortByLocation.add(Menu.NONE, Constants.SELECTION_SORT_BY_LOCATION_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
-
-            submenuSortByAttractionCategory.add(Menu.NONE, Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Menu.NONE, R.string.selection_sort_ascending);
-            submenuSortByAttractionCategory.add(Menu.NONE, Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, Menu.NONE, R.string.selection_sort_descending);
-
-            submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            submenuSortByManufacturer.add(Menu.NONE, Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
-
-            submenuSortBy.setGroupEnabled(
-                    Constants.SELECTION_SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION);
-
-            submenuSortBy.setGroupEnabled(
-                    Constants.SELECTION_SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
-
-            submenuSortBy.setGroupEnabled(
-                    Constants.SELECTION_SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER);
-
             this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.SORT_BY_NAME)
+                    .addMenuItem(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
+//                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                    .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
                     .addMenuItem(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
                     .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
                     .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
@@ -271,45 +238,10 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
-
         if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
         {
             return true;
         }
-
-        int id = item.getItemId();
-        if(id == Constants.SELECTION_SORT_BY_NAME_ASCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-        else if(id == Constants.SELECTION_SORT_BY_NAME_DESCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-        else if(id == Constants.SELECTION_SORT_BY_LOCATION_ASCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-        else if(id == Constants.SELECTION_SORT_BY_LOCATION_DESCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-        else if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_ASCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-        else if(id == Constants.SELECTION_SORT_BY_MANUFACTURER_DESCENDING)
-        {
-            this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -355,6 +287,70 @@ public class PickElementsActivity extends BaseActivity
     public boolean handleMenuItemGroupByStatusSelected()
     {
         this.groupElementsByType(GroupHeaderProvider.GroupType.STATUS);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortByNameAscendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortByNameDescendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortByLocationAscendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortByLocationDescendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+//    @Override
+//    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
+//    {
+//        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
+//        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
+//    {
+//        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
+//        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+//        return true;
+//    }
+
+    @Override
+    public boolean handleMenuItemSortByManufacturerAscendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortByManufacturerDescendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
         return true;
     }
 

@@ -2,6 +2,8 @@ package de.juliusawen.coastercreditcounter.toolbox;
 
 public interface IMenuAgentClient
 {
+    boolean handleMenuItemHelpSelected();
+
     boolean handleMenuItemExpandAllSelected();
     boolean handleMenuItemCollapseAllSelected();
 
@@ -10,5 +12,14 @@ public interface IMenuAgentClient
     boolean handleMenuItemGroupByManufacturerSelected();
     boolean handleMenuItemGroupByStatusSelected();
 
-    boolean handleMenuItemHelpSelected();
+    boolean handleMenuItemSortByYearAscendingSelected();
+    boolean handleMenuItemSortByYearDescendingSelected();
+    boolean handleMenuItemSortByNameAscendingSelected();
+    boolean handleMenuItemSortByNameDescendingSelected();
+    boolean handleMenuItemSortByLocationAscendingSelected();
+    boolean handleMenuItemSortByLocationDescendingSelected();
+    boolean handleMenuItemSortByAttractionCategoryAscendingSelected();
+    boolean handleMenuItemSortByAttractionCategoryDescendingSelected();
+    boolean handleMenuItemSortByManufacturerAscendingSelected();
+    boolean handleMenuItemSortByManufacturerDescendingSelected();
 }

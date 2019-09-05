@@ -34,18 +34,9 @@
 
     <!--GENERIC SELECTIONS-->
     <string name="selection_help">help</string>
-    <string name="selection_add">add</string>
-    <string name="selection_sort">sort</string>
-    <string name="selection_edit">edit</string>
-    <string name="selection_delete">delete</string>
-    <string name="selection_remove">remove</string>
-    <string name="selection_relocate">relocate</string>
 
-    <string name="selection_sort_by">sort by</string>
-    <string name="selection_sort_by_name">name</string>
-    <string name="selection_sort_by_location">location</string>
-    <string name="selection_sort_by_manufacturer">manufacturer</string>
-    <string name="selection_sort_by_attraction_category">category</string>
+    <string name="selection_expand_all">expand all</string>
+    <string name="selection_collapse_all">collapse all</string>>
 
     <string name="selection_group_by">group by</string>
     <string name="selection_group_by_location">location</string>
@@ -53,11 +44,24 @@
     <string name="selection_group_by_attraction_category">category</string>
     <string name="selection_group_by_status">status</string>
 
+    <string name="selection_sort_by">sort by</string>
+
+    <string name="selection_sort_by_year">year</string>
+    <string name="selection_sort_by_name">name</string>
+    <string name="selection_sort_by_location">location</string>
+    <string name="selection_sort_by_manufacturer">manufacturer</string>
+    <string name="selection_sort_by_attraction_category">category</string>
+
     <string name="selection_sort_ascending">ascending</string>
     <string name="selection_sort_descending">descending</string>
 
-    <string name="selection_expand_all">expand all</string>
-    <string name="selection_collapse_all">collapse all</string>
+
+    <string name="selection_sort">sort</string>
+    <string name="selection_add">add</string>
+    <string name="selection_edit">edit</string>
+    <string name="selection_delete">delete</string>
+    <string name="selection_remove">remove</string>
+    <string name="selection_relocate">relocate</string>
 
     <string name="selection_set_as_default">set as default</string>
 

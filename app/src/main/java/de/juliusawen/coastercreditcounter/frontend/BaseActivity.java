@@ -200,7 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return super.onOptionsItemSelected(item);
     }
 
-    // region handleOptionsMenuSelectionImplementations
+    // region handleOptionsMenuItemSelected implementations
 
     public boolean handleMenuItemHelpSelected()
     {
@@ -218,42 +218,39 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
-    {
-        return false;
-    }
-
+    public boolean handleMenuItemExpandAllSelected() { return false; }
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
-    {
-        return false;
-    }
-
+    public boolean handleMenuItemCollapseAllSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByLocationSelected()
-    {
-        return false;
-    }
-
+    public boolean handleMenuItemGroupByLocationSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected()
-    {
-        return false;
-    }
-
+    public boolean handleMenuItemGroupByAttractionCategorySelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected()
-    {
-        return false;
-    }
-
+    public boolean handleMenuItemGroupByManufacturerSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByStatusSelected()
-    {
-        return false;
-    }
+    public boolean handleMenuItemGroupByStatusSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByYearAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByYearDescendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByNameAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByNameDescendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByLocationAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByLocationDescendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByManufacturerAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortByManufacturerDescendingSelected() { return false; }
 
-    // endregion handleOptionsMenuSelectionImplementations
+    // endregion handleOptionsMenuItemSelected implementations
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
