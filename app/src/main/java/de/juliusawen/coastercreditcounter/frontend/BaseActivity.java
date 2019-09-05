@@ -197,7 +197,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", MenuAgent.getMenuItemString(item.getItemId())));
+        if(item.getItemId() <= MenuAgent.Selection.values().length) //Todo: remove this when switched to MenuAgent
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%s] selected", MenuAgent.getMenuItemString(item.getItemId())));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

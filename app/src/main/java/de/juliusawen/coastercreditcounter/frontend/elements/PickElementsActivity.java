@@ -259,14 +259,14 @@ public class PickElementsActivity extends BaseActivity
                     .addMenuItemGroupByAttractionCategory(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
                     .addMenuItemGroupByManufacturer(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
                     .addMenuItemGroupByStatus(this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
-                    .addItemExpandAllToOptionsMenu(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .addMenuItemExpandAll(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                     .addMenuItemCollapseAll(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .create(menu);
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
-                    .addItemExpandAllToOptionsMenu(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .addMenuItemExpandAll(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                     .addMenuItemCollapseAll(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .create(menu);
         }

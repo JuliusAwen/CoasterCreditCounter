@@ -16,158 +16,158 @@ public class MenuAgent
 {
     private MenuType menuType;
 
-    private Map<MenuItem, Integer> flatMenuItemStringResourcesByMenuItem;
-    private Map<MenuItem, Integer> deepMenuItemStringResourcesByMenuItem;
+    private Map<Selection, Integer> flatMenuItemStringResourcesBySelection;
+    private Map<Selection, Integer> deepMenuItemStringResourcesBySelection;
 
-    private List<MenuItem> optionsMenuFlatMenuItems;
-    private List<MenuItem> optionsMenuDeepMenuItems;
-    private List<MenuItem> optionsMenuActionMenuItems;
+    private List<Selection> optionsMenuFlatSelections;
+    private List<Selection> optionsMenuDeepSelections;
+    private List<Selection> optionsMenuActionSelections;
 
-    private List<MenuItem> popupMenuFlatMenuItems;
-    private List<MenuItem> popupMenuDeepMenuItems;
+    private List<Selection> popupMenuFlatSelections;
+    private List<Selection> popupMenuDeepSelections;
 
-    private Map<MenuItem, Pair<Boolean, Boolean>> addAndSetEnabledPairsByMenuItem;
+    private Map<Selection, Pair<Boolean, Boolean>> addAndSetEnabledPairsByMenuItemSelection;
 
     public MenuAgent(MenuType menuType)
     {
         this.menuType = menuType;
 
-        this.flatMenuItemStringResourcesByMenuItem = this.createFlatMenuItemsStringResourcesByMenuItem();
-        this.deepMenuItemStringResourcesByMenuItem = this.createDeepMenuItemsStringResourcesByMenuItem();
+        this.flatMenuItemStringResourcesBySelection = this.createFlatMenuItemsStringResourcesByMenuItem();
+        this.deepMenuItemStringResourcesBySelection = this.createDeepMenuItemsStringResourcesByMenuItem();
 
-        this.optionsMenuFlatMenuItems = this.createOptionsMenuFlatMenuItems();
-        this.optionsMenuDeepMenuItems = this.createOptionsMenuDeepMenuItems();
-        this.optionsMenuActionMenuItems = this.createOptionsMenuActionMenuItems();
+        this.optionsMenuFlatSelections = this.createOptionsMenuFlatSelections();
+        this.optionsMenuDeepSelections = this.createOptionsMenuDeepSelections();
+        this.optionsMenuActionSelections = this.createOptionsMenuActionSelections();
 
-        this.popupMenuFlatMenuItems = this.createPopupMenuFlatMenuItems();
-        this.popupMenuDeepMenuItems = this.createPopupMenuDeepMenuItems();
+        this.popupMenuFlatSelections = this.createPopupMenuFlatSelections();
+        this.popupMenuDeepSelections = this.createPopupMenuDeepSelections();
 
-        this.initializeAddAndSetEnabledPairsByMenuItem();
+        this.initializeAddAndSetEnabledPairsBySelection();
     }
 
     // region initialization
 
-    private Map<MenuItem, Integer> createFlatMenuItemsStringResourcesByMenuItem()
+    private Map<Selection, Integer> createFlatMenuItemsStringResourcesByMenuItem()
     {
-        Map<MenuItem, Integer> flatMenuItemStringResourcesByMenuItem = new HashMap<>();
+        Map<Selection, Integer> flatMenuItemStringResourcesByMenuItem = new HashMap<>();
 
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.EXPAND_ALL, R.string.flat_menu_item_expand_all);
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.COLLAPSE_ALL, R.string.flat_menu_item_collapse_all);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.EXPAND_ALL, R.string.flat_menu_item_expand_all);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.COLLAPSE_ALL, R.string.flat_menu_item_collapse_all);
 
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_LOCATION, R.string.flat_menu_item_group_by_location);
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_ATTRACTION_CATEGORY, R.string.flat_menu_item_group_by_attraction_category);
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_MANUFACTURER, R.string.flat_menu_item_group_by_manufacturer);
-        flatMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_STATUS, R.string.flat_menu_item_group_by_status);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_LOCATION, R.string.flat_menu_item_group_by_location);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_ATTRACTION_CATEGORY, R.string.flat_menu_item_group_by_attraction_category);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_MANUFACTURER, R.string.flat_menu_item_group_by_manufacturer);
+        flatMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_STATUS, R.string.flat_menu_item_group_by_status);
 
         return flatMenuItemStringResourcesByMenuItem;
     }
 
-    private Map<MenuItem, Integer> createDeepMenuItemsStringResourcesByMenuItem()
+    private Map<Selection, Integer> createDeepMenuItemsStringResourcesByMenuItem()
     {
-        Map<MenuItem, Integer> deepMenuItemStringResourcesByMenuItem = new HashMap<>();
+        Map<Selection, Integer> deepMenuItemStringResourcesByMenuItem = new HashMap<>();
 
-        deepMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_LOCATION, R.string.deep_menu_item_group_by_location);
-        deepMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_ATTRACTION_CATEGORY, R.string.deep_menu_item_group_by_attraction_category);
-        deepMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_MANUFACTURER, R.string.deep_menu_item_group_by_manufacturer);
-        deepMenuItemStringResourcesByMenuItem.put(MenuItem.GROUP_BY_STATUS, R.string.deep_menu_item_group_by_status);
+        deepMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_LOCATION, R.string.deep_menu_item_group_by_location);
+        deepMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_ATTRACTION_CATEGORY, R.string.deep_menu_item_group_by_attraction_category);
+        deepMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_MANUFACTURER, R.string.deep_menu_item_group_by_manufacturer);
+        deepMenuItemStringResourcesByMenuItem.put(Selection.GROUP_BY_STATUS, R.string.deep_menu_item_group_by_status);
 
         return deepMenuItemStringResourcesByMenuItem;
     }
 
-    private List<MenuItem> createOptionsMenuFlatMenuItems()
+    private List<Selection> createOptionsMenuFlatSelections()
     {
-        List<MenuItem> optionsMenuFlatMenuItems = new LinkedList<>();
+        List<Selection> optionsMenuFlatSelections = new LinkedList<>();
 
-//        optionsMenuFlatMenuItems.add(MenuItem.SORT);
+//        optionsMenuFlatSelections.add(Selection.SORT);
 
-        optionsMenuFlatMenuItems.add(MenuItem.EXPAND_ALL);
-        optionsMenuFlatMenuItems.add(MenuItem.COLLAPSE_ALL);
+        optionsMenuFlatSelections.add(Selection.EXPAND_ALL);
+        optionsMenuFlatSelections.add(Selection.COLLAPSE_ALL);
 
-        return optionsMenuFlatMenuItems;
+        return optionsMenuFlatSelections;
     }
 
-    private List<MenuItem> createOptionsMenuDeepMenuItems()
+    private List<Selection> createOptionsMenuDeepSelections()
     {
-        List<MenuItem> optionsMenuDeepMenuItems = new LinkedList<>();
+        List<Selection> optionsMenuDeepSelections = new LinkedList<>();
 
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_NAME_ASCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_NAME_DESCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_YEAR_ASCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_YEAR_DESCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_LOCATION_ASCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_LOCATION_DESCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_MANUFACTURER_ASCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_MANUFACTURER_DESCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING);
-//        optionsMenuDeepMenuItems.add(MenuItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_NAME_ASCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_NAME_DESCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_YEAR_ASCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_YEAR_DESCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_LOCATION_ASCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_LOCATION_DESCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_MANUFACTURER_ASCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_MANUFACTURER_DESCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_ATTRACTION_CATEGORY_ASCENDING);
+//        optionsMenuDeepSelections.add(Selection.SORT_BY_ATTRACTION_CATEGORY_DESCENDING);
 
-        optionsMenuDeepMenuItems.add(MenuItem.GROUP_BY_LOCATION);
-        optionsMenuDeepMenuItems.add(MenuItem.GROUP_BY_ATTRACTION_CATEGORY);
-        optionsMenuDeepMenuItems.add(MenuItem.GROUP_BY_MANUFACTURER);
-        optionsMenuDeepMenuItems.add(MenuItem.GROUP_BY_STATUS);
+        optionsMenuDeepSelections.add(Selection.GROUP_BY_LOCATION);
+        optionsMenuDeepSelections.add(Selection.GROUP_BY_ATTRACTION_CATEGORY);
+        optionsMenuDeepSelections.add(Selection.GROUP_BY_MANUFACTURER);
+        optionsMenuDeepSelections.add(Selection.GROUP_BY_STATUS);
 
-        return optionsMenuDeepMenuItems;
+        return optionsMenuDeepSelections;
     }
 
-    private List<MenuItem> createOptionsMenuActionMenuItems()
+    private List<Selection> createOptionsMenuActionSelections()
     {
-        List<MenuItem> optionsMenuActionMenuItems = new LinkedList<>();
+        List<Selection> optionsMenuActionSelections = new LinkedList<>();
 
-//        optionsMenuActionMenuItems.add(MenuItem.SHORTCUT_TO_CURRENT_VISIT);
-//        optionsMenuActionMenuItems.add(MenuItem.ENABLE_EDITING);
-//        optionsMenuActionMenuItems.add(MenuItem.DISABLE_EDITING);
+//        optionsMenuActionSelections.add(Selection.SHORTCUT_TO_CURRENT_VISIT);
+//        optionsMenuActionSelections.add(Selection.ENABLE_EDITING);
+//        optionsMenuActionSelections.add(Selection.DISABLE_EDITING);
 
-        return optionsMenuActionMenuItems;
+        return optionsMenuActionSelections;
     }
 
-    private List<MenuItem> createPopupMenuFlatMenuItems()
+    private List<Selection> createPopupMenuFlatSelections()
     {
-        List<MenuItem> popupMenuFlatMenuItems = new LinkedList<>();
+        List<Selection> popupMenuFlatSelections = new LinkedList<>();
 
-//        this.popupMenuFlatMenuItems.add(MenuItem.EDIT);
-//        this.popupMenuFlatMenuItems.add(MenuItem.DELETE);
-//        this.popupMenuFlatMenuItems.add(MenuItem.REMOVE);
-//        this.popupMenuFlatMenuItems.add(MenuItem.RELOCATE);
-//        this.popupMenuFlatMenuItems.add(MenuItem.ASSIGN_TO_ATTRACTIONS);
-//        this.popupMenuFlatMenuItems.add(MenuItem.SET_AS_DEFAULT);
+//        this.popupMenuFlatSelections.add(Selection.EDIT);
+//        this.popupMenuFlatSelections.add(Selection.DELETE);
+//        this.popupMenuFlatSelections.add(Selection.REMOVE);
+//        this.popupMenuFlatSelections.add(Selection.RELOCATE);
+//        this.popupMenuFlatSelections.add(Selection.ASSIGN_TO_ATTRACTIONS);
+//        this.popupMenuFlatSelections.add(Selection.SET_AS_DEFAULT);
 
-        return popupMenuFlatMenuItems;
+        return popupMenuFlatSelections;
     }
 
-    private List<MenuItem> createPopupMenuDeepMenuItems()
+    private List<Selection> createPopupMenuDeepSelections()
     {
-        List<MenuItem> popupMenuDeepMenuItems = new LinkedList<>();
+        List<Selection> popupMenuDeepSelections = new LinkedList<>();
 
-//        this.popupMenuDeepMenuItems.add(MenuItem.SORT_LOCATIONS);
-//        this.popupMenuDeepMenuItems.add(MenuItem.SORT_PARKS);
-//        this.popupMenuDeepMenuItems.add(MenuItem.CREATE_LOCATION);
-//        this.popupMenuDeepMenuItems.add(MenuItem.CREATE_PARK);
+//        this.popupMenuDeepSelections.add(Selection.SORT_LOCATIONS);
+//        this.popupMenuDeepSelections.add(Selection.SORT_PARKS);
+//        this.popupMenuDeepSelections.add(Selection.CREATE_LOCATION);
+//        this.popupMenuDeepSelections.add(Selection.CREATE_PARK);
 
-        return popupMenuDeepMenuItems;
+        return popupMenuDeepSelections;
     }
 
-    private void initializeAddAndSetEnabledPairsByMenuItem()
+    private void initializeAddAndSetEnabledPairsBySelection()
     {
-        this.addAndSetEnabledPairsByMenuItem = new HashMap<>();
-        this.initializeAllMenuItemGroups();
+        this.addAndSetEnabledPairsByMenuItemSelection = new HashMap<>();
+        this.initializeAllSelectionGroups();
     }
 
-    private void initializeAllMenuItemGroups()
+    private void initializeAllSelectionGroups()
     {
-        this.initializeMenuItemGroup(this.optionsMenuFlatMenuItems);
-        this.initializeMenuItemGroup(this.optionsMenuDeepMenuItems);
-        this.initializeMenuItemGroup(this.optionsMenuActionMenuItems);
+        this.initializeSelectionGroup(this.optionsMenuFlatSelections);
+        this.initializeSelectionGroup(this.optionsMenuDeepSelections);
+        this.initializeSelectionGroup(this.optionsMenuActionSelections);
 
-        this.initializeMenuItemGroup(this.popupMenuFlatMenuItems);
-        this.initializeMenuItemGroup(this.popupMenuDeepMenuItems);
+        this.initializeSelectionGroup(this.popupMenuFlatSelections);
+        this.initializeSelectionGroup(this.popupMenuDeepSelections);
     }
 
-    private void initializeMenuItemGroup(List<MenuItem> menuItems)
+    private void initializeSelectionGroup(List<Selection> selections)
     {
-        for(MenuItem menuItem : menuItems)
+        for(Selection selection : selections)
         {
-            this.addAndSetEnabledPairsByMenuItem.put(menuItem, new Pair<>(false, false));
+            this.addAndSetEnabledPairsByMenuItemSelection.put(selection, new Pair<>(false, false));
         }
     }
 
@@ -175,39 +175,39 @@ public class MenuAgent
 
     // region setter
 
-    public MenuAgent addItemExpandAllToOptionsMenu(boolean setEnabled)
+    public MenuAgent addMenuItemExpandAll(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.EXPAND_ALL, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.EXPAND_ALL, new Pair<>(true, setEnabled));
         return this;
     }
 
     public MenuAgent addMenuItemCollapseAll(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.COLLAPSE_ALL, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.COLLAPSE_ALL, new Pair<>(true, setEnabled));
         return this;
     }
 
     public MenuAgent addMenuItemGroupByLocation(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.GROUP_BY_LOCATION, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.GROUP_BY_LOCATION, new Pair<>(true, setEnabled));
         return this;
     }
 
     public MenuAgent addMenuItemGroupByAttractionCategory(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.GROUP_BY_ATTRACTION_CATEGORY, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.GROUP_BY_ATTRACTION_CATEGORY, new Pair<>(true, setEnabled));
         return this;
     }
 
     public MenuAgent addMenuItemGroupByManufacturer(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.GROUP_BY_MANUFACTURER, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.GROUP_BY_MANUFACTURER, new Pair<>(true, setEnabled));
         return this;
     }
 
     public MenuAgent addMenuItemGroupByStatus(boolean setEnabled)
     {
-        this.addAndSetEnabledPairsByMenuItem.put(MenuItem.GROUP_BY_STATUS, new Pair<>(true, setEnabled));
+        this.addAndSetEnabledPairsByMenuItemSelection.put(Selection.GROUP_BY_STATUS, new Pair<>(true, setEnabled));
         return this;
     }
 
@@ -226,7 +226,7 @@ public class MenuAgent
                 this.addDeepItemsToOptionsMenu(menu);
                 this.addFlatItemsToOptionsMenu(menu);
 
-                menu.add(Menu.NONE, MenuItem.HELP.ordinal(), Menu.NONE, R.string.flat_menu_item_help);
+                menu.add(Menu.NONE, Selection.HELP.ordinal(), Menu.NONE, R.string.flat_menu_item_help);
                 break;
 
             case POPUP_MENU:
@@ -234,12 +234,12 @@ public class MenuAgent
                 break;
         }
 
-        this.initializeAllMenuItemGroups();
+        this.initializeAllSelectionGroups();
     }
 
     private void addFlatItemsToOptionsMenu(Menu menu)
     {
-        this.addItemsToMenu(this.optionsMenuFlatMenuItems, menu, false);
+        this.addItemsToMenu(this.optionsMenuFlatSelections, menu, false);
     }
 
     private void addDeepItemsToOptionsMenu(Menu menu)
@@ -249,26 +249,26 @@ public class MenuAgent
 
     private void addGroupByItemsToOptionsMenu(Menu menu)
     {
-        List<MenuItem> groupByItemsToAdd = new LinkedList<>();
+        List<Selection> groupByItemsToAdd = new LinkedList<>();
 
-        if(this.addAndSetEnabledPairsByMenuItem.get(MenuItem.GROUP_BY_LOCATION).first)
+        if(this.addAndSetEnabledPairsByMenuItemSelection.get(Selection.GROUP_BY_LOCATION).first)
         {
-            groupByItemsToAdd.add(MenuItem.GROUP_BY_LOCATION);
+            groupByItemsToAdd.add(Selection.GROUP_BY_LOCATION);
         }
 
-        if(this.addAndSetEnabledPairsByMenuItem.get(MenuItem.GROUP_BY_ATTRACTION_CATEGORY).first)
+        if(this.addAndSetEnabledPairsByMenuItemSelection.get(Selection.GROUP_BY_ATTRACTION_CATEGORY).first)
         {
-            groupByItemsToAdd.add(MenuItem.GROUP_BY_ATTRACTION_CATEGORY);
+            groupByItemsToAdd.add(Selection.GROUP_BY_ATTRACTION_CATEGORY);
         }
 
-        if(this.addAndSetEnabledPairsByMenuItem.get(MenuItem.GROUP_BY_MANUFACTURER).first)
+        if(this.addAndSetEnabledPairsByMenuItemSelection.get(Selection.GROUP_BY_MANUFACTURER).first)
         {
-            groupByItemsToAdd.add(MenuItem.GROUP_BY_MANUFACTURER);
+            groupByItemsToAdd.add(Selection.GROUP_BY_MANUFACTURER);
         }
 
-        if(this.addAndSetEnabledPairsByMenuItem.get(MenuItem.GROUP_BY_STATUS).first)
+        if(this.addAndSetEnabledPairsByMenuItemSelection.get(Selection.GROUP_BY_STATUS).first)
         {
-            groupByItemsToAdd.add(MenuItem.GROUP_BY_STATUS);
+            groupByItemsToAdd.add(Selection.GROUP_BY_STATUS);
         }
 
         boolean menuIsDeep = groupByItemsToAdd.size() > 1;
@@ -280,20 +280,20 @@ public class MenuAgent
         this.addItemsToMenu(groupByItemsToAdd, groupByMenu, menuIsDeep);
     }
 
-    private void addItemsToMenu(List<MenuItem> menuItems, Menu menu, boolean menuIsDeep)
+    private void addItemsToMenu(List<Selection> selections, Menu menu, boolean menuIsDeep)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemsToMenu:: adding [%d] item(s) to menu (isDeep = [%S])", menuItems.size(), menuIsDeep));
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemsToMenu:: adding [%d] item(s) to menu (isDeep = [%S])", selections.size(), menuIsDeep));
 
-        for(MenuItem menuItem : menuItems)
+        for(Selection selection : selections)
         {
-            Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemsToMenu:: adding item [%s]", menuItem)); //Todo: set to verbose!
+            Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemsToMenu:: adding item [%s]", selection)); //Todo: set to verbose!
 
-            if(this.addAndSetEnabledPairsByMenuItem.get(menuItem).first)
+            if(this.addAndSetEnabledPairsByMenuItemSelection.get(selection).first)
             {
-                menu.add(menuItem.ordinal(), menuItem.ordinal(), Menu.NONE, menuIsDeep
-                        ? this.deepMenuItemStringResourcesByMenuItem.get(menuItem)
-                        : this.flatMenuItemStringResourcesByMenuItem.get(menuItem))
-                        .setEnabled(this.addAndSetEnabledPairsByMenuItem.get(menuItem).second);
+                menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, menuIsDeep
+                        ? this.deepMenuItemStringResourcesBySelection.get(selection)
+                        : this.flatMenuItemStringResourcesBySelection.get(selection))
+                        .setEnabled(this.addAndSetEnabledPairsByMenuItemSelection.get(selection).second);
             }
         }
     }
@@ -301,9 +301,9 @@ public class MenuAgent
 
     public boolean handleMenuItemSelected(android.view.MenuItem item, IMenuAgentClient client)
     {
-        Log.i(Constants.LOG_TAG, String.format("MenuAgent.handleMenuItemSelected:: MenuItem [%s] selected", MenuItem.values()[item.getItemId()].toString()));
+        Log.i(Constants.LOG_TAG, String.format("MenuAgent.handleMenuItemSelected:: Selection [%s] selected", Selection.values()[item.getItemId()].toString()));
 
-        switch(MenuItem.values()[item.getItemId()])
+        switch(Selection.values()[item.getItemId()])
         {
             case HELP:
                 return client.handleMenuItemHelpSelected();
@@ -341,7 +341,7 @@ public class MenuAgent
         POPUP_MENU
     }
 
-    public enum MenuItem
+    public enum Selection
     {
         NO_FUNCTION,
 
@@ -405,7 +405,7 @@ public class MenuAgent
 
     public static String getMenuItemString(int itemId)
     {
-        return MenuItem.values()[itemId].toString();
+        return Selection.values()[itemId].toString();
     }
 }
 
