@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.frontend;
+package de.juliusawen.coastercreditcounter.frontend.elements;
 
 import androidx.lifecycle.ViewModel;
 

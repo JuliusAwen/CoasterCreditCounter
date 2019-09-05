@@ -5,13 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
-import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
 
 class GetContentRecyclerViewAdapterRequest
 {
-    AdapterType adapterType;
+    ContentRecyclerViewAdapter.AdapterType adapterType;
 
     List<IElement> elements = new ArrayList<>();
 

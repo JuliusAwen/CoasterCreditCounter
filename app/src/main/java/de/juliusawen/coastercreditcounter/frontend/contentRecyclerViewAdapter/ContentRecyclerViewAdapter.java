@@ -25,10 +25,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.GroupHeaderProvider;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.IGroupHeader;
-import de.juliusawen.coastercreditcounter.backend.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.AttractionBlueprint;
@@ -44,14 +40,24 @@ import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.IGroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.AdapterType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    public enum AdapterType
+    {
+        EXPANDABLE,
+        SELECTABLE,
+        COUNTABLE,
+    }
+
     public enum DetailType
     {
         LOCATION,

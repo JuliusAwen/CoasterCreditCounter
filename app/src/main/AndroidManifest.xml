@@ -45,7 +45,7 @@
             android:name=".frontend.elements.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.CreateSimpleElementActivity"
+            android:name=".frontend.elements.CreateSimpleElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <service

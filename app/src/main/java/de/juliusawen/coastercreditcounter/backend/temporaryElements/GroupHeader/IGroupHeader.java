@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.GroupHeader;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 

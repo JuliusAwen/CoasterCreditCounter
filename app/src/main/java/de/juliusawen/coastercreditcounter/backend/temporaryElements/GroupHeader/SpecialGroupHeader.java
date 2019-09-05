@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.GroupHeader;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
 
 import android.util.Log;
 
