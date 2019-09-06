@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -60,9 +60,15 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
+
             if(this.viewModel.exportFileAbsolutePath == null)
             {
                 this.setExportFileAbsolutPath();
+            }
+
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuAgent.MenuType.OPTIONS_MENU);
             }
 
             this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
@@ -114,7 +120,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 IElement resultElement = ResultFetcher.fetchResultElement(data);
 
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<SHORTCUT_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<GO_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
 
                 ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
             }
@@ -122,16 +128,15 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
+
+    // region OPTIONS MENU
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        menu.clear();
-
         if(!Visit.getCurrentVisits().isEmpty())
         {
-            menu.add(Menu.NONE, Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT, Menu.NONE, "shortcut to current visit")
-                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -148,34 +153,40 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 this.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
-            else if(item.getItemId() == Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT)
+            else
             {
-                if(Visit.getCurrentVisits().size() > 1)
-                {
-                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: [%d] current visits found - offering pick",
-                            Visit.getCurrentVisits().size()));
-
-                    ActivityDistributor.startActivityPickForResult(
-                            this,
-                            Constants.REQUEST_CODE_PICK_VISIT,
-                            new ArrayList<IElement>(Visit.getCurrentVisits()));
-                }
-                else
-                {
-                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onOptionsItemSelected<SHORTCUT_TO_CURRENT_VISIT>:: only one current visit found - opening %s...",
-                            Visit.getCurrentVisits().get(0)));
-
-                    ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
-                }
+                return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
             }
-
-            return super.onOptionsItemSelected(item);
         }
         else
         {
             return true;
         }
     }
+    @Override
+    public boolean handleOptionsMenuItemGoToCurrentVisitSelected()
+    {
+        if(Visit.getCurrentVisits().size() > 1)
+        {
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleOptionsMenuItemGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
+                    Visit.getCurrentVisits().size()));
+
+            ActivityDistributor.startActivityPickForResult(
+                    this,
+                    Constants.REQUEST_CODE_PICK_VISIT,
+                    new ArrayList<IElement>(Visit.getCurrentVisits()));
+        }
+        else
+        {
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleOptionsMenuItemGoToCurrentVisitSelected:: only one current visit found - opening %s...",
+                    Visit.getCurrentVisits().get(0)));
+
+            ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
+        }
+        return true;
+    }
+
+    // endregion OPTIONS MENU
 
     private void setExportFileAbsolutPath()
     {

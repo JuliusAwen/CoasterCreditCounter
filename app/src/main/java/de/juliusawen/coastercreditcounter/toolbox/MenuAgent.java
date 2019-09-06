@@ -29,17 +29,29 @@ public class MenuAgent
     public static final int GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER.ordinal();
     public static final int GROUP_BY_STATUS = Selection.GROUP_BY_STATUS.ordinal();
 
+    public static final int GO_TO_CURRENT_VISIT = Selection.GO_TO_CURRENT_VISIT.ordinal();
+
+    public static final int ENABLE_EDITING = Selection.ENABLE_EDITING.ordinal();
+    public static final int DISABLE_EDITING = Selection.DISABLE_EDITING.ordinal();
+
+
 
     private MenuType menuType;
+
     private Map<Selection, Boolean> setEnabledBySelectionsToAdd;
+
     private Map<Selection, Integer> stringResourcesBySelection;
+    private Map<Selection, Integer> drawableResourcesBySelection;
 
 
     public MenuAgent(MenuType menuType)
     {
         this.menuType = menuType;
+
         this.setEnabledBySelectionsToAdd = new LinkedHashMap<>();
+
         this.stringResourcesBySelection = this.createStringResourcesBySelectionMap();
+        this.drawableResourcesBySelection = this.createDrawableResourcesBySelectionMap();
     }
 
     private Map<Selection, Integer> createStringResourcesBySelectionMap()
@@ -62,7 +74,24 @@ public class MenuAgent
         stringResourcesBySelection.put(Selection.GROUP_BY_MANUFACTURER, R.string.selection_group_by_manufacturer);
         stringResourcesBySelection.put(Selection.GROUP_BY_STATUS, R.string.selection_group_by_status);
 
+        stringResourcesBySelection.put(Selection.GO_TO_CURRENT_VISIT, R.string.selection_go_to_current_visit);
+
+        stringResourcesBySelection.put(Selection.ENABLE_EDITING, R.string.selection_enable_editing);
+        stringResourcesBySelection.put(Selection.DISABLE_EDITING, R.string.selection_disable_editing);
+
         return stringResourcesBySelection;
+    }
+
+    private Map<Selection, Integer> createDrawableResourcesBySelectionMap()
+    {
+        Map<Selection, Integer> drawableResourcesBySelection = new HashMap<>();
+
+        drawableResourcesBySelection.put(Selection.GO_TO_CURRENT_VISIT, R.drawable.ic_baseline_local_activity);
+
+        drawableResourcesBySelection.put(Selection.ENABLE_EDITING, R.drawable.ic_baseline_create);
+        drawableResourcesBySelection.put(Selection.DISABLE_EDITING, R.drawable.ic_baseline_block);
+
+        return drawableResourcesBySelection;
     }
 
 
@@ -113,6 +142,12 @@ public class MenuAgent
                             this.createMenuGroupBy(selection, menu, subMenuGroupBy);
                             break;
                         }
+
+                        case GO_TO_CURRENT_VISIT:
+                        case ENABLE_EDITING:
+                        case DISABLE_EDITING:
+                            this.addActionItemToMenu(selection, menu);
+                            break;
 
                         default:
                         {
@@ -204,6 +239,16 @@ public class MenuAgent
                 .setEnabled(this.setEnabledBySelectionsToAdd.get(selection));
     }
 
+    private void addActionItemToMenu(Selection selection, Menu menu)
+    {
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addActionItemToMenu:: adding MenuItem [%s]", selection)); //Todo: set to verbose
+
+        menu.add(Menu.NONE, selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
+                .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesBySelection.get(selection), R.color.white))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+
     public boolean handleMenuItemSelected(MenuItem item, IMenuAgentClient client)
     {
         if(item.getItemId() <= Selection.values().length)
@@ -222,43 +267,50 @@ public class MenuAgent
                 case SORT_BY_MANUFACTURER:
                     return true;
                 case HELP:
-                    return client.handleMenuItemHelpSelected();
+                    return client.handleOptionsMenuItemHelpSelected();
                 case EXPAND_ALL:
-                    return client.handleMenuItemExpandAllSelected();
+                    return client.handleOptionsMenuItemExpandAllSelected();
                 case COLLAPSE_ALL:
-                    return client.handleMenuItemCollapseAllSelected();
+                    return client.handleOptionsMenuItemCollapseAllSelected();
                 case GROUP_BY_LOCATION:
-                    return client.handleMenuItemGroupByLocationSelected();
+                    return client.handleOptionsMenuItemGroupByLocationSelected();
                 case GROUP_BY_ATTRACTION_CATEGORY:
-                    return client.handleMenuItemGroupByAttractionCategorySelected();
+                    return client.handleOptionsMenuItemGroupByAttractionCategorySelected();
                 case GROUP_BY_MANUFACTURER:
-                    return client.handleMenuItemGroupByManufacturerSelected();
+                    return client.handleOptionsMenuItemGroupByManufacturerSelected();
                 case GROUP_BY_STATUS:
-                    return client.handleMenuItemGroupByStatusSelected();
+                    return client.handleOptionsMenuItemGroupByStatusSelected();
                 case SORT_BY_YEAR_ASCENDING:
-                    return client.handleMenuItemSortByYearAscendingSelected();
+                    return client.handleOptionsMenuItemSortByYearAscendingSelected();
                 case SORT_BY_YEAR_DESCENDING:
-                    return client.handleMenuItemSortByYearDescendingSelected();
+                    return client.handleOptionsMenuItemSortByYearDescendingSelected();
                 case SORT_BY_NAME_ASCENDING:
-                    return client.handleMenuItemSortByNameAscendingSelected();
+                    return client.handleOptionsMenuItemSortByNameAscendingSelected();
                 case SORT_BY_NAME_DESCENDING:
-                    return client.handleMenuItemSortByNameDescendingSelected();
+                    return client.handleOptionsMenuItemSortByNameDescendingSelected();
                 case SORT_BY_LOCATION_ASCENDING:
-                    return client.handleMenuItemSortByLocationAscendingSelected();
+                    return client.handleOptionsMenuItemSortByLocationAscendingSelected();
                 case SORT_BY_LOCATION_DESCENDING:
-                    return client.handleMenuItemSortByLocationDescendingSelected();
+                    return client.handleOptionsMenuItemSortByLocationDescendingSelected();
                 case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
-                    return client.handleMenuItemSortByAttractionCategoryAscendingSelected();
+                    return client.handleOptionsMenuItemSortByAttractionCategoryAscendingSelected();
                 case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
-                    return client.handleMenuItemSortByAttractionCategoryDescendingSelected();
+                    return client.handleOptionsMenuItemSortByAttractionCategoryDescendingSelected();
                 case SORT_BY_MANUFACTURER_ASCENDING:
-                    return client.handleMenuItemSortByManufacturerAscendingSelected();
+                    return client.handleOptionsMenuItemSortByManufacturerAscendingSelected();
                 case SORT_BY_MANUFACTURER_DESCENDING:
-                    return client.handleMenuItemSortByManufacturerDescendingSelected();
+                    return client.handleOptionsMenuItemSortByManufacturerDescendingSelected();
+                case GO_TO_CURRENT_VISIT:
+                    return client.handleOptionsMenuItemGoToCurrentVisitSelected();
+                case ENABLE_EDITING:
+                    return client.handleOptionsMenuItemEnableEditingSelected();
+                case DISABLE_EDITING:
+                    return client.handleOptionsMenuItemDisableEditingSelected();
+
 
 
                 default:
-                    return false;
+                    return client.handleInvalidOptionsMenuItemSelected(item);
             }
         }
         else
@@ -319,9 +371,10 @@ public class MenuAgent
 
 
         //OPTIONS ACTION
-//        SHORTCUT_TO_CURRENT_VISIT,
-//        ENABLE_EDITING,
-//        DISABLE_EDITING,
+
+        GO_TO_CURRENT_VISIT,
+        ENABLE_EDITING,
+        DISABLE_EDITING,
 
 
         //POPUP
@@ -341,11 +394,6 @@ public class MenuAgent
 
 //        CREATE_LOCATION,
 //        CREATE_PARK,
-    }
-
-    public static String getSelectionString(int itemId)
-    {
-        return Selection.values()[itemId].toString();
     }
 }
 

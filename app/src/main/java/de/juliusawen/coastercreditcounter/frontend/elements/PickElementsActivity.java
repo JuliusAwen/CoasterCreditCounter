@@ -203,6 +203,8 @@ public class PickElementsActivity extends BaseActivity
         }
     }
 
+    //region OPTIONS MENU
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -238,60 +240,54 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
-        {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
     }
 
 
-    // region create options menu selected
-
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public boolean handleOptionsMenuItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
         return true;
     }
 
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public boolean handleOptionsMenuItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
         return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByLocationSelected()
+    public boolean handleOptionsMenuItemGroupByLocationSelected()
     {
         this.groupElementsByType(GroupHeaderProvider.GroupType.LOCATION);
         return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected()
+    public boolean handleOptionsMenuItemGroupByAttractionCategorySelected()
     {
         this.groupElementsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
         return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected()
+    public boolean handleOptionsMenuItemGroupByManufacturerSelected()
     {
         this.groupElementsByType(GroupHeaderProvider.GroupType.MANUFACTURER);
         return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByStatusSelected()
+    public boolean handleOptionsMenuItemGroupByStatusSelected()
     {
         this.groupElementsByType(GroupHeaderProvider.GroupType.STATUS);
         return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByNameAscendingSelected()
+    public boolean handleOptionsMenuItemSortByNameAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -299,7 +295,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleMenuItemSortByNameDescendingSelected()
+    public boolean handleOptionsMenuItemSortByNameDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -307,7 +303,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleMenuItemSortByLocationAscendingSelected()
+    public boolean handleOptionsMenuItemSortByLocationAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -315,7 +311,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleMenuItemSortByLocationDescendingSelected()
+    public boolean handleOptionsMenuItemSortByLocationDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -323,7 +319,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
 //    @Override
-//    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
+//    public boolean handleOptionsMenuItemSortByAttractionCategoryAscendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -331,7 +327,7 @@ public class PickElementsActivity extends BaseActivity
 //    }
 //
 //    @Override
-//    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
+//    public boolean handleOptionsMenuItemSortByAttractionCategoryDescendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -339,7 +335,7 @@ public class PickElementsActivity extends BaseActivity
 //    }
 
     @Override
-    public boolean handleMenuItemSortByManufacturerAscendingSelected()
+    public boolean handleOptionsMenuItemSortByManufacturerAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -347,14 +343,14 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleMenuItemSortByManufacturerDescendingSelected()
+    public boolean handleOptionsMenuItemSortByManufacturerDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
         return true;
     }
 
-    // endregion create options menu selected
+    // endregion OPTIONS MENU
 
 
     private void groupElementsByType(GroupHeaderProvider.GroupType groupType)

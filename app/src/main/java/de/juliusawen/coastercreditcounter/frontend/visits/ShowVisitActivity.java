@@ -42,6 +42,7 @@ import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -70,6 +71,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuAgent.MenuType.OPTIONS_MENU);
+            }
+
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit))
                     .addToolbar()
                     .addToolbarHomeButton()
@@ -88,12 +94,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
-                this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView();
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
+                this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView()
+                        .setTypefaceForType(GroupHeader.class, Typeface.BOLD);
             }
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.addRideOnClickListener(this.getAddRideOnClickListener());
-            this.viewModel.contentRecyclerViewAdapter.deleteRideOnClickListener(this.getRemoveRideOnClickListener());
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
+                    .addRideOnClickListener(this.getAddRideOnClickListener())
+                    .deleteRideOnClickListener(this.getRemoveRideOnClickListener());
 
             this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -131,26 +137,24 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.onDestroy();
     }
 
+    //region OPTIONS MENU
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        menu.clear();
-
         if(this.viewModel.visit.isEditingEnabled())
         {
-            menu.add(Menu.NONE, Constants.SELECTION_DISABLE_EDITING, Menu.NONE, "disable editing")
-                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_block, R.color.white))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.DISABLE_EDITING);
         }
         else
         {
-            menu.add(Menu.NONE, Constants.SELECTION_ENABLE_EDITING, Menu.NONE, "enable for editing")
-                    .setIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_create, R.color.white))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.ENABLE_EDITING);
         }
 
-        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .create(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -158,39 +162,49 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == Constants.SELECTION_EXPAND_ALL)
-        {
-            this.viewModel.contentRecyclerViewAdapter.expandAll();
-        }
-        else if(item.getItemId() == Constants.SELECTION_COLLAPSE_ALL)
-        {
-            this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        }
-        else if(item.getItemId() == Constants.SELECTION_ENABLE_EDITING)
-        {
-            super.setFloatingActionButtonVisibility(true);
-            this.viewModel.visit.setEditingEnabled(true);
-            this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(false);
-            invalidateOptionsMenu();
-
-            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
-
-            return true;
-        }
-        else if(item.getItemId() == Constants.SELECTION_DISABLE_EDITING)
-        {
-            super.setFloatingActionButtonVisibility(false);
-            this.viewModel.visit.setEditingEnabled(false);
-            this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
-            invalidateOptionsMenu();
-
-            Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
     }
+
+    @Override
+    public boolean handleOptionsMenuItemExpandAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        return true;
+    }
+
+    @Override
+    public boolean handleOptionsMenuItemCollapseAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        return true;
+    }
+
+    @Override
+    public boolean handleOptionsMenuItemEnableEditingSelected()
+    {
+        super.setFloatingActionButtonVisibility(true);
+        this.viewModel.visit.setEditingEnabled(true);
+        this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(false);
+        invalidateOptionsMenu();
+
+        Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
+        return true;
+    }
+
+    @Override
+    public boolean handleOptionsMenuItemDisableEditingSelected()
+    {
+        super.setFloatingActionButtonVisibility(false);
+        this.viewModel.visit.setEditingEnabled(false);
+        this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
+        invalidateOptionsMenu();
+
+        Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
+
+        return true;
+    }
+
+    //endregion OPTIONS MENU
 
     private void decorateFloatingActionButton()
     {

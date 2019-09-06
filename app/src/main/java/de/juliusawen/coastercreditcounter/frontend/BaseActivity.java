@@ -202,53 +202,65 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
     // region handleOptionsMenuItemSelected implementations
 
-    public boolean handleMenuItemHelpSelected()
+    @Override
+    public boolean handleInvalidOptionsMenuItemSelected(MenuItem item)
+    {
+        return this.onOptionsItemSelected(item);
+    }
+
+    public boolean handleOptionsMenuItemHelpSelected()
     {
         if(this.helpOverlayFragment != null)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuItemHelpSelected:: showing HelpOverlay");
             this.setHelpOverlayVisibility(true);
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuItemHelpSelected:: HelpOverlayFragment not added");
             return false;
         }
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected() { return false; }
+    public boolean handleOptionsMenuItemExpandAllSelected() { return false; }
     @Override
-    public boolean handleMenuItemCollapseAllSelected() { return false; }
+    public boolean handleOptionsMenuItemCollapseAllSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByLocationSelected() { return false; }
+    public boolean handleOptionsMenuItemGroupByLocationSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected() { return false; }
+    public boolean handleOptionsMenuItemGroupByAttractionCategorySelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected() { return false; }
+    public boolean handleOptionsMenuItemGroupByManufacturerSelected() { return false; }
     @Override
-    public boolean handleMenuItemGroupByStatusSelected() { return false; }
+    public boolean handleOptionsMenuItemGroupByStatusSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByYearAscendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByYearAscendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByYearDescendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByYearDescendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByNameAscendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByNameAscendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByNameDescendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByNameDescendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByLocationAscendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByLocationAscendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByLocationDescendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByLocationDescendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByManufacturerAscendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByManufacturerAscendingSelected() { return false; }
     @Override
-    public boolean handleMenuItemSortByManufacturerDescendingSelected() { return false; }
+    public boolean handleOptionsMenuItemSortByManufacturerDescendingSelected() { return false; }
+    @Override
+    public boolean handleOptionsMenuItemGoToCurrentVisitSelected() { return false; }
+    @Override
+    public boolean handleOptionsMenuItemEnableEditingSelected() { return false; }
+    @Override
+    public boolean handleOptionsMenuItemDisableEditingSelected() { return false; }
 
     // endregion handleOptionsMenuItemSelected implementations
 

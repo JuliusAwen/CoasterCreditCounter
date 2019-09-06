@@ -870,18 +870,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public ContentRecyclerViewAdapter setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
     {
         this.recyclerOnClickListener = onClickListener;
-
         return this;
     }
 
-    public void addRideOnClickListener(View.OnClickListener increaseOnClickListener)
+    public ContentRecyclerViewAdapter addRideOnClickListener(View.OnClickListener increaseOnClickListener)
     {
         this.addRideOnClickListener = increaseOnClickListener;
+        return this;
     }
 
-    public void deleteRideOnClickListener(View.OnClickListener decreaseOnClickListener)
+    public ContentRecyclerViewAdapter deleteRideOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
         this.deleteRideOnClickListener = decreaseOnClickListener;
+        return this;
     }
 
     private View.OnClickListener getExpansionOnClickListener()
@@ -922,27 +923,34 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void expandAll()
     {
-        int itemsCount;
-        do
+        if(!this.items.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding next generation");
-
-            List<IElement> itemsList = new ArrayList<>(this.items);
-            itemsCount = itemsList.size();
-
-            for(IElement item : itemsList)
+            int itemsCount;
+            do
             {
-                if(!this.expandedItems.contains(item))
+                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding next generation");
+
+                List<IElement> itemsList = new ArrayList<>(this.items);
+                itemsCount = itemsList.size();
+
+                for(IElement item : itemsList)
                 {
-                    this.expandItem(item);
+                    if(!this.expandedItems.contains(item))
+                    {
+                        this.expandItem(item);
+                    }
                 }
             }
+            while(itemsCount != this.items.size());
+
+            scrollToItem(this.items.get(0));
+
+            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: all expanded");
         }
-        while(itemsCount != this.items.size());
-
-        scrollToItem(this.items.get(0));
-
-        Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: all expanded");
+        else
+        {
+            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: no items to expand");
+        }
     }
 
     public void expandItem(IElement item)
