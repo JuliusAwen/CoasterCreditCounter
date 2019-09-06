@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,6 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
 {
     private ShowVisitsFragmentViewModel viewModel;
-    private RecyclerView recyclerView;
     private boolean actionConfirmed;
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
 
@@ -103,16 +103,25 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
     @Override
-    public void onDestroyView()
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
-        this.recyclerView.setAdapter(null);
-        super.onDestroyView();
+        if(this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+        {
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
+            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+
     }
 
     @Override
@@ -176,7 +185,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         super.onDetach();
         this.viewModel = null;
-        this.recyclerView = null;
         this.showVisitsFragmentInteraction = null;
     }
 

@@ -51,7 +51,6 @@ import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
     private ShowVisitActivityViewModel viewModel;
-    private RecyclerView recyclerView;
     private boolean actionConfirmed;
 
     @Override
@@ -101,9 +100,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .addRideOnClickListener(this.getAddRideOnClickListener())
                     .deleteRideOnClickListener(this.getRemoveRideOnClickListener());
 
-            this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             if(this.allAttractionsAdded())
             {
@@ -128,13 +127,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
         }
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroy();
     }
 
     //region OPTIONS MENU

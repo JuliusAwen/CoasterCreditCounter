@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
 {
     private ShowAttractionsFragmentViewModel viewModel;
-    private RecyclerView recyclerView;
     private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
     private boolean actionConfirmed;
 
@@ -105,17 +105,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
-    @Override
-    public void onDestroyView()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroyView();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -173,8 +167,20 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         super.onDetach();
         this.viewModel = null;
-        this.recyclerView = null;
         this.showAttractionsFragmentInteraction = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
+    {
+        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+
     }
 
     @Override
@@ -188,8 +194,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             this.viewModel.contentRecyclerViewAdapter.collapseAll();
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
@@ -207,16 +212,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
 
         return contentRecyclerViewAdapter;
-    }
-
-    public boolean isAllExpanded()
-    {
-        return this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
-    }
-
-    public boolean isAllCollapsed()
-    {
-        return this.viewModel.contentRecyclerViewAdapter.isAllCollapsed();
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

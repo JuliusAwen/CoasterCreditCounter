@@ -900,7 +900,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
                 else
                 {
-                    collapseItem(item);
+                    collapseItem(item, true);
                 }
             }
         };
@@ -916,7 +916,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
             else
             {
-                this.collapseItem(item);
+                this.collapseItem(item, true);
             }
         }
     }
@@ -1032,14 +1032,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if(this.expandedItems.contains(item))
             {
-                this.collapseItem(item);
+                this.collapseItem(item, false);
             }
         }
 
         Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: all collapsed");
     }
 
-    private void collapseItem(IElement item)
+    private void collapseItem(IElement item, boolean scrollToItem)
     {
         if(this.expandedItems.contains(item))
         {
@@ -1053,7 +1053,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     if(this.expandedItems.contains(child))
                     {
-                        this.collapseItem(child);
+                        this.collapseItem(child, false);
                     }
 
                     int index = this.items.indexOf(child);
@@ -1065,7 +1065,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: removed child %s at index [%d]", child, index));
                 }
 
-                this.scrollToItem(item);
+                if(scrollToItem)
+                {
+                    this.scrollToItem(item);
+                }
 
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsed item %s", item));
             }

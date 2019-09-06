@@ -155,7 +155,7 @@
     <string name="description_tab_title">title</string>
 
 
-    <!--VISITS-->
+    <!--SHOW_VISITS-->
     <string name="title_visit_create">Create Visit</string>
     <string name="title_visit_show">Visit</string>
     <string name="title_visit_pick">Pick Visit</string>
@@ -181,7 +181,7 @@
     <string name="text_visit_display_full_name">%1$s @ %2$s</string>
 
 
-    <!--ATTRACTIONS-->
+    <!--SHOW_ATTRACTIONS-->
     <string name="title_attractions_sort">Sort Attractions</string>
     <string name="title_attractions_pick">Pick Attractions</string>
     <string name="subtitle_attractions_description_pick_to_add_to_visit">to add to your visit</string>

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,7 +26,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
-import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
@@ -38,12 +36,13 @@ import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
 {
-    private static final int TAB_OVERVIEW = 0;
-    private static final int TAB_ATTRACTIONS = 1;
-    private static final int TAB_VISITS = 2;
+    public enum Tab
+    {
+        SHOW_OVERVIEW,
+        SHOW_ATTRACTIONS,
+        SHOW_VISITS
+    }
 
-    private ViewPager viewPager;
-    
     private ShowParkActivityViewModel viewModel;
     
     @Override
@@ -63,9 +62,9 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            if(this.viewModel.currentTab == -1)
+            if(this.viewModel.currentTab == null)
             {
-                this.viewModel.currentTab = TAB_OVERVIEW;
+                this.viewModel.currentTab = Tab.SHOW_OVERVIEW;
             }
 
             super.addHelpOverlayFragment(null, null)
@@ -75,27 +74,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             this.createTabPagerAdapter();
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        menu.clear();
-
-        if(this.viewModel.currentTab == TAB_VISITS && this.viewModel.park.getChildCountOfType(Visit.class) > 1)
-        {
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
-        }
-        else if(this.viewModel.currentTab == TAB_ATTRACTIONS)
-        {
-            ShowAttractionsFragment showAttractionsFragment = (ShowAttractionsFragment)this.viewPager.getAdapter().instantiateItem(this.viewPager, viewPager.getCurrentItem());
-
-            menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!showAttractionsFragment.isAllExpanded());
-            menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!showAttractionsFragment.isAllCollapsed());
-        }
-
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -109,11 +87,24 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         }
     }
 
+    @Override
+    public void deleteElement(IElement elementToDelete)
+    {
+        super.markForDeletion(elementToDelete, true)
+                .markForUpdate(elementToDelete.getParent());
+    }
+
+    @Override
+    public void updateElement(IElement elementToUpdate)
+    {
+        super.markForUpdate(elementToUpdate);
+    }
+
     private void createTabPagerAdapter()
     {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this.getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
 
-        this.viewPager = findViewById(R.id.viewPagerShowPark);
+        ViewPager viewPager = findViewById(R.id.viewPagerShowPark);
         viewPager.setAdapter(tabPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayoutShowPark);
@@ -134,7 +125,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             @Override
             public void onPageSelected(int position)
             {
-                onPageSelectedViewPager(position);
+                onPageSelectedViewPager(Tab.values()[position]);
             }
 
             @Override
@@ -143,93 +134,86 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-        viewPager.setCurrentItem(this.viewModel.currentTab);
+        viewPager.setCurrentItem(this.viewModel.currentTab.ordinal());
         this.onPageSelectedViewPager(this.viewModel.currentTab);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%d]", tabLayout.getTabCount(), this.viewModel.currentTab));
+        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%s]", tabLayout.getTabCount(), this.viewModel.currentTab));
     }
 
-    private void onPageSelectedViewPager(int position)
+    private void onPageSelectedViewPager(Tab tab)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: selected position [%d]", position));
+        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: selected tab [%s]", tab));
 
-        switch(position)
+        this.viewModel.currentTab = tab;
+
+        switch(tab)
         {
-            case TAB_OVERVIEW:
+            case SHOW_OVERVIEW:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_overview))
                         .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getText(R.string.help_text_show_park_overview));
-                this.decorateFloatingActionButtonShowParkOverview();
                 break;
 
-            case TAB_ATTRACTIONS:
+            case SHOW_ATTRACTIONS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_attractions))
                         .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getText(R.string.help_text_show_attractions));
-                this.decorateFloatingActionButtonShowParkAttractions();
                 break;
 
-            case TAB_VISITS:
+            case SHOW_VISITS:
                 super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_visits))
                         .setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getText(R.string.help_text_show_visits));
-                this.decorateFloatingActionButtonShowParkVisits();
                 break;
-
-            default:
-                Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: tab position [%d] does not exist", position));
         }
-
-        this.viewModel.currentTab = position;
+        this.decorateFloatingActionButton(tab);
     }
 
-    private void decorateFloatingActionButtonShowParkOverview()
+    private void decorateFloatingActionButton(Tab tab)
     {
-        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white))
-                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        switch(tab)
         {
-            @Override
-            public void onClick(View view)
+            case SHOW_OVERVIEW:
             {
-                Toaster.makeToast(ShowParkActivity.this, "fab interaction for TAB_OVERVIEW not yet implemented");
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white))
+                        .setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                Toaster.makeToast(ShowParkActivity.this, "fab interaction for Tab SHOW_OVERVIEW not yet implemented");
+                            }
+                        });
+                break;
             }
-        });
+
+            case SHOW_ATTRACTIONS:
+            {
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
+                        .setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
+                            }
+                        });
+                break;
+            }
+
+            case SHOW_VISITS:
+            {
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
+                        .setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
+                            }
+                        });
+                break;
+            }
+        }
     }
 
-    private void decorateFloatingActionButtonShowParkAttractions()
-    {
-        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
-                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
-            }
-        });
-    }
-    private void decorateFloatingActionButtonShowParkVisits()
-    {
-        super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white))
-                .setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
-            }
-        });
-    }
-
-    @Override
-    public void deleteElement(IElement elementToDelete)
-    {
-        super.markForDeletion(elementToDelete, true)
-                .markForUpdate(elementToDelete.getParent());
-    }
-
-    @Override
-    public void updateElement(IElement elementToUpdate)
-    {
-        super.markForUpdate(elementToUpdate);
-    }
 
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
@@ -256,19 +240,19 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         @Override
         public Fragment getItem(int position)
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: returning fragment for position [%d]", position));
+            Log.v(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: returning fragment for tab position [%d]", position));
 
-            switch(position)
+            switch(Tab.values()[position])
             {
-                case(0):
+                case SHOW_OVERVIEW:
                 {
                     return ShowParkOverviewFragment.newInstance(this.parkUuid);
                 }
-                case(1):
+                case SHOW_ATTRACTIONS:
                 {
                     return ShowAttractionsFragment.newInstance(this.parkUuid);
                 }
-                case(2):
+                case SHOW_VISITS:
                 {
                     return ShowVisitsFragment.newInstance(this.parkUuid);
                 }
@@ -284,19 +268,19 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
 
-            switch (position)
+            switch (Tab.values()[position])
             {
-                case TAB_OVERVIEW:
+                case SHOW_OVERVIEW:
                     this.showParkOverviewFragment = (ShowParkOverviewFragment) createdFragment;
                     break;
-                case TAB_ATTRACTIONS:
+                case SHOW_ATTRACTIONS:
                     this.showAttractionsFragment = (ShowAttractionsFragment) createdFragment;
                     break;
-                case TAB_VISITS:
+                case SHOW_VISITS:
                     this.showVisitsFragment = (ShowVisitsFragment) createdFragment;
                     break;
                 default:
-                    String errorMessage = String.format(Locale.getDefault(), "ShowParkActivity.TabPagerAdapter.instantiateItem:: tab position [%d] does not exist", position);
+                    String errorMessage = String.format(Locale.getDefault(), "ShowParkActivity.TabPagerAdapter.instantiateItem:: tab [%s] does not exist", Tab.values()[position]);
                     Log.e(Constants.LOG_TAG, errorMessage);
                     throw new IllegalStateException(errorMessage);
             }
@@ -307,7 +291,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         @Override
         public int getCount()
         {
-            return this.tabTitleDrawables.length;
+            return Tab.values().length;
         }
 
         View getTabTitleView(int position)
