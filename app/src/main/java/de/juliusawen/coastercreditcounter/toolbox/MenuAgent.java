@@ -101,44 +101,7 @@ public class MenuAgent
                         case SORT_BY_ATTRACTION_CATEGORY:
                         case SORT_BY_MANUFACTURER:
                         {
-                            if(subMenuSortBy == null)
-                            {
-                                Log.d(Constants.LOG_TAG, "MenuAgent.create<OptionsMenu>:: adding submenu <sort by>"); //Todo: set to verbose
-                                subMenuSortBy = menu.addSubMenu(Selection.SORT_BY.ordinal(), Selection.SORT_BY.ordinal(), Menu.NONE, R.string.selection_sort_by);
-                            }
-
-                            Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSubMenu:: adding SubMenu [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
-                            Menu subSubMenuSortBy = subMenuSortBy.addSubMenu(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
-
-                            switch(selection)
-                            {
-                                case SORT_BY_YEAR:
-                                    this.addSortAscendingToSubMenu(Selection.SORT_BY_YEAR_ASCENDING, subSubMenuSortBy);
-                                    this.addSortDescendingToSubMenu(Selection.SORT_BY_YEAR_DESCENDING, subSubMenuSortBy);
-                                    break;
-
-                                case SORT_BY_NAME:
-                                    this.addSortAscendingToSubMenu(Selection.SORT_BY_NAME_ASCENDING, subSubMenuSortBy);
-                                    this.addSortDescendingToSubMenu(Selection.SORT_BY_NAME_DESCENDING, subSubMenuSortBy);
-                                    break;
-
-                                case SORT_BY_LOCATION:
-                                    this.addSortAscendingToSubMenu(Selection.SORT_BY_LOCATION_ASCENDING, subSubMenuSortBy);
-                                    this.addSortDescendingToSubMenu(Selection.SORT_BY_LOCATION_DESCENDING, subSubMenuSortBy);
-                                    break;
-
-                                case SORT_BY_ATTRACTION_CATEGORY:
-                                    this.addSortAscendingToSubMenu(Selection.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, subSubMenuSortBy);
-                                    this.addSortDescendingToSubMenu(Selection.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, subSubMenuSortBy);
-                                    break;
-
-                                case SORT_BY_MANUFACTURER:
-                                    this.addSortAscendingToSubMenu(Selection.SORT_BY_MANUFACTURER_ASCENDING, subSubMenuSortBy);
-                                    this.addSortDescendingToSubMenu(Selection.SORT_BY_MANUFACTURER_DESCENDING, subSubMenuSortBy);
-                                    break;
-                            }
-
-                            subMenuSortBy.setGroupEnabled(selection.ordinal(), setEnabledBySelectionsToAdd.get(selection));
+                            this.createMenuSortBy(selection, menu, subMenuSortBy);
                             break;
                         }
 
@@ -147,13 +110,7 @@ public class MenuAgent
                         case GROUP_BY_MANUFACTURER:
                         case GROUP_BY_STATUS:
                         {
-                            if(subMenuGroupBy == null)
-                            {
-                                Log.d(Constants.LOG_TAG, "MenuAgent.create<OptionsMenu>:: adding submenu <group by>"); //Todo: set to verbose
-                                subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
-                            }
-
-                            this.addItemToMenu(selection, subMenuGroupBy);
+                            this.createMenuGroupBy(selection, menu, subMenuGroupBy);
                             break;
                         }
 
@@ -175,11 +132,46 @@ public class MenuAgent
         this.setEnabledBySelectionsToAdd.clear();
     }
 
-    private void addItemToMenu(Selection selection, Menu menu)
+    private void createMenuSortBy(Selection selection, Menu menu, Menu subMenuSortBy)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding MenuItem [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
-        menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
-                .setEnabled(this.setEnabledBySelectionsToAdd.get(selection));
+        if(subMenuSortBy == null)
+        {
+            Log.d(Constants.LOG_TAG, "MenuAgent.createMenuSortBy:: adding submenu <sort by>"); //Todo: set to verbose
+            subMenuSortBy = menu.addSubMenu(Selection.SORT_BY.ordinal(), Selection.SORT_BY.ordinal(), Menu.NONE, R.string.selection_sort_by);
+        }
+
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.createMenuSortBy:: adding SubMenu [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
+        Menu subSubMenuSortBy = subMenuSortBy.addSubMenu(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
+
+        switch(selection)
+        {
+            case SORT_BY_YEAR:
+                this.addSortAscendingToSubMenu(Selection.SORT_BY_YEAR_ASCENDING, subSubMenuSortBy);
+                this.addSortDescendingToSubMenu(Selection.SORT_BY_YEAR_DESCENDING, subSubMenuSortBy);
+                break;
+
+            case SORT_BY_NAME:
+                this.addSortAscendingToSubMenu(Selection.SORT_BY_NAME_ASCENDING, subSubMenuSortBy);
+                this.addSortDescendingToSubMenu(Selection.SORT_BY_NAME_DESCENDING, subSubMenuSortBy);
+                break;
+
+            case SORT_BY_LOCATION:
+                this.addSortAscendingToSubMenu(Selection.SORT_BY_LOCATION_ASCENDING, subSubMenuSortBy);
+                this.addSortDescendingToSubMenu(Selection.SORT_BY_LOCATION_DESCENDING, subSubMenuSortBy);
+                break;
+
+            case SORT_BY_ATTRACTION_CATEGORY:
+                this.addSortAscendingToSubMenu(Selection.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, subSubMenuSortBy);
+                this.addSortDescendingToSubMenu(Selection.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, subSubMenuSortBy);
+                break;
+
+            case SORT_BY_MANUFACTURER:
+                this.addSortAscendingToSubMenu(Selection.SORT_BY_MANUFACTURER_ASCENDING, subSubMenuSortBy);
+                this.addSortDescendingToSubMenu(Selection.SORT_BY_MANUFACTURER_DESCENDING, subSubMenuSortBy);
+                break;
+        }
+
+        subMenuSortBy.setGroupEnabled(selection.ordinal(), setEnabledBySelectionsToAdd.get(selection));
     }
 
     private void addSortAscendingToSubMenu(Selection selection, Menu subMenu)
@@ -194,6 +186,23 @@ public class MenuAgent
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_descending);
     }
 
+    private void createMenuGroupBy(Selection selection, Menu menu, Menu subMenuGroupBy)
+    {
+        if(subMenuGroupBy == null)
+        {
+            Log.d(Constants.LOG_TAG, "MenuAgent.createMenuGroupBy:: adding submenu <group by>"); //Todo: set to verbose
+            subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
+        }
+
+        this.addItemToMenu(selection, subMenuGroupBy);
+    }
+
+    private void addItemToMenu(Selection selection, Menu menu)
+    {
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding MenuItem [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
+        menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
+                .setEnabled(this.setEnabledBySelectionsToAdd.get(selection));
+    }
 
     public boolean handleMenuItemSelected(MenuItem item, IMenuAgentClient client)
     {
@@ -270,15 +279,14 @@ public class MenuAgent
     {
         NO_FUNCTION,
 
+
+        //OPTIONS MENU
+
         HELP,
 
         EXPAND_ALL,
         COLLAPSE_ALL,
 
-//        SORT,
-//        SORT_LOCATIONS,
-//        SORT_PARKS,
-//        SORT_ATTRACTIONS,
 
         SORT_BY,
 
@@ -302,6 +310,7 @@ public class MenuAgent
         SORT_BY_MANUFACTURER_ASCENDING,
         SORT_BY_MANUFACTURER_DESCENDING,
 
+
         GROUP_BY,
         GROUP_BY_LOCATION,
         GROUP_BY_MANUFACTURER,
@@ -309,16 +318,23 @@ public class MenuAgent
         GROUP_BY_STATUS,
 
 
+        //OPTIONS ACTION
 //        SHORTCUT_TO_CURRENT_VISIT,
 //        ENABLE_EDITING,
 //        DISABLE_EDITING,
 
 
+        //POPUP
 //        EDIT,
 //        DELETE,
 //        REMOVE,
 //        RELOCATE,
-//
+
+//        SORT,
+//        SORT_LOCATIONS,
+//        SORT_PARKS,
+//        SORT_ATTRACTIONS,
+
 //        ASSIGN_TO_ATTRACTIONS,
 //        SET_AS_DEFAULT,
 

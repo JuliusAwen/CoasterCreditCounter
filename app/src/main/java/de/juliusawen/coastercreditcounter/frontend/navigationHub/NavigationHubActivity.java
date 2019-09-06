@@ -49,9 +49,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private TextView textViewTotalCoasterCreditCount;
     private TextView textViewTotalCoasterRidesCount;
 
-    private final int SELECTION_USE_DEV_CONTENT = 9999;
-    private final int SELECTION_USE_MOCK_CONTENT = 6666;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -130,21 +127,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         menu.clear();
 
-        if(App.config.isDebugBuild())
-        {
-            if(App.config.usageOfDevelopersContentEnabled())
-            {
-                if(App.config.useDevelopersContent())
-                {
-                    menu.add(Menu.NONE, this.SELECTION_USE_MOCK_CONTENT, Menu.NONE, "use mocked content");
-                }
-                else
-                {
-                    menu.add(Menu.NONE, this.SELECTION_USE_DEV_CONTENT, Menu.NONE, "use developers content");
-                }
-            }
-        }
-
         if(!Visit.getCurrentVisits().isEmpty())
         {
             menu.add(Menu.NONE, Constants.SELECTION_SHORTCUT_TO_CURRENT_VISIT, Menu.NONE, "shortcut to current visit")
@@ -187,38 +169,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 }
             }
 
-            if(App.config.isDebugBuild())
-            {
-                if(item.getItemId() == this.SELECTION_USE_DEV_CONTENT)
-                {
-                    App.config.setUseDevelopersContent(true);
-                    this.setExportFileAbsolutPath();
-
-                    AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
-                            R.drawable.ic_baseline_warning,
-                            "Import Dev Content?",
-                            String.format("Export file absolute path set to %s.\n\n" +
-                                    "WARNING:\n" +
-                                    "Importing from that source could lead to JSON inconsistencies!\n" +
-                                    "Current JSON file state is overwritten when changes take place!", this.viewModel.exportFileAbsolutePath),
-                            getString(R.string.text_accept),
-                            getString(R.string.text_decline),
-                            Constants.REQUEST_CODE_OVERWRITE_CONTENT,
-                            false
-                    );
-
-                    alertDialogFragmentOverwriteFile.setCancelable(false);
-                    alertDialogFragmentOverwriteFile.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                }
-                else if(item.getItemId() == this.SELECTION_USE_MOCK_CONTENT)
-                {
-                    Toaster.makeToast(this, "USING MOCKED CONTENT - importing...");
-                    App.config.setUseDevelopersContent(false);
-                    this.setExportFileAbsolutPath();
-                    this.startImportContent();
-                }
-            }
-
             return super.onOptionsItemSelected(item);
         }
         else
@@ -242,7 +192,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         Log.d(Constants.LOG_TAG, String.format("NavigationHubActivity.setMenuItemImportAvailability:: import enabled [%S]", enabled));
 
 
-        //Todo: remove setEnabled(false)
+        //Todo: remove setEnabled(false) when implemented
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
     }
 
