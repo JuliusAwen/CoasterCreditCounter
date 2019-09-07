@@ -1384,18 +1384,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.initializeDisplayModesByDetail();
     }
 
-    public void formatAsPrettyPrint(boolean formatAsPrettyPrint)
+    public void setFormatAsPrettyPrint(boolean formatAsPrettyPrint)
     {
         this.formatAsPrettyPrint = formatAsPrettyPrint;
-
-        if(formatAsPrettyPrint)
-        {
-            this.expandAll();
-        }
-        else
-        {
-            this.collapseAll();
-        }
+        this.expandAll();
 
         notifyDataSetChanged();
     }

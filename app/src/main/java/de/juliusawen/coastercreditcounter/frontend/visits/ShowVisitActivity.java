@@ -119,11 +119,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             if(this.viewModel.visit.isEditingEnabled())
             {
                 super.setFloatingActionButtonVisibility(true);
+                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
             }
             else
             {
                 super.setFloatingActionButtonVisibility(false);
-                this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
+                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
             }
 
             Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
@@ -184,7 +185,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.setFloatingActionButtonVisibility(true);
         this.viewModel.visit.setEditingEnabled(true);
-        this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(false);
+        this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
         invalidateOptionsMenu();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
@@ -196,7 +197,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.setFloatingActionButtonVisibility(false);
         this.viewModel.visit.setEditingEnabled(false);
-        this.viewModel.contentRecyclerViewAdapter.formatAsPrettyPrint(true);
+        this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
         invalidateOptionsMenu();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
@@ -513,7 +514,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(resetContent)
         {
             Log.d(LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
+                    .expandAll();
         }
         else
         {
