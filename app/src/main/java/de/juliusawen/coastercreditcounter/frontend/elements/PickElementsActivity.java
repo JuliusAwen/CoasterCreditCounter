@@ -206,7 +206,7 @@ public class PickElementsActivity extends BaseActivity
     //region OPTIONS MENU
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
@@ -214,24 +214,54 @@ public class PickElementsActivity extends BaseActivity
         {
             this.viewModel.optionsMenuAgent
                     .addMenuItem(MenuAgent.SORT_BY_NAME)
-                    .addMenuItem(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
-//                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
-                    .addMenuItem(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
-                    .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
-                    .addMenuItem(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
-                    .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .addMenuItem(MenuAgent.SORT_BY_LOCATION)
+//                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY)
+                    .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER)
+                    .addMenuItem(MenuAgent.GROUP_BY_LOCATION)
+                    .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
+                    .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER)
+                    .addMenuItem(MenuAgent.GROUP_BY_STATUS)
+                    .addMenuItem(MenuAgent.EXPAND_ALL)
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
                     .addMenuItem(MenuAgent.HELP)
                     .create(menu);
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .addMenuItem(MenuAgent.EXPAND_ALL)
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
                     .create(menu);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
+//                    .setEnabled(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                    .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
+                    .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
+                    .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                    .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
+                    .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
+                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .prepare(menu);
+        }
+        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .prepare(menu);
         }
 
         return super.onPrepareOptionsMenu(menu);

@@ -132,21 +132,28 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     //region OPTIONS MENU
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.DISABLE_EDITING)
+                .addMenuItem(MenuAgent.ENABLE_EDITING)
+                .addMenuItem(MenuAgent.EXPAND_ALL)
+                .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                .addMenuItem(MenuAgent.HELP)
+                .create(menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(this.viewModel.visit.isEditingEnabled())
-        {
-            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.DISABLE_EDITING);
-        }
-        else
-        {
-            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.ENABLE_EDITING);
-        }
-
         this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .addMenuItem(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .create(menu);
+                .setVisible(MenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
+                .setVisible(MenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
+                .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .prepare(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }

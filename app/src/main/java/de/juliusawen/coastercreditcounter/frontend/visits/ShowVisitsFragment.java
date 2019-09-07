@@ -53,6 +53,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private ShowVisitsFragmentViewModel viewModel;
     private boolean actionConfirmed;
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
+    private RecyclerView recyclerView;
 
     public ShowVisitsFragment() {}
 
@@ -103,9 +104,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        this.recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
     @Override
@@ -186,6 +187,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         super.onDetach();
         this.viewModel = null;
         this.showVisitsFragmentInteraction = null;
+        this.recyclerView.setAdapter(null);
+        this.recyclerView.setLayoutManager(null);
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()

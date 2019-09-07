@@ -5,7 +5,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -38,7 +39,11 @@ public class MenuAgent
 
     private MenuType menuType;
 
-    private Map<Selection, Boolean> setEnabledBySelectionsToAdd;
+
+    private List<Selection> selectionsToAdd;
+    private Map<Selection, Boolean> setEnabledBySelection;
+    private Map<Selection, Boolean> setVisibleBySelection;
+    private Map<Selection, Selection> submenuBySelection;
 
     private Map<Selection, Integer> stringResourcesBySelection;
     private Map<Selection, Integer> drawableResourcesBySelection;
@@ -48,7 +53,10 @@ public class MenuAgent
     {
         this.menuType = menuType;
 
-        this.setEnabledBySelectionsToAdd = new LinkedHashMap<>();
+        this.selectionsToAdd = new LinkedList<>();
+        this.setEnabledBySelection = new HashMap<>();
+        this.setVisibleBySelection = new HashMap<>();
+        this.submenuBySelection = new HashMap<>();
 
         this.stringResourcesBySelection = this.createStringResourcesBySelectionMap();
         this.drawableResourcesBySelection = this.createDrawableResourcesBySelectionMap();
@@ -95,21 +103,24 @@ public class MenuAgent
     }
 
 
-    public MenuAgent addMenuItem(int selection)
+    public MenuAgent addMenuItem(int menuItem)
     {
-        return this.addMenuItem(selection, true);
-    }
+        if(Selection.values().length >= menuItem)
+        {
+            this.selectionsToAdd.add(Selection.values()[menuItem]);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("MenuAgent.addMenuItem:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
+        }
 
-    public MenuAgent addMenuItem(int selection, boolean setEnabled)
-    {
-        this.setEnabledBySelectionsToAdd.put(Selection.values()[selection], setEnabled);
         return this;
     }
 
 
     public void create(Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.create:: adding [%d] MenuItem(s) to [%s]", this.setEnabledBySelectionsToAdd.size(), this.menuType));
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.create:: adding [%d] MenuItem(s) to [%s]", this.selectionsToAdd.size(), this.menuType));
 
         menu.clear();
 
@@ -120,7 +131,7 @@ public class MenuAgent
                 Menu subMenuSortBy = null;
                 Menu subMenuGroupBy = null;
 
-                for(Selection selection : this.setEnabledBySelectionsToAdd.keySet())
+                for(Selection selection : this.selectionsToAdd)
                 {
                     switch(selection)
                     {
@@ -130,7 +141,13 @@ public class MenuAgent
                         case SORT_BY_ATTRACTION_CATEGORY:
                         case SORT_BY_MANUFACTURER:
                         {
-                            this.createMenuSortBy(selection, menu, subMenuSortBy);
+                            if(subMenuSortBy == null)
+                            {
+                                Log.d(Constants.LOG_TAG, "MenuAgent.create:: adding subMenu <sort by>"); //Todo: set to verbose
+                                subMenuSortBy = menu.addSubMenu(Selection.SORT_BY.ordinal(), Selection.SORT_BY.ordinal(), Menu.NONE, R.string.selection_sort_by);
+                            }
+                            this.createMenuSortBy(selection, subMenuSortBy);
+                            this.submenuBySelection.put(selection, Selection.SORT_BY);
                             break;
                         }
 
@@ -139,7 +156,13 @@ public class MenuAgent
                         case GROUP_BY_MANUFACTURER:
                         case GROUP_BY_STATUS:
                         {
-                            this.createMenuGroupBy(selection, menu, subMenuGroupBy);
+                            if(subMenuGroupBy == null)
+                            {
+                                Log.d(Constants.LOG_TAG, "MenuAgent.create:: adding submenu <group by>"); //Todo: set to verbose
+                                subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
+                            }
+                            this.addItemToMenu(selection, subMenuGroupBy);
+                            this.submenuBySelection.put(selection, Selection.GROUP_BY);
                             break;
                         }
 
@@ -164,18 +187,12 @@ public class MenuAgent
             }
         }
 
-        this.setEnabledBySelectionsToAdd.clear();
+        this.selectionsToAdd.clear();
     }
 
-    private void createMenuSortBy(Selection selection, Menu menu, Menu subMenuSortBy)
+    private void createMenuSortBy(Selection selection, Menu subMenuSortBy)
     {
-        if(subMenuSortBy == null)
-        {
-            Log.d(Constants.LOG_TAG, "MenuAgent.createMenuSortBy:: adding submenu <sort by>"); //Todo: set to verbose
-            subMenuSortBy = menu.addSubMenu(Selection.SORT_BY.ordinal(), Selection.SORT_BY.ordinal(), Menu.NONE, R.string.selection_sort_by);
-        }
-
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.createMenuSortBy:: adding SubMenu [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.createMenuSortBy:: adding SubMenu [%s]", selection)); //Todo: set to verbose
         Menu subSubMenuSortBy = subMenuSortBy.addSubMenu(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
 
         switch(selection)
@@ -205,47 +222,110 @@ public class MenuAgent
                 this.addSortDescendingToSubMenu(Selection.SORT_BY_MANUFACTURER_DESCENDING, subSubMenuSortBy);
                 break;
         }
-
-        subMenuSortBy.setGroupEnabled(selection.ordinal(), setEnabledBySelectionsToAdd.get(selection));
     }
 
     private void addSortAscendingToSubMenu(Selection selection, Menu subMenu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortAscendingToSubMenu:: adding MenuItem [%s]", selection)); //Todo: set to verbose
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortAscendingToSubMenu:: adding [%s]", selection)); //Todo: set to verbose
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
     }
 
     private void addSortDescendingToSubMenu(Selection selection, Menu subMenu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortDescendingToSubMenu:: adding MenuItem [%s]", selection)); //Todo: set to verbose
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortDescendingToSubMenu:: adding [%s]", selection)); //Todo: set to verbose
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_descending);
-    }
-
-    private void createMenuGroupBy(Selection selection, Menu menu, Menu subMenuGroupBy)
-    {
-        if(subMenuGroupBy == null)
-        {
-            Log.d(Constants.LOG_TAG, "MenuAgent.createMenuGroupBy:: adding submenu <group by>"); //Todo: set to verbose
-            subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
-        }
-
-        this.addItemToMenu(selection, subMenuGroupBy);
     }
 
     private void addItemToMenu(Selection selection, Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding MenuItem [%s] - setEnabled[%S]", selection, this.setEnabledBySelectionsToAdd.get(selection))); //Todo: set to verbose
-        menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
-                .setEnabled(this.setEnabledBySelectionsToAdd.get(selection));
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding [%s]", selection)); //Todo: set to verbose
+        menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
     }
 
     private void addActionItemToMenu(Selection selection, Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addActionItemToMenu:: adding MenuItem [%s]", selection)); //Todo: set to verbose
+        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addActionItemToMenu:: adding [%s]", selection)); //Todo: set to verbose
 
         menu.add(Menu.NONE, selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
                 .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesBySelection.get(selection), R.color.white))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    public MenuAgent setEnabled(int menuItem, boolean setEnabled)
+    {
+        if(Selection.values().length >= menuItem)
+        {
+            this.setEnabledBySelection.put(Selection.values()[menuItem], setEnabled);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("MenuAgent.setEnabled:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
+        }
+
+        return this;
+    }
+
+    public MenuAgent setVisible(int menuItem, boolean setVisible)
+    {
+        if(Selection.values().length >= menuItem)
+        {
+            this.setVisibleBySelection.put(Selection.values()[menuItem], setVisible);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("MenuAgent.setVisible:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
+        }
+
+        return this;
+    }
+
+    public void prepare(Menu menu)
+    {
+
+        for(Selection selection : this.setEnabledBySelection.keySet())
+        {
+            MenuItem menuItem = menu.findItem(selection.ordinal());
+            if(menuItem != null)
+            {
+                if(menuItem.hasSubMenu())
+                {
+                    Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s][%s] enabled [%S]",
+                            this.submenuBySelection.get(selection), selection, this.setEnabledBySelection.get(selection)));
+
+                    menuItem = menu.findItem(this.submenuBySelection.get(selection).ordinal());
+                    if(menuItem != null)
+                    {
+                        menuItem.getSubMenu().setGroupEnabled(selection.ordinal(), this.setEnabledBySelection.get(selection));
+                    }
+                }
+                else
+                {
+                    Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] enabled [%S]", selection, this.setEnabledBySelection.get(selection)));
+                    menuItem.setEnabled(this.setEnabledBySelection.get(selection));
+                }
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("MenuAgent.prepare<setEnable>:: MenuItem [%s] not found", selection));
+            }
+        }
+
+        for(Selection selection : this.setVisibleBySelection.keySet())
+        {
+            MenuItem menuItem = menu.findItem(selection.ordinal());
+            if(menuItem != null)
+            {
+                Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] visible [%S]", selection, this.setVisibleBySelection.get(selection)));
+                menuItem.setVisible(this.setVisibleBySelection.get(selection));
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("MenuAgent.prepare<setVisible>:: MenuItem [%s] not found", selection));
+            }
+        }
+
+        this.setEnabledBySelection.clear();
+        this.setVisibleBySelection.clear();
     }
 
 

@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +101,17 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         this.synchronizePersistency();
     }
 
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        this.toolbar = null;
+        this.helpOverlayFragment = null;
+        this.floatingActionButton = null;
+        this.floatingActionButtonOnClickListener = null;
+        this.progressBar = null;
+    }
+
 
     private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()
     {
@@ -187,16 +197,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected", item.getItemId()));
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected - not handled!", item.getItemId()));
         return super.onOptionsItemSelected(item);
     }
 
