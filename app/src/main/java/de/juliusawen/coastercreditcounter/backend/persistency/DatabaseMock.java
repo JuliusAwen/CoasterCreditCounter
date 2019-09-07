@@ -324,6 +324,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         kaeptnsToern.setManufacturer(manufacturers.Mack);
         heidePark.addChildAndSetParent(kaeptnsToern);
 
+        CustomAttraction nostalgiekarusell = CustomAttraction.create("Nostalgiekarussell", 0, null);
+        nostalgiekarusell.setAttractionCategory(attractionCategories.FamilyRides);
+        heidePark.addChildAndSetParent(nostalgiekarusell);
+
+
 
         // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides12102018 = new LinkedHashMap<>();
@@ -365,6 +370,16 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides18052019.put(wildwasserbahn, 1);
         rides18052019.put(mountainRafting, 2);
         heidePark.addChildAndSetParent(this.createVisit(18, 5, 2019, rides18052019));
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides07092019 = new LinkedHashMap<>();
+        rides07092019.put(nostalgiekarusell, 1);
+        rides07092019.put(flugDerDaemonen, 4);
+        rides07092019.put(bigLoop, 1);
+        rides07092019.put(desertRace, 3);
+        rides07092019.put(colossos, 2);
+        rides07092019.put(krake, 2);
+        rides07092019.put(limit, 1);
+        heidePark.addChildAndSetParent(this.createVisit(7, 9, 2019, rides07092019));
     }
 
     private void mockWalibiHolland()

@@ -36,7 +36,7 @@ public class AppConfig
 
     private final boolean validateContent = true;
 
-    public final String dateFormat = "dd. MMMM yyyy";
+    public final String dateFormat = "d. MMMM yyyy";
     public final String yearFormat = "yyyy";
     public final String timeFormat = "HH:mm";
 
