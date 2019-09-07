@@ -30,12 +30,14 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
-import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
+import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
@@ -77,7 +79,7 @@ public class PickElementsActivity extends BaseActivity
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuAgent.MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
             }
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -92,8 +94,8 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
@@ -107,9 +109,9 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
                 }
                 else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
@@ -124,7 +126,7 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForType(Status.class, Typeface.BOLD)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
                             .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
-                            .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -154,10 +156,10 @@ public class PickElementsActivity extends BaseActivity
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements))
-                    .addToolbar()
-                    .addToolbarHomeButton()
-                    .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
             if(!this.viewModel.isSimplePick)
             {
@@ -245,13 +247,13 @@ public class PickElementsActivity extends BaseActivity
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
-                    .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
+                    .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
 //                    .setEnabled(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
-                    .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.LOCATION)
-                    .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.MANUFACTURER)
-                    .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.STATUS)
+                    .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                    .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                    .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
+                    .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                    .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
                     .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                     .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
@@ -275,49 +277,49 @@ public class PickElementsActivity extends BaseActivity
 
 
     @Override
-    public boolean handleOptionsMenuItemExpandAllSelected()
+    public boolean handleMenuItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemCollapseAllSelected()
+    public boolean handleMenuItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemGroupByLocationSelected()
+    public boolean handleMenuItemGroupByLocationSelected()
     {
-        this.groupElementsByType(GroupHeaderProvider.GroupType.LOCATION);
+        this.groupElementsByType(GroupType.LOCATION);
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemGroupByAttractionCategorySelected()
+    public boolean handleMenuItemGroupByAttractionCategorySelected()
     {
-        this.groupElementsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+        this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemGroupByManufacturerSelected()
+    public boolean handleMenuItemGroupByManufacturerSelected()
     {
-        this.groupElementsByType(GroupHeaderProvider.GroupType.MANUFACTURER);
+        this.groupElementsByType(GroupType.MANUFACTURER);
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemGroupByStatusSelected()
+    public boolean handleMenuItemGroupByStatusSelected()
     {
-        this.groupElementsByType(GroupHeaderProvider.GroupType.STATUS);
+        this.groupElementsByType(GroupType.STATUS);
         return true;
     }
 
     @Override
-    public boolean handleOptionsMenuItemSortByNameAscendingSelected()
+    public boolean handleMenuItemSortByNameAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -325,7 +327,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleOptionsMenuItemSortByNameDescendingSelected()
+    public boolean handleMenuItemSortByNameDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -333,7 +335,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleOptionsMenuItemSortByLocationAscendingSelected()
+    public boolean handleMenuItemSortByLocationAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -341,7 +343,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleOptionsMenuItemSortByLocationDescendingSelected()
+    public boolean handleMenuItemSortByLocationDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -349,7 +351,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
 //    @Override
-//    public boolean handleOptionsMenuItemSortByAttractionCategoryAscendingSelected()
+//    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -357,7 +359,7 @@ public class PickElementsActivity extends BaseActivity
 //    }
 //
 //    @Override
-//    public boolean handleOptionsMenuItemSortByAttractionCategoryDescendingSelected()
+//    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -365,7 +367,7 @@ public class PickElementsActivity extends BaseActivity
 //    }
 
     @Override
-    public boolean handleOptionsMenuItemSortByManufacturerAscendingSelected()
+    public boolean handleMenuItemSortByManufacturerAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -373,7 +375,7 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleOptionsMenuItemSortByManufacturerDescendingSelected()
+    public boolean handleMenuItemSortByManufacturerDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -383,7 +385,7 @@ public class PickElementsActivity extends BaseActivity
     // endregion OPTIONS MENU
 
 
-    private void groupElementsByType(GroupHeaderProvider.GroupType groupType)
+    private void groupElementsByType(GroupType groupType)
     {
         this.viewModel.contentRecyclerViewAdapter.clearTypefaceForTypes()
                 .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
@@ -392,31 +394,31 @@ public class PickElementsActivity extends BaseActivity
         switch(groupType)
         {
             case LOCATION:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .groupItemsByType(GroupHeaderProvider.GroupType.LOCATION);
+                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                        .groupItemsByType(GroupType.LOCATION);
                 break;
 
             case ATTRACTION_CATEGORY:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                        .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
                 break;
 
             case MANUFACTURER:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .groupItemsByType(GroupHeaderProvider.GroupType.MANUFACTURER);
+                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                        .groupItemsByType(GroupType.MANUFACTURER);
                 break;
 
             case STATUS:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                        .groupItemsByType(GroupHeaderProvider.GroupType.STATUS);
+                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                        .groupItemsByType(GroupType.STATUS);
                 break;
         }
     }

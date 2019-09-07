@@ -40,6 +40,8 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
@@ -78,8 +80,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             App.content.getContentOfType(AttractionCategory.class),
                             childTypesToExpand)
                             .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_MANUFACTURER)
                 {
@@ -87,8 +89,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             App.content.getContentOfType(Manufacturer.class),
                             childTypesToExpand)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.ATTRACTION_CATEGORY, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW);
                 }
                 else if(this.viewModel.typeToManage == Constants.TYPE_STATUS)
                 {
@@ -96,8 +98,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             App.content.getContentOfType(Status.class),
                             childTypesToExpand)
                             .setTypefaceForType(Status.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.LOCATION, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                            .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW);
                 }
             }
 
@@ -114,11 +116,11 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
             String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText)
-                    .addToolbar()
-                    .addToolbarHomeButton()
-                    .setToolbarTitleAndSubtitle(toolbarTitle, null)
-                    .addFloatingActionButton();
+            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+            super.addFloatingActionButton();
 
             this.decorateFloatingActionButton();
         }
@@ -598,8 +600,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(AttractionCategory.getDefault())
-                            .markForUpdate(this.viewModel.longClickedElement);
+                    super.markForUpdate(AttractionCategory.getDefault());
+                    super.markForUpdate(this.viewModel.longClickedElement);
                     AttractionCategory.setDefault((AttractionCategory)this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
@@ -609,8 +611,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Manufacturer",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(Manufacturer.getDefault())
-                            .markForUpdate(this.viewModel.longClickedElement);
+                    super.markForUpdate(Manufacturer.getDefault());
+                    super.markForUpdate(this.viewModel.longClickedElement);
                     Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
@@ -620,8 +622,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Status",
                             this.viewModel.longClickedElement));
 
-                    super.markForUpdate(Status.getDefault())
-                            .markForUpdate(this.viewModel.longClickedElement);
+                    super.markForUpdate(Status.getDefault());
+                    super.markForUpdate(this.viewModel.longClickedElement);
                     Status.setDefault((Status) this.viewModel.longClickedElement);
 
                     Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));

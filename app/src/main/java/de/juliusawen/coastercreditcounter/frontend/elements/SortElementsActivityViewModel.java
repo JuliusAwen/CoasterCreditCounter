@@ -11,4 +11,11 @@ public class SortElementsActivityViewModel extends ViewModel
 {
     List<IElement> elementsToSort;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

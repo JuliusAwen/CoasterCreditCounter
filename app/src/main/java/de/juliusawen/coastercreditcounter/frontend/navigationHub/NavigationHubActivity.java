@@ -31,6 +31,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -68,7 +69,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuAgent.MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
             }
 
             this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
@@ -81,9 +82,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-            super.addToolbar()
-                    .addToolbarMenuIcon()
-                    .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+            super.addToolbar();
+            super.addToolbarMenuIcon();
+            super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
         }
     }
 
@@ -164,11 +165,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
     }
     @Override
-    public boolean handleOptionsMenuItemGoToCurrentVisitSelected()
+    public boolean handleMenuItemGoToCurrentVisitSelected()
     {
         if(Visit.getCurrentVisits().size() > 1)
         {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleOptionsMenuItemGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleMenuItemGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
                     Visit.getCurrentVisits().size()));
 
             ActivityDistributor.startActivityPickForResult(
@@ -178,7 +179,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
         else
         {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleOptionsMenuItemGoToCurrentVisitSelected:: only one current visit found - opening %s...",
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleMenuItemGoToCurrentVisitSelected:: only one current visit found - opening %s...",
                     Visit.getCurrentVisits().get(0)));
 
             ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));

@@ -13,4 +13,11 @@ public class ShowVisitActivityViewModel extends ViewModel
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     IElement longClickedElement;
     MenuAgent optionsMenuAgent;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

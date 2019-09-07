@@ -11,4 +11,11 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
     Park park;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     IElement longClickedElement;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

@@ -80,9 +80,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addToolbar()
-                    .addToolbarHomeButton()
-                    .addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
 
             this.setSelectionModeEnabled(this.viewModel.selectionMode);
 
@@ -465,9 +465,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                             Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
 
-                            ShowLocationsActivity.super
-                                    .markForDeletion(viewModel.longClickedElement, true)
-                                    .markForUpdate(viewModel.longClickedElement.getParent());
+                            ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, true);
+                            ShowLocationsActivity.super.markForUpdate(viewModel.longClickedElement.getParent());
 
                             viewModel.longClickedElement.deleteElementAndDescendants();
                             updateContentRecyclerView(true);
@@ -509,9 +508,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                             IElement parent = viewModel.longClickedElement.getParent();
 
-                            ShowLocationsActivity.super
-                                    .markForDeletion(viewModel.longClickedElement, false)
-                                    .markForUpdate(parent);
+                            ShowLocationsActivity.super.markForDeletion(viewModel.longClickedElement, false);
+                            ShowLocationsActivity.super.markForUpdate(parent);
 
                             viewModel.longClickedElement.removeElement();
 

@@ -36,13 +36,13 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -184,11 +184,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onDetach()
     {
-        super.onDetach();
-        this.viewModel = null;
-        this.showVisitsFragmentInteraction = null;
         this.recyclerView.setAdapter(null);
-        this.recyclerView.setLayoutManager(null);
+        super.onDetach();
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
@@ -199,7 +196,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(Visit.class),
                 childTypesToExpand)
-                .groupItemsByType(GroupHeaderProvider.GroupType.YEAR);
+                .groupItemsByType(GroupType.YEAR);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()

@@ -46,34 +46,15 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.ContentRecyclerViewAdapterType;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
+import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    public enum AdapterType
-    {
-        EXPANDABLE,
-        SELECTABLE,
-        COUNTABLE,
-    }
-
-    public enum DetailType
-    {
-        LOCATION,
-        ATTRACTION_CATEGORY,
-        MANUFACTURER,
-        STATUS,
-        TOTAL_RIDE_COUNT
-    }
-
-    public enum DisplayMode
-    {
-        OFF,
-        ABOVE,
-        BELOW
-    }
-
     private enum ViewType
     {
         ITEM,
@@ -90,14 +71,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final Map<IElement, Integer> generationByItem = new LinkedHashMap<>();
 
-    private final AdapterType adapterType;
-    private GroupHeaderProvider.GroupType groupType;
+    private final ContentRecyclerViewAdapterType contentRecyclerViewAdapterType;
+    private GroupType groupType;
     private boolean formatAsPrettyPrint;
 
     private final boolean selectMultipleItems;
     private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
 
+
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+
     private View.OnClickListener addRideOnClickListener;
     private View.OnClickListener deleteRideOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
@@ -112,11 +95,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final Map<DetailType, Set<Class<? extends IAttraction>>> typesByDetail = new HashMap<>();
 
-    private Map<DetailType, DisplayMode> displayModesByDetail = new HashMap<>();
+    private Map<DetailType, DetailDisplayMode> displayModesByDetail = new HashMap<>();
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
-        this.adapterType = request.adapterType;
+        this.contentRecyclerViewAdapterType = request.contentRecyclerViewAdapterType;
         this.selectMultipleItems = request.selectMultiple;
 
         this.initializeTypesByTypeface();
@@ -124,7 +107,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.initializeDisplayModesByDetail();
 
         this.groupHeaderProvider = new GroupHeaderProvider();
-        this.groupType = GroupHeaderProvider.GroupType.NONE;
+        this.groupType = GroupType.NONE;
 
         if(request.relevantChildTypes != null)
         {
@@ -151,7 +134,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter groupItemsByType(GroupHeaderProvider.GroupType groupType)
+    public ContentRecyclerViewAdapter groupItemsByType(GroupType groupType)
     {
         this.groupType = groupType;
         this.selectedItemsInOrderOfSelection.clear();
@@ -166,23 +149,23 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
 
             case LOCATION:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.LOCATION);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.LOCATION);
                 break;
 
             case ATTRACTION_CATEGORY:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.ATTRACTION_CATEGORY);
                 break;
 
             case MANUFACTURER:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.MANUFACTURER);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.MANUFACTURER);
                 break;
 
             case STATUS:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.STATUS);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.STATUS);
                 break;
 
             case YEAR:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupHeaderProvider.GroupType.YEAR);
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.YEAR);
 
                 if(App.settings.expandLatestYearInListByDefault())
                 {
@@ -267,11 +250,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void initializeDisplayModesByDetail()
     {
-        this.displayModesByDetail.put(DetailType.LOCATION, DisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.MANUFACTURER, DisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.ATTRACTION_CATEGORY, DisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.STATUS, DisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.TOTAL_RIDE_COUNT, DisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.LOCATION, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.MANUFACTURER, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.STATUS, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.OFF);
     }
 
     private static class ViewHolderItem extends RecyclerView.ViewHolder
@@ -353,7 +336,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         IElement item = this.items.get(position);
 
-        if(this.adapterType.equals(AdapterType.COUNTABLE) && (item instanceof VisitedAttraction))
+        if(this.contentRecyclerViewAdapterType.equals(ContentRecyclerViewAdapterType.COUNTABLE) && (item instanceof VisitedAttraction))
         {
             return ViewType.VISITED_ATTRACTION.ordinal();
         }
@@ -434,8 +417,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
     {
-        super.onAttachedToRecyclerView(recyclerView);
         this.recyclerView = recyclerView;
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView)
+    {
+        this.recyclerView = null;
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     private RecyclerView.LayoutManager getLayoutManager()
@@ -517,8 +507,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 if(types.contains(type))
                 {
-                    displayDetailAbove = this.displayModesByDetail.containsValue(DisplayMode.ABOVE);
-                    displayDetailBelow = this.displayModesByDetail.containsValue(DisplayMode.BELOW);
+                    displayDetailAbove = this.displayModesByDetail.containsValue(DetailDisplayMode.ABOVE);
+                    displayDetailBelow = this.displayModesByDetail.containsValue(DetailDisplayMode.BELOW);
                     break;
                 }
             }
@@ -530,7 +520,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 boolean detailDisplayed = false;
 
                 String locationName = "";
-                if(this.displayModesByDetail.get(DetailType.LOCATION) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(DetailType.LOCATION) == DetailDisplayMode.ABOVE)
                 {
                     if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                     {
@@ -546,7 +536,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String manufacturerName = "";
-                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -557,7 +547,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -568,7 +558,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String statusName = "";
-                if(this.displayModesByDetail.get(DetailType.STATUS) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(DetailType.STATUS) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -579,7 +569,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String totalRideCountString = "";
-                if(this.displayModesByDetail.get(DetailType.TOTAL_RIDE_COUNT) == DisplayMode.ABOVE)
+                if(this.displayModesByDetail.get(DetailType.TOTAL_RIDE_COUNT) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
@@ -606,7 +596,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 boolean detailDisplayed = false;
 
                 String locationName = "";
-                if(this.displayModesByDetail.get(DetailType.LOCATION) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(DetailType.LOCATION) == DetailDisplayMode.BELOW)
                 {
                     if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
                     {
@@ -622,7 +612,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String manufacturerName = "";
-                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -633,7 +623,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DetailDisplayMode.BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -644,7 +634,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String statusName = "";
-                if(this.displayModesByDetail.get(DetailType.STATUS) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(DetailType.STATUS) == DetailDisplayMode.BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -655,7 +645,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 String totalRideCountString = "";
-                if(this.displayModesByDetail.get(DetailType.TOTAL_RIDE_COUNT) == DisplayMode.BELOW)
+                if(this.displayModesByDetail.get(DetailType.TOTAL_RIDE_COUNT) == DetailDisplayMode.BELOW)
                 {
                     if(detailDisplayed)
                     {
@@ -682,7 +672,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             //set onClickListeners
             if(!viewHolder.itemView.hasOnClickListeners())
             {
-                if(this.adapterType == AdapterType.SELECTABLE)
+                if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.SELECTABLE)
                 {
                     viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
                 }
@@ -1351,7 +1341,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(typeface <= 3)
         {
             Objects.requireNonNull(this.typesByTypeface.get(typeface)).add(type);
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForType:: typeface [%d] set for [%s]", typeface, type));
+            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForType:: typeface [%d] set for [%s]", typeface, type.getSimpleName()));
         }
         else
         {
@@ -1381,9 +1371,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter setDisplayModeForDetail(DetailType detailType, DisplayMode displayMode)
+    public ContentRecyclerViewAdapter setDisplayModeForDetail(DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
-        this.displayModesByDetail.put(detailType, displayMode);
+        this.displayModesByDetail.put(detailType, detailDisplayMode);
 
         return this;
     }
@@ -1410,7 +1400,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    public GroupHeaderProvider.GroupType getGroupType()
+    public GroupType getGroupType()
     {
         return this.groupType;
     }

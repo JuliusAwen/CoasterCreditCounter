@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -43,12 +42,8 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    private Toolbar toolbar;
-    private ActionBar actionBar;
-    private HelpOverlayFragment helpOverlayFragment;
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
-    private View progressBar;
 
     private BaseActivityViewModel viewModel;
 
@@ -87,7 +82,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
         if(App.isInitialized)
         {
-            if(this.helpOverlayFragment != null)
+            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+            if(helpOverlayFragment != null)
             {
                 this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
             }
@@ -99,17 +96,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     {
         super.onPause();
         this.synchronizePersistency();
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        this.toolbar = null;
-        this.helpOverlayFragment = null;
-        this.floatingActionButton = null;
-        this.floatingActionButtonOnClickListener = null;
-        this.progressBar = null;
     }
 
 
@@ -198,6 +184,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     }
 
 
+    // region handleOptionsMenuItemSelected implementations
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -205,7 +193,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return super.onOptionsItemSelected(item);
     }
 
-    // region handleOptionsMenuItemSelected implementations
 
     @Override
     public boolean handleInvalidOptionsMenuItemSelected(MenuItem item)
@@ -213,59 +200,61 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return this.onOptionsItemSelected(item);
     }
 
-    public boolean handleOptionsMenuItemHelpSelected()
+    public boolean handleMenuItemHelpSelected()
     {
-        if(this.helpOverlayFragment != null)
+        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+        if(helpOverlayFragment != null)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuItemHelpSelected:: showing HelpOverlay");
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
             this.setHelpOverlayVisibility(true);
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsMenuItemHelpSelected:: HelpOverlayFragment not added");
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
             return false;
         }
     }
 
     @Override
-    public boolean handleOptionsMenuItemExpandAllSelected() { return false; }
+    public boolean handleMenuItemExpandAllSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemCollapseAllSelected() { return false; }
+    public boolean handleMenuItemCollapseAllSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemGroupByLocationSelected() { return false; }
+    public boolean handleMenuItemGroupByLocationSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemGroupByAttractionCategorySelected() { return false; }
+    public boolean handleMenuItemGroupByAttractionCategorySelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemGroupByManufacturerSelected() { return false; }
+    public boolean handleMenuItemGroupByManufacturerSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemGroupByStatusSelected() { return false; }
+    public boolean handleMenuItemGroupByStatusSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByYearAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByYearAscendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByYearDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByYearDescendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByNameAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByNameAscendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByNameDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByNameDescendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByLocationAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByLocationAscendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByLocationDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByLocationDescendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByManufacturerAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByManufacturerAscendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemSortByManufacturerDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByManufacturerDescendingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemGoToCurrentVisitSelected() { return false; }
+    public boolean handleMenuItemGoToCurrentVisitSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemEnableEditingSelected() { return false; }
+    public boolean handleMenuItemEnableEditingSelected() { return false; }
     @Override
-    public boolean handleOptionsMenuItemDisableEditingSelected() { return false; }
+    public boolean handleMenuItemDisableEditingSelected() { return false; }
 
     // endregion handleOptionsMenuItemSelected implementations
 
@@ -280,53 +269,118 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public BaseActivity addToolbar()
+    public void addHelpOverlayFragment(String title, CharSequence message)
     {
-        if(App.isInitialized)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
-            this.toolbar = findViewById(R.id.toolbar);
-            this.toolbar.setVisibility(View.VISIBLE);
-            setSupportActionBar(toolbar);
-            this.actionBar = getSupportActionBar();
-        }
+        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
 
-        return this;
+        if(helpOverlayFragment == null)
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with title [%s] and message", title));
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
+            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.hide(helpOverlayFragment);
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using HelpOverlayFragment");
+        }
     }
 
-    public BaseActivity addToolbarHomeButton()
+    public void setHelpOverlayTitleAndMessage(String title, String message)
     {
-        if(this.actionBar != null)
+        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
+
+        if(helpOverlayFragment != null)
+        {
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title [%s] and message", title));
+            helpOverlayFragment.setTitleAndMessage(title, message);
+        }
+        else
+        {
+            this.addHelpOverlayFragment(title, message);
+        }
+    }
+
+    public void setHelpOverlayVisibility(boolean isVisible)
+    {
+        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
+
+        if(helpOverlayFragment != null)
+        {
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible[%s]", isVisible));
+
+            if(isVisible)
+            {
+                this.showFragmentFadeIn(helpOverlayFragment);
+            }
+            else
+            {
+                this.hideFragmentFadeOut(helpOverlayFragment);
+            }
+
+            this.viewModel.helpOverlayFragmentIsVisible = isVisible;
+            this.setFloatingActionButtonVisibility(!isVisible);
+        }
+        else
+        {
+            this.addHelpOverlayFragment(this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage);
+        }
+    }
+
+    private HelpOverlayFragment fetchHelpOverlayFragment()
+    {
+        return (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+    }
+
+
+
+    public void addToolbar()
+    {
+        Toolbar toolbar = this.fetchToolbar();
+        if(toolbar != null)
+        {
+            toolbar.setVisibility(View.VISIBLE);
+            setSupportActionBar(toolbar);
+            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
+        }
+    }
+
+    public void addToolbarHomeButton()
+    {
+        if(getSupportActionBar() != null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: adding home button to toolbar...");
 
-            this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            this.toolbar.setNavigationOnClickListener(new View.OnClickListener()
+            Toolbar toolbar = this.fetchToolbar();
+
+            if(toolbar != null)
             {
-                @Override
-                public void onClick(View view)
+                this.fetchToolbar().setNavigationOnClickListener(new View.OnClickListener()
                 {
-                    onToolbarHomeButtonBackClicked();
-                }
-            });
+                    @Override
+                    public void onClick(View view)
+                    {
+                        onToolbarHomeButtonBackClicked();
+                    }
+                });
+            }
         }
-
-        return this;
     }
 
-    public BaseActivity addToolbarMenuIcon()
+    public void addToolbarMenuIcon()
     {
-        if(this.actionBar != null)
+        if(getSupportActionBar() != null)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
 
-            this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setHomeAsUpIndicator(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
         }
-
-        return this;
     }
 
     private  void onToolbarHomeButtonBackClicked()
@@ -335,78 +389,76 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         this.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
     }
 
-    public BaseActivity setToolbarTitleAndSubtitle(String title, String subtitle)
+    public void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
-        if(this.actionBar != null)
+        if(getSupportActionBar() != null)
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
 
             if(title != null && !title.trim().isEmpty())
             {
-                this.actionBar.setTitle(title);
+                getSupportActionBar().setTitle(title);
             }
             else
             {
-                this.actionBar.setTitle("");
+                getSupportActionBar().setTitle("");
             }
 
             if(subtitle != null && !subtitle.trim().isEmpty())
             {
-                this.actionBar.setSubtitle(subtitle);
+                getSupportActionBar().setSubtitle(subtitle);
             }
             else
             {
-                this.actionBar.setSubtitle("");
+                getSupportActionBar().setSubtitle("");
             }
         }
-
-        return this;
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_BACK)
+        else
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
-            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
-            finish();
-            return true;
+            Log.e(Constants.LOG_TAG, "BaseActivity.setToolbarTitleAndSubtitle:: SupportActionBar not found.");
         }
-        return super.onKeyDown(keyCode, event);
     }
 
-    public BaseActivity addFloatingActionButton()
+    private Toolbar fetchToolbar()
+    {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if(toolbar != null)
+        {
+            return toolbar;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.fetchToolbar:: View<toolbar> not found.");
+            return null;
+        }
+    }
+
+    public void addFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
-
-        return this;
     }
 
-    public BaseActivity setFloatingActionButtonIcon(Drawable icon)
+    public void setFloatingActionButtonIcon(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
             icon.setTint(Color.WHITE);
             this.floatingActionButton.setImageDrawable(icon);
         }
-
-        return this;
     }
 
-    public BaseActivity setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         if(this.floatingActionButton != null)
         {
             this.floatingActionButton.setOnClickListener(onClickListener);
             this.floatingActionButtonOnClickListener = onClickListener;
         }
-
-        return this;
     }
 
-    public BaseActivity setFloatingActionButtonVisibility(boolean isVisible)
+    public void setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.floatingActionButton != null)
         {
@@ -421,11 +473,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 this.floatingActionButton.hide();
             }
         }
-
-        return this;
     }
 
-    public BaseActivity disableFloatingActionButton()
+    public void disableFloatingActionButton()
     {
         if(this.floatingActionButton != null)
         {
@@ -434,11 +484,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.floatingActionButton.hide();
             this.floatingActionButton = null;
         }
-
-        return this;
     }
 
-    public BaseActivity animateFloatingActionButtonTransition(Drawable icon)
+    public void animateFloatingActionButtonTransition(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
@@ -461,65 +509,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.floatingActionButton = newFloatingActionButton;
             this.floatingActionButton.show();
         }
-
-        return this;
-    }
-
-    public BaseActivity addHelpOverlayFragment(String title, CharSequence message)
-    {
-        this.helpOverlayFragment = (HelpOverlayFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-
-        if(this.helpOverlayFragment == null)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment...");
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
-            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-            fragmentTransaction.hide(this.helpOverlayFragment);
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using HelpOverlayFragment");
-        }
-
-        return this;
-    }
-
-    public BaseActivity setHelpOverlayTitleAndMessage(String title, CharSequence message)
-    {
-        if(this.helpOverlayFragment != null)
-        {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            this.helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
-            fragmentTransaction.replace(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-            fragmentTransaction.hide(this.helpOverlayFragment);
-            fragmentTransaction.commit();
-        }
-
-        return this;
-    }
-
-    public BaseActivity setHelpOverlayVisibility(boolean isVisible)
-    {
-        if(this.helpOverlayFragment != null)
-        {
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible[%s]", isVisible));
-
-            if(isVisible)
-            {
-                this.showFragmentFadeIn(this.helpOverlayFragment);
-            }
-            else
-            {
-                this.hideFragmentFadeOut(this.helpOverlayFragment);
-            }
-
-            this.viewModel.helpOverlayFragmentIsVisible = isVisible;
-            this.setFloatingActionButtonVisibility(!isVisible);
-        }
-
-        return this;
     }
 
     private void showFragmentFadeIn(Fragment fragment)
@@ -556,28 +545,59 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 .commit();
     }
 
-    public BaseActivity showProgressBar()
+    public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        if(this.progressBar == null)
+        if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            ViewGroup viewGroup = findViewById(android.R.id.content);
-            View progressBar = getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
-            viewGroup.addView(progressBar);
-
-            this.progressBar = progressBar;
+            Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+            finish();
+            return true;
         }
-
-        this.progressBar.setVisibility(View.VISIBLE);
-
-        return this;
+        return super.onKeyDown(keyCode, event);
     }
 
-    public BaseActivity hideProgressBar()
+    public void showProgressBar()
     {
-        this.progressBar.setVisibility(View.GONE);
-        this.progressBar = null;
+        View progressBar = this.fetchProgressBar();
 
-        return this;
+        if(progressBar == null)
+        {
+            ViewGroup viewGroup = (ViewGroup)this.fetchRootView();
+            progressBar = getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
+            viewGroup.addView(progressBar);
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar()
+    {
+        View progressBar = this.fetchProgressBar();
+
+        if(progressBar != null)
+        {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private View fetchProgressBar()
+    {
+        return this.fetchRootView().findViewById(R.id.linearLayoutProgressBar);
+    }
+
+    private View fetchRootView()
+    {
+        View rootView = findViewById(android.R.id.content);
+        if(rootView != null)
+        {
+            return rootView;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.fetchRootView:: View not found.");
+            return null;
+        }
     }
 
     protected boolean requestPermissionWriteExternalStorage()
@@ -623,16 +643,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public BaseActivity markForCreation(List<IElement> elements)
+    public void markForCreation(List<IElement> elements)
     {
         for(IElement element : elements)
         {
             this.markForCreation(element);
         }
-        return this;
     }
 
-    public BaseActivity markForCreation(IElement element)
+    public void markForCreation(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -640,42 +659,34 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             this.viewModel.elementsToCreate.add(element);
         }
         App.content.addElement(element);
-
-        return this;
     }
 
-    public BaseActivity markForUpdate(List<IElement> elements)
+    public void markForUpdate(List<IElement> elements)
     {
         for(IElement element : elements)
         {
             this.markForUpdate(element);
         }
-
-        return this;
     }
 
-    public BaseActivity markForUpdate(IElement element)
+    public void markForUpdate(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
         }
-
-        return this;
     }
 
-    public BaseActivity markForDeletion(List<IElement> elements, boolean deleteDescendants)
+    public void markForDeletion(List<IElement> elements, boolean deleteDescendants)
     {
         for(IElement element : elements)
         {
             this.markForDeletion(element, deleteDescendants);
         }
-
-        return this;
     }
 
-    public BaseActivity markForDeletion(IElement element, boolean deleteDescendants)
+    public void markForDeletion(IElement element, boolean deleteDescendants)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -691,11 +702,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
             }
         }
         App.content.removeElement(element);
-
-        return this;
     }
 
-    public BaseActivity synchronizePersistency()
+    public void synchronizePersistency()
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
@@ -715,7 +724,5 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         {
             Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
         }
-
-        return this;
     }
 }

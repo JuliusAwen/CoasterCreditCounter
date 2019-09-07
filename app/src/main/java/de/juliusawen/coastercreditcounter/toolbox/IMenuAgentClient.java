@@ -6,29 +6,29 @@ public interface IMenuAgentClient
 {
     boolean handleInvalidOptionsMenuItemSelected(MenuItem item);
 
-    boolean handleOptionsMenuItemHelpSelected();
+    boolean handleMenuItemHelpSelected();
 
-    boolean handleOptionsMenuItemExpandAllSelected();
-    boolean handleOptionsMenuItemCollapseAllSelected();
+    boolean handleMenuItemExpandAllSelected();
+    boolean handleMenuItemCollapseAllSelected();
 
-    boolean handleOptionsMenuItemGroupByLocationSelected();
-    boolean handleOptionsMenuItemGroupByAttractionCategorySelected();
-    boolean handleOptionsMenuItemGroupByManufacturerSelected();
-    boolean handleOptionsMenuItemGroupByStatusSelected();
+    boolean handleMenuItemGroupByLocationSelected();
+    boolean handleMenuItemGroupByAttractionCategorySelected();
+    boolean handleMenuItemGroupByManufacturerSelected();
+    boolean handleMenuItemGroupByStatusSelected();
 
-    boolean handleOptionsMenuItemSortByYearAscendingSelected();
-    boolean handleOptionsMenuItemSortByYearDescendingSelected();
-    boolean handleOptionsMenuItemSortByNameAscendingSelected();
-    boolean handleOptionsMenuItemSortByNameDescendingSelected();
-    boolean handleOptionsMenuItemSortByLocationAscendingSelected();
-    boolean handleOptionsMenuItemSortByLocationDescendingSelected();
-    boolean handleOptionsMenuItemSortByAttractionCategoryAscendingSelected();
-    boolean handleOptionsMenuItemSortByAttractionCategoryDescendingSelected();
-    boolean handleOptionsMenuItemSortByManufacturerAscendingSelected();
-    boolean handleOptionsMenuItemSortByManufacturerDescendingSelected();
+    boolean handleMenuItemSortByYearAscendingSelected();
+    boolean handleMenuItemSortByYearDescendingSelected();
+    boolean handleMenuItemSortByNameAscendingSelected();
+    boolean handleMenuItemSortByNameDescendingSelected();
+    boolean handleMenuItemSortByLocationAscendingSelected();
+    boolean handleMenuItemSortByLocationDescendingSelected();
+    boolean handleMenuItemSortByAttractionCategoryAscendingSelected();
+    boolean handleMenuItemSortByAttractionCategoryDescendingSelected();
+    boolean handleMenuItemSortByManufacturerAscendingSelected();
+    boolean handleMenuItemSortByManufacturerDescendingSelected();
 
-    boolean handleOptionsMenuItemGoToCurrentVisitSelected();
+    boolean handleMenuItemGoToCurrentVisitSelected();
 
-    boolean handleOptionsMenuItemEnableEditingSelected();
-    boolean handleOptionsMenuItemDisableEditingSelected();
+    boolean handleMenuItemEnableEditingSelected();
+    boolean handleMenuItemDisableEditingSelected();
 }

@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.globals.enums.ContentRecyclerViewAdapterType;
 
 class GetContentRecyclerViewAdapterRequest
 {
-    ContentRecyclerViewAdapter.AdapterType adapterType;
+    ContentRecyclerViewAdapterType contentRecyclerViewAdapterType;
 
     List<IElement> elements = new ArrayList<>();
 

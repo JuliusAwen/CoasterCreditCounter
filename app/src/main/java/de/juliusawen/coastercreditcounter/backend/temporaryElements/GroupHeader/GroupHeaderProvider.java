@@ -25,22 +25,13 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public class GroupHeaderProvider
 {
-    public enum GroupType
-    {
-        NONE,
-        YEAR,
-        LOCATION,
-        ATTRACTION_CATEGORY,
-        MANUFACTURER,
-        STATUS
-    }
-
     private final Map<UUID, GroupHeader> groupHeadersByGroupElementUuid = new HashMap<>();
     private GroupType formerGroupType = GroupType.NONE;
     private List<IAttraction> formerAttractions;
@@ -292,7 +283,7 @@ public class GroupHeaderProvider
                     break;
             }
 
-            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortGroupHeadersBasedOnGroupElementsOrder::" +
+            Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder::" +
                     " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", groupHeaders.size(), groupElements.size()));
 
             for(IElement groupElement : groupElements)
@@ -311,7 +302,7 @@ public class GroupHeaderProvider
         }
         else
         {
-            Log.v(Constants.LOG_TAG,"SortTool.sortGroupHeadersBasedOnGroupElementsOrder:: not sorted - list contains less than two elements");
+            Log.v(Constants.LOG_TAG,"GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder:: not sorted - list contains less than two elements");
             return groupHeaders;
         }
     }
@@ -339,7 +330,7 @@ public class GroupHeaderProvider
             return new ArrayList<IElement>(visits);
         }
 
-        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding YearHeaders to [%d] elements...", visits.size()));
+        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding YearHeaders to [%d] elements...", visits.size()));
 
         for(SpecialGroupHeader specialGroupHeader : this.specialGroupHeaders)
         {
@@ -384,7 +375,7 @@ public class GroupHeaderProvider
                 {
                     specialGroupHeader = SpecialGroupHeader.create(year);
                     this.specialGroupHeaders.add(specialGroupHeader);
-                    Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: created new %s", specialGroupHeader));
+                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: created new %s", specialGroupHeader));
                 }
 
                 specialGroupHeader.addChild(visit);
@@ -392,7 +383,7 @@ public class GroupHeaderProvider
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: [%d] YearHeaders added", groupedVisits.size()));
+        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: [%d] YearHeaders added", groupedVisits.size()));
         return groupedVisits;
     }
 
@@ -401,12 +392,12 @@ public class GroupHeaderProvider
         if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
         {
             visits = this.sortAscendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <ascending>", visits.size()));
+            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: sorted [%d] visits <ascending>", visits.size()));
         }
         else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
         {
             visits = this.sortDescendingByDate(visits);
-            Log.v(Constants.LOG_TAG, String.format("SortTool.sortVisitsByDateAccordingToSortOrder:: sorted #[%d] visits <descending>", visits.size()));
+            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: sorted [%d] visits <descending>", visits.size()));
         }
 
         return visits;
@@ -421,7 +412,7 @@ public class GroupHeaderProvider
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -433,7 +424,7 @@ public class GroupHeaderProvider
             sortedVisits.add(0, visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: [%d] visits sorted", visits.size()));
+        Log.i(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortDescendingByDate:: [%d] visits sorted", visits.size()));
         return sortedVisits;
     }
 
@@ -447,7 +438,7 @@ public class GroupHeaderProvider
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("SortTool.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
+            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortDescendingByDate:: parsed date [%s] from name %s", dateString, visit));
         }
 
         List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -459,7 +450,7 @@ public class GroupHeaderProvider
             sortedVisits.add(visitsByDateString.get(dateString));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("SortTool.sortAscendingByDate:: [%d] visits sorted", visits.size()));
+        Log.i(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortAscendingByDate:: [%d] visits sorted", visits.size()));
 
         return sortedVisits;
     }
@@ -482,7 +473,7 @@ public class GroupHeaderProvider
                 }
             }
 
-            Log.v(Constants.LOG_TAG, String.format("SpecialGroupHeader.getLatestYearHeader:: %s found as latest SpecialGroupHeader in a list of [%d]", latestSpecialGroupHeader, yearHeaders.size()));
+            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.getLatestYearHeader:: %s found as latest SpecialGroupHeader in a list of [%d]", latestSpecialGroupHeader, yearHeaders.size()));
         }
 
         return latestSpecialGroupHeader;

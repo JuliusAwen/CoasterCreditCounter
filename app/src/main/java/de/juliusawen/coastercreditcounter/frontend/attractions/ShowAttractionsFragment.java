@@ -37,13 +37,15 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
+import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -54,6 +56,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 {
     private ShowAttractionsFragmentViewModel viewModel;
     private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
+    RecyclerView recyclerView;
     private boolean actionConfirmed;
 
     public ShowAttractionsFragment() {}
@@ -105,9 +108,16 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        this.recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroyView();
     }
 
 
@@ -163,14 +173,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        this.viewModel = null;
-        this.showAttractionsFragmentInteraction = null;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
@@ -206,10 +208,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand);
 
-        contentRecyclerViewAdapter.setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.MANUFACTURER, ContentRecyclerViewAdapter.DisplayMode.ABOVE)
-                .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.STATUS, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                .setDisplayModeForDetail(ContentRecyclerViewAdapter.DetailType.TOTAL_RIDE_COUNT, ContentRecyclerViewAdapter.DisplayMode.BELOW)
-                .groupItemsByType(GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY);
+        contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
 
         return contentRecyclerViewAdapter;
     }

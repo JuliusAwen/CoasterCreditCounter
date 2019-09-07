@@ -12,4 +12,11 @@ public class ShowLocationsActivityViewModel extends ViewModel
     IElement longClickedElement;
     boolean selectionMode;
     IElement newParent;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

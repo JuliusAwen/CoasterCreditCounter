@@ -10,4 +10,11 @@ public class ManageOrphanElementsViewModel extends ViewModel
     int typeToManage;
     IElement longClickedElement;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

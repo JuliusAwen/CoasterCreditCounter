@@ -15,4 +15,11 @@ public class PickElementsActivityViewModel extends ViewModel
     List<IElement> elementsToPickFrom;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     MenuAgent optionsMenuAgent;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

@@ -136,6 +136,22 @@ public class HelpOverlayFragment extends Fragment
         this.helpOverlayFragmentInteractionListener = null;
     }
 
+    public void setTitleAndMessage(String title, String message)
+    {
+        if(this.textViewTitle != null && this.textViewMessage != null)
+        {
+            this.textViewTitle.setText(title);
+            this.textViewMessage.setText(message);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "HelpOverlayFragment.setTitleAndMessage:: TextViewTitle and TextViewMessage not available.");
+        }
+
+        this.viewModel.helpOverlayFragmentTitle = title;
+        this.viewModel.helpOverlayFragmentMessage = message;
+    }
+
     public interface HelpOverlayFragmentInteractionListener
     {
         void onHelpOverlayFragmentInteraction(View view);

@@ -17,4 +17,11 @@ public class ShowVisitsFragmentViewModel extends ViewModel
     IElement longClickedElement;
     Calendar calendar;
     DatePickerDialog datePickerDialog;
+
+    @Override
+    public void onCleared()
+    {
+        super.onCleared();
+        this.contentRecyclerViewAdapter = null;
+    }
 }

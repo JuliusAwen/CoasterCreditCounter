@@ -11,6 +11,7 @@ import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 
 public class MenuAgent
 {
@@ -347,45 +348,45 @@ public class MenuAgent
                 case SORT_BY_MANUFACTURER:
                     return true;
                 case HELP:
-                    return client.handleOptionsMenuItemHelpSelected();
+                    return client.handleMenuItemHelpSelected();
                 case EXPAND_ALL:
-                    return client.handleOptionsMenuItemExpandAllSelected();
+                    return client.handleMenuItemExpandAllSelected();
                 case COLLAPSE_ALL:
-                    return client.handleOptionsMenuItemCollapseAllSelected();
+                    return client.handleMenuItemCollapseAllSelected();
                 case GROUP_BY_LOCATION:
-                    return client.handleOptionsMenuItemGroupByLocationSelected();
+                    return client.handleMenuItemGroupByLocationSelected();
                 case GROUP_BY_ATTRACTION_CATEGORY:
-                    return client.handleOptionsMenuItemGroupByAttractionCategorySelected();
+                    return client.handleMenuItemGroupByAttractionCategorySelected();
                 case GROUP_BY_MANUFACTURER:
-                    return client.handleOptionsMenuItemGroupByManufacturerSelected();
+                    return client.handleMenuItemGroupByManufacturerSelected();
                 case GROUP_BY_STATUS:
-                    return client.handleOptionsMenuItemGroupByStatusSelected();
+                    return client.handleMenuItemGroupByStatusSelected();
                 case SORT_BY_YEAR_ASCENDING:
-                    return client.handleOptionsMenuItemSortByYearAscendingSelected();
+                    return client.handleMenuItemSortByYearAscendingSelected();
                 case SORT_BY_YEAR_DESCENDING:
-                    return client.handleOptionsMenuItemSortByYearDescendingSelected();
+                    return client.handleMenuItemSortByYearDescendingSelected();
                 case SORT_BY_NAME_ASCENDING:
-                    return client.handleOptionsMenuItemSortByNameAscendingSelected();
+                    return client.handleMenuItemSortByNameAscendingSelected();
                 case SORT_BY_NAME_DESCENDING:
-                    return client.handleOptionsMenuItemSortByNameDescendingSelected();
+                    return client.handleMenuItemSortByNameDescendingSelected();
                 case SORT_BY_LOCATION_ASCENDING:
-                    return client.handleOptionsMenuItemSortByLocationAscendingSelected();
+                    return client.handleMenuItemSortByLocationAscendingSelected();
                 case SORT_BY_LOCATION_DESCENDING:
-                    return client.handleOptionsMenuItemSortByLocationDescendingSelected();
+                    return client.handleMenuItemSortByLocationDescendingSelected();
                 case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
-                    return client.handleOptionsMenuItemSortByAttractionCategoryAscendingSelected();
+                    return client.handleMenuItemSortByAttractionCategoryAscendingSelected();
                 case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
-                    return client.handleOptionsMenuItemSortByAttractionCategoryDescendingSelected();
+                    return client.handleMenuItemSortByAttractionCategoryDescendingSelected();
                 case SORT_BY_MANUFACTURER_ASCENDING:
-                    return client.handleOptionsMenuItemSortByManufacturerAscendingSelected();
+                    return client.handleMenuItemSortByManufacturerAscendingSelected();
                 case SORT_BY_MANUFACTURER_DESCENDING:
-                    return client.handleOptionsMenuItemSortByManufacturerDescendingSelected();
+                    return client.handleMenuItemSortByManufacturerDescendingSelected();
                 case GO_TO_CURRENT_VISIT:
-                    return client.handleOptionsMenuItemGoToCurrentVisitSelected();
+                    return client.handleMenuItemGoToCurrentVisitSelected();
                 case ENABLE_EDITING:
-                    return client.handleOptionsMenuItemEnableEditingSelected();
+                    return client.handleMenuItemEnableEditingSelected();
                 case DISABLE_EDITING:
-                    return client.handleOptionsMenuItemDisableEditingSelected();
+                    return client.handleMenuItemDisableEditingSelected();
 
 
 
@@ -400,12 +401,6 @@ public class MenuAgent
         }
     }
 
-
-    public enum MenuType
-    {
-        OPTIONS_MENU,
-        POPUP_MENU
-    }
 
     private enum Selection
     {

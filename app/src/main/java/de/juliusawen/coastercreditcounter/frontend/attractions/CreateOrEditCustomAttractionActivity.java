@@ -121,14 +121,14 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
 
             super.addHelpOverlayFragment(
-                        getString(R.string.title_help, this.viewModel.isEditMode
+                    getString(R.string.title_help, this.viewModel.isEditMode
                             ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
                             : getString(R.string.title_custom_attraction_create)),
-                        getText(R.string.help_text_create_or_edit_custom_attraction))
-                    .addToolbar()
-                    .addToolbarHomeButton()
-                    .setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle)
-                    .addFloatingActionButton();
+                    getText(R.string.help_text_create_or_edit_custom_attraction));
+            super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
+            super.addFloatingActionButton();
 
             this.decorateFloatingActionButton();
             this.createEditTextAttractionName();
@@ -299,9 +299,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
                         viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
 
-                        CreateOrEditCustomAttractionActivity.super
-                                .markForCreation(viewModel.attraction)
-                                .markForUpdate(viewModel.parentPark);
+
+                        CreateOrEditCustomAttractionActivity.super.markForCreation(viewModel.attraction);
+                        CreateOrEditCustomAttractionActivity.super.markForUpdate(viewModel.parentPark);
 
                         returnResult(RESULT_OK);
                     }

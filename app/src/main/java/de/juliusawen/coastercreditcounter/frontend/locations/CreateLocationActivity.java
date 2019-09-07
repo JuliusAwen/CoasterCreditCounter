@@ -47,10 +47,10 @@ public class CreateLocationActivity extends BaseActivity
             }
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location))
-                    .addToolbar()
-                    .addToolbarHomeButton()
-                    .setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create))
-                    .addFloatingActionButton();
+            ;super.addToolbar();
+            super.addToolbarHomeButton();
+            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
+            super.addFloatingActionButton();
 
             this.decorateFloatingActionButton();
             this.createEditText();

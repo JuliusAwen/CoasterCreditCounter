@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.globals.enums.ContentRecyclerViewAdapterType;
 
 public abstract class ContentRecyclerViewAdapterProvider
 {
@@ -12,7 +13,7 @@ public abstract class ContentRecyclerViewAdapterProvider
             Set<Class<? extends IElement>> childTypesToExpand)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
-        request.adapterType = ContentRecyclerViewAdapter.AdapterType.EXPANDABLE;
+        request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.EXPANDABLE;
         request.elements = parentElements;
         request.relevantChildTypes = childTypesToExpand;
 
@@ -25,7 +26,7 @@ public abstract class ContentRecyclerViewAdapterProvider
             boolean selectMultiple)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
-        request.adapterType = ContentRecyclerViewAdapter.AdapterType.SELECTABLE;
+        request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.SELECTABLE;
         request.elements = elements;
         request.relevantChildTypes = childTypesToExpand;
         request.selectMultiple = selectMultiple;
@@ -38,7 +39,7 @@ public abstract class ContentRecyclerViewAdapterProvider
             Set<Class<? extends IElement>> childTypesToExpand)
     {
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
-        request.adapterType = ContentRecyclerViewAdapter.AdapterType.COUNTABLE;
+        request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.COUNTABLE;
         request.elements = parentElements;
         request.relevantChildTypes = childTypesToExpand;
 

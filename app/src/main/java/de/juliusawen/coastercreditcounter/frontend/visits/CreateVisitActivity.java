@@ -50,8 +50,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
             }
 
-            super.addToolbar()
-                    .addToolbarHomeButton();
+            super.addToolbar();
+            super.addToolbarHomeButton();
 
             this.decorateToolbar();
 
@@ -186,8 +186,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         this.viewModel.visit = Visit.create(calendar, null);
         this.viewModel.park.addChildAndSetParent(this.viewModel.visit);
 
-        super.markForCreation(this.viewModel.visit)
-                .markForUpdate(this.viewModel.park);
+        super.markForCreation(this.viewModel.visit);
+        super.markForUpdate(this.viewModel.park);
 
         if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
         {

@@ -7,5 +7,4 @@ import de.juliusawen.coastercreditcounter.backend.elements.Park;
 public class ShowParkActivityViewModel extends ViewModel
 {
     Park park;
-    ShowParkActivity.Tab currentTab = null;
 }
