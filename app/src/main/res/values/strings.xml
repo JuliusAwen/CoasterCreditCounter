@@ -44,6 +44,7 @@
     <string name="selection_group_by_attraction_category">category</string>
     <string name="selection_group_by_status">status</string>
 
+    <string name="selection_sort">sort</string>
     <string name="selection_sort_by">sort by</string>
 
     <string name="selection_sort_by_year">year</string>
@@ -61,7 +62,6 @@
     <string name="selection_disable_editing">disable editing</string>
 
 
-    <string name="selection_sort">sort</string>
     <string name="selection_add">add</string>
     <string name="selection_edit">edit</string>
     <string name="selection_delete">delete</string>

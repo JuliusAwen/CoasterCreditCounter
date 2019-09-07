@@ -125,8 +125,7 @@ public class PickElementsActivity extends BaseActivity
                             false)
                             .setTypefaceForType(Status.class, Typeface.BOLD)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
-                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -235,6 +234,14 @@ public class PickElementsActivity extends BaseActivity
                     .addMenuItem(MenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
+        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+        {
+            this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.SORT)
+                    .create(menu);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -315,6 +322,23 @@ public class PickElementsActivity extends BaseActivity
     public boolean handleMenuItemGroupByStatusSelected()
     {
         this.groupElementsByType(GroupType.STATUS);
+        return true;
+    }
+
+
+    @Override
+    public boolean handleMenuItemSortAscendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemSortDescendingSelected()
+    {
+        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
         return true;
     }
 

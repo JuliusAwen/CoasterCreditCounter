@@ -16,6 +16,8 @@ public interface IMenuAgentClient
     boolean handleMenuItemGroupByManufacturerSelected();
     boolean handleMenuItemGroupByStatusSelected();
 
+    boolean handleMenuItemSortAscendingSelected();
+    boolean handleMenuItemSortDescendingSelected();
     boolean handleMenuItemSortByYearAscendingSelected();
     boolean handleMenuItemSortByYearDescendingSelected();
     boolean handleMenuItemSortByNameAscendingSelected();

@@ -187,17 +187,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     // region handleOptionsMenuItemSelected implementations
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected - not handled!", item.getItemId()));
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
     public boolean handleInvalidOptionsMenuItemSelected(MenuItem item)
     {
-        return this.onOptionsItemSelected(item);
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected - not handled!", item.getItemId()));
+
+        return true;
     }
 
     public boolean handleMenuItemHelpSelected()
@@ -229,6 +223,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     public boolean handleMenuItemGroupByManufacturerSelected() { return false; }
     @Override
     public boolean handleMenuItemGroupByStatusSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortAscendingSelected() { return false; }
+    @Override
+    public boolean handleMenuItemSortDescendingSelected() { return false; }
     @Override
     public boolean handleMenuItemSortByYearAscendingSelected() { return false; }
     @Override
