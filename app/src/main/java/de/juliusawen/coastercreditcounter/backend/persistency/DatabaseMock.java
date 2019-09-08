@@ -1234,13 +1234,49 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction kaernapulten = StockAttraction.create("Kärnapulten", attractionBlueprints.SkyFly, 1, null);
         hansaPark.addChildAndSetParent(kaernapulten);
 
-        CustomAttraction kettenflieger = CustomAttraction.create("Kettenflieger", 1, null);
-        kettenflieger.setAttractionCategory(attractionCategories.FamilyRides);
-        hansaPark.addChildAndSetParent(kettenflieger);
+        CustomAttraction hanseflieger = CustomAttraction.create("Hanse Flieger", 1, null);
+        hanseflieger.setAttractionCategory(attractionCategories.FamilyRides);
+        hansaPark.addChildAndSetParent(hanseflieger);
 
         StockAttraction fliegenderHai = StockAttraction.create("Fliegender Hai", attractionBlueprints.Ranger, 2, null);
         fliegenderHai.setStatus(statuses.Defunct);
         hansaPark.addChildAndSetParent(fliegenderHai);
+
+        CustomAttraction hansaParkExpress = CustomAttraction.create("Hansa Park Express", 0, null);
+        hansaParkExpress.setAttractionCategory(attractionCategories.TransportRides);
+        hansaPark.addChildAndSetParent(hansaParkExpress);
+
+        CustomAttraction highlander = CustomAttraction.create("Highlander", 0, null);
+        highlander.setAttractionCategory(attractionCategories.ThrillRides);
+        hansaPark.addChildAndSetParent(highlander);
+
+        CustomAttraction barracudaSlide = CustomAttraction.create("Barracuda Slide", 0, null);
+        barracudaSlide.setAttractionCategory(attractionCategories.FamilyRides);
+        hansaPark.addChildAndSetParent(barracudaSlide);
+
+        CustomAttraction blumenmeerbootsfahrt = CustomAttraction.create("Blumenmeerbootsfahrt", 0, null);
+        blumenmeerbootsfahrt.setAttractionCategory(attractionCategories.WaterRides);
+        hansaPark.addChildAndSetParent(blumenmeerbootsfahrt);
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides08091029 = new LinkedHashMap<>();
+        rides08091029.put(hansaParkExpress, 1);
+        rides08091029.put(hanseflieger, 1);
+        rides08091029.put(highlander, 2);
+        rides08091029.put(nessie, 1);
+        rides08091029.put(rasenderRoland, 1);
+        rides08091029.put(barracudaSlide, 1);
+        rides08091029.put(schwurDesKaernan, 1);
+        rides08091029.put(stoertebekersKaperfahrt, 1);
+        rides08091029.put(fluchVonNovgorod, 1);
+        rides08091029.put(blumenmeerbootsfahrt, 1);
+        rides08091029.put(fliegenderHollaender, 1);
+        rides08091029.put(wasserwolfAmIlmensee, 1);
+        rides08091029.put(superSplash, 1);
+        rides08091029.put(kaernapulten, 1);
+        hansaPark.addChildAndSetParent(this.createVisit(8, 9, 2019, rides08091029));
+
+
+
     }
 
     private void mockMagicParkVerden()
