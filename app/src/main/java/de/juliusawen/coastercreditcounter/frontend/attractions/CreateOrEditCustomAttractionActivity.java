@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -380,7 +381,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private void createLayoutManufacturer()
     {
-        findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer).setOnClickListener((new View.OnClickListener()
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
+        linearLayout.setOnClickListener((new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -404,13 +406,15 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault();
         this.textViewManufacturer.setText(manufacturer.getName());
-        this.textViewManufacturer.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.VISIBLE);
+
         this.viewModel.manufacturer = manufacturer;
     }
 
     private void createLayoutAttractionCategory()
     {
-        findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionCategory).setOnClickListener(new View.OnClickListener()
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionCategory);
+        linearLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -434,7 +438,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         AttractionCategory attractionCategory = this.viewModel.isEditMode ? this.viewModel.attraction.getAttractionCategory() : AttractionCategory.getDefault();
         this.textViewAttractionCategory.setText(attractionCategory.getName());
-        this.textViewAttractionCategory.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.VISIBLE);
+
         this.viewModel.attractionCategory = attractionCategory;
     }
 

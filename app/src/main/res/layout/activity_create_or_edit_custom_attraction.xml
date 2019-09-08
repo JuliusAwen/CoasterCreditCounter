@@ -33,7 +33,9 @@
                     android:id="@+id/editTextCreateOrEditAttractionName"
                     android:hint="@string/hint_enter_attraction_name"
                     android:textSize="16sp"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="12dp"
                     tools:ignore="Autofill"
                     android:imeOptions="actionDone"/>
 
@@ -52,11 +54,11 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
+                        android:orientation="vertical">
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
+                            android:textStyle="bold"
                             android:text="@string/spinner_text_attraction_type"/>
 
                         <Spinner
@@ -85,11 +87,11 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
+                        android:orientation="vertical">
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
+                            android:textStyle="bold"
                             android:text="@string/header_manufacturer"/>
 
                         <TextView
@@ -117,11 +119,11 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
+                        android:orientation="vertical">
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
+                            android:textStyle="bold"
                             android:text="@string/spinner_text_attraction_category"/>
 
                         <TextView
@@ -148,11 +150,11 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
+                        android:orientation="vertical">
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
+                            android:textStyle="bold"
                             android:text="@string/spinner_text_status"/>
 
                         <TextView
@@ -166,6 +168,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="12dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -175,9 +180,8 @@
                         android:gravity="start"
                         android:layout_gravity="center_vertical"
                         android:paddingStart="5dip"
-                        android:paddingEnd="5dip"
-                        android:layout_marginStart="16dp"
-                        android:textSize="16sp"
+                        android:paddingEnd="0dip"
+                        android:textStyle="bold"
                         android:text="@string/text_untracked_rides"/>
 
                     <EditText
@@ -185,7 +189,6 @@
                         style="@style/StandardEditText"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="16dp"
                         android:hint="@string/hint_untracked_ride_count"
                         android:inputType="number"
                         android:textSize="16sp"
