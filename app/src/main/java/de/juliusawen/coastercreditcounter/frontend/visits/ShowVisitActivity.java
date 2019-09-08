@@ -107,8 +107,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButton();
+            if(Visit.isCurrentVisit(this.viewModel.visit))
+            {
+                this.viewModel.visit.setEditingEnabled(true);
+            }
 
             if(this.viewModel.visit.isEditingEnabled())
             {
@@ -119,6 +121,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
             }
 
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButton();
             this.handleFloatingActionButtonVisibility();
 
             Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
