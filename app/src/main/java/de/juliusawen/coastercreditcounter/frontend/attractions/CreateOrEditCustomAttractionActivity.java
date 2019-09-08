@@ -28,6 +28,7 @@ import de.juliusawen.coastercreditcounter.backend.attractions.Coaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.backend.attractions.CustomCoaster;
 import de.juliusawen.coastercreditcounter.backend.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.backend.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
@@ -144,8 +145,13 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 this.createLayoutAttractionType();
             }
 
-            this.createLayoutManufacturer();
-            this.createLayoutAttractionCategory();
+            if(!(this.viewModel.attraction instanceof StockAttraction))
+            {
+                this.createLayoutManufacturer();
+                this.createLayoutAttractionCategory();
+            }
+            //Todo: implement goto blueprint on else
+
             this.createLayoutStatus();
             this.createEditTextUntrackedRideCount();
         }
@@ -208,7 +214,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 boolean somethingWentWrong = false;
 
                 viewModel.name = editTextAttractionName.getText().toString();
-                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: attraction name set to [%s]", viewModel.name));
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: attraction name entered [%s]", viewModel.name));
 
                 String untrackedRideCountString = editTextUntrackedRideCount.getText().toString();
                 try
@@ -251,16 +257,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
+                        if(!(viewModel.attraction instanceof StockAttraction))
                         {
-                            viewModel.attraction.setManufacturer(viewModel.manufacturer);
-                            somethingChanged = true;
-                        }
+                            if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
+                            {
+                                viewModel.attraction.setManufacturer(viewModel.manufacturer);
+                                somethingChanged = true;
+                            }
 
-                        if(!viewModel.attraction.getAttractionCategory().equals(viewModel.attractionCategory))
-                        {
-                            viewModel.attraction.setAttractionCategory(viewModel.attractionCategory);
-                            somethingChanged = true;
+                            if(!viewModel.attraction.getAttractionCategory().equals(viewModel.attractionCategory))
+                            {
+                                viewModel.attraction.setAttractionCategory(viewModel.attractionCategory);
+                                somethingChanged = true;
+                            }
                         }
 
                         if(!viewModel.attraction.getStatus().equals(viewModel.status))
@@ -292,22 +301,24 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
                     }
-
-                    if(createAttraction())
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
-
-                        viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
-
-
-                        CreateOrEditCustomAttractionActivity.super.markForCreation(viewModel.attraction);
-                        CreateOrEditCustomAttractionActivity.super.markForUpdate(viewModel.parentPark);
-
-                        returnResult(RESULT_OK);
-                    }
                     else
                     {
-                        Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                        if(createAttraction())
+                        {
+                            Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
+
+                            viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
+
+
+                            CreateOrEditCustomAttractionActivity.super.markForCreation(viewModel.attraction);
+                            CreateOrEditCustomAttractionActivity.super.markForUpdate(viewModel.parentPark);
+
+                            returnResult(RESULT_OK);
+                        }
+                        else
+                        {
+                            Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                        }
                     }
                 }
             }
@@ -393,6 +404,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault();
         this.textViewManufacturer.setText(manufacturer.getName());
+        this.textViewManufacturer.setVisibility(View.VISIBLE);
         this.viewModel.manufacturer = manufacturer;
     }
 
@@ -422,6 +434,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         AttractionCategory attractionCategory = this.viewModel.isEditMode ? this.viewModel.attraction.getAttractionCategory() : AttractionCategory.getDefault();
         this.textViewAttractionCategory.setText(attractionCategory.getName());
+        this.textViewAttractionCategory.setVisibility(View.VISIBLE);
         this.viewModel.attractionCategory = attractionCategory;
     }
 

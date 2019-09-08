@@ -39,8 +39,8 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
-                    android:baselineAligned="false"
                     android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionType"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -70,17 +70,18 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
-                    android:background="?selectableItemBackground">
+                    android:background="?selectableItemBackground"
+                    android:visibility="gone">
 
                     <LinearLayout
                         style="@style/StandardBarLayout"
-                        android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -101,17 +102,18 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionCategory"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
-                    android:background="?selectableItemBackground">
+                    android:background="?selectableItemBackground"
+                    android:visibility="gone">
 
                     <LinearLayout
                         style="@style/StandardBarLayout"
-                        android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionCategory"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
