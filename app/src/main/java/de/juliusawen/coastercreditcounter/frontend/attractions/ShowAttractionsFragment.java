@@ -147,7 +147,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
             {
                 Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
-                this.showAttractionsFragmentInteraction.updateElement(selectedElement);
+                this.showAttractionsFragmentInteraction.markForUpdate(selectedElement);
                 this.updateContentRecyclerView().scrollToItem(selectedElement);
             }
             else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
@@ -336,13 +336,13 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                 {
                                     if(visitedAttraction.getOnSiteAttraction().equals(viewModel.longClickedElement))
                                     {
-                                        ShowAttractionsFragment.this.showAttractionsFragmentInteraction.deleteElement(visitedAttraction);
+                                        ShowAttractionsFragment.this.showAttractionsFragmentInteraction.markForDeletion(visitedAttraction);
                                         visitedAttraction.deleteElementAndDescendants();
                                     }
                                 }
                             }
 
-                            ShowAttractionsFragment.this.showAttractionsFragmentInteraction.deleteElement(viewModel.longClickedElement);
+                            ShowAttractionsFragment.this.showAttractionsFragmentInteraction.markForDeletion(viewModel.longClickedElement);
                             viewModel.longClickedElement.deleteElementAndDescendants();
                             updateContentRecyclerView();
                         }
@@ -368,7 +368,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public interface ShowAttractionsFragmentInteraction
     {
-        void updateElement(IElement elementToUpdate);
-        void deleteElement(IElement elemtToDelete);
+        void markForUpdate(IElement elementToUpdate);
+        void markForDeletion(IElement elemtToDelete);
     }
 }
