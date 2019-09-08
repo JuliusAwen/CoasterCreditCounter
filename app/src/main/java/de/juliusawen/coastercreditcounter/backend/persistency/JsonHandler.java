@@ -49,7 +49,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         public String name;
         public UUID uuid;
-        public final List<UUID> childrenUuids = new ArrayList<>();
+        public final List<UUID> childrenUuids = new LinkedList<>();
         public int day;
         public int month;
         public int year;
@@ -74,8 +74,6 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean importContent(Content content)
     {
-
-
         content.clear();
 
         if((!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
@@ -83,8 +81,7 @@ public class JsonHandler implements IDatabaseWrapper
             Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: importing default content from DatabaseMock");
             Stopwatch stopwatch = new Stopwatch(true);
             boolean success = this.provideDefaultContent(content);
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: creating, exporting and importing default content from DatabaseMock successful[%S]- took [%d]ms",
-                    success, stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: creating, exporting and importing default content from DatabaseMock successful[%S]- took [%d]ms", success, stopwatch.stop()));
             return success;
         }
         else
@@ -104,22 +101,19 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(this.fetchContent(jsonString, content))
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms",
-                    App.config.getContentFileName(), stopwatchImport.stop()));
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
             return true;
         }
         else if(App.config.createExportFileIfNotExists())
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
             boolean success = this.provideDefaultContent(content);
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms",
-                    success, stopwatchImport.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms", success, stopwatchImport.stop()));
             return success;
         }
         else
         {
-            Log.e(Constants.LOG_TAG,
-                    String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
             return false;
         }
     }
@@ -207,37 +201,32 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
             {
-                List<TemporaryElement> temporaryStatuses =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
+                List<TemporaryElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
                 content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURERS))
             {
-                List<TemporaryElement> temporaryManufacturers =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
+                List<TemporaryElement> temporaryManufacturers = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
                 content.addElements(ConvertTool.convertElementsToType(this.createManufacturers(temporaryManufacturers), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
             {
-                List<TemporaryElement> temporaryAttractionCategories =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
+                List<TemporaryElement> temporaryAttractionCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
                 content.addElements(ConvertTool.convertElementsToType(this.createAttractionCategories(temporaryAttractionCategories), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_LOCATIONS))
             {
-                this.temporaryLocations =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_LOCATIONS));
+                this.temporaryLocations = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_LOCATIONS));
                 content.addElements(this.createLocations(temporaryLocations));
 
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_PARKS))
             {
-                this.temporaryParks =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_PARKS));
+                this.temporaryParks = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_PARKS));
                 content.addElements(this.createParks(this.temporaryParks));
             }
 
@@ -247,44 +236,38 @@ public class JsonHandler implements IDatabaseWrapper
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS))
                 {
-                    List<TemporaryElement> temporaryAttractionBlueprints =
-                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
+                    List<TemporaryElement> temporaryAttractionBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
                     content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_COASTER_BLUEPRINTS))
                 {
-                    this.temporaryCoasterBlueprints =
-                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
+                    this.temporaryCoasterBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
                     content.addElements(this.createCoasterBlueprints(this.temporaryCoasterBlueprints, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_STOCK_ATTRACTIONS))
                 {
-                    this.temporaryStockAttractions =
-                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_STOCK_ATTRACTIONS));
+                    this.temporaryStockAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_STOCK_ATTRACTIONS));
                     content.addElements(this.createStockAttractions(this.temporaryStockAttractions, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_ATTRACTIONS))
                 {
-                    this.temporaryCustomAttractions =
-                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
+                    this.temporaryCustomAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
                     content.addElements(this.createCustomAttractions(this.temporaryCustomAttractions, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_COASTERS))
                 {
-                    this.temporaryCustomCoasters =
-                            this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_COASTERS));
+                    this.temporaryCustomCoasters = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_COASTERS));
                     content.addElements(this.createCustomCoasters(this.temporaryCustomCoasters, content));
                 }
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
             {
-                this.temporaryVisits =
-                        this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
+                this.temporaryVisits = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
 
@@ -415,7 +398,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<Status> createStatuses(List<TemporaryElement> temporaryElements)
     {
-        List<Status> statuses = new ArrayList<>();
+        List<Status> statuses = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Status status = Status.create(temporaryElement.name, temporaryElement.uuid);
@@ -441,7 +424,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<Manufacturer> createManufacturers(List<TemporaryElement> temporaryElements)
     {
-        List<Manufacturer> manufacturers = new ArrayList<>();
+        List<Manufacturer> manufacturers = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Manufacturer manufacturer = Manufacturer.create(temporaryElement.name, temporaryElement.uuid);
@@ -467,7 +450,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements)
     {
-        List<AttractionCategory> attractionCategories = new ArrayList<>();
+        List<AttractionCategory> attractionCategories = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
@@ -493,7 +476,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createLocations(List<TemporaryElement> temporaryElements)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Location element = Location.create(temporaryElement.name, temporaryElement.uuid);
@@ -504,7 +487,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createParks(List<TemporaryElement> temporaryElements)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Park element  = Park.create(temporaryElement.name, temporaryElement.uuid);
@@ -515,7 +498,7 @@ public class JsonHandler implements IDatabaseWrapper
     
     private List<IElement> createAttractionBlueprints(List<TemporaryElement> temporaryElements, Content content)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.uuid);
@@ -528,7 +511,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createCoasterBlueprints(List<TemporaryElement> temporaryElements, Content content)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.uuid);
@@ -541,7 +524,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createStockAttractions(List<TemporaryElement> temporaryElements, Content content)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             StockAttraction element =
@@ -557,7 +540,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createCustomAttractions(List<TemporaryElement> temporaryElements, Content content)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
@@ -571,7 +554,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createCustomCoasters(List<TemporaryElement> temporaryElements, Content content)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
@@ -585,7 +568,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createVisits(List<TemporaryElement> temporaryElements)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Visit element = Visit.create(temporaryElement.year, temporaryElement.month, temporaryElement.day, temporaryElement.uuid);
@@ -596,7 +579,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<IElement> createRides(List<TemporaryElement> temporaryElements)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
             Ride element = Ride.create(temporaryElement.hour, temporaryElement.minute, temporaryElement.uuid);
@@ -610,7 +593,7 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof Status)
         {
-            return (Status) element;
+            return (Status)element;
         }
         else
         {
@@ -624,7 +607,7 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof Manufacturer)
         {
-            return (Manufacturer) element;
+            return (Manufacturer)element;
         }
         else
         {
@@ -638,7 +621,7 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof AttractionCategory)
         {
-            return (AttractionCategory) element;
+            return (AttractionCategory)element;
         }
         else
         {
@@ -693,20 +676,17 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(App.persistence.writeStringToExternalFile(file , jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,
-                        String.format("Content.export:: exporting content to external json [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Content.export:: exporting content to external json [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,
-                        String.format("Content.export:: exporting content failed: could not write to external json [%s] - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("Content.export:: exporting content failed: could not write to external json [%s] - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,
-                    String.format("Content.export:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("Content.export:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -754,45 +734,55 @@ public class JsonHandler implements IDatabaseWrapper
         {
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put(Constants.JSON_STRING_LOCATIONS,
-                    content.getContentOfType(Location.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Location.class)));
+            jsonObject.put(Constants.JSON_STRING_LOCATIONS, content.getContentOfType(Location.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Location.class)));
 
-            jsonObject.put(Constants.JSON_STRING_PARKS,
-                    content.getContentOfType(Park.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Park.class)));
+            jsonObject.put(Constants.JSON_STRING_PARKS, content.getContentOfType(Park.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Park.class)));
 
-            jsonObject.put(Constants.JSON_STRING_VISITS,
-                    content.getContentOfType(Visit.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Visit.class)));
+            jsonObject.put(Constants.JSON_STRING_VISITS, content.getContentOfType(Visit.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Visit.class)));
 
             jsonObject.put(Constants.JSON_STRING_RIDES,
                     content.getContentOfType(Ride.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Ride.class)));
 
 
             JSONObject jsonObjectAttractions = new JSONObject();
-            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS,
-                    content.getContentOfType(AttractionBlueprint.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionBlueprint.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS, content.getContentOfType(AttractionBlueprint.class).isEmpty()
+                            ? JSONObject.NULL
+                            : this.createJsonArray(content.getContentOfType(AttractionBlueprint.class)));
 
-            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS,
-                    content.getContentOfType(CoasterBlueprint.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CoasterBlueprint.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS, content.getContentOfType(CoasterBlueprint.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(CoasterBlueprint.class)));
 
-            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS,
-                    content.getContentOfType(CustomAttraction.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CustomAttraction.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS, content.getContentOfType(CustomAttraction.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(CustomAttraction.class)));
 
-            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_COASTERS,
-                    content.getContentOfType(CustomCoaster.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(CustomCoaster.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_COASTERS, content.getContentOfType(CustomCoaster.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(CustomCoaster.class)));
 
-            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS,
-                    content.getContentOfType(StockAttraction.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(StockAttraction.class)));
+            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS, content.getContentOfType(StockAttraction.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(StockAttraction.class)));
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 
 
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURERS,
-                    content.getContentOfType(Manufacturer.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Manufacturer.class)));
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURERS, content.getContentOfType(Manufacturer.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Manufacturer.class)));
 
             jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
                     content.getContentOfType(AttractionCategory.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionCategory.class)));
 
-            jsonObject.put(Constants.JSON_STRING_STATUSES,
-                    content.getContentOfType(Status.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Status.class)));
+            jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Status.class)));
 
             Log.v(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
             return jsonObject;
@@ -800,8 +790,7 @@ public class JsonHandler implements IDatabaseWrapper
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s]" +
-                    " - took [%d]ms", e.getMessage(), stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
         }
 
         return null;

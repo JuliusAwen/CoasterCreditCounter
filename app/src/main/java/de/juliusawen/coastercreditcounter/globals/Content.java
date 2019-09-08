@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -158,7 +159,7 @@ public class Content
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)
     {
-        List<T> content = new ArrayList<>();
+        List<T> content = new LinkedList<>();
         for(IElement element : this.elementsByUuid.values())
         {
             if(type.isInstance(element))
@@ -171,7 +172,7 @@ public class Content
 
     public <T extends IElement> List<IElement> getContentOfType(Class<T> type)
     {
-        List<IElement> content = new ArrayList<>();
+        List<IElement> content = new LinkedList<>();
         for(IElement element : this.elementsByUuid.values())
         {
             if(type.isInstance(element))
@@ -194,7 +195,7 @@ public class Content
 
     public List<IElement> getContentByUuidStrings(List<String> uuidStrings)
     {
-        List<IElement> elements = new ArrayList<>();
+        List<IElement> elements = new LinkedList<>();
 
         Stopwatch stopwatch = new Stopwatch(true);
 
