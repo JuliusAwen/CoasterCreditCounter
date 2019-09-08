@@ -527,12 +527,12 @@ public class JsonHandler implements IDatabaseWrapper
         List<IElement> elements = new LinkedList<>();
         for(TemporaryElement temporaryElement : temporaryElements)
         {
-            StockAttraction element =
-                    StockAttraction.create(
+            StockAttraction element = StockAttraction.create(
                             temporaryElement.name,
                             (IBlueprint)content.getContentByUuid(temporaryElement.blueprintUuid),
                             temporaryElement.untrackedRideCount,
                             temporaryElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
             elements.add(element);
         }
         return elements;
@@ -770,6 +770,7 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS, content.getContentOfType(StockAttraction.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentOfType(StockAttraction.class)));
+
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 
 

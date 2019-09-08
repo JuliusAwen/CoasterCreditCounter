@@ -55,7 +55,7 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
 
             JsonTool.putNameAndUuid(jsonObject, this);
             jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
-            jsonObject.put(Constants.JSON_STRING_STATUS, this.blueprint.getStatus().getUuid());
+            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 
             Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
