@@ -94,6 +94,7 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                             .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
                 }
