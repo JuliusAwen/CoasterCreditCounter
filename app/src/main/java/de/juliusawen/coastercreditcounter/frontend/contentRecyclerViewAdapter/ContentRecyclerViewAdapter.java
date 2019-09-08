@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -125,7 +126,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
-        this.originalItems = items;
+        this.originalItems = new LinkedList<>(items);
         this.generationByItem.clear();
         this.items.clear();
 
@@ -138,7 +139,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         this.groupType = groupType;
         this.selectedItemsInOrderOfSelection.clear();
-        this.expandedItems.clear();
 
         List<IElement> groupedItems = new ArrayList<>();
 
@@ -1014,6 +1014,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void collapseAll()
     {
+        Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: CALLED");
         Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: collapsing all");
 
         List<IElement> itemsList = new ArrayList<>(this.expandedItems);
