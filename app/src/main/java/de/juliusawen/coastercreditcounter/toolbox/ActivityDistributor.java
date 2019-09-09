@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
+import de.juliusawen.coastercreditcounter.backend.elements.ElementType;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.attractions.CreateOrEditCustomAttractionActivity;
 import de.juliusawen.coastercreditcounter.frontend.elements.CreateSimpleElementActivity;
@@ -63,27 +64,28 @@ public abstract class ActivityDistributor
 
     public static  void startActivityManageForResult(Context context, int requestCode)
     {
-        int type = Constants.TYPE_NONE;
+        ElementType elementType = ElementType.NONE;
         String toolbarTitle;
         String helpTitle;
         String helpText;
+
         if(requestCode == Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES)
         {
-            type = Constants.TYPE_ATTRACTION_CATEGORY;
+            elementType = ElementType.ATTRACTION_CATEGORY;
             toolbarTitle = context.getString(R.string.title_attraction_categories);
             helpTitle = context.getString(R.string.title_attraction_categories);
             helpText = context.getString(R.string.help_text_manage_attraction_category);
         }
         else if(requestCode == Constants.REQUEST_CODE_MANAGE_MANUFACTURERS)
         {
-            type = Constants.TYPE_MANUFACTURER;
+            elementType = ElementType.MANUFACTURER;
             toolbarTitle = context.getString(R.string.title_manufacturers);
             helpTitle = context.getString(R.string.title_manufacturers);
             helpText = context.getString(R.string.help_text_manage_manufacturer);
         }
         else if(requestCode == Constants.REQUEST_CODE_MANAGE_STATUSES)
         {
-            type = Constants.TYPE_STATUS;
+            elementType = ElementType.STATUS;
             toolbarTitle = context.getString(R.string.title_statuses);
             helpTitle = context.getString(R.string.title_statuses);
             helpText = context.getString(R.string.help_text_manage_status);
@@ -95,10 +97,10 @@ public abstract class ActivityDistributor
             helpText = context.getString(R.string.error_missing_text);
         }
 
-        if(type != Constants.TYPE_NONE)
+        if(!elementType.equals(ElementType.NONE))
         {
             Intent intent = new Intent(context, ManageOrphanElementsActivity.class);
-            intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, type);
+            intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, elementType.ordinal());
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);

@@ -1,12 +1,8 @@
 package de.juliusawen.coastercreditcounter.toolbox;
 
-import android.view.MenuItem;
-
 public interface IMenuAgentClient
 {
-    boolean handleInvalidOptionsMenuItemSelected(MenuItem item);
 
-    boolean handleMenuItemHelpSelected();
 
     boolean handleMenuItemExpandAllSelected();
     boolean handleMenuItemCollapseAllSelected();

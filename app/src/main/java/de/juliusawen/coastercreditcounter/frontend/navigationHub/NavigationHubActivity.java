@@ -130,15 +130,21 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
 
-    // region OPTIONS MENU
+    // region --- OPTIONS MENU
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(!Visit.getCurrentVisits().isEmpty())
-        {
-            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
-        }
+        this.viewModel.optionsMenuAgent
+                .setVisible(MenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                .prepare(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -187,7 +193,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return true;
     }
 
-    // endregion OPTIONS MENU
+    // endregion --- OPTIONS MENU
+
 
     private void setExportFileAbsolutPath()
     {

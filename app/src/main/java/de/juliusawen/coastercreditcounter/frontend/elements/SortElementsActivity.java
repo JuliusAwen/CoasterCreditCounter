@@ -24,7 +24,9 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 
 public class SortElementsActivity extends BaseActivity
@@ -43,6 +45,11 @@ public class SortElementsActivity extends BaseActivity
         if(App.isInitialized)
         {
             this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
+
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+            }
 
             if(this.viewModel.elementsToSort == null)
             {
@@ -89,14 +96,15 @@ public class SortElementsActivity extends BaseActivity
         super.onDestroy();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        menu.clear();
 
-        Menu submenuSort = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.selection_sort_by);
-        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-        submenuSort.add(Menu.NONE, Constants.SELECTION_SORT_BY_NAME_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
+    //region --- OPTIONS MENU
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.SORT)
+                .create(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -104,20 +112,8 @@ public class SortElementsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.i(Constants.LOG_TAG, String.format("SortElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
-
-        int id = item.getItemId();
-
-        if(id == Constants.SELECTION_SORT_BY_NAME_ASCENDING)
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
         {
-            this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-            return true;
-        }
-        else if(id == Constants.SELECTION_SORT_BY_NAME_DESCENDING)
-        {
-            this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
             return true;
         }
         else
@@ -125,6 +121,24 @@ public class SortElementsActivity extends BaseActivity
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public boolean handleMenuItemSortAscendingSelected()
+    {
+        this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+        return true;
+    }
+    @Override
+    public boolean handleMenuItemSortDescendingSelected()
+    {
+        this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+        return true;
+    }
+
+    //endregion --- OPTIONS MENU
+
 
     private void decorateFloatingActionButton()
     {

@@ -89,7 +89,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         super.onDestroy();
     }
 
-    //region OPTIONS MENU
+
+    //region --- OPTIONS MENU
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -157,7 +158,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         return false;
     }
 
-    //endregion OPTIONS MENU
+    //endregion --- OPTIONS MENU
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)

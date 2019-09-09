@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
+    private final int MENU_ITEM_HELP = Integer.MAX_VALUE - 32168421;
+
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
 
@@ -184,31 +187,34 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     }
 
 
-    // region handleOptionsMenuItemSelected implementations
+    //region --- OPTIONS MENU
 
     @Override
-    public boolean handleInvalidOptionsMenuItemSelected(MenuItem item)
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.onOptionsItemSelected:: [%d] selected - not handled!", item.getItemId()));
-
-        return true;
+        menu.add(Menu.NONE, MENU_ITEM_HELP, Menu.NONE, R.string.selection_help);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public boolean handleMenuItemHelpSelected()
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        if(item.getItemId() == MENU_ITEM_HELP)
+        {
+            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
 
-        if(helpOverlayFragment != null)
-        {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
-            this.setHelpOverlayVisibility(true);
-            return true;
+            if(helpOverlayFragment != null)
+            {
+                Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
+                this.setHelpOverlayVisibility(true);
+                return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
+            }
         }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
-            return false;
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -317,7 +323,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return false;
     }
 
-    // endregion handleOptionsMenuItemSelected implementations
+    //endregion --- OPTIONS MENU
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
@@ -374,14 +380,17 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
             if(isVisible)
             {
-                this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = this.floatingActionButton.getVisibility() == View.VISIBLE;
-                this.setFloatingActionButtonVisibility(false);
+                if(this.floatingActionButton != null)
+                {
+                    this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = this.floatingActionButton.getVisibility() == View.VISIBLE;
+                    this.setFloatingActionButtonVisibility(false);
+                }
                 this.showFragmentFadeIn(helpOverlayFragment);
             }
             else
             {
                 this.hideFragmentFadeOut(helpOverlayFragment);
-                if(this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay)
+                if(this.floatingActionButton != null && this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay)
                 {
                     this.setFloatingActionButtonVisibility(true);
                 }

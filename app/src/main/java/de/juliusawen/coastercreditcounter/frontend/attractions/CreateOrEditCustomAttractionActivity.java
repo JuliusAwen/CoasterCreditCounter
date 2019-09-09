@@ -72,13 +72,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         if(App.isInitialized)
         {
             this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
-
             this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
-
             this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
             this.textViewAttractionCategory = findViewById(R.id.textViewCreateOrEditAttraction_AttractionCategory);
             this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
-
             this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
             this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);

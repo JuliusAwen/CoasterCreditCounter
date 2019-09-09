@@ -79,8 +79,9 @@ public class ShowParkOverviewFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.HELP)
                 .create(menu);
+
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
 
     @Override

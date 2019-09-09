@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 
 public class ShowLocationsActivityViewModel extends ViewModel
 {
@@ -12,11 +13,5 @@ public class ShowLocationsActivityViewModel extends ViewModel
     IElement longClickedElement;
     boolean selectionMode;
     IElement newParent;
-
-    @Override
-    public void onCleared()
-    {
-        super.onCleared();
-        this.contentRecyclerViewAdapter = null;
-    }
+    MenuAgent optionsMenuAgent;
 }

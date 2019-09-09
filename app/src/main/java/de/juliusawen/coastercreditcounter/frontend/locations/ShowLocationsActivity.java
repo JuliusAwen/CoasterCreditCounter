@@ -35,7 +35,9 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -56,6 +58,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
+
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+            }
 
             if(this.viewModel.currentLocation == null)
             {
@@ -96,13 +103,27 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         super.onDestroy();
     }
 
+
+    //region OPTIONS MENU
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.EXPAND_ALL)
+                .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                .create(menu);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        menu.clear();
-
-        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        this.viewModel.optionsMenuAgent
+                .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .prepare(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -110,23 +131,32 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
-
-        int id = item.getItemId();
-
-        if(id == Constants.SELECTION_EXPAND_ALL)
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
         {
-            this.viewModel.contentRecyclerViewAdapter.expandAll();
             return true;
         }
-        else if(id == Constants.SELECTION_COLLAPSE_ALL)
+        else
         {
-            this.viewModel.contentRecyclerViewAdapter.collapseAll();
-            return true;
+            return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean handleMenuItemExpandAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        return true;
+    }
+
+    @Override
+    public boolean handleMenuItemCollapseAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        return true;
+    }
+
+    //endregion OPTIONS MENU
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)

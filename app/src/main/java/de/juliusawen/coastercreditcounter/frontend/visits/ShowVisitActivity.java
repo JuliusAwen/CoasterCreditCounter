@@ -129,7 +129,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         }
     }
 
-    //region OPTIONS MENU
+
+    //region --- OPTIONS MENU
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -139,7 +140,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 .addMenuItem(MenuAgent.ENABLE_EDITING)
                 .addMenuItem(MenuAgent.EXPAND_ALL)
                 .addMenuItem(MenuAgent.COLLAPSE_ALL)
-                .addMenuItem(MenuAgent.HELP)
                 .create(menu);
 
         return super.onCreateOptionsMenu(menu);
@@ -205,7 +205,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return true;
     }
 
-    //endregion OPTIONS MENU
+    //endregion --- OPTIONS MENU
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)

@@ -224,25 +224,23 @@ public class PickElementsActivity extends BaseActivity
                     .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER)
                     .addMenuItem(MenuAgent.GROUP_BY_STATUS)
                     .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
-                    .addMenuItem(MenuAgent.HELP)
-                    .create(menu);
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL);
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
                     .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
-                    .create(menu);
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL);
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
                 || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.SORT)
-                    .create(menu);
+                    .addMenuItem(MenuAgent.SORT);
         }
+
+        this.viewModel.optionsMenuAgent.create(menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -263,16 +261,16 @@ public class PickElementsActivity extends BaseActivity
                     .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
                     .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
                     .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                    .prepare(menu);
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
         }
         else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
         {
             this.viewModel.optionsMenuAgent
                     .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                    .prepare(menu);
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
         }
+
+        this.viewModel.optionsMenuAgent.prepare(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }

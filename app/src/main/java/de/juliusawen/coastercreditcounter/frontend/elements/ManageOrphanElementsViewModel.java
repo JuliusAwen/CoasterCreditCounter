@@ -2,19 +2,15 @@ package de.juliusawen.coastercreditcounter.frontend.elements;
 
 import androidx.lifecycle.ViewModel;
 
+import de.juliusawen.coastercreditcounter.backend.elements.ElementType;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 
 public class ManageOrphanElementsViewModel extends ViewModel
 {
-    int typeToManage;
+    ElementType elementTypeToManage;
     IElement longClickedElement;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-
-    @Override
-    public void onCleared()
-    {
-        super.onCleared();
-        this.contentRecyclerViewAdapter = null;
-    }
+    MenuAgent optionsMenuAgent;
 }

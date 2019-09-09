@@ -15,8 +15,6 @@ import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 
 public class MenuAgent
 {
-    public static final int HELP = Selection.HELP.ordinal();
-
     public static final int EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static final int COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
@@ -67,8 +65,6 @@ public class MenuAgent
     private Map<Selection, Integer> createStringResourcesBySelectionMap()
     {
         Map<Selection, Integer> stringResourcesBySelection = new HashMap<>();
-
-        stringResourcesBySelection.put(Selection.HELP, R.string.selection_help);
 
         stringResourcesBySelection.put(Selection.EXPAND_ALL, R.string.selection_expand_all);
         stringResourcesBySelection.put(Selection.COLLAPSE_ALL, R.string.selection_collapse_all);
@@ -125,7 +121,7 @@ public class MenuAgent
     {
         Log.d(Constants.LOG_TAG, String.format("MenuAgent.create:: adding [%d] MenuItem(s) to [%s]", this.selectionsToAdd.size(), this.menuType));
 
-        menu.clear();
+//        menu.clear();
 
         switch(menuType)
         {
@@ -363,9 +359,6 @@ public class MenuAgent
                 case SORT_BY_MANUFACTURER:
                     return true;
 
-
-                case HELP:
-                    return client.handleMenuItemHelpSelected();
                 case EXPAND_ALL:
                     return client.handleMenuItemExpandAllSelected();
                 case COLLAPSE_ALL:
@@ -412,7 +405,7 @@ public class MenuAgent
 
 
                 default:
-                    return client.handleInvalidOptionsMenuItemSelected(item);
+                    return false;
             }
         }
         else

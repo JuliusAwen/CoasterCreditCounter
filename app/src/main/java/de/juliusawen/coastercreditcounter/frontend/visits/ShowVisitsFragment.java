@@ -116,12 +116,14 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
+
+    //region --- OPTIONS MENU
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
                 .addMenuItem(MenuAgent.SORT)
-                .addMenuItem(MenuAgent.HELP)
                 .create(menu);
     }
 
@@ -138,6 +140,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.updateContentRecyclerView();
         return true;
     }
+
+    //endregion --- OPTIONS MENU
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
