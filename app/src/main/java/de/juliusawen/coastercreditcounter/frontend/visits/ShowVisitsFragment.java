@@ -43,8 +43,10 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Gr
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -85,6 +87,11 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             }
         }
 
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+        }
+
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
@@ -112,41 +119,24 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
-        if(this.viewModel.park.getChildCountOfType(Visit.class) > 1)
-        {
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_ASCENDING, Menu.NONE, R.string.selection_sort_ascending);
-            menu.add(Menu.NONE, Constants.SELECTION_SORT_BY_YEAR_DESCENDING, Menu.NONE, R.string.selection_sort_descending);
-        }
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.SORT)
+                .addMenuItem(MenuAgent.HELP)
+                .create(menu);
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
+    public boolean handleMenuItemSortAscendingSelected()
     {
-
+        Visit.setSortOrder(SortOrder.ASCENDING);
+        this.updateContentRecyclerView();
+        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean handleMenuItemSortDescendingSelected()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onOptionItemSelected:: [%s] selected", item.getItemId()));
-
-        int id = item.getItemId();
-        if(id == Constants.SELECTION_SORT_BY_YEAR_ASCENDING)
-        {
-            Visit.setSortOrder(SortOrder.ASCENDING);
-            this.updateContentRecyclerView();
-            return true;
-        }
-        else if(id == Constants.SELECTION_SORT_BY_YEAR_DESCENDING)
-        {
-            Visit.setSortOrder(SortOrder.DESCENDING);
-            this.updateContentRecyclerView();
-            return true;
-        }
-        else
-        {
-            return super.onOptionsItemSelected(item);
-        }
+        Visit.setSortOrder(SortOrder.DESCENDING);
+        this.updateContentRecyclerView();
+        return true;
     }
 
     @Override

@@ -46,7 +46,9 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Gr
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -87,6 +89,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             {
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
+        }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -175,27 +182,32 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
-        menu.add(Menu.NONE, Constants.SELECTION_EXPAND_ALL, Menu.NONE, R.string.selection_expand_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.add(Menu.NONE, Constants.SELECTION_COLLAPSE_ALL, Menu.NONE, R.string.selection_collapse_all).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.EXPAND_ALL)
+                .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                .addMenuItem(MenuAgent.HELP)
+                .create(menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-
+        this.viewModel.optionsMenuAgent
+                .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .prepare(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+
+    public boolean handleMenuItemExpandAllSelected()
     {
-        if(item.getItemId() == Constants.SELECTION_EXPAND_ALL)
-        {
-            this.viewModel.contentRecyclerViewAdapter.expandAll();
-        }
-        else if(item.getItemId() == Constants.SELECTION_COLLAPSE_ALL)
-        {
-            this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        }
+        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        return true;
+    }
+
+    public boolean handleMenuItemCollapseAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.collapseAll();
         return true;
     }
 

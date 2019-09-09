@@ -208,7 +208,7 @@ public class MenuAgent
         {
             case SORT:
                 this.addSortAscendingToSubMenu(Selection.SORT_ASCENDING, subMenu);
-                this.addSortAscendingToSubMenu(Selection.SORT_DESCENDING, subMenu);
+                this.addSortDescendingToSubMenu(Selection.SORT_DESCENDING, subMenu);
                 break;
 
             case SORT_BY_YEAR:

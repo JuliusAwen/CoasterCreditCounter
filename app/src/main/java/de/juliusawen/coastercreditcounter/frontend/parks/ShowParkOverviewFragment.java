@@ -3,6 +3,8 @@ package de.juliusawen.coastercreditcounter.frontend.parks;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +18,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
+import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 
 public class ShowParkOverviewFragment extends Fragment
 {
@@ -49,6 +53,13 @@ public class ShowParkOverviewFragment extends Fragment
                 this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
             }
         }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+        }
+
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -62,6 +73,14 @@ public class ShowParkOverviewFragment extends Fragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onViewCreated:: decorating view...");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
+    {
+        this.viewModel.optionsMenuAgent
+                .addMenuItem(MenuAgent.HELP)
+                .create(menu);
     }
 
     @Override

@@ -1010,7 +1010,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void collapseAll()
     {
-        Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: CALLED");
         Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: collapsing all");
 
         List<IElement> itemsList = new ArrayList<>(this.expandedItems);

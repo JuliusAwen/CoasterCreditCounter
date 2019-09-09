@@ -212,47 +212,110 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected() { return false; }
+    public boolean handleMenuItemExpandAllSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemCollapseAllSelected() { return false; }
+    public boolean handleMenuItemCollapseAllSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemGroupByLocationSelected() { return false; }
+    public boolean handleMenuItemGroupByLocationSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected() { return false; }
+    public boolean handleMenuItemGroupByAttractionCategorySelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected() { return false; }
+    public boolean handleMenuItemGroupByManufacturerSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemGroupByStatusSelected() { return false; }
+    public boolean handleMenuItemGroupByStatusSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortAscendingSelected() { return false; }
+    public boolean handleMenuItemSortAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortDescendingSelected() { return false; }
+    public boolean handleMenuItemSortDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByYearAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByYearAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByYearDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByYearDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByNameAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByNameAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByNameDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByNameDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByLocationAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByLocationAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByLocationDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByLocationDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByManufacturerAscendingSelected() { return false; }
+    public boolean handleMenuItemSortByManufacturerAscendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemSortByManufacturerDescendingSelected() { return false; }
+    public boolean handleMenuItemSortByManufacturerDescendingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemGoToCurrentVisitSelected() { return false; }
+    public boolean handleMenuItemGoToCurrentVisitSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemEnableEditingSelected() { return false; }
+    public boolean handleMenuItemEnableEditingSelected()
+    {
+        return false;
+    }
     @Override
-    public boolean handleMenuItemDisableEditingSelected() { return false; }
+    public boolean handleMenuItemDisableEditingSelected()
+    {
+        return false;
+    }
 
     // endregion handleOptionsMenuItemSelected implementations
 
