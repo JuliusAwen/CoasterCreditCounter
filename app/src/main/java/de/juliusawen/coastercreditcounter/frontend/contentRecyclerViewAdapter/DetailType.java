@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals.enums;
+package de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter;
 
 public enum DetailType
 {

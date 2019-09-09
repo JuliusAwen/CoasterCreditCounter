@@ -40,12 +40,12 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailType;
+import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
-import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;

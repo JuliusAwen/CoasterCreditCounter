@@ -47,10 +47,6 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.ContentRecyclerViewAdapterType;
-import de.juliusawen.coastercreditcounter.globals.enums.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.globals.enums.DetailType;
-import de.juliusawen.coastercreditcounter.globals.enums.GroupType;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
