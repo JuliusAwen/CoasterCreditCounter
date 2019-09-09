@@ -374,15 +374,20 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
             if(isVisible)
             {
+                this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = this.floatingActionButton.getVisibility() == View.VISIBLE;
+                this.setFloatingActionButtonVisibility(false);
                 this.showFragmentFadeIn(helpOverlayFragment);
             }
             else
             {
                 this.hideFragmentFadeOut(helpOverlayFragment);
+                if(this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay)
+                {
+                    this.setFloatingActionButtonVisibility(true);
+                }
             }
 
             this.viewModel.helpOverlayFragmentIsVisible = isVisible;
-            this.setFloatingActionButtonVisibility(!isVisible);
         }
         else
         {

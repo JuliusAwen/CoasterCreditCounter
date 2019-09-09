@@ -20,4 +20,6 @@ public class BaseActivityViewModel extends ViewModel
     final Set<IElement> elementsToDelete = new HashSet<>();
 
     boolean writeToExternalStoragePermissionNeededToInitialize;
+
+    boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
 }
