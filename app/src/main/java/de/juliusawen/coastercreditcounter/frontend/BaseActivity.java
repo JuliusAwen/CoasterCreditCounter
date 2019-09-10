@@ -43,7 +43,7 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    private final int MENU_ITEM_HELP = Integer.MAX_VALUE - 32168421;
+    private final int MENU_ITEM_HELP = Integer.MAX_VALUE - 32168;
 
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
