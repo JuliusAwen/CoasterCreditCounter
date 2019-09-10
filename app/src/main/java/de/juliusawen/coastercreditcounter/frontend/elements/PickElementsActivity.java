@@ -29,18 +29,18 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.SortTool;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -181,6 +181,8 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode != Activity.RESULT_OK)
@@ -251,29 +253,32 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+        if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent
-                    .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-//                    .setEnabled(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                    .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                    .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-                    .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
-                    .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                    .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
-                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
-        }
-        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
-        {
-            this.viewModel.optionsMenuAgent
-                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
-        }
+            if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+            {
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                        //                    .setEnabled(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                        .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                        .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                        .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
+                        .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                        .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
+                        .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+            }
+            else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+            {
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+            }
 
-        this.viewModel.optionsMenuAgent.prepare(menu);
+            this.viewModel.optionsMenuAgent.prepare(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -281,7 +286,12 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        {
+            return true;
+        }
+
+        return  super.onOptionsItemSelected(item);
     }
 
 

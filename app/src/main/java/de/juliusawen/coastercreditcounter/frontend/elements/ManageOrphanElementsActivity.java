@@ -42,12 +42,12 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.De
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -155,6 +155,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode != Activity.RESULT_OK)

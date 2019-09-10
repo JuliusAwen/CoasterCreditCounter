@@ -82,20 +82,15 @@ public class Content
 
     public void clear()
     {
-        if(this.backup())
-        {
-            this.rootLocation = null;
-            this.elementsByUuid.clear();
+        this.backup();
 
-            Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "Content.clear:: content not cleared!");
-        }
+        this.rootLocation = null;
+        this.elementsByUuid.clear();
+
+        Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
     }
 
-    private boolean backup()
+    private void backup()
     {
         this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
         this.backupRootLocation = this.rootLocation;
@@ -103,7 +98,6 @@ public class Content
         this.isRestoreBackupPossible = true;
 
         Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
-        return true;
     }
 
     public boolean restoreBackup()

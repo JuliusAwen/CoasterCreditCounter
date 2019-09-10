@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
 
 public class ShowAttractionsFragmentViewModel extends ViewModel
 {
@@ -13,11 +13,4 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     IElement longClickedElement;
     MenuAgent optionsMenuAgent;
-
-    @Override
-    public void onCleared()
-    {
-        super.onCleared();
-        this.contentRecyclerViewAdapter = null;
-    }
 }

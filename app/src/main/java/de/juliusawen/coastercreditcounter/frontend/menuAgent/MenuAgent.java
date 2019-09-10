@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.toolbox;
+package de.juliusawen.coastercreditcounter.frontend.menuAgent;
 
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
+import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class MenuAgent
 {
@@ -37,16 +37,16 @@ public class MenuAgent
 
 
 
-    private MenuType menuType;
+    private final MenuType menuType;
 
 
-    private List<Selection> selectionsToAdd;
-    private Map<Selection, Boolean> setEnabledBySelection;
-    private Map<Selection, Boolean> setVisibleBySelection;
-    private Map<Selection, Selection> submenuBySelection;
+    private final List<Selection> selectionsToAdd;
+    private final Map<Selection, Boolean> setEnabledBySelection;
+    private final Map<Selection, Boolean> setVisibleBySelection;
+    private final Map<Selection, Selection> submenuBySelection;
 
-    private Map<Selection, Integer> stringResourcesBySelection;
-    private Map<Selection, Integer> drawableResourcesBySelection;
+    private final Map<Selection, Integer> stringResourcesBySelection;
+    private final Map<Selection, Integer> drawableResourcesBySelection;
 
 
     public MenuAgent(MenuType menuType)
@@ -258,7 +258,7 @@ public class MenuAgent
 
         menu.add(Menu.NONE, selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
                 .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesBySelection.get(selection), R.color.white))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
     }
 
     public MenuAgent setEnabled(int menuItem, boolean setEnabled)

@@ -158,6 +158,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode != RESULT_OK)

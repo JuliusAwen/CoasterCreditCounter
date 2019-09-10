@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
 
 public class PickElementsActivityViewModel extends ViewModel
 {
@@ -15,11 +15,4 @@ public class PickElementsActivityViewModel extends ViewModel
     List<IElement> elementsToPickFrom;
     ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     MenuAgent optionsMenuAgent;
-
-    @Override
-    public void onCleared()
-    {
-        super.onCleared();
-        this.contentRecyclerViewAdapter = null;
-    }
 }

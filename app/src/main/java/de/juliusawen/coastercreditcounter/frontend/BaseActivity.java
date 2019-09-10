@@ -34,11 +34,11 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.IMenuAgentClient;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
-import de.juliusawen.coastercreditcounter.toolbox.IMenuAgentClient;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -99,7 +99,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     protected void onPause()
     {
         super.onPause();
-        this.synchronizePersistency();
+
+        if(App.isInitialized)
+        {
+            this.synchronizePersistency();
+        }
     }
 
 
@@ -218,6 +222,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
             }
         }
+
         return super.onOptionsItemSelected(item);
     }
 

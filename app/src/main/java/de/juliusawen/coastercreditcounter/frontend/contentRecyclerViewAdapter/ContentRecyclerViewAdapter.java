@@ -41,11 +41,11 @@ import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeaderProvider;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.IGroupHeader;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.GroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.GroupHeaderProvider;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.IGroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
@@ -86,13 +86,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final List<IElement> selectedItemsInOrderOfSelection = new ArrayList<>();
     private final Set<IElement> expandedItems = new HashSet<>();
 
-    private Map<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
+    private final Map<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
 
     private final Map<Integer, Set<Class<? extends IElement>>> typesByTypeface = new HashMap<>();
 
     private final Map<DetailType, Set<Class<? extends IAttraction>>> typesByDetail = new HashMap<>();
 
-    private Map<DetailType, DetailDisplayMode> displayModesByDetail = new HashMap<>();
+    private final Map<DetailType, DetailDisplayMode> displayModesByDetail = new HashMap<>();
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {

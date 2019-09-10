@@ -26,7 +26,7 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
  */
 public class Visit extends Element
 {
-    private static List<Visit> currentVisits = new ArrayList<>();
+    private static final List<Visit> currentVisits = new ArrayList<>();
     private static SortOrder sortOrder = SortOrder.DESCENDING;
     private final Calendar calendar;
 

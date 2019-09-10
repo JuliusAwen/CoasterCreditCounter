@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.frontend.parks;
 import androidx.lifecycle.ViewModel;
 
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
 
 public class ShowParkOverviewFragmentViewModel extends ViewModel
 {

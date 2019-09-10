@@ -34,10 +34,10 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -123,10 +123,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .prepare(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .prepare(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -138,10 +141,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             return true;
         }
-        else
-        {
-            return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -187,6 +188,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == RESULT_OK)

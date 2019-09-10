@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.backend.elements.ElementType;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
 
 public class ManageOrphanElementsViewModel extends ViewModel
 {

@@ -66,8 +66,10 @@ public class App extends Application
 
         Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
 
-        if(App.settings.initialize() && App.content.initialize() && App.initializeCurrentVisit())
+        if(App.settings.initialize() && App.content.initialize())
         {
+            App.initializeCurrentVisit();
+
             App.isInitialized = true;
             return true;
         }
@@ -77,14 +79,12 @@ public class App extends Application
         }
     }
 
-    private static boolean initializeCurrentVisit()
+    private static void initializeCurrentVisit()
     {
         Log.i(Constants.LOG_TAG, "App.initializeCurrentVisit:: initializing current visits...");
         for(Visit visit : App.persistence.fetchCurrentVisits())
         {
             Visit.addCurrentVisit(visit);
         }
-
-        return true;
     }
 }

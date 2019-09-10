@@ -36,8 +36,8 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -45,10 +45,10 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.De
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -238,7 +238,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                 if(element instanceof Attraction)
                 {
-                    Toaster.makeToast(getContext(), String.format("ShowAttraction not yet implemented %s", (Element) view.getTag()));
+                    Toaster.notYetImplemented(getContext());
                 }
                 else if(element instanceof GroupHeader)
                 {

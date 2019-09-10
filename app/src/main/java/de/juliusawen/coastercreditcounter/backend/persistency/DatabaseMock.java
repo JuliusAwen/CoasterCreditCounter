@@ -30,12 +30,12 @@ import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
-    private AttractionCategories attractionCategories;
-    private Manufacturers manufacturers;
-    private Statuses statuses;
-    private Locations locations;
-    private CoasterBlueprints coasterBlueprints;
-    private AttractionBlueprints attractionBlueprints;
+    private final AttractionCategories attractionCategories;
+    private final Manufacturers manufacturers;
+    private final Statuses statuses;
+    private final Locations locations;
+    private final CoasterBlueprints coasterBlueprints;
+    private final AttractionBlueprints attractionBlueprints;
 
     private static final DatabaseMock instance = new DatabaseMock();
 
@@ -1541,14 +1541,14 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 class AttractionCategories
 {
-    AttractionCategory RollerCoasters = AttractionCategory.create("RollerCoasters", null);
-    AttractionCategory ThrillRides = AttractionCategory.create("Thrill Rides", null);
-    AttractionCategory FamilyRides = AttractionCategory.create("Family Rides", null);
-    AttractionCategory WaterRides = AttractionCategory.create("Water Rides", null);
-    AttractionCategory DarkRides = AttractionCategory.create("Dark Rides", null);
-    AttractionCategory TransportRides = AttractionCategory.create("Transport Rides", null);
+    final AttractionCategory RollerCoasters = AttractionCategory.create("RollerCoasters", null);
+    final AttractionCategory ThrillRides = AttractionCategory.create("Thrill Rides", null);
+    final AttractionCategory FamilyRides = AttractionCategory.create("Family Rides", null);
+    final AttractionCategory WaterRides = AttractionCategory.create("Water Rides", null);
+    final AttractionCategory DarkRides = AttractionCategory.create("Dark Rides", null);
+    final AttractionCategory TransportRides = AttractionCategory.create("Transport Rides", null);
 
-    List<AttractionCategory> All = new LinkedList<>();
+    final List<AttractionCategory> All = new LinkedList<>();
 
     AttractionCategories()
     {
@@ -1567,32 +1567,32 @@ class AttractionCategories
 
 class Manufacturers
 {
-    Manufacturer BolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard", null);
-    Manufacturer Intamin = Manufacturer.create("Intamin", null);
-    Manufacturer Vekoma = Manufacturer.create("Vekoma", null);
-    Manufacturer Huss = Manufacturer.create("Huss", null);
-    Manufacturer Pinfari = Manufacturer.create("Pinfari", null);
-    Manufacturer MaurerSoehne = Manufacturer.create("Mauerer Söhne", null);
-    Manufacturer EtfRideSystems = Manufacturer.create("ETF Ride Systems", null);
-    Manufacturer Zierer = Manufacturer.create("Zierer", null);
-    Manufacturer Hofmann = Manufacturer.create("Hofmann", null);
-    Manufacturer Hafema = Manufacturer.create("Hafema", null);
-    Manufacturer PrestonAndBarbieri = Manufacturer.create("Preston & Barbieri", null);
-    Manufacturer Schwarzkopf = Manufacturer.create("Schwarzkopf", null);
-    Manufacturer Mack = Manufacturer.create("Mack", null);
-    Manufacturer SAndS = Manufacturer.create("S&S", null);
-    Manufacturer SbfVisa = Manufacturer.create("SBF Visa", null);
-    Manufacturer Triotech = Manufacturer.create("Triotech", null);
-    Manufacturer Zamperla = Manufacturer.create("Zamperla", null);
-    Manufacturer ArrowDynamics = Manufacturer.create("Arrow Dynamics", null);
-    Manufacturer Simworx = Manufacturer.create("Simworx", null);
-    Manufacturer CCI = Manufacturer.create("Custom Coasters International", null);
-    Manufacturer RMC = Manufacturer.create("Rocky Mountain Construction", null);
-    Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer Amusement Rides", null);
-    Manufacturer PremierRides = Manufacturer.create("Premier Rides", null);
-    Manufacturer GCI = Manufacturer.create("Great Coasters International", null);
+    final Manufacturer BolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard", null);
+    final Manufacturer Intamin = Manufacturer.create("Intamin", null);
+    final Manufacturer Vekoma = Manufacturer.create("Vekoma", null);
+    final Manufacturer Huss = Manufacturer.create("Huss", null);
+    final Manufacturer Pinfari = Manufacturer.create("Pinfari", null);
+    final Manufacturer MaurerSoehne = Manufacturer.create("Mauerer Söhne", null);
+    final Manufacturer EtfRideSystems = Manufacturer.create("ETF Ride Systems", null);
+    final Manufacturer Zierer = Manufacturer.create("Zierer", null);
+    final Manufacturer Hofmann = Manufacturer.create("Hofmann", null);
+    final Manufacturer Hafema = Manufacturer.create("Hafema", null);
+    final Manufacturer PrestonAndBarbieri = Manufacturer.create("Preston & Barbieri", null);
+    final Manufacturer Schwarzkopf = Manufacturer.create("Schwarzkopf", null);
+    final Manufacturer Mack = Manufacturer.create("Mack", null);
+    final Manufacturer SAndS = Manufacturer.create("S&S", null);
+    final Manufacturer SbfVisa = Manufacturer.create("SBF Visa", null);
+    final Manufacturer Triotech = Manufacturer.create("Triotech", null);
+    final Manufacturer Zamperla = Manufacturer.create("Zamperla", null);
+    final Manufacturer ArrowDynamics = Manufacturer.create("Arrow Dynamics", null);
+    final Manufacturer Simworx = Manufacturer.create("Simworx", null);
+    final Manufacturer CCI = Manufacturer.create("Custom Coasters International", null);
+    final Manufacturer RMC = Manufacturer.create("Rocky Mountain Construction", null);
+    final Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer Amusement Rides", null);
+    final Manufacturer PremierRides = Manufacturer.create("Premier Rides", null);
+    final Manufacturer GCI = Manufacturer.create("Great Coasters International", null);
 
-    List<Manufacturer> All = new LinkedList<>();
+    final List<Manufacturer> All = new LinkedList<>();
 
     Manufacturers()
     {
@@ -1629,12 +1629,12 @@ class Manufacturers
 
 class Statuses
 {
-    Status ClosedForRefurbishment = Status.create("closed for refurbishment", null);
-    Status ClosedForConversion = Status.create("closed for conversion", null);
-    Status Converted = Status.create("converted", null);
-    Status Defunct = Status.create("defunct", null);
+    final Status ClosedForRefurbishment = Status.create("closed for refurbishment", null);
+    final Status ClosedForConversion = Status.create("closed for conversion", null);
+    final Status Converted = Status.create("converted", null);
+    final Status Defunct = Status.create("defunct", null);
 
-    List<Status> All = new LinkedList<>();
+    final List<Status> All = new LinkedList<>();
 
     Statuses()
     {
@@ -1651,11 +1651,11 @@ class Statuses
 
 class Locations
 {
-    Location Europe = Location.create("Europe", null);
+    final Location Europe = Location.create("Europe", null);
 
-    Location Germany = Location.create("Germany", null);
-    Location Netherlands = Location.create("Netherlands", null);
-    Location Spain = Location.create("Spain", null);
+    final Location Germany = Location.create("Germany", null);
+    final Location Netherlands = Location.create("Netherlands", null);
+    final Location Spain = Location.create("Spain", null);
 
     Locations()
     {
@@ -1667,12 +1667,12 @@ class Locations
 
 class CoasterBlueprints
 {
-    CoasterBlueprint SuspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", null);
-    CoasterBlueprint Boomerang = CoasterBlueprint.create("Boomerang", null);
-    CoasterBlueprint BigAppleMB28 = CoasterBlueprint.create("Big Apple", null);
-    CoasterBlueprint SkyRocketII = CoasterBlueprint.create("Sky Rocker II", null);
+    final CoasterBlueprint SuspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster", null);
+    final CoasterBlueprint Boomerang = CoasterBlueprint.create("Boomerang", null);
+    final CoasterBlueprint BigAppleMB28 = CoasterBlueprint.create("Big Apple", null);
+    final CoasterBlueprint SkyRocketII = CoasterBlueprint.create("Sky Rocker II", null);
 
-    List<CoasterBlueprint> All = new LinkedList<>();
+    final List<CoasterBlueprint> All = new LinkedList<>();
 
     CoasterBlueprints(Manufacturers manufacturers, AttractionCategories attractionCategories)
     {
@@ -1698,15 +1698,15 @@ class CoasterBlueprints
 
 class AttractionBlueprints
 {
-    AttractionBlueprint TopSpin = AttractionBlueprint.create("Top Spin", null);
-    AttractionBlueprint SuspendedTopSpin = AttractionBlueprint.create("Suspended Top Spin", null);
-    AttractionBlueprint BreakDancer = AttractionBlueprint.create("Break Dancer", null);
-    AttractionBlueprint DiskO = AttractionBlueprint.create("Disk'O", null);
-    AttractionBlueprint Condor = AttractionBlueprint.create("Condor", null);
-    AttractionBlueprint SkyFly = AttractionBlueprint.create("Sky Fly", null);
-    AttractionBlueprint Ranger = AttractionBlueprint.create("Ranger", null);
+    final AttractionBlueprint TopSpin = AttractionBlueprint.create("Top Spin", null);
+    final AttractionBlueprint SuspendedTopSpin = AttractionBlueprint.create("Suspended Top Spin", null);
+    final AttractionBlueprint BreakDancer = AttractionBlueprint.create("Break Dancer", null);
+    final AttractionBlueprint DiskO = AttractionBlueprint.create("Disk'O", null);
+    final AttractionBlueprint Condor = AttractionBlueprint.create("Condor", null);
+    final AttractionBlueprint SkyFly = AttractionBlueprint.create("Sky Fly", null);
+    final AttractionBlueprint Ranger = AttractionBlueprint.create("Ranger", null);
 
-    List<AttractionBlueprint> All = new LinkedList<>();
+    final List<AttractionBlueprint> All = new LinkedList<>();
 
     AttractionBlueprints(Manufacturers manufacturers, AttractionCategories attractionCategories)
     {

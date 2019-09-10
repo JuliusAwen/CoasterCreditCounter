@@ -30,10 +30,10 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -113,6 +113,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(Constants.LOG_TAG, String.format("NavigationHubActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)
@@ -125,7 +127,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
             }
-
         }
     }
 
@@ -139,15 +140,19 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .setVisible(MenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
-                .prepare(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setVisible(MenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                    .prepare(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -165,13 +170,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             else
             {
-                return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
+                if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+                {
+                    return true;
+                }
             }
         }
-        else
-        {
-            return true;
-        }
+
+        return super.onOptionsItemSelected(item);
     }
     @Override
     public boolean handleMenuItemGoToCurrentVisitSelected()
@@ -291,7 +297,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 case R.id.navigationItem_ManageModels:
                 {
-                    Toaster.makeToast(NavigationHubActivity.this, "not yet implemented");
+                    Toaster.notYetImplemented(NavigationHubActivity.this);
                     break;
                 }
 

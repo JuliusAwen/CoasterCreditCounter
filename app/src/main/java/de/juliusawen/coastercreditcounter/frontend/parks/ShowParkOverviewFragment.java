@@ -17,15 +17,13 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 
 public class ShowParkOverviewFragment extends Fragment
 {
     private ShowParkOverviewFragmentViewModel viewModel;
-
-    public ShowParkOverviewFragment() {}
 
     public static ShowParkOverviewFragment newInstance(String parkUuid)
     {
@@ -82,12 +80,5 @@ public class ShowParkOverviewFragment extends Fragment
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);
-    }
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        this.viewModel = null;
     }
 }

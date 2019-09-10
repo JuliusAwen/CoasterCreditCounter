@@ -33,19 +33,19 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Ride;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
@@ -55,6 +55,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 {
     private ShowVisitActivityViewModel viewModel;
     private boolean actionConfirmed;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -103,9 +104,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .addRideOnClickListener(this.getAddRideOnClickListener())
                     .deleteRideOnClickListener(this.getRemoveRideOnClickListener());
 
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
             if(Visit.isCurrentVisit(this.viewModel.visit))
             {
@@ -127,6 +128,13 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
 
@@ -151,12 +159,15 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .setVisible(MenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
-                .setVisible(MenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .prepare(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setVisible(MenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
+                    .setVisible(MenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
+                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .prepare(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -164,7 +175,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -214,6 +230,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
         Log.i(LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode == Activity.RESULT_OK)

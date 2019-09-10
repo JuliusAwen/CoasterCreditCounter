@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader;
 
 import android.content.Context;
 import android.util.Log;
@@ -25,7 +25,6 @@ import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
 {
     private final IElement groupElement;
-    private ActivityDistributor activityDistributor;
 
     private GroupHeader(String name, UUID uuid, IElement groupElement)
     {

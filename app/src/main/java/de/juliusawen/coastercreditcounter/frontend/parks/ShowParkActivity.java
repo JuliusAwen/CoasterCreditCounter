@@ -20,7 +20,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,12 +30,12 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.MenuType;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
-import de.juliusawen.coastercreditcounter.toolbox.MenuAgent;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
 
 public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
@@ -95,7 +94,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this);
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -267,7 +271,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                             @Override
                             public void onClick(View view)
                             {
-                                Toaster.makeToast(ShowParkActivity.this, "fab interaction for Tab SHOW_OVERVIEW not yet implemented");
+                                Toaster.notYetImplemented(ShowParkActivity.this);
                             }
                         });
                 break;
@@ -306,12 +310,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
-        ShowParkOverviewFragment showParkOverviewFragment;
-        ShowAttractionsFragment showAttractionsFragment;
-        ShowVisitsFragment showVisitsFragment;
-
         private final String parkUuid;
-        private Map<Integer, Fragment> fragmentsByPosition = new HashMap<>();
+        private final Map<Integer, Fragment> fragmentsByPosition = new HashMap<>();
 
         private final Drawable[] tabTitleDrawables = new Drawable[]
                 {
@@ -322,7 +322,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
         {
-            super(fragmentManager);
+            super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             Log.d(Constants.LOG_TAG, "ShowParkActivity.TabPagerAdapter.Constructor:: instantiating adapter...");
             this.parkUuid = parkUuid;
         }
@@ -362,26 +362,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position)
         {
-            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
-
-            switch (Tab.values()[position])
-            {
-                case SHOW_OVERVIEW:
-                    this.showParkOverviewFragment = (ShowParkOverviewFragment) createdFragment;
-                    break;
-                case SHOW_ATTRACTIONS:
-                    this.showAttractionsFragment = (ShowAttractionsFragment) createdFragment;
-                    break;
-                case SHOW_VISITS:
-                    this.showVisitsFragment = (ShowVisitsFragment) createdFragment;
-                    break;
-                default:
-                    String errorMessage = String.format(Locale.getDefault(), "ShowParkActivity.TabPagerAdapter.instantiateItem:: tab [%s] does not exist", Tab.values()[position]);
-                    Log.e(Constants.LOG_TAG, errorMessage);
-                    throw new IllegalStateException(errorMessage);
-            }
-
-            return createdFragment;
+            return super.instantiateItem(container, position);
         }
 
         @Override
