@@ -62,11 +62,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         }
     }
 
-    private void decorateToolbar()
-    {
-        super.setToolbarTitleAndSubtitle(this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create), this.viewModel.park.getName());
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -96,6 +91,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         {
             returnResult(Activity.RESULT_OK);
         }
+    }
+
+    private void decorateToolbar()
+    {
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create), this.viewModel.park.getName());
     }
 
     private void pickDate()

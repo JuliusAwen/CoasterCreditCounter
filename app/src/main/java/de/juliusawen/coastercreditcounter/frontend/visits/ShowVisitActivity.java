@@ -135,12 +135,15 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.DISABLE_EDITING)
-                .addMenuItem(MenuAgent.ENABLE_EDITING)
-                .addMenuItem(MenuAgent.EXPAND_ALL)
-                .addMenuItem(MenuAgent.COLLAPSE_ALL)
-                .create(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.DISABLE_EDITING)
+                    .addMenuItem(MenuAgent.ENABLE_EDITING)
+                    .addMenuItem(MenuAgent.EXPAND_ALL)
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .create(menu);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

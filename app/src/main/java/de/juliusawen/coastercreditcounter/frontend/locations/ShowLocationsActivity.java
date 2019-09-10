@@ -109,10 +109,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.EXPAND_ALL)
-                .addMenuItem(MenuAgent.COLLAPSE_ALL)
-                .create(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.EXPAND_ALL)
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .create(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }

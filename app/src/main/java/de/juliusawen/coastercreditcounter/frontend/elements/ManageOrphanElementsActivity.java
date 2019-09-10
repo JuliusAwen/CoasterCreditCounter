@@ -241,40 +241,43 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        switch(this.viewModel.elementTypeToManage)
+        if(App.isInitialized)
         {
-            case ATTRACTION_CATEGORY:
+            switch(this.viewModel.elementTypeToManage)
             {
-                if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
+                case ATTRACTION_CATEGORY:
                 {
-                    menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
+                    if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
+                    {
+                        menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
+                    }
+
+                    break;
                 }
 
-                break;
-            }
-
-            case MANUFACTURER:
-            {
-                if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
+                case MANUFACTURER:
                 {
-                    menu.add(Menu.NONE, Constants.SELECTION_SORT_MANUFACTURERS, Menu.NONE, R.string.selection_sort_manufacturers);
-                }
-                break;
-            }
-
-            case STATUS:
-            {
-                if(App.content.getContentOfType(Status.class).size() > 1) // --> setVisible
-                {
-                    menu.add(Menu.NONE, Constants.SELECTION_SORT_STATUSES, Menu.NONE, R.string.selection_sort_statuses);
+                    if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
+                    {
+                        menu.add(Menu.NONE, Constants.SELECTION_SORT_MANUFACTURERS, Menu.NONE, R.string.selection_sort_manufacturers);
+                    }
+                    break;
                 }
 
-                break;
+                case STATUS:
+                {
+                    if(App.content.getContentOfType(Status.class).size() > 1) // --> setVisible
+                    {
+                        menu.add(Menu.NONE, Constants.SELECTION_SORT_STATUSES, Menu.NONE, R.string.selection_sort_statuses);
+                    }
+
+                    break;
+                }
             }
+
+            menu.add(Menu.NONE, 123456, Menu.NONE, R.string.selection_expand_all);
+            menu.add(Menu.NONE, 654321, Menu.NONE, R.string.selection_collapse_all);
         }
-
-        menu.add(Menu.NONE, 123456, Menu.NONE, R.string.selection_expand_all);
-        menu.add(Menu.NONE, 654321, Menu.NONE, R.string.selection_collapse_all);
 
         return super.onPrepareOptionsMenu(menu);
     }

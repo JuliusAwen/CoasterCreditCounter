@@ -210,37 +210,40 @@ public class PickElementsActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+        if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.SORT_BY_NAME)
-                    .addMenuItem(MenuAgent.SORT_BY_LOCATION)
-//                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY)
-                    .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER)
-                    .addMenuItem(MenuAgent.GROUP_BY_LOCATION)
-                    .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
-                    .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER)
-                    .addMenuItem(MenuAgent.GROUP_BY_STATUS)
-                    .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL);
-        }
-        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
-        {
-            this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL);
-        }
-        else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
-                || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
-        {
-            this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.SORT);
-        }
+            if(this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_CATEGORY_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_MANUFACTURERS_TO_ATTRACTIONS
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
+            {
+                this.viewModel.optionsMenuAgent
+                        .addMenuItem(MenuAgent.SORT_BY_NAME)
+                        .addMenuItem(MenuAgent.SORT_BY_LOCATION)
+                        //                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY)
+                        .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER)
+                        .addMenuItem(MenuAgent.GROUP_BY_LOCATION)
+                        .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
+                        .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER)
+                        .addMenuItem(MenuAgent.GROUP_BY_STATUS)
+                        .addMenuItem(MenuAgent.EXPAND_ALL)
+                        .addMenuItem(MenuAgent.COLLAPSE_ALL);
+            }
+            else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+            {
+                this.viewModel.optionsMenuAgent
+                        .addMenuItem(MenuAgent.EXPAND_ALL)
+                        .addMenuItem(MenuAgent.COLLAPSE_ALL);
+            }
+            else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
+                    || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
+            {
+                this.viewModel.optionsMenuAgent
+                        .addMenuItem(MenuAgent.SORT);
+            }
 
-        this.viewModel.optionsMenuAgent.create(menu);
+            this.viewModel.optionsMenuAgent.create(menu);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -57,6 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
         super.onCreate(savedInstanceState);
 
+        //VieModel has to instantiated before initialization
         this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
 
         if(App.isInitialized)
@@ -192,7 +193,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        menu.add(Menu.NONE, MENU_ITEM_HELP, Menu.NONE, R.string.selection_help);
+        if(App.isInitialized)
+        {
+            menu.add(Menu.NONE, MENU_ITEM_HELP, Menu.NONE, R.string.selection_help);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -135,7 +135,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 

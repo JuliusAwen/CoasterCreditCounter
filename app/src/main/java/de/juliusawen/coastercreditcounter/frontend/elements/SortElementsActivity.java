@@ -102,9 +102,12 @@ public class SortElementsActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.SORT)
-                .create(menu);
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.SORT)
+                    .create(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
