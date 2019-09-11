@@ -35,6 +35,8 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.IMenuAgentClient;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
@@ -43,8 +45,6 @@ import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
-    private final int MENU_ITEM_HELP = Integer.MAX_VALUE - 32168;
-
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
 
@@ -86,6 +86,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
         if(App.isInitialized)
         {
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+            }
+
+
             HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
 
             if(helpOverlayFragment != null)
@@ -168,7 +174,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void finishAppInitialization()
+    private void finishAppInitialization()
     {
         Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: finishing app initialization...");
 
@@ -194,142 +200,144 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
     //region --- OPTIONS MENU
 
+    protected void preventHelpBeingAddedToOptionsMenu(boolean prevent)
+    {
+        this.viewModel.preventHelpBeingAddedToOptionsMenu = prevent;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        if(App.isInitialized && !this.viewModel.preventHelpBeingAddedToOptionsMenu)
         {
-            menu.add(Menu.NONE, MENU_ITEM_HELP, Menu.NONE, R.string.selection_help);
+            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.HELP).create(menu);
         }
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == MENU_ITEM_HELP)
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
         {
-            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-
-            if(helpOverlayFragment != null)
-            {
-                Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
-                this.setHelpOverlayVisibility(true);
-                return true;
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
-            }
+            return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return  super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public void handleMenuItemHelpSelected()
     {
-        return false;
+        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+        if(helpOverlayFragment != null)
+        {
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
+            this.setHelpOverlayVisibility(true);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
+        }
+    }
+
+    @Override
+    public void handleMenuItemExpandAllSelected()
+    {
     }
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public void handleMenuItemCollapseAllSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemGroupByLocationSelected()
+    public void handleMenuItemGroupByLocationSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected()
+    public void handleMenuItemGroupByAttractionCategorySelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected()
+    public void handleMenuItemGroupByManufacturerSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemGroupByStatusSelected()
+    public void handleMenuItemGroupByStatusSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortAscendingSelected()
+    public void handleMenuItemSortAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortDescendingSelected()
+    public void handleMenuItemSortDescendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByYearAscendingSelected()
+    public void handleMenuItemSortAttractionCategoriesSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByYearDescendingSelected()
+    public void handleMenuItemSortManufacturersSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByNameAscendingSelected()
+    public void handleMenuItemSortStatusesSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByNameDescendingSelected()
+    public void handleMenuItemSortByYearAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByLocationAscendingSelected()
+    public void handleMenuItemSortByYearDescendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByLocationDescendingSelected()
+    public void handleMenuItemSortByNameAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
+    public void handleMenuItemSortByNameDescendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
+    public void handleMenuItemSortByLocationAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByManufacturerAscendingSelected()
+    public void handleMenuItemSortByLocationDescendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemSortByManufacturerDescendingSelected()
+    public void handleMenuItemSortByAttractionCategoryAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemGoToCurrentVisitSelected()
+    public void handleMenuItemSortByAttractionCategoryDescendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemEnableEditingSelected()
+    public void handleMenuItemSortByManufacturerAscendingSelected()
     {
-        return false;
     }
     @Override
-    public boolean handleMenuItemDisableEditingSelected()
+    public void handleMenuItemSortByManufacturerDescendingSelected()
     {
-        return false;
+    }
+    @Override
+    public void handleMenuItemGoToCurrentVisitSelected()
+    {
+    }
+    @Override
+    public void handleMenuItemEnableEditingSelected()
+    {
+    }
+    @Override
+    public void handleMenuItemDisableEditingSelected()
+    {
     }
 
     //endregion --- OPTIONS MENU
@@ -345,7 +353,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void addHelpOverlayFragment(String title, CharSequence message)
+    protected void addHelpOverlayFragment(String title, CharSequence message)
     {
         HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
 
@@ -364,7 +372,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void setHelpOverlayTitleAndMessage(String title, String message)
+    protected void setHelpOverlayTitleAndMessage(String title, String message)
     {
         HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
 
@@ -379,7 +387,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void setHelpOverlayVisibility(boolean isVisible)
+    protected void setHelpOverlayVisibility(boolean isVisible)
     {
         HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
 
@@ -420,7 +428,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
 
 
-    public void addToolbar()
+    protected void addToolbar()
     {
         Toolbar toolbar = this.fetchToolbar();
         if(toolbar != null)
@@ -431,7 +439,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void addToolbarHomeButton()
+    protected void addToolbarHomeButton()
     {
         if(getSupportActionBar() != null)
         {
@@ -456,7 +464,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void addToolbarMenuIcon()
+    protected void addToolbarMenuIcon()
     {
         if(getSupportActionBar() != null)
         {
@@ -467,13 +475,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    private  void onToolbarHomeButtonBackClicked()
+    protected   void onToolbarHomeButtonBackClicked()
     {
         Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button pressed...");
         this.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
     }
 
-    public void setToolbarTitleAndSubtitle(String title, String subtitle)
+    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
         if(getSupportActionBar() != null)
         {
@@ -517,14 +525,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void addFloatingActionButton()
+    protected void addFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
-    public void setFloatingActionButtonIcon(Drawable icon)
+    protected void setFloatingActionButtonIcon(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
@@ -533,7 +541,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         if(this.floatingActionButton != null)
         {
@@ -542,7 +550,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void setFloatingActionButtonVisibility(boolean isVisible)
+    protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.floatingActionButton != null)
         {
@@ -559,18 +567,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void disableFloatingActionButton()
-    {
-        if(this.floatingActionButton != null)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.disableFloatingActionButton:: disabling FloatingActionButton...");
-
-            this.floatingActionButton.hide();
-            this.floatingActionButton = null;
-        }
-    }
-
-    public void animateFloatingActionButtonTransition(Drawable icon)
+    protected void animateFloatingActionButtonTransition(Drawable icon)
     {
         if(this.floatingActionButton != null)
         {
@@ -595,7 +592,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    private void showFragmentFadeIn(Fragment fragment)
+    protected void showFragmentFadeIn(Fragment fragment)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -604,7 +601,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 .commit();
     }
 
-    private void hideFragmentFadeOut(Fragment fragment)
+    protected void hideFragmentFadeOut(Fragment fragment)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -613,7 +610,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
                 .commit();
     }
 
-    private void showFragment(Fragment fragment)
+    protected void showFragment(Fragment fragment)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -641,7 +638,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         return super.onKeyDown(keyCode, event);
     }
 
-    public void showProgressBar()
+    protected void showProgressBar()
     {
         View progressBar = this.fetchProgressBar();
 
@@ -655,7 +652,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void hideProgressBar()
+    protected void hideProgressBar()
     {
         View progressBar = this.fetchProgressBar();
 
@@ -727,7 +724,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void markForCreation(List<IElement> elements)
+    protected void markForCreation(List<IElement> elements)
     {
         for(IElement element : elements)
         {
@@ -735,7 +732,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void markForCreation(IElement element)
+    protected void markForCreation(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -745,7 +742,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         App.content.addElement(element);
     }
 
-    public void markForUpdate(List<IElement> elements)
+    protected void markForUpdate(List<IElement> elements)
     {
         for(IElement element : elements)
         {
@@ -753,7 +750,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void markForUpdate(IElement element)
+    protected void markForUpdate(IElement element)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -762,7 +759,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void markForDeletion(List<IElement> elements, boolean deleteDescendants)
+    protected void markForDeletion(List<IElement> elements, boolean deleteDescendants)
     {
         for(IElement element : elements)
         {
@@ -770,7 +767,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         }
     }
 
-    public void markForDeletion(IElement element, boolean deleteDescendants)
+    protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
         if(!(element instanceof ITemporaryElement))
         {
@@ -788,7 +785,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         App.content.removeElement(element);
     }
 
-    public void synchronizePersistency()
+    protected void synchronizePersistency()
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {

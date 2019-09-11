@@ -2,31 +2,34 @@ package de.juliusawen.coastercreditcounter.frontend.menuAgent;
 
 public interface IMenuAgentClient
 {
+    void handleMenuItemHelpSelected();
 
+    void handleMenuItemExpandAllSelected();
+    void handleMenuItemCollapseAllSelected();
 
-    boolean handleMenuItemExpandAllSelected();
-    boolean handleMenuItemCollapseAllSelected();
+    void handleMenuItemGroupByLocationSelected();
+    void handleMenuItemGroupByAttractionCategorySelected();
+    void handleMenuItemGroupByManufacturerSelected();
+    void handleMenuItemGroupByStatusSelected();
 
-    boolean handleMenuItemGroupByLocationSelected();
-    boolean handleMenuItemGroupByAttractionCategorySelected();
-    boolean handleMenuItemGroupByManufacturerSelected();
-    boolean handleMenuItemGroupByStatusSelected();
+    void handleMenuItemSortAscendingSelected();
+    void handleMenuItemSortDescendingSelected();
+    void handleMenuItemSortAttractionCategoriesSelected();
+    void handleMenuItemSortManufacturersSelected();
+    void handleMenuItemSortStatusesSelected();
+    void handleMenuItemSortByYearAscendingSelected();
+    void handleMenuItemSortByYearDescendingSelected();
+    void handleMenuItemSortByNameAscendingSelected();
+    void handleMenuItemSortByNameDescendingSelected();
+    void handleMenuItemSortByLocationAscendingSelected();
+    void handleMenuItemSortByLocationDescendingSelected();
+    void handleMenuItemSortByAttractionCategoryAscendingSelected();
+    void handleMenuItemSortByAttractionCategoryDescendingSelected();
+    void handleMenuItemSortByManufacturerAscendingSelected();
+    void handleMenuItemSortByManufacturerDescendingSelected();
 
-    boolean handleMenuItemSortAscendingSelected();
-    boolean handleMenuItemSortDescendingSelected();
-    boolean handleMenuItemSortByYearAscendingSelected();
-    boolean handleMenuItemSortByYearDescendingSelected();
-    boolean handleMenuItemSortByNameAscendingSelected();
-    boolean handleMenuItemSortByNameDescendingSelected();
-    boolean handleMenuItemSortByLocationAscendingSelected();
-    boolean handleMenuItemSortByLocationDescendingSelected();
-    boolean handleMenuItemSortByAttractionCategoryAscendingSelected();
-    boolean handleMenuItemSortByAttractionCategoryDescendingSelected();
-    boolean handleMenuItemSortByManufacturerAscendingSelected();
-    boolean handleMenuItemSortByManufacturerDescendingSelected();
+    void handleMenuItemGoToCurrentVisitSelected();
 
-    boolean handleMenuItemGoToCurrentVisitSelected();
-
-    boolean handleMenuItemEnableEditingSelected();
-    boolean handleMenuItemDisableEditingSelected();
+    void handleMenuItemEnableEditingSelected();
+    void handleMenuItemDisableEditingSelected();
 }

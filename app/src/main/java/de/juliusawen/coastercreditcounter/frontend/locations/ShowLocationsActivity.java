@@ -117,7 +117,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     .create(menu);
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -146,17 +146,15 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public void handleMenuItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public void handleMenuItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        return true;
     }
 
     //endregion OPTIONS MENU

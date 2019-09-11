@@ -15,10 +15,17 @@ import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 
 public class MenuAgent
 {
+    public static final int HELP = Selection.HELP.ordinal();
+
     public static final int EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
     public static final int COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
 
     public static final int SORT = Selection.SORT.ordinal();
+
+    public static final int SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
+    public static final int SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
+    public static final int SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
+
     public static final int SORT_BY_YEAR  = Selection.SORT_BY_YEAR.ordinal();
     public static final int SORT_BY_NAME  = Selection.SORT_BY_NAME.ordinal();
     public static final int SORT_BY_LOCATION  = Selection.SORT_BY_LOCATION.ordinal();
@@ -66,10 +73,17 @@ public class MenuAgent
     {
         Map<Selection, Integer> stringResourcesBySelection = new HashMap<>();
 
+        stringResourcesBySelection.put(Selection.HELP, R.string.selection_help);
+
         stringResourcesBySelection.put(Selection.EXPAND_ALL, R.string.selection_expand_all);
         stringResourcesBySelection.put(Selection.COLLAPSE_ALL, R.string.selection_collapse_all);
 
         stringResourcesBySelection.put(Selection.SORT, R.string.selection_sort);
+
+        stringResourcesBySelection.put(Selection.SORT_ATTRACTION_CATEGORIES, R.string.selection_sort);
+        stringResourcesBySelection.put(Selection.SORT_MANUFACTURERS, R.string.selection_sort);
+        stringResourcesBySelection.put(Selection.SORT_STATUSES, R.string.selection_sort);
+
         stringResourcesBySelection.put(Selection.SORT_BY_YEAR, R.string.selection_sort_by_year);
         stringResourcesBySelection.put(Selection.SORT_BY_NAME, R.string.selection_sort_by_name);
         stringResourcesBySelection.put(Selection.SORT_BY_LOCATION, R.string.selection_sort_by_location);
@@ -120,8 +134,6 @@ public class MenuAgent
     public void create(Menu menu)
     {
         Log.d(Constants.LOG_TAG, String.format("MenuAgent.create:: adding [%d] MenuItem(s) to [%s]", this.selectionsToAdd.size(), this.menuType));
-
-//        menu.clear();
 
         switch(menuType)
         {
@@ -359,54 +371,87 @@ public class MenuAgent
                 case SORT_BY_MANUFACTURER:
                     return true;
 
+                case HELP:
+                    client.handleMenuItemHelpSelected();
+                    break;
                 case EXPAND_ALL:
-                    return client.handleMenuItemExpandAllSelected();
+                    client.handleMenuItemExpandAllSelected();
+                    break;
                 case COLLAPSE_ALL:
-                    return client.handleMenuItemCollapseAllSelected();
+                    client.handleMenuItemCollapseAllSelected();
+                    break;
                 case GROUP_BY_LOCATION:
-                    return client.handleMenuItemGroupByLocationSelected();
+                    client.handleMenuItemGroupByLocationSelected();
+                    break;
                 case GROUP_BY_ATTRACTION_CATEGORY:
-                    return client.handleMenuItemGroupByAttractionCategorySelected();
+                    client.handleMenuItemGroupByAttractionCategorySelected();
+                    break;
                 case GROUP_BY_MANUFACTURER:
-                    return client.handleMenuItemGroupByManufacturerSelected();
+                    client.handleMenuItemGroupByManufacturerSelected();
+                    break;
                 case GROUP_BY_STATUS:
-                    return client.handleMenuItemGroupByStatusSelected();
+                    client.handleMenuItemGroupByStatusSelected();
+                    break;
                 case SORT_ASCENDING:
-                    return client.handleMenuItemSortAscendingSelected();
+                    client.handleMenuItemSortAscendingSelected();
+                    break;
                 case SORT_DESCENDING:
-                    return client.handleMenuItemSortDescendingSelected();
+                    client.handleMenuItemSortDescendingSelected();
+                    break;
+                case SORT_ATTRACTION_CATEGORIES:
+                    client.handleMenuItemSortAttractionCategoriesSelected();
+                    break;
+                case SORT_MANUFACTURERS:
+                    client.handleMenuItemSortManufacturersSelected();
+                    break;
+                case SORT_STATUSES:
+                    client.handleMenuItemSortStatusesSelected();
+                    break;
                 case SORT_BY_YEAR_ASCENDING:
-                    return client.handleMenuItemSortByYearAscendingSelected();
+                    client.handleMenuItemSortByYearAscendingSelected();
+                    break;
                 case SORT_BY_YEAR_DESCENDING:
-                    return client.handleMenuItemSortByYearDescendingSelected();
+                    client.handleMenuItemSortByYearDescendingSelected();
+                    break;
                 case SORT_BY_NAME_ASCENDING:
-                    return client.handleMenuItemSortByNameAscendingSelected();
+                    client.handleMenuItemSortByNameAscendingSelected();
+                    break;
                 case SORT_BY_NAME_DESCENDING:
-                    return client.handleMenuItemSortByNameDescendingSelected();
+                    client.handleMenuItemSortByNameDescendingSelected();
+                    break;
                 case SORT_BY_LOCATION_ASCENDING:
-                    return client.handleMenuItemSortByLocationAscendingSelected();
+                    client.handleMenuItemSortByLocationAscendingSelected();
+                    break;
                 case SORT_BY_LOCATION_DESCENDING:
-                    return client.handleMenuItemSortByLocationDescendingSelected();
+                    client.handleMenuItemSortByLocationDescendingSelected();
+                    break;
                 case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
-                    return client.handleMenuItemSortByAttractionCategoryAscendingSelected();
+                    client.handleMenuItemSortByAttractionCategoryAscendingSelected();
+                    break;
                 case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
-                    return client.handleMenuItemSortByAttractionCategoryDescendingSelected();
+                    client.handleMenuItemSortByAttractionCategoryDescendingSelected();
+                    break;
                 case SORT_BY_MANUFACTURER_ASCENDING:
-                    return client.handleMenuItemSortByManufacturerAscendingSelected();
+                    client.handleMenuItemSortByManufacturerAscendingSelected();
+                    break;
                 case SORT_BY_MANUFACTURER_DESCENDING:
-                    return client.handleMenuItemSortByManufacturerDescendingSelected();
+                    client.handleMenuItemSortByManufacturerDescendingSelected();
+                    break;
                 case GO_TO_CURRENT_VISIT:
-                    return client.handleMenuItemGoToCurrentVisitSelected();
+                    client.handleMenuItemGoToCurrentVisitSelected();
+                    break;
                 case ENABLE_EDITING:
-                    return client.handleMenuItemEnableEditingSelected();
+                    client.handleMenuItemEnableEditingSelected();
+                    break;
                 case DISABLE_EDITING:
-                    return client.handleMenuItemDisableEditingSelected();
-
-
+                    client.handleMenuItemDisableEditingSelected();
+                    break;
 
                 default:
                     return false;
             }
+
+            return true;
         }
         else
         {
@@ -429,11 +474,20 @@ public class MenuAgent
         COLLAPSE_ALL,
 
 
-        SORT_BY,
-
         SORT,
+
         SORT_ASCENDING,
         SORT_DESCENDING,
+
+        SORT_ATTRACTION_CATEGORIES,
+        SORT_MANUFACTURERS,
+        SORT_STATUSES,
+
+//        SORT_LOCATIONS,
+//        SORT_PARKS,
+//        SORT_ATTRACTIONS,
+
+        SORT_BY,
 
         SORT_BY_YEAR,
         SORT_BY_YEAR_ASCENDING,
@@ -475,10 +529,6 @@ public class MenuAgent
 //        DELETE,
 //        REMOVE,
 //        RELOCATE,
-
-//        SORT_LOCATIONS,
-//        SORT_PARKS,
-//        SORT_ATTRACTIONS,
 
 //        ASSIGN_TO_ATTRACTIONS,
 //        SET_AS_DEFAULT,

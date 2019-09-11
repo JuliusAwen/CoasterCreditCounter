@@ -109,7 +109,7 @@ public class SortElementsActivity extends BaseActivity
                     .create(menu);
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -126,18 +126,16 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean handleMenuItemSortAscendingSelected()
+    public void handleMenuItemSortAscendingSelected()
     {
         this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-        return true;
     }
     @Override
-    public boolean handleMenuItemSortDescendingSelected()
+    public void handleMenuItemSortDescendingSelected()
     {
         this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-        return true;
     }
 
     //endregion --- OPTIONS MENU

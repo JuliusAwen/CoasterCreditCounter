@@ -116,6 +116,29 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        this.recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+
+        if(resultCode == Activity.RESULT_OK)
+        {
+            if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
+            {
+                this.updateContentRecyclerView();
+
+                IElement visit = ResultFetcher.fetchResultElement(data);
+                ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
+            }
+        }
+    }
 
     //region --- OPTIONS MENU
 
@@ -124,7 +147,20 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         this.viewModel.optionsMenuAgent
                 .addMenuItem(MenuAgent.SORT)
+                .addMenuItem(MenuAgent.HELP)
                 .create(menu);
+
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        this.viewModel.optionsMenuAgent
+                .setEnabled(MenuAgent.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+                .prepare(menu);
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     public boolean handleMenuItemSortAscendingSelected()
@@ -145,23 +181,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
-
-        if(resultCode == Activity.RESULT_OK)
-        {
-            if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
-            {
-                this.updateContentRecyclerView();
-
-                IElement visit = ResultFetcher.fetchResultElement(data);
-                ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
-            }
-        }
-    }
-
-    @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
@@ -174,13 +193,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         {
             throw new RuntimeException(context.toString() + " must implement ShowVisitsFragmentInteraction");
         }
-    }
-
-    @Override
-    public void onDetach()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDetach();
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()

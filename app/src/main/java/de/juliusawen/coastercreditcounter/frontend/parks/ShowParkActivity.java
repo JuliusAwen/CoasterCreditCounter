@@ -73,6 +73,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             }
 
             super.addHelpOverlayFragment(null, null);
+            super.preventHelpBeingAddedToOptionsMenu(true);
             super.addToolbar();
             super.addToolbarHomeButton();
             super.addFloatingActionButton();
@@ -103,7 +104,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public void handleMenuItemExpandAllSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -112,13 +113,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 break;
 
             case SHOW_ATTRACTIONS:
-                return ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemExpandAllSelected();
+                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemExpandAllSelected();
         }
-        return false;
     }
 
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public void handleMenuItemCollapseAllSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -127,13 +127,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 break;
 
             case SHOW_ATTRACTIONS:
-                return ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemCollapseAllSelected();
+                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemCollapseAllSelected();
         }
-        return false;
     }
 
     @Override
-    public boolean handleMenuItemSortAscendingSelected()
+    public void handleMenuItemSortAscendingSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -142,13 +141,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 break;
 
             case SHOW_VISITS:
-                return ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortAscendingSelected();
+                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortAscendingSelected();
         }
-        return false;
     }
 
     @Override
-    public boolean handleMenuItemSortDescendingSelected()
+    public void handleMenuItemSortDescendingSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -157,9 +155,8 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 break;
 
             case SHOW_VISITS:
-                return ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortDescendingSelected();
+                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortDescendingSelected();
         }
-        return false;
     }
 
     //endregion --- OPTIONS MENU

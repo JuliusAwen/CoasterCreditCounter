@@ -296,126 +296,110 @@ public class PickElementsActivity extends BaseActivity
 
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public void handleMenuItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public void handleMenuItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByLocationSelected()
+    public void handleMenuItemGroupByLocationSelected()
     {
         this.groupElementsByType(GroupType.LOCATION);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByAttractionCategorySelected()
+    public void handleMenuItemGroupByAttractionCategorySelected()
     {
         this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByManufacturerSelected()
+    public void handleMenuItemGroupByManufacturerSelected()
     {
         this.groupElementsByType(GroupType.MANUFACTURER);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemGroupByStatusSelected()
+    public void handleMenuItemGroupByStatusSelected()
     {
         this.groupElementsByType(GroupType.STATUS);
-        return true;
     }
 
 
     @Override
-    public boolean handleMenuItemSortAscendingSelected()
+    public void handleMenuItemSortAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortDescendingSelected()
+    public void handleMenuItemSortDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByNameAscendingSelected()
+    public void handleMenuItemSortByNameAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByNameDescendingSelected()
+    public void handleMenuItemSortByNameDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByLocationAscendingSelected()
+    public void handleMenuItemSortByLocationAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByLocationDescendingSelected()
+    public void handleMenuItemSortByLocationDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
 //    @Override
-//    public boolean handleMenuItemSortByAttractionCategoryAscendingSelected()
+//    public void handleMenuItemSortByAttractionCategoryAscendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-//        return true;
 //    }
 //
 //    @Override
-//    public boolean handleMenuItemSortByAttractionCategoryDescendingSelected()
+//    public void handleMenuItemSortByAttractionCategoryDescendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-//        return true;
 //    }
 
     @Override
-    public boolean handleMenuItemSortByManufacturerAscendingSelected()
+    public void handleMenuItemSortByManufacturerAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemSortByManufacturerDescendingSelected()
+    public void handleMenuItemSortByManufacturerDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-        return true;
     }
 
     // endregion OPTIONS MENU

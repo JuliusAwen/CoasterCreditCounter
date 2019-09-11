@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
 
 public class BaseActivityViewModel extends ViewModel
 {
@@ -22,4 +23,7 @@ public class BaseActivityViewModel extends ViewModel
     boolean writeToExternalStoragePermissionNeededToInitialize;
 
     boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
+
+    MenuAgent optionsMenuAgent;
+    boolean preventHelpBeingAddedToOptionsMenu = false;
 }

@@ -240,55 +240,68 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         }
     }
 
+
+    //region --- OPTIONS MENU
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         if(App.isInitialized)
         {
-            switch(this.viewModel.elementTypeToManage)
-            {
-                case ATTRACTION_CATEGORY:
-                {
-                    if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
-                    {
-                        menu.add(Menu.NONE, Constants.SELECTION_SORT_ATTRACTION_CATEGORIES, Menu.NONE, R.string.selection_sort_attraction_categories);
-                    }
-
-                    break;
-                }
-
-                case MANUFACTURER:
-                {
-                    if(App.content.getContentOfType(AttractionCategory.class).size() > 1) // --> setVisible
-                    {
-                        menu.add(Menu.NONE, Constants.SELECTION_SORT_MANUFACTURERS, Menu.NONE, R.string.selection_sort_manufacturers);
-                    }
-                    break;
-                }
-
-                case STATUS:
-                {
-                    if(App.content.getContentOfType(Status.class).size() > 1) // --> setVisible
-                    {
-                        menu.add(Menu.NONE, Constants.SELECTION_SORT_STATUSES, Menu.NONE, R.string.selection_sort_statuses);
-                    }
-
-                    break;
-                }
-            }
-
-            menu.add(Menu.NONE, 123456, Menu.NONE, R.string.selection_expand_all);
-            menu.add(Menu.NONE, 654321, Menu.NONE, R.string.selection_collapse_all);
+            this.viewModel.optionsMenuAgent
+                    .addMenuItem(MenuAgent.SORT_ATTRACTION_CATEGORIES)
+                    .addMenuItem(MenuAgent.SORT_MANUFACTURERS)
+                    .addMenuItem(MenuAgent.SORT_STATUSES)
+                    .addMenuItem(MenuAgent.EXPAND_ALL)
+                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .create(menu);
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        menu.getItem(123456).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-        menu.getItem(654321).setEnabled(!this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+        if(App.isInitialized)
+        {
+            this.viewModel.optionsMenuAgent
+                    .setVisible(MenuAgent.SORT_ATTRACTION_CATEGORIES, false)
+                    .setVisible(MenuAgent.SORT_MANUFACTURERS, false)
+                    .setVisible(MenuAgent.SORT_STATUSES, false);
+
+            switch(this.viewModel.elementTypeToManage)
+            {
+                case ATTRACTION_CATEGORY:
+                {
+                    this.viewModel.optionsMenuAgent
+                            .setEnabled(MenuAgent.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
+                            .setVisible(MenuAgent.SORT_ATTRACTION_CATEGORIES, true);
+                    break;
+                }
+
+                case MANUFACTURER:
+                {
+                    this.viewModel.optionsMenuAgent
+                            .setEnabled(MenuAgent.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
+                            .setVisible(MenuAgent.SORT_MANUFACTURERS, true);
+                    break;
+                }
+
+                case STATUS:
+                {
+                    this.viewModel.optionsMenuAgent
+                            .setEnabled(MenuAgent.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
+                            .setVisible(MenuAgent.SORT_STATUSES, true);
+                    break;
+                }
+            }
+
+            this.viewModel.optionsMenuAgent
+                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .prepare(menu);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -296,45 +309,55 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onOptionItemSelected:: [%S] selected", item.getItemId()));
-
-        int id = item.getItemId();
-        if(id == Constants.SELECTION_SORT_ATTRACTION_CATEGORIES)
+        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
         {
-            ActivityDistributor.startActivitySortForResult(
-                    this,
-                    Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
-                    App.content.getContentOfType(AttractionCategory.class));
-        }
-        else if(id == Constants.SELECTION_SORT_MANUFACTURERS)
-        {
-            ActivityDistributor.startActivitySortForResult(
-                    this,
-                    Constants.REQUEST_CODE_SORT_MANUFACTURERS,
-                    App.content.getContentOfType(Manufacturer.class));
-        }
-        else if(id == Constants.SELECTION_SORT_STATUSES)
-        {
-            ActivityDistributor.startActivitySortForResult(
-                    this,
-                    Constants.REQUEST_CODE_SORT_STATUSES,
-                    App.content.getContentOfType(Status.class));
-        }
-        else if(id == 123456)
-        {
-            this.viewModel.contentRecyclerViewAdapter.expandAll();
-        }
-        else if(id == 654321)
-        {
-            this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        }
-        else
-        {
-            return super.onOptionsItemSelected(item);
+            return true;
         }
 
-        return true;
+        return  super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void handleMenuItemSortAttractionCategoriesSelected()
+    {
+        ActivityDistributor.startActivitySortForResult(
+                this,
+                Constants.REQUEST_CODE_SORT_ATTRACTION_CATEGORIES,
+                App.content.getContentOfType(AttractionCategory.class));
+    }
+
+    @Override
+    public void handleMenuItemSortManufacturersSelected()
+    {
+        ActivityDistributor.startActivitySortForResult(
+                this,
+                Constants.REQUEST_CODE_SORT_MANUFACTURERS,
+                App.content.getContentOfType(Manufacturer.class));
+    }
+
+    @Override
+    public void handleMenuItemSortStatusesSelected()
+    {
+        ActivityDistributor.startActivitySortForResult(
+                this,
+                Constants.REQUEST_CODE_SORT_STATUSES,
+                App.content.getContentOfType(Status.class));
+    }
+
+    @Override
+    public void handleMenuItemExpandAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.expandAll();
+    }
+
+    @Override
+    public void handleMenuItemCollapseAllSelected()
+    {
+        this.viewModel.contentRecyclerViewAdapter.collapseAll();
+    }
+
+    //endregion --- OPTIONS MENU
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)

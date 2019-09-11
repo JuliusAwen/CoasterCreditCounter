@@ -141,7 +141,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public boolean handleMenuItemGoToCurrentVisitSelected()
+    public void handleMenuItemGoToCurrentVisitSelected()
     {
         if(Visit.getCurrentVisits().size() > 1)
         {
@@ -199,7 +199,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
         }
-        return true;
     }
 
     // endregion --- OPTIONS MENU

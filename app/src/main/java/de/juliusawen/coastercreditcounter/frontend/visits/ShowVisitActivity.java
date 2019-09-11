@@ -184,44 +184,37 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public boolean handleMenuItemExpandAllSelected()
+    public void handleMenuItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemCollapseAllSelected()
+    public void handleMenuItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemEnableEditingSelected()
+    public void handleMenuItemEnableEditingSelected()
     {
         this.viewModel.visit.setEditingEnabled(true);
         this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
-        invalidateOptionsMenu();
 
         this.handleFloatingActionButtonVisibility();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
-        return true;
     }
 
     @Override
-    public boolean handleMenuItemDisableEditingSelected()
+    public void handleMenuItemDisableEditingSelected()
     {
         this.viewModel.visit.setEditingEnabled(false);
         this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
-        invalidateOptionsMenu();
 
         this.handleFloatingActionButtonVisibility();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
-
-        return true;
     }
 
     //endregion --- OPTIONS MENU

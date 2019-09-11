@@ -44,7 +44,12 @@
     <string name="selection_group_by_attraction_category">category</string>
     <string name="selection_group_by_status">status</string>
 
+
+
+    <string name="selection_sort_attractions">sort attractions</string>
+
     <string name="selection_sort">sort</string>
+
     <string name="selection_sort_by">sort by</string>
 
     <string name="selection_sort_by_year">year</string>
@@ -186,8 +191,6 @@
     <string name="title_attractions_pick">Pick Attractions</string>
     <string name="subtitle_attractions_description_pick_to_add_to_visit">to add to your visit</string>
 
-    <string name="selection_sort_attractions">sort attractions</string>
-
     <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
     <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
 
@@ -206,27 +209,24 @@
     <string name="name_default_manufacturer">unknown</string>
     <string name="title_manufacturers">Manufacturers</string>
     <string name="title_manufacturer_create">Create Manufacturer</string>
-    <string name="title_manufacturers_sort">Sort Manufacturers</string>
     <string name="title_manufacturer_edit">Edit Manufacturer</string>
     <string name="title_manufacturer_pick">Pick Manufacturer</string>
+    <string name="title_manufacturers_sort">Sort Manufacturers</string>
     <string name="subtitle_manufacturer_to_assign_manufacturer_to">to assign manufacturer to</string>
     <string name="subtitle_manufacturer_to_assign_to_attraction">to assign to attraction</string>
-    <string name="selection_sort_manufacturers">sort manufacturers</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
     <string name="header_manufacturer">Manufacturer:</string>
 
 
     <!--ATTRACTION CATEGORIES-->
     <string name="name_default_attraction_category">uncategorized</string>
-
     <string name="title_attraction_categories">Attraction Categories</string>
-    <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="title_attraction_category_create">Create Attraction Category</string>
     <string name="title_attraction_category_edit">Edit Attraction Category</string>
     <string name="title_attraction_category_pick">Pick Attraction Category</string>
+    <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
     <string name="subtitle_attraction_category_to_assign_category_to">to assign category to</string>
     <string name="subtitle_attraction_category_to_assign_to_attraction">to assign to attraction</string>
-    <string name="selection_sort_attraction_categories">sort attraction categories</string>
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
     <string name="spinner_text_attraction_category">Attraction Category:</string>
 
@@ -236,7 +236,6 @@
     <string name="title_status_create">Create Status</string>
     <string name="title_statuses_sort">Sort Statuses</string>
     <string name="title_status_edit">Edit Status</string>
-    <string name="selection_sort_statuses">sort statuses</string>
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="title_status_pick">Pick Status</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
