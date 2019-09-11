@@ -4,7 +4,7 @@ import android.view.MenuItem;
 
 import androidx.lifecycle.ViewModel;
 
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 
 public class NavigationHubActivityViewModel extends ViewModel
 {
@@ -12,5 +12,5 @@ public class NavigationHubActivityViewModel extends ViewModel
     String exportFileAbsolutePath;
     boolean isImporting;
     boolean isExporting;
-    MenuAgent optionsMenuAgent;
+    OptionsMenuAgent optionsMenuAgent;
 }

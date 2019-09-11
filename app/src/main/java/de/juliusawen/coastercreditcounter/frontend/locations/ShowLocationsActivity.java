@@ -34,8 +34,7 @@ import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -61,7 +60,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
             if(this.viewModel.currentLocation == null)
@@ -112,8 +111,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
+                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -126,8 +125,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
         }
 

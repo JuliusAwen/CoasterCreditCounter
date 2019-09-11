@@ -42,8 +42,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.De
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;
@@ -74,7 +73,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -249,11 +248,11 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.SORT_ATTRACTION_CATEGORIES)
-                    .addMenuItem(MenuAgent.SORT_MANUFACTURERS)
-                    .addMenuItem(MenuAgent.SORT_STATUSES)
-                    .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .addMenuItem(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES)
+                    .addMenuItem(OptionsMenuAgent.SORT_MANUFACTURERS)
+                    .addMenuItem(OptionsMenuAgent.SORT_STATUSES)
+                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
+                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -266,40 +265,40 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setVisible(MenuAgent.SORT_ATTRACTION_CATEGORIES, false)
-                    .setVisible(MenuAgent.SORT_MANUFACTURERS, false)
-                    .setVisible(MenuAgent.SORT_STATUSES, false);
+                    .setVisible(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES, false)
+                    .setVisible(OptionsMenuAgent.SORT_MANUFACTURERS, false)
+                    .setVisible(OptionsMenuAgent.SORT_STATUSES, false);
 
             switch(this.viewModel.elementTypeToManage)
             {
                 case ATTRACTION_CATEGORY:
                 {
                     this.viewModel.optionsMenuAgent
-                            .setEnabled(MenuAgent.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
-                            .setVisible(MenuAgent.SORT_ATTRACTION_CATEGORIES, true);
+                            .setEnabled(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
+                            .setVisible(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES, true);
                     break;
                 }
 
                 case MANUFACTURER:
                 {
                     this.viewModel.optionsMenuAgent
-                            .setEnabled(MenuAgent.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
-                            .setVisible(MenuAgent.SORT_MANUFACTURERS, true);
+                            .setEnabled(OptionsMenuAgent.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
+                            .setVisible(OptionsMenuAgent.SORT_MANUFACTURERS, true);
                     break;
                 }
 
                 case STATUS:
                 {
                     this.viewModel.optionsMenuAgent
-                            .setEnabled(MenuAgent.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
-                            .setVisible(MenuAgent.SORT_STATUSES, true);
+                            .setEnabled(OptionsMenuAgent.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
+                            .setVisible(OptionsMenuAgent.SORT_STATUSES, true);
                     break;
                 }
             }
 
             this.viewModel.optionsMenuAgent
-                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
         }
 

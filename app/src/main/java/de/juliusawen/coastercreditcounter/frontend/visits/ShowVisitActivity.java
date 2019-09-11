@@ -41,8 +41,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
@@ -76,7 +75,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
             super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit));
@@ -148,10 +147,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(MenuAgent.DISABLE_EDITING)
-                    .addMenuItem(MenuAgent.ENABLE_EDITING)
-                    .addMenuItem(MenuAgent.EXPAND_ALL)
-                    .addMenuItem(MenuAgent.COLLAPSE_ALL)
+                    .addMenuItem(OptionsMenuAgent.DISABLE_EDITING)
+                    .addMenuItem(OptionsMenuAgent.ENABLE_EDITING)
+                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
+                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -164,10 +163,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setVisible(MenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
-                    .setVisible(MenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                    .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .setVisible(OptionsMenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
+                    .setVisible(OptionsMenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
+                    .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
         }
 

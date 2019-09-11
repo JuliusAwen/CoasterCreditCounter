@@ -42,8 +42,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.Co
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
@@ -89,7 +88,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(this.viewModel.optionsMenuAgent == null)
         {
-            this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -146,7 +145,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
-                .addMenuItem(MenuAgent.SORT)
+                .addMenuItem(OptionsMenuAgent.SORT)
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -156,7 +155,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public void onPrepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
-                .setEnabled(MenuAgent.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+                .setEnabled(OptionsMenuAgent.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
                 .prepare(menu);
 
         super.onPrepareOptionsMenu(menu);

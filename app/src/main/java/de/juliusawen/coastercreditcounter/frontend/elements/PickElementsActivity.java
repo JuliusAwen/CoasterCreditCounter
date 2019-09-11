@@ -36,8 +36,7 @@ import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.De
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
@@ -79,7 +78,7 @@ public class PickElementsActivity extends BaseActivity
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -219,29 +218,29 @@ public class PickElementsActivity extends BaseActivity
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
             {
                 this.viewModel.optionsMenuAgent
-                        .addMenuItem(MenuAgent.SORT_BY_NAME)
-                        .addMenuItem(MenuAgent.SORT_BY_LOCATION)
-                        //                    .addMenuItem(MenuAgent.SORT_BY_ATTRACTION_CATEGORY)
-                        .addMenuItem(MenuAgent.SORT_BY_MANUFACTURER)
-                        .addMenuItem(MenuAgent.GROUP_BY_LOCATION)
-                        .addMenuItem(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
-                        .addMenuItem(MenuAgent.GROUP_BY_MANUFACTURER)
-                        .addMenuItem(MenuAgent.GROUP_BY_STATUS)
-                        .addMenuItem(MenuAgent.EXPAND_ALL)
-                        .addMenuItem(MenuAgent.COLLAPSE_ALL);
+                        .addMenuItem(OptionsMenuAgent.SORT_BY_NAME)
+                        .addMenuItem(OptionsMenuAgent.SORT_BY_LOCATION)
+                        //                    .addMenuItem(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY)
+                        .addMenuItem(OptionsMenuAgent.SORT_BY_MANUFACTURER)
+                        .addMenuItem(OptionsMenuAgent.GROUP_BY_LOCATION)
+                        .addMenuItem(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
+                        .addMenuItem(OptionsMenuAgent.GROUP_BY_MANUFACTURER)
+                        .addMenuItem(OptionsMenuAgent.GROUP_BY_STATUS)
+                        .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
+                        .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL);
             }
             else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
             {
                 this.viewModel.optionsMenuAgent
-                        .addMenuItem(MenuAgent.EXPAND_ALL)
-                        .addMenuItem(MenuAgent.COLLAPSE_ALL);
+                        .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
+                        .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL);
             }
             else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_STATUS)
             {
                 this.viewModel.optionsMenuAgent
-                        .addMenuItem(MenuAgent.SORT);
+                        .addMenuItem(OptionsMenuAgent.SORT);
             }
 
             this.viewModel.optionsMenuAgent.create(menu);
@@ -260,21 +259,21 @@ public class PickElementsActivity extends BaseActivity
                     || this.viewModel.requestCode == Constants.REQUEST_CODE_ASSIGN_STATUS_TO_ATTRACTIONS)
             {
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(MenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-                        //                    .setEnabled(MenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                        .setEnabled(MenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                        .setEnabled(MenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-                        .setEnabled(MenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
-                        .setEnabled(MenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                        .setEnabled(MenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
-                        .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                        .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+                        .setEnabled(OptionsMenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                        //                    .setEnabled(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                        .setEnabled(OptionsMenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                        .setEnabled(OptionsMenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                        .setEnabled(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
+                        .setEnabled(OptionsMenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                        .setEnabled(OptionsMenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
+                        .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
             }
             else if(this.viewModel.requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
             {
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(MenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                        .setEnabled(MenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+                        .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
             }
 
             this.viewModel.optionsMenuAgent.prepare(menu);

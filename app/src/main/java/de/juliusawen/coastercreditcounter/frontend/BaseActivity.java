@@ -34,16 +34,15 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.IMenuAgentClient;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.IOptionsMenuAgentClient;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
-public abstract class BaseActivity extends AppCompatActivity  implements IMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
@@ -88,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
         {
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
 
@@ -205,7 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.HELP).create(menu);
+            this.viewModel.optionsMenuAgent.addMenuItem(OptionsMenuAgent.HELP).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);

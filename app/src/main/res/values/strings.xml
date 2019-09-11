@@ -10,9 +10,9 @@
 
 
     <!--GENERIC TEXTS-->
-    <string name="text_ok">OK</string>
+<!--    <string name="text_ok">OK</string>-->
     <string name="text_accept">Accept</string>
-    <string name="text_decline">Decline</string>
+<!--    <string name="text_decline">Decline</string>-->
     <string name="text_close">Close</string>
     <string name="text_cancel">Cancel</string>
 
@@ -52,6 +52,12 @@
 
     <string name="selection_sort_by">sort by</string>
 
+    <string name="selection_sort_parks">parks</string>
+    <string name="selection_add_park">park</string>
+
+    <string name="selection_sort_locations">locations</string>
+    <string name="selection_add_location">location</string>
+
     <string name="selection_sort_by_year">year</string>
     <string name="selection_sort_by_name">name</string>
     <string name="selection_sort_by_location">location</string>
@@ -74,12 +80,13 @@
     <string name="selection_relocate">relocate</string>
 
     <string name="selection_set_as_default">set as default</string>
+    <string name="selection_assign_to_attractions">assign to attractions</string>
 
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>
-    <string name="action_undo_delete_text">\'%1$s\' deleted</string>
-    <string name="action_undo_remove_text">\'%1$s\' removed</string>
-    <string name="action_restored_text">\'%1$s\' restored</string>
+<!--    <string name="action_undo_delete_text">\'%1$s\' deleted</string>-->
+<!--    <string name="action_undo_remove_text">\'%1$s\' removed</string>-->
+<!--    <string name="action_restored_text">\'%1$s\' restored</string>-->
 
     <string name="action_confirm_text">CONFIRM</string>
     <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
@@ -90,8 +97,8 @@
     <string name="error_name_not_valid">Name is not valid!</string>
     <string name="error_number_not_valid">Number is not valid!</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
-    <string name="error_delete_failed">Deletion failed…</string>
-    <string name="error_remove_failed">Removal failed…</string>
+<!--    <string name="error_delete_failed">Deletion failed…</string>-->
+<!--    <string name="error_remove_failed">Removal failed…</string>-->
     <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected!</string>
     <string name="error_missing_text">-text is missing-</string>
@@ -121,6 +128,7 @@
     <string name="description_cancel">@string/text_cancel</string>
     <string name="description_close">@string/text_close</string>
     <string name="description_image_view">image</string>
+    <string name="description_tab_title">title</string>
 
     <!-- ATTRACTION TYPES-->
     <string name="spinner_text_attraction_type">Type:</string>
@@ -135,10 +143,6 @@
     <string name="title_location_edit">Edit Location</string>
     <string name="subtitle_locations_pick_description_to_add_to_new_location">to add to the new location</string>
     <string name="subtitle_location_create">create child location</string>
-
-    <string name="selection_sort_locations">locations</string>
-    <string name="selection_add_location">location</string>
-
     <string name="hint_enter_location_name">Enter location name</string>
 
 
@@ -151,13 +155,7 @@
     <string name="subtitle_park_show_tab_overview">Overview</string>
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
     <string name="subtitle_park_show_tab_visits">Visits</string>
-
-    <string name="selection_sort_parks">parks</string>
-    <string name="selection_add_park">park</string>
-
     <string name="hint_enter_park_name">Enter park name</string>
-
-    <string name="description_tab_title">title</string>
 
 
     <!--SHOW_VISITS-->
@@ -244,8 +242,6 @@
 
 
     <!--ORPHAN ELEMENTS-->
-    <string name="selection_assign_to_attractions">assign to attractions</string>
-
     <string name="alert_dialog_message_delete_orphan_element_has_children">
         %1$d attraction(s) are assigned - do you really want to delete \'%2$s\'?
         \n(default \'%3$s\' will be assigned to attractions)

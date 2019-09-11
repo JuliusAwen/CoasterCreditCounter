@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.frontend.menuAgent;
 
-public interface IMenuAgentClient
+public interface IOptionsMenuAgentClient
 {
     void handleMenuItemHelpSelected();
 

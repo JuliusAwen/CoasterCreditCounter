@@ -30,8 +30,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -69,7 +68,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             if(this.viewModel.optionsMenuAgent == null)
             {
-                this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
             }
 
             this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
@@ -138,7 +137,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+            this.viewModel.optionsMenuAgent.addMenuItem(OptionsMenuAgent.GO_TO_CURRENT_VISIT).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -150,7 +149,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setVisible(MenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                    .setVisible(OptionsMenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
                     .prepare(menu);
         }
 

@@ -116,9 +116,6 @@ public abstract class Constants
     public static final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
     public static final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
     public static final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
-    public static final int SELECTION_SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
-    public static final int SELECTION_SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
-    public static final int SELECTION_SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
 
     public static final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
     public static final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();

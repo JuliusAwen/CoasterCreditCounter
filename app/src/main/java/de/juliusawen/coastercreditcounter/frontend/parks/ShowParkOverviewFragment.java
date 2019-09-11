@@ -15,8 +15,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuAgent;
-import de.juliusawen.coastercreditcounter.frontend.menuAgent.MenuType;
+import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class ShowParkOverviewFragment extends Fragment
@@ -52,7 +51,7 @@ public class ShowParkOverviewFragment extends Fragment
 
         if(this.viewModel.optionsMenuAgent == null)
         {
-            this.viewModel.optionsMenuAgent = new MenuAgent(MenuType.OPTIONS_MENU);
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
         this.setHasOptionsMenu(true);
