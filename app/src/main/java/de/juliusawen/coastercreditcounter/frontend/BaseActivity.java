@@ -200,15 +200,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
     //region --- OPTIONS MENU
 
-    protected void preventHelpBeingAddedToOptionsMenu(boolean prevent)
-    {
-        this.viewModel.preventHelpBeingAddedToOptionsMenu = prevent;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(App.isInitialized && !this.viewModel.preventHelpBeingAddedToOptionsMenu)
+        if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent.addMenuItem(MenuAgent.HELP).create(menu);
         }

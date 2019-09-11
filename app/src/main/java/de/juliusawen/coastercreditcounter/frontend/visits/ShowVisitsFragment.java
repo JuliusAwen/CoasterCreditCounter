@@ -147,7 +147,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         this.viewModel.optionsMenuAgent
                 .addMenuItem(MenuAgent.SORT)
-                .addMenuItem(MenuAgent.HELP)
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);

@@ -146,11 +146,14 @@ public class MenuAgent
                 {
                     switch(selection)
                     {
-                        case SORT:
-                        {
-                            this.createMenuSort(selection, menu);
+                        case HELP:
+                            addHelpToMenu(menu);
                             break;
-                        }
+
+                        case SORT:
+                            this.createMenuSort(selection, menu);
+                            this.submenuBySelection.put(selection, Selection.SORT);
+                            break;
 
                         case SORT_BY_YEAR:
                         case SORT_BY_NAME:
@@ -178,7 +181,7 @@ public class MenuAgent
                                 Log.v(Constants.LOG_TAG, "MenuAgent.create:: adding submenu <group by>");
                                 subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
                             }
-                            this.addItemToMenu(selection, subMenuGroupBy);
+                            this.addItemToSubMenu(selection, subMenuGroupBy);
                             this.submenuBySelection.put(selection, Selection.GROUP_BY);
                             break;
                         }
@@ -190,10 +193,8 @@ public class MenuAgent
                             break;
 
                         default:
-                        {
                             this.addItemToMenu(selection, menu);
                             break;
-                        }
                     }
                 }
                 break;
@@ -205,6 +206,12 @@ public class MenuAgent
         }
 
         this.selectionsToAdd.clear();
+    }
+
+    private void addHelpToMenu(Menu menu)
+    {
+        Log.v(Constants.LOG_TAG, "MenuAgent.addHelpToSubMenu:: adding HELP");
+        menu.add(Menu.NONE, Selection.HELP.ordinal(), 1, R.string.selection_help); // 1 - represents the order: as all other selections are 0 HELP should always be sorted to the bottom
     }
 
     private void createMenuSort(Selection selection, Menu menu)
@@ -258,10 +265,16 @@ public class MenuAgent
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_descending);
     }
 
+    private void addItemToSubMenu(Selection selection, Menu subMenu)
+    {
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.addItemToSubMenu:: adding [%s]", selection));
+        subMenu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
+    }
+
     private void addItemToMenu(Selection selection, Menu menu)
     {
         Log.v(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding [%s]", selection));
-        menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
+        menu.add(Menu.NONE, selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
     }
 
     private void addActionItemToMenu(Selection selection, Menu menu)
@@ -311,18 +324,27 @@ public class MenuAgent
             {
                 if(menuItem.hasSubMenu())
                 {
-                    Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s][%s] enabled [%S]",
-                            this.submenuBySelection.get(selection), selection, this.setEnabledBySelection.get(selection)));
-
-                    menuItem = menu.findItem(this.submenuBySelection.get(selection).ordinal());
-                    if(menuItem != null)
+                    if(this.submenuBySelection.get(selection).equals(selection))
                     {
-                        menuItem.getSubMenu().setGroupEnabled(selection.ordinal(), this.setEnabledBySelection.get(selection));
+                        Log.v(Constants.LOG_TAG, String.format("MenuAgent.prepare<hasSubMenu>:: setting [%s] enabled [%S]", selection, this.setEnabledBySelection.get(selection)));
+
+                        menuItem.setEnabled(this.setEnabledBySelection.get(selection));
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("MenuAgent.prepare<hasSubMenu>:: setting [%s][%s] enabled [%S]",
+                                this.submenuBySelection.get(selection), selection, this.setEnabledBySelection.get(selection)));
+
+                        menuItem = menu.findItem(this.submenuBySelection.get(selection).ordinal());
+                        if(menuItem != null)
+                        {
+                            menuItem.getSubMenu().setGroupEnabled(selection.ordinal(), this.setEnabledBySelection.get(selection));
+                        }
                     }
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] enabled [%S]", selection, this.setEnabledBySelection.get(selection)));
+                    Log.v(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] enabled [%S]", selection, this.setEnabledBySelection.get(selection)));
                     menuItem.setEnabled(this.setEnabledBySelection.get(selection));
                 }
             }
@@ -337,7 +359,7 @@ public class MenuAgent
             MenuItem menuItem = menu.findItem(selection.ordinal());
             if(menuItem != null)
             {
-                Log.d(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] visible [%S]", selection, this.setVisibleBySelection.get(selection)));
+                Log.v(Constants.LOG_TAG, String.format("MenuAgent.prepare:: setting [%s] visible [%S]", selection, this.setVisibleBySelection.get(selection)));
                 menuItem.setVisible(this.setVisibleBySelection.get(selection));
             }
             else

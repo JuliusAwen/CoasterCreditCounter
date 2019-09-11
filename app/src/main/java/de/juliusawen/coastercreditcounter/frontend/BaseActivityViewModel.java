@@ -25,5 +25,4 @@ public class BaseActivityViewModel extends ViewModel
     boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
 
     MenuAgent optionsMenuAgent;
-    boolean preventHelpBeingAddedToOptionsMenu = false;
 }

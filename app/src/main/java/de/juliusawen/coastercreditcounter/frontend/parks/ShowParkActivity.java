@@ -73,7 +73,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             }
 
             super.addHelpOverlayFragment(null, null);
-            super.preventHelpBeingAddedToOptionsMenu(true);
             super.addToolbar();
             super.addToolbarHomeButton();
             super.addFloatingActionButton();
