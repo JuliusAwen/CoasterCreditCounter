@@ -529,6 +529,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
     protected void setFloatingActionButtonIcon(Drawable icon)
     {
+        Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonIcon:: setting FloatingActionButton icon...");
         if(this.floatingActionButton != null)
         {
             icon.setTint(Color.WHITE);
@@ -538,6 +539,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IMenuAg
 
     protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
+        Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonOnClickListener:: setting FloatingActionButton onClickListener...");
+
         if(this.floatingActionButton != null)
         {
             this.floatingActionButton.setOnClickListener(onClickListener);

@@ -91,10 +91,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.onResume();
 
-        invalidateOptionsMenu();
-
         if(App.isInitialized)
         {
+            invalidateOptionsMenu();
+
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView()
@@ -127,6 +127,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.handleFloatingActionButtonVisibility();
 
             Log.d(LOG_TAG, String.format("ShowVisitActivity.onResume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
+
+            this.decorateFloatingActionButton();
         }
     }
 
