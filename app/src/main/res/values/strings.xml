@@ -261,6 +261,7 @@
 
     <string name="item_navigation_drawer_browse_content">Browse Content</string>
 
+    <string name="item_navigation_drawer_manage_blueprints">Blueprints</string>
     <string name="item_navigation_drawer_manage_categories">Categories</string>
     <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>
     <string name="item_navigation_drawer_manage_models">Models</string>

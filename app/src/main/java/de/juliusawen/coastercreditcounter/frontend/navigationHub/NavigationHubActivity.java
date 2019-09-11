@@ -81,6 +81,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
+            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
             super.addToolbar();
             super.addToolbarMenuIcon();
             super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
@@ -95,8 +96,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             invalidateOptionsMenu();
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
 
             this.setStatistics();
 
@@ -220,6 +219,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         //Todo: remove setEnabled(false) when implemented
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
+        navigationMenu.findItem(R.id.navigationItem_ManageBlueprints).setEnabled(false);
     }
 
     private void setStatistics()
@@ -279,7 +279,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     ActivityDistributor.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
                     break;
                 }
-
                 case R.id.navigationItem_ManageCategories:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
@@ -293,6 +292,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     break;
                 }
 
+                case R.id.navigationItem_ManageBlueprints:
                 case R.id.navigationItem_ManageModels:
                 {
                     Toaster.notYetImplemented(NavigationHubActivity.this);

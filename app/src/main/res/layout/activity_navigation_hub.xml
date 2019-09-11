@@ -66,7 +66,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_drawer_header"
         app:itemTextAppearance="@style/NavigationDrawerItem"
-        app:itemIconPadding="12dp"
         app:menu="@menu/menu_navigation_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <dimen name="navigation_drawer_header_vertical_spacing">16dp</dimen>
     <dimen name="navigation_drawer_header_height">160dp</dimen>
+    <dimen name="design_navigation_separator_vertical_padding" tools:override="true">0dp</dimen>
+
     <dimen name="standard_bar_height">40dp</dimen>
     <dimen name="half_standard_bar_height">20dp</dimen>
+
     <dimen name="expand_toggle_padding_factor">8dp</dimen>
+
 </resources>
