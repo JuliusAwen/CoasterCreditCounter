@@ -160,7 +160,7 @@ public class MenuAgent
                         {
                             if(subMenuSortBy == null)
                             {
-                                Log.d(Constants.LOG_TAG, "MenuAgent.create:: adding subMenu <sort by>"); //Todo: set to verbose
+                                Log.v(Constants.LOG_TAG, "MenuAgent.create:: adding subMenu <sort by>");
                                 subMenuSortBy = menu.addSubMenu(Selection.SORT_BY.ordinal(), Selection.SORT_BY.ordinal(), Menu.NONE, R.string.selection_sort_by);
                             }
                             this.createMenuSort(selection, subMenuSortBy);
@@ -175,7 +175,7 @@ public class MenuAgent
                         {
                             if(subMenuGroupBy == null)
                             {
-                                Log.d(Constants.LOG_TAG, "MenuAgent.create:: adding submenu <group by>"); //Todo: set to verbose
+                                Log.v(Constants.LOG_TAG, "MenuAgent.create:: adding submenu <group by>");
                                 subMenuGroupBy = menu.addSubMenu(Selection.GROUP_BY.ordinal(), Selection.GROUP_BY.ordinal(), Menu.NONE, R.string.selection_group_by);
                             }
                             this.addItemToMenu(selection, subMenuGroupBy);
@@ -209,7 +209,7 @@ public class MenuAgent
 
     private void createMenuSort(Selection selection, Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.createMenuSort:: adding SubMenu [%s]", selection)); //Todo: set to verbose
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.createMenuSort:: adding SubMenu [%s]", selection));
         Menu subMenu = menu.addSubMenu(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
 
         switch(selection)
@@ -248,25 +248,25 @@ public class MenuAgent
 
     private void addSortAscendingToSubMenu(Selection selection, Menu subMenu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortAscendingToSubMenu:: adding [%s]", selection)); //Todo: set to verbose
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.addSortAscendingToSubMenu:: adding [%s]", selection));
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_ascending);
     }
 
     private void addSortDescendingToSubMenu(Selection selection, Menu subMenu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addSortDescendingToSubMenu:: adding [%s]", selection)); //Todo: set to verbose
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.addSortDescendingToSubMenu:: adding [%s]", selection));
         subMenu.add(Menu.NONE, selection.ordinal(), Menu.NONE, R.string.selection_sort_descending);
     }
 
     private void addItemToMenu(Selection selection, Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding [%s]", selection)); //Todo: set to verbose
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.addItemToMenu:: adding [%s]", selection));
         menu.add(selection.ordinal(), selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection));
     }
 
     private void addActionItemToMenu(Selection selection, Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("MenuAgent.addActionItemToMenu:: adding [%s]", selection)); //Todo: set to verbose
+        Log.v(Constants.LOG_TAG, String.format("MenuAgent.addActionItemToMenu:: adding [%s]", selection));
 
         menu.add(Menu.NONE, selection.ordinal(), Menu.NONE, this.stringResourcesBySelection.get(selection))
                 .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesBySelection.get(selection), R.color.white))
@@ -466,7 +466,7 @@ public class MenuAgent
         NO_FUNCTION,
 
 
-        //OPTIONS MENU
+        //OPTIONS MENU ITEM
 
         HELP,
 
@@ -517,7 +517,7 @@ public class MenuAgent
         GROUP_BY_STATUS,
 
 
-        //OPTIONS ACTION
+        //OPTIONS MENU ACTION
 
         GO_TO_CURRENT_VISIT,
         ENABLE_EDITING,
