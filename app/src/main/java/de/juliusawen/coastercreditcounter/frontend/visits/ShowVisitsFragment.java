@@ -38,6 +38,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
@@ -129,12 +130,12 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CODE_CREATE_VISIT)
+            if(requestCode == RequestCode.CREATE_VISIT.ordinal())
             {
                 this.updateContentRecyclerView();
 
                 IElement visit = ResultFetcher.fetchResultElement(data);
-                ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, visit);
+                ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, visit);
             }
         }
     }
@@ -214,7 +215,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 Element element = (Element) view.getTag();
                 if(element instanceof Visit)
                 {
-                    ActivityDistributor.startActivityShow(getActivity(), Constants.REQUEST_CODE_SHOW_VISIT, element);
+                    ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, element);
                 }
                 else if(element instanceof SpecialGroupHeader)
                 {
@@ -274,7 +275,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                                     getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
-                                    Constants.REQUEST_CODE_DELETE,
+                                    RequestCode.DELETE,
                                     true);
 
                     alertDialogFragmentDelete.setCancelable(false);
@@ -356,7 +357,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == Constants.REQUEST_CODE_DELETE)
+            if(requestCode == RequestCode.DELETE.ordinal())
             {
                 snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),

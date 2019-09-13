@@ -7,10 +7,11 @@ import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 
 public class CreateOrEditCustomAttractionActivityViewModel extends ViewModel
 {
-    int requestCode = -1;
+    RequestCode requestCode;
     boolean isEditMode = false;
 
     String toolbarTitle;

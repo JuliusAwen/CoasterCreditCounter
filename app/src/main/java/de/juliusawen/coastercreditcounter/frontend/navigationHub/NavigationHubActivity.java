@@ -30,6 +30,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -117,13 +118,13 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CODE_PICK_VISIT)
+            if(requestCode == RequestCode.PICK_VISIT.ordinal())
             {
                 IElement resultElement = ResultFetcher.fetchResultElement(data);
 
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<GO_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
 
-                ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, resultElement);
+                ActivityDistributor.startActivityShow(this, RequestCode.SHOW_VISIT, resultElement);
             }
         }
     }
@@ -187,7 +188,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
             ActivityDistributor.startActivityPickForResult(
                     this,
-                    Constants.REQUEST_CODE_PICK_VISIT,
+                    RequestCode.PICK_VISIT,
                     new ArrayList<IElement>(Visit.getCurrentVisits()));
         }
         else
@@ -195,7 +196,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             Log.i(LOG_TAG, String.format("NavigationHubActivity.handleMenuItemGoToCurrentVisitSelected:: only one current visit found - opening %s...",
                     Visit.getCurrentVisits().get(0)));
 
-            ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_SHOW_VISIT, Visit.getCurrentVisits().get(0));
+            ActivityDistributor.startActivityShow(this, RequestCode.SHOW_VISIT, Visit.getCurrentVisits().get(0));
         }
     }
 
@@ -276,19 +277,19 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 case R.id.navigationItem_BrowseContent:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
-                    ActivityDistributor.startActivityShow(NavigationHubActivity.this, Constants.REQUEST_CODE_SHOW_LOCATION, App.content.getRootLocation());
+                    ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
                     break;
                 }
                 case R.id.navigationItem_ManageCategories:
                 {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
-                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_ATTRACTION_CATEGORIES);
                     break;
                 }
 
                 case R.id.navigationItem_ManageManufacturers:
                 {
-                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_MANUFACTURERS);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_MANUFACTURERS);
                     break;
                 }
 
@@ -301,7 +302,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                 case R.id.navigationItem_ManageStatuses:
                 {
-                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, Constants.REQUEST_CODE_MANAGE_STATUSES);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_STATUSES);
                     break;
                 }
 
@@ -319,7 +320,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                     getString(R.string.alert_dialog_message_overwrite_content),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
-                                    Constants.REQUEST_CODE_OVERWRITE_CONTENT,
+                                    RequestCode.OVERWRITE_CONTENT,
                                     false
                             );
 
@@ -351,7 +352,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                                     getString(R.string.alert_dialog_message_overwrite_file),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
-                                    Constants.REQUEST_CODE_OVERWRITE_FILE,
+                                    RequestCode.OVERWRITE_FILE,
                                     false
                             );
 
@@ -393,19 +394,21 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         dialog.dismiss();
 
-        if(requestCode == Constants.REQUEST_CODE_OVERWRITE_FILE)
+        switch(RequestCode.values()[requestCode])
         {
-            if(which == DialogInterface.BUTTON_POSITIVE)
-            {
-                this.startExportContent();
-            }
-        }
-        else if(requestCode == Constants.REQUEST_CODE_OVERWRITE_CONTENT)
-        {
-            if(which == DialogInterface.BUTTON_POSITIVE)
-            {
-                this.startImportContent();
-            }
+            case OVERWRITE_FILE:
+                if(which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    this.startExportContent();
+                }
+                break;
+
+            case OVERWRITE_CONTENT:
+                if(which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    this.startImportContent();
+                }
+                break;
         }
     }
 

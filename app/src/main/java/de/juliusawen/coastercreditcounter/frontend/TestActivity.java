@@ -13,6 +13,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.Location;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -88,6 +89,6 @@ public class TestActivity extends BaseActivity
 
     private void startActivity()
     {
-        ActivityDistributor.startActivityShow(this, Constants.REQUEST_CODE_MANAGE_ATTRACTION_CATEGORIES, null);
+        ActivityDistributor.startActivityShow(this, RequestCode.MANAGE_ATTRACTION_CATEGORIES, null);
     }
 }

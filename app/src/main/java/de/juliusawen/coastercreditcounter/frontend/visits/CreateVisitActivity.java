@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -71,7 +72,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         if(resultCode == Activity.RESULT_OK)
         {
-            if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+            if(requestCode == RequestCode.PICK_ATTRACTIONS.ordinal())
             {
                 List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
@@ -169,7 +170,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_message_visit_already_exists),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
-                Constants.REQUEST_CODE_HANDLE_EXISTING_VISIT,
+                RequestCode.HANDLE_EXISTING_VISIT,
                 false
         );
         alertDialogFragment.setCancelable(false);
@@ -219,7 +220,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 getString(R.string.alert_dialog_message_add_attractions_to_visit),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
-                Constants.REQUEST_CODE_PICK_ATTRACTIONS,
+                RequestCode.PICK_ATTRACTIONS,
                 false
         );
         alertDialogFragment.setCancelable(false);
@@ -231,38 +232,44 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         dialog.dismiss();
 
-        if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+        switch(RequestCode.values()[requestCode])
         {
-            if(which == DialogInterface.BUTTON_POSITIVE)
+            case PICK_ATTRACTIONS:
             {
-                ActivityDistributor.startActivityPickForResult(
-                        CreateVisitActivity.this,
-                        Constants.REQUEST_CODE_PICK_ATTRACTIONS,
-                        new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
-            }
-            else if(which == DialogInterface.BUTTON_NEGATIVE)
-            {
-                returnResult(Activity.RESULT_OK);
-            }
-        }
-        else if(requestCode == Constants.REQUEST_CODE_HANDLE_EXISTING_VISIT)
-        {
-            if(which == DialogInterface.BUTTON_POSITIVE)
-            {
-                this.createVisit(viewModel.calendar);
-
-                if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
+                if(which == DialogInterface.BUTTON_POSITIVE)
                 {
-                    showPickAttractionsDialog();
+                    ActivityDistributor.startActivityPickForResult(
+                            CreateVisitActivity.this,
+                            RequestCode.PICK_ATTRACTIONS,
+                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
                 }
-                else
+                else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
                     returnResult(Activity.RESULT_OK);
                 }
+                break;
             }
-            else if(which == DialogInterface.BUTTON_NEGATIVE)
+
+            case HANDLE_EXISTING_VISIT:
             {
-                returnResult(Activity.RESULT_CANCELED);
+                if(which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    this.createVisit(viewModel.calendar);
+
+                    if(this.viewModel.park.getChildCountOfType(Attraction.class) > 0)
+                    {
+                        showPickAttractionsDialog();
+                    }
+                    else
+                    {
+                        returnResult(Activity.RESULT_OK);
+                    }
+                }
+                else if(which == DialogInterface.BUTTON_NEGATIVE)
+                {
+                    returnResult(Activity.RESULT_CANCELED);
+                }
+                break;
             }
         }
     }

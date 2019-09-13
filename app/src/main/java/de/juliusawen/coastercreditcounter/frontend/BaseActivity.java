@@ -34,6 +34,7 @@ import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.IOptionsMenuAgentClient;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
@@ -188,8 +189,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Intent intent = getIntent();
 
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]",
-                    StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]", StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); //this clears the stacktrace
             ActivityDistributor.startActivityViaIntent(this, intent);
@@ -684,7 +684,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
 
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal());
             return false;
         }
 
@@ -693,7 +693,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-        if(requestCode == Constants.REQUEST_CODE_PERMISSION_CODE_WRITE_EXTERNAL_STORAGE)
+        if(requestCode == RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal())
         {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {

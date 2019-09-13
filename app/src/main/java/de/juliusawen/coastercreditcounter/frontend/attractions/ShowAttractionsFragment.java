@@ -39,6 +39,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -137,29 +138,31 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             IElement selectedElement = ResultFetcher.fetchResultElement(data);
 
-            if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTIONS)
+            switch(RequestCode.values()[requestCode])
             {
-                List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
+                case SORT_ATTRACTIONS:
+                    List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
+                    IElement parent = resultElements.get(0).getParent();
+                    if(parent != null)
+                    {
+                        this.viewModel.park.reorderChildren(resultElements);
 
-                IElement parent = resultElements.get(0).getParent();
-                if(parent != null)
-                {
-                    this.viewModel.park.reorderChildren(resultElements);
+                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
+                                .scrollToItem(((Attraction)selectedElement).getAttractionCategory());
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
-                            .scrollToItem(((Attraction)selectedElement).getAttractionCategory());
+                    }
+                    break;
 
-                }
-            }
-            else if(requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
-            {
-                Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
-                this.showAttractionsFragmentInteraction.markForUpdate(selectedElement);
-                this.updateContentRecyclerView().scrollToItem(selectedElement);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION)
-            {
-                this.updateContentRecyclerView();
+
+                case EDIT_CUSTOM_ATTRACTION:
+                    Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
+                    this.showAttractionsFragmentInteraction.markForUpdate(selectedElement);
+                    this.updateContentRecyclerView().scrollToItem(selectedElement);
+                    break;
+
+                case CREATE_CUSTOM_ATTRACTION:
+                    this.updateContentRecyclerView();
+                    break;
             }
         }
     }
@@ -274,7 +277,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             {
                                 ActivityDistributor.startActivityEditForResult(
                                         getContext(),
-                                        Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION,
+                                        RequestCode.EDIT_CUSTOM_ATTRACTION,
                                         viewModel.longClickedElement);
                             }
                             else if(id == Constants.SELECTION_DELETE_ATTRACTION)
@@ -286,7 +289,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                                 getString(R.string.alert_dialog_message_delete_attraction, viewModel.longClickedElement.getName()),
                                                 getString(R.string.text_accept),
                                                 getString(R.string.text_cancel),
-                                                Constants.REQUEST_CODE_DELETE,
+                                                RequestCode.DELETE,
                                                 true);
 
                                 alertDialogFragmentDelete.setCancelable(false);
@@ -313,7 +316,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == Constants.REQUEST_CODE_DELETE)
+            if(requestCode == RequestCode.DELETE.ordinal())
             {
                 snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),

@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCateg
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.Toaster;
@@ -118,23 +119,24 @@ public class CreateSimpleElementActivity extends BaseActivity
         if(resultCode == RESULT_OK)
         {
             IElement createdElement = null;
-            int requestCode = getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, -1);
+            RequestCode requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
 
-            if(requestCode == Constants.REQUEST_CODE_CREATE_ATTRACTION_CATEGORY)
+            switch(requestCode)
             {
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", viewModel.createdString));
-                createdElement = AttractionCategory.create(viewModel.createdString, null);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_CREATE_MANUFACTURER)
-            {
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", viewModel.createdString));
-                createdElement = Manufacturer.create(viewModel.createdString, null);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_CREATE_STATUS)
-            {
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_STATUS>:: creating Status [%s]", viewModel.createdString));
+                case CREATE_ATTRACTION_CATEGORY:
+                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", viewModel.createdString));
+                    createdElement = AttractionCategory.create(viewModel.createdString, null);
+                    break;
 
-                createdElement = Status.create(viewModel.createdString, null);
+                case CREATE_MANUFACTURER:
+                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_MANUFACTURER>:: creating Manufacturer [%s]", viewModel.createdString));
+                    createdElement = Manufacturer.create(viewModel.createdString, null);
+                    break;
+
+                case CREATE_STATUS:
+                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_STATUS>:: creating Status [%s]", viewModel.createdString));
+                    createdElement = Status.create(viewModel.createdString, null);
+                    break;
             }
 
             if(createdElement != null)

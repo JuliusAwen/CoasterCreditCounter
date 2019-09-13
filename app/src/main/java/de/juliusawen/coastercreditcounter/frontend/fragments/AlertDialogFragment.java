@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class AlertDialogFragment extends DialogFragment
@@ -17,7 +18,14 @@ public class AlertDialogFragment extends DialogFragment
 
     public AlertDialogListener alertDialogListener;
 
-    public static AlertDialogFragment newInstance(int iconResource, String title, String message, String positiveButtonText, String negativeButtonText, int requestCode, boolean isChildFragment)
+    public static AlertDialogFragment newInstance(
+            int iconResource,
+            String title,
+            String message,
+            String positiveButtonText,
+            String negativeButtonText,
+            RequestCode requestCode,
+            boolean isChildFragment)
     {
         Log.v(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
                 "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
@@ -31,7 +39,7 @@ public class AlertDialogFragment extends DialogFragment
         args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_MESSAGE, message);
         args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT, positiveButtonText);
         args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT, negativeButtonText);
-        args.putInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE, requestCode);
+        args.putInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE, requestCode.ordinal());
         args.putBoolean(Constants.FRAGMENT_ARG_IS_CHILD_FRAGMENT, isChildFragment);
         alertDialogFragment.setArguments(args);
 

@@ -30,6 +30,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.attractions.ShowAttractionsFragment;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitsFragment;
@@ -280,7 +281,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                             @Override
                             public void onClick(View view)
                             {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_CUSTOM_ATTRACTION, viewModel.park);
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_CUSTOM_ATTRACTION, viewModel.park);
                             }
                         });
                 break;
@@ -294,7 +295,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                             @Override
                             public void onClick(View view)
                             {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, Constants.REQUEST_CODE_CREATE_VISIT, viewModel.park);
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_VISIT, viewModel.park);
                             }
                         });
                 break;

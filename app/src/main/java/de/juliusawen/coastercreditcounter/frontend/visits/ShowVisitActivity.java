@@ -37,6 +37,7 @@ import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
@@ -232,32 +233,38 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
-            if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTIONS)
+            switch(RequestCode.values()[requestCode])
             {
-                for(IElement element : resultElements)
+                case PICK_ATTRACTIONS:
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
-                    this.viewModel.visit.addChildAndSetParent(visitedAttraction);
+                    for(IElement element : resultElements)
+                    {
+                        VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                        this.viewModel.visit.addChildAndSetParent(visitedAttraction);
 
-                    super.markForCreation(visitedAttraction);
-                }
+                        super.markForCreation(visitedAttraction);
+                    }
 
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
-
-                super.markForUpdate(this.viewModel.visit);
-            }
-            else if(requestCode == Constants.REQUEST_CODE_SORT_ATTRACTIONS)
-            {
-                IElement parent = resultElements.get(0).getParent();
-                if(parent != null)
-                {
-                    this.viewModel.visit.reorderChildren(resultElements);
-                    Log.d(LOG_TAG,
-                            String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
-
-                    updateContentRecyclerView(true);
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
 
                     super.markForUpdate(this.viewModel.visit);
+                    break;
+                }
+
+                case SORT_ATTRACTIONS:
+                {
+                    IElement parent = resultElements.get(0).getParent();
+                    if(parent != null)
+                    {
+                        this.viewModel.visit.reorderChildren(resultElements);
+                        Log.d(LOG_TAG,
+                                String.format("ShowVisitActivity.onActivityResult<SortAttractions>:: replaced %s's <children> with <sorted children>", this.viewModel.visit));
+
+                        updateContentRecyclerView(true);
+
+                        super.markForUpdate(this.viewModel.visit);
+                    }
+                    break;
                 }
             }
         }
@@ -275,7 +282,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 ActivityDistributor.startActivityPickForResult(
                         ShowVisitActivity.this,
-                        Constants.REQUEST_CODE_PICK_ATTRACTIONS,
+                        RequestCode.PICK_ATTRACTIONS,
                         new LinkedList<IElement>(getNotYetAddedAttractionsWithDefaultStatus()));
             }
         });
@@ -366,7 +373,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                                         getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
                                         getString(R.string.text_accept),
                                         getString(R.string.text_cancel),
-                                        Constants.REQUEST_CODE_DELETE,
+                                        RequestCode.DELETE,
                                         false);
 
                         alertDialogFragmentDelete.setCancelable(false);
@@ -394,7 +401,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == Constants.REQUEST_CODE_DELETE)
+            if(requestCode == RequestCode.DELETE.ordinal())
             {
                 snackbar = Snackbar.make(
                         findViewById(android.R.id.content),

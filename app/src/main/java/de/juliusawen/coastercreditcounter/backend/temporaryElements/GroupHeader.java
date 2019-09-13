@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
@@ -76,7 +77,7 @@ public class GroupHeader extends OrphanElement implements IGroupHeader, IElement
                             attractions = longClickedElement.getChildrenOfType(VisitedAttraction.class);
                         }
 
-                        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(context), Constants.REQUEST_CODE_SORT_ATTRACTIONS, attractions);
+                        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(context), RequestCode.SORT_ATTRACTIONS, attractions);
                     }
 
                     return true;

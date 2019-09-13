@@ -37,6 +37,7 @@ import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
 import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
@@ -80,11 +81,11 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
             this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
 
-            if(this.viewModel.requestCode == -1)
+            if(this.viewModel.requestCode == null)
             {
-                this.viewModel.requestCode = getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, -1);
+                this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
 
-                if(this.viewModel.requestCode == Constants.REQUEST_CODE_EDIT_CUSTOM_ATTRACTION)
+                if(this.viewModel.requestCode == RequestCode.EDIT_CUSTOM_ATTRACTION)
                 {
                     this.viewModel.isEditMode = true;
                 }
@@ -169,17 +170,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         IElement pickedElement = ResultFetcher.fetchResultElement(data);
 
-        if(requestCode == Constants.REQUEST_CODE_PICK_MANUFACTURER)
+        switch(RequestCode.values()[requestCode])
         {
-            this.setText((Manufacturer)pickedElement);
-        }
-        else if(requestCode == Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY)
-        {
-            this.setText((AttractionCategory) pickedElement);
-        }
-        else if(requestCode == Constants.REQUEST_CODE_PICK_STATUS)
-        {
-            this.setText((Status)pickedElement);
+            case PICK_MANUFACTURER:
+                this.setText((Manufacturer)pickedElement);
+                break;
+
+            case PICK_ATTRACTION_CATEGORY:
+                this.setText((AttractionCategory) pickedElement);
+                break;
+
+            case PICK_STATUS:
+                this.setText((Status)pickedElement);
+                break;
         }
 
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
@@ -398,7 +401,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_MANUFACTURER, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_MANUFACTURER, elements);
                 }
             }
         }));
@@ -430,7 +433,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_ATTRACTION_CATEGORY, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_ATTRACTION_CATEGORY, elements);
                 }
             }
         });
@@ -460,7 +463,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, Constants.REQUEST_CODE_PICK_STATUS, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_STATUS, elements);
                 }
             }
         });
