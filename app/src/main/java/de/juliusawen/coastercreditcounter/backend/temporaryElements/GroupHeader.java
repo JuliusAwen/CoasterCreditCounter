@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,10 +17,8 @@ import de.juliusawen.coastercreditcounter.backend.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.backend.elements.Element;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 
 public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
 {

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader;
+package de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter;
 
 import android.util.Log;
 
@@ -24,7 +24,8 @@ import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.backend.orphanElements.Status;
-import de.juliusawen.coastercreditcounter.frontend.contentRecyclerViewAdapter.GroupType;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.GroupHeader;
+import de.juliusawen.coastercreditcounter.backend.temporaryElements.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.toolbox.ConvertTool;

@@ -6,9 +6,9 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.frontend.navigationHub.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 
 public class MainActivity extends AppCompatActivity
 {

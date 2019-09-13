@@ -33,12 +33,12 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.backend.application.App;
 import de.juliusawen.coastercreditcounter.backend.elements.IElement;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.frontend.fragments.HelpOverlayFragment;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.IOptionsMenuAgentClient;
 import de.juliusawen.coastercreditcounter.frontend.menuAgent.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.DrawableProvider;
 import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 

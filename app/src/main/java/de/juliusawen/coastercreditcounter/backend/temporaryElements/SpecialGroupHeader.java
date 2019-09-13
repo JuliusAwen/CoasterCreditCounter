@@ -1,11 +1,10 @@
-package de.juliusawen.coastercreditcounter.backend.temporaryElements.groupHeader;
+package de.juliusawen.coastercreditcounter.backend.temporaryElements;
 
 import android.util.Log;
 
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.backend.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.backend.temporaryElements.ITemporaryElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class SpecialGroupHeader extends OrphanElement implements IGroupHeader, ITemporaryElement

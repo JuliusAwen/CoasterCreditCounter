@@ -24,9 +24,9 @@ import de.juliusawen.coastercreditcounter.backend.elements.Park;
 import de.juliusawen.coastercreditcounter.backend.elements.Visit;
 import de.juliusawen.coastercreditcounter.backend.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.frontend.BaseActivity;
+import de.juliusawen.coastercreditcounter.frontend.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.frontend.fragments.AlertDialogFragment;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.toolbox.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.toolbox.ResultFetcher;
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener

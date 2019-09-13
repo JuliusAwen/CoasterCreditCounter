@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.toolbox;
+package de.juliusawen.coastercreditcounter.frontend.activityDistributor;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +26,7 @@ import de.juliusawen.coastercreditcounter.frontend.parks.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.frontend.visits.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.frontend.visits.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.toolbox.StringTool;
 
 public abstract class ActivityDistributor
 {
