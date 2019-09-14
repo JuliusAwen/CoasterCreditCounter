@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".frontend.locations.ShowLocationsActivity">
+    tools:context=".userInterface.activities.ShowLocationsActivity">
 
     <include
         layout="@layout/floating_action_button"/>

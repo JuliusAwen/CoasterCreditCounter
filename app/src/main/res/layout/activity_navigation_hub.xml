@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:fitsSystemWindows="true"
-    tools:context=".frontend.navigationHub.NavigationHubActivity">
+    tools:context=".userInterface.activities.NavigationHubActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

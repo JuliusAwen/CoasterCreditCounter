@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.backend.application.App;
-import de.juliusawen.coastercreditcounter.backend.elements.IElement;
-import de.juliusawen.coastercreditcounter.backend.elements.Location;
-import de.juliusawen.coastercreditcounter.backend.persistency.DatabaseMock;
-import de.juliusawen.coastercreditcounter.backend.persistency.Persistence;
-import de.juliusawen.coastercreditcounter.toolbox.Stopwatch;
+import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
+import de.juliusawen.coastercreditcounter.persistence.DatabaseMock;
+import de.juliusawen.coastercreditcounter.persistence.Persistence;
+import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
 public class Content
 {

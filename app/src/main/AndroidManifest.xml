@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".backend.application.App"
+        android:name=".application.App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -16,40 +16,40 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".frontend.MainActivity">
+        <activity android:name=".userInterface.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".frontend.locations.ShowLocationsActivity" />
-        <activity android:name=".frontend.elements.SortElementsActivity" />
-        <activity android:name=".frontend.elements.PickElementsActivity" />
-        <activity android:name=".frontend.parks.ShowParkActivity" />
-        <activity android:name=".frontend.visits.ShowVisitActivity" />
-        <activity android:name=".frontend.TestActivity" />
-        <activity android:name=".frontend.visits.CreateVisitActivity" />
-        <activity android:name=".frontend.elements.ManageOrphanElementsActivity" />
-        <activity android:name=".frontend.navigationHub.NavigationHubActivity" />
+        <activity android:name=".userInterface.activities.ShowLocationsActivity" />
+        <activity android:name=".userInterface.activities.SortElementsActivity" />
+        <activity android:name=".userInterface.activities.PickElementsActivity" />
+        <activity android:name=".userInterface.activities.ShowParkActivity" />
+        <activity android:name=".userInterface.activities.ShowVisitActivity" />
+        <activity android:name=".userInterface.activities.TestActivity" />
+        <activity android:name=".userInterface.activities.CreateVisitActivity" />
+        <activity android:name=".userInterface.activities.ManageOrphanElementsActivity" />
+        <activity android:name=".userInterface.activities.NavigationHubActivity" />
         <activity
-            android:name=".frontend.locations.CreateLocationActivity"
+            android:name=".userInterface.activities.CreateLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.attractions.CreateOrEditCustomAttractionActivity"
+            android:name=".userInterface.activities.CreateOrEditCustomAttractionActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.parks.CreateParkActivity"
+            android:name=".userInterface.activities.CreateParkActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.elements.EditElementActivity"
+            android:name=".userInterface.activities.EditElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.elements.CreateSimpleElementActivity"
+            android:name=".userInterface.activities.CreateSimpleElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <service
-            android:name=".backend.persistency.PersistenceService"
+            android:name=".persistence.PersistenceService"
             android:exported="false" />
     </application>
 
