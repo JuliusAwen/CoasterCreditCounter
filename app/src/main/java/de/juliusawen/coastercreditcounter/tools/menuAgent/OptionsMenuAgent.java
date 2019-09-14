@@ -15,32 +15,32 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 
 public class OptionsMenuAgent
 {
-    public static final int HELP = Selection.HELP.ordinal();
+    public static final Selection HELP = Selection.HELP;
 
-    public static final int EXPAND_ALL = Selection.EXPAND_ALL.ordinal();
-    public static final int COLLAPSE_ALL = Selection.COLLAPSE_ALL.ordinal();
+    public static final Selection EXPAND_ALL = Selection.EXPAND_ALL;
+    public static final Selection COLLAPSE_ALL = Selection.COLLAPSE_ALL;
 
-    public static final int SORT = Selection.SORT.ordinal();
+    public static final Selection SORT = Selection.SORT;
 
-    public static final int SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES.ordinal();
-    public static final int SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS.ordinal();
-    public static final int SORT_STATUSES = Selection.SORT_STATUSES.ordinal();
+    public static final Selection SORT_ATTRACTION_CATEGORIES = Selection.SORT_ATTRACTION_CATEGORIES;
+    public static final Selection SORT_MANUFACTURERS = Selection.SORT_MANUFACTURERS;
+    public static final Selection SORT_STATUSES = Selection.SORT_STATUSES;
 
-    public static final int SORT_BY_YEAR  = Selection.SORT_BY_YEAR.ordinal();
-    public static final int SORT_BY_NAME  = Selection.SORT_BY_NAME.ordinal();
-    public static final int SORT_BY_LOCATION  = Selection.SORT_BY_LOCATION.ordinal();
-    public static final int SORT_BY_ATTRACTION_CATEGORY = Selection.SORT_BY_ATTRACTION_CATEGORY.ordinal();
-    public static final int SORT_BY_MANUFACTURER  = Selection.SORT_BY_MANUFACTURER.ordinal();
+    public static final Selection SORT_BY_YEAR  = Selection.SORT_BY_YEAR;
+    public static final Selection SORT_BY_NAME  = Selection.SORT_BY_NAME;
+    public static final Selection SORT_BY_LOCATION  = Selection.SORT_BY_LOCATION;
+    public static final Selection SORT_BY_ATTRACTION_CATEGORY = Selection.SORT_BY_ATTRACTION_CATEGORY;
+    public static final Selection SORT_BY_MANUFACTURER  = Selection.SORT_BY_MANUFACTURER;
 
-    public static final int GROUP_BY_LOCATION = Selection.GROUP_BY_LOCATION.ordinal();
-    public static final int GROUP_BY_ATTRACTION_CATEGORY = Selection.GROUP_BY_ATTRACTION_CATEGORY.ordinal();
-    public static final int GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER.ordinal();
-    public static final int GROUP_BY_STATUS = Selection.GROUP_BY_STATUS.ordinal();
+    public static final Selection GROUP_BY_LOCATION = Selection.GROUP_BY_LOCATION;
+    public static final Selection GROUP_BY_ATTRACTION_CATEGORY = Selection.GROUP_BY_ATTRACTION_CATEGORY;
+    public static final Selection GROUP_BY_MANUFACTURER = Selection.GROUP_BY_MANUFACTURER;
+    public static final Selection GROUP_BY_STATUS = Selection.GROUP_BY_STATUS;
 
-    public static final int GO_TO_CURRENT_VISIT = Selection.GO_TO_CURRENT_VISIT.ordinal();
+    public static final Selection GO_TO_CURRENT_VISIT = Selection.GO_TO_CURRENT_VISIT;
 
-    public static final int ENABLE_EDITING = Selection.ENABLE_EDITING.ordinal();
-    public static final int DISABLE_EDITING = Selection.DISABLE_EDITING.ordinal();
+    public static final Selection ENABLE_EDITING = Selection.ENABLE_EDITING;
+    public static final Selection DISABLE_EDITING = Selection.DISABLE_EDITING;
 
     private final List<Selection> selectionsToAdd;
     private final Map<Selection, Boolean> setEnabledBySelection;
@@ -109,16 +109,9 @@ public class OptionsMenuAgent
     }
 
 
-    public OptionsMenuAgent addMenuItem(int menuItem)
+    public OptionsMenuAgent add(Selection selection)
     {
-        if(Selection.values().length >= menuItem)
-        {
-            this.selectionsToAdd.add(Selection.values()[menuItem]);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addMenuItem:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
-        }
+        this.selectionsToAdd.add(selection);
 
         return this;
     }
@@ -268,30 +261,16 @@ public class OptionsMenuAgent
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
     }
 
-    public OptionsMenuAgent setEnabled(int menuItem, boolean setEnabled)
+    public OptionsMenuAgent setEnabled(Selection selection, boolean setEnabled)
     {
-        if(Selection.values().length >= menuItem)
-        {
-            this.setEnabledBySelection.put(Selection.values()[menuItem], setEnabled);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.setEnabled:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
-        }
+        this.setEnabledBySelection.put(selection, setEnabled);
 
         return this;
     }
 
-    public OptionsMenuAgent setVisible(int menuItem, boolean setVisible)
+    public OptionsMenuAgent setVisible(Selection selection, boolean setVisible)
     {
-        if(Selection.values().length >= menuItem)
-        {
-            this.setVisibleBySelection.put(Selection.values()[menuItem], setVisible);
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.setVisible:: MenuItem [%d] does not exist - Selection.values().length = [%d]", menuItem, Selection.values().length));
-        }
+        this.setVisibleBySelection.put(selection, setVisible);
 
         return this;
     }
@@ -376,79 +355,79 @@ public class OptionsMenuAgent
                     return true;
 
                 case HELP:
-                    client.handleMenuItemHelpSelected();
+                    client.handleHelpSelected();
                     break;
                 case EXPAND_ALL:
-                    client.handleMenuItemExpandAllSelected();
+                    client.handleExpandAllSelected();
                     break;
                 case COLLAPSE_ALL:
-                    client.handleMenuItemCollapseAllSelected();
+                    client.handleCollapseAllSelected();
                     break;
                 case GROUP_BY_LOCATION:
-                    client.handleMenuItemGroupByLocationSelected();
+                    client.handleGroupByLocationSelected();
                     break;
                 case GROUP_BY_ATTRACTION_CATEGORY:
-                    client.handleMenuItemGroupByAttractionCategorySelected();
+                    client.handleGroupByAttractionCategorySelected();
                     break;
                 case GROUP_BY_MANUFACTURER:
-                    client.handleMenuItemGroupByManufacturerSelected();
+                    client.handleGroupByManufacturerSelected();
                     break;
                 case GROUP_BY_STATUS:
-                    client.handleMenuItemGroupByStatusSelected();
+                    client.handleGroupByStatusSelected();
                     break;
                 case SORT_ASCENDING:
-                    client.handleMenuItemSortAscendingSelected();
+                    client.handleSortAscendingSelected();
                     break;
                 case SORT_DESCENDING:
-                    client.handleMenuItemSortDescendingSelected();
+                    client.handleSortDescendingSelected();
                     break;
                 case SORT_ATTRACTION_CATEGORIES:
-                    client.handleMenuItemSortAttractionCategoriesSelected();
+                    client.handleSortAttractionCategoriesSelected();
                     break;
                 case SORT_MANUFACTURERS:
-                    client.handleMenuItemSortManufacturersSelected();
+                    client.handleSortManufacturersSelected();
                     break;
                 case SORT_STATUSES:
-                    client.handleMenuItemSortStatusesSelected();
+                    client.handleSortStatusesSelected();
                     break;
                 case SORT_BY_YEAR_ASCENDING:
-                    client.handleMenuItemSortByYearAscendingSelected();
+                    client.handleSortByYearAscendingSelected();
                     break;
                 case SORT_BY_YEAR_DESCENDING:
-                    client.handleMenuItemSortByYearDescendingSelected();
+                    client.handleSortByYearDescendingSelected();
                     break;
                 case SORT_BY_NAME_ASCENDING:
-                    client.handleMenuItemSortByNameAscendingSelected();
+                    client.handleSortByNameAscendingSelected();
                     break;
                 case SORT_BY_NAME_DESCENDING:
-                    client.handleMenuItemSortByNameDescendingSelected();
+                    client.handleSortByNameDescendingSelected();
                     break;
                 case SORT_BY_LOCATION_ASCENDING:
-                    client.handleMenuItemSortByLocationAscendingSelected();
+                    client.handleSortByLocationAscendingSelected();
                     break;
                 case SORT_BY_LOCATION_DESCENDING:
-                    client.handleMenuItemSortByLocationDescendingSelected();
+                    client.handleSortByLocationDescendingSelected();
                     break;
                 case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
-                    client.handleMenuItemSortByAttractionCategoryAscendingSelected();
+                    client.handleSortByAttractionCategoryAscendingSelected();
                     break;
                 case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
-                    client.handleMenuItemSortByAttractionCategoryDescendingSelected();
+                    client.handleSortByAttractionCategoryDescendingSelected();
                     break;
                 case SORT_BY_MANUFACTURER_ASCENDING:
-                    client.handleMenuItemSortByManufacturerAscendingSelected();
+                    client.handleSortByManufacturerAscendingSelected();
                     break;
                 case SORT_BY_MANUFACTURER_DESCENDING:
-                    client.handleMenuItemSortByManufacturerDescendingSelected();
+                    client.handleSortByManufacturerDescendingSelected();
                     break;
                 case GO_TO_CURRENT_VISIT:
-                    client.handleMenuItemGoToCurrentVisitSelected();
+                    client.handleGoToCurrentVisitSelected();
                     break;
                 case ENABLE_EDITING:
-                    client.handleMenuItemEnableEditingSelected();
+                    client.handleEnableEditingSelected();
                     break;
                 case DISABLE_EDITING:
-                    client.handleMenuItemDisableEditingSelected();
+                    client.handleDisableEditingSelected();
                     break;
 
                 default:

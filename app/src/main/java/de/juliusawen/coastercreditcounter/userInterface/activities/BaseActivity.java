@@ -204,7 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.addMenuItem(OptionsMenuAgent.HELP).create(menu);
+            this.viewModel.optionsMenuAgent.add(OptionsMenuAgent.HELP).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -222,115 +222,115 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     }
 
     @Override
-    public void handleMenuItemHelpSelected()
+    public void handleHelpSelected()
     {
         HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
 
         if(helpOverlayFragment != null)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: showing HelpOverlay");
+            Log.i(Constants.LOG_TAG, "BaseActivity.handleHelpSelected:: showing HelpOverlay");
             this.setHelpOverlayVisibility(true);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleMenuItemHelpSelected:: HelpOverlayFragment not added");
+            Log.e(Constants.LOG_TAG, "BaseActivity.handleHelpSelected:: HelpOverlayFragment not added");
         }
     }
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
     }
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
     }
     @Override
-    public void handleMenuItemGroupByLocationSelected()
+    public void handleGroupByLocationSelected()
     {
     }
     @Override
-    public void handleMenuItemGroupByAttractionCategorySelected()
+    public void handleGroupByAttractionCategorySelected()
     {
     }
     @Override
-    public void handleMenuItemGroupByManufacturerSelected()
+    public void handleGroupByManufacturerSelected()
     {
     }
     @Override
-    public void handleMenuItemGroupByStatusSelected()
+    public void handleGroupByStatusSelected()
     {
     }
     @Override
-    public void handleMenuItemSortAscendingSelected()
+    public void handleSortAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortDescendingSelected()
+    public void handleSortDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortAttractionCategoriesSelected()
+    public void handleSortAttractionCategoriesSelected()
     {
     }
     @Override
-    public void handleMenuItemSortManufacturersSelected()
+    public void handleSortManufacturersSelected()
     {
     }
     @Override
-    public void handleMenuItemSortStatusesSelected()
+    public void handleSortStatusesSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByYearAscendingSelected()
+    public void handleSortByYearAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByYearDescendingSelected()
+    public void handleSortByYearDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByNameAscendingSelected()
+    public void handleSortByNameAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByNameDescendingSelected()
+    public void handleSortByNameDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByLocationAscendingSelected()
+    public void handleSortByLocationAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByLocationDescendingSelected()
+    public void handleSortByLocationDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByAttractionCategoryAscendingSelected()
+    public void handleSortByAttractionCategoryAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByAttractionCategoryDescendingSelected()
+    public void handleSortByAttractionCategoryDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByManufacturerAscendingSelected()
+    public void handleSortByManufacturerAscendingSelected()
     {
     }
     @Override
-    public void handleMenuItemSortByManufacturerDescendingSelected()
+    public void handleSortByManufacturerDescendingSelected()
     {
     }
     @Override
-    public void handleMenuItemGoToCurrentVisitSelected()
+    public void handleGoToCurrentVisitSelected()
     {
     }
     @Override
-    public void handleMenuItemEnableEditingSelected()
+    public void handleEnableEditingSelected()
     {
     }
     @Override
-    public void handleMenuItemDisableEditingSelected()
+    public void handleDisableEditingSelected()
     {
     }
 

@@ -237,11 +237,11 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES)
-                    .addMenuItem(OptionsMenuAgent.SORT_MANUFACTURERS)
-                    .addMenuItem(OptionsMenuAgent.SORT_STATUSES)
-                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
+                    .add(OptionsMenuAgent.SORT_ATTRACTION_CATEGORIES)
+                    .add(OptionsMenuAgent.SORT_MANUFACTURERS)
+                    .add(OptionsMenuAgent.SORT_STATUSES)
+                    .add(OptionsMenuAgent.EXPAND_ALL)
+                    .add(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -306,7 +306,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public void handleMenuItemSortAttractionCategoriesSelected()
+    public void handleSortAttractionCategoriesSelected()
     {
         ActivityDistributor.startActivitySortForResult(
                 this,
@@ -315,7 +315,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public void handleMenuItemSortManufacturersSelected()
+    public void handleSortManufacturersSelected()
     {
         ActivityDistributor.startActivitySortForResult(
                 this,
@@ -324,7 +324,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public void handleMenuItemSortStatusesSelected()
+    public void handleSortStatusesSelected()
     {
         ActivityDistributor.startActivitySortForResult(
                 this,
@@ -333,13 +333,13 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
     }
 
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
     }

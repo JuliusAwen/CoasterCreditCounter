@@ -136,7 +136,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.addMenuItem(OptionsMenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+            this.viewModel.optionsMenuAgent.add(OptionsMenuAgent.GO_TO_CURRENT_VISIT).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -178,11 +178,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void handleMenuItemGoToCurrentVisitSelected()
+    public void handleGoToCurrentVisitSelected()
     {
         if(Visit.getCurrentVisits().size() > 1)
         {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleMenuItemGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
                     Visit.getCurrentVisits().size()));
 
             ActivityDistributor.startActivityPickForResult(
@@ -192,7 +192,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
         else
         {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleMenuItemGoToCurrentVisitSelected:: only one current visit found - opening %s...",
+            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
                     Visit.getCurrentVisits().get(0)));
 
             ActivityDistributor.startActivityShow(this, RequestCode.SHOW_VISIT, Visit.getCurrentVisits().get(0));

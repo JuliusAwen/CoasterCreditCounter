@@ -187,8 +187,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
-                .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
+                .add(OptionsMenuAgent.EXPAND_ALL)
+                .add(OptionsMenuAgent.COLLAPSE_ALL)
                 .create(menu);
     }
 

@@ -111,8 +111,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
+                    .add(OptionsMenuAgent.EXPAND_ALL)
+                    .add(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -145,13 +145,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
     }
 
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
     }
@@ -278,7 +278,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 if(!viewModel.selectionMode)
                 {
-                    PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
+                    PopupMenu popupMenu = getPopupMenu(view);
                     popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
                     popupMenu.show();
                 }
@@ -333,7 +333,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    private PopupMenu getRecyclerViewItemPopupMenu(View view)
+    private PopupMenu getPopupMenu(View view)
     {
         PopupMenu popupMenu = new PopupMenu(ShowLocationsActivity.this, view);
         this.populatePopupMenu(popupMenu.getMenu());
@@ -590,7 +590,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isRootLocation(IElement element)
     {
         return element.equals(App.content.getRootLocation());

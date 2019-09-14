@@ -147,10 +147,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(OptionsMenuAgent.DISABLE_EDITING)
-                    .addMenuItem(OptionsMenuAgent.ENABLE_EDITING)
-                    .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                    .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL)
+                    .add(OptionsMenuAgent.DISABLE_EDITING)
+                    .add(OptionsMenuAgent.ENABLE_EDITING)
+                    .add(OptionsMenuAgent.EXPAND_ALL)
+                    .add(OptionsMenuAgent.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -185,19 +185,19 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
     }
 
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
     }
 
     @Override
-    public void handleMenuItemEnableEditingSelected()
+    public void handleEnableEditingSelected()
     {
         this.viewModel.visit.setEditingEnabled(true);
         this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
@@ -208,7 +208,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public void handleMenuItemDisableEditingSelected()
+    public void handleDisableEditingSelected()
     {
         this.viewModel.visit.setEditingEnabled(false);
         this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);

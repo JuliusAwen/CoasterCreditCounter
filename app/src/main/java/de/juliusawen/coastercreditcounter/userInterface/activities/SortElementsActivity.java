@@ -103,7 +103,7 @@ public class SortElementsActivity extends BaseActivity
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .addMenuItem(OptionsMenuAgent.SORT)
+                    .add(OptionsMenuAgent.SORT)
                     .create(menu);
         }
 
@@ -124,13 +124,13 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    public void handleMenuItemSortAscendingSelected()
+    public void handleSortAscendingSelected()
     {
         this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
     }
     @Override
-    public void handleMenuItemSortDescendingSelected()
+    public void handleSortDescendingSelected()
     {
         this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);

@@ -102,7 +102,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -116,7 +116,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -130,7 +130,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void handleMenuItemSortAscendingSelected()
+    public void handleSortAscendingSelected()
     {
         switch(this.getCurrentTab())
         {
@@ -144,7 +144,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void handleMenuItemSortDescendingSelected()
+    public void handleSortDescendingSelected()
     {
         switch(this.getCurrentTab())
         {

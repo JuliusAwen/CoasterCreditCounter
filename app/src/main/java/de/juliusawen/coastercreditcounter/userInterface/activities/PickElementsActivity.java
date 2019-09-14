@@ -231,29 +231,29 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .addMenuItem(OptionsMenuAgent.SORT_BY_NAME)
-                            .addMenuItem(OptionsMenuAgent.SORT_BY_LOCATION)
-                            //                    .addMenuItem(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY)
-                            .addMenuItem(OptionsMenuAgent.SORT_BY_MANUFACTURER)
-                            .addMenuItem(OptionsMenuAgent.GROUP_BY_LOCATION)
-                            .addMenuItem(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
-                            .addMenuItem(OptionsMenuAgent.GROUP_BY_MANUFACTURER)
-                            .addMenuItem(OptionsMenuAgent.GROUP_BY_STATUS)
-                            .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                            .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL);
+                            .add(OptionsMenuAgent.SORT_BY_NAME)
+                            .add(OptionsMenuAgent.SORT_BY_LOCATION)
+                            //                    .add(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY)
+                            .add(OptionsMenuAgent.SORT_BY_MANUFACTURER)
+                            .add(OptionsMenuAgent.GROUP_BY_LOCATION)
+                            .add(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
+                            .add(OptionsMenuAgent.GROUP_BY_MANUFACTURER)
+                            .add(OptionsMenuAgent.GROUP_BY_STATUS)
+                            .add(OptionsMenuAgent.EXPAND_ALL)
+                            .add(OptionsMenuAgent.COLLAPSE_ALL);
                     break;
 
                 case PICK_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .addMenuItem(OptionsMenuAgent.EXPAND_ALL)
-                            .addMenuItem(OptionsMenuAgent.COLLAPSE_ALL);
+                            .add(OptionsMenuAgent.EXPAND_ALL)
+                            .add(OptionsMenuAgent.COLLAPSE_ALL);
                     break;
 
                 case PICK_ATTRACTION_CATEGORY:
                 case PICK_MANUFACTURER:
                 case PICK_STATUS:
                     this.viewModel.optionsMenuAgent
-                            .addMenuItem(OptionsMenuAgent.SORT);
+                            .add(OptionsMenuAgent.SORT);
                     break;
             }
 
@@ -311,107 +311,107 @@ public class PickElementsActivity extends BaseActivity
 
 
     @Override
-    public void handleMenuItemExpandAllSelected()
+    public void handleExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
     }
 
     @Override
-    public void handleMenuItemCollapseAllSelected()
+    public void handleCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
     }
 
     @Override
-    public void handleMenuItemGroupByLocationSelected()
+    public void handleGroupByLocationSelected()
     {
         this.groupElementsByType(GroupType.LOCATION);
     }
 
     @Override
-    public void handleMenuItemGroupByAttractionCategorySelected()
+    public void handleGroupByAttractionCategorySelected()
     {
         this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
     }
 
     @Override
-    public void handleMenuItemGroupByManufacturerSelected()
+    public void handleGroupByManufacturerSelected()
     {
         this.groupElementsByType(GroupType.MANUFACTURER);
     }
 
     @Override
-    public void handleMenuItemGroupByStatusSelected()
+    public void handleGroupByStatusSelected()
     {
         this.groupElementsByType(GroupType.STATUS);
     }
 
 
     @Override
-    public void handleMenuItemSortAscendingSelected()
+    public void handleSortAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortDescendingSelected()
+    public void handleSortDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortByNameAscendingSelected()
+    public void handleSortByNameAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortByNameDescendingSelected()
+    public void handleSortByNameDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortByLocationAscendingSelected()
+    public void handleSortByLocationAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortByLocationDescendingSelected()
+    public void handleSortByLocationDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
 //    @Override
-//    public void handleMenuItemSortByAttractionCategoryAscendingSelected()
+//    public void handleSortByAttractionCategoryAscendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
 //    }
 //
 //    @Override
-//    public void handleMenuItemSortByAttractionCategoryDescendingSelected()
+//    public void handleSortByAttractionCategoryDescendingSelected()
 //    {
 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
 //    }
 
     @Override
-    public void handleMenuItemSortByManufacturerAscendingSelected()
+    public void handleSortByManufacturerAscendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
     }
 
     @Override
-    public void handleMenuItemSortByManufacturerDescendingSelected()
+    public void handleSortByManufacturerDescendingSelected()
     {
         this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);

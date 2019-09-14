@@ -2,34 +2,34 @@ package de.juliusawen.coastercreditcounter.tools.menuAgent;
 
 public interface IOptionsMenuAgentClient
 {
-    void handleMenuItemHelpSelected();
+    void handleHelpSelected();
 
-    void handleMenuItemExpandAllSelected();
-    void handleMenuItemCollapseAllSelected();
+    void handleExpandAllSelected();
+    void handleCollapseAllSelected();
 
-    void handleMenuItemGroupByLocationSelected();
-    void handleMenuItemGroupByAttractionCategorySelected();
-    void handleMenuItemGroupByManufacturerSelected();
-    void handleMenuItemGroupByStatusSelected();
+    void handleGroupByLocationSelected();
+    void handleGroupByAttractionCategorySelected();
+    void handleGroupByManufacturerSelected();
+    void handleGroupByStatusSelected();
 
-    void handleMenuItemSortAscendingSelected();
-    void handleMenuItemSortDescendingSelected();
-    void handleMenuItemSortAttractionCategoriesSelected();
-    void handleMenuItemSortManufacturersSelected();
-    void handleMenuItemSortStatusesSelected();
-    void handleMenuItemSortByYearAscendingSelected();
-    void handleMenuItemSortByYearDescendingSelected();
-    void handleMenuItemSortByNameAscendingSelected();
-    void handleMenuItemSortByNameDescendingSelected();
-    void handleMenuItemSortByLocationAscendingSelected();
-    void handleMenuItemSortByLocationDescendingSelected();
-    void handleMenuItemSortByAttractionCategoryAscendingSelected();
-    void handleMenuItemSortByAttractionCategoryDescendingSelected();
-    void handleMenuItemSortByManufacturerAscendingSelected();
-    void handleMenuItemSortByManufacturerDescendingSelected();
+    void handleSortAscendingSelected();
+    void handleSortDescendingSelected();
+    void handleSortAttractionCategoriesSelected();
+    void handleSortManufacturersSelected();
+    void handleSortStatusesSelected();
+    void handleSortByYearAscendingSelected();
+    void handleSortByYearDescendingSelected();
+    void handleSortByNameAscendingSelected();
+    void handleSortByNameDescendingSelected();
+    void handleSortByLocationAscendingSelected();
+    void handleSortByLocationDescendingSelected();
+    void handleSortByAttractionCategoryAscendingSelected();
+    void handleSortByAttractionCategoryDescendingSelected();
+    void handleSortByManufacturerAscendingSelected();
+    void handleSortByManufacturerDescendingSelected();
 
-    void handleMenuItemGoToCurrentVisitSelected();
+    void handleGoToCurrentVisitSelected();
 
-    void handleMenuItemEnableEditingSelected();
-    void handleMenuItemDisableEditingSelected();
+    void handleEnableEditingSelected();
+    void handleDisableEditingSelected();
 }
