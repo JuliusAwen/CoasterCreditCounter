@@ -532,8 +532,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 case REMOVE:
                 {
-                    snackbar = Snackbar.make(findViewById(android.R.id.content),
-                            getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
+                    snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG);
 
                     snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
                     {
@@ -604,7 +603,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: notifying data set changes...");
+            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: notifying data set changed...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
 
