@@ -136,7 +136,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
         {
             return true;
         }

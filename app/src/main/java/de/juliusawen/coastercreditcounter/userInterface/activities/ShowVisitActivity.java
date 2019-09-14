@@ -176,7 +176,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
         {
             return true;
         }

@@ -93,7 +93,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
         {
             return true;
         }

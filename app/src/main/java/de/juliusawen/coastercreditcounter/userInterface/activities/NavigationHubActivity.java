@@ -168,7 +168,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             else
             {
-                if(this.viewModel.optionsMenuAgent.handleMenuItemSelected(item, this))
+                if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
                 {
                     return true;
                 }
