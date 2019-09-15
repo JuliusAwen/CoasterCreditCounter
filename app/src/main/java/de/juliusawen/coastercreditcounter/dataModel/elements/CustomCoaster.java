@@ -27,11 +27,11 @@ public class CustomCoaster extends Coaster implements IOnSiteAttraction, ICatego
         if(!name.isEmpty())
         {
             customCoaster = new CustomCoaster(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("CustomCoaster.create:: %s created.", customCoaster.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("CustomCoaster.show:: %s created.", customCoaster.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("CustomCoaster.create:: invalid name[%s] - CustomCoaster not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("CustomCoaster.show:: invalid name[%s] - CustomCoaster not created.", name));
         }
         return customCoaster;
     }

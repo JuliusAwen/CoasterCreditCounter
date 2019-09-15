@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
@@ -389,11 +389,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
 
-        switch(RequestCode.values()[requestCode])
+        switch(requestCode)
         {
             case OVERWRITE_FILE:
                 if(which == DialogInterface.BUTTON_POSITIVE)

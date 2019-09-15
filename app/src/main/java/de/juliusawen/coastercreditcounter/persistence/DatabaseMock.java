@@ -1492,7 +1492,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: elements not created - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.show:: elements not created - DatabaseMock is not able to persist any data");
         return true;
     }
 

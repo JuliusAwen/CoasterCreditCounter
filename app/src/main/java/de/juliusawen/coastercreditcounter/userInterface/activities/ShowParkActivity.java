@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowVisitsFragment;
 
@@ -112,6 +112,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             case SHOW_ATTRACTIONS:
                 ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemExpandAllSelected();
+                break;
         }
     }
 
@@ -126,6 +127,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             case SHOW_ATTRACTIONS:
                 ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemCollapseAllSelected();
+                break;
         }
     }
 
@@ -140,6 +142,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             case SHOW_VISITS:
                 ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortAscendingSelected();
+                break;
         }
     }
 
@@ -154,10 +157,86 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
             case SHOW_VISITS:
                 ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortDescendingSelected();
+                break;
         }
     }
 
     //endregion --- OPTIONS MENU
+
+    @Override
+    public void handleDeleteElementClicked()
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_OVERVIEW:
+            case SHOW_ATTRACTIONS:
+                break;
+
+            case SHOW_VISITS:
+                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleDeleteElement();
+                break;
+        }
+    }
+
+    @Override
+    public void handleDeleteAttractionClicked()
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_OVERVIEW:
+            case SHOW_VISITS:
+                break;
+
+            case SHOW_ATTRACTIONS:
+                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleDeleteAttraction();
+                break;
+        }
+    }
+
+    @Override
+    public void handleEditElementClicked()
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_OVERVIEW:
+            case SHOW_ATTRACTIONS:
+                break;
+
+            case SHOW_VISITS:
+                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleEditElement();
+                break;
+        }
+    }
+
+    @Override
+    public void handleEditCustomAttractionClicked()
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_OVERVIEW:
+            case SHOW_VISITS:
+                break;
+
+            case SHOW_ATTRACTIONS:
+                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleEditCustomAttraction();
+                break;
+        }
+    }
+
+    @Override
+    public void handleSortAttractionsClicked()
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_OVERVIEW:
+            case SHOW_VISITS:
+                break;
+
+            case SHOW_ATTRACTIONS:
+                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleSortAttractions();
+                break;
+        }
+    }
 
 
     @Override

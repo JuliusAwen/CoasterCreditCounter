@@ -37,7 +37,7 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
@@ -90,7 +90,14 @@ public class PickElementsActivity extends BaseActivity
                         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                         childTypesToExpand.add(Attraction.class);
 
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToPickFrom, childTypesToExpand, true).setTypefaceForType(GroupHeader.class, Typeface.BOLD).setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE).setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW).groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                this.viewModel.elementsToPickFrom,
+                                childTypesToExpand,
+                                true)
+                                .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
                         break;
                     }
 
@@ -489,19 +496,24 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ManageOrphanElementsActivity.onClickFloatingActionButton<Add>:: FloatingActionButton pressed");
+                Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onClickFloatingActionButton<Add>:: FloatingActionButton pressed - RequestCode [%s]", viewModel.requestCode));
 
-                if(viewModel.requestCode == RequestCode.PICK_ATTRACTION_CATEGORY)
+                switch(viewModel.requestCode)
                 {
-                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_ATTRACTION_CATEGORY, null);
-                }
-                else if(viewModel.requestCode == RequestCode.PICK_MANUFACTURER)
-                {
-                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_MANUFACTURER, null);
-                }
-                else if(viewModel.requestCode == RequestCode.PICK_STATUS)
-                {
-                    ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_STATUS, null);
+                    case PICK_ATTRACTION_CATEGORY:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_ATTRACTION_CATEGORY, null);
+                        break;
+
+                    case PICK_MANUFACTURER:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_MANUFACTURER, null);
+                        break;
+
+                    case PICK_STATUS:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_STATUS, null);
+                        break;
+
+                        default:
+                            break;
                 }
             }
         });

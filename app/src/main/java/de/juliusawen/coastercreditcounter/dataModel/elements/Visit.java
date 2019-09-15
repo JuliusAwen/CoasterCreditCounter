@@ -49,7 +49,7 @@ public class Visit extends Element
     {
         Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
-        Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("Visit.show:: %s created.", visit.getFullName()));
         return visit;
     }
 

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class BaseActivityViewModel extends ViewModel
 {

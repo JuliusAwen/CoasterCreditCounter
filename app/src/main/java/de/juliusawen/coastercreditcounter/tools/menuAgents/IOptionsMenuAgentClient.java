@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.tools.menuAgent;
+package de.juliusawen.coastercreditcounter.tools.menuAgents;
 
 public interface IOptionsMenuAgentClient
 {

@@ -930,7 +930,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.create:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG, "JsonHandler.show:: empty implementation to satisfy interface");
         return false;
     }
 

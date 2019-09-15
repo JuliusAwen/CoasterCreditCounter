@@ -14,8 +14,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class AlertDialogFragment extends DialogFragment
 {
-    public AlertDialogFragment() {}
-
     public AlertDialogListener alertDialogListener;
 
     public static AlertDialogFragment newInstance(
@@ -82,7 +80,7 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
-                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
+                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(RequestCode.values()[requestCode], dialog, which);
                     }
                 })
                 .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener()
@@ -91,7 +89,7 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
-                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(requestCode, dialog, which);
+                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(RequestCode.values()[requestCode], dialog, which);
                     }
                 })
                 .create();
@@ -99,6 +97,6 @@ public class AlertDialogFragment extends DialogFragment
 
     public interface AlertDialogListener
     {
-        void onAlertDialogClick(int requestCode, DialogInterface dialog, int which);
+        void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which);
     }
 }

@@ -38,7 +38,7 @@ public class Ride extends Element
     {
         Ride ride = new Ride(StringTool.fetchSimpleTime(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
-        Log.v(Constants.LOG_TAG,  String.format("Ride.create:: %s created.", ride.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("Ride.show:: %s created.", ride.getFullName()));
 
         return ride;
     }

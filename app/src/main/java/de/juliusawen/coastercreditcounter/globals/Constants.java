@@ -55,7 +55,6 @@ public abstract class Constants
     public static final String JSON_STRING_DEFAULT_INCREMENT = "default increment";
 
 
-
     public static final String ACTION_SAVE = "de.juliusawen.coding.action_save";
     public static final String ACTION_CREATE = "de.juliusawen.coding.action_create";
     public static final String ACTION_UPDATE = "de.juliusawen.coding.action_update";
@@ -91,64 +90,5 @@ public abstract class Constants
 
     public static final String FRAGMENT_TAG_HELP_OVERLAY = "de.juliusawen.coding.fragment_tag_help_overlay";
     public static final String FRAGMENT_TAG_ALERT_DIALOG = "de.juliusawen.coding.fragment_tag_alert_dialog";
-
-
-
-
-
-    public static final int SELECTION_ADD = Selection.ADD.ordinal();
-
-    public static final int SELECTION_CREATE_LOCATION = Selection.CREATE_LOCATION.ordinal();
-    public static final int SELECTION_CREATE_PARK = Selection.CREATE_PARK.ordinal();
-
-    public static final int SELECTION_EDIT_LOCATION = Selection.EDIT_LOCATION.ordinal();
-    public static final int SELECTION_EDIT_PARK = Selection.EDIT_PARK.ordinal();
-    public static final int SELECTION_EDIT_ELEMENT = Selection.EDIT_ELEMENT.ordinal();
-    public static final int SELECTION_EDIT_CUSTOM_ATTRACTION = Selection.EDIT_CUSTOM_ATTRACTION.ordinal();
-
-    public static final int SELECTION_DELETE_ELEMENT = Selection.DELETE_ELEMENT.ordinal();
-    public static final int SELECTION_DELETE_ATTRACTION = Selection.DELETE_ATTRACTION.ordinal();
-
-    public static final int SELECTION_REMOVE_ELEMENT = Selection.REMOVE_ELEMENT.ordinal();
-    public static final int SELECTION_RELOCATE_ELEMENT = Selection.RELOCATE_ELEMENT.ordinal();
-
-    public static final int SELECTION_SORT = Selection.SORT.ordinal();
-    public static final int SELECTION_SORT_LOCATIONS = Selection.SORT_LOCATIONS.ordinal();
-    public static final int SELECTION_SORT_PARKS = Selection.SORT_PARKS.ordinal();
-    public static final int SELECTION_SORT_ATTRACTIONS = Selection.SORT_ATTRACTIONS.ordinal();
-
-    public static final int SELECTION_ASSIGN_TO_ATTRACTIONS = Selection.ASSIGN_TO_ATTRACTIONS.ordinal();
-    public static final int SELECTION_SET_AS_DEFAULT = Selection.SET_AS_DEFAULT.ordinal();
-
-
-    private enum Selection
-    {
-        ADD,
-
-        CREATE_LOCATION,
-        CREATE_PARK,
-
-        EDIT_LOCATION,
-        EDIT_PARK,
-        EDIT_ELEMENT,
-        EDIT_CUSTOM_ATTRACTION,
-
-        DELETE_ELEMENT,
-        DELETE_ATTRACTION,
-
-        REMOVE_ELEMENT,
-        RELOCATE_ELEMENT,
-
-        SORT,
-        SORT_LOCATIONS,
-        SORT_PARKS,
-        SORT_ATTRACTIONS,
-        SORT_ATTRACTION_CATEGORIES,
-        SORT_MANUFACTURERS,
-        SORT_STATUSES,
-
-        ASSIGN_TO_ATTRACTIONS,
-        SET_AS_DEFAULT,
-    }
 }
 

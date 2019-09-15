@@ -16,7 +16,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class ShowParkOverviewFragment extends Fragment
 {
@@ -62,11 +62,5 @@ public class ShowParkOverviewFragment extends Fragment
     {
         Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.fragment_show_park_overview, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
-    {
-        Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onViewCreated:: decorating view...");
     }
 }

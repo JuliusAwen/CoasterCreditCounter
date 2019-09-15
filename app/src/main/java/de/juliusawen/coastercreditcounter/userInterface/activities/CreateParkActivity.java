@@ -121,7 +121,7 @@ public class CreateParkActivity extends BaseActivity
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.createLocation:: create %s success[%S]", this.viewModel.newPark, success));
+        Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.createLocation:: show %s success[%S]", this.viewModel.newPark, success));
 
         return success;
     }

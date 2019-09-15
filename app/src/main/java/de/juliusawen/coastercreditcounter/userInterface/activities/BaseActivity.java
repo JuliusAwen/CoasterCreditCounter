@@ -39,11 +39,12 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.IOptionsMenuAgentClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.IOptionsMenuAgentClient;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.HelpOverlayFragment;
 
-public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
@@ -335,6 +336,73 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     }
 
     //endregion --- OPTIONS MENU
+
+
+    //region --- POPUP MENU
+
+    @Override
+    public void handleSortLocationsClicked()
+    {
+    }
+    @Override
+    public void handleSortParksClicked()
+    {
+    }
+    @Override
+    public void handleEditLocationClicked()
+    {
+    }
+    @Override
+    public void handleEditParkClicked()
+    {
+    }
+    @Override
+    public void handleEditElementClicked()
+    {
+    }
+    @Override
+    public void handleEditCustomAttractionClicked()
+    {
+    }
+    @Override
+    public void handleRemoveElementClicked()
+    {
+    }
+    @Override
+    public void handleRelocateElementClicked()
+    {
+    }
+    @Override
+    public void handleDeleteElementClicked()
+    {
+    }
+    @Override
+    public void handleDeleteAttractionClicked()
+    {
+    }
+    @Override
+    public void handleAssignToAttractionsClicked()
+    {
+    }
+    @Override
+    public void handleSetAsDefaultClicked()
+    {
+    }
+    @Override
+    public void handleSortAttractionsClicked()
+    {
+    }
+    @Override
+    public void handleAddLocationClicked()
+    {
+    }
+    @Override
+    public void handleAddParkClicked()
+    {
+    }
+
+    //endregion --- POPUP MENU
+
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)

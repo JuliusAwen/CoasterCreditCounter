@@ -51,11 +51,11 @@ public class AttractionBlueprint extends Attraction implements IBlueprint, IOrph
         if(!name.isEmpty())
         {
             attractionBlueprint = new AttractionBlueprint(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("AttractionBlueprint.create:: %s created.", attractionBlueprint.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("AttractionBlueprint.show:: %s created.", attractionBlueprint.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("AttractionBlueprint.create:: invalid name[%s] - AttractionBlueprint not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("AttractionBlueprint.show:: invalid name[%s] - AttractionBlueprint not created.", name));
         }
         return attractionBlueprint;
     }

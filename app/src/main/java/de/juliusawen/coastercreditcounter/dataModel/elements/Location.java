@@ -25,11 +25,11 @@ public class Location extends Element
             name = name.trim();
 
             location = new Location(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("Location.show:: %s created.", location.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Location.show:: invalid name[%s] - location not created.", name));
         }
         return location;
     }

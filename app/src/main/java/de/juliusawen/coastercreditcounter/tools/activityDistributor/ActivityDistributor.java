@@ -164,7 +164,7 @@ public abstract class ActivityDistributor
             Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
-            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
             ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 
             Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityEditForResult:: started [%s] for %s", StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName()), element));
@@ -365,7 +365,7 @@ public abstract class ActivityDistributor
 
         if(toolbarTitle != null)
         {
-            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);

@@ -41,7 +41,7 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
         VisitedAttraction visitedAttraction;
         visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), onSiteAttraction, UUID.randomUUID());
 
-        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.show:: %s created", visitedAttraction.getFullName()));
 
         return visitedAttraction;
     }

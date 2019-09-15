@@ -10,9 +10,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +40,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -408,192 +407,15 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
 
-                    PopupMenu popupMenu = new PopupMenu(ManageOrphanElementsActivity.this, view);
-
-                    popupMenu.getMenu().add(0, Constants.SELECTION_ASSIGN_TO_ATTRACTIONS, Menu.NONE, R.string.selection_assign_to_attractions)
-                            .setEnabled(!App.content.getContentAsType(ICategorized.class).isEmpty());
-
-                    popupMenu.getMenu().add(0, Constants.SELECTION_EDIT_ELEMENT, Menu.NONE, R.string.selection_edit);
-
-                    popupMenu.getMenu().add(0, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete).setEnabled(!isDefault);
-
-                    popupMenu.getMenu().add(0, Constants.SELECTION_SET_AS_DEFAULT, Menu.NONE, R.string.selection_set_as_default).setEnabled(!isDefault);
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                    {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item)
-                        {
-                            Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick:: [%S] selected", item.getItemId()));
-
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            int id = item.getItemId();
-
-                            if(id == Constants.SELECTION_ASSIGN_TO_ATTRACTIONS)
-                            {
-                                List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
-
-                                switch(viewModel.orphanElementTypeToManage)
-                                {
-                                    case ATTRACTION_CATEGORY:
-                                    {
-                                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                        {
-                                            if(attraction.getAttractionCategory().equals(viewModel.longClickedElement))
-                                            {
-                                                Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                        "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                                attractions.remove(attraction);
-                                            }
-                                        }
-
-                                        ActivityDistributor.startActivityPickForResult(
-                                                ManageOrphanElementsActivity.this,
-                                                RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                                attractions);
-
-                                        break;
-                                    }
-
-                                    case MANUFACTURER:
-                                    {
-                                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                        {
-                                            if(attraction.getManufacturer().equals(viewModel.longClickedElement))
-                                            {
-                                                Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                        "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                                attractions.remove(attraction);
-                                            }
-                                        }
-
-                                        ActivityDistributor.startActivityPickForResult(
-                                                ManageOrphanElementsActivity.this,
-                                                RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
-                                                attractions);
-
-                                        break;
-                                    }
-
-                                    case STATUS:
-                                    {
-                                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
-                                        {
-                                            if(attraction.getManufacturer().equals(viewModel.longClickedElement))
-                                            {
-                                                Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: " +
-                                                        "removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                                attractions.remove(attraction);
-                                            }
-                                        }
-
-                                        ActivityDistributor.startActivityPickForResult(
-                                                ManageOrphanElementsActivity.this,
-                                                RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS,
-                                                attractions);
-
-                                        break;
-                                    }
-                                }
-
-                                return true;
-                            }
-
-                            else if(id == Constants.SELECTION_EDIT_ELEMENT)
-                            {
-                                switch(viewModel.orphanElementTypeToManage)
-                                {
-                                    case ATTRACTION_CATEGORY:
-                                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
-                                        break;
-
-                                    case MANUFACTURER:
-                                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_MANUFACTURER, viewModel.longClickedElement);
-                                        break;
-
-                                    case STATUS:
-                                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_STATUS, viewModel.longClickedElement);
-                                        break;
-                                }
-
-                                return true;
-                            }
-
-                            else if(id == Constants.SELECTION_DELETE_ELEMENT)
-                            {
-                                String alertDialogMessage;
-                                if(viewModel.longClickedElement.hasChildren())
-                                {
-                                    String defaultName;
-
-                                    switch(viewModel.orphanElementTypeToManage)
-                                    {
-                                        case ATTRACTION_CATEGORY:
-                                            defaultName = AttractionCategory.getDefault().getName();
-                                            break;
-
-                                        case MANUFACTURER:
-                                            defaultName = Manufacturer.getDefault().getName();
-                                            break;
-
-                                        case STATUS:
-                                            defaultName = Status.getDefault().getName();
-                                            break;
-
-                                            default:
-                                                defaultName = getString(R.string.error_missing_text);
-                                                break;
-                                    }
-
-                                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_children,
-                                            viewModel.longClickedElement.getChildCount(),
-                                            viewModel.longClickedElement.getName(),
-                                            defaultName);
-                                }
-                                else
-                                {
-                                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_no_children,
-                                            viewModel.longClickedElement.getName());
-                                }
-
-                                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                                        R.drawable.ic_baseline_warning,
-                                        getString(R.string.alert_dialog_title_delete_element),
-                                        alertDialogMessage,
-                                        getString(R.string.text_accept),
-                                        getString(R.string.text_cancel),
-                                        RequestCode.DELETE,
-                                        false);
-
-                                alertDialogFragmentDelete.setCancelable(false);
-                                alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                                return true;
-                            }
-                            else if(id == Constants.SELECTION_SET_AS_DEFAULT)
-                            {
-                                String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedElement.getName());
-
-                                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                                        R.drawable.ic_baseline_warning,
-                                        getString(R.string.alert_dialog_title_set_as_default),
-                                        alterDialogMessage,
-                                        getString(R.string.text_accept),
-                                        getString(R.string.text_cancel),
-                                        RequestCode.SET_AS_DEFAULT,
-                                        false);
-
-                                alertDialogFragmentDelete.setCancelable(false);
-                                alertDialogFragmentDelete.show(fragmentManager, Constants.FRAGMENT_TAG_ALERT_DIALOG);
-
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    });
-                    popupMenu.show();
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.ASSIGN_TO_ATTRACTIONS)
+                            .add(PopupMenuAgent.EDIT_ELEMENT)
+                            .add(PopupMenuAgent.DELETE_ELEMENT)
+                            .add(PopupMenuAgent.SET_AS_DEFAULT)
+                            .setEnabled(PopupMenuAgent.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(ICategorized.class).isEmpty())
+                            .setEnabled(PopupMenuAgent.DELETE_ELEMENT, !isDefault)
+                            .setEnabled(PopupMenuAgent.SET_AS_DEFAULT, !isDefault)
+                            .show(ManageOrphanElementsActivity.this, view);
                 }
                 return true;
             }
@@ -601,13 +423,167 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    public void handleAssignToAttractionsClicked()
+    {
+        List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+
+        switch(viewModel.orphanElementTypeToManage)
+        {
+            case ATTRACTION_CATEGORY:
+            {
+                for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                {
+                    if(attraction.getAttractionCategory().equals(viewModel.longClickedElement))
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                        attractions.remove(attraction);
+                    }
+                }
+
+                ActivityDistributor.startActivityPickForResult(
+                        ManageOrphanElementsActivity.this,
+                        RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
+                        attractions);
+
+                break;
+            }
+
+            case MANUFACTURER:
+            {
+                for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                {
+                    if(attraction.getManufacturer().equals(viewModel.longClickedElement))
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                        attractions.remove(attraction);
+                    }
+                }
+
+                ActivityDistributor.startActivityPickForResult(
+                        ManageOrphanElementsActivity.this,
+                        RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
+                        attractions);
+
+                break;
+            }
+
+            case STATUS:
+            {
+                for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                {
+                    if(attraction.getManufacturer().equals(viewModel.longClickedElement))
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                        attractions.remove(attraction);
+                    }
+                }
+
+                ActivityDistributor.startActivityPickForResult(
+                        ManageOrphanElementsActivity.this,
+                        RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS,
+                        attractions);
+
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void handleEditElementClicked()
+    {
+        switch(viewModel.orphanElementTypeToManage)
+        {
+            case ATTRACTION_CATEGORY:
+                ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
+                break;
+
+            case MANUFACTURER:
+                ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_MANUFACTURER, viewModel.longClickedElement);
+                break;
+
+            case STATUS:
+                ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_STATUS, viewModel.longClickedElement);
+                break;
+        }
+    }
+
+    @Override
+    public void handleDeleteElementClicked()
+    {
+        String alertDialogMessage;
+        if(viewModel.longClickedElement.hasChildren())
+        {
+            String defaultName;
+
+            switch(viewModel.orphanElementTypeToManage)
+            {
+                case ATTRACTION_CATEGORY:
+                    defaultName = AttractionCategory.getDefault().getName();
+                    break;
+
+                case MANUFACTURER:
+                    defaultName = Manufacturer.getDefault().getName();
+                    break;
+
+                case STATUS:
+                    defaultName = Status.getDefault().getName();
+                    break;
+
+                default:
+                    defaultName = getString(R.string.error_missing_text);
+                    break;
+            }
+
+            alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_children,
+                    viewModel.longClickedElement.getChildCount(),
+                    viewModel.longClickedElement.getName(),
+                    defaultName);
+        }
+        else
+        {
+            alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_no_children,
+                    viewModel.longClickedElement.getName());
+        }
+
+        AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                R.drawable.ic_baseline_warning,
+                getString(R.string.alert_dialog_title_delete_element),
+                alertDialogMessage,
+                getString(R.string.text_accept),
+                getString(R.string.text_cancel),
+                RequestCode.DELETE,
+                false);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+    }
+
+    @Override
+    public void handleSetAsDefaultClicked()
+    {
+        String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedElement.getName());
+
+        AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                R.drawable.ic_baseline_warning,
+                getString(R.string.alert_dialog_title_set_as_default),
+                alterDialogMessage,
+                getString(R.string.text_accept),
+                getString(R.string.text_cancel),
+                RequestCode.SET_AS_DEFAULT,
+                false);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+    }
+
+    @Override
+    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            switch(RequestCode.values()[requestCode])
+            switch(requestCode)
             {
                 case DELETE:
                 {

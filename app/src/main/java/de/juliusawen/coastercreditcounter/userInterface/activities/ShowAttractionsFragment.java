@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +42,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -128,8 +128,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         super.onDestroyView();
     }
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -150,10 +148,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
                                 .scrollToItem(((Attraction)selectedElement).getAttractionCategory());
-
                     }
                     break;
-
 
                 case EDIT_CUSTOM_ATTRACTION:
                     Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
@@ -223,7 +219,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand);
 
-        contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+        contentRecyclerViewAdapter
+                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                 .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                 .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
@@ -253,54 +250,22 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             @Override
             public boolean onLongClick(View view)
             {
+                viewModel.longClickedElement = (IElement)view.getTag();
+
                 if(view.getTag() instanceof GroupHeader)
                 {
-                    GroupHeader.handleOnGroupHeaderLongClick(getActivity(), view);
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.SORT_ATTRACTIONS)
+                            .setVisible(PopupMenuAgent.SORT_ATTRACTIONS,
+                                    viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
+                            .show(getContext(), view);
                 }
                 else
                 {
-                    viewModel.longClickedElement = (IElement)view.getTag();
-
-                    PopupMenu popupMenu = new PopupMenu(getContext(), view);
-                    popupMenu.getMenu().add(0, Constants.SELECTION_EDIT_CUSTOM_ATTRACTION, Menu.NONE, R.string.selection_edit);
-                    popupMenu.getMenu().add(0, Constants.SELECTION_DELETE_ATTRACTION, Menu.NONE, R.string.selection_delete);
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                    {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item)
-                        {
-                            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onMenuItemClick:: [%S] selected", item.getItemId()));
-
-                            int id = item.getItemId();
-
-                            if(id == Constants.SELECTION_EDIT_CUSTOM_ATTRACTION)
-                            {
-                                ActivityDistributor.startActivityEditForResult(
-                                        getContext(),
-                                        RequestCode.EDIT_CUSTOM_ATTRACTION,
-                                        viewModel.longClickedElement);
-                            }
-                            else if(id == Constants.SELECTION_DELETE_ATTRACTION)
-                            {
-                                AlertDialogFragment alertDialogFragmentDelete =
-                                        AlertDialogFragment.newInstance(
-                                                R.drawable.ic_baseline_warning,
-                                                getString(R.string.alert_dialog_title_delete_attraction),
-                                                getString(R.string.alert_dialog_message_delete_attraction, viewModel.longClickedElement.getName()),
-                                                getString(R.string.text_accept),
-                                                getString(R.string.text_cancel),
-                                                RequestCode.DELETE,
-                                                true);
-
-                                alertDialogFragmentDelete.setCancelable(false);
-                                alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                            }
-
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.EDIT_CUSTOM_ATTRACTION)
+                            .add(PopupMenuAgent.DELETE_ATTRACTION)
+                            .show(getContext(), view);
                 }
 
                 return true;
@@ -308,18 +273,56 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         };
     }
 
+    public void handleSortAttractions()
+    {
+        List<IElement> attractions = new ArrayList<>();
+
+        if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+        {
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+        }
+        else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+        {
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+        }
+
+        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(getContext()), RequestCode.SORT_ATTRACTIONS, attractions);
+    }
+
+    public void handleEditCustomAttraction()
+    {
+        ActivityDistributor.startActivityEditForResult(
+                getContext(),
+                RequestCode.EDIT_CUSTOM_ATTRACTION,
+                viewModel.longClickedElement);
+    }
+
+    public void handleDeleteAttraction()
+    {
+        AlertDialogFragment alertDialogFragmentDelete =
+                AlertDialogFragment.newInstance(
+                        R.drawable.ic_baseline_warning,
+                        getString(R.string.alert_dialog_title_delete_attraction),
+                        getString(R.string.alert_dialog_message_delete_attraction, viewModel.longClickedElement.getName()),
+                        getString(R.string.text_accept),
+                        getString(R.string.text_cancel),
+                        RequestCode.DELETE,
+                        true);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+    }
+
     @Override
-    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
 
-        Snackbar snackbar;
-
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == RequestCode.DELETE.ordinal())
+            if(requestCode.equals(RequestCode.DELETE))
             {
-                snackbar = Snackbar.make(
+                Snackbar snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
                         getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
                         Snackbar.LENGTH_LONG);

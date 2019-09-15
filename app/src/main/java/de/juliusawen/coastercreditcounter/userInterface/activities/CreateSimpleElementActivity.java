@@ -146,7 +146,7 @@ public class CreateSimpleElementActivity extends BaseActivity
             else
             {
                 Toaster.makeToast(this, getString(R.string.error_creation_failed));
-                Log.e(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE>:: not able to create [%s]", viewModel.createdString));
+                Log.e(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE>:: not able to show [%s]", viewModel.createdString));
             }
         }
 

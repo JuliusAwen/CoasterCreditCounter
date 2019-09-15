@@ -36,11 +36,11 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         if(!name.isEmpty())
         {
             stockAttraction = new StockAttraction(name, blueprint, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("StockAttraction.show:: %s created.", stockAttraction.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("StockAttraction.create:: invalid name[%s] - StockAttraction not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("StockAttraction.show:: invalid name[%s] - StockAttraction not created.", name));
         }
         return stockAttraction;
     }

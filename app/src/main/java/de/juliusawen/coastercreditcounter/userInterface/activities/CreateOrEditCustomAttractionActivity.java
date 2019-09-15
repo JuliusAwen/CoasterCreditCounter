@@ -84,7 +84,13 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             {
                 this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
 
-                if(this.viewModel.requestCode == RequestCode.EDIT_CUSTOM_ATTRACTION)
+                if(this.viewModel.requestCode == RequestCode.INVALID)
+                {
+                    String message = "RequestCode is INVALID";
+                    Log.e(Constants.LOG_TAG, message);
+                    throw new IllegalStateException(message);
+                }
+                else if(this.viewModel.requestCode == RequestCode.EDIT_CUSTOM_ATTRACTION)
                 {
                     this.viewModel.isEditMode = true;
                 }
@@ -533,7 +539,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: create - success[%S]", success));
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: show - success[%S]", success));
 
         return success;
     }

@@ -11,11 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -43,7 +41,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitsFragmentViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -230,68 +229,41 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                 if(viewModel.longClickedElement instanceof Visit)
                 {
-                    PopupMenu popupMenu = getRecyclerViewItemPopupMenu(view);
-                    popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
-                    popupMenu.show();
-                    return false;
+
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.EDIT_ELEMENT)
+                            .add(PopupMenuAgent.DELETE_ELEMENT)
+                            .show(getContext(), view);
+
+                    return true;
                 }
                 else
                 {
-                    return true;
+                    return false;
                 }
             }
         };
     }
 
-    private PopupMenu getRecyclerViewItemPopupMenu(View view)
+    public void handleDeleteElement()
     {
-        PopupMenu popupMenu = new PopupMenu(ShowVisitsFragment.this.getContext(), view);
-        this.populatePopupMenu(popupMenu.getMenu());
-        return popupMenu;
+        AlertDialogFragment alertDialogFragmentDelete =
+                AlertDialogFragment.newInstance(
+                        R.drawable.ic_baseline_warning,
+                        getString(R.string.alert_dialog_title_delete_element),
+                        getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
+                        getString(R.string.text_accept),
+                        getString(R.string.text_cancel),
+                        RequestCode.DELETE,
+                        true);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
-    private void populatePopupMenu(Menu menu)
+    public void handleEditElement()
     {
-        menu.add(Menu.NONE, Constants.SELECTION_EDIT_ELEMENT, Menu.NONE, R.string.selection_edit);
-        menu.add(Menu.NONE, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete);
-    }
-
-    private PopupMenu.OnMenuItemClickListener getOnMenuItemClickListener()
-    {
-        return new PopupMenu.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
-
-                int id = item.getItemId();
-                if(id == Constants.SELECTION_DELETE_ELEMENT)
-                {
-                    AlertDialogFragment alertDialogFragmentDelete =
-                            AlertDialogFragment.newInstance(
-                                    R.drawable.ic_baseline_warning,
-                                    getString(R.string.alert_dialog_title_delete_element),
-                                    getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
-                                    getString(R.string.text_accept),
-                                    getString(R.string.text_cancel),
-                                    RequestCode.DELETE,
-                                    true);
-
-                    alertDialogFragmentDelete.setCancelable(false);
-                    alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-
-                    return true;
-                }
-                else if(id == Constants.SELECTION_EDIT_ELEMENT)
-                {
-                    pickDate();
-                    return true;
-                }
-
-                return false;
-            }
-        };
+        pickDate();
     }
 
     private void pickDate()
@@ -349,7 +321,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     }
 
     @Override
-    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
 
@@ -357,7 +329,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == RequestCode.DELETE.ordinal())
+            if(requestCode.equals(RequestCode.DELETE))
             {
                 snackbar = Snackbar.make(
                         Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),

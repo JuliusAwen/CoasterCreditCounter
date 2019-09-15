@@ -32,55 +32,55 @@
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 
-    <!--GENERIC SELECTIONS-->
-    <string name="selection_help">help</string>
+    <!--MENU ITEMS-->
+    <string name="menu_item_help">help</string>
 
-    <string name="selection_expand_all">expand all</string>
-    <string name="selection_collapse_all">collapse all</string>>
+    <string name="menu_item_expand_all">expand all</string>
+    <string name="menu_item_collapse_all">collapse all</string>>
 
-    <string name="selection_group_by">group by</string>
-    <string name="selection_group_by_location">location</string>
-    <string name="selection_group_by_manufacturer">manufacturer</string>
-    <string name="selection_group_by_attraction_category">category</string>
-    <string name="selection_group_by_status">status</string>
-
-
-
-    <string name="selection_sort_attractions">sort attractions</string>
-
-    <string name="selection_sort">sort</string>
-
-    <string name="selection_sort_by">sort by</string>
-
-    <string name="selection_sort_parks">parks</string>
-    <string name="selection_add_park">park</string>
-
-    <string name="selection_sort_locations">locations</string>
-    <string name="selection_add_location">location</string>
-
-    <string name="selection_sort_by_year">year</string>
-    <string name="selection_sort_by_name">name</string>
-    <string name="selection_sort_by_location">location</string>
-    <string name="selection_sort_by_manufacturer">manufacturer</string>
-    <string name="selection_sort_by_attraction_category">category</string>
-
-    <string name="selection_sort_ascending">ascending</string>
-    <string name="selection_sort_descending">descending</string>
-
-    <string name="selection_go_to_current_visit">go to current visit</string>
-
-    <string name="selection_enable_editing">enable editing</string>
-    <string name="selection_disable_editing">disable editing</string>
+    <string name="menu_item_group_by">group by</string>
+    <string name="menu_item_group_by_location">location</string>
+    <string name="menu_item_group_by_manufacturer">manufacturer</string>
+    <string name="menu_item_group_by_attraction_category">category</string>
+    <string name="menu_item_group_by_status">status</string>
 
 
-    <string name="selection_add">add</string>
-    <string name="selection_edit">edit</string>
-    <string name="selection_delete">delete</string>
-    <string name="selection_remove">remove</string>
-    <string name="selection_relocate">relocate</string>
 
-    <string name="selection_set_as_default">set as default</string>
-    <string name="selection_assign_to_attractions">assign to attractions</string>
+    <string name="menu_item_sort_attractions">sort attractions</string>
+
+    <string name="menu_item_sort">sort</string>
+
+    <string name="menu_item_sort_by">sort by</string>
+
+    <string name="menu_item_sort_parks">parks</string>
+    <string name="menu_item_add_park">park</string>
+
+    <string name="menu_item_sort_locations">locations</string>
+    <string name="menu_item_add_location">location</string>
+
+    <string name="menu_item_sort_by_year">year</string>
+    <string name="menu_item_sort_by_name">name</string>
+    <string name="menu_item_sort_by_location">location</string>
+    <string name="menu_item_sort_by_manufacturer">manufacturer</string>
+    <string name="menu_item_sort_by_attraction_category">category</string>
+
+    <string name="menu_item_sort_ascending">ascending</string>
+    <string name="menu_item_sort_descending">descending</string>
+
+    <string name="menu_item_go_to_current_visit">go to current visit</string>
+
+    <string name="menu_item_enable_editing">enable editing</string>
+    <string name="menu_item_disable_editing">disable editing</string>
+
+
+    <string name="menu_item_add">add</string>
+    <string name="menu_item_edit">edit</string>
+    <string name="menu_item_delete">delete</string>
+    <string name="menu_item_remove">remove</string>
+    <string name="menu_item_relocate">relocate</string>
+
+    <string name="menu_item_set_as_default">set as default</string>
+    <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>

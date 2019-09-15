@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -41,7 +41,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgent.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -283,6 +284,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         ShowVisitActivity.this,
                         RequestCode.PICK_ATTRACTIONS,
                         new LinkedList<IElement>(getNotYetAddedAttractionsWithDefaultStatus()));
+
             }
         });
     }
@@ -335,14 +337,17 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 if(viewModel.longClickedElement instanceof GroupHeader)
                 {
-                    GroupHeader.handleOnGroupHeaderLongClick(ShowVisitActivity.this, view);
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.SORT_ATTRACTIONS)
+                            .setVisible(PopupMenuAgent.SORT_ATTRACTIONS,
+                                    viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
+                            .show(ShowVisitActivity.this, view);
                 }
                 else if(viewModel.longClickedElement instanceof Attraction)
                 {
-                    PopupMenu popupMenu = new PopupMenu(ShowVisitActivity.this, view);
-                    popupMenu.getMenu().add(Menu.NONE, Constants.SELECTION_DELETE_ELEMENT, Menu.NONE, R.string.selection_delete);
-                    popupMenu.setOnMenuItemClickListener(getOnMenuItemClickListener());
-                    popupMenu.show();
+                    PopupMenuAgent.getAgent()
+                            .add(PopupMenuAgent.DELETE_ELEMENT)
+                            .show(ShowVisitActivity.this, view);
                 }
 
                 return true;
@@ -350,49 +355,50 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         };
     }
 
-    private PopupMenu.OnMenuItemClickListener getOnMenuItemClickListener()
+    @Override
+    public void handleSortAttractionsClicked()
     {
-        return new PopupMenu.OnMenuItemClickListener()
+        List<IElement> attractions = new ArrayList<>();
+
+        if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
         {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                Log.i(LOG_TAG, String.format("ShowVisitActivity.onPopupMenuItemLongClick:: [%S] selected", item.getItemId()));
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+        }
+        else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+        {
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+        }
 
-                int id = item.getItemId();
-                if(id == Constants.SELECTION_DELETE_ELEMENT)
-                {
-                    //let user verify delete when any rides are counted
-                    if(viewModel.longClickedElement.getChildCount() > 0)
-                    {
-                        AlertDialogFragment alertDialogFragmentDelete =
-                                AlertDialogFragment.newInstance(
-                                        R.drawable.ic_baseline_warning,
-                                        getString(R.string.alert_dialog_title_delete_element),
-                                        getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
-                                        getString(R.string.text_accept),
-                                        getString(R.string.text_cancel),
-                                        RequestCode.DELETE,
-                                        false);
-
-                        alertDialogFragmentDelete.setCancelable(false);
-                        alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-
-                        return true;
-                    }
-                    else
-                    {
-                        deleteVisitedAttraction();
-                    }
-                }
-
-                return false;
-            }
-        };
+        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(ShowVisitActivity.this), RequestCode.SORT_ATTRACTIONS, attractions);
     }
 
     @Override
-    public void onAlertDialogClick(int requestCode, DialogInterface dialog, int which)
+    public void handleDeleteElementClicked()
+    {
+        //let user verify delete when any rides are counted
+        if(viewModel.longClickedElement.getChildCount() > 0)
+        {
+            AlertDialogFragment alertDialogFragmentDelete =
+                    AlertDialogFragment.newInstance(
+                            R.drawable.ic_baseline_warning,
+                            getString(R.string.alert_dialog_title_delete_element),
+                            getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
+                            getString(R.string.text_accept),
+                            getString(R.string.text_cancel),
+                            RequestCode.DELETE,
+                            false);
+
+            alertDialogFragmentDelete.setCancelable(false);
+            alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+        }
+        else
+        {
+            deleteVisitedAttraction();
+        }
+    }
+
+    @Override
+    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
     {
         dialog.dismiss();
 
@@ -400,7 +406,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode == RequestCode.DELETE.ordinal())
+            if(requestCode.equals(RequestCode.DELETE))
             {
                 snackbar = Snackbar.make(
                         findViewById(android.R.id.content),

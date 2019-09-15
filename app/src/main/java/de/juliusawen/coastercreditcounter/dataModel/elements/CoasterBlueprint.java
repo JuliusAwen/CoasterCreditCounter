@@ -51,11 +51,11 @@ public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElem
         if(!name.isEmpty())
         {
             coasterBlueprint = new CoasterBlueprint(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("CoasterBlueprint.create:: %s created.", coasterBlueprint.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("CoasterBlueprint.show:: %s created.", coasterBlueprint.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("CoasterBlueprint.create:: invalid name[%s] - CoasterBlueprint not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("CoasterBlueprint.show:: invalid name[%s] - CoasterBlueprint not created.", name));
         }
         return coasterBlueprint;
     }

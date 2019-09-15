@@ -120,7 +120,7 @@ public class CreateLocationActivity extends BaseActivity
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.createLocation:: create %s success[%S]", this.viewModel.newLocation, success));
+        Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.createLocation:: show %s success[%S]", this.viewModel.newLocation, success));
 
         return success;
     }

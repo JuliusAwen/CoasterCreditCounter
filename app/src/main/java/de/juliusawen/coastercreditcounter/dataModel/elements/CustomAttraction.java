@@ -27,11 +27,11 @@ public class CustomAttraction extends Attraction implements IOnSiteAttraction, I
             name = name.trim();
 
             customAttraction = new CustomAttraction(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.create:: %s created", customAttraction.getFullName()));
+            Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.show:: %s created", customAttraction.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("CustomAttraction.create:: invalid name [%s] - CustomAttraction not created", name));
+            Log.e(Constants.LOG_TAG,  String.format("CustomAttraction.show:: invalid name [%s] - CustomAttraction not created", name));
         }
         return customAttraction;
     }
