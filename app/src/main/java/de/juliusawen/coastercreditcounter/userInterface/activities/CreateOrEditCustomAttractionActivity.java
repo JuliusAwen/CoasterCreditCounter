@@ -80,20 +80,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
             this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
 
-            if(this.viewModel.requestCode == null)
+            if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)].equals(RequestCode.EDIT_CUSTOM_ATTRACTION))
             {
-                this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
-
-                if(this.viewModel.requestCode == RequestCode.INVALID)
-                {
-                    String message = "RequestCode is INVALID";
-                    Log.e(Constants.LOG_TAG, message);
-                    throw new IllegalStateException(message);
-                }
-                else if(this.viewModel.requestCode == RequestCode.EDIT_CUSTOM_ATTRACTION)
-                {
-                    this.viewModel.isEditMode = true;
-                }
+                this.viewModel.isEditMode = true;
             }
 
             if(this.viewModel.isEditMode)

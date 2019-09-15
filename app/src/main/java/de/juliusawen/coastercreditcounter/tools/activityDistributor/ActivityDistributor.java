@@ -238,7 +238,7 @@ public abstract class ActivityDistributor
                     break;
             }
 
-            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode);
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
 
             ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 
