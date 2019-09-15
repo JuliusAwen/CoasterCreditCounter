@@ -283,14 +283,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
     }
     @Override
-    public void handleSortByYearAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByYearDescendingSelected()
-    {
-    }
-    @Override
     public void handleSortByNameAscendingSelected()
     {
     }
@@ -365,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
     }
     @Override
-    public void handleRemoveElementClicked()
+    public void handleRemoveLocationClicked()
     {
     }
     @Override

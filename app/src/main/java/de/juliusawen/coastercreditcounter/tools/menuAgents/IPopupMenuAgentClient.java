@@ -11,7 +11,7 @@ public interface IPopupMenuAgentClient
     void handleEditParkClicked();
     void handleEditElementClicked();
     void handleEditCustomAttractionClicked();
-    void handleRemoveElementClicked();
+    void handleRemoveLocationClicked();
     void handleRelocateElementClicked();
     void handleDeleteElementClicked();
     void handleDeleteAttractionClicked();

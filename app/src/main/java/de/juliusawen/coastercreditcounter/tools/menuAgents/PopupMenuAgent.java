@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -26,11 +28,10 @@ public class PopupMenuAgent
     public static final PopupItem EDIT_PARK = PopupItem.EDIT_PARK;
     public static final PopupItem EDIT_ELEMENT = PopupItem.EDIT_ELEMENT;
     public static final PopupItem EDIT_CUSTOM_ATTRACTION = PopupItem.EDIT_CUSTOM_ATTRACTION;
-    public static final PopupItem REMOVE_ELEMENT = PopupItem.REMOVE_ELEMENT;
+    public static final PopupItem REMOVE_LOCATION = PopupItem.REMOVE_LOCATION;
     public static final PopupItem RELOCATE_ELEMENT = PopupItem.RELOCATE_ELEMENT;
     public static final PopupItem DELETE_ELEMENT = PopupItem.DELETE_ELEMENT;
     public static final PopupItem DELETE_ATTRACTION = PopupItem.DELETE_ATTRACTION;
-
     public static final PopupItem ASSIGN_TO_ATTRACTIONS = PopupItem.ASSIGN_TO_ATTRACTIONS;
     public static final PopupItem SET_AS_DEFAULT = PopupItem.SET_AS_DEFAULT;
 
@@ -38,10 +39,8 @@ public class PopupMenuAgent
     private PopupMenu menu;
 
     private final List<PopupItem> itemsToAdd;
-    private final Map<PopupItem, Boolean> setEnabledByItem;
-    private final Map<PopupItem, Boolean> setVisibleByItem;
-    private final Map<PopupItem, PopupItem> submenuByItem;
-
+    private final Set<PopupItem> itemsToSetDisabled;
+    private final Set<PopupItem> itemsToSetInvisible;
     private final Map<PopupItem, Integer> stringResourcesByItem;
 
     public static PopupMenuAgent getAgent()
@@ -52,10 +51,8 @@ public class PopupMenuAgent
     private PopupMenuAgent()
     {
         this.itemsToAdd = new LinkedList<>();
-        this.setEnabledByItem = new HashMap<>();
-        this.setVisibleByItem = new HashMap<>();
-        this.submenuByItem = new HashMap<>();
-
+        this.itemsToSetDisabled = new HashSet<>();
+        this.itemsToSetInvisible = new HashSet<>();
         this.stringResourcesByItem = this.initializeStringResourcesByItem();
     }
 
@@ -77,7 +74,7 @@ public class PopupMenuAgent
         stringResourcesByItem.put(PopupItem.EDIT_ELEMENT, R.string.menu_item_edit);
         stringResourcesByItem.put(PopupItem.EDIT_CUSTOM_ATTRACTION, R.string.menu_item_edit);
 
-        stringResourcesByItem.put(PopupItem.REMOVE_ELEMENT, R.string.menu_item_remove);
+        stringResourcesByItem.put(PopupItem.REMOVE_LOCATION, R.string.menu_item_remove);
         stringResourcesByItem.put(PopupItem.RELOCATE_ELEMENT, R.string.menu_item_relocate);
 
         stringResourcesByItem.put(PopupItem.DELETE_ELEMENT, R.string.menu_item_delete);
@@ -97,6 +94,23 @@ public class PopupMenuAgent
         return this;
     }
 
+    public PopupMenuAgent setEnabled(PopupItem item, boolean setEnabled)
+    {
+        if(!setEnabled)
+        {
+            this.itemsToSetDisabled.add(item);
+        }
+        return this;
+    }
+
+    public PopupMenuAgent setVisible(PopupItem item, boolean setVisible)
+    {
+        if(!setVisible)
+        {
+            this.itemsToSetInvisible.add(item);
+        }
+        return this;
+    }
 
     public void show(Context context, View view)
     {
@@ -108,7 +122,6 @@ public class PopupMenuAgent
 
             for(PopupItem item : this.itemsToAdd)
             {
-                MenuItem menuItem;
                 Menu submenu;
 
                 switch(item)
@@ -118,41 +131,44 @@ public class PopupMenuAgent
                     case EDIT_PARK:
                     case EDIT_ELEMENT:
                     case EDIT_CUSTOM_ATTRACTION:
-                    case REMOVE_ELEMENT:
+                    case REMOVE_LOCATION:
                     case RELOCATE_ELEMENT:
                     case DELETE_ELEMENT:
                     case DELETE_ATTRACTION:
                     case ASSIGN_TO_ATTRACTIONS:
                     case SET_AS_DEFAULT:
-                        menuItem = this.addItemToMenu(item);
-                        this.handleSetEnabled(item, menuItem);
-                        this.handleSetVisible(item, menuItem);
+                        this.addItemToMenu(item);
                         break;
 
-                    case ADD: //createLocation/Park
+                    case ADD:
                         submenu = this.addSubMenu(item);
-                        menuItem = this.addItemToSubMenu(PopupItem.ADD_LOCATION, submenu);
-                        menuItem.setEnabled(this.setEnabledByItem.get(PopupItem.ADD_LOCATION) != null ? this.setEnabledByItem.get(PopupItem.ADD_LOCATION) : true);
-                        menuItem.setVisible(this.setVisibleByItem.get(PopupItem.ADD_LOCATION) != null ? this.setVisibleByItem.get(PopupItem.ADD_LOCATION) : true);
-                        menuItem = this.addItemToSubMenu(PopupItem.ADD_PARK, submenu);
-                        menuItem.setEnabled(this.setEnabledByItem.get(PopupItem.ADD_PARK) != null ? this.setEnabledByItem.get(PopupItem.ADD_PARK) : true);
-                        menuItem.setVisible(this.setVisibleByItem.get(PopupItem.ADD_PARK) != null ? this.setVisibleByItem.get(PopupItem.ADD_PARK) : true);
+                        this.addItemToSubMenu(PopupItem.ADD_LOCATION, submenu);
+                        this.addItemToSubMenu(PopupItem.ADD_PARK, submenu);
                         break;
 
-                    case SORT: //SortLocations/Parks
+                    case SORT:
                         submenu = this.addSubMenu(item);
-                        menuItem = this.addItemToSubMenu(PopupItem.SORT_LOCATIONS, submenu);
-                        menuItem.setEnabled(this.setEnabledByItem.get(PopupItem.SORT_LOCATIONS) != null ? this.setEnabledByItem.get(PopupItem.SORT_LOCATIONS) : true);
-                        menuItem.setVisible(this.setVisibleByItem.get(PopupItem.SORT_LOCATIONS) != null ? this.setVisibleByItem.get(PopupItem.SORT_LOCATIONS) : true);
-                        menuItem = this.addItemToSubMenu(PopupItem.SORT_PARKS, submenu);
-                        menuItem.setEnabled(this.setEnabledByItem.get(PopupItem.SORT_PARKS) != null ? this.setEnabledByItem.get(PopupItem.SORT_PARKS) : true);
-                        menuItem.setVisible(this.setVisibleByItem.get(PopupItem.SORT_PARKS) != null ? this.setVisibleByItem.get(PopupItem.SORT_PARKS) : true);
+                        this.addItemToSubMenu(PopupItem.SORT_LOCATIONS, submenu);
+                        this.addItemToSubMenu(PopupItem.SORT_PARKS, submenu);
                         break;
 
                     default:
                         Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: unknown PopupItem [%s]", item));
                         return;
                 }
+            }
+
+            for(PopupItem item : itemsToSetInvisible)
+            {
+                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item invisible: [%s]", item));
+                this.menu.getMenu().findItem(item.ordinal()).setVisible(false);
+                this.itemsToSetDisabled.remove(item); // no need to set disabled when invisible
+            }
+
+            for(PopupItem item : this.itemsToSetDisabled)
+            {
+                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item disabled: [%s]", item));
+                this.menu.getMenu().findItem(item.ordinal()).setEnabled(false);
             }
 
             this.menu.setOnMenuItemClickListener(this.getMenuItemClickListener((IPopupMenuAgentClient) context));
@@ -173,48 +189,13 @@ public class PopupMenuAgent
     private Menu addSubMenu(PopupItem item)
     {
         Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addSubMenu:: adding submenu [%s]", item));
-        Menu subMenu = this.menu.getMenu().addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
-        this.menu.getMenu().setGroupEnabled(item.ordinal(), this.setEnabledByItem.get(item) != null ? this.setEnabledByItem.get(item) : true);
-        this.menu.getMenu().setGroupVisible(item.ordinal(), this.setVisibleByItem.get(item) != null ? this.setVisibleByItem.get(item) : true);
-        return subMenu;
+        return this.menu.getMenu().addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
     }
 
     private MenuItem addItemToSubMenu(PopupItem item, Menu subMenu)
     {
-        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addItemToSubMenu:: adding [%s] to subbenu", item));
+        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addItemToSubMenu:: adding [%s] to submenu", item));
         return subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
-    }
-
-    private void handleSetEnabled(PopupItem item, MenuItem menuItem)
-    {
-        if(this.setEnabledByItem.containsKey(item))
-        {
-            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.handleSetEnabled:: setting [%s] enabled [%S]", item, this.setEnabledByItem.get(item)));
-            menuItem.setEnabled(this.setEnabledByItem.get(item));
-        }
-    }
-
-    private void handleSetVisible(PopupItem item, MenuItem menuItem)
-    {
-        if(this.setVisibleByItem.containsKey(item))
-        {
-            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.handleSetVisible:: setting [%s] visible [%S]", item, this.setVisibleByItem.get(item)));
-            menuItem.setVisible(this.setVisibleByItem.get(item));
-        }
-    }
-
-    public PopupMenuAgent setEnabled(PopupItem item, boolean setEnabled)
-    {
-        this.setEnabledByItem.put(item, setEnabled);
-
-        return this;
-    }
-
-    public PopupMenuAgent setVisible(PopupItem item, boolean setVisible)
-    {
-        this.setVisibleByItem.put(item, setVisible);
-
-        return this;
     }
 
     private PopupMenu.OnMenuItemClickListener getMenuItemClickListener(final IPopupMenuAgentClient client)
@@ -271,8 +252,8 @@ public class PopupMenuAgent
                             client.handleEditCustomAttractionClicked();
                             break;
 
-                        case REMOVE_ELEMENT:
-                            client.handleRemoveElementClicked();
+                        case REMOVE_LOCATION:
+                            client.handleRemoveLocationClicked();
                             break;
 
                         case RELOCATE_ELEMENT:
@@ -328,7 +309,8 @@ public class PopupMenuAgent
         DELETE_ELEMENT,
         DELETE_ATTRACTION,
 
-        REMOVE_ELEMENT,
+        REMOVE_LOCATION,
+
         RELOCATE_ELEMENT,
 
         SORT,

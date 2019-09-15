@@ -17,8 +17,6 @@ public interface IOptionsMenuAgentClient
     void handleSortAttractionCategoriesSelected();
     void handleSortManufacturersSelected();
     void handleSortStatusesSelected();
-    void handleSortByYearAscendingSelected();
-    void handleSortByYearDescendingSelected();
     void handleSortByNameAscendingSelected();
     void handleSortByNameDescendingSelected();
     void handleSortByLocationAscendingSelected();

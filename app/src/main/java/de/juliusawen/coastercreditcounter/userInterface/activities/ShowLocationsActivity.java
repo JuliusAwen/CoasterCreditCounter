@@ -288,7 +288,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             .add(PopupMenuAgent.EDIT_LOCATION)
                             .add(PopupMenuAgent.EDIT_PARK)
                             .add(PopupMenuAgent.DELETE_ELEMENT)
-                            .add(PopupMenuAgent.REMOVE_ELEMENT)
+                            .add(PopupMenuAgent.REMOVE_LOCATION)
                             .add(PopupMenuAgent.RELOCATE_ELEMENT)
                             .setVisible(PopupMenuAgent.ADD, isLocation)
                             .setEnabled(PopupMenuAgent.SORT, isLocation && sortLocationsEnabled || sortParksEnabled)
@@ -298,8 +298,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             .setVisible(PopupMenuAgent.EDIT_LOCATION, isLocation)
                             .setVisible(PopupMenuAgent.EDIT_PARK, !isLocation)
                             .setEnabled(PopupMenuAgent.DELETE_ELEMENT, !isRootLocation(viewModel.longClickedElement))
-                            .setVisible(PopupMenuAgent.REMOVE_ELEMENT, isLocation)
-                            .setEnabled(PopupMenuAgent.REMOVE_ELEMENT, viewModel.longClickedElement.hasChildren() && !isRootLocation(viewModel.longClickedElement))
+                            .setVisible(PopupMenuAgent.REMOVE_LOCATION, isLocation)
+                            .setEnabled(PopupMenuAgent.REMOVE_LOCATION, viewModel.longClickedElement.hasChildren() && !isRootLocation(viewModel.longClickedElement))
                             .setEnabled(PopupMenuAgent.RELOCATE_ELEMENT, !isRootLocation(viewModel.longClickedElement))
                             .show(ShowLocationsActivity.this, view);
                 }
@@ -352,7 +352,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public void handleRemoveElementClicked()
+    public void handleRemoveLocationClicked()
     {
         AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
                 R.drawable.ic_baseline_warning,

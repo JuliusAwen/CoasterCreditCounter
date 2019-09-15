@@ -26,7 +26,6 @@ public class OptionsMenuAgent
     public static final OptionsItem SORT_MANUFACTURERS = OptionsItem.SORT_MANUFACTURERS;
     public static final OptionsItem SORT_STATUSES = OptionsItem.SORT_STATUSES;
 
-    public static final OptionsItem SORT_BY_YEAR  = OptionsItem.SORT_BY_YEAR;
     public static final OptionsItem SORT_BY_NAME  = OptionsItem.SORT_BY_NAME;
     public static final OptionsItem SORT_BY_LOCATION  = OptionsItem.SORT_BY_LOCATION;
     public static final OptionsItem SORT_BY_ATTRACTION_CATEGORY = OptionsItem.SORT_BY_ATTRACTION_CATEGORY;
@@ -49,7 +48,7 @@ public class OptionsMenuAgent
     private final Map<OptionsItem, OptionsItem> submenuByItem;
 
     private final Map<OptionsItem, Integer> stringResourcesByItem;
-    private final Map<OptionsItem, Integer> drawableResourcesByItem;
+    private final Map<OptionsItem, Integer> drawableResourcesByActionItem;
 
 
     public OptionsMenuAgent()
@@ -60,7 +59,7 @@ public class OptionsMenuAgent
         this.submenuByItem = new HashMap<>();
 
         this.stringResourcesByItem = this.initializeStringResourcesByItem();
-        this.drawableResourcesByItem = this.initializeDrawableResourcesByItem();
+        this.drawableResourcesByActionItem = this.initializeDrawableResourcesByActionItem();
     }
 
     private Map<OptionsItem, Integer> initializeStringResourcesByItem()
@@ -78,7 +77,6 @@ public class OptionsMenuAgent
         stringResourcesByItem.put(OptionsItem.SORT_MANUFACTURERS, R.string.menu_item_sort);
         stringResourcesByItem.put(OptionsItem.SORT_STATUSES, R.string.menu_item_sort);
 
-        stringResourcesByItem.put(OptionsItem.SORT_BY_YEAR, R.string.menu_item_sort_by_year);
         stringResourcesByItem.put(OptionsItem.SORT_BY_NAME, R.string.menu_item_sort_by_name);
         stringResourcesByItem.put(OptionsItem.SORT_BY_LOCATION, R.string.menu_item_sort_by_location);
         stringResourcesByItem.put(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, R.string.menu_item_sort_by_attraction_category);
@@ -97,16 +95,16 @@ public class OptionsMenuAgent
         return stringResourcesByItem;
     }
 
-    private Map<OptionsItem, Integer> initializeDrawableResourcesByItem()
+    private Map<OptionsItem, Integer> initializeDrawableResourcesByActionItem()
     {
-        Map<OptionsItem, Integer> drawableResourcesByItem = new HashMap<>();
+        Map<OptionsItem, Integer> drawableResourcesByActionItem = new HashMap<>();
 
-        drawableResourcesByItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.drawable.ic_baseline_local_activity);
+        drawableResourcesByActionItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.drawable.ic_baseline_local_activity);
 
-        drawableResourcesByItem.put(OptionsItem.ENABLE_EDITING, R.drawable.ic_baseline_create);
-        drawableResourcesByItem.put(OptionsItem.DISABLE_EDITING, R.drawable.ic_baseline_block);
+        drawableResourcesByActionItem.put(OptionsItem.ENABLE_EDITING, R.drawable.ic_baseline_create);
+        drawableResourcesByActionItem.put(OptionsItem.DISABLE_EDITING, R.drawable.ic_baseline_block);
 
-        return drawableResourcesByItem;
+        return drawableResourcesByActionItem;
     }
 
 
@@ -133,11 +131,10 @@ public class OptionsMenuAgent
                     break;
 
                 case SORT:
-                    this.createMenuSort(item, menu);
+                    this.addSubMenuSort(item, menu);
                     this.submenuByItem.put(item, OptionsItem.SORT);
                     break;
 
-                case SORT_BY_YEAR:
                 case SORT_BY_NAME:
                 case SORT_BY_LOCATION:
                 case SORT_BY_ATTRACTION_CATEGORY:
@@ -148,7 +145,7 @@ public class OptionsMenuAgent
                         Log.v(Constants.LOG_TAG, "OptionsMenuAgent.show:: adding subMenu <sort by>");
                         subMenuSortBy = menu.addSubMenu(OptionsItem.SORT_BY.ordinal(), OptionsItem.SORT_BY.ordinal(), Menu.NONE, R.string.menu_item_sort_by);
                     }
-                    this.createMenuSort(item, subMenuSortBy);
+                    this.addSubMenuSort(item, subMenuSortBy);
                     this.submenuByItem.put(item, OptionsItem.SORT_BY);
                     break;
                 }
@@ -189,54 +186,49 @@ public class OptionsMenuAgent
         menu.add(Menu.NONE, OptionsItem.HELP.ordinal(), 1, R.string.menu_item_help); // 1 - represents the order: as all other selections are 0 HELP should always be sorted to the bottom
     }
 
-    private void createMenuSort(OptionsItem item, Menu menu)
+    private void addSubMenuSort(OptionsItem item, Menu menu)
     {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.createMenuSort:: adding SubMenu [%s]", item));
+        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSubMenuSort:: adding SubMenu [%s]", item));
         Menu subMenu = menu.addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
 
         switch(item)
         {
             case SORT:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_DESCENDING, subMenu);
-                break;
-
-            case SORT_BY_YEAR:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_BY_YEAR_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_BY_YEAR_DESCENDING, subMenu);
+                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_ASCENDING, subMenu);
+                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_DESCENDING, subMenu);
                 break;
 
             case SORT_BY_NAME:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_BY_NAME_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_BY_NAME_DESCENDING, subMenu);
+                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_NAME_ASCENDING, subMenu);
+                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_NAME_DESCENDING, subMenu);
                 break;
 
             case SORT_BY_LOCATION:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_BY_LOCATION_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_BY_LOCATION_DESCENDING, subMenu);
+                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_LOCATION_ASCENDING, subMenu);
+                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_LOCATION_DESCENDING, subMenu);
                 break;
 
             case SORT_BY_ATTRACTION_CATEGORY:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, subMenu);
+                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, subMenu);
+                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, subMenu);
                 break;
 
             case SORT_BY_MANUFACTURER:
-                this.addSortAscendingToSubMenu(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenu(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, subMenu);
+                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, subMenu);
+                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, subMenu);
                 break;
         }
     }
 
-    private void addSortAscendingToSubMenu(OptionsItem item, Menu subMenu)
+    private void addSortAscendingToSubMenuSort(OptionsItem item, Menu subMenu)
     {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortAscendingToSubMenu:: adding [%s]", item));
+        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortAscendingToSubMenuSort:: adding [%s]", item));
         subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, R.string.menu_item_sort_ascending);
     }
 
-    private void addSortDescendingToSubMenu(OptionsItem item, Menu subMenu)
+    private void addSortDescendingToSubMenuSort(OptionsItem item, Menu subMenu)
     {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortDescendingToSubMenu:: adding [%s]", item));
+        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortDescendingToSubMenuSort:: adding [%s]", item));
         subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, R.string.menu_item_sort_descending);
     }
 
@@ -257,21 +249,19 @@ public class OptionsMenuAgent
         Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addActionItemToMenu:: adding [%s]", item));
 
         menu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item))
-                .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesByItem.get(item), R.color.white))
+                .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesByActionItem.get(item), R.color.white))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
     }
 
     public OptionsMenuAgent setEnabled(OptionsItem item, boolean setEnabled)
     {
         this.setEnabledByItem.put(item, setEnabled);
-
         return this;
     }
 
     public OptionsMenuAgent setVisible(OptionsItem item, boolean setVisible)
     {
         this.setVisibleByItem.put(item, setVisible);
-
         return this;
     }
 
@@ -347,7 +337,6 @@ public class OptionsMenuAgent
                 case SORT:
                 case SORT_BY:
                 case GROUP_BY:
-                case SORT_BY_YEAR:
                 case SORT_BY_NAME:
                 case SORT_BY_LOCATION:
                 case SORT_BY_ATTRACTION_CATEGORY:
@@ -389,12 +378,6 @@ public class OptionsMenuAgent
                     break;
                 case SORT_STATUSES:
                     client.handleSortStatusesSelected();
-                    break;
-                case SORT_BY_YEAR_ASCENDING:
-                    client.handleSortByYearAscendingSelected();
-                    break;
-                case SORT_BY_YEAR_DESCENDING:
-                    client.handleSortByYearDescendingSelected();
                     break;
                 case SORT_BY_NAME_ASCENDING:
                     client.handleSortByNameAscendingSelected();
@@ -467,10 +450,6 @@ public class OptionsMenuAgent
         SORT_STATUSES,
 
         SORT_BY,
-
-        SORT_BY_YEAR,
-        SORT_BY_YEAR_ASCENDING,
-        SORT_BY_YEAR_DESCENDING,
 
         SORT_BY_NAME,
         SORT_BY_NAME_ASCENDING,
