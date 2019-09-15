@@ -33,7 +33,9 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowParkOverviewFragment;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowVisitsFragment;
 
@@ -87,9 +89,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         super.onDestroy();
     }
 
-
-    //region --- OPTIONS MENU
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -102,141 +101,78 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
-    public void handleExpandAllSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
         switch(this.getCurrentTab())
         {
-            case SHOW_OVERVIEW:
-            case SHOW_VISITS:
-                break;
-
             case SHOW_ATTRACTIONS:
-                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemExpandAllSelected();
-                break;
+                ShowAttractionsFragment showAttractionsFragment = ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
+                switch(item)
+                {
+                    case EXPAND_ALL:
+                        showAttractionsFragment.handleOptionsItemExpandAllSelected();
+                        return true;
+
+                    case COLLAPSE_ALL:
+                        showAttractionsFragment.handleOptionsItemCollapseAllSelected();
+                        return true;
+                }
+
+            case SHOW_VISITS:
+                ShowVisitsFragment showVisitsFragment = ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
+                switch(item)
+                {
+                    case SORT_ASCENDING:
+                        showVisitsFragment.handleOptionsItemMenuItemSortAscendingSelected();
+                        return true;
+
+                    case SORT_DESCENDING:
+                        showVisitsFragment.handleOptionsItemSortDescendingSelected();
+                        return true;
+                }
         }
+        return super.handleOptionsItemSelected(item);
     }
 
     @Override
-    public void handleCollapseAllSelected()
+    public void handlePopupItemClicked(PopupItem item)
     {
         switch(this.getCurrentTab())
         {
-            case SHOW_OVERVIEW:
-            case SHOW_VISITS:
+            case SHOW_ATTRACTIONS:
+                ShowAttractionsFragment showAttractionsFragment = ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
+                switch(item)
+                {
+                    case DELETE_ATTRACTION:
+                        showAttractionsFragment.handlePopupItemDeleteAttractionClicked();
+                        break;
+
+                    case EDIT_CUSTOM_ATTRACTION:
+                        showAttractionsFragment.handlePopupItemEditCustomAttractionClicked();
+                        break;
+
+                    case SORT_ATTRACTIONS:
+                        showAttractionsFragment.handlePopupItemSortAttractionsClicked();
+                        break;
+                }
                 break;
 
-            case SHOW_ATTRACTIONS:
-                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemCollapseAllSelected();
+            case SHOW_VISITS:
+                ShowVisitsFragment showVisitsFragment = ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
+                switch(item)
+                {
+                    case DELETE_ELEMENT:
+                        showVisitsFragment.handlePopupItemDeleteElementClicked();
+                        break;
+
+                    case EDIT_ELEMENT:
+                        showVisitsFragment.handlePopupItemEditElementClicked();
+                        break;
+                }
                 break;
         }
     }
 
-    @Override
-    public void handleSortAscendingSelected()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_ATTRACTIONS:
-                break;
-
-            case SHOW_VISITS:
-                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortAscendingSelected();
-                break;
-        }
-    }
-
-    @Override
-    public void handleSortDescendingSelected()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_ATTRACTIONS:
-                break;
-
-            case SHOW_VISITS:
-                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleMenuItemSortDescendingSelected();
-                break;
-        }
-    }
-
-    //endregion --- OPTIONS MENU
-
-    @Override
-    public void handleDeleteElementClicked()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_ATTRACTIONS:
-                break;
-
-            case SHOW_VISITS:
-                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleDeleteElement();
-                break;
-        }
-    }
-
-    @Override
-    public void handleDeleteAttractionClicked()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_VISITS:
-                break;
-
-            case SHOW_ATTRACTIONS:
-                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleDeleteAttraction();
-                break;
-        }
-    }
-
-    @Override
-    public void handleEditElementClicked()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_ATTRACTIONS:
-                break;
-
-            case SHOW_VISITS:
-                ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleEditElement();
-                break;
-        }
-    }
-
-    @Override
-    public void handleEditCustomAttractionClicked()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_VISITS:
-                break;
-
-            case SHOW_ATTRACTIONS:
-                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleEditCustomAttraction();
-                break;
-        }
-    }
-
-    @Override
-    public void handleSortAttractionsClicked()
-    {
-        switch(this.getCurrentTab())
-        {
-            case SHOW_OVERVIEW:
-            case SHOW_VISITS:
-                break;
-
-            case SHOW_ATTRACTIONS:
-                ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem())).handleSortAttractions();
-                break;
-        }
-    }
 
 
     @Override

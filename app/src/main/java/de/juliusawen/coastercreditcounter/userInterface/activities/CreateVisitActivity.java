@@ -227,10 +227,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     }
 
     @Override
-    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
+    public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        dialog.dismiss();
-
         switch(requestCode)
         {
             case PICK_ATTRACTIONS:

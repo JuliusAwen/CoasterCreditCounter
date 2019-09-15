@@ -36,12 +36,16 @@ import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.ConfirmSnackbar;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -51,10 +55,9 @@ import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFra
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
-public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
+public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowVisitActivityViewModel viewModel;
-    private boolean actionConfirmed;
     private RecyclerView recyclerView;
 
     @Override
@@ -139,19 +142,16 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.onDestroy();
     }
 
-
-    //region --- OPTIONS MENU
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .add(OptionsMenuAgent.DISABLE_EDITING)
-                    .add(OptionsMenuAgent.ENABLE_EDITING)
-                    .add(OptionsMenuAgent.EXPAND_ALL)
-                    .add(OptionsMenuAgent.COLLAPSE_ALL)
+                    .add(OptionsItem.DISABLE_EDITING)
+                    .add(OptionsItem.ENABLE_EDITING)
+                    .add(OptionsItem.EXPAND_ALL)
+                    .add(OptionsItem.COLLAPSE_ALL)
                     .create(menu);
         }
 
@@ -164,10 +164,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setVisible(OptionsMenuAgent.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
-                    .setVisible(OptionsMenuAgent.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                    .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
+                    .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
+                    .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                    .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
         }
 
@@ -186,41 +186,36 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public void handleExpandAllSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        switch(item)
+        {
+            case EXPAND_ALL:
+                this.viewModel.contentRecyclerViewAdapter.expandAll();
+                return true;
+
+            case COLLAPSE_ALL:
+                this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                return true;
+
+            case ENABLE_EDITING:
+                this.viewModel.visit.setEditingEnabled(true);
+                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
+                this.handleFloatingActionButtonVisibility();
+                Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
+                return true;
+
+            case DISABLE_EDITING:
+                this.viewModel.visit.setEditingEnabled(false);
+                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
+                this.handleFloatingActionButtonVisibility();
+                Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
+                return true;
+
+            default:
+                return super.handleOptionsItemSelected(item);
+        }
     }
-
-    @Override
-    public void handleCollapseAllSelected()
-    {
-        this.viewModel.contentRecyclerViewAdapter.collapseAll();
-    }
-
-    @Override
-    public void handleEnableEditingSelected()
-    {
-        this.viewModel.visit.setEditingEnabled(true);
-        this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
-
-        this.handleFloatingActionButtonVisibility();
-
-        Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
-    }
-
-    @Override
-    public void handleDisableEditingSelected()
-    {
-        this.viewModel.visit.setEditingEnabled(false);
-        this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
-
-        this.handleFloatingActionButtonVisibility();
-
-        Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
-    }
-
-    //endregion --- OPTIONS MENU
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -337,16 +332,18 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 if(viewModel.longClickedElement instanceof GroupHeader)
                 {
-                    PopupMenuAgent.getAgent()
-                            .add(PopupMenuAgent.SORT_ATTRACTIONS)
-                            .setVisible(PopupMenuAgent.SORT_ATTRACTIONS,
-                                    viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
+                    boolean sortAttractionsIsEnabled =
+                            viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1;
+
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.SORT_ATTRACTIONS)
+                            .setEnabled(PopupItem.SORT_ATTRACTIONS, sortAttractionsIsEnabled)
                             .show(ShowVisitActivity.this, view);
                 }
                 else if(viewModel.longClickedElement instanceof Attraction)
                 {
-                    PopupMenuAgent.getAgent()
-                            .add(PopupMenuAgent.DELETE_ELEMENT)
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.DELETE_ELEMENT)
                             .show(ShowVisitActivity.this, view);
                 }
 
@@ -356,92 +353,72 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public void handleSortAttractionsClicked()
+    public void handlePopupItemClicked(PopupItem item)
     {
-        List<IElement> attractions = new ArrayList<>();
-
-        if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+        switch(item)
         {
-            attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
-        }
-        else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
-        {
-            attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
-        }
+            case SORT_ATTRACTIONS:
+                List<IElement> attractions = new ArrayList<>();
+                if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+                {
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+                }
+                else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+                {
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                }
+                ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(ShowVisitActivity.this), RequestCode.SORT_ATTRACTIONS, attractions);
+                break;
 
-        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(ShowVisitActivity.this), RequestCode.SORT_ATTRACTIONS, attractions);
+            case DELETE_ELEMENT:
+                //let user verify delete when any rides are counted
+                if(viewModel.longClickedElement.getChildCount() > 0)
+                {
+                    AlertDialogFragment alertDialogFragmentDelete =
+                            AlertDialogFragment.newInstance(
+                                    R.drawable.ic_baseline_warning,
+                                    getString(R.string.alert_dialog_title_delete_element),
+                                    getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
+                                    getString(R.string.text_accept),
+                                    getString(R.string.text_cancel),
+                                    RequestCode.DELETE,
+                                    false);
+
+                    alertDialogFragmentDelete.setCancelable(false);
+                    alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                }
+                else
+                {
+                    deleteVisitedAttraction();
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void handleAlertDialogClick(RequestCode requestCode, int which)
+    {
+        if(which == DialogInterface.BUTTON_POSITIVE && requestCode.equals(RequestCode.DELETE))
+        {
+            ConfirmSnackbar.Show(
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                            Snackbar.LENGTH_LONG),
+                    requestCode,
+                    this);
+        }
     }
 
     @Override
-    public void handleDeleteElementClicked()
+    public void handleActionConfirmed(RequestCode requestCode)
     {
-        //let user verify delete when any rides are counted
-        if(viewModel.longClickedElement.getChildCount() > 0)
-        {
-            AlertDialogFragment alertDialogFragmentDelete =
-                    AlertDialogFragment.newInstance(
-                            R.drawable.ic_baseline_warning,
-                            getString(R.string.alert_dialog_title_delete_element),
-                            getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
-                            getString(R.string.text_accept),
-                            getString(R.string.text_cancel),
-                            RequestCode.DELETE,
-                            false);
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-            alertDialogFragmentDelete.setCancelable(false);
-            alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-        }
-        else
+        if(requestCode.equals(RequestCode.DELETE))
         {
             deleteVisitedAttraction();
-        }
-    }
-
-    @Override
-    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
-    {
-        dialog.dismiss();
-
-        Snackbar snackbar;
-
-        if(which == DialogInterface.BUTTON_POSITIVE)
-        {
-            if(requestCode.equals(RequestCode.DELETE))
-            {
-                snackbar = Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
-                        Snackbar.LENGTH_LONG);
-
-                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        actionConfirmed = true;
-                        Log.i(LOG_TAG, "ShowVisitActivity.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
-                    }
-                });
-
-                snackbar.addCallback(new Snackbar.Callback()
-                {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event)
-                    {
-                        if(actionConfirmed)
-                        {
-                            actionConfirmed = false;
-                            deleteVisitedAttraction();
-                        }
-                        else
-                        {
-                            Log.d(LOG_TAG, "ShowVisitActivity.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
-                        }
-                    }
-                });
-
-                snackbar.show();
-            }
         }
     }
 

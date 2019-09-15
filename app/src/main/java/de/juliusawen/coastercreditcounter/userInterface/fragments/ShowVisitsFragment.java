@@ -37,11 +37,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.ConfirmSnackbar;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitsFragmentViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
@@ -49,14 +53,11 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
 
-public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
+public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowVisitsFragmentViewModel viewModel;
-    private boolean actionConfirmed;
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
     private RecyclerView recyclerView;
-
-    public ShowVisitsFragment() {}
 
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
@@ -145,7 +146,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
-                .add(OptionsMenuAgent.SORT)
+                .add(OptionsItem.SORT)
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -155,20 +156,20 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public void onPrepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsMenuAgent.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+                .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
                 .prepare(menu);
 
         super.onPrepareOptionsMenu(menu);
     }
 
-    public boolean handleMenuItemSortAscendingSelected()
+    public boolean handleOptionsItemMenuItemSortAscendingSelected()
     {
         Visit.setSortOrder(SortOrder.ASCENDING);
         this.updateContentRecyclerView();
         return true;
     }
 
-    public boolean handleMenuItemSortDescendingSelected()
+    public boolean handleOptionsItemSortDescendingSelected()
     {
         Visit.setSortOrder(SortOrder.DESCENDING);
         this.updateContentRecyclerView();
@@ -230,9 +231,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 if(viewModel.longClickedElement instanceof Visit)
                 {
 
-                    PopupMenuAgent.getAgent()
-                            .add(PopupMenuAgent.EDIT_ELEMENT)
-                            .add(PopupMenuAgent.DELETE_ELEMENT)
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.EDIT_ELEMENT)
+                            .add(PopupItem.DELETE_ELEMENT)
                             .show(getContext(), view);
 
                     return true;
@@ -245,7 +246,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         };
     }
 
-    public void handleDeleteElement()
+    public void handlePopupItemDeleteElementClicked()
     {
         AlertDialogFragment alertDialogFragmentDelete =
                 AlertDialogFragment.newInstance(
@@ -261,7 +262,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
-    public void handleEditElement()
+    public void handlePopupItemEditElementClicked()
     {
         pickDate();
     }
@@ -321,55 +322,32 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     }
 
     @Override
-    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
+    public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        dialog.dismiss();
-
-        Snackbar snackbar;
-
-        if(which == DialogInterface.BUTTON_POSITIVE)
+        if(which == DialogInterface.BUTTON_POSITIVE && requestCode.equals(RequestCode.DELETE))
         {
-            if(requestCode.equals(RequestCode.DELETE))
-            {
-                snackbar = Snackbar.make(
-                        Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
-                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
-                        Snackbar.LENGTH_LONG);
+            ConfirmSnackbar.Show(
+                    Snackbar.make(
+                            Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
+                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                            Snackbar.LENGTH_LONG),
+                    requestCode,
+                    this);
+        }
+    }
 
-                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        actionConfirmed = true;
-                        Log.i(Constants.LOG_TAG, "ShowVisitsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
-                    }
-                });
+    @Override
+    public void handleActionConfirmed(RequestCode requestCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-                snackbar.addCallback(new Snackbar.Callback()
-                {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event)
-                    {
-                        if(actionConfirmed)
-                        {
-                            actionConfirmed = false;
+        if(requestCode.equals(RequestCode.DELETE))
+        {
+            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
-                            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
-
-                            ShowVisitsFragment.this.showVisitsFragmentInteraction.markForDeletion(viewModel.longClickedElement);
-                            viewModel.longClickedElement.deleteElementAndDescendants();
-                            updateContentRecyclerView();
-                        }
-                        else
-                        {
-                            Log.d(Constants.LOG_TAG, "ShowVisitsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
-                        }
-                    }
-                });
-
-                snackbar.show();
-            }
+            ShowVisitsFragment.this.showVisitsFragmentInteraction.markForDeletion(viewModel.longClickedElement);
+            this.viewModel.longClickedElement.deleteElementAndDescendants();
+            updateContentRecyclerView();
         }
     }
 

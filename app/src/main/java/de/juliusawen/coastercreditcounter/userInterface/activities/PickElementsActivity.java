@@ -37,6 +37,7 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -225,8 +226,6 @@ public class PickElementsActivity extends BaseActivity
 
     }
 
-    //region OPTIONS MENU
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -238,29 +237,29 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .add(OptionsMenuAgent.SORT_BY_NAME)
-                            .add(OptionsMenuAgent.SORT_BY_LOCATION)
-                            //                    .add(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY)
-                            .add(OptionsMenuAgent.SORT_BY_MANUFACTURER)
-                            .add(OptionsMenuAgent.GROUP_BY_LOCATION)
-                            .add(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY)
-                            .add(OptionsMenuAgent.GROUP_BY_MANUFACTURER)
-                            .add(OptionsMenuAgent.GROUP_BY_STATUS)
-                            .add(OptionsMenuAgent.EXPAND_ALL)
-                            .add(OptionsMenuAgent.COLLAPSE_ALL);
+                            .add(OptionsItem.SORT_BY_NAME)
+                            .add(OptionsItem.SORT_BY_LOCATION)
+                            //                    .add(OptionsItem.SORT_BY_ATTRACTION_CATEGORY)
+                            .add(OptionsItem.SORT_BY_MANUFACTURER)
+                            .add(OptionsItem.GROUP_BY_LOCATION)
+                            .add(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY)
+                            .add(OptionsItem.GROUP_BY_MANUFACTURER)
+                            .add(OptionsItem.GROUP_BY_STATUS)
+                            .add(OptionsItem.EXPAND_ALL)
+                            .add(OptionsItem.COLLAPSE_ALL);
                     break;
 
                 case PICK_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .add(OptionsMenuAgent.EXPAND_ALL)
-                            .add(OptionsMenuAgent.COLLAPSE_ALL);
+                            .add(OptionsItem.EXPAND_ALL)
+                            .add(OptionsItem.COLLAPSE_ALL);
                     break;
 
                 case PICK_ATTRACTION_CATEGORY:
                 case PICK_MANUFACTURER:
                 case PICK_STATUS:
                     this.viewModel.optionsMenuAgent
-                            .add(OptionsMenuAgent.SORT);
+                            .add(OptionsItem.SORT);
                     break;
             }
 
@@ -281,21 +280,21 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsMenuAgent.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-                            //                    .setEnabled(OptionsMenuAgent.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
-                            .setEnabled(OptionsMenuAgent.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                            .setEnabled(OptionsMenuAgent.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
-                            .setEnabled(OptionsMenuAgent.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
-                            .setEnabled(OptionsMenuAgent.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
-                            .setEnabled(OptionsMenuAgent.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
-                            .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                            .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+                            .setEnabled(OptionsItem.SORT_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                            //                    .setEnabled(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupHeaderProvider.GroupType.ATTRACTION_CATEGORY)
+                            .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                            .setEnabled(OptionsItem.GROUP_BY_LOCATION, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION)
+                            .setEnabled(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY)
+                            .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                            .setEnabled(OptionsItem.GROUP_BY_STATUS, this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
+                            .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                            .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
                     break;
 
                 case PICK_ATTRACTIONS:
                     this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                            .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+                            .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                            .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
                     break;
             }
 
@@ -316,116 +315,81 @@ public class PickElementsActivity extends BaseActivity
         return  super.onOptionsItemSelected(item);
     }
 
-
     @Override
-    public void handleExpandAllSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        switch(item)
+        {
+            case EXPAND_ALL:
+                this.viewModel.contentRecyclerViewAdapter.expandAll();
+                return true;
+
+            case COLLAPSE_ALL:
+                this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                return true;
+
+            case GROUP_BY_LOCATION:
+                this.groupElementsByType(GroupType.LOCATION);
+                return true;
+
+            case GROUP_BY_ATTRACTION_CATEGORY:
+                this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
+                return true;
+
+            case GROUP_BY_MANUFACTURER:
+                this.groupElementsByType(GroupType.MANUFACTURER);
+                return true;
+
+            case GROUP_BY_STATUS:
+                this.groupElementsByType(GroupType.STATUS);
+                return true;
+
+            case SORT_ASCENDING:
+            case SORT_BY_NAME_ASCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_DESCENDING:
+            case SORT_BY_NAME_DESCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_LOCATION_ASCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_LOCATION_DESCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
+                //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
+                //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
+                //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
+                //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_MANUFACTURER_ASCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_MANUFACTURER_DESCENDING:
+                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            default:
+                return super.handleOptionsItemSelected(item);
+        }
     }
-
-    @Override
-    public void handleCollapseAllSelected()
-    {
-        this.viewModel.contentRecyclerViewAdapter.collapseAll();
-    }
-
-    @Override
-    public void handleGroupByLocationSelected()
-    {
-        this.groupElementsByType(GroupType.LOCATION);
-    }
-
-    @Override
-    public void handleGroupByAttractionCategorySelected()
-    {
-        this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
-    }
-
-    @Override
-    public void handleGroupByManufacturerSelected()
-    {
-        this.groupElementsByType(GroupType.MANUFACTURER);
-    }
-
-    @Override
-    public void handleGroupByStatusSelected()
-    {
-        this.groupElementsByType(GroupType.STATUS);
-    }
-
-
-    @Override
-    public void handleSortAscendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortDescendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortByNameAscendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortByNameDescendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortByLocationAscendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortByLocationDescendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-//    @Override
-//    public void handleSortByAttractionCategoryAscendingSelected()
-//    {
-//        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
-//        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-//    }
-//
-//    @Override
-//    public void handleSortByAttractionCategoryDescendingSelected()
-//    {
-//        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
-//        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-//    }
-
-    @Override
-    public void handleSortByManufacturerAscendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    @Override
-    public void handleSortByManufacturerDescendingSelected()
-    {
-        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-    }
-
-    // endregion OPTIONS MENU
-
 
     private void groupElementsByType(GroupType groupType)
     {

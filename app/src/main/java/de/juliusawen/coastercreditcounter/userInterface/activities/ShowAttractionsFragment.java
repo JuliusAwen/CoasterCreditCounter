@@ -38,11 +38,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.ConfirmSnackbar;
+import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -55,14 +59,11 @@ import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowAttraction
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
-public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener
+public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowAttractionsFragmentViewModel viewModel;
     private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
     RecyclerView recyclerView;
-    private boolean actionConfirmed;
-
-    public ShowAttractionsFragment() {}
 
     public static ShowAttractionsFragment newInstance(String uuidString)
     {
@@ -183,8 +184,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
         this.viewModel.optionsMenuAgent
-                .add(OptionsMenuAgent.EXPAND_ALL)
-                .add(OptionsMenuAgent.COLLAPSE_ALL)
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
                 .create(menu);
     }
 
@@ -192,19 +193,19 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     public void onPrepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsMenuAgent.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsMenuAgent.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                 .prepare(menu);
     }
 
 
-    public boolean handleMenuItemExpandAllSelected()
+    public boolean handleOptionsItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
         return true;
     }
 
-    public boolean handleMenuItemCollapseAllSelected()
+    public boolean handleOptionsItemCollapseAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
         return true;
@@ -254,17 +255,17 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                 if(view.getTag() instanceof GroupHeader)
                 {
-                    PopupMenuAgent.getAgent()
-                            .add(PopupMenuAgent.SORT_ATTRACTIONS)
-                            .setVisible(PopupMenuAgent.SORT_ATTRACTIONS,
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.SORT_ATTRACTIONS)
+                            .setVisible(PopupItem.SORT_ATTRACTIONS,
                                     viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
                             .show(getContext(), view);
                 }
                 else
                 {
-                    PopupMenuAgent.getAgent()
-                            .add(PopupMenuAgent.EDIT_CUSTOM_ATTRACTION)
-                            .add(PopupMenuAgent.DELETE_ATTRACTION)
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.EDIT_CUSTOM_ATTRACTION)
+                            .add(PopupItem.DELETE_ATTRACTION)
                             .show(getContext(), view);
                 }
 
@@ -273,7 +274,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         };
     }
 
-    public void handleSortAttractions()
+    public void handlePopupItemSortAttractionsClicked()
     {
         List<IElement> attractions = new ArrayList<>();
 
@@ -289,7 +290,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(getContext()), RequestCode.SORT_ATTRACTIONS, attractions);
     }
 
-    public void handleEditCustomAttraction()
+    public void handlePopupItemEditCustomAttractionClicked()
     {
         ActivityDistributor.startActivityEditForResult(
                 getContext(),
@@ -297,7 +298,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 viewModel.longClickedElement);
     }
 
-    public void handleDeleteAttraction()
+    public void handlePopupItemDeleteAttractionClicked()
     {
         AlertDialogFragment alertDialogFragmentDelete =
                 AlertDialogFragment.newInstance(
@@ -314,65 +315,47 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
-    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
+    public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        dialog.dismiss();
-
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
             if(requestCode.equals(RequestCode.DELETE))
             {
-                Snackbar snackbar = Snackbar.make(
-                        Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
-                        getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
-                        Snackbar.LENGTH_LONG);
-
-                snackbar.setAction(R.string.action_confirm_text, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        actionConfirmed = true;
-                        Log.i(LOG_TAG, "ShowAttractionsFragment.onSnackbarClick<DELETE>:: action <DELETE> confirmed");
-                    }
-                });
-
-                snackbar.addCallback(new Snackbar.Callback()
-                {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event)
-                    {
-                        if(actionConfirmed)
-                        {
-                            actionConfirmed = false;
-
-                            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onDismissed<DELETE>:: deleting %s...", viewModel.longClickedElement));
-
-                            for(Visit visit : viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
-                            {
-                                for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
-                                {
-                                    if(visitedAttraction.getOnSiteAttraction().equals(viewModel.longClickedElement))
-                                    {
-                                        ShowAttractionsFragment.this.showAttractionsFragmentInteraction.markForDeletion(visitedAttraction);
-                                        visitedAttraction.deleteElementAndDescendants();
-                                    }
-                                }
-                            }
-
-                            ShowAttractionsFragment.this.showAttractionsFragmentInteraction.markForDeletion(viewModel.longClickedElement);
-                            viewModel.longClickedElement.deleteElementAndDescendants();
-                            updateContentRecyclerView();
-                        }
-                        else
-                        {
-                            Log.d(LOG_TAG, "ShowAttractionsFragment.onDismissed<DELETE>:: action <DELETE> not confirmed - doing nothing");
-                        }
-                    }
-                });
-
-                snackbar.show();
+                ConfirmSnackbar.Show(
+                        Snackbar.make(
+                                Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
+                                getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                                Snackbar.LENGTH_LONG),
+                        requestCode,
+                        this);
             }
+        }
+    }
+
+    @Override
+    public void handleActionConfirmed(RequestCode requestCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        if(requestCode.equals(RequestCode.DELETE))
+        {
+            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
+
+            for(Visit visit : this.viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
+            {
+                for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
+                {
+                    if(visitedAttraction.getOnSiteAttraction().equals(this.viewModel.longClickedElement))
+                    {
+                        this.showAttractionsFragmentInteraction.markForDeletion(visitedAttraction);
+                        visitedAttraction.deleteElementAndDescendants();
+                    }
+                }
+            }
+
+            this.showAttractionsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
+            this.viewModel.longClickedElement.deleteElementAndDescendants();
+            updateContentRecyclerView();
         }
     }
 

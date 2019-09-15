@@ -41,7 +41,9 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.IOptionsMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.HelpOverlayFragment;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -205,7 +207,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.add(OptionsMenuAgent.HELP).create(menu);
+            this.viewModel.optionsMenuAgent.add(OptionsItem.HELP).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -223,177 +225,37 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     }
 
     @Override
-    public void handleHelpSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+        Log.i(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] selected", item));
 
-        if(helpOverlayFragment != null)
+        if(item.equals(OptionsItem.HELP))
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.handleHelpSelected:: showing HelpOverlay");
-            this.setHelpOverlayVisibility(true);
+            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+            if(helpOverlayFragment != null)
+            {
+                Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsItemSelected:: showing HelpOverlay");
+                this.setHelpOverlayVisibility(true);
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsItemSelected:: HelpOverlayFragment not added");
+            }
+            return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.handleHelpSelected:: HelpOverlayFragment not added");
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] unhandled", item));
+            return false;
         }
     }
 
     @Override
-    public void handleExpandAllSelected()
+    public void handlePopupItemClicked(PopupItem item)
     {
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: PopupMenuItem [%s] clicked - unhandled", item));
     }
-    @Override
-    public void handleCollapseAllSelected()
-    {
-    }
-    @Override
-    public void handleGroupByLocationSelected()
-    {
-    }
-    @Override
-    public void handleGroupByAttractionCategorySelected()
-    {
-    }
-    @Override
-    public void handleGroupByManufacturerSelected()
-    {
-    }
-    @Override
-    public void handleGroupByStatusSelected()
-    {
-    }
-    @Override
-    public void handleSortAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortDescendingSelected()
-    {
-    }
-    @Override
-    public void handleSortAttractionCategoriesSelected()
-    {
-    }
-    @Override
-    public void handleSortManufacturersSelected()
-    {
-    }
-    @Override
-    public void handleSortStatusesSelected()
-    {
-    }
-    @Override
-    public void handleSortByNameAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByNameDescendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByLocationAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByLocationDescendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByAttractionCategoryAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByAttractionCategoryDescendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByManufacturerAscendingSelected()
-    {
-    }
-    @Override
-    public void handleSortByManufacturerDescendingSelected()
-    {
-    }
-    @Override
-    public void handleGoToCurrentVisitSelected()
-    {
-    }
-    @Override
-    public void handleEnableEditingSelected()
-    {
-    }
-    @Override
-    public void handleDisableEditingSelected()
-    {
-    }
-
-    //endregion --- OPTIONS MENU
-
-
-    //region --- POPUP MENU
-
-    @Override
-    public void handleSortLocationsClicked()
-    {
-    }
-    @Override
-    public void handleSortParksClicked()
-    {
-    }
-    @Override
-    public void handleEditLocationClicked()
-    {
-    }
-    @Override
-    public void handleEditParkClicked()
-    {
-    }
-    @Override
-    public void handleEditElementClicked()
-    {
-    }
-    @Override
-    public void handleEditCustomAttractionClicked()
-    {
-    }
-    @Override
-    public void handleRemoveLocationClicked()
-    {
-    }
-    @Override
-    public void handleRelocateElementClicked()
-    {
-    }
-    @Override
-    public void handleDeleteElementClicked()
-    {
-    }
-    @Override
-    public void handleDeleteAttractionClicked()
-    {
-    }
-    @Override
-    public void handleAssignToAttractionsClicked()
-    {
-    }
-    @Override
-    public void handleSetAsDefaultClicked()
-    {
-    }
-    @Override
-    public void handleSortAttractionsClicked()
-    {
-    }
-    @Override
-    public void handleAddLocationClicked()
-    {
-    }
-    @Override
-    public void handleAddParkClicked()
-    {
-    }
-
-    //endregion --- POPUP MENU
 
 
     @Override

@@ -80,7 +80,8 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
-                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(RequestCode.values()[requestCode], dialog, which);
+                        dialog.dismiss();
+                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
                     }
                 })
                 .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener()
@@ -89,7 +90,8 @@ public class AlertDialogFragment extends DialogFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
-                        AlertDialogFragment.this.alertDialogListener.onAlertDialogClick(RequestCode.values()[requestCode], dialog, which);
+                        dialog.dismiss();
+                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
                     }
                 })
                 .create();
@@ -97,6 +99,6 @@ public class AlertDialogFragment extends DialogFragment
 
     public interface AlertDialogListener
     {
-        void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which);
+        void handleAlertDialogClick(RequestCode requestCode, int which);
     }
 }

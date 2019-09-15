@@ -33,6 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
 
@@ -128,15 +129,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-
-    // region --- OPTIONS MENU
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         if(App.isInitialized)
         {
-            this.viewModel.optionsMenuAgent.add(OptionsMenuAgent.GO_TO_CURRENT_VISIT).create(menu);
+            this.viewModel.optionsMenuAgent.add(OptionsItem.GO_TO_CURRENT_VISIT).create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -148,7 +146,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .setVisible(OptionsMenuAgent.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                    .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
                     .prepare(menu);
         }
 
@@ -178,29 +176,31 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void handleGoToCurrentVisitSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(Visit.getCurrentVisits().size() > 1)
+        if(item.equals(OptionsItem.GO_TO_CURRENT_VISIT))
         {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
-                    Visit.getCurrentVisits().size()));
+            if(Visit.getCurrentVisits().size() > 1)
+            {
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
+                        Visit.getCurrentVisits().size()));
 
-            ActivityDistributor.startActivityPickForResult(
-                    this,
-                    RequestCode.PICK_VISIT,
-                    new ArrayList<IElement>(Visit.getCurrentVisits()));
-        }
-        else
-        {
-            Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
-                    Visit.getCurrentVisits().get(0)));
+                ActivityDistributor.startActivityPickForResult(
+                        this,
+                        RequestCode.PICK_VISIT,
+                        new ArrayList<IElement>(Visit.getCurrentVisits()));
+            }
+            else
+            {
+                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
+                        Visit.getCurrentVisits().get(0)));
 
-            ActivityDistributor.startActivityShow(this, RequestCode.SHOW_VISIT, Visit.getCurrentVisits().get(0));
+                ActivityDistributor.startActivityShow(this, RequestCode.SHOW_VISIT, Visit.getCurrentVisits().get(0));
+            }
+            return true;
         }
+        return super.handleOptionsItemSelected(item);
     }
-
-    // endregion --- OPTIONS MENU
-
 
     private void setExportFileAbsolutPath()
     {
@@ -389,10 +389,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public void onAlertDialogClick(RequestCode requestCode, DialogInterface dialog, int which)
+    public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        dialog.dismiss();
-
         switch(requestCode)
         {
             case OVERWRITE_FILE:

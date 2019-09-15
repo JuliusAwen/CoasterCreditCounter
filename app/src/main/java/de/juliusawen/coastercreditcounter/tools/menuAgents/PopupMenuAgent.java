@@ -19,23 +19,6 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class PopupMenuAgent
 {
-    public static final PopupItem ADD = PopupItem.ADD;
-    public static final PopupItem SORT = PopupItem.SORT;
-    public static final PopupItem SORT_LOCATIONS = PopupItem.SORT_LOCATIONS;
-    public static final PopupItem SORT_PARKS = PopupItem.SORT_PARKS;
-    public static final PopupItem SORT_ATTRACTIONS = PopupItem.SORT_ATTRACTIONS;
-    public static final PopupItem EDIT_LOCATION = PopupItem.EDIT_LOCATION;
-    public static final PopupItem EDIT_PARK = PopupItem.EDIT_PARK;
-    public static final PopupItem EDIT_ELEMENT = PopupItem.EDIT_ELEMENT;
-    public static final PopupItem EDIT_CUSTOM_ATTRACTION = PopupItem.EDIT_CUSTOM_ATTRACTION;
-    public static final PopupItem REMOVE_LOCATION = PopupItem.REMOVE_LOCATION;
-    public static final PopupItem RELOCATE_ELEMENT = PopupItem.RELOCATE_ELEMENT;
-    public static final PopupItem DELETE_ELEMENT = PopupItem.DELETE_ELEMENT;
-    public static final PopupItem DELETE_ATTRACTION = PopupItem.DELETE_ATTRACTION;
-    public static final PopupItem ASSIGN_TO_ATTRACTIONS = PopupItem.ASSIGN_TO_ATTRACTIONS;
-    public static final PopupItem SET_AS_DEFAULT = PopupItem.SET_AS_DEFAULT;
-
-
     private PopupMenu menu;
 
     private final List<PopupItem> itemsToAdd;
@@ -43,7 +26,7 @@ public class PopupMenuAgent
     private final Set<PopupItem> itemsToSetInvisible;
     private final Map<PopupItem, Integer> stringResourcesByItem;
 
-    public static PopupMenuAgent getAgent()
+    public static PopupMenuAgent getMenu()
     {
         return new PopupMenuAgent();
     }
@@ -153,7 +136,7 @@ public class PopupMenuAgent
                         break;
 
                     default:
-                        Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: unknown PopupItem [%s]", item));
+                        Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: PopupItem [%s] can not be shown", item));
                         return;
                 }
             }
@@ -203,122 +186,34 @@ public class PopupMenuAgent
         return new PopupMenu.OnMenuItemClickListener()
         {
             @Override
-            public boolean onMenuItemClick(MenuItem item)
+            public boolean onMenuItemClick(MenuItem menuItem)
             {
-                if(item.getItemId() <= PopupItem.values().length)
+                if(menuItem.getItemId() <= PopupItem.values().length)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%s] clicked", PopupItem.values()[item.getItemId()].toString()));
+                    Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%s] clicked", PopupItem.values()[menuItem.getItemId()].toString()));
 
-                    switch(PopupItem.values()[item.getItemId()])
+                    PopupItem popupItem = PopupItem.values()[menuItem.getItemId()];
+
+                    switch(popupItem)
                     {
                         case NO_FUNCTION:
                         case SORT:
                         case ADD:
-                            break;
-
-                        case ADD_LOCATION:
-                            client.handleAddLocationClicked();
-                            break;
-
-                        case ADD_PARK:
-                            client.handleAddParkClicked();
-                            break;
-
-                        case SORT_LOCATIONS:
-                            client.handleSortLocationsClicked();
-                            break;
-
-                        case SORT_PARKS:
-                            client.handleSortParksClicked();
-                            break;
-
-                        case SORT_ATTRACTIONS:
-                            client.handleSortAttractionsClicked();
-                            break;
-
-                        case EDIT_LOCATION:
-                            client.handleEditLocationClicked();
-                            break;
-
-                        case EDIT_PARK:
-                            client.handleEditParkClicked();
-                            break;
-
-                        case EDIT_ELEMENT:
-                            client.handleEditElementClicked();
-                            break;
-
-                        case EDIT_CUSTOM_ATTRACTION:
-                            client.handleEditCustomAttractionClicked();
-                            break;
-
-                        case REMOVE_LOCATION:
-                            client.handleRemoveLocationClicked();
-                            break;
-
-                        case RELOCATE_ELEMENT:
-                            client.handleRelocateElementClicked();
-                            break;
-
-                        case DELETE_ELEMENT:
-                            client.handleDeleteElementClicked();
-                            break;
-
-                        case DELETE_ATTRACTION:
-                            client.handleDeleteAttractionClicked();
-                            break;
-
-                        case ASSIGN_TO_ATTRACTIONS:
-                            client.handleAssignToAttractionsClicked();
-                            break;
-
-                        case SET_AS_DEFAULT:
-                            client.handleSetAsDefaultClicked();
+                            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%s] has no function", popupItem));
                             break;
 
                         default:
-                            return false;
+                            client.handlePopupItemClicked(popupItem);
                     }
 
                     return true;
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, "PopupMenuAgent.onMenuItemClick:: MenuItem [%s] not valid");
+                    Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%d] is invalid", menuItem.getItemId()));
                     return false;
                 }
             }
         };
-    }
-
-
-    private enum PopupItem
-    {
-        NO_FUNCTION,
-
-        ADD,
-        ADD_LOCATION,
-        ADD_PARK,
-
-        EDIT_ELEMENT,
-        EDIT_LOCATION,
-        EDIT_PARK,
-
-        EDIT_CUSTOM_ATTRACTION,
-
-        DELETE_ELEMENT,
-        DELETE_ATTRACTION,
-
-        REMOVE_LOCATION,
-
-        RELOCATE_ELEMENT,
-
-        SORT,
-        SORT_LOCATIONS,
-        SORT_PARKS,
-        SORT_ATTRACTIONS,
-
-        ASSIGN_TO_ATTRACTIONS,
-        SET_AS_DEFAULT,
     }
 }

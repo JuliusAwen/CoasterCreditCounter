@@ -24,6 +24,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 
@@ -94,16 +95,13 @@ public class SortElementsActivity extends BaseActivity
         super.onDestroy();
     }
 
-
-    //region --- OPTIONS MENU
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent
-                    .add(OptionsMenuAgent.SORT)
+                    .add(OptionsItem.SORT)
                     .create(menu);
         }
 
@@ -124,20 +122,24 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    public void handleSortAscendingSelected()
+    public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-    }
-    @Override
-    public void handleSortDescendingSelected()
-    {
-        this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-    }
+        switch(item)
+        {
+            case SORT_ASCENDING:
+                this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+                return true;
 
-    //endregion --- OPTIONS MENU
+            case SORT_DESCENDING:
+                this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
+                return true;
 
+            default:
+                return super.handleOptionsItemSelected(item);
+        }
+    }
 
     private void decorateFloatingActionButton()
     {

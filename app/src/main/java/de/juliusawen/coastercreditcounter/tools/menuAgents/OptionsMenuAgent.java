@@ -15,33 +15,6 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 
 public class OptionsMenuAgent
 {
-    public static final OptionsItem HELP = OptionsItem.HELP;
-
-    public static final OptionsItem EXPAND_ALL = OptionsItem.EXPAND_ALL;
-    public static final OptionsItem COLLAPSE_ALL = OptionsItem.COLLAPSE_ALL;
-
-    public static final OptionsItem SORT = OptionsItem.SORT;
-
-    public static final OptionsItem SORT_ATTRACTION_CATEGORIES = OptionsItem.SORT_ATTRACTION_CATEGORIES;
-    public static final OptionsItem SORT_MANUFACTURERS = OptionsItem.SORT_MANUFACTURERS;
-    public static final OptionsItem SORT_STATUSES = OptionsItem.SORT_STATUSES;
-
-    public static final OptionsItem SORT_BY_NAME  = OptionsItem.SORT_BY_NAME;
-    public static final OptionsItem SORT_BY_LOCATION  = OptionsItem.SORT_BY_LOCATION;
-    public static final OptionsItem SORT_BY_ATTRACTION_CATEGORY = OptionsItem.SORT_BY_ATTRACTION_CATEGORY;
-    public static final OptionsItem SORT_BY_MANUFACTURER  = OptionsItem.SORT_BY_MANUFACTURER;
-
-    public static final OptionsItem GROUP_BY_LOCATION = OptionsItem.GROUP_BY_LOCATION;
-    public static final OptionsItem GROUP_BY_ATTRACTION_CATEGORY = OptionsItem.GROUP_BY_ATTRACTION_CATEGORY;
-    public static final OptionsItem GROUP_BY_MANUFACTURER = OptionsItem.GROUP_BY_MANUFACTURER;
-    public static final OptionsItem GROUP_BY_STATUS = OptionsItem.GROUP_BY_STATUS;
-
-    public static final OptionsItem GO_TO_CURRENT_VISIT = OptionsItem.GO_TO_CURRENT_VISIT;
-
-    public static final OptionsItem ENABLE_EDITING = OptionsItem.ENABLE_EDITING;
-    public static final OptionsItem DISABLE_EDITING = OptionsItem.DISABLE_EDITING;
-
-
     private final List<OptionsItem> itemsToAdd;
     private final Map<OptionsItem, Boolean> setEnabledByItem;
     private final Map<OptionsItem, Boolean> setVisibleByItem;
@@ -117,7 +90,7 @@ public class OptionsMenuAgent
 
     public void create(Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("OptionsMenuAgent.show:: adding [%d] Item(s) to OptionsMenu", this.itemsToAdd.size()));
+        Log.d(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding [%d] Item(s) to OptionsMenu", this.itemsToAdd.size()));
 
         Menu subMenuSortBy = null;
         Menu subMenuGroupBy = null;
@@ -142,7 +115,7 @@ public class OptionsMenuAgent
                 {
                     if(subMenuSortBy == null)
                     {
-                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.show:: adding subMenu <sort by>");
+                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.create:: adding subMenu <sort by>");
                         subMenuSortBy = menu.addSubMenu(OptionsItem.SORT_BY.ordinal(), OptionsItem.SORT_BY.ordinal(), Menu.NONE, R.string.menu_item_sort_by);
                     }
                     this.addSubMenuSort(item, subMenuSortBy);
@@ -157,7 +130,7 @@ public class OptionsMenuAgent
                 {
                     if(subMenuGroupBy == null)
                     {
-                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.show:: adding submenu <group by>");
+                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.create:: adding submenu <group by>");
                         subMenuGroupBy = menu.addSubMenu(OptionsItem.GROUP_BY.ordinal(), OptionsItem.GROUP_BY.ordinal(), Menu.NONE, R.string.menu_item_group_by);
                     }
                     this.addItemToSubMenu(item, subMenuGroupBy);
@@ -171,8 +144,16 @@ public class OptionsMenuAgent
                     this.addActionItemToMenu(item, menu);
                     break;
 
-                default:
+                case EXPAND_ALL:
+                case COLLAPSE_ALL:
+                case SORT_ATTRACTION_CATEGORIES:
+                case SORT_MANUFACTURERS:
+                case SORT_STATUSES:
                     this.addItemToMenu(item, menu);
+                    break;
+
+                default:
+                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: OptionsItem [%s] can not be created this way", item));
                     break;
             }
         }
@@ -324,13 +305,15 @@ public class OptionsMenuAgent
     }
 
 
-    public boolean handleOptionsItemSelected(MenuItem item, IOptionsMenuAgentClient client)
+    public boolean handleOptionsItemSelected(MenuItem menuItem, IOptionsMenuAgentClient client)
     {
-        if(item.getItemId() <= OptionsItem.values().length)
+        if(menuItem.getItemId() <= OptionsItem.values().length)
         {
-            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] selected", OptionsItem.values()[item.getItemId()].toString()));
+            OptionsItem optionsItem = OptionsItem.values()[menuItem.getItemId()];
 
-            switch(OptionsItem.values()[item.getItemId()])
+            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] selected", optionsItem));
+
+            switch(optionsItem)
             {
                 //add case for OptionsItems with no function here
                 case NO_FUNCTION:
@@ -341,145 +324,18 @@ public class OptionsMenuAgent
                 case SORT_BY_LOCATION:
                 case SORT_BY_ATTRACTION_CATEGORY:
                 case SORT_BY_MANUFACTURER:
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] has no function", optionsItem));
                     return true;
 
-                case HELP:
-                    client.handleHelpSelected();
-                    break;
-                case EXPAND_ALL:
-                    client.handleExpandAllSelected();
-                    break;
-                case COLLAPSE_ALL:
-                    client.handleCollapseAllSelected();
-                    break;
-                case GROUP_BY_LOCATION:
-                    client.handleGroupByLocationSelected();
-                    break;
-                case GROUP_BY_ATTRACTION_CATEGORY:
-                    client.handleGroupByAttractionCategorySelected();
-                    break;
-                case GROUP_BY_MANUFACTURER:
-                    client.handleGroupByManufacturerSelected();
-                    break;
-                case GROUP_BY_STATUS:
-                    client.handleGroupByStatusSelected();
-                    break;
-                case SORT_ASCENDING:
-                    client.handleSortAscendingSelected();
-                    break;
-                case SORT_DESCENDING:
-                    client.handleSortDescendingSelected();
-                    break;
-                case SORT_ATTRACTION_CATEGORIES:
-                    client.handleSortAttractionCategoriesSelected();
-                    break;
-                case SORT_MANUFACTURERS:
-                    client.handleSortManufacturersSelected();
-                    break;
-                case SORT_STATUSES:
-                    client.handleSortStatusesSelected();
-                    break;
-                case SORT_BY_NAME_ASCENDING:
-                    client.handleSortByNameAscendingSelected();
-                    break;
-                case SORT_BY_NAME_DESCENDING:
-                    client.handleSortByNameDescendingSelected();
-                    break;
-                case SORT_BY_LOCATION_ASCENDING:
-                    client.handleSortByLocationAscendingSelected();
-                    break;
-                case SORT_BY_LOCATION_DESCENDING:
-                    client.handleSortByLocationDescendingSelected();
-                    break;
-                case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
-                    client.handleSortByAttractionCategoryAscendingSelected();
-                    break;
-                case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
-                    client.handleSortByAttractionCategoryDescendingSelected();
-                    break;
-                case SORT_BY_MANUFACTURER_ASCENDING:
-                    client.handleSortByManufacturerAscendingSelected();
-                    break;
-                case SORT_BY_MANUFACTURER_DESCENDING:
-                    client.handleSortByManufacturerDescendingSelected();
-                    break;
-                case GO_TO_CURRENT_VISIT:
-                    client.handleGoToCurrentVisitSelected();
-                    break;
-                case ENABLE_EDITING:
-                    client.handleEnableEditingSelected();
-                    break;
-                case DISABLE_EDITING:
-                    client.handleDisableEditingSelected();
-                    break;
-
                 default:
-                    return false;
+                    return client.handleOptionsItemSelected(optionsItem);
             }
-
-            return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] not valid");
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%d] not valid", menuItem.getItemId()));
             return false;
         }
-    }
-
-
-    private enum OptionsItem
-    {
-        NO_FUNCTION,
-
-
-        //NORMAL MENU ITEMS
-
-        HELP,
-
-        EXPAND_ALL,
-        COLLAPSE_ALL,
-
-
-        SORT,
-
-        SORT_ASCENDING,
-        SORT_DESCENDING,
-
-        SORT_ATTRACTION_CATEGORIES,
-        SORT_MANUFACTURERS,
-        SORT_STATUSES,
-
-        SORT_BY,
-
-        SORT_BY_NAME,
-        SORT_BY_NAME_ASCENDING,
-        SORT_BY_NAME_DESCENDING,
-
-        SORT_BY_LOCATION,
-        SORT_BY_LOCATION_ASCENDING,
-        SORT_BY_LOCATION_DESCENDING,
-
-        SORT_BY_ATTRACTION_CATEGORY,
-        SORT_BY_ATTRACTION_CATEGORY_ASCENDING,
-        SORT_BY_ATTRACTION_CATEGORY_DESCENDING,
-
-        SORT_BY_MANUFACTURER,
-        SORT_BY_MANUFACTURER_ASCENDING,
-        SORT_BY_MANUFACTURER_DESCENDING,
-
-
-        GROUP_BY,
-        GROUP_BY_LOCATION,
-        GROUP_BY_MANUFACTURER,
-        GROUP_BY_ATTRACTION_CATEGORY,
-        GROUP_BY_STATUS,
-
-
-        //ACTION MENU ITEMS
-
-        GO_TO_CURRENT_VISIT,
-        ENABLE_EDITING,
-        DISABLE_EDITING,
     }
 }
 
