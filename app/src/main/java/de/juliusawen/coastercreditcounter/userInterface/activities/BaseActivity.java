@@ -309,7 +309,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         if(helpOverlayFragment != null)
         {
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible[%s]", isVisible));
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible [%s]", isVisible));
 
             if(isVisible)
             {
@@ -401,7 +401,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(getSupportActionBar() != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title[%s] and subtitle[%s]", title, subtitle));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title [%s] and subtitle [%s]", title, subtitle));
 
             if(title != null && !title.trim().isEmpty())
             {

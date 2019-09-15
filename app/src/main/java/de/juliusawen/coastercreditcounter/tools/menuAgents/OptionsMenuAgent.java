@@ -311,7 +311,7 @@ public class OptionsMenuAgent
         {
             OptionsItem optionsItem = OptionsItem.values()[menuItem.getItemId()];
 
-            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] selected", optionsItem));
+            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] in [%s] selected", optionsItem, client.getClass().getSimpleName()));
 
             switch(optionsItem)
             {
@@ -324,7 +324,7 @@ public class OptionsMenuAgent
                 case SORT_BY_LOCATION:
                 case SORT_BY_ATTRACTION_CATEGORY:
                 case SORT_BY_MANUFACTURER:
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] has no function", optionsItem));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] in [%s] has no function", optionsItem, client.getClass().getSimpleName()));
                     return true;
 
                 default:
@@ -333,7 +333,7 @@ public class OptionsMenuAgent
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%d] not valid", menuItem.getItemId()));
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
             return false;
         }
     }
