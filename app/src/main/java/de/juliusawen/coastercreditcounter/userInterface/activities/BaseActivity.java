@@ -44,7 +44,7 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.HelpOverlayFragment;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
@@ -200,8 +200,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     }
 
 
-    //region --- OPTIONS MENU
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -216,19 +214,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
-        {
-            return true;
-        }
-
-        return  super.onOptionsItemSelected(item);
+        return this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this);
     }
+
 
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        Log.i(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] selected", item));
-
         if(item.equals(OptionsItem.HELP))
         {
             HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);

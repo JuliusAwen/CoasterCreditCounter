@@ -3,11 +3,12 @@ package de.juliusawen.coastercreditcounter.tools.menuAgents;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -15,223 +16,109 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 
 public class OptionsMenuAgent
 {
-    private final List<OptionsItem> itemsToAdd;
-    private final Map<OptionsItem, Boolean> setEnabledByItem;
-    private final Map<OptionsItem, Boolean> setVisibleByItem;
-    private final Map<OptionsItem, OptionsItem> submenuByItem;
+    private final Set<OptionsItem> itemsToAdd = new LinkedHashSet<>();
+    private final Map<OptionsItem, OptionsItem> groupByItem = new HashMap<>();
+    private final Map<OptionsItem, SubMenu> subMenuByGroup = new HashMap<>();
 
-    private final Map<OptionsItem, Integer> stringResourcesByItem;
-    private final Map<OptionsItem, Integer> drawableResourcesByActionItem;
+    private final Map<OptionsItem, Integer> stringResourcesByItem = new HashMap<>();
+    private final Map<OptionsItem, Integer> drawableResourcesByItem = new HashMap<>();
+
+    private final Map<OptionsItem, Boolean> setEnabledByItem = new HashMap<>();
+    private final Map<OptionsItem, Boolean> setVisibleByItem = new HashMap<>();
 
 
     public OptionsMenuAgent()
     {
-        this.itemsToAdd = new LinkedList<>();
-        this.setEnabledByItem = new HashMap<>();
-        this.setVisibleByItem = new HashMap<>();
-        this.submenuByItem = new HashMap<>();
-
-        this.stringResourcesByItem = this.initializeStringResourcesByItem();
-        this.drawableResourcesByActionItem = this.initializeDrawableResourcesByActionItem();
+        this.populateStringResourcesByItem();
+        this.populateDrawableResourcesByItem();
     }
 
-    private Map<OptionsItem, Integer> initializeStringResourcesByItem()
+    private void populateStringResourcesByItem()
     {
-        Map<OptionsItem, Integer> stringResourcesByItem = new HashMap<>();
+        this.stringResourcesByItem.put(OptionsItem.HELP, R.string.menu_item_help);
 
-        stringResourcesByItem.put(OptionsItem.HELP, R.string.menu_item_help);
+        this.stringResourcesByItem.put(OptionsItem.EXPAND_ALL, R.string.menu_item_expand_all);
+        this.stringResourcesByItem.put(OptionsItem.COLLAPSE_ALL, R.string.menu_item_collapse_all);
 
-        stringResourcesByItem.put(OptionsItem.EXPAND_ALL, R.string.menu_item_expand_all);
-        stringResourcesByItem.put(OptionsItem.COLLAPSE_ALL, R.string.menu_item_collapse_all);
+        this.stringResourcesByItem.put(OptionsItem.SORT, R.string.menu_item_sort);
+        this.stringResourcesByItem.put(OptionsItem.SORT_ASCENDING, R.string.menu_item_sort_ascending);
+        this.stringResourcesByItem.put(OptionsItem.SORT_DESCENDING, R.string.menu_item_sort_descending);
 
-        stringResourcesByItem.put(OptionsItem.SORT, R.string.menu_item_sort);
+        this.stringResourcesByItem.put(OptionsItem.SORT_ATTRACTION_CATEGORIES, R.string.menu_item_sort);
+        this.stringResourcesByItem.put(OptionsItem.SORT_MANUFACTURERS, R.string.menu_item_sort);
+        this.stringResourcesByItem.put(OptionsItem.SORT_STATUSES, R.string.menu_item_sort);
 
-        stringResourcesByItem.put(OptionsItem.SORT_ATTRACTION_CATEGORIES, R.string.menu_item_sort);
-        stringResourcesByItem.put(OptionsItem.SORT_MANUFACTURERS, R.string.menu_item_sort);
-        stringResourcesByItem.put(OptionsItem.SORT_STATUSES, R.string.menu_item_sort);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_NAME, R.string.menu_item_sort_by_name);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_NAME_ASCENDING, R.string.menu_item_sort_ascending);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_NAME_DESCENDING, R.string.menu_item_sort_descending);
 
-        stringResourcesByItem.put(OptionsItem.SORT_BY_NAME, R.string.menu_item_sort_by_name);
-        stringResourcesByItem.put(OptionsItem.SORT_BY_LOCATION, R.string.menu_item_sort_by_location);
-        stringResourcesByItem.put(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, R.string.menu_item_sort_by_attraction_category);
-        stringResourcesByItem.put(OptionsItem.SORT_BY_MANUFACTURER, R.string.menu_item_sort_by_manufacturer);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_LOCATION, R.string.menu_item_sort_by_location);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_LOCATION_ASCENDING, R.string.menu_item_sort_ascending);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_LOCATION_DESCENDING, R.string.menu_item_sort_descending);
 
-        stringResourcesByItem.put(OptionsItem.GROUP_BY_LOCATION, R.string.menu_item_group_by_location);
-        stringResourcesByItem.put(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, R.string.menu_item_group_by_attraction_category);
-        stringResourcesByItem.put(OptionsItem.GROUP_BY_MANUFACTURER, R.string.menu_item_group_by_manufacturer);
-        stringResourcesByItem.put(OptionsItem.GROUP_BY_STATUS, R.string.menu_item_group_by_status);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, R.string.menu_item_sort_by_attraction_category);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, R.string.menu_item_sort_ascending);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, R.string.menu_item_sort_descending);
 
-        stringResourcesByItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.string.menu_item_go_to_current_visit);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_MANUFACTURER, R.string.menu_item_sort_by_manufacturer);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, R.string.menu_item_sort_ascending);
+        this.stringResourcesByItem.put(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, R.string.menu_item_sort_descending);
 
-        stringResourcesByItem.put(OptionsItem.ENABLE_EDITING, R.string.menu_item_enable_editing);
-        stringResourcesByItem.put(OptionsItem.DISABLE_EDITING, R.string.menu_item_disable_editing);
+        this.stringResourcesByItem.put(OptionsItem.GROUP_BY, R.string.menu_item_group_by);
+        this.stringResourcesByItem.put(OptionsItem.GROUP_BY_LOCATION, R.string.menu_item_group_by_location);
+        this.stringResourcesByItem.put(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, R.string.menu_item_group_by_attraction_category);
+        this.stringResourcesByItem.put(OptionsItem.GROUP_BY_MANUFACTURER, R.string.menu_item_group_by_manufacturer);
+        this.stringResourcesByItem.put(OptionsItem.GROUP_BY_STATUS, R.string.menu_item_group_by_status);
 
-        return stringResourcesByItem;
+        this.stringResourcesByItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.string.menu_item_go_to_current_visit);
+
+        this.stringResourcesByItem.put(OptionsItem.ENABLE_EDITING, R.string.menu_item_enable_editing);
+        this.stringResourcesByItem.put(OptionsItem.DISABLE_EDITING, R.string.menu_item_disable_editing);
     }
 
-    private Map<OptionsItem, Integer> initializeDrawableResourcesByActionItem()
+    private void populateDrawableResourcesByItem()
     {
-        Map<OptionsItem, Integer> drawableResourcesByActionItem = new HashMap<>();
+        this.drawableResourcesByItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.drawable.ic_baseline_local_activity);
 
-        drawableResourcesByActionItem.put(OptionsItem.GO_TO_CURRENT_VISIT, R.drawable.ic_baseline_local_activity);
-
-        drawableResourcesByActionItem.put(OptionsItem.ENABLE_EDITING, R.drawable.ic_baseline_create);
-        drawableResourcesByActionItem.put(OptionsItem.DISABLE_EDITING, R.drawable.ic_baseline_block);
-
-        return drawableResourcesByActionItem;
+        this.drawableResourcesByItem.put(OptionsItem.ENABLE_EDITING, R.drawable.ic_baseline_create);
+        this.drawableResourcesByItem.put(OptionsItem.DISABLE_EDITING, R.drawable.ic_baseline_block);
     }
 
 
     public OptionsMenuAgent add(OptionsItem item)
     {
-        this.itemsToAdd.add(item);
-
+        this.addItem(item);
         return this;
     }
 
-    public void create(Menu menu)
+    public OptionsMenuAgent addToGroup(OptionsItem item, OptionsItem group)
     {
-        Log.d(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding [%d] Item(s) to OptionsMenu", this.itemsToAdd.size()));
-
-        Menu subMenuSortBy = null;
-        Menu subMenuGroupBy = null;
-
-        for(OptionsItem item : this.itemsToAdd)
+        if(this.addItem(item))
         {
-            switch(item)
+            if(!this.groupByItem.containsKey(item))
             {
-                case HELP:
-                    addHelpToMenu(menu);
-                    break;
-
-                case SORT:
-                    this.addSubMenuSort(item, menu);
-                    this.submenuByItem.put(item, OptionsItem.SORT);
-                    break;
-
-                case SORT_BY_NAME:
-                case SORT_BY_LOCATION:
-                case SORT_BY_ATTRACTION_CATEGORY:
-                case SORT_BY_MANUFACTURER:
-                {
-                    if(subMenuSortBy == null)
-                    {
-                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.create:: adding subMenu <sort by>");
-                        subMenuSortBy = menu.addSubMenu(OptionsItem.SORT_BY.ordinal(), OptionsItem.SORT_BY.ordinal(), Menu.NONE, R.string.menu_item_sort_by);
-                    }
-                    this.addSubMenuSort(item, subMenuSortBy);
-                    this.submenuByItem.put(item, OptionsItem.SORT_BY);
-                    break;
-                }
-
-                case GROUP_BY_LOCATION:
-                case GROUP_BY_ATTRACTION_CATEGORY:
-                case GROUP_BY_MANUFACTURER:
-                case GROUP_BY_STATUS:
-                {
-                    if(subMenuGroupBy == null)
-                    {
-                        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.create:: adding submenu <group by>");
-                        subMenuGroupBy = menu.addSubMenu(OptionsItem.GROUP_BY.ordinal(), OptionsItem.GROUP_BY.ordinal(), Menu.NONE, R.string.menu_item_group_by);
-                    }
-                    this.addItemToSubMenu(item, subMenuGroupBy);
-                    this.submenuByItem.put(item, OptionsItem.GROUP_BY);
-                    break;
-                }
-
-                case GO_TO_CURRENT_VISIT:
-                case ENABLE_EDITING:
-                case DISABLE_EDITING:
-                    this.addActionItemToMenu(item, menu);
-                    break;
-
-                case EXPAND_ALL:
-                case COLLAPSE_ALL:
-                case SORT_ATTRACTION_CATEGORIES:
-                case SORT_MANUFACTURERS:
-                case SORT_STATUSES:
-                    this.addItemToMenu(item, menu);
-                    break;
-
-                default:
-                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: OptionsItem [%s] can not be created this way", item));
-                    break;
+                this.groupByItem.put(item, group);
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [%s] for Item [%s] already added", group, item));
             }
         }
-
-        this.itemsToAdd.clear();
+        return this;
     }
 
-    private void addHelpToMenu(Menu menu)
+    private boolean addItem(OptionsItem item)
     {
-        Log.v(Constants.LOG_TAG, "OptionsMenuAgent.addHelpToSubMenu:: adding HELP");
-        menu.add(Menu.NONE, OptionsItem.HELP.ordinal(), 1, R.string.menu_item_help); // 1 - represents the order: as all other selections are 0 HELP should always be sorted to the bottom
-    }
-
-    private void addSubMenuSort(OptionsItem item, Menu menu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSubMenuSort:: adding SubMenu [%s]", item));
-        Menu subMenu = menu.addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
-
-        switch(item)
+        if(!this.itemsToAdd.contains(item))
         {
-            case SORT:
-                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_DESCENDING, subMenu);
-                break;
-
-            case SORT_BY_NAME:
-                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_NAME_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_NAME_DESCENDING, subMenu);
-                break;
-
-            case SORT_BY_LOCATION:
-                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_LOCATION_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_LOCATION_DESCENDING, subMenu);
-                break;
-
-            case SORT_BY_ATTRACTION_CATEGORY:
-                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, subMenu);
-                break;
-
-            case SORT_BY_MANUFACTURER:
-                this.addSortAscendingToSubMenuSort(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, subMenu);
-                this.addSortDescendingToSubMenuSort(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, subMenu);
-                break;
+            this.itemsToAdd.add(item);
+            return true;
         }
-    }
-
-    private void addSortAscendingToSubMenuSort(OptionsItem item, Menu subMenu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortAscendingToSubMenuSort:: adding [%s]", item));
-        subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, R.string.menu_item_sort_ascending);
-    }
-
-    private void addSortDescendingToSubMenuSort(OptionsItem item, Menu subMenu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addSortDescendingToSubMenuSort:: adding [%s]", item));
-        subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, R.string.menu_item_sort_descending);
-    }
-
-    private void addItemToSubMenu(OptionsItem item, Menu subMenu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addItemToSubMenu:: adding [%s]", item));
-        subMenu.add(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
-    }
-
-    private void addItemToMenu(OptionsItem item, Menu menu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addItemToMenu:: adding [%s]", item));
-        menu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
-    }
-
-    private void addActionItemToMenu(OptionsItem item, Menu menu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.addActionItemToMenu:: adding [%s]", item));
-
-        menu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item))
-                .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesByActionItem.get(item), R.color.white))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [%s] already added", item));
+            return false;
+        }
     }
 
     public OptionsMenuAgent setEnabled(OptionsItem item, boolean setEnabled)
@@ -246,43 +133,96 @@ public class OptionsMenuAgent
         return this;
     }
 
+    public void create(Menu menu)
+    {
+        for(OptionsItem item : this.itemsToAdd)
+        {
+            if(item.equals(OptionsItem.HELP))
+            {
+                final int highestSortOrder = 1;
+                Log.v(Constants.LOG_TAG, "OptionsMenuAgent.create:: adding Item HELP to bottom of menu");
+                menu.add(Menu.NONE, OptionsItem.HELP.ordinal(), highestSortOrder, R.string.menu_item_help);
+            }
+            else if(this.drawableResourcesByItem.containsKey(item))
+            {
+                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s] as ACTION_IF_ROOM to ROOT", item));
+
+                menu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item))
+                        .setIcon(DrawableProvider.getColoredDrawable(this.drawableResourcesByItem.get(item), R.color.white))
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
+            else if(isGroup(item))
+            {
+                if(this.isGroupInRootMenu(item))
+                {
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [%s] to ROOT", item));
+                    this.subMenuByGroup.put(item, menu.addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item)));
+                }
+                else //isGroupInSubMenu
+                {
+                    if(this.subMenuByGroup.containsKey(this.groupByItem.get(item)))
+                    {
+                        OptionsItem group = this.groupByItem.get(item);
+                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [%s] to Group [%s]", item, group));
+                        this.subMenuByGroup.put(item, this.subMenuByGroup.get(group).addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item)));
+                    }
+                    else
+                    {
+                        Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: Group for Group [%s] not found", item));
+                        break;
+                    }
+                }
+            }
+            else if(this.isItemInRootMenu(item))
+            {
+                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s] to ROOT", item));
+                menu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
+            }
+            else //IsItemInGroup
+            {
+                if((this.subMenuByGroup.containsKey(this.groupByItem.get(item))))
+                {
+                    OptionsItem group = this.groupByItem.get(item);
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s] to Group [%s]", item, group));
+                    this.subMenuByGroup.get(group).add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Group for Item [%s] not found", item));
+                    break;
+                }
+            }
+        }
+
+        this.itemsToAdd.clear();
+    }
+
     public void prepare(Menu menu)
     {
-
         for(OptionsItem optionsItem : this.setEnabledByItem.keySet())
         {
             MenuItem menuItem = menu.findItem(optionsItem.ordinal());
             if(menuItem != null)
             {
-                if(menuItem.hasSubMenu())
+                boolean isEnabled = this.setEnabledByItem.get(optionsItem);
+                if(this.isGroup(optionsItem))
                 {
-                    if(this.submenuByItem.get(optionsItem).equals(optionsItem))
+                    if(this.isGroupInRootMenu(optionsItem))
                     {
-                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare<hasSubMenu>:: setting [%s] enabled [%S]", optionsItem, this.setEnabledByItem.get(optionsItem)));
-
-                        menuItem.setEnabled(this.setEnabledByItem.get(optionsItem));
+                        menu.setGroupEnabled(optionsItem.ordinal(), isEnabled);
                     }
-                    else
+                    else //isGroupInGroup
                     {
-                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare<hasSubMenu>:: setting [%s][%s] enabled [%S]",
-                                this.submenuByItem.get(optionsItem), optionsItem, this.setEnabledByItem.get(optionsItem)));
-
-                        menuItem = menu.findItem(this.submenuByItem.get(optionsItem).ordinal());
-                        if(menuItem != null)
-                        {
-                            menuItem.getSubMenu().setGroupEnabled(optionsItem.ordinal(), this.setEnabledByItem.get(optionsItem));
-                        }
+                        OptionsItem group = this.groupByItem.get(optionsItem);
+                        this.subMenuByGroup.get(group).setGroupEnabled(optionsItem.ordinal(), isEnabled);
                     }
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [%s] enabled [%s]", optionsItem, isEnabled));
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: setting [%s] enabled [%S]", optionsItem, this.setEnabledByItem.get(optionsItem)));
-                    menuItem.setEnabled(this.setEnabledByItem.get(optionsItem));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [%s] enabled [%s]", optionsItem, isEnabled));
+                    menuItem.setEnabled(isEnabled);
                 }
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare<setEnable>:: MenuItem [%s] not found", optionsItem));
             }
         }
 
@@ -291,17 +231,45 @@ public class OptionsMenuAgent
             MenuItem menuItem = menu.findItem(optionsItem.ordinal());
             if(menuItem != null)
             {
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: setting [%s] visible [%S]", optionsItem, this.setVisibleByItem.get(optionsItem)));
-                menuItem.setVisible(this.setVisibleByItem.get(optionsItem));
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare<setVisible>:: MenuItem [%s] not found", optionsItem));
+                boolean isVisible = this.setVisibleByItem.get(optionsItem);
+                if(this.isGroup(optionsItem))
+                {
+                    if(this.isGroupInRootMenu(optionsItem))
+                    {
+                        menu.setGroupVisible(optionsItem.ordinal(), isVisible);
+                    }
+                    else //isGroupInGroup
+                    {
+                        OptionsItem group = this.groupByItem.get(optionsItem);
+                        this.subMenuByGroup.get(group).setGroupVisible(optionsItem.ordinal(), isVisible);
+                    }
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [%s] visible [%s]", optionsItem, isVisible));
+                }
+                else
+                {
+                    menuItem.setVisible(isVisible);
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [%s] visible [%s]", optionsItem, isVisible));
+                }
             }
         }
 
         this.setEnabledByItem.clear();
         this.setVisibleByItem.clear();
+    }
+
+    private boolean isGroup(OptionsItem item)
+    {
+        return this.groupByItem.containsValue(item);
+    }
+
+    private boolean isGroupInRootMenu(OptionsItem item)
+    {
+        return isGroup(item) && !this.groupByItem.containsKey(item);
+    }
+
+    private boolean isItemInRootMenu(OptionsItem item)
+    {
+        return !this.groupByItem.containsKey(item);
     }
 
 
@@ -311,7 +279,7 @@ public class OptionsMenuAgent
         {
             OptionsItem optionsItem = OptionsItem.values()[menuItem.getItemId()];
 
-            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] in [%s] selected", optionsItem, client.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [%s] in [%s] selected", optionsItem, client.getClass().getSimpleName()));
 
             switch(optionsItem)
             {
@@ -324,7 +292,7 @@ public class OptionsMenuAgent
                 case SORT_BY_LOCATION:
                 case SORT_BY_ATTRACTION_CATEGORY:
                 case SORT_BY_MANUFACTURER:
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%s] in [%s] has no function", optionsItem, client.getClass().getSimpleName()));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [%s] in [%s] has no function", optionsItem, client.getClass().getSimpleName()));
                     return true;
 
                 default:
@@ -333,7 +301,7 @@ public class OptionsMenuAgent
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: MenuItem [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
             return false;
         }
     }

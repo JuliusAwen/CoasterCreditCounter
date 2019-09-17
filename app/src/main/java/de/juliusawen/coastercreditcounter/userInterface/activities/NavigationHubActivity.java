@@ -35,7 +35,7 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
@@ -175,6 +175,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {

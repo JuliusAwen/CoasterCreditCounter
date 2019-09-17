@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -102,23 +101,12 @@ public class SortElementsActivity extends BaseActivity
         {
             this.viewModel.optionsMenuAgent
                     .add(OptionsItem.SORT)
+                        .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                        .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
                     .create(menu);
         }
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
-        {
-            return true;
-        }
-        else
-        {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.fragments;
+package de.juliusawen.coastercreditcounter.userInterface.toolFragments;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

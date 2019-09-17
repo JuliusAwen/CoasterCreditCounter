@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.fragments;
+package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -47,11 +47,11 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitsFragmentViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
@@ -147,6 +147,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         this.viewModel.optionsMenuAgent
                 .add(OptionsItem.SORT)
+                    .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                    .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);

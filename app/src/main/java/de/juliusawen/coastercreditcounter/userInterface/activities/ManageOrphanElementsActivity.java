@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -51,7 +50,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ManageOrphanElementsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
@@ -291,17 +290,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
-        {
-            return true;
-        }
-
-        return  super.onOptionsItemSelected(item);
     }
 
     @Override

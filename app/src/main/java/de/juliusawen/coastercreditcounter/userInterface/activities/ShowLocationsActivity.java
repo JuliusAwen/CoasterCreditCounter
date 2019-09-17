@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
@@ -42,7 +41,7 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
@@ -131,17 +130,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

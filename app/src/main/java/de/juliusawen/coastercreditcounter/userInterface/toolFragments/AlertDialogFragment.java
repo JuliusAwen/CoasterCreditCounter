@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.fragments;
+package de.juliusawen.coastercreditcounter.userInterface.toolFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

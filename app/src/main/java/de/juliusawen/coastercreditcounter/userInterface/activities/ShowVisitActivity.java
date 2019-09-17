@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -51,7 +50,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 
@@ -172,17 +171,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

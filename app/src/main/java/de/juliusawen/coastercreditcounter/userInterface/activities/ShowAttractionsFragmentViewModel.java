@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.fragments;
+package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import androidx.lifecycle.ViewModel;
 

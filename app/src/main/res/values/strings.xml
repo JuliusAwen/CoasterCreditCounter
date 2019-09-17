@@ -10,9 +10,7 @@
 
 
     <!--GENERIC TEXTS-->
-<!--    <string name="text_ok">OK</string>-->
     <string name="text_accept">Accept</string>
-<!--    <string name="text_decline">Decline</string>-->
     <string name="text_close">Close</string>
     <string name="text_cancel">Cancel</string>
 
@@ -32,61 +30,8 @@
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 
-    <!--MENU ITEMS-->
-    <string name="menu_item_help">help</string>
-
-    <string name="menu_item_expand_all">expand all</string>
-    <string name="menu_item_collapse_all">collapse all</string>>
-
-    <string name="menu_item_group_by">group by</string>
-    <string name="menu_item_group_by_location">location</string>
-    <string name="menu_item_group_by_manufacturer">manufacturer</string>
-    <string name="menu_item_group_by_attraction_category">category</string>
-    <string name="menu_item_group_by_status">status</string>
-
-
-
-    <string name="menu_item_sort_attractions">sort attractions</string>
-
-    <string name="menu_item_sort">sort</string>
-
-    <string name="menu_item_sort_by">sort by</string>
-
-    <string name="menu_item_sort_parks">parks</string>
-    <string name="menu_item_add_park">park</string>
-
-    <string name="menu_item_sort_locations">locations</string>
-    <string name="menu_item_add_location">location</string>
-
-    <string name="menu_item_sort_by_year">year</string>
-    <string name="menu_item_sort_by_name">name</string>
-    <string name="menu_item_sort_by_location">location</string>
-    <string name="menu_item_sort_by_manufacturer">manufacturer</string>
-    <string name="menu_item_sort_by_attraction_category">category</string>
-
-    <string name="menu_item_sort_ascending">ascending</string>
-    <string name="menu_item_sort_descending">descending</string>
-
-    <string name="menu_item_go_to_current_visit">go to current visit</string>
-
-    <string name="menu_item_enable_editing">enable editing</string>
-    <string name="menu_item_disable_editing">disable editing</string>
-
-
-    <string name="menu_item_add">add</string>
-    <string name="menu_item_edit">edit</string>
-    <string name="menu_item_delete">delete</string>
-    <string name="menu_item_remove">remove</string>
-    <string name="menu_item_relocate">relocate</string>
-
-    <string name="menu_item_set_as_default">set as default</string>
-    <string name="menu_item_assign_to_attractions">assign to attractions</string>
-
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>
-<!--    <string name="action_undo_delete_text">\'%1$s\' deleted</string>-->
-<!--    <string name="action_undo_remove_text">\'%1$s\' removed</string>-->
-<!--    <string name="action_restored_text">\'%1$s\' restored</string>-->
 
     <string name="action_confirm_text">CONFIRM</string>
     <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
@@ -97,8 +42,6 @@
     <string name="error_name_not_valid">Name is not valid!</string>
     <string name="error_number_not_valid">Number is not valid!</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
-<!--    <string name="error_delete_failed">Deletion failed…</string>-->
-<!--    <string name="error_remove_failed">Removal failed…</string>-->
     <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected!</string>
     <string name="error_missing_text">-text is missing-</string>
@@ -129,6 +72,50 @@
     <string name="description_close">@string/text_close</string>
     <string name="description_image_view">image</string>
     <string name="description_tab_title">title</string>
+
+
+    <!--MENU ITEMS-->
+    <string name="menu_item_help">help</string>
+
+    <string name="menu_item_sort">sort</string>
+    <string name="menu_item_sort_ascending">ascending</string>
+    <string name="menu_item_sort_descending">descending</string>
+    <string name="menu_item_sort_locations">locations</string>
+    <string name="menu_item_sort_parks">parks</string>
+    <string name="menu_item_sort_attractions">sort attractions</string>
+
+    <string name="menu_item_sort_by">sort by</string>
+    <string name="menu_item_sort_by_year">year</string>
+    <string name="menu_item_sort_by_name">name</string>
+    <string name="menu_item_sort_by_location">location</string>
+    <string name="menu_item_sort_by_manufacturer">manufacturer</string>
+    <string name="menu_item_sort_by_attraction_category">category</string>
+
+    <string name="menu_item_group_by">group by</string>
+    <string name="menu_item_group_by_location">location</string>
+    <string name="menu_item_group_by_manufacturer">manufacturer</string>
+    <string name="menu_item_group_by_attraction_category">category</string>
+    <string name="menu_item_group_by_status">status</string>
+
+    <string name="menu_item_add">add</string>
+    <string name="menu_item_add_park">park</string>
+    <string name="menu_item_add_location">location</string>
+
+    <string name="menu_item_edit">edit</string>
+    <string name="menu_item_delete">delete</string>
+    <string name="menu_item_remove">remove</string>
+    <string name="menu_item_relocate">relocate</string>
+
+    <string name="menu_item_expand_all">expand all</string>
+    <string name="menu_item_collapse_all">collapse all</string>>
+
+    <string name="menu_item_enable_editing">enable editing</string>
+    <string name="menu_item_disable_editing">disable editing</string>
+
+    <string name="menu_item_go_to_current_visit">go to current visit</string>
+    <string name="menu_item_set_as_default">set as default</string>
+    <string name="menu_item_assign_to_attractions">assign to attractions</string>
+
 
     <!-- ATTRACTION TYPES-->
     <string name="spinner_text_attraction_type">Type:</string>
@@ -227,6 +214,7 @@
     <string name="subtitle_attraction_category_to_assign_to_attraction">to assign to attraction</string>
     <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
     <string name="spinner_text_attraction_category">Attraction Category:</string>
+
 
     <!--STATUS-->
     <string name="name_default_status">operational</string>

@@ -54,8 +54,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.AlertDialogFragment;
-import de.juliusawen.coastercreditcounter.userInterface.fragments.ShowAttractionsFragmentViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.globals.Constants.LOG_TAG;
 

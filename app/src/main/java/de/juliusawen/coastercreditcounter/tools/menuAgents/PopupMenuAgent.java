@@ -177,7 +177,7 @@ public class PopupMenuAgent
 
     private MenuItem addItemToSubMenu(PopupItem item, Menu subMenu)
     {
-        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addItemToSubMenu:: adding [%s] to submenu", item));
+        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addToGroup:: adding [%s] to submenu", item));
         return subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
     }
 
@@ -192,14 +192,14 @@ public class PopupMenuAgent
                 {
                     PopupItem popupItem = PopupItem.values()[menuItem.getItemId()];
 
-                    Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%s] in [%s] clicked", popupItem, client.getClass().getSimpleName()));
+                    Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%s] in [%s] clicked", popupItem, client.getClass().getSimpleName()));
 
                     switch(popupItem)
                     {
                         case NO_FUNCTION:
                         case SORT:
                         case ADD:
-                            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%s] in [%s] has no function", popupItem, client.getClass().getSimpleName()));
+                            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%s] in [%s] has no function", popupItem, client.getClass().getSimpleName()));
                             break;
 
                         default:
@@ -210,7 +210,7 @@ public class PopupMenuAgent
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: MenuItem [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
+                    Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
                     return false;
                 }
             }
