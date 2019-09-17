@@ -436,33 +436,33 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderItem:: binding %s for position [%d] - generation [%d]...", item, position, generation));
 
 
-        if(!this.formatAsPrettyPrint)
+        //setExpandToggle
+        viewHolder.imageViewExpandToggle.setTag(item);
+
+        if(!this.getRelevantChildren(item).isEmpty())
         {
-            //setExpandToggle
-            viewHolder.imageViewExpandToggle.setTag(item);
+            viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
 
-            if(!this.getRelevantChildren(item).isEmpty() && !this.formatAsPrettyPrint)
+            if(this.expandedItems.contains(item))
             {
-                viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
-
-                if(this.expandedItems.contains(item))
-                {
-                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
-                }
-                else
-                {
-                    viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
-                }
-
-                viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
 
+            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
+        }
+        else
+        {
+            viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+        }
 
 
+
+        if(!this.formatAsPrettyPrint)
+        {
             //set typeface
             viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
 

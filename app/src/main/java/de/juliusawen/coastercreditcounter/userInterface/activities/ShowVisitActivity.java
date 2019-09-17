@@ -153,7 +153,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .add(OptionsItem.COLLAPSE_ALL)
                     .create(menu);
         }
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -169,7 +168,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                     .prepare(menu);
         }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -188,6 +186,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             case ENABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(true);
+                invalidateOptionsMenu();
                 this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
                 this.handleFloatingActionButtonVisibility();
                 Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<ENABLE_EDITING>:: enabled editing for %s", this.viewModel.visit));
@@ -195,6 +194,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             case DISABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(false);
+                invalidateOptionsMenu();
                 this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
                 this.handleFloatingActionButtonVisibility();
                 Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
