@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -345,9 +343,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int typeOfView)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int typeOfView)
     {
         RecyclerView.ViewHolder viewHolder;
 
@@ -380,7 +377,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         ViewType viewType = ViewType.values()[viewHolder.getItemViewType()];
         switch (viewType)
@@ -410,14 +407,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView)
+    public void onAttachedToRecyclerView(RecyclerView recyclerView)
     {
         this.recyclerView = recyclerView;
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView)
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView)
     {
         this.recyclerView = null;
         super.onDetachedFromRecyclerView(recyclerView);
@@ -1335,7 +1332,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(typeface <= 3)
         {
-            Objects.requireNonNull(this.typesByTypeface.get(typeface)).add(type);
+            this.typesByTypeface.get(typeface).add(type);
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForType:: typeface [%d] set for [%s]", typeface, type.getSimpleName()));
         }
         else

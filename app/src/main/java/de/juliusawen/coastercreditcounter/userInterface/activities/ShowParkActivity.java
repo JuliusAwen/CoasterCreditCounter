@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -20,7 +19,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -203,7 +201,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         for (int i = 0; i < tabLayout.getTabCount(); i++)
         {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
-            Objects.requireNonNull(tab).setCustomView(tabPagerAdapter.getTabTitleView(i));
+            (tab).setCustomView(tabPagerAdapter.getTabTitleView(i));
         }
 
         this.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -354,15 +352,14 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             }
         }
 
-        @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position)
+        public Object instantiateItem(ViewGroup container, int position)
         {
             return super.instantiateItem(container, position);
         }
 
         @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object)
+        public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
             this.fragmentsByPosition.remove(position);

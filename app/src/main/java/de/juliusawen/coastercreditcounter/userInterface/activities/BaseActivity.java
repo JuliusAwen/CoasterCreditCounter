@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -27,7 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -192,7 +190,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Intent intent = getIntent();
 
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]", StringTool.parseActivityName(Objects.requireNonNull(intent.getComponent()).getShortClassName())));
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); //this clears the stacktrace
             ActivityDistributor.startActivityViaIntent(this, intent);
@@ -415,11 +413,17 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.setToolbarTitleAndSubtitle:: SupportActionBar not found.");
+            Log.e(Constants.LOG_TAG, "BaseActivity.setToolbarTitleAndSubtitle:: SupportActionBar not found");
         }
     }
 
-    private Toolbar fetchToolbar()
+    protected void setToolbarOnClickListener(View.OnClickListener onClickListener)
+    {
+        Log.d(Constants.LOG_TAG, "BaseActivity.setToolbarOnClickListener:: setting onClickListener");
+        this.fetchToolbar().setOnClickListener(onClickListener);
+    }
+
+    public Toolbar fetchToolbar()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
         if(toolbar != null)
@@ -428,7 +432,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.fetchToolbar:: View<toolbar> not found.");
+            Log.e(Constants.LOG_TAG, "BaseActivity.fetchToolbar:: View<toolbar> not found");
             return null;
         }
     }
@@ -605,7 +609,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return true;
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
         if(requestCode == RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal())
         {

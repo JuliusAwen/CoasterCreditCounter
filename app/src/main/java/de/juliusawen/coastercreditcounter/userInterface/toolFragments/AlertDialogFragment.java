@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -44,7 +43,6 @@ public class AlertDialogFragment extends DialogFragment
         return alertDialogFragment;
     }
 
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {

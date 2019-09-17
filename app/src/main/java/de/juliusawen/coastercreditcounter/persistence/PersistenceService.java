@@ -4,10 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
@@ -25,9 +22,9 @@ public class PersistenceService extends IntentService
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent)
+    protected void onHandleIntent(Intent intent)
     {
-        String action = Objects.requireNonNull(intent).getAction();
+        String action = (intent).getAction();
 
         if(action != null)
         {

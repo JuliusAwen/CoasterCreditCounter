@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -260,7 +259,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            public boolean onNavigationItemSelected(MenuItem item)
             {
                 return NavigationHubActivity.this.onNavigationItemSelected(item);
             }
@@ -379,7 +378,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 

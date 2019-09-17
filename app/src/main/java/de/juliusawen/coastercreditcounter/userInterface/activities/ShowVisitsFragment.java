@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -103,13 +101,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.fragment_show_visits, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
+    public void onViewCreated(View view, Bundle savedInstanceState)
     {
         this.recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -261,7 +259,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                         true);
 
         alertDialogFragmentDelete.setCancelable(false);
-        alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+        alertDialogFragmentDelete.show(getChildFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
     public void handlePopupItemEditElementClicked()
@@ -278,7 +276,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         int month = this.viewModel.calendar.get(Calendar.MONTH);
         int day = this.viewModel.calendar.get(Calendar.DAY_OF_MONTH);
 
-        this.viewModel.datePickerDialog = new DatePickerDialog(Objects.requireNonNull(ShowVisitsFragment.this.getContext()), new DatePickerDialog.OnDateSetListener()
+        this.viewModel.datePickerDialog = new DatePickerDialog(ShowVisitsFragment.this.getContext(), new DatePickerDialog.OnDateSetListener()
         {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
@@ -330,7 +328,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         {
             ConfirmSnackbar.Show(
                     Snackbar.make(
-                            Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
+                            getActivity().findViewById(android.R.id.content),
                             getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
                             Snackbar.LENGTH_LONG),
                     requestCode,

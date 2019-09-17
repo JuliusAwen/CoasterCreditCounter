@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -108,13 +106,13 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.fragment_show_attractions, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
+    public void onViewCreated(View view, Bundle savedInstanceState)
     {
         this.recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -286,7 +284,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
         }
 
-        ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(getContext()), RequestCode.SORT_ATTRACTIONS, attractions);
+        ActivityDistributor.startActivitySortForResult(getContext(), RequestCode.SORT_ATTRACTIONS, attractions);
     }
 
     public void handlePopupItemEditCustomAttractionClicked()
@@ -310,7 +308,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         true);
 
         alertDialogFragmentDelete.setCancelable(false);
-        alertDialogFragmentDelete.show(Objects.requireNonNull(getChildFragmentManager()), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+        alertDialogFragmentDelete.show(getChildFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
     @Override
@@ -322,7 +320,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             {
                 ConfirmSnackbar.Show(
                         Snackbar.make(
-                                Objects.requireNonNull(getActivity()).findViewById(android.R.id.content),
+                                getActivity().findViewById(android.R.id.content),
                                 getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
                                 Snackbar.LENGTH_LONG),
                         requestCode,

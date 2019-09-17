@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +48,6 @@ public abstract class Element implements IElement
         return element.getUuid() != null && element.getUuid().equals(this.getUuid());
     }
 
-    @NonNull
     public String toString()
     {
         return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());

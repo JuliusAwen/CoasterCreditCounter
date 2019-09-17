@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +52,6 @@ public class Visit extends Element
     }
 
     @Override
-    @NonNull
     public String toString()
     {
         if(this.getParent() != null)

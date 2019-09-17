@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -85,7 +84,20 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             super.addToolbar();
             super.addToolbarHomeButton();
             super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+            super.setToolbarOnClickListener(this.getToolbarOnClickListener());
         }
+    }
+
+    private View.OnClickListener getToolbarOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent());
+            }
+        };
     }
 
     @Override
@@ -355,7 +367,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 {
                     attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
                 }
-                ActivityDistributor.startActivitySortForResult(Objects.requireNonNull(ShowVisitActivity.this), RequestCode.SORT_ATTRACTIONS, attractions);
+                ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
                 break;
 
             case DELETE_ELEMENT:

@@ -14,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -347,7 +346,7 @@ public class JsonHandler implements IDatabaseWrapper
 
                             for(int k = 0; k < jsonArrayRides.length(); k++)
                             {
-                                Objects.requireNonNull(temporaryElement.ridesByAttractions.get(attractionUuid)).add(UUID.fromString(jsonArrayRides.getString(k)));
+                                temporaryElement.ridesByAttractions.get(attractionUuid).add(UUID.fromString(jsonArrayRides.getString(k)));
                             }
                         }
                     }

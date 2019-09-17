@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,7 +8,6 @@ import java.util.UUID;
 
 public interface IElement
 {
-    @NonNull
     String toString();
     JSONObject toJson() throws JSONException;
 

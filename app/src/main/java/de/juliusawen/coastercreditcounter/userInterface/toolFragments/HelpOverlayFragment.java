@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -70,7 +69,7 @@ public class HelpOverlayFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onCreateView:: creating view...");
 
@@ -81,7 +80,7 @@ public class HelpOverlayFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
+    public void onViewCreated(View view, Bundle savedInstanceState)
     {
         Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onViewCreated:: decorating view...");
 

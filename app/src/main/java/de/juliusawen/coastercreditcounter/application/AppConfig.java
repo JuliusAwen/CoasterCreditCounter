@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 @SuppressWarnings("FieldCanBeLocal") //
@@ -44,7 +42,6 @@ public class AppConfig
         Log.i(Constants.LOG_TAG, String.format("AppConfig.Constructor:: Configuration: \n%s", this));
     }
 
-    @NonNull
     @Override
     public String toString()
     {
