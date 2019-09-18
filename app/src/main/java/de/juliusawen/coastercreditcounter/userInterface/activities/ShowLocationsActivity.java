@@ -262,7 +262,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.ADD)
+                                .addToGroup(PopupItem.ADD_LOCATION, PopupItem.ADD)
+                                .addToGroup(PopupItem.ADD_PARK, PopupItem.ADD)
                             .add(PopupItem.SORT)
+                                .addToGroup(PopupItem.SORT_LOCATIONS, PopupItem.SORT)
+                                .addToGroup(PopupItem.SORT_PARKS, PopupItem.SORT)
                             .add(PopupItem.EDIT_LOCATION)
                             .add(PopupItem.EDIT_PARK)
                             .add(PopupItem.DELETE_ELEMENT)

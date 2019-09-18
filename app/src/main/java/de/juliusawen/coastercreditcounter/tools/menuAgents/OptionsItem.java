@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public enum OptionsItem
 {
-    NO_FUNCTION(-1, -1),
+    NO_FUNCTION(R.string.menu_item_no_function, -1),
 
 
     SORT(R.string.menu_item_sort, -1),

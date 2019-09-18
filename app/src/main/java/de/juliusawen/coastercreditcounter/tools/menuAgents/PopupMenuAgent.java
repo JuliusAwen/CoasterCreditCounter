@@ -4,77 +4,66 @@ import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.PopupMenu;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class PopupMenuAgent
 {
-    private PopupMenu menu;
+    private final Set<PopupItem> itemsToAdd = new LinkedHashSet<>();
+    private final Map<PopupItem, PopupItem> groupByItem = new HashMap<>();
+    private final Map<PopupItem, SubMenu> subMenuByGroup = new HashMap<>();
 
-    private final List<PopupItem> itemsToAdd;
-    private final Set<PopupItem> itemsToSetDisabled;
-    private final Set<PopupItem> itemsToSetInvisible;
-    private final Map<PopupItem, Integer> stringResourcesByItem;
+    private final Set<PopupItem> itemsToSetDisabled = new HashSet<>();
+    private final Set<PopupItem> itemsToSetInvisible = new HashSet<>();
 
     public static PopupMenuAgent getMenu()
     {
         return new PopupMenuAgent();
     }
 
-    private PopupMenuAgent()
-    {
-        this.itemsToAdd = new LinkedList<>();
-        this.itemsToSetDisabled = new HashSet<>();
-        this.itemsToSetInvisible = new HashSet<>();
-        this.stringResourcesByItem = this.initializeStringResourcesByItem();
-    }
-
-    private Map<PopupItem, Integer> initializeStringResourcesByItem()
-    {
-        Map<PopupItem, Integer> stringResourcesByItem = new HashMap<>();
-
-        stringResourcesByItem.put(PopupItem.ADD, R.string.menu_item_add);
-        stringResourcesByItem.put(PopupItem.ADD_LOCATION, R.string.menu_item_add_location);
-        stringResourcesByItem.put(PopupItem.ADD_PARK, R.string.menu_item_add_park);
-
-        stringResourcesByItem.put(PopupItem.SORT, R.string.menu_item_sort);
-        stringResourcesByItem.put(PopupItem.SORT_LOCATIONS, R.string.menu_item_sort_locations);
-        stringResourcesByItem.put(PopupItem.SORT_PARKS, R.string.menu_item_sort_parks);
-        stringResourcesByItem.put(PopupItem.SORT_ATTRACTIONS, R.string.menu_item_sort_attractions);
-
-        stringResourcesByItem.put(PopupItem.EDIT_LOCATION, R.string.menu_item_edit);
-        stringResourcesByItem.put(PopupItem.EDIT_PARK, R.string.menu_item_edit);
-        stringResourcesByItem.put(PopupItem.EDIT_ELEMENT, R.string.menu_item_edit);
-        stringResourcesByItem.put(PopupItem.EDIT_CUSTOM_ATTRACTION, R.string.menu_item_edit);
-
-        stringResourcesByItem.put(PopupItem.REMOVE_LOCATION, R.string.menu_item_remove);
-        stringResourcesByItem.put(PopupItem.RELOCATE_ELEMENT, R.string.menu_item_relocate);
-
-        stringResourcesByItem.put(PopupItem.DELETE_ELEMENT, R.string.menu_item_delete);
-        stringResourcesByItem.put(PopupItem.DELETE_ATTRACTION, R.string.menu_item_delete);
-
-        stringResourcesByItem.put(PopupItem.ASSIGN_TO_ATTRACTIONS, R.string.menu_item_assign_to_attractions);
-        stringResourcesByItem.put(PopupItem.SET_AS_DEFAULT, R.string.menu_item_set_as_default);
-
-        return stringResourcesByItem;
-    }
-
-
     public PopupMenuAgent add(PopupItem item)
     {
-        this.itemsToAdd.add(item);
-
+        this.addItem(item);
         return this;
+    }
+
+    public PopupMenuAgent addToGroup(PopupItem item, PopupItem group)
+    {
+        if(this.addItem(item))
+        {
+            if(!this.groupByItem.containsKey(item))
+            {
+                this.groupByItem.put(item, group);
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
+            }
+        }
+        return this;
+    }
+
+    private boolean addItem(PopupItem item)
+    {
+        if(!this.itemsToAdd.contains(item))
+        {
+            this.itemsToAdd.add(item);
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
+            return false;
+        }
     }
 
     public PopupMenuAgent setEnabled(PopupItem item, boolean setEnabled)
@@ -101,84 +90,87 @@ public class PopupMenuAgent
         {
             Log.d(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: showing PopupMenu with [%d] Item(s)", this.itemsToAdd.size()));
 
-            this.menu = new PopupMenu(context, view);
+            PopupMenu menu = new PopupMenu(context, view);
 
             for(PopupItem item : this.itemsToAdd)
             {
-                Menu submenu;
-
-                switch(item)
+                if(isGroup(item))
                 {
-                    case SORT_ATTRACTIONS:
-                    case EDIT_LOCATION:
-                    case EDIT_PARK:
-                    case EDIT_ELEMENT:
-                    case EDIT_CUSTOM_ATTRACTION:
-                    case REMOVE_LOCATION:
-                    case RELOCATE_ELEMENT:
-                    case DELETE_ELEMENT:
-                    case DELETE_ATTRACTION:
-                    case ASSIGN_TO_ATTRACTIONS:
-                    case SET_AS_DEFAULT:
-                        this.addItemToMenu(item);
+                    if(this.isGroupInRootMenu(item))
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: adding group [#%d - %s] to ROOT", item.ordinal(), item));
+                        this.subMenuByGroup.put(item, menu.getMenu().addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
+                    }
+                    else //isGroupInSubMenu
+                    {
+                        if(this.subMenuByGroup.containsKey(this.groupByItem.get(item)))
+                        {
+                            PopupItem group = this.groupByItem.get(item);
+                            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: adding Group [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                            this.subMenuByGroup.put(item, this.subMenuByGroup.get(group).addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
+                        }
+                        else
+                        {
+                            Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: Group for Group [#%d - %s] not found", item.ordinal(), item));
+                            break;
+                        }
+                    }
+                }
+                else if(this.isItemInRootMenu(item))
+                {
+                    Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: adding Item [#%d - %s] to ROOT", item.ordinal(), item));
+                    menu.getMenu().add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
+                }
+                else //IsItemInGroup
+                {
+                    if((this.subMenuByGroup.containsKey(this.groupByItem.get(item))))
+                    {
+                        PopupItem group = this.groupByItem.get(item);
+                        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: adding Item [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                        this.subMenuByGroup.get(group).add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
+                    }
+                    else
+                    {
+                        Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: Group for Item [#%d - %s] not found", item.ordinal(), item));
                         break;
-
-                    case ADD:
-                        submenu = this.addSubMenu(item);
-                        this.addItemToSubMenu(PopupItem.ADD_LOCATION, submenu);
-                        this.addItemToSubMenu(PopupItem.ADD_PARK, submenu);
-                        break;
-
-                    case SORT:
-                        submenu = this.addSubMenu(item);
-                        this.addItemToSubMenu(PopupItem.SORT_LOCATIONS, submenu);
-                        this.addItemToSubMenu(PopupItem.SORT_PARKS, submenu);
-                        break;
-
-                    default:
-                        Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: PopupItem [%s] can not be shown", item));
-                        return;
+                    }
                 }
             }
 
             for(PopupItem item : itemsToSetInvisible)
             {
-                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item invisible: [%s]", item));
-                this.menu.getMenu().findItem(item.ordinal()).setVisible(false);
+                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item invisible: [#%d - %s]", item.ordinal(), item));
+                menu.getMenu().findItem(item.ordinal()).setVisible(false);
                 this.itemsToSetDisabled.remove(item); // no need to set disabled when invisible
             }
 
             for(PopupItem item : this.itemsToSetDisabled)
             {
-                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item disabled: [%s]", item));
-                this.menu.getMenu().findItem(item.ordinal()).setEnabled(false);
+                Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: setting item disabled: [#%d - %s]",item.ordinal(), item));
+                menu.getMenu().findItem(item.ordinal()).setEnabled(false);
             }
 
-            this.menu.setOnMenuItemClickListener(this.getMenuItemClickListener((IPopupMenuAgentClient) context));
-            this.menu.show();
+            menu.setOnMenuItemClickListener(this.getMenuItemClickListener((IPopupMenuAgentClient) context));
+            menu.show();
         }
         else
         {
             Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: [%s] does not implement IPopupMenuAgentClient", context.getClass().getSimpleName()));
         }
     }
-
-    private MenuItem addItemToMenu(PopupItem item)
+    private boolean isGroup(PopupItem item)
     {
-        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addItemToMenu:: adding [%s]", item));
-        return this.menu.getMenu().add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
+        return this.groupByItem.containsValue(item);
     }
 
-    private Menu addSubMenu(PopupItem item)
+    private boolean isGroupInRootMenu(PopupItem item)
     {
-        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addSubMenu:: adding submenu [%s]", item));
-        return this.menu.getMenu().addSubMenu(item.ordinal(), item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
+        return isGroup(item) && !this.groupByItem.containsKey(item);
     }
 
-    private MenuItem addItemToSubMenu(PopupItem item, Menu subMenu)
+    private boolean isItemInRootMenu(PopupItem item)
     {
-        Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.addToGroup:: adding [%s] to submenu", item));
-        return subMenu.add(Menu.NONE, item.ordinal(), Menu.NONE, this.stringResourcesByItem.get(item));
+        return !this.groupByItem.containsKey(item);
     }
 
     private PopupMenu.OnMenuItemClickListener getMenuItemClickListener(final IPopupMenuAgentClient client)
@@ -188,31 +180,19 @@ public class PopupMenuAgent
             @Override
             public boolean onMenuItemClick(MenuItem menuItem)
             {
-                if(menuItem.getItemId() <= PopupItem.values().length)
+                PopupItem popupItem = PopupItem.getValue(menuItem.getItemId());
+                Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [#%d - %s] in [%s] clicked", popupItem.ordinal(), popupItem, client.getClass().getSimpleName()));
+
+                if(popupItem == PopupItem.NO_FUNCTION)
                 {
-                    PopupItem popupItem = PopupItem.values()[menuItem.getItemId()];
-
-                    Log.i(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%s] in [%s] clicked", popupItem, client.getClass().getSimpleName()));
-
-                    switch(popupItem)
-                    {
-                        case NO_FUNCTION:
-                        case SORT:
-                        case ADD:
-                            Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%s] in [%s] has no function", popupItem, client.getClass().getSimpleName()));
-                            break;
-
-                        default:
-                            client.handlePopupItemClicked(popupItem);
-                    }
-
-                    return true;
+                    Log.v(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [#%d - %s] in [%s] has no function", popupItem.ordinal(), popupItem, client.getClass().getSimpleName()));
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.onMenuItemClick:: Item [%d] for [%s] is invalid", menuItem.getItemId(), client.getClass().getSimpleName()));
-                    return false;
+                    client.handlePopupItemClicked(popupItem);
                 }
+
+                return true;
             }
         };
     }

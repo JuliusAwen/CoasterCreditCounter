@@ -219,26 +219,14 @@ public class OptionsMenuAgent
     public boolean handleOptionsItemSelected(MenuItem menuItem, IOptionsMenuAgentClient client)
     {
         OptionsItem optionsItem = OptionsItem.getValue(menuItem.getItemId());
-
         Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] selected", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
 
-        switch(optionsItem)
+        if(optionsItem == OptionsItem.NO_FUNCTION)
         {
-            //add case for OptionsItems with no function here
-            case NO_FUNCTION:
-            case SORT:
-            case SORT_BY:
-            case GROUP_BY:
-            case SORT_BY_NAME:
-            case SORT_BY_LOCATION:
-            case SORT_BY_ATTRACTION_CATEGORY:
-            case SORT_BY_MANUFACTURER:
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] has no function", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
-                return true;
-
-            default:
-                return client.handleOptionsItemSelected(optionsItem);
+            Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] has no function", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
+            return true;
         }
+        return client.handleOptionsItemSelected(optionsItem);
     }
 }
 

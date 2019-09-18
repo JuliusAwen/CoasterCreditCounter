@@ -75,6 +75,8 @@
 
 
     <!--MENU ITEMS-->
+    <string name="menu_item_no_function">no function</string>
+
     <string name="menu_item_help">help</string>
 
     <string name="menu_item_sort">sort</string>
