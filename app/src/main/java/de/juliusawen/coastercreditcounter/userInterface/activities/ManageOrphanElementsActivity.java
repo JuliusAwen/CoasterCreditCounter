@@ -61,89 +61,88 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ManageOrphanElementsActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_manage_orphan_elements);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
+
+        this.viewModel.orphanElementTypeToManage = OrphanElementType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, OrphanElementType.NONE.ordinal())];
+
+        if(this.viewModel.optionsMenuAgent == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
 
-            this.viewModel.orphanElementTypeToManage = OrphanElementType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, OrphanElementType.NONE.ordinal())];
+        if(this.viewModel.contentRecyclerViewAdapter == null)
+        {
+            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+            childTypesToExpand.add(ICategorized.class);
 
-            if(this.viewModel.optionsMenuAgent == null)
+            switch(this.viewModel.orphanElementTypeToManage)
             {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            if(this.viewModel.contentRecyclerViewAdapter == null)
-            {
-                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                childTypesToExpand.add(ICategorized.class);
-
-                switch(this.viewModel.orphanElementTypeToManage)
+                case ATTRACTION_CATEGORY:
                 {
-                    case ATTRACTION_CATEGORY:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                App.content.getContentOfType(AttractionCategory.class),
-                                childTypesToExpand)
-                                .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
-                                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(AttractionCategory.class),
+                            childTypesToExpand)
+                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
 
-                        break;
-                    }
+                    break;
+                }
 
-                    case MANUFACTURER:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                App.content.getContentOfType(Manufacturer.class),
-                                childTypesToExpand)
-                                .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                                .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
-                                .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW);
+                case MANUFACTURER:
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(Manufacturer.class),
+                            childTypesToExpand)
+                            .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW);
 
-                        break;
-                    }
+                    break;
+                }
 
-                    case STATUS:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                App.content.getContentOfType(Status.class),
-                                childTypesToExpand)
-                                .setTypefaceForType(Status.class, Typeface.BOLD)
-                                .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
-                                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW);
+                case STATUS:
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(Status.class),
+                            childTypesToExpand)
+                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW);
 
-                        break;
-                    }
+                    break;
                 }
             }
-
-            if(this.viewModel.contentRecyclerViewAdapter != null)
-            {
-                this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-                this.recyclerView = findViewById(R.id.recyclerViewManageOrphanElements);
-                this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-            }
-
-            Intent intent = getIntent();
-            String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-            String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-            String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
-            super.addFloatingActionButton();
-
-            this.decorateFloatingActionButton();
         }
+
+        if(this.viewModel.contentRecyclerViewAdapter != null)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            this.recyclerView = findViewById(R.id.recyclerViewManageOrphanElements);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        }
+
+        Intent intent = getIntent();
+        String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
+        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
+        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+        super.addFloatingActionButton();
+
+        this.decorateFloatingActionButton();
     }
+
 
     @Override
     protected void onDestroy()

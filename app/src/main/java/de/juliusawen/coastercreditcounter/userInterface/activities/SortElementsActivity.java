@@ -35,56 +35,54 @@ public class SortElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "SortElementsActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_sort_elements);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
+
+        if(this.viewModel.optionsMenuAgent == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            if(this.viewModel.elementsToSort == null)
-            {
-                this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-            }
-
-            if(this.viewModel.contentRecyclerViewAdapter == null)
-            {
-                this.viewModel.contentRecyclerViewAdapter =
-                        ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
-
-                Set<Class<? extends IElement>> types = new HashSet<>();
-                for(IElement elementToSort : this.viewModel.elementsToSort)
-                {
-                    types.add(elementToSort.getClass());
-                }
-
-                for(Class<? extends IElement> type : types)
-                {
-                    this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(type, Typeface.BOLD);
-                }
-            }
-            this.recyclerView = findViewById(R.id.recyclerViewSortElements);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setHasFixedSize(true);
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
-            super.addFloatingActionButton();
-
-            this.decorateFloatingActionButton();
-
-            this.createActionDialog();
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
+
+        if(this.viewModel.elementsToSort == null)
+        {
+            this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        }
+
+        if(this.viewModel.contentRecyclerViewAdapter == null)
+        {
+            this.viewModel.contentRecyclerViewAdapter =
+                    ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+
+            Set<Class<? extends IElement>> types = new HashSet<>();
+            for(IElement elementToSort : this.viewModel.elementsToSort)
+            {
+                types.add(elementToSort.getClass());
+            }
+
+            for(Class<? extends IElement> type : types)
+            {
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(type, Typeface.BOLD);
+            }
+        }
+        this.recyclerView = findViewById(R.id.recyclerViewSortElements);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setHasFixedSize(true);
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_sort_elements));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
+        super.addFloatingActionButton();
+
+        this.decorateFloatingActionButton();
+
+        this.createActionDialog();
     }
 
     @Override

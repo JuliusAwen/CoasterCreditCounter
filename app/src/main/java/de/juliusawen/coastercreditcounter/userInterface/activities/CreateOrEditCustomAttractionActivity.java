@@ -64,90 +64,88 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateOrEditCustomAttractionActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_create_or_edit_custom_attraction);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
+        this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
+        this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
+        this.textViewAttractionCategory = findViewById(R.id.textViewCreateOrEditAttraction_AttractionCategory);
+        this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
+        this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
+
+        this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
+
+        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)].equals(RequestCode.EDIT_CUSTOM_ATTRACTION))
         {
-            this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
-            this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
-            this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
-            this.textViewAttractionCategory = findViewById(R.id.textViewCreateOrEditAttraction_AttractionCategory);
-            this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
-            this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
-
-            this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
-
-            if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)].equals(RequestCode.EDIT_CUSTOM_ATTRACTION))
-            {
-                this.viewModel.isEditMode = true;
-            }
-
-            if(this.viewModel.isEditMode)
-            {
-                if(this.viewModel.attraction == null)
-                {
-                    this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-                }
-
-                if(this.viewModel.parentPark == null)
-                {
-                    this.viewModel.parentPark = (Park) this.viewModel.attraction.getParent();
-                }
-            }
-            else if(this.viewModel.parentPark == null)
-            {
-                this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            if(this.viewModel.toolbarTitle == null)
-            {
-                this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_custom_attraction_create);
-            }
-
-            if(this.viewModel.toolbarSubtitle == null)
-            {
-                this.viewModel.toolbarSubtitle = this.viewModel.isEditMode
-                        ? this.viewModel.attraction.getName()
-                        : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
-            }
-
-            super.addHelpOverlayFragment(
-                    getString(R.string.title_help, this.viewModel.isEditMode
-                            ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
-                            : getString(R.string.title_custom_attraction_create)),
-                    getText(R.string.help_text_create_or_edit_custom_attraction));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
-            super.addFloatingActionButton();
-
-            this.decorateFloatingActionButton();
-            this.createEditTextAttractionName();
-
-            if(viewModel.isEditMode)
-            {
-                findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionType).setVisibility(View.GONE);
-                Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onCreate:: Activity is in edit mode - hiding option to change attraction type");
-            }
-            else
-            {
-                this.createAttractionTypesDictionary();
-                this.createLayoutAttractionType();
-            }
-
-            if(!(this.viewModel.attraction instanceof StockAttraction))
-            {
-                this.createLayoutManufacturer();
-                this.createLayoutAttractionCategory();
-            }
-            //Todo: implement goto blueprint on else
-
-            this.createLayoutStatus();
-            this.createEditTextUntrackedRideCount();
+            this.viewModel.isEditMode = true;
         }
+
+        if(this.viewModel.isEditMode)
+        {
+            if(this.viewModel.attraction == null)
+            {
+                this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            }
+
+            if(this.viewModel.parentPark == null)
+            {
+                this.viewModel.parentPark = (Park) this.viewModel.attraction.getParent();
+            }
+        }
+        else if(this.viewModel.parentPark == null)
+        {
+            this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+
+        if(this.viewModel.toolbarTitle == null)
+        {
+            this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_custom_attraction_create);
+        }
+
+        if(this.viewModel.toolbarSubtitle == null)
+        {
+            this.viewModel.toolbarSubtitle = this.viewModel.isEditMode
+                    ? this.viewModel.attraction.getName()
+                    : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
+        }
+
+        super.addHelpOverlayFragment(
+                getString(R.string.title_help, this.viewModel.isEditMode
+                        ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
+                        : getString(R.string.title_custom_attraction_create)),
+                getText(R.string.help_text_create_or_edit_custom_attraction));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
+        super.addFloatingActionButton();
+
+        this.decorateFloatingActionButton();
+        this.createEditTextAttractionName();
+
+        if(viewModel.isEditMode)
+        {
+            findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionType).setVisibility(View.GONE);
+            Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onCreate:: Activity is in edit mode - hiding option to change attraction type");
+        }
+        else
+        {
+            this.createAttractionTypesDictionary();
+            this.createLayoutAttractionType();
+        }
+
+        if(!(this.viewModel.attraction instanceof StockAttraction))
+        {
+            this.createLayoutManufacturer();
+            this.createLayoutAttractionCategory();
+        }
+        //Todo: implement goto blueprint on else
+
+        this.createLayoutStatus();
+        this.createEditTextUntrackedRideCount();
     }
 
     @Override

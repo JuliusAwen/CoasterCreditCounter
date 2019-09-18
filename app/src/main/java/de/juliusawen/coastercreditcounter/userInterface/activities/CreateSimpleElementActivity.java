@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.lifecycle.ViewModelProviders;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
@@ -30,34 +29,32 @@ public class CreateSimpleElementActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.CreateSimpleElementActivity:: creating activity...");
-
         setContentView(R.layout.activity_create_simple_element);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
-        {
-            this.editText = findViewById(R.id.editTextCreateSimpleElement);
-            this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
+    protected void create()
+    {
+        this.editText = findViewById(R.id.editTextCreateSimpleElement);
+        this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
 
-            Intent intent = getIntent();
-            String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-            String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-            String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
-            String hint = intent.getStringExtra(Constants.EXTRA_HINT);
+        Intent intent = getIntent();
+        String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
+        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
+        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
+        String hint = intent.getStringExtra(Constants.EXTRA_HINT);
 
-            this.editText.setHint(hint);
+        this.editText.setHint(hint);
 
-            this.viewModel = ViewModelProviders.of(this).get(CreateSimpleElementActivityViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(CreateSimpleElementActivityViewModel.class);
 
-            super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(toolbarTitle, null);
-            super.addFloatingActionButton();
+        super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+        super.addFloatingActionButton();
 
-            this.decorateFloatingActionButton();
-        }
+        this.decorateFloatingActionButton();
     }
 
     private void decorateFloatingActionButton()

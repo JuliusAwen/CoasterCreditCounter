@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 public class BaseActivityViewModel extends ViewModel
 {
     public boolean isInitializingApp = false;
+    public boolean activityIsCreated = false;
 
     public boolean helpOverlayFragmentIsVisible = false;
     public String helpOverlayFragmentTitle;

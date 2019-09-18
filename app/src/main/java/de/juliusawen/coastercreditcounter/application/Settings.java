@@ -126,11 +126,8 @@ public class Settings
         Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
 
         this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
-
         this.setExpandLatestYearInListByDefault(true);
-
         this.setFirstDayOfTheWeek(Calendar.MONDAY);
-
         this.setDefaultIncrement(1);
     }
 

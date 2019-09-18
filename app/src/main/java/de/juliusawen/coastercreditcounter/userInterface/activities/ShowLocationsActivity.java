@@ -51,50 +51,47 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowLocationsActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_show_locations);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    public void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
+
+        if(this.viewModel.optionsMenuAgent == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            if(this.viewModel.currentLocation == null)
-            {
-                String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                this.viewModel.currentLocation = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
-            }
-
-            if(this.viewModel.contentRecyclerViewAdapter == null)
-            {
-                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                childTypesToExpand.add(Location.class);
-                childTypesToExpand.add(Park.class);
-
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                        new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
-                        childTypesToExpand)
-                        .setTypefaceForType(Location.class, Typeface.BOLD);
-            }
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-
-            this.recyclerView = findViewById(R.id.recyclerViewShowLocations);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
-
-            this.setSelectionModeEnabled(this.viewModel.selectionMode);
-
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
+
+        if(this.viewModel.currentLocation == null)
+        {
+            String elementUuid = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+            this.viewModel.currentLocation = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
+        }
+
+        if(this.viewModel.contentRecyclerViewAdapter == null)
+        {
+            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+            childTypesToExpand.add(Location.class);
+            childTypesToExpand.add(Park.class);
+
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                    new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
+                    childTypesToExpand)
+                    .setTypefaceForType(Location.class, Typeface.BOLD);
+        }
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+
+        this.recyclerView = findViewById(R.id.recyclerViewShowLocations);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
+
+        this.setSelectionModeEnabled(this.viewModel.selectionMode);
     }
 
     @Override

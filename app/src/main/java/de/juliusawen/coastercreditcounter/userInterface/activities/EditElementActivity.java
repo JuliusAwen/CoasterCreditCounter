@@ -22,37 +22,34 @@ import de.juliusawen.coastercreditcounter.tools.Toaster;
 public class EditElementActivity extends BaseActivity
 {
     private EditElementActivityViewModel viewModel;
-
     private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "EditElementActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_edit_element);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.editText = findViewById(R.id.editTextEditElement);
+
+        this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
+
+        if(this.viewModel.elementToEdit == null)
         {
-            this.editText = findViewById(R.id.editTextEditElement);
-
-            this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
-
-            if(this.viewModel.elementToEdit == null)
-            {
-                this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
-            super.addFloatingActionButton();
-
-            this.decorateFloatingActionButton();
-            this.createEditText();
+            this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
+        super.addFloatingActionButton();
+
+        this.decorateFloatingActionButton();
+        this.createEditText();
     }
 
     private void decorateFloatingActionButton()

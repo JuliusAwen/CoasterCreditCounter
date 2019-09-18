@@ -29,31 +29,29 @@ public class CreateParkActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateParkActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_create_park);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.editText = findViewById(R.id.editTextCreatePark);
+
+        this.viewModel = ViewModelProviders.of(this).get(CreateParkActivityViewModel.class);
+
+        if(this.viewModel.parentLocation == null)
         {
-            this.editText = findViewById(R.id.editTextCreatePark);
-
-            this.viewModel = ViewModelProviders.of(this).get(CreateParkActivityViewModel.class);
-
-            if(this.viewModel.parentLocation == null)
-            {
-                this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create));
-            super.addFloatingActionButton();
-
-            this.decorateFloatingActionButton();
-            this.createEditText();
+            this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create));
+        super.addFloatingActionButton();
+
+        this.decorateFloatingActionButton();
+        this.createEditText();
     }
 
     private void decorateFloatingActionButton()

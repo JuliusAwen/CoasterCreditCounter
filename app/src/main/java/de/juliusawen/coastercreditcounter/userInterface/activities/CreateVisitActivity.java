@@ -36,29 +36,27 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "CreateVisitActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_create_visit);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
+
+        if(this.viewModel.park == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
+            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
 
-            if(this.viewModel.park == null)
-            {
-                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
+        super.addToolbar();
+        super.addToolbarHomeButton();
 
-            super.addToolbar();
-            super.addToolbarHomeButton();
+        this.decorateToolbar();
 
-            this.decorateToolbar();
-
-            if(!this.viewModel.datePicked)
-            {
-                this.pickDate();
-            }
+        if(!this.viewModel.datePicked)
+        {
+            this.pickDate();
         }
     }
 

@@ -52,40 +52,38 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "NavigationHubActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_navigation_hub);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
+
+        if(this.viewModel.exportFileAbsolutePath == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
-
-            if(this.viewModel.exportFileAbsolutePath == null)
-            {
-                this.setExportFileAbsolutPath();
-            }
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
-            this.textViewTotalCoasterCreditCount = findViewById(R.id.textViewNavigationHub_totalCoasterCreditsCount);
-            this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewNavigationHub_totalCoasterRidesCount);
-
-            this.drawerLayout = findViewById(R.id.navigationDrawer);
-            this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
-            this.setMenuItemImportAvailability();
-
-            this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
-            super.addToolbar();
-            super.addToolbarMenuIcon();
-            super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+            this.setExportFileAbsolutPath();
         }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
+        this.textViewTotalCoasterCreditCount = findViewById(R.id.textViewNavigationHub_totalCoasterCreditsCount);
+        this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewNavigationHub_totalCoasterRidesCount);
+
+        this.drawerLayout = findViewById(R.id.navigationDrawer);
+        this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
+        this.setMenuItemImportAvailability();
+
+        this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+        super.addToolbar();
+        super.addToolbarMenuIcon();
+        super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
     }
 
     @Override
@@ -414,14 +412,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.isImporting)
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: app is importing...");
-            super.showProgressBar();
+            super.showProgressBar(true);
         }
         else
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: starting async import...");
 
             this.viewModel.isImporting = true;
-            super.showProgressBar();
+            super.showProgressBar(true);
             new ImportContent().execute(this);
         }
     }
@@ -463,7 +461,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     public void finishImportContent()
     {
         Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: finishing import...");
-        super.hideProgressBar();
+        super.showProgressBar(false);
         this.viewModel.isImporting = false;
 
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.information_import_success), Snackbar.LENGTH_LONG);
@@ -493,14 +491,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.isExporting)
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: app is exporting...");
-            super.showProgressBar();
+            super.showProgressBar(true);
         }
         else
         {
             Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: starting async export...");
 
             this.viewModel.isExporting = true;
-            super.showProgressBar();
+            super.showProgressBar(true);
             new ExportContent().execute(this);
         }
     }
@@ -543,7 +541,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportExport:: finishing import/export...");
 
-        super.hideProgressBar();
+        super.showProgressBar(false);
         this.setMenuItemImportAvailability();
         this.viewModel.isExporting = false;
         Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.information_export_success,

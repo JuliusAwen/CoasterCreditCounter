@@ -55,132 +55,130 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "PickElementsActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_pick_elements);
         super.onCreate(savedInstanceState);
+    }
 
-        if(App.isInitialized)
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
+
+        if(this.viewModel.requestCode == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
-
-            if(this.viewModel.requestCode == null)
-            {
-                this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
-            }
-
-            this.viewModel.isSimplePick = getIntent().getBooleanExtra(Constants.EXTRA_SIMPLE_PICK, false);
-
-            if(this.viewModel.elementsToPickFrom == null)
-            {
-                this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-            }
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            if(this.viewModel.contentRecyclerViewAdapter == null)
-            {
-                switch(this.viewModel.requestCode)
-                {
-                    case PICK_ATTRACTIONS:
-                    {
-                        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                        childTypesToExpand.add(Attraction.class);
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.elementsToPickFrom,
-                                childTypesToExpand,
-                                true)
-                                .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
-                        break;
-                    }
-
-                    case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                    case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                    case ASSIGN_STATUS_TO_ATTRACTIONS:
-                    {
-                        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                        childTypesToExpand.add(Attraction.class);
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.elementsToPickFrom,
-                                childTypesToExpand,
-                                true)
-                                .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
-                        break;
-                    }
-
-                    case PICK_ATTRACTION_CATEGORY:
-                    case PICK_MANUFACTURER:
-                    case PICK_STATUS:
-                    {
-                        this.useSelectOrDeselectAllBar = false;
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.elementsToPickFrom,
-                                null,
-                                false)
-                                .setTypefaceForType(Status.class, Typeface.BOLD)
-                                .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                                .setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
-
-                        super.addFloatingActionButton();
-                        this.decorateFloatingActionButtonAdd();
-                        break;
-                    }
-
-                    case PICK_VISIT:
-                    {
-                        this.useSelectOrDeselectAllBar = false;
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.elementsToPickFrom,
-                                null,
-                                false)
-                                .setTypefaceForType(Status.class, Typeface.BOLD)
-                                .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
-                        break;
-                    }
-
-                    default:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.elementsToPickFrom,
-                                null,
-                                true)
-                                .setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
-                        break;
-                    }
-
-                }
-            }
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-            this.recyclerView = findViewById(R.id.recyclerViewPickElements);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
-
-            if(!this.viewModel.isSimplePick)
-            {
-                super.addFloatingActionButton();
-                this.decorateFloatingActionButtonCheck();
-            }
-
-            this.addSelectOrDeselectAllBar();
+            this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
         }
+
+        this.viewModel.isSimplePick = getIntent().getBooleanExtra(Constants.EXTRA_SIMPLE_PICK, false);
+
+        if(this.viewModel.elementsToPickFrom == null)
+        {
+            this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+        }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        if(this.viewModel.contentRecyclerViewAdapter == null)
+        {
+            switch(this.viewModel.requestCode)
+            {
+                case PICK_ATTRACTIONS:
+                {
+                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(Attraction.class);
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            childTypesToExpand,
+                            true)
+                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                    break;
+                }
+
+                case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+                case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                case ASSIGN_STATUS_TO_ATTRACTIONS:
+                {
+                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(Attraction.class);
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            childTypesToExpand,
+                            true)
+                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                    break;
+                }
+
+                case PICK_ATTRACTION_CATEGORY:
+                case PICK_MANUFACTURER:
+                case PICK_STATUS:
+                {
+                    this.useSelectOrDeselectAllBar = false;
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            false)
+                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
+                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+
+                    super.addFloatingActionButton();
+                    this.decorateFloatingActionButtonAdd();
+                    break;
+                }
+
+                case PICK_VISIT:
+                {
+                    this.useSelectOrDeselectAllBar = false;
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            false)
+                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
+                    break;
+                }
+
+                default:
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            null,
+                            true)
+                            .setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                    break;
+                }
+
+            }
+        }
+        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
+        this.recyclerView = findViewById(R.id.recyclerViewPickElements);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+
+        if(!this.viewModel.isSimplePick)
+        {
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButtonCheck();
+        }
+
+        this.addSelectOrDeselectAllBar();
     }
 
     @Override

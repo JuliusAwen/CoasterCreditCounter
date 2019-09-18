@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -58,12 +57,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         super.onCreate(savedInstanceState);
 
-        //VieModel has to instantiated before initialization
+        //ViewModel has to be instantiated before initialization!
         this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
 
         if(App.isInitialized)
         {
             this.viewModel.isInitializingApp = false;
+
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
+            this.create();
+            this.viewModel.activityIsCreated = true;
         }
         else
         {
@@ -80,6 +83,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
+    protected abstract void create();
+
     @Override
     protected void onResume()
     {
@@ -87,6 +92,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         if(App.isInitialized)
         {
+            if(!this.viewModel.activityIsCreated)
+            {
+                Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
+                this.create();
+            }
+
             if(this.viewModel.optionsMenuAgent == null)
             {
                 this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
@@ -125,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         else
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization:: " +
-                    "not able to initialize app without permission to write to external storage (change configuration <useExternalStorage> to 'false' or grant permission!)");
+                    "not able to create app without permission to write to external storage (change configuration <useExternalStorage> to 'false' or grant permission!)");
         }
     }
 
@@ -138,14 +149,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(this.viewModel.isInitializingApp)
         {
             Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: app is initializing...");
-            this.showProgressBar();
+            this.showProgressBar(true);
         }
         else
         {
             Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
 
             this.viewModel.isInitializingApp = true;
-            this.showProgressBar();
+            this.showProgressBar(true);
             new InitializeApp().execute(this);
         }
     }
@@ -177,24 +188,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     private void finishAppInitialization()
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: finishing app initialization...");
+        this.showProgressBar(false);
 
-        this.hideProgressBar();
+        Intent intent = getIntent();
+        Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
 
-        if(App.config.jumpToTestActivityOnStart())
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.finishAppInitialization:: starting TestActivity");
-            ActivityDistributor.startActivityViaClass(this, TestActivity.class);
-        }
-        else
-        {
-            Intent intent = getIntent();
-
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s]", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); //this clears the stacktrace
-            ActivityDistributor.startActivityViaIntent(this, intent);
-        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //this clears the stacktrace
+        ActivityDistributor.startActivityViaIntent(this, intent);
     }
 
 
@@ -205,16 +205,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             this.viewModel.optionsMenuAgent.add(OptionsItem.HELP).create(menu);
         }
-
         return super.onCreateOptionsMenu(menu);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        return this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this);
-    }
-
 
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
@@ -553,7 +545,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void showProgressBar()
+    protected void showProgressBar(boolean show)
     {
         View progressBar = this.fetchProgressBar();
 
@@ -564,14 +556,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             viewGroup.addView(progressBar);
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    protected void hideProgressBar()
-    {
-        View progressBar = this.fetchProgressBar();
-
-        if(progressBar != null)
+        if(show)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else
         {
             progressBar.setVisibility(View.GONE);
         }

@@ -49,32 +49,30 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowParkActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_show_park);
         super.onCreate(savedInstanceState);
-        
-        if(App.isInitialized)
+    }
+
+    protected void create()
+    {
+        this.viewModel = ViewModelProviders.of(this).get(ShowParkActivityViewModel.class);
+
+        if(this.viewModel.park == null)
         {
-            this.viewModel = ViewModelProviders.of(this).get(ShowParkActivityViewModel.class);
-
-            if(this.viewModel.park == null)
-            {
-                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            super.addHelpOverlayFragment(null, null);
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.addFloatingActionButton();
-
-            this.createTabPagerAdapter();
+            this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        super.addHelpOverlayFragment(null, null);
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.addFloatingActionButton();
+
+        this.createTabPagerAdapter();
     }
 
     @Override
@@ -82,6 +80,17 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     {
         getSupportFragmentManager().getFragments().clear();
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        for (Fragment fragment : getSupportFragmentManager().getFragments())
+        {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -157,18 +166,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         }
     }
 
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        for (Fragment fragment : getSupportFragmentManager().getFragments())
-        {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     public void markForDeletion(IElement elementToDelete)

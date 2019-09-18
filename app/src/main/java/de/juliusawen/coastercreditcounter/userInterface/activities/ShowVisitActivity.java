@@ -61,43 +61,29 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.i(LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitActivity.onCreate:: creating activity...");
-
         setContentView(R.layout.activity_show_visit);
         super.onCreate(savedInstanceState);
-
-        if(App.isInitialized)
-        {
-            this.viewModel = ViewModelProviders.of(this).get(ShowVisitActivityViewModel.class);
-
-            if(this.viewModel.visit == null)
-            {
-                this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
-            super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit));
-            super.addToolbar();
-            super.addToolbarHomeButton();
-            super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
-            super.setToolbarOnClickListener(this.getToolbarOnClickListener());
-        }
     }
 
-    private View.OnClickListener getToolbarOnClickListener()
+    protected void create()
     {
-        return new View.OnClickListener()
+        this.viewModel = ViewModelProviders.of(this).get(ShowVisitActivityViewModel.class);
+
+        if(this.viewModel.visit == null)
         {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent());
-            }
-        };
+            this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+        }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_visit_show)), getString(R.string.help_text_show_visit));
+        super.addToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+        super.setToolbarOnClickListener(this.getToolbarOnClickListener());
     }
 
     @Override
@@ -263,6 +249,18 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 }
             }
         }
+    }
+
+    private View.OnClickListener getToolbarOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent());
+            }
+        };
     }
 
     private void decorateFloatingActionButton()

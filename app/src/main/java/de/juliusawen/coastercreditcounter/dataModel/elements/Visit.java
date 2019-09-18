@@ -196,7 +196,7 @@ public class Visit extends Element
         {
             if(Visit.isSameDay(visit.getCalendar(), calendar))
             {
-                Log.d(Constants.LOG_TAG, String.format("Visit.fetchVisitsForYearAndDay:: Found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
+                Log.v(Constants.LOG_TAG, String.format("Visit.fetchVisitsForYearAndDay:: Found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
                 foundVisits.add(visit);
             }
         }

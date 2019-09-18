@@ -3,8 +3,9 @@ package de.juliusawen.coastercreditcounter.globals;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
-    public static final String LOG_DIVIDER = "##################### ";
-    public static final String LOG_DIVIDER_ON_CREATE = "####### ";
+    public static final String LOG_DIVIDER = "######################## ";
+    public static final String LOG_DIVIDER_ON_CREATE = "############ ";
+    public static final String LOG_DIVIDER_ON_RESUME = "###### ";
     public static final String LOG_DIVIDER_FINISH = "-------";
 
 

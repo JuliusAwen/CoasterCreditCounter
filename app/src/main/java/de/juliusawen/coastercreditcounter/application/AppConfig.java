@@ -19,7 +19,6 @@ public class AppConfig
     private final boolean isDebugBuild = true;
 
     //below is just working when isDebugBuild = true
-    private final boolean jumpToTestActivityOnStart = false;
 
     private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = false;
@@ -51,7 +50,6 @@ public class AppConfig
                         "contentFileName [%s]\n" +
                         "settingsFileName [%s]\n" +
                         "isDebugBuild [%S]\n" +
-                        "jumpToTestActivityOnStart [%S]\n" +
                         "useExternalStorage [%S]\n" +
                         "createExportFileIfNonexistent [%S]\n" +
                         "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
@@ -62,9 +60,7 @@ public class AppConfig
                 this.getContentFileName(),
                 this.getSettingsFileName(),
                 this.isDebugBuild(),
-                this.jumpToTestActivityOnStart(),
                 this.useExternalStorage(),
-
                 this.createExportFileIfNotExists(),
                 this.useDefaultContentFromDatabaseMockOnStartup(),
                 this.validateContent()
@@ -89,11 +85,6 @@ public class AppConfig
     public boolean isDebugBuild()
     {
         return this.isDebugBuild;
-    }
-
-    public boolean jumpToTestActivityOnStart()
-    {
-        return this.isDebugBuild && this.jumpToTestActivityOnStart;
     }
 
     public boolean useExternalStorage()
