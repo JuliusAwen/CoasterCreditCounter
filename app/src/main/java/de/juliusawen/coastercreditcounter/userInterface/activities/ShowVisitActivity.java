@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -58,11 +57,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     private ShowVisitActivityViewModel viewModel;
     private RecyclerView recyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_show_visit);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

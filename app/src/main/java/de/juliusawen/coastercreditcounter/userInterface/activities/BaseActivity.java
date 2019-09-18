@@ -52,11 +52,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private BaseActivityViewModel viewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected final void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: creating activity...");
 
-        super.onCreate(savedInstanceState);
+        this.setContentView();
 
         //ViewModel has to be instantiated before initialization!
         this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
@@ -84,10 +86,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
+    protected abstract void setContentView();
     protected abstract void create();
 
     @Override
-    protected void onResume()
+    protected final void onResume()
     {
         super.onResume();
 
@@ -117,21 +120,21 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void resume()
-    {
-        Log.v(Constants.LOG_TAG, String.format("BaseActivity.resume:: [%s] does not override resume()", this.getClass().getSimpleName()));
-    }
+    protected void resume() {}
 
     @Override
-    protected void onPause()
+    protected final void onPause()
     {
         super.onPause();
 
         if(App.isInitialized)
         {
             this.synchronizePersistency();
+            this.pause();
         }
     }
+
+    protected void pause() {}
 
 
     private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()

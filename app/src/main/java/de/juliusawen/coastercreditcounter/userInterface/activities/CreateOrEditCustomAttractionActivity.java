@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -61,11 +60,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private Map<String, Integer> attractionTypesById;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void setContentView()
     {
         setContentView(R.layout.activity_create_or_edit_custom_attraction);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

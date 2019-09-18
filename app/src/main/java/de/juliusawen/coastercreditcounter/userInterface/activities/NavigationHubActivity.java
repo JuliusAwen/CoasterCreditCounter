@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -49,11 +48,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private TextView textViewTotalCoasterCreditCount;
     private TextView textViewTotalCoasterRidesCount;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void setContentView()
     {
         setContentView(R.layout.activity_navigation_hub);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

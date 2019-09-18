@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
 
@@ -33,11 +32,10 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 {
     private CreateVisitActivityViewModel viewModel;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_create_visit);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

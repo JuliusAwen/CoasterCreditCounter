@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -48,11 +47,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private ShowLocationsActivityViewModel viewModel;
     private RecyclerView recyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_show_locations);
-        super.onCreate(savedInstanceState);
     }
 
     public void create()

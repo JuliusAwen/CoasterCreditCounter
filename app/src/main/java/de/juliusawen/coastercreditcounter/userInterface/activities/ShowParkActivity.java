@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,12 +44,11 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
     private ShowParkActivityViewModel viewModel;
     private ViewPager viewPager;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_show_park);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

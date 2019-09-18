@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -32,11 +31,10 @@ public class SortElementsActivity extends BaseActivity
     private SortElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_sort_elements);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

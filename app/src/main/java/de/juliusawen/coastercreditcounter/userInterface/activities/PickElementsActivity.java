@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -52,11 +51,10 @@ public class PickElementsActivity extends BaseActivity
     private RadioButton radioButtonSelectOrDeselectAll;
     private boolean useSelectOrDeselectAllBar = true;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_pick_elements);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

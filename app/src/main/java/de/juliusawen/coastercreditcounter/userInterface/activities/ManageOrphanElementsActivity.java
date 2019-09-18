@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -58,11 +57,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     private RecyclerView recyclerView;
     private OrphanElement lastCreatedOrphanElement;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_manage_orphan_elements);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()

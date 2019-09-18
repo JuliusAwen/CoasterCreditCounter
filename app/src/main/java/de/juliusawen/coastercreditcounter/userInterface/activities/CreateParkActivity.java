@@ -1,7 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,11 +25,10 @@ public class CreateParkActivity extends BaseActivity
     private CreateParkActivityViewModel viewModel;
     private EditText editText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    protected void setContentView()
     {
         setContentView(R.layout.activity_create_park);
-        super.onCreate(savedInstanceState);
     }
 
     protected void create()
