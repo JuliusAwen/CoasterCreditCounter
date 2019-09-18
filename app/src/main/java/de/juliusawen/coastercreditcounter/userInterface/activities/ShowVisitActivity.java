@@ -71,7 +71,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(this.viewModel.visit == null)
         {
-            this.viewModel.visit = (Visit) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.visit = (Visit)App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.optionsMenuAgent == null)
