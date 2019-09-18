@@ -93,18 +93,13 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected Menu createOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent
-                    .add(OptionsItem.SORT)
-                        .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                        .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-                    .create(menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.SORT)
+                .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
+                .create(menu);
     }
 
     @Override
@@ -236,7 +231,7 @@ public class SortElementsActivity extends BaseActivity
             }
         }
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
         finish();
     }
 }

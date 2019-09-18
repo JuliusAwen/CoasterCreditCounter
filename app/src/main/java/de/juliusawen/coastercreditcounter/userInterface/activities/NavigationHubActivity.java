@@ -87,23 +87,18 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    protected void onResume()
+    protected void resume()
     {
-        super.onResume();
+        invalidateOptionsMenu();
 
-        if(App.isInitialized)
+        this.setStatistics();
+
+        for (int i = 0; i < this.navigationView.getMenu().size(); i++)
         {
-            invalidateOptionsMenu();
-
-            this.setStatistics();
-
-            for (int i = 0; i < this.navigationView.getMenu().size(); i++)
-            {
-                this.navigationView.getMenu().getItem(i).setChecked(false);
-            }
-
-            this.closeNavigationDrawer();
+            this.navigationView.getMenu().getItem(i).setChecked(false);
         }
+
+        this.closeNavigationDrawer();
     }
 
     @Override
@@ -127,27 +122,17 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected Menu createOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent.add(OptionsItem.GO_TO_CURRENT_VISIT).create(menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent.add(OptionsItem.GO_TO_CURRENT_VISIT).create(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected Menu prepareOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent
-                    .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
-                    .prepare(menu);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                .prepare(menu);
     }
 
     @Override

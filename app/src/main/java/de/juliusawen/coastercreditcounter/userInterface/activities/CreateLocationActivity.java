@@ -137,7 +137,7 @@ public class CreateLocationActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
         finish();
     }
 }

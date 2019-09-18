@@ -62,7 +62,7 @@ public class Status extends OrphanElement implements IOrphanElement
     public static void setDefault(Status status)
     {
         Status.defaultStatus = status;
-        Log.i(Constants.LOG_TAG, String.format("Status.setDefault:: set %s as default status", status));
+        Log.d(Constants.LOG_TAG, String.format("Status.setDefault:: set %s as default status", status));
     }
 
     public static Status getDefault()

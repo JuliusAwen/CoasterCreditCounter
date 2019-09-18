@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -64,13 +65,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             this.viewModel.isInitializingApp = false;
 
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
             this.create();
             this.viewModel.activityIsCreated = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
+            Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: app is not initialized");
 
             if(!App.config.useExternalStorage())
             {
@@ -94,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             if(!this.viewModel.activityIsCreated)
             {
-                Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
+                Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
                 this.create();
             }
 
@@ -110,7 +111,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             {
                 this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
             }
+
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: calling [%s].resume()", this.getClass().getSimpleName()));
+            this.resume();
         }
+    }
+
+    protected void resume()
+    {
+        Log.v(Constants.LOG_TAG, String.format("BaseActivity.resume:: [%s] does not override resume()", this.getClass().getSimpleName()));
     }
 
     @Override
@@ -204,8 +213,37 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(App.isInitialized)
         {
             this.viewModel.optionsMenuAgent.add(OptionsItem.HELP).create(menu);
+            menu = this.createOptionsMenu(menu);
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    protected Menu createOptionsMenu(Menu menu)
+    {
+        Log.v(Constants.LOG_TAG, String.format("BaseActivity.createOptionsMenu:: [%s] does not override createOptionsMenu()", this.getClass().getSimpleName()));
+        return menu;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        if(App.isInitialized)
+        {
+            menu = this.prepareOptionsMenu(menu);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    protected Menu prepareOptionsMenu(Menu menu)
+    {
+        Log.v(Constants.LOG_TAG, String.format("BaseActivity.prepareOptionsMenu:: [%s] does not override prepareOptionsMenu()", this.getClass().getSimpleName()));
+        return menu;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        return this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this);
     }
 
     @Override
@@ -538,7 +576,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
             Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
-            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
             finish();
             return true;
         }

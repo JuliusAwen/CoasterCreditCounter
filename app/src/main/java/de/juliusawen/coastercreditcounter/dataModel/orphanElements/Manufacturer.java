@@ -62,7 +62,7 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
     public static void setDefault(Manufacturer manufacturer)
     {
         Manufacturer.defaultManufacturer = manufacturer;
-        Log.i(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: set %s as default manufacturer", manufacturer));
+        Log.d(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: set %s as default manufacturer", manufacturer));
     }
 
     public static Manufacturer getDefault()

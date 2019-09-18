@@ -161,7 +161,7 @@ public class Visit extends Element
     {
         if(visit != null)
         {
-            Log.i(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
+            Log.d(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
             visit.setEditingEnabled(true);
             Visit.currentVisits.add(visit);
         }

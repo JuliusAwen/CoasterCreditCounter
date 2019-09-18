@@ -24,7 +24,7 @@ public class AlertDialogFragment extends DialogFragment
             RequestCode requestCode,
             boolean isChildFragment)
     {
-        Log.v(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
+        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
                 "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
                 title, message, positiveButtonText, negativeButtonText));
 

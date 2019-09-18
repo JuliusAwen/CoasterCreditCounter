@@ -102,31 +102,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected Menu createOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent
-                    .add(OptionsItem.EXPAND_ALL)
-                    .add(OptionsItem.COLLAPSE_ALL)
-                    .create(menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
+                .create(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected Menu prepareOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent
-                    .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                    .prepare(menu);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .prepare(menu);
     }
 
     @Override

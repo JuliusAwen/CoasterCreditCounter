@@ -283,7 +283,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         setResult(resultCode, intent);
         super.synchronizePersistency(); // has to be called manually because after calling finish() BaseActivity.onPause() is not called for some strange reason...
 
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
         finish();
     }
 }

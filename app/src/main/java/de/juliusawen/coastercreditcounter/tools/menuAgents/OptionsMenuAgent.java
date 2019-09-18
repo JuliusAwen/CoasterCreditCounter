@@ -40,7 +40,7 @@ public class OptionsMenuAgent
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [%s #%d] for Item [%s #%d] already added", group, group.ordinal(), item, item.ordinal()));
+                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
             }
         }
         return this;
@@ -55,7 +55,7 @@ public class OptionsMenuAgent
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [%s #%d] already added", item, item.ordinal()));
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
             return false;
         }
     }
@@ -72,15 +72,15 @@ public class OptionsMenuAgent
         return this;
     }
 
-    public void create(Menu menu)
+    public Menu create(Menu menu)
     {
-        Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding [%s] Item(s) to OptionsMenu", this.itemsToAdd.size()));
+        Log.d(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding [%s] Item(s) to OptionsMenu", this.itemsToAdd.size()));
 
         for(OptionsItem item : this.itemsToAdd)
         {
             if(this.isActionItem(item))
             {
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s #%d] as ACTION_IF_ROOM to ROOT", item, item.ordinal()));
+                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [#%d - %s] as ACTION_IF_ROOM to ROOT", item.ordinal(), item));
 
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource)
                         .setIcon(DrawableProvider.getColoredDrawable(item.drawableResource, R.color.white))
@@ -90,7 +90,7 @@ public class OptionsMenuAgent
             {
                 if(this.isGroupInRootMenu(item))
                 {
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [%s #%d] to ROOT", item, item.ordinal()));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [#%d - %s] to ROOT", item.ordinal(), item));
                     this.subMenuByGroup.put(item, menu.addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                 }
                 else //isGroupInSubMenu
@@ -98,19 +98,19 @@ public class OptionsMenuAgent
                     if(this.subMenuByGroup.containsKey(this.groupByItem.get(item)))
                     {
                         OptionsItem group = this.groupByItem.get(item);
-                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [%s #%d] to Group [%s #%d]", item, item.ordinal(), group, group.ordinal()));
+                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Group [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
                         this.subMenuByGroup.put(item, this.subMenuByGroup.get(group).addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                     }
                     else
                     {
-                        Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: Group for Group [%s #%d] not found", item, item.ordinal()));
+                        Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: Group for Group [#%d - %s] not found", item.ordinal(), item));
                         break;
                     }
                 }
             }
             else if(this.isItemInRootMenu(item))
             {
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s #%d] to ROOT", item, item.ordinal()));
+                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [#%d - %s] to ROOT", item.ordinal(), item));
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
             }
             else //IsItemInGroup
@@ -118,21 +118,22 @@ public class OptionsMenuAgent
                 if((this.subMenuByGroup.containsKey(this.groupByItem.get(item))))
                 {
                     OptionsItem group = this.groupByItem.get(item);
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [%s #%d] to Group [%s #%d]", item, item.ordinal(), group, group.ordinal()));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.create:: adding Item [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
                     this.subMenuByGroup.get(group).add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Group for Item [%s #%d] not found", item, item.ordinal()));
+                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Group for Item [#%d - %s] not found", item.ordinal(), item));
                     break;
                 }
             }
         }
 
         this.itemsToAdd.clear();
+        return menu;
     }
 
-    public void prepare(Menu menu)
+    public Menu prepare(Menu menu)
     {
         for(OptionsItem optionsItem : this.setEnabledByItem.keySet())
         {
@@ -151,11 +152,11 @@ public class OptionsMenuAgent
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupEnabled(optionsItem.ordinal(), isEnabled);
                     }
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [%s #%d] enabled [%s]", optionsItem, optionsItem.ordinal(), isEnabled));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [%s #%d] enabled [%s]", optionsItem, optionsItem.ordinal(), isEnabled));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
                     menuItem.setEnabled(isEnabled);
                 }
             }
@@ -178,18 +179,20 @@ public class OptionsMenuAgent
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupVisible(optionsItem.ordinal(), isVisible);
                     }
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [%s #%d] visible [%s]", optionsItem, optionsItem.ordinal(), isVisible));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Group [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
                 }
                 else
                 {
                     menuItem.setVisible(isVisible);
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [%s #%d] visible [%s]", optionsItem, optionsItem.ordinal(), isVisible));
+                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.prepare:: Item [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
                 }
             }
         }
 
         this.setEnabledByItem.clear();
         this.setVisibleByItem.clear();
+
+        return menu;
     }
 
     private boolean isActionItem(OptionsItem item)
@@ -217,7 +220,7 @@ public class OptionsMenuAgent
     {
         OptionsItem optionsItem = OptionsItem.getValue(menuItem.getItemId());
 
-        Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [%s #%d] in [%s] selected", optionsItem, optionsItem.ordinal(), client.getClass().getSimpleName()));
+        Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] selected", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
 
         switch(optionsItem)
         {
@@ -230,7 +233,7 @@ public class OptionsMenuAgent
             case SORT_BY_LOCATION:
             case SORT_BY_ATTRACTION_CATEGORY:
             case SORT_BY_MANUFACTURER:
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [%s #%d] in [%s] has no function", optionsItem, optionsItem.ordinal(), client.getClass().getSimpleName()));
+                Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] has no function", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
                 return true;
 
             default:

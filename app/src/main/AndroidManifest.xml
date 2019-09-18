@@ -23,22 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".userInterface.activities.NavigationHubActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.ShowLocationsActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.SortElementsActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.PickElementsActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.ShowParkActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.ShowVisitActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.CreateVisitActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".userInterface.activities.ManageOrphanElementsActivity"
-            android:launchMode="singleTask" />
+        <activity android:name=".userInterface.activities.NavigationHubActivity" />
+        <activity android:name=".userInterface.activities.ShowLocationsActivity" />
+        <activity android:name=".userInterface.activities.SortElementsActivity" />
+        <activity android:name=".userInterface.activities.PickElementsActivity" />
+        <activity android:name=".userInterface.activities.ShowParkActivity" />
+        <activity android:name=".userInterface.activities.ShowVisitActivity" />
+        <activity android:name=".userInterface.activities.CreateVisitActivity" />
+        <activity android:name=".userInterface.activities.ManageOrphanElementsActivity" />
 
         <activity
             android:name=".userInterface.activities.CreateLocationActivity"

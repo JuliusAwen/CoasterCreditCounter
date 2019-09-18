@@ -229,66 +229,56 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected Menu createOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
-        {
-            this.viewModel.optionsMenuAgent
-                    .add(OptionsItem.SORT_ATTRACTION_CATEGORIES)
-                    .add(OptionsItem.SORT_MANUFACTURERS)
-                    .add(OptionsItem.SORT_STATUSES)
-                    .add(OptionsItem.EXPAND_ALL)
-                    .add(OptionsItem.COLLAPSE_ALL)
-                    .create(menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.SORT_ATTRACTION_CATEGORIES)
+                .add(OptionsItem.SORT_MANUFACTURERS)
+                .add(OptionsItem.SORT_STATUSES)
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
+                .create(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected  Menu prepareOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        this.viewModel.optionsMenuAgent
+                .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, false)
+                .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
+                .setVisible(OptionsItem.SORT_STATUSES, false);
+
+        switch(this.viewModel.orphanElementTypeToManage)
         {
-            this.viewModel.optionsMenuAgent
-                    .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, false)
-                    .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
-                    .setVisible(OptionsItem.SORT_STATUSES, false);
-
-            switch(this.viewModel.orphanElementTypeToManage)
+            case ATTRACTION_CATEGORY:
             {
-                case ATTRACTION_CATEGORY:
-                {
-                    this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsItem.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
-                            .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, true);
-                    break;
-                }
-
-                case MANUFACTURER:
-                {
-                    this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsItem.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
-                            .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
-                    break;
-                }
-
-                case STATUS:
-                {
-                    this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsItem.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
-                            .setVisible(OptionsItem.SORT_STATUSES, true);
-                    break;
-                }
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, true);
+                break;
             }
 
-            this.viewModel.optionsMenuAgent
-                    .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                    .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                    .prepare(menu);
+            case MANUFACTURER:
+            {
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
+                break;
+            }
+
+            case STATUS:
+            {
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_STATUSES, true);
+                break;
+            }
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .prepare(menu);
     }
 
     @Override
@@ -746,7 +736,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
         finish();
     }
 }

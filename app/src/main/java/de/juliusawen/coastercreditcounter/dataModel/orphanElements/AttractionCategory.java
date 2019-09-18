@@ -62,7 +62,7 @@ public class AttractionCategory extends OrphanElement
     public static void setDefault(AttractionCategory attractionCategory)
     {
         AttractionCategory.defaultAttractionCategory = attractionCategory;
-        Log.i(Constants.LOG_TAG, String.format("AttractionCategory.setDefault:: set %s as default attraction category", attractionCategory));
+        Log.d(Constants.LOG_TAG, String.format("AttractionCategory.setDefault:: set %s as default attraction category", attractionCategory));
     }
 
     public static AttractionCategory getDefault()

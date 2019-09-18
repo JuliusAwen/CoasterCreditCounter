@@ -23,7 +23,6 @@ public class Content
 
     private boolean isRestoreBackupPossible;
     private Map<UUID, IElement> backupElements = null;
-    private Location backupRootLocation = null;
 
     private final Persistence persistence;
 
@@ -42,6 +41,11 @@ public class Content
     {
         this.persistence = persistence;
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
+    }
+
+    public int getSize()
+    {
+        return this.elementsByUuid.size();
     }
 
     public boolean initialize()
@@ -82,45 +86,50 @@ public class Content
 
     public void clear()
     {
-        this.backup();
-
-        this.rootLocation = null;
-        this.elementsByUuid.clear();
-
-        Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
+        if(this.backup())
+        {
+            this.rootLocation = null;
+            this.elementsByUuid.clear();
+            Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
+        }
     }
 
-    private void backup()
+    private boolean backup()
     {
         this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
-        this.backupRootLocation = this.rootLocation;
 
         this.isRestoreBackupPossible = true;
 
-        Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
+        if(this.elementsByUuid.size() > 0)
+        {
+            Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
+            return true;
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "Content.backup:: content is empty");
+            return false;
+        }
     }
 
     public boolean restoreBackup()
     {
         if(this.isRestoreBackupPossible)
         {
-                if(this.backupElements != null && this.backupRootLocation != null)
+            if(this.backupElements != null)
             {
                 this.elementsByUuid = new LinkedHashMap<>(this.backupElements);
-                this.rootLocation = this.backupRootLocation;
-
+                this.rootLocation = null;
                 this.isRestoreBackupPossible = false;
-
                 this.backupElements = null;
-                this.backupRootLocation = null;
 
                 Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible: backup data is null");
-                return false;
+                Log.w(Constants.LOG_TAG, "Content.restoreBackup:: content backup is empty");
+                return true;
             }
         }
         else

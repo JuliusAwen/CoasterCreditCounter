@@ -6,7 +6,7 @@ public abstract class Constants
     public static final String LOG_DIVIDER = "######################## ";
     public static final String LOG_DIVIDER_ON_CREATE = "############ ";
     public static final String LOG_DIVIDER_ON_RESUME = "###### ";
-    public static final String LOG_DIVIDER_FINISH = "-------";
+    public static final String LOG_DIVIDER_FINISH = "------- finished ";
 
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";

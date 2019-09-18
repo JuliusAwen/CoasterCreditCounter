@@ -61,7 +61,7 @@ public abstract class ActivityDistributor
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),"ActivityDistributor.startActivityShow:: unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
         }
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static  void startActivityManageForResult(Context context, RequestCode requestCode)
@@ -118,7 +118,7 @@ public abstract class ActivityDistributor
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown RequestCode [%s]", requestCode));
         }
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static void startActivityEditForResult(Context context, RequestCode requestCode, IElement element)
@@ -175,7 +175,7 @@ public abstract class ActivityDistributor
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityEditForResult:: unable to start activity: unknown RequestCode [%s] for type [%s] from [%s]",
                     requestCode, element, context.getClass().getSimpleName()));
         }
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static void startActivityCreateForResult(Context context, RequestCode requestCode, IElement parentElement)
@@ -249,7 +249,7 @@ public abstract class ActivityDistributor
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), requestCode, context.getClass().getSimpleName()));
         }
 
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static void startActivitySortForResult(Context context, RequestCode requestCode, List<IElement> elementsToSort)
@@ -301,7 +301,7 @@ public abstract class ActivityDistributor
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivitySortForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static void startActivityPickForResult(Context context, RequestCode requestCode, List<IElement> elementsToPickFrom)
@@ -383,7 +383,7 @@ public abstract class ActivityDistributor
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityPickForResult:: unable to start activity: unknown request code [%s]", requestCode));
         }
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
 
     public static void startActivityViaIntent(Context context, Intent intent)

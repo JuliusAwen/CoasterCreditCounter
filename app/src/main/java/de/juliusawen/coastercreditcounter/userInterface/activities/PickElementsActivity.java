@@ -224,98 +224,88 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected Menu createOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        switch(this.viewModel.requestCode)
         {
-            switch(this.viewModel.requestCode)
-            {
-                case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                case ASSIGN_STATUS_TO_ATTRACTIONS:
-                    this.viewModel.optionsMenuAgent
-                            .add(OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
-                                    .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
-                                    .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME)
-                                .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
-                                    .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
-                                    .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                this.viewModel.optionsMenuAgent
+                        .add(OptionsItem.SORT_BY)
+                            .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
+                                .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
+                                .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME)
+                            .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
+                                .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
+                                .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
 //                                .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, OptionsItem.SORT)
 //                                    .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, OptionsItem.SORT_BY_ATTRACTION_CATEGORY)
 //                                    .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, OptionsItem.SORT_BY_ATTRACTION_CATEGORY)
-                                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
-                                    .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                                    .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                            .add(OptionsItem.GROUP_BY)
-                                .addToGroup(OptionsItem.GROUP_BY_LOCATION, OptionsItem.GROUP_BY)
-                                .addToGroup(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, OptionsItem.GROUP_BY)
-                                .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
-                                .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
+                            .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
+                                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
+                                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
+                        .add(OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_LOCATION, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
 
-                case PICK_ATTRACTIONS:
-                    this.viewModel.optionsMenuAgent
-                            .add(OptionsItem.EXPAND_ALL)
-                            .add(OptionsItem.COLLAPSE_ALL);
-                    break;
+            case PICK_ATTRACTIONS:
+                this.viewModel.optionsMenuAgent
+                        .add(OptionsItem.EXPAND_ALL)
+                        .add(OptionsItem.COLLAPSE_ALL);
+                break;
 
-                case PICK_ATTRACTION_CATEGORY:
-                case PICK_MANUFACTURER:
-                case PICK_STATUS:
-                    this.viewModel.optionsMenuAgent
-                            .add(OptionsItem.SORT)
-                                .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                                .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
-                    break;
-            }
-
-            this.viewModel.optionsMenuAgent.create(menu);
+            case PICK_ATTRACTION_CATEGORY:
+            case PICK_MANUFACTURER:
+            case PICK_STATUS:
+                this.viewModel.optionsMenuAgent
+                        .add(OptionsItem.SORT)
+                            .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
+                break;
         }
 
-        return super.onCreateOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent.create(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected Menu prepareOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
+        boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
+        boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
+
+        boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
+        boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
+        boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
+        boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
+
+        switch(this.viewModel.requestCode)
         {
-            boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-            boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
-            boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
+                            .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
+//                            .setEnabled(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, sortByCategoryEnabled)
+                            .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
+                        .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, groupByCategoryEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
 
-            boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-            boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
-            boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
-            boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
-
-            switch(this.viewModel.requestCode)
-            {
-                case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                case ASSIGN_STATUS_TO_ATTRACTIONS:
-                    this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
-                                .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
-    //                            .setEnabled(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, sortByCategoryEnabled)
-                                .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
-                                .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
-                                .setEnabled(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, groupByCategoryEnabled)
-                                .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
-                                .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
-
-                case PICK_ATTRACTIONS:
-                    this.viewModel.optionsMenuAgent
-                            .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                            .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
-                    break;
-            }
-
-            this.viewModel.optionsMenuAgent.prepare(menu);
+            case PICK_ATTRACTIONS:
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
+                break;
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return this.viewModel.optionsMenuAgent.prepare(menu);
     }
 
     @Override
@@ -625,7 +615,7 @@ public class PickElementsActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
         finish();
     }
 }
