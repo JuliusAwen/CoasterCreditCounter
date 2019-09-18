@@ -1,8 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -117,7 +115,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 Visit resultElement = (Visit)ResultFetcher.fetchResultElement(data);
 
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<GO_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
-                this.showCurrentVisit(resultElement);
+                ActivityDistributor.goToCurrentVisit(this, resultElement);
             }
         }
     }
@@ -179,41 +177,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
                         Visit.getCurrentVisits().get(0)));
 
-                this.showCurrentVisit(Visit.getCurrentVisits().get(0));
+                ActivityDistributor.goToCurrentVisit(this, Visit.getCurrentVisits().get(0));
             }
             return true;
         }
         return super.handleOptionsItemSelected(item);
-    }
-
-    private void showCurrentVisit(Visit currentVisit)
-    {
-        Intent navigationHubActivity = new Intent(this, NavigationHubActivity.class);
-
-        Intent showLocationIntent = new Intent(this, ShowLocationsActivity.class);
-
-        Intent showParkIntent = new Intent(this, ShowParkActivity.class);
-        showParkIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getParent().getUuid().toString());
-
-        Intent showVisitIntent = new Intent(this, ShowVisitActivity.class);
-        showVisitIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getUuid().toString());
-
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addNextIntent(navigationHubActivity);
-        taskStackBuilder.addNextIntent(showLocationIntent);
-        taskStackBuilder.addNextIntent(showParkIntent);
-        taskStackBuilder.addNextIntent(showVisitIntent);
-
-        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        try
-        {
-            pendingIntent.send();
-        }
-        catch(PendingIntent.CanceledException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     private void setExportFileAbsolutPath()

@@ -1,6 +1,8 @@
 package de.juliusawen.coastercreditcounter.tools.activityDistributor;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,6 +13,7 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElementType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -21,6 +24,7 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleE
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ManageOrphanElementsActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowParkActivity;
@@ -402,5 +406,35 @@ public abstract class ActivityDistributor
                 StringTool.parseActivityName(intent.getComponent().getShortClassName()), context.getClass().getSimpleName()));
 
         context.startActivity(intent);
+    }
+
+    public static void goToCurrentVisit(Context context, Visit currentVisit)
+    {
+        Intent navigationHubActivity = new Intent(context, NavigationHubActivity.class);
+
+        Intent showLocationIntent = new Intent(context, ShowLocationsActivity.class);
+
+        Intent showParkIntent = new Intent(context, ShowParkActivity.class);
+        showParkIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getParent().getUuid().toString());
+
+        Intent showVisitIntent = new Intent(context, ShowVisitActivity.class);
+        showVisitIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getUuid().toString());
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntent(navigationHubActivity);
+        taskStackBuilder.addNextIntent(showLocationIntent);
+        taskStackBuilder.addNextIntent(showParkIntent);
+        taskStackBuilder.addNextIntent(showVisitIntent);
+
+        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        try
+        {
+            pendingIntent.send();
+        }
+        catch(PendingIntent.CanceledException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
