@@ -118,12 +118,6 @@
     <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
 
-    <!-- ATTRACTION TYPES-->
-    <string name="spinner_text_attraction_type">Type:</string>
-
-    <string name="attraction_type_roller_coaster">Roller Coaster</string>
-    <string name="attraction_type_non_roller_coaster">Non-Roller Coaster</string>
-
     <!--LOCATIONS-->
     <string name="title_locations">Locations</string>
     <string name="title_locations_sort">Sort Locations</string>

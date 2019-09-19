@@ -7,8 +7,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -16,17 +14,12 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Coaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
@@ -55,11 +48,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private EditText editTextUntrackedRideCount;
 
-    private final int attractionType_RollerCoaster = 0;
-    private final int attractionType_NonRollerCoaster = 1;
-    private Map<String, Integer> attractionTypesById;
-
-
     protected void setContentView()
     {
         setContentView(R.layout.activity_create_or_edit_custom_attraction);
@@ -68,7 +56,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     protected void create()
     {
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
-        this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
         this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
         this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
@@ -122,17 +109,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         this.decorateFloatingActionButton();
         this.createEditTextAttractionName();
-
-        if(viewModel.isEditMode)
-        {
-            findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionType).setVisibility(View.GONE);
-            Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onCreate:: Activity is in edit mode - hiding option to change attraction type");
-        }
-        else
-        {
-            this.createAttractionTypesDictionary();
-            this.createLayoutAttractionType();
-        }
 
         if(!(this.viewModel.attraction instanceof StockAttraction))
         {
@@ -330,46 +306,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         }
     }
 
-    private void createAttractionTypesDictionary()
-    {
-        this.attractionTypesById = new HashMap<>();
-        this.attractionTypesById.put(getString(R.string.attraction_type_roller_coaster), this.attractionType_RollerCoaster);
-        this.attractionTypesById.put(getString(R.string.attraction_type_non_roller_coaster), this.attractionType_NonRollerCoaster);
-    }
-
-    private void createLayoutAttractionType()
-    {
-        this.spinnerAttractionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                String item = parent.getItemAtPosition(position).toString();
-                viewModel.attractionType = attractionTypesById.get(item);
-                Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onItemSelected:: attraction type set to [%s]", item));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(this.attractionTypesById.keySet()));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.spinnerAttractionType.setAdapter(arrayAdapter);
-
-        if(this.viewModel.isEditMode)
-        {
-            if(this.viewModel.attraction instanceof Coaster)
-            {
-                this.spinnerAttractionType.setSelection(attractionType_RollerCoaster);
-            }
-            else
-            {
-                this.spinnerAttractionType.setSelection(attractionType_NonRollerCoaster);
-            }
-        }
-    }
-
     private void createLayoutManufacturer()
     {
         LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
@@ -499,16 +435,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private boolean createAttraction()
     {
         boolean success = false;
-        IAttraction attraction = null;
-
-        if(this.viewModel.attractionType == this.attractionType_RollerCoaster)
-        {
-             attraction = CustomCoaster.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount, null);
-        }
-        else if(this.viewModel.attractionType == this.attractionType_NonRollerCoaster)
-        {
-            attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount, null);
-        }
+        IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount, null);
 
         if(attraction != null)
         {

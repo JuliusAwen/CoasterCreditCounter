@@ -28,7 +28,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
@@ -204,33 +203,28 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void initializeTypesByDetails()
     {
         Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
-        typesForWhichDisplayManufacturerDetail.add(CustomCoaster.class);
         typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
         typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
+        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
         this.typesByDetail.put(DetailType.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayLocationDetail = new HashSet<>();
-        typesForWhichDisplayLocationDetail.add(CustomCoaster.class);
         typesForWhichDisplayLocationDetail.add(CustomAttraction.class);
         typesForWhichDisplayLocationDetail.add(StockAttraction.class);
         typesForWhichDisplayLocationDetail.add(Blueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
         this.typesByDetail.put(DetailType.LOCATION, typesForWhichDisplayLocationDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayCategoryDetail = new HashSet<>();
-        typesForWhichDisplayCategoryDetail.add(CustomCoaster.class);
         typesForWhichDisplayCategoryDetail.add(CustomAttraction.class);
         typesForWhichDisplayCategoryDetail.add(Blueprint.class);
         this.typesByDetail.put(DetailType.CATEGORY, typesForWhichDisplayCategoryDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
-        typesForWhichDisplayStatusDetail.add(CustomCoaster.class);
         typesForWhichDisplayStatusDetail.add(CustomAttraction.class);
         typesForWhichDisplayStatusDetail.add(StockAttraction.class);
         this.typesByDetail.put(DetailType.STATUS, typesForWhichDisplayStatusDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayTotalRideCountDetail = new HashSet<>();
-        typesForWhichDisplayTotalRideCountDetail.add(CustomCoaster.class);
         typesForWhichDisplayTotalRideCountDetail.add(CustomAttraction.class);
         typesForWhichDisplayTotalRideCountDetail.add(StockAttraction.class);
         this.typesByDetail.put(DetailType.TOTAL_RIDE_COUNT, typesForWhichDisplayTotalRideCountDetail);

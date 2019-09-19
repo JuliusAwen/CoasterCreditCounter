@@ -12,7 +12,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /***
  * Parent: Location
- * Children: CustomCoaster, CustomAttraction, StockAttraction, Visit
+ * Children: CustomAttraction, StockAttraction, Visit
  */
 public class Park extends Element
 {

@@ -11,7 +11,6 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
@@ -94,43 +93,43 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park phantasialand = Park.create("Phantasialand");
         locations.Germany.addChildAndSetParent(phantasialand);
 
-        CustomCoaster taron = CustomCoaster.create("Taron", 38);
+        CustomAttraction taron = CustomAttraction.create("Taron", 38);
         taron.setCreditType(creditTypes.RollerCoaster);
         taron.setCategory(categories.RollerCoasters);
         taron.setManufacturer(manufacturers.Intamin);
         phantasialand.addChildAndSetParent(taron);
 
-        CustomCoaster blackMamba = CustomCoaster.create("Black Mamba", 18);
+        CustomAttraction blackMamba = CustomAttraction.create("Black Mamba", 18);
         blackMamba.setCreditType(creditTypes.RollerCoaster);
         blackMamba.setCategory(categories.RollerCoasters);
         blackMamba.setManufacturer(manufacturers.BolligerAndMabillard);
         phantasialand.addChildAndSetParent(blackMamba);
 
-        CustomCoaster coloradoAdventure = CustomCoaster.create("Colorado Adventure", 11);
+        CustomAttraction coloradoAdventure = CustomAttraction.create("Colorado Adventure", 11);
         coloradoAdventure.setCreditType(creditTypes.RollerCoaster);
         coloradoAdventure.setCategory(categories.RollerCoasters);
         coloradoAdventure.setManufacturer(manufacturers.Vekoma);
         phantasialand.addChildAndSetParent(coloradoAdventure);
 
-        CustomCoaster raik = CustomCoaster.create("Raik", 5);
+        CustomAttraction raik = CustomAttraction.create("Raik", 5);
         raik.setCreditType(creditTypes.RollerCoaster);
         raik.setCategory(categories.RollerCoasters);
         raik.setManufacturer(manufacturers.Vekoma);
         phantasialand.addChildAndSetParent(raik);
 
-        CustomCoaster templeOfTheNightHawk = CustomCoaster.create("Temple of the Night Hawk", 9);
+        CustomAttraction templeOfTheNightHawk = CustomAttraction.create("Temple of the Night Hawk", 9);
         templeOfTheNightHawk.setCreditType(creditTypes.RollerCoaster);
         templeOfTheNightHawk.setCategory(categories.RollerCoasters);
         templeOfTheNightHawk.setManufacturer(manufacturers.Vekoma);
         phantasialand.addChildAndSetParent(templeOfTheNightHawk);
 
-        CustomCoaster winjasFear = CustomCoaster.create("Winja's Fear", 8);
+        CustomAttraction winjasFear = CustomAttraction.create("Winja's Fear", 8);
         winjasFear.setCreditType(creditTypes.RollerCoaster);
         winjasFear.setCategory(categories.RollerCoasters);
         winjasFear.setManufacturer(manufacturers.MaurerSoehne);
         phantasialand.addChildAndSetParent(winjasFear);
 
-        CustomCoaster winjasForce = CustomCoaster.create("Winja's Force", 8);
+        CustomAttraction winjasForce = CustomAttraction.create("Winja's Force", 8);
         winjasForce.setCreditType(creditTypes.RollerCoaster);
         winjasForce.setCategory(categories.RollerCoasters);
         winjasForce.setManufacturer(manufacturers.MaurerSoehne);
@@ -231,49 +230,49 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction limit = StockAttraction.create("Limit", blueprints.SuspendedLoopingCoaster, 1);
         heidePark.addChildAndSetParent(limit);
 
-        CustomCoaster krake = CustomCoaster.create("Krake", 14);
+        CustomAttraction krake = CustomAttraction.create("Krake", 14);
         krake.setCreditType(creditTypes.RollerCoaster);
         krake.setCategory(categories.RollerCoasters);
         krake.setManufacturer(manufacturers.BolligerAndMabillard);
         heidePark.addChildAndSetParent(krake);
 
-        CustomCoaster flugDerDaemonen = CustomCoaster.create("Flug der Dämonen", 11);
+        CustomAttraction flugDerDaemonen = CustomAttraction.create("Flug der Dämonen", 11);
         flugDerDaemonen.setCreditType(creditTypes.RollerCoaster);
         flugDerDaemonen.setCategory(categories.RollerCoasters);
         flugDerDaemonen.setManufacturer(manufacturers.BolligerAndMabillard);
         heidePark.addChildAndSetParent(flugDerDaemonen);
 
-        CustomCoaster desertRace = CustomCoaster.create("Desert Race", 10);
+        CustomAttraction desertRace = CustomAttraction.create("Desert Race", 10);
         desertRace.setCreditType(creditTypes.RollerCoaster);
         desertRace.setCategory(categories.RollerCoasters);
         desertRace.setManufacturer(manufacturers.Intamin);
         heidePark.addChildAndSetParent(desertRace);
 
-        CustomCoaster bigLoop = CustomCoaster.create("Big Loop", 2);
+        CustomAttraction bigLoop = CustomAttraction.create("Big Loop", 2);
         bigLoop.setCreditType(creditTypes.RollerCoaster);
         bigLoop.setCategory(categories.RollerCoasters);
         bigLoop.setManufacturer(manufacturers.Vekoma);
         heidePark.addChildAndSetParent(bigLoop);
 
-        CustomCoaster grottenblitz = CustomCoaster.create("Grottenblitz", 1);
+        CustomAttraction grottenblitz = CustomAttraction.create("Grottenblitz", 1);
         grottenblitz.setCreditType(creditTypes.RollerCoaster);
         grottenblitz.setCategory(categories.RollerCoasters);
         grottenblitz.setManufacturer(manufacturers.Mack);
         heidePark.addChildAndSetParent(grottenblitz);
 
-        CustomCoaster indyBlitz = CustomCoaster.create("Indy-Blitz", 1);
+        CustomAttraction indyBlitz = CustomAttraction.create("Indy-Blitz", 1);
         indyBlitz.setCreditType(creditTypes.RollerCoaster);
         indyBlitz.setCategory(categories.RollerCoasters);
         indyBlitz.setManufacturer(manufacturers.Zierer);
         heidePark.addChildAndSetParent(indyBlitz);
 
-        CustomCoaster bobbahn = CustomCoaster.create("Bobbahn", 1);
+        CustomAttraction bobbahn = CustomAttraction.create("Bobbahn", 1);
         bobbahn.setCreditType(creditTypes.RollerCoaster);
         bobbahn.setCategory(categories.RollerCoasters);
         bobbahn.setManufacturer(manufacturers.Mack);
         heidePark.addChildAndSetParent(bobbahn);
 
-        CustomCoaster colossos = CustomCoaster.create("Colossos");
+        CustomAttraction colossos = CustomAttraction.create("Colossos");
         colossos.setCreditType(creditTypes.RollerCoaster);
         colossos.setCategory(categories.RollerCoasters);
         colossos.setManufacturer(manufacturers.Intamin);
@@ -411,38 +410,38 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction excalibur = StockAttraction.create("Excalibur", blueprints.TopSpin, 1);
         walibiHolland.addChildAndSetParent(excalibur);
 
-        CustomCoaster drako = CustomCoaster.create("Drako", 2);
+        CustomAttraction drako = CustomAttraction.create("Drako", 2);
         drako.setCreditType(creditTypes.RollerCoaster);
         drako.setCategory(categories.RollerCoasters);
         drako.setManufacturer(manufacturers.Zierer);
         walibiHolland.addChildAndSetParent(drako);
 
-        CustomCoaster lostGravity = CustomCoaster.create("Lost Gravity", 7);
+        CustomAttraction lostGravity = CustomAttraction.create("Lost Gravity", 7);
         lostGravity.setCreditType(creditTypes.RollerCoaster);
         lostGravity.setCategory(categories.RollerCoasters);
         lostGravity.setManufacturer(manufacturers.Mack);
         walibiHolland.addChildAndSetParent(lostGravity);
 
-        CustomCoaster robinHood = CustomCoaster.create("Robin Hood", 2);
+        CustomAttraction robinHood = CustomAttraction.create("Robin Hood", 2);
         robinHood.setCreditType(creditTypes.RollerCoaster);
         robinHood.setCategory(categories.RollerCoasters);
         robinHood.setManufacturer(manufacturers.Vekoma);
         robinHood.setStatus(statuses.Converted);
         walibiHolland.addChildAndSetParent(robinHood);
 
-        CustomCoaster xpressPlatform13 = CustomCoaster.create("Xpress: Platform 13", 2);
+        CustomAttraction xpressPlatform13 = CustomAttraction.create("Xpress: Platform 13", 2);
         xpressPlatform13.setCreditType(creditTypes.RollerCoaster);
         xpressPlatform13.setCategory(categories.RollerCoasters);
         xpressPlatform13.setManufacturer(manufacturers.Vekoma);
         walibiHolland.addChildAndSetParent(xpressPlatform13);
 
-        CustomCoaster goliath = CustomCoaster.create("Goliath", 7);
+        CustomAttraction goliath = CustomAttraction.create("Goliath", 7);
         goliath.setCreditType(creditTypes.RollerCoaster);
         goliath.setCategory(categories.RollerCoasters);
         goliath.setManufacturer(manufacturers.Intamin);
         walibiHolland.addChildAndSetParent(goliath);
 
-        CustomCoaster untamed = CustomCoaster.create("Untamed");
+        CustomAttraction untamed = CustomAttraction.create("Untamed");
         untamed.setCreditType(creditTypes.RollerCoaster);
         untamed.setCategory(categories.RollerCoasters);
         untamed.setManufacturer(manufacturers.RMC);
@@ -588,14 +587,14 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 
         //2018
-        CustomCoaster bergUndTal = CustomCoaster.create("Berg & Tal", 1);
+        CustomAttraction bergUndTal = CustomAttraction.create("Berg & Tal", 1);
         bergUndTal.setCreditType(creditTypes.RollerCoaster);
         bergUndTal.setCategory(categories.RollerCoasters);
         osterwiese.addChildAndSetParent(bergUndTal);
 
 
         //2019
-        CustomCoaster crazyMouse = CustomCoaster.create("Crazy Mouse");
+        CustomAttraction crazyMouse = CustomAttraction.create("Crazy Mouse");
         crazyMouse.setCreditType(creditTypes.RollerCoaster);
         crazyMouse.setCategory(categories.RollerCoasters);
         osterwiese.addChildAndSetParent(crazyMouse);
@@ -617,18 +616,18 @@ public final class DatabaseMock implements IDatabaseWrapper
         locations.Germany.addChildAndSetParent(freimarkt);
 
         //2018
-        CustomCoaster alpinaBahn = CustomCoaster.create("Alpina Bahn", 2);
+        CustomAttraction alpinaBahn = CustomAttraction.create("Alpina Bahn", 2);
         alpinaBahn.setCreditType(creditTypes.RollerCoaster);
         alpinaBahn.setCategory(categories.RollerCoasters);
         alpinaBahn.setManufacturer(manufacturers.Schwarzkopf);
         freimarkt.addChildAndSetParent(alpinaBahn);
 
-        CustomCoaster wildeMaus = CustomCoaster.create("Wilde Maus", 1);
+        CustomAttraction wildeMaus = CustomAttraction.create("Wilde Maus", 1);
         wildeMaus.setCreditType(creditTypes.RollerCoaster);
         wildeMaus.setCategory(categories.RollerCoasters);
         freimarkt.addChildAndSetParent(wildeMaus);
 
-        CustomCoaster euroCoaster = CustomCoaster.create("Euro Coaster", 1);
+        CustomAttraction euroCoaster = CustomAttraction.create("Euro Coaster", 1);
         euroCoaster.setCreditType(creditTypes.RollerCoaster);
         euroCoaster.setCategory(categories.RollerCoasters);
         freimarkt.addChildAndSetParent(euroCoaster);
@@ -639,49 +638,49 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park portAventura = Park.create("Port Aventura");
         locations.Spain.addChildAndSetParent(portAventura);
 
-        CustomCoaster shambhala = CustomCoaster.create("Shambhala");
+        CustomAttraction shambhala = CustomAttraction.create("Shambhala");
         shambhala.setCreditType(creditTypes.RollerCoaster);
         shambhala.setCategory(categories.RollerCoasters);
         shambhala.setManufacturer(manufacturers.BolligerAndMabillard);
         portAventura.addChildAndSetParent(shambhala);
 
-        CustomCoaster dragonKhan = CustomCoaster.create("Dragon Khan");
+        CustomAttraction dragonKhan = CustomAttraction.create("Dragon Khan");
         dragonKhan.setCreditType(creditTypes.RollerCoaster);
         dragonKhan.setCategory(categories.RollerCoasters);
         dragonKhan.setManufacturer(manufacturers.BolligerAndMabillard);
         portAventura.addChildAndSetParent(dragonKhan);
 
-        CustomCoaster stampidaRoja = CustomCoaster.create("Stampida (Roja)");
+        CustomAttraction stampidaRoja = CustomAttraction.create("Stampida (Roja)");
         stampidaRoja.setCreditType(creditTypes.RollerCoaster);
         stampidaRoja.setCategory(categories.RollerCoasters);
         stampidaRoja.setManufacturer(manufacturers.CCI);
         portAventura.addChildAndSetParent(stampidaRoja);
 
-        CustomCoaster stampidaAzul = CustomCoaster.create("Stampida (Azul)");
+        CustomAttraction stampidaAzul = CustomAttraction.create("Stampida (Azul)");
         stampidaAzul.setCreditType(creditTypes.RollerCoaster);
         stampidaAzul.setCategory(categories.RollerCoasters);
         stampidaAzul.setManufacturer(manufacturers.CCI);
         portAventura.addChildAndSetParent(stampidaAzul);
 
-        CustomCoaster tomahawk = CustomCoaster.create("Tomahawk");
+        CustomAttraction tomahawk = CustomAttraction.create("Tomahawk");
         tomahawk.setCreditType(creditTypes.RollerCoaster);
         tomahawk.setCategory(categories.RollerCoasters);
         tomahawk.setManufacturer(manufacturers.CCI);
         portAventura.addChildAndSetParent(tomahawk);
 
-        CustomCoaster elDiablo = CustomCoaster.create("El Diablo");
+        CustomAttraction elDiablo = CustomAttraction.create("El Diablo");
         elDiablo.setCreditType(creditTypes.RollerCoaster);
         elDiablo.setCategory(categories.RollerCoasters);
         elDiablo.setManufacturer(manufacturers.ArrowDynamics);
         portAventura.addChildAndSetParent(elDiablo);
 
-        CustomCoaster furiusBaco = CustomCoaster.create("Furius Baco");
+        CustomAttraction furiusBaco = CustomAttraction.create("Furius Baco");
         furiusBaco.setCreditType(creditTypes.RollerCoaster);
         furiusBaco.setCategory(categories.RollerCoasters);
         furiusBaco.setManufacturer(manufacturers.Intamin);
         portAventura.addChildAndSetParent(furiusBaco);
 
-        CustomCoaster tamitami = CustomCoaster.create("Tami-Tami");
+        CustomAttraction tamitami = CustomAttraction.create("Tami-Tami");
         tamitami.setCreditType(creditTypes.RollerCoaster);
         tamitami.setCategory(categories.RollerCoasters);
         tamitami.setManufacturer(manufacturers.Vekoma);
@@ -760,13 +759,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park ferrariLand = Park.create("Ferrari Land");
         locations.Spain.addChildAndSetParent(ferrariLand);
 
-        CustomCoaster redForce = CustomCoaster.create("Red Force");
+        CustomAttraction redForce = CustomAttraction.create("Red Force");
         redForce.setCreditType(creditTypes.RollerCoaster);
         redForce.setCategory(categories.RollerCoasters);
         redForce.setManufacturer(manufacturers.Intamin);
         ferrariLand.addChildAndSetParent(redForce);
 
-        CustomCoaster juniorRedForce = CustomCoaster.create("Junior Red Force");
+        CustomAttraction juniorRedForce = CustomAttraction.create("Junior Red Force");
         juniorRedForce.setCreditType(creditTypes.RollerCoaster);
         juniorRedForce.setCategory(categories.RollerCoasters);
         juniorRedForce.setManufacturer(manufacturers.SbfVisa);
@@ -809,13 +808,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park slagharen = Park.create("Attractiepark Slagharen");
         locations.Netherlands.addChildAndSetParent(slagharen);
 
-        CustomCoaster goldrush = CustomCoaster.create("Gold Rush");
+        CustomAttraction goldrush = CustomAttraction.create("Gold Rush");
         goldrush.setCreditType(creditTypes.RollerCoaster);
         goldrush.setCategory(categories.RollerCoasters);
         goldrush.setManufacturer(manufacturers.Gerstlauer);
         slagharen.addChildAndSetParent(goldrush);
 
-        CustomCoaster minetrain = CustomCoaster.create("Mine Train");
+        CustomAttraction minetrain = CustomAttraction.create("Mine Train");
         minetrain.setCreditType(creditTypes.RollerCoaster);
         minetrain.setCategory(categories.RollerCoasters);
         minetrain.setManufacturer(manufacturers.Vekoma);
@@ -904,7 +903,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction skyScream = StockAttraction.create("Sky Scream", blueprints.SkyRocketII);
         holidayPark.addChildAndSetParent(skyScream);
 
-        CustomCoaster expeditionGeForce = CustomCoaster.create("Expedition GeForce");
+        CustomAttraction expeditionGeForce = CustomAttraction.create("Expedition GeForce");
         expeditionGeForce.setCreditType(creditTypes.RollerCoaster);
         expeditionGeForce.setCategory(categories.RollerCoasters);
         expeditionGeForce.setManufacturer(manufacturers.Intamin);
@@ -935,37 +934,37 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park movieParkGermany = Park.create("Movie Park Germany");
         locations.Germany.addChildAndSetParent(movieParkGermany);
 
-        CustomCoaster starTrekOperationEnterprise = CustomCoaster.create("Star Trek: Operation Enterprise");
+        CustomAttraction starTrekOperationEnterprise = CustomAttraction.create("Star Trek: Operation Enterprise");
         starTrekOperationEnterprise.setCreditType(creditTypes.RollerCoaster);
         starTrekOperationEnterprise.setCategory(categories.RollerCoasters);
         starTrekOperationEnterprise.setManufacturer(manufacturers.Mack);
         movieParkGermany.addChildAndSetParent(starTrekOperationEnterprise);
 
-        CustomCoaster vanHelsingsFactory = CustomCoaster.create("Van Helsing's Factory");
+        CustomAttraction vanHelsingsFactory = CustomAttraction.create("Van Helsing's Factory");
         vanHelsingsFactory.setCreditType(creditTypes.RollerCoaster);
         vanHelsingsFactory.setCategory(categories.RollerCoasters);
         vanHelsingsFactory.setManufacturer(manufacturers.Gerstlauer);
         movieParkGermany.addChildAndSetParent(vanHelsingsFactory);
 
-        CustomCoaster backyardigans = CustomCoaster.create("The Backyardigans: Mission to Mars");
+        CustomAttraction backyardigans = CustomAttraction.create("The Backyardigans: Mission to Mars");
         backyardigans.setCreditType(creditTypes.RollerCoaster);
         backyardigans.setCategory(categories.RollerCoasters);
         backyardigans.setManufacturer(manufacturers.Vekoma);
         movieParkGermany.addChildAndSetParent(backyardigans);
 
-        CustomCoaster ghostChasers = CustomCoaster.create("Ghost Chasers");
+        CustomAttraction ghostChasers = CustomAttraction.create("Ghost Chasers");
         ghostChasers.setCreditType(creditTypes.RollerCoaster);
         ghostChasers.setCategory(categories.RollerCoasters);
         ghostChasers.setManufacturer(manufacturers.Mack);
         movieParkGermany.addChildAndSetParent(ghostChasers);
 
-        CustomCoaster jimmyNeutronsAtomicFlyer = CustomCoaster.create("Jimmy Neutron's Atomic Flyer");
+        CustomAttraction jimmyNeutronsAtomicFlyer = CustomAttraction.create("Jimmy Neutron's Atomic Flyer");
         jimmyNeutronsAtomicFlyer.setCreditType(creditTypes.RollerCoaster);
         jimmyNeutronsAtomicFlyer.setCategory(categories.RollerCoasters);
         jimmyNeutronsAtomicFlyer.setManufacturer(manufacturers.Vekoma);
         movieParkGermany.addChildAndSetParent(jimmyNeutronsAtomicFlyer);
 
-        CustomCoaster bandit = CustomCoaster.create("Bandit");
+        CustomAttraction bandit = CustomAttraction.create("Bandit");
         bandit.setCreditType(creditTypes.RollerCoaster);
         bandit.setCategory(categories.RollerCoasters);
         bandit.setManufacturer(manufacturers.PremierRides);
@@ -1036,31 +1035,31 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park toverland = Park.create("Toverland");
         this.locations.Netherlands.addChildAndSetParent(toverland);
 
-        CustomCoaster troy = CustomCoaster.create("Troy");
+        CustomAttraction troy = CustomAttraction.create("Troy");
         troy.setCreditType(creditTypes.RollerCoaster);
         troy.setCategory(categories.RollerCoasters);
         troy.setManufacturer(manufacturers.GCI);
         toverland.addChildAndSetParent(troy);
 
-        CustomCoaster fenix = CustomCoaster.create("Fēnix");
+        CustomAttraction fenix = CustomAttraction.create("Fēnix");
         fenix.setCreditType(creditTypes.RollerCoaster);
         fenix.setCategory(categories.RollerCoasters);
         fenix.setManufacturer(manufacturers.BolligerAndMabillard);
         toverland.addChildAndSetParent(fenix);
 
-        CustomCoaster dwervelwind = CustomCoaster.create("Dwervelwind");
+        CustomAttraction dwervelwind = CustomAttraction.create("Dwervelwind");
         dwervelwind.setCreditType(creditTypes.RollerCoaster);
         dwervelwind.setCategory(categories.RollerCoasters);
         dwervelwind.setManufacturer(manufacturers.Mack);
         toverland.addChildAndSetParent(dwervelwind);
 
-        CustomCoaster boosterBike = CustomCoaster.create("Booster Bike");
+        CustomAttraction boosterBike = CustomAttraction.create("Booster Bike");
         boosterBike.setCreditType(creditTypes.RollerCoaster);
         boosterBike.setCategory(categories.RollerCoasters);
         boosterBike.setManufacturer(manufacturers.Vekoma);
         toverland.addChildAndSetParent(boosterBike);
 
-        CustomCoaster toosExpress = CustomCoaster.create("Toos-Express");
+        CustomAttraction toosExpress = CustomAttraction.create("Toos-Express");
         toosExpress.setCreditType(creditTypes.RollerCoaster);
         toosExpress.setCategory(categories.RollerCoasters);
         toosExpress.setManufacturer(manufacturers.Vekoma);
@@ -1129,42 +1128,42 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park efteling = Park.create("Efteling");
         locations.Netherlands.addChildAndSetParent(efteling);
 
-        CustomCoaster jorisEnDeDraakWater = CustomCoaster.create("Joris en de Draak (Water)", 2);
+        CustomAttraction jorisEnDeDraakWater = CustomAttraction.create("Joris en de Draak (Water)", 2);
         jorisEnDeDraakWater.setCreditType(creditTypes.RollerCoaster);
         jorisEnDeDraakWater.setCategory(categories.RollerCoasters);
         jorisEnDeDraakWater.setManufacturer(manufacturers.GCI);
         efteling.addChildAndSetParent(jorisEnDeDraakWater);
 
-        CustomCoaster jorisEnDeDraakVuur = CustomCoaster.create("Joris en de Draak (Vuur)", 1);
+        CustomAttraction jorisEnDeDraakVuur = CustomAttraction.create("Joris en de Draak (Vuur)", 1);
         jorisEnDeDraakVuur.setCreditType(creditTypes.RollerCoaster);
         jorisEnDeDraakVuur.setCategory(categories.RollerCoasters);
         jorisEnDeDraakVuur.setManufacturer(manufacturers.GCI);
         efteling.addChildAndSetParent(jorisEnDeDraakVuur);
 
-        CustomCoaster baron1898 = CustomCoaster.create("Baron 1898", 5);
+        CustomAttraction baron1898 = CustomAttraction.create("Baron 1898", 5);
         baron1898.setCreditType(creditTypes.RollerCoaster);
         baron1898.setCategory(categories.RollerCoasters);
         baron1898.setManufacturer(manufacturers.BolligerAndMabillard);
         efteling.addChildAndSetParent(baron1898);
 
-        CustomCoaster python = CustomCoaster.create("Python", 1);
+        CustomAttraction python = CustomAttraction.create("Python", 1);
         python.setCreditType(creditTypes.RollerCoaster);
         python.setCategory(categories.RollerCoasters);
         python.setManufacturer(manufacturers.Vekoma);
         efteling.addChildAndSetParent(python);
 
-        CustomCoaster deVliegendeHollander = CustomCoaster.create("De Vliegende Hollander", 2);
+        CustomAttraction deVliegendeHollander = CustomAttraction.create("De Vliegende Hollander", 2);
         deVliegendeHollander.setCreditType(creditTypes.RollerCoaster);
         deVliegendeHollander.setCategory(categories.RollerCoasters);
         efteling.addChildAndSetParent(deVliegendeHollander);
 
-        CustomCoaster vogelRok = CustomCoaster.create("Vogel Rok", 1);
+        CustomAttraction vogelRok = CustomAttraction.create("Vogel Rok", 1);
         vogelRok.setCreditType(creditTypes.RollerCoaster);
         vogelRok.setCategory(categories.RollerCoasters);
         vogelRok.setManufacturer(manufacturers.Vekoma);
         efteling.addChildAndSetParent(vogelRok);
 
-        CustomCoaster bobbaan = CustomCoaster.create("Bobbaan", 2);
+        CustomAttraction bobbaan = CustomAttraction.create("Bobbaan", 2);
         bobbaan.setCreditType(creditTypes.RollerCoaster);
         bobbaan.setCategory(categories.RollerCoasters);
         bobbaan.setManufacturer(manufacturers.Intamin);
@@ -1225,43 +1224,43 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park hansaPark = Park.create("Hansa Park");
         locations.Germany.addChildAndSetParent(hansaPark);
 
-        CustomCoaster fluchVonNovgorod = CustomCoaster.create("Fluch von Novgorod", 4);
+        CustomAttraction fluchVonNovgorod = CustomAttraction.create("Fluch von Novgorod", 4);
         fluchVonNovgorod.setCreditType(creditTypes.RollerCoaster);
         fluchVonNovgorod.setCategory(categories.RollerCoasters);
         fluchVonNovgorod.setManufacturer(manufacturers.Gerstlauer);
         hansaPark.addChildAndSetParent(fluchVonNovgorod);
 
-        CustomCoaster schwurDesKaernan = CustomCoaster.create("Der Schwur des Kärnan", 6);
+        CustomAttraction schwurDesKaernan = CustomAttraction.create("Der Schwur des Kärnan", 6);
         schwurDesKaernan.setCreditType(creditTypes.RollerCoaster);
         schwurDesKaernan.setCategory(categories.RollerCoasters);
         schwurDesKaernan.setManufacturer(manufacturers.Gerstlauer);
         hansaPark.addChildAndSetParent(schwurDesKaernan);
 
-        CustomCoaster nessie = CustomCoaster.create("Nessie", 3);
+        CustomAttraction nessie = CustomAttraction.create("Nessie", 3);
         nessie.setCreditType(creditTypes.RollerCoaster);
         nessie.setCategory(categories.RollerCoasters);
         nessie.setManufacturer(manufacturers.Schwarzkopf);
         hansaPark.addChildAndSetParent(nessie);
 
-        CustomCoaster crazyMine = CustomCoaster.create("Crazy-Mine", 3);
+        CustomAttraction crazyMine = CustomAttraction.create("Crazy-Mine", 3);
         crazyMine.setCreditType(creditTypes.RollerCoaster);
         crazyMine.setCategory(categories.RollerCoasters);
         crazyMine.setManufacturer(manufacturers.MaurerSoehne);
         hansaPark.addChildAndSetParent(crazyMine);
 
-        CustomCoaster rasenderRoland = CustomCoaster.create("Rasender Roland", 2);
+        CustomAttraction rasenderRoland = CustomAttraction.create("Rasender Roland", 2);
         rasenderRoland.setCreditType(creditTypes.RollerCoaster);
         rasenderRoland.setCategory(categories.RollerCoasters);
         rasenderRoland.setManufacturer(manufacturers.Vekoma);
         hansaPark.addChildAndSetParent(rasenderRoland);
 
-        CustomCoaster schlangeVonMidgard = CustomCoaster.create("Schlange von Midgard", 2);
+        CustomAttraction schlangeVonMidgard = CustomAttraction.create("Schlange von Midgard", 2);
         schlangeVonMidgard.setCreditType(creditTypes.RollerCoaster);
         schlangeVonMidgard.setCategory(categories.RollerCoasters);
         schlangeVonMidgard.setManufacturer(manufacturers.Gerstlauer);
         hansaPark.addChildAndSetParent(schlangeVonMidgard);
 
-        CustomCoaster derKleineZar = CustomCoaster.create("Der kleine Zar", 1);
+        CustomAttraction derKleineZar = CustomAttraction.create("Der kleine Zar", 1);
         derKleineZar.setCreditType(creditTypes.RollerCoaster);
         derKleineZar.setCategory(categories.RollerCoasters);
         derKleineZar.setManufacturer(manufacturers.PrestonAndBarbieri);
@@ -1345,7 +1344,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park magicParkVerden = Park.create("Magic Park Verden");
         locations.Germany.addChildAndSetParent(magicParkVerden);
 
-        CustomCoaster achterbahn = CustomCoaster.create("Magic Park Achterbahn");
+        CustomAttraction achterbahn = CustomAttraction.create("Magic Park Achterbahn");
         achterbahn.setCreditType(creditTypes.RollerCoaster);
         achterbahn.setCategory(categories.RollerCoasters);
         magicParkVerden.addChildAndSetParent(achterbahn);
@@ -1367,79 +1366,79 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park europaPark = Park.create("Europa Park");
         locations.Germany.addChildAndSetParent(europaPark);
 
-        CustomCoaster silverStar = CustomCoaster.create("Silver Star", 5);
+        CustomAttraction silverStar = CustomAttraction.create("Silver Star", 5);
         silverStar.setCreditType(creditTypes.RollerCoaster);
         silverStar.setCategory(categories.RollerCoasters);
         silverStar.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(silverStar);
 
-        CustomCoaster blueFire = CustomCoaster.create("Blue Fire Megacoaster", 4);
+        CustomAttraction blueFire = CustomAttraction.create("Blue Fire Megacoaster", 4);
         blueFire.setCreditType(creditTypes.RollerCoaster);
         blueFire.setCategory(categories.RollerCoasters);
         blueFire.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(blueFire);
 
-        CustomCoaster wodan = CustomCoaster.create("Wodan - Timburcoaster", 4);
+        CustomAttraction wodan = CustomAttraction.create("Wodan - Timburcoaster", 4);
         wodan.setCreditType(creditTypes.RollerCoaster);
         wodan.setCategory(categories.RollerCoasters);
         wodan.setManufacturer(manufacturers.GCI);
         europaPark.addChildAndSetParent(wodan);
 
-        CustomCoaster eurosatCanCanCoaster = CustomCoaster.create("Eurosat - Can Can Coaster");
+        CustomAttraction eurosatCanCanCoaster = CustomAttraction.create("Eurosat - Can Can Coaster");
         eurosatCanCanCoaster.setCreditType(creditTypes.RollerCoaster);
         eurosatCanCanCoaster.setCategory(categories.RollerCoasters);
         eurosatCanCanCoaster.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(eurosatCanCanCoaster);
 
-        CustomCoaster euroMir = CustomCoaster.create("Euro-Mir", 1);
+        CustomAttraction euroMir = CustomAttraction.create("Euro-Mir", 1);
         euroMir.setCreditType(creditTypes.RollerCoaster);
         euroMir.setCategory(categories.RollerCoasters);
         euroMir.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(euroMir);
 
-        CustomCoaster alpenexpressEnzian = CustomCoaster.create("Alpenexpress Enzian", 1);
+        CustomAttraction alpenexpressEnzian = CustomAttraction.create("Alpenexpress Enzian", 1);
         alpenexpressEnzian.setCreditType(creditTypes.RollerCoaster);
         alpenexpressEnzian.setCategory(categories.RollerCoasters);
         alpenexpressEnzian.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(alpenexpressEnzian);
 
-        CustomCoaster schweizerBobbahn = CustomCoaster.create("Schweizer Bobbahn", 2);
+        CustomAttraction schweizerBobbahn = CustomAttraction.create("Schweizer Bobbahn", 2);
         schweizerBobbahn.setCreditType(creditTypes.RollerCoaster);
         schweizerBobbahn.setCategory(categories.RollerCoasters);
         schweizerBobbahn.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(schweizerBobbahn);
 
-        CustomCoaster matterhornBlitz = CustomCoaster.create("Matterhorn-Blitz", 2);
+        CustomAttraction matterhornBlitz = CustomAttraction.create("Matterhorn-Blitz", 2);
         matterhornBlitz.setCreditType(creditTypes.RollerCoaster);
         matterhornBlitz.setCategory(categories.RollerCoasters);
         matterhornBlitz.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(matterhornBlitz);
 
-        CustomCoaster pegasus = CustomCoaster.create("Pegasus", 1);
+        CustomAttraction pegasus = CustomAttraction.create("Pegasus", 1);
         pegasus.setCreditType(creditTypes.RollerCoaster);
         pegasus.setCategory(categories.RollerCoasters);
         pegasus.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(pegasus);
 
-        CustomCoaster baaaExpress = CustomCoaster.create("Ba-a-a Express", 1);
+        CustomAttraction baaaExpress = CustomAttraction.create("Ba-a-a Express", 1);
         baaaExpress.setCreditType(creditTypes.RollerCoaster);
         baaaExpress.setCategory(categories.RollerCoasters);
         baaaExpress.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(baaaExpress);
 
-        CustomCoaster arthur = CustomCoaster.create("Arthur", 1);
+        CustomAttraction arthur = CustomAttraction.create("Arthur", 1);
         arthur.setCreditType(creditTypes.RollerCoaster);
         arthur.setCategory(categories.RollerCoasters);
         arthur.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(arthur);
 
-        CustomCoaster poseidon = CustomCoaster.create("Poseidon", 2);
+        CustomAttraction poseidon = CustomAttraction.create("Poseidon", 2);
         poseidon.setCreditType(creditTypes.RollerCoaster);
         poseidon.setCategory(categories.RollerCoasters);
         poseidon.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(poseidon);
 
-        CustomCoaster atlantica = CustomCoaster.create("Atlantica SuperSplash", 2);
+        CustomAttraction atlantica = CustomAttraction.create("Atlantica SuperSplash", 2);
         atlantica.setCreditType(creditTypes.RollerCoaster);
         atlantica.setCategory(categories.RollerCoasters);
         atlantica.setManufacturer(manufacturers.Mack);
