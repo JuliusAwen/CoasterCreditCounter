@@ -11,16 +11,16 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class ConvertTool
 {
-    public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elements, Class<T> type)
+    public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elementsToConvert, Class<T> type)
     {
-        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elements.size(), type.getSimpleName()));
+        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elementsToConvert.size(), type.getSimpleName()));
 
-        List<T> returnList = new ArrayList<>();
-        for(IElement element : elements)
+        List<T> convertedElements = new ArrayList<>();
+        for(IElement element : elementsToConvert)
         {
             try
             {
-                returnList.add(type.cast(element));
+                convertedElements.add(type.cast(element));
             }
             catch(ClassCastException e)
             {
@@ -29,7 +29,7 @@ public abstract class ConvertTool
                 throw new IllegalStateException(errorMessage + "\n" + e);
             }
         }
-        return returnList;
+        return convertedElements;
     }
 
     public static int convertDpToPx(int dp)

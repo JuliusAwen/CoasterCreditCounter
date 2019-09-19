@@ -22,6 +22,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
@@ -84,6 +85,10 @@ public class GroupHeaderProvider
                     {
                         case LOCATION:
                             groupElement = attraction.getParent();
+                            break;
+
+                        case CREDIT_TYPE:
+                            groupElement = attraction.getCreditType();
                             break;
 
                         case CATEGORY:
@@ -161,6 +166,10 @@ public class GroupHeaderProvider
                     {
                         case LOCATION:
                             groupElement = attraction.getParent();
+                            break;
+
+                        case CREDIT_TYPE:
+                            groupElement = attraction.getCreditType();
                             break;
 
                         case CATEGORY:
@@ -269,6 +278,10 @@ public class GroupHeaderProvider
 
                 case LOCATION:
                     groupElements = App.content.getContentOfType(Park.class);
+                    break;
+
+                case CREDIT_TYPE:
+                    groupElements = App.content.getContentOfType(CreditType.class);
                     break;
 
                 case CATEGORY:

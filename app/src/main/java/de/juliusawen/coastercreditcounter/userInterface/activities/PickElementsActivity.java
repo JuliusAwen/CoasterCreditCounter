@@ -98,6 +98,7 @@ public class PickElementsActivity extends BaseActivity
                     break;
                 }
 
+                case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
@@ -116,6 +117,8 @@ public class PickElementsActivity extends BaseActivity
                     break;
                 }
 
+                case PICK_CREDIT_TYPE:
+                case PICK_PARKS:
                 case PICK_CATEGORY:
                 case PICK_MANUFACTURER:
                 case PICK_STATUS:
@@ -198,8 +201,9 @@ public class PickElementsActivity extends BaseActivity
             return;
         }
 
-        switch(RequestCode.values()[requestCode])
+        switch(RequestCode.getValue(requestCode))
         {
+            case CREATE_CREDIT_TYPE:
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
@@ -237,6 +241,9 @@ public class PickElementsActivity extends BaseActivity
                             .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
+                            .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY)
+                                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
+                                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
 //                                .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT)
 //                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
 //                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
@@ -245,6 +252,7 @@ public class PickElementsActivity extends BaseActivity
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                         .add(OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_LOCATION, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
@@ -272,10 +280,12 @@ public class PickElementsActivity extends BaseActivity
     protected Menu prepareOptionsMenu(Menu menu)
     {
         boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
+        boolean sortByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
         boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
 
         boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
+        boolean groupByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
         boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
         boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
@@ -288,10 +298,12 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
                             .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
+//                            .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeEnabled)
 //                            .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
                             .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
                         .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
@@ -311,30 +323,6 @@ public class PickElementsActivity extends BaseActivity
     {
         switch(item)
         {
-            case EXPAND_ALL:
-                this.viewModel.contentRecyclerViewAdapter.expandAll();
-                return true;
-
-            case COLLAPSE_ALL:
-                this.viewModel.contentRecyclerViewAdapter.collapseAll();
-                return true;
-
-            case GROUP_BY_LOCATION:
-                this.groupElementsByType(GroupType.LOCATION);
-                return true;
-
-            case GROUP_BY_CATEGORY:
-                this.groupElementsByType(GroupType.CATEGORY);
-                return true;
-
-            case GROUP_BY_MANUFACTURER:
-                this.groupElementsByType(GroupType.MANUFACTURER);
-                return true;
-
-            case GROUP_BY_STATUS:
-                this.groupElementsByType(GroupType.STATUS);
-                return true;
-
             case SORT_ASCENDING:
             case SORT_BY_NAME_ASCENDING:
                 this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
@@ -357,6 +345,16 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
+            case SORT_BY_CREDIT_TYPE_ASCENDING:
+//                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByCreditTypeAscending(viewModel.elementsToPickFrom);
+//                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case SORT_BY_CREDIT_TYPE_DESCENDING:
+//                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByCreditTypeDescending(viewModel.elementsToPickFrom);
+//                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
             case SORT_BY_CATEGORY_ASCENDING:
                 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
                 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
@@ -375,6 +373,34 @@ public class PickElementsActivity extends BaseActivity
             case SORT_BY_MANUFACTURER_DESCENDING:
                 this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                return true;
+
+            case GROUP_BY_LOCATION:
+                this.groupElementsByType(GroupType.LOCATION);
+                return true;
+
+            case GROUP_BY_CREDIT_TYPE:
+                this.groupElementsByType(GroupType.CREDIT_TYPE);
+                return true;
+
+            case GROUP_BY_CATEGORY:
+                this.groupElementsByType(GroupType.CATEGORY);
+                return true;
+
+            case GROUP_BY_MANUFACTURER:
+                this.groupElementsByType(GroupType.MANUFACTURER);
+                return true;
+
+            case GROUP_BY_STATUS:
+                this.groupElementsByType(GroupType.STATUS);
+                return true;
+
+            case EXPAND_ALL:
+                this.viewModel.contentRecyclerViewAdapter.expandAll();
+                return true;
+
+            case COLLAPSE_ALL:
+                this.viewModel.contentRecyclerViewAdapter.collapseAll();
                 return true;
 
             default:
@@ -396,6 +422,14 @@ public class PickElementsActivity extends BaseActivity
                         .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.LOCATION);
+                break;
+
+            case CREDIT_TYPE:
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                        .groupItemsByType(GroupType.CREDIT_TYPE);
                 break;
 
             case CATEGORY:
@@ -459,6 +493,10 @@ public class PickElementsActivity extends BaseActivity
 
                 switch(viewModel.requestCode)
                 {
+                    case PICK_CREDIT_TYPE:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
+                        break;
+
                     case PICK_CATEGORY:
                         ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
                         break;
@@ -581,10 +619,11 @@ public class PickElementsActivity extends BaseActivity
             {
                 switch(this.viewModel.requestCode)
                 {
-                    case PICK_STATUS:
                     case PICK_VISIT:
-                    case PICK_MANUFACTURER:
+                    case PICK_CREDIT_TYPE:
                     case PICK_CATEGORY:
+                    case PICK_MANUFACTURER:
+                    case PICK_STATUS:
                     {
                         Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());

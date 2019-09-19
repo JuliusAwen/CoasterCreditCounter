@@ -5,6 +5,7 @@ public enum GroupType
     NONE,
     YEAR,
     LOCATION,
+    CREDIT_TYPE,
     CATEGORY,
     MANUFACTURER,
     STATUS

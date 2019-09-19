@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -27,6 +28,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.ICategorized;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElementType;
@@ -81,41 +83,41 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             switch(this.viewModel.orphanElementTypeToManage)
             {
+                case CREDIT_TYPE:
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            App.content.getContentOfType(CreditType.class),
+                            childTypesToExpand)
+                            .setTypefaceForType(CreditType.class, Typeface.BOLD)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
+                    break;
+
                 case CATEGORY:
-                {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(Category.class),
                             childTypesToExpand)
                             .setTypefaceForType(Category.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
-
                     break;
-                }
 
                 case MANUFACTURER:
-                {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(Manufacturer.class),
                             childTypesToExpand)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
-
                     break;
-                }
 
                 case STATUS:
-                {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(Status.class),
                             childTypesToExpand)
                             .setTypefaceForType(Status.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW);
-
                     break;
-                }
             }
         }
 
@@ -164,6 +166,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         IElement resultElement = ResultFetcher.fetchResultElement(data);
         switch(RequestCode.values()[requestCode])
         {
+            case CREATE_CREDIT_TYPE:
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
@@ -171,12 +174,14 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 updateContentRecyclerView(true);
                 break;
 
+            case EDIT_CREDIT_TYPE:
             case EDIT_CATEGORY:
             case EDIT_MANUFACTURER:
             case EDIT_STATUS:
                 updateContentRecyclerView(false);
                 break;
 
+            case SORT_CREDIT_TYPES:
             case SORT_CATEGORIES:
             case SORT_MANUFACTURERS:
             case SORT_STATUSES:
@@ -186,13 +191,21 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 super.markForUpdate(resultElements);
                 break;
 
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 resultElements = ResultFetcher.fetchResultElements(data);
-
                 switch(this.viewModel.orphanElementTypeToManage)
                 {
+                    case CREDIT_TYPE:
+                        for(IElement element : resultElements)
+                        {
+                            ((Attraction)element).setCreditType((CreditType) this.viewModel.longClickedElement);
+                            super.markForUpdate(element);
+                        }
+                        break;
+
                     case CATEGORY:
                         for(IElement element : resultElements)
                         {
@@ -230,6 +243,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     protected Menu createOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.SORT_CREDIT_TYPES)
                 .add(OptionsItem.SORT_CATEGORIES)
                 .add(OptionsItem.SORT_MANUFACTURERS)
                 .add(OptionsItem.SORT_STATUSES)
@@ -242,35 +256,36 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     protected  Menu prepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
+                .setVisible(OptionsItem.SORT_CREDIT_TYPES, false)
                 .setVisible(OptionsItem.SORT_CATEGORIES, false)
                 .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
                 .setVisible(OptionsItem.SORT_STATUSES, false);
 
         switch(this.viewModel.orphanElementTypeToManage)
         {
+            case CREDIT_TYPE:
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_CREDIT_TYPES, App.content.getContentOfType(CreditType.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_CREDIT_TYPES, true);
+                break;
+
             case CATEGORY:
-            {
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_CATEGORIES, App.content.getContentOfType(Category.class).size() > 1)
                         .setVisible(OptionsItem.SORT_CATEGORIES, true);
                 break;
-            }
 
             case MANUFACTURER:
-            {
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
                         .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
                 break;
-            }
 
             case STATUS:
-            {
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
                         .setVisible(OptionsItem.SORT_STATUSES, true);
                 break;
-            }
         }
 
         return this.viewModel.optionsMenuAgent
@@ -284,6 +299,13 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         switch(item)
         {
+            case SORT_CREDIT_TYPES:
+                ActivityDistributor.startActivitySortForResult(
+                        this,
+                        RequestCode.SORT_CREDIT_TYPES,
+                        App.content.getContentOfType(CreditType.class));
+                return true;
+
             case SORT_CATEGORIES:
                 ActivityDistributor.startActivitySortForResult(
                         this,
@@ -356,14 +378,16 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if((viewModel.longClickedElement instanceof Category)
-                        || (viewModel.longClickedElement instanceof Manufacturer)
-                        || (viewModel.longClickedElement instanceof Status))
+                if((viewModel.longClickedElement instanceof OrphanElement))
                 {
                     boolean isDefault = false;
 
                     switch(viewModel.orphanElementTypeToManage)
                     {
+                        case CREDIT_TYPE:
+                            isDefault = viewModel.longClickedElement.equals(CreditType.getDefault());
+                            break;
+
                         case CATEGORY:
                             isDefault = viewModel.longClickedElement.equals(Category.getDefault());
                             break;
@@ -379,6 +403,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
 
+
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
                             .add(PopupItem.EDIT_ELEMENT)
@@ -387,6 +412,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(ICategorized.class).isEmpty())
                             .setEnabled(PopupItem.DELETE_ELEMENT, !isDefault)
                             .setEnabled(PopupItem.SET_AS_DEFAULT, !isDefault)
+                            .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.orphanElementTypeToManage.equals(OrphanElementType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> default is always "no credit"
                             .show(ManageOrphanElementsActivity.this, view);
                 }
                 return true;
@@ -401,64 +427,80 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
-                List<IElement> attractions = new ArrayList<IElement>(App.content.getContentAsType(ICategorized.class));
+                List<IElement> categorizedElements = App.content.getContentOfType(ICategorized.class);
+                List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
 
                 switch(viewModel.orphanElementTypeToManage)
                 {
-                    case CATEGORY:
+                    case CREDIT_TYPE:
                     {
-                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                        for(IAttraction attraction : categorizedAttractions)
                         {
-                            if(attraction.getCategory().equals(viewModel.longClickedElement))
+                            if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                attractions.remove(attraction);
+                                categorizedElements.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManageOrphanElementsActivity.this,
                                 RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                attractions);
+                                categorizedElements);
+                        break;
+                    }
 
+                    case CATEGORY:
+                    {
+                        for(IAttraction attraction : categorizedAttractions)
+                        {
+                            if(attraction.getCategory().equals(viewModel.longClickedElement))
+                            {
+                                Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                categorizedElements.remove(attraction);
+                            }
+                        }
+
+                        ActivityDistributor.startActivityPickForResult(
+                                ManageOrphanElementsActivity.this,
+                                RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
+                                categorizedElements);
                         break;
                     }
 
                     case MANUFACTURER:
                     {
-                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                        for(IAttraction attraction : categorizedAttractions)
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                attractions.remove(attraction);
+                                categorizedElements.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManageOrphanElementsActivity.this,
                                 RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
-                                attractions);
-
+                                categorizedElements);
                         break;
                     }
 
                     case STATUS:
                     {
-                        for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
+                        for(IAttraction attraction : categorizedAttractions)
                         {
-                            if(attraction.getManufacturer().equals(viewModel.longClickedElement))
+                            if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-                                attractions.remove(attraction);
+                                categorizedElements.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManageOrphanElementsActivity.this,
                                 RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS,
-                                attractions);
-
+                                categorizedElements);
                         break;
                     }
                 }
@@ -469,6 +511,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 switch(viewModel.orphanElementTypeToManage)
                 {
+                    case CREDIT_TYPE:
+                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_CREDIT_TYPE, viewModel.longClickedElement);
+                        break;
+
                     case CATEGORY:
                         ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_CATEGORY, viewModel.longClickedElement);
                         break;
@@ -493,6 +539,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     switch(viewModel.orphanElementTypeToManage)
                     {
+                        case CREDIT_TYPE:
+                            defaultName = CreditType.getDefault().getName();
+                            break;
+
                         case CATEGORY:
                             defaultName = Category.getDefault().getName();
                             break;
@@ -578,44 +628,31 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 {
                     switch(this.viewModel.orphanElementTypeToManage)
                     {
-                        case CATEGORY:
-                        {
-                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Category", this.viewModel.longClickedElement));
+                        // no option to change CreditTypes' default value --> default is always "no credit"
 
+                        case CATEGORY:
+                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Category", this.viewModel.longClickedElement));
                             super.markForUpdate(Category.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
                             Category.setDefault((Category) this.viewModel.longClickedElement);
-
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
-
                             break;
-                        }
 
                         case MANUFACTURER:
-                        {
                             Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Manufacturer", this.viewModel.longClickedElement));
-
                             super.markForUpdate(Manufacturer.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
                             Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
-
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
-
                             break;
-                        }
 
                         case STATUS:
-                        {
                             Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Status", this.viewModel.longClickedElement));
-
                             super.markForUpdate(Status.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
                             Status.setDefault((Status) this.viewModel.longClickedElement);
-
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
-
                             break;
-                        }
                     }
                     break;
                 }
@@ -640,6 +677,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 {
                     switch(this.viewModel.orphanElementTypeToManage)
                     {
+                        case CREDIT_TYPE:
+                            child.setCreditType(CreditType.getDefault());
+                            break;
+
                         case CATEGORY:
                             child.setCategory(Category.getDefault());
                             break;
@@ -674,6 +715,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                 switch(viewModel.orphanElementTypeToManage)
                 {
+                    case CREDIT_TYPE:
+                        ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
+                        break;
+
                     case CATEGORY:
                         ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
                         break;
@@ -699,6 +744,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             switch(this.viewModel.orphanElementTypeToManage)
             {
+                case CREDIT_TYPE:
+                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(CreditType.class));
+                    break;
+
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Category.class));
                     break;

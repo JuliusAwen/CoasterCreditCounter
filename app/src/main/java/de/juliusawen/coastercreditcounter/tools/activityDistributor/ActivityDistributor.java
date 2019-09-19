@@ -77,25 +77,32 @@ public abstract class ActivityDistributor
 
         switch(requestCode)
         {
+            case MANAGE_CREDIT_TYPES:
+                orphanElementType = OrphanElementType.CREDIT_TYPE;
+                toolbarTitle = context.getString(R.string.title_credit_types);
+                helpTitle = context.getString(R.string.title_credit_types);
+                helpText = context.getString(R.string.help_text_manage_credit_types);
+                break;
+
             case MANAGE_CATEGORIES:
                 orphanElementType = OrphanElementType.CATEGORY;
                 toolbarTitle = context.getString(R.string.title_categories);
                 helpTitle = context.getString(R.string.title_categories);
-                helpText = context.getString(R.string.help_text_manage_category);
+                helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
             case MANAGE_MANUFACTURERS:
                 orphanElementType = OrphanElementType.MANUFACTURER;
                 toolbarTitle = context.getString(R.string.title_manufacturers);
                 helpTitle = context.getString(R.string.title_manufacturers);
-                helpText = context.getString(R.string.help_text_manage_manufacturer);
+                helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
             case MANAGE_STATUSES:
                 orphanElementType = OrphanElementType.STATUS;
                 toolbarTitle = context.getString(R.string.title_statuses);
                 helpTitle = context.getString(R.string.title_statuses);
-                helpText = context.getString(R.string.help_text_manage_status);
+                helpText = context.getString(R.string.help_text_manage_statuses);
                 break;
 
             default:
@@ -142,6 +149,16 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_park_edit);
                 break;
 
+            case EDIT_CUSTOM_ATTRACTION:
+                type = CreateOrEditCustomAttractionActivity.class;
+                toolbarTitle = context.getString(R.string.title_custom_attraction_edit);
+                break;
+
+            case EDIT_CREDIT_TYPE:
+                type = EditElementActivity.class;
+                toolbarTitle = context.getString(R.string.title_credit_type_edit);
+                break;
+
             case EDIT_CATEGORY:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_category_edit);
@@ -155,11 +172,6 @@ public abstract class ActivityDistributor
             case EDIT_STATUS:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_status_edit);
-                break;
-
-            case EDIT_CUSTOM_ATTRACTION:
-                type = CreateOrEditCustomAttractionActivity.class;
-                toolbarTitle = context.getString(R.string.title_custom_attraction_edit);
                 break;
         }
 
@@ -223,6 +235,13 @@ public abstract class ActivityDistributor
         {
             switch(requestCode)
             {
+                case CREATE_CREDIT_TYPE:
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_credit_type_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_credit_type_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_credit_type));
+                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_credit_type_name));
+                    break;
+
                 case CREATE_CATEGORY:
                     intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_category_create));
                     intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_category_create));
@@ -272,6 +291,10 @@ public abstract class ActivityDistributor
 
             case SORT_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_attractions_sort);
+                break;
+
+            case SORT_CREDIT_TYPES:
+                toolbarTitle = context.getString(R.string.title_credit_type_sort);
                 break;
 
             case SORT_CATEGORIES:
@@ -327,14 +350,20 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description_to_add_to_new_location);
                 break;
 
+            case PICK_VISIT:
+                toolbarTitle = context.getString(R.string.title_visit_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_visit_pick_to_open);
+                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
+                break;
+
             case PICK_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_attractions_pick);
                 toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
                 break;
 
-            case PICK_VISIT:
-                toolbarTitle = context.getString(R.string.title_visit_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_visit_pick_to_open);
+            case PICK_CREDIT_TYPE:
+                toolbarTitle = context.getString(R.string.title_credit_type_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_credit_type_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
@@ -356,14 +385,19 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
-            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_credit_type_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_credit_type_to_assign_credit_type_to);
                 break;
 
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_attractions_pick);
                 toolbarSubtitle = context.getString(R.string.subtitle_category_to_assign_category_to);
+                break;
+
+            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                toolbarTitle = context.getString(R.string.title_attractions_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
                 break;
 
             case ASSIGN_STATUS_TO_ATTRACTIONS:

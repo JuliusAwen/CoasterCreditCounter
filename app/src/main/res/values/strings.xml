@@ -1,12 +1,15 @@
 <resources>
+
     <!--GENERIC NAMES-->
     <string name="name_app">CoasterCreditCounter</string>
+
 
 
     <!--GENERIC TITLES AND SUBTITLES-->
     <string name="title_relocate">Relocate</string>
     <string name="subtitle_relocate">select new parent location for \'%1$s\'</string>
     <string name="hint_edit_element_name">Edit element name</string>
+
 
 
     <!--GENERIC TEXTS-->
@@ -19,7 +22,7 @@
 
     <string name="text_untracked_rides">Untracked rides:</string>
 
-    <string name="text_detail">%1$s%2$s%3$s%4$s%5$s</string>
+    <string name="text_detail">%1$s%2$s%3$s%4$s%5$s%6$s</string>
     <string name="text_total_rides">total rides: %1$d</string>
 
     <string name="text_blueprint_substitute">Blueprint</string>
@@ -30,12 +33,14 @@
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 
+
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>
 
     <string name="action_confirm_text">CONFIRM</string>
     <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
     <string name="action_confirm_remove_text">Confirm removal of \'%1$s\'</string>
+
 
 
     <!--GENERIC ERROR MESSAGES-->
@@ -45,6 +50,7 @@
     <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected!</string>
     <string name="error_missing_text">-text is missing-</string>
+
 
 
     <!--GENERIC DIALOG TEXTS-->
@@ -61,9 +67,11 @@
     <string name="alert_dialog_message_set_as_default">Do you really want to set \'%1$s\' as default?</string>
 
 
+
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
     <string name="hint_untracked_ride_count">e.g. 4</string>
+
 
 
     <!--GENERIC DESCRIPTIONS-->
@@ -72,6 +80,7 @@
     <string name="description_close">@string/text_close</string>
     <string name="description_image_view">image</string>
     <string name="description_tab_title">title</string>
+
 
 
     <!--MENU ITEMS-->
@@ -88,14 +97,16 @@
 
     <string name="menu_item_sort_by">sort by</string>
     <string name="menu_item_sort_by_name">name</string>
+    <string name="menu_item_sort_by_credit_type">credit type</string>
     <string name="menu_item_sort_by_location">location</string>
-    <string name="menu_item_sort_by_manufacturer">manufacturer</string>
     <string name="menu_item_sort_by_category">category</string>
+    <string name="menu_item_sort_by_manufacturer">manufacturer</string>
 
     <string name="menu_item_group_by">group by</string>
     <string name="menu_item_group_by_location">location</string>
-    <string name="menu_item_group_by_manufacturer">manufacturer</string>
+    <string name="menu_item_group_by_credit_type">credit type</string>
     <string name="menu_item_group_by_category">category</string>
+    <string name="menu_item_group_by_manufacturer">manufacturer</string>
     <string name="menu_item_group_by_status">status</string>
 
     <string name="menu_item_add">add</string>
@@ -118,137 +129,16 @@
     <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
 
-    <!--LOCATIONS-->
-    <string name="title_locations">Locations</string>
-    <string name="title_locations_sort">Sort Locations</string>
-    <string name="title_locations_pick">Pick Locations</string>
-    <string name="title_location_edit">Edit Location</string>
-    <string name="subtitle_locations_pick_description_to_add_to_new_location">to add to the new location</string>
-    <string name="subtitle_location_create">create child location</string>
-    <string name="hint_enter_location_name">Enter location name</string>
-
-
-    <!--PARKS-->
-    <string name="title_parks_sort">Sort Parks</string>
-    <string name="title_parks_pick">Pick Parks</string>
-    <string name="title_park_edit">Edit Park</string>
-    <string name="subtitle_park_create">create park</string>
-    <string name="subtitle_parks_pick_description_to_add_to_new_location">to add to the new location</string>
-    <string name="subtitle_park_show_tab_overview">Overview</string>
-    <string name="subtitle_park_show_tab_attractions">Attractions</string>
-    <string name="subtitle_park_show_tab_visits">Visits</string>
-    <string name="hint_enter_park_name">Enter park name</string>
-
-
-    <!--SHOW_VISITS-->
-    <string name="title_visit_create">Create Visit</string>
-    <string name="title_visit_show">Visit</string>
-    <string name="title_visit_pick">Pick Visit</string>
-    <string name="subtitle_visit_pick_to_open">to open</string>
-
-    <string name="error_visit_already_exists">Visit for that day already exists…</string>
-
-    <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
-    <string name="alert_dialog_message_visit_already_exists">Do you want to override existing visit? \n(existing data will be lost, ride counts will be adjusted)</string>
-    <string name="alert_dialog_message_delete_visited_attraction">Do you want to delete visited %1$s? \n(tracked rides will be lost, ride count will be adjusted)</string>
-
-    <string name="description_decrease">decrease ride count</string>
-    <string name="description_increase">increase ride count</string>
-
-    <string name="text_visited_attraction_pretty_print">%1$dx %2$s</string>
-    <string name="text_visit_display_full_name">%1$s @ %2$s</string>
-
-
-    <!--SHOW_ATTRACTIONS-->
-    <string name="title_attractions_sort">Sort Attractions</string>
-    <string name="title_attractions_pick">Pick Attractions</string>
-    <string name="subtitle_attractions_description_pick_to_add_to_visit">to add to your visit</string>
-
-    <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
-    <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
-
-    <string name="alert_dialog_title_delete_attraction">DELETE ATTRACTION</string>
-    <string name="alert_dialog_message_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all tracked rides will be deleted as well)</string>
-
-    <string name="hint_enter_attraction_name">Enter attraction name</string>
-
-    <string name="title_custom_attraction_create">Create Attraction</string>
-    <string name="subtitle_custom_attraction_create">for %1$s</string>
-
-    <string name="title_custom_attraction_edit">Edit Attraction</string>
-
-
-    <!--CreditTypes-->
-    <string name="name_default_credit_type">no credit</string>
-    <string name="title_credit_types">Credit Types</string>
-    <string name="title_credit_type_create">Create Credit Type</string>
-    <string name="title_credit_type_edit">Edit Credit Type</string>
-    <string name="title_credit_type_pick">Pick Credit Type</string>
-    <string name="title_credit_type_sort">Sort Credit Types</string>
-    <string name="subtitle_credit_type_to_assign_credit_type_to">to assign credit type to</string>
-    <string name="subtitle_credit_type_to_assign_to_attraction">to assign to attraction</string>
-    <string name="hint_enter_credit_type_name">Enter credit type name</string>
-    <string name="header_credit_type">Credit Type:</string>
-
-
-    <!--MANUFACTURERS-->
-    <string name="name_default_manufacturer">unknown</string>
-    <string name="title_manufacturers">Manufacturers</string>
-    <string name="title_manufacturer_create">Create Manufacturer</string>
-    <string name="title_manufacturer_edit">Edit Manufacturer</string>
-    <string name="title_manufacturer_pick">Pick Manufacturer</string>
-    <string name="title_manufacturers_sort">Sort Manufacturers</string>
-    <string name="subtitle_manufacturer_to_assign_manufacturer_to">to assign manufacturer to</string>
-    <string name="subtitle_manufacturer_to_assign_to_attraction">to assign to attraction</string>
-    <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
-    <string name="header_manufacturer">Manufacturer:</string>
-
-
-    <!--CATEGORIES-->
-    <string name="name_default_category">uncategorized</string>
-    <string name="title_categories">Categories</string>
-    <string name="title_category_create">Create Category</string>
-    <string name="title_category_edit">Edit Category</string>
-    <string name="title_category_pick">Pick Category</string>
-    <string name="title_categories_sort">Sort Categories</string>
-    <string name="subtitle_category_to_assign_category_to">to assign category to</string>
-    <string name="subtitle_category_to_assign_to_attraction">to assign to attraction</string>
-    <string name="hint_enter_category_name">Enter category name</string>
-    <string name="header_category">Category:</string>
-
-
-    <!--STATUS-->
-    <string name="name_default_status">operational</string>
-    <string name="title_statuses">Statuses</string>
-    <string name="title_status_create">Create Status</string>
-    <string name="title_statuses_sort">Sort Statuses</string>
-    <string name="title_status_edit">Edit Status</string>
-    <string name="hint_enter_status_name">Enter status name</string>
-    <string name="title_status_pick">Pick Status</string>
-    <string name="subtitle_status_to_assign_status_to">to assign status to</string>
-    <string name="subtitle_status_to_assign_to_attraction">to assign to attraction</string>
-    <string name="header_status">Status:</string>
-
-
-    <!--ORPHAN ELEMENTS-->
-    <string name="alert_dialog_message_delete_orphan_element_has_children">
-        %1$d attraction(s) are assigned - do you really want to delete \'%2$s\'?
-        \n(default \'%3$s\' will be assigned to attractions)
-    </string>
-    <string name="alert_dialog_message_delete_orphan_element_has_no_children">Do you really want to delete \'%1$s\'?</string>
-
-    <string name="information_assigned_to_attractions">assigned \'%1$s\' to %2$d attractions</string>
-    <string name="information_set_as_default">\'%1$s\' set as default</string>
-
 
     <!--NAVIGATION HUB-->
     <string name="subtitle_navigation_hub">Navigation Hub</string>
 
     <string name="group_title_navigation_drawer_manage">Manage</string>
-    <string name="group_title_navigation_import_export">Import/Export</string>
+    <string name="group_title_navigation_import_export_content">Import/Export Content</string>
 
     <string name="item_navigation_drawer_browse_content">Browse Content</string>
 
+    <string name="item_navigation_drawer_manage_credit_types">Credit Types</string>
     <string name="item_navigation_drawer_manage_blueprints">Blueprints</string>
     <string name="item_navigation_drawer_manage_categories">Categories</string>
     <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>
@@ -275,8 +165,144 @@
     <string name="information_restore_content_backup_success">Content restored</string>
 
 
+
     <!--SEARCH-->
     <string name="hint_search_content">Search content</string>
+
+
+
+    <!--LOCATIONS-->
+    <string name="title_locations">Locations</string>
+    <string name="title_locations_sort">Sort Locations</string>
+    <string name="title_locations_pick">Pick Locations</string>
+    <string name="title_location_edit">Edit Location</string>
+    <string name="subtitle_locations_pick_description_to_add_to_new_location">to add to the new location</string>
+    <string name="subtitle_location_create">create child location</string>
+    <string name="hint_enter_location_name">Enter location name</string>
+
+
+
+    <!--PARKS-->
+    <string name="title_parks_sort">Sort Parks</string>
+    <string name="title_parks_pick">Pick Parks</string>
+    <string name="title_park_edit">Edit Park</string>
+    <string name="subtitle_park_create">create park</string>
+    <string name="subtitle_parks_pick_description_to_add_to_new_location">to add to the new location</string>
+    <string name="subtitle_park_show_tab_overview">Overview</string>
+    <string name="subtitle_park_show_tab_attractions">Attractions</string>
+    <string name="subtitle_park_show_tab_visits">Visits</string>
+    <string name="hint_enter_park_name">Enter park name</string>
+
+
+
+    <!--SHOW_VISITS-->
+    <string name="title_visit_create">Create Visit</string>
+    <string name="title_visit_show">Visit</string>
+    <string name="title_visit_pick">Pick Visit</string>
+    <string name="subtitle_visit_pick_to_open">to open</string>
+
+    <string name="error_visit_already_exists">Visit for that day already exists…</string>
+
+    <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
+    <string name="alert_dialog_message_visit_already_exists">Do you want to override existing visit? \n(existing data will be lost, ride counts will be adjusted)</string>
+    <string name="alert_dialog_message_delete_visited_attraction">Do you want to delete visited %1$s? \n(tracked rides will be lost, ride count will be adjusted)</string>
+
+    <string name="description_decrease">decrease ride count</string>
+    <string name="description_increase">increase ride count</string>
+
+    <string name="text_visited_attraction_pretty_print">%1$dx %2$s</string>
+    <string name="text_visit_display_full_name">%1$s @ %2$s</string>
+
+
+
+    <!--SHOW_ATTRACTIONS-->
+    <string name="title_attractions_sort">Sort Attractions</string>
+    <string name="title_attractions_pick">Pick Attractions</string>
+    <string name="subtitle_attractions_description_pick_to_add_to_visit">to add to your visit</string>
+
+    <string name="alert_dialog_title_add_attractions_to_visit">ADD ATTRACTIONS</string>
+    <string name="alert_dialog_message_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
+
+    <string name="alert_dialog_title_delete_attraction">DELETE ATTRACTION</string>
+    <string name="alert_dialog_message_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all tracked rides will be deleted as well)</string>
+
+    <string name="hint_enter_attraction_name">Enter attraction name</string>
+
+    <string name="title_custom_attraction_create">Create Attraction</string>
+    <string name="subtitle_custom_attraction_create">for %1$s</string>
+
+    <string name="title_custom_attraction_edit">Edit Attraction</string>
+
+
+
+    <!--CreditTypes-->
+    <string name="name_default_credit_type">no credit</string>
+    <string name="title_credit_types">Credit Types</string>
+    <string name="title_credit_type_create">Create Credit Type</string>
+    <string name="title_credit_type_edit">Edit Credit Type</string>
+    <string name="title_credit_type_pick">Pick Credit Type</string>
+    <string name="title_credit_type_sort">Sort Credit Types</string>
+    <string name="subtitle_credit_type_to_assign_credit_type_to">to assign credit type to</string>
+    <string name="subtitle_credit_type_to_assign_to_attraction">to assign to attraction</string>
+    <string name="hint_enter_credit_type_name">Enter credit type name</string>
+    <string name="header_credit_type">Credit Type:</string>
+
+
+
+    <!--MANUFACTURERS-->
+    <string name="name_default_manufacturer">unknown</string>
+    <string name="title_manufacturers">Manufacturers</string>
+    <string name="title_manufacturer_create">Create Manufacturer</string>
+    <string name="title_manufacturer_edit">Edit Manufacturer</string>
+    <string name="title_manufacturer_pick">Pick Manufacturer</string>
+    <string name="title_manufacturers_sort">Sort Manufacturers</string>
+    <string name="subtitle_manufacturer_to_assign_manufacturer_to">to assign manufacturer to</string>
+    <string name="subtitle_manufacturer_to_assign_to_attraction">to assign to attraction</string>
+    <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
+    <string name="header_manufacturer">Manufacturer:</string>
+
+
+
+    <!--CATEGORIES-->
+    <string name="name_default_category">uncategorized</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_category_create">Create Category</string>
+    <string name="title_category_edit">Edit Category</string>
+    <string name="title_category_pick">Pick Category</string>
+    <string name="title_categories_sort">Sort Categories</string>
+    <string name="subtitle_category_to_assign_category_to">to assign category to</string>
+    <string name="subtitle_category_to_assign_to_attraction">to assign to attraction</string>
+    <string name="hint_enter_category_name">Enter category name</string>
+    <string name="header_category">Category:</string>
+
+
+
+    <!--STATUS-->
+    <string name="name_default_status">operational</string>
+    <string name="title_statuses">Statuses</string>
+    <string name="title_status_create">Create Status</string>
+    <string name="title_statuses_sort">Sort Statuses</string>
+    <string name="title_status_edit">Edit Status</string>
+    <string name="hint_enter_status_name">Enter status name</string>
+    <string name="title_status_pick">Pick Status</string>
+    <string name="subtitle_status_to_assign_status_to">to assign status to</string>
+    <string name="subtitle_status_to_assign_to_attraction">to assign to attraction</string>
+    <string name="header_status">Status:</string>
+
+
+
+    <!--ORPHAN ELEMENTS-->
+    <string name="alert_dialog_message_delete_orphan_element_has_children">
+        %1$d attraction(s) are assigned - do you really want to delete \'%2$s\'?
+        \n(default \'%3$s\' will be assigned to attractions)
+    </string>
+    <string name="alert_dialog_message_delete_orphan_element_has_no_children">Do you really want to delete \'%1$s\'?</string>
+
+    <string name="information_assigned_to_attractions">assigned \'%1$s\' to %2$d attractions</string>
+    <string name="information_set_as_default">\'%1$s\' set as default</string>
+
+
+
 
 
     <!--HELP-->
@@ -308,17 +334,19 @@
     <string name="help_text_pick_elements">@string/help_text_not_yet_available</string>
     <string name="help_text_create_location">@string/help_text_not_yet_available</string>
     <string name="help_text_create_park">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_credit_type">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_category">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_status">@string/help_text_not_yet_available</string>
     <string name="help_text_edit">@string/help_text_not_yet_available</string>
     <string name="help_text_show_park_overview">@string/help_text_not_yet_available</string>
     <string name="help_text_show_attractions">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
-    <string name="help_text_manage_category">@string/help_text_not_yet_available</string>
-    <string name="help_text_manage_manufacturer">@string/help_text_not_yet_available</string>
-    <string name="help_text_manage_status">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_category">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_status">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_credit_types">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_categories">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_manufacturers">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_statuses">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
     <string name="help_text_create_or_edit_custom_attraction">@string/help_text_not_yet_available</string>
 

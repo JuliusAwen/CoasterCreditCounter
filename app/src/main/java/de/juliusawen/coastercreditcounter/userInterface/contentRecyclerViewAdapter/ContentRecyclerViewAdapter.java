@@ -142,6 +142,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.LOCATION);
                 break;
 
+            case CREDIT_TYPE:
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.CREDIT_TYPE);
+                break;
+
             case CATEGORY:
                 groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.CATEGORY);
                 break;
@@ -202,22 +206,27 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void initializeTypesByDetails()
     {
-        Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
-        typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
-        this.typesByDetail.put(DetailType.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
-
         Set<Class<? extends IAttraction>> typesForWhichDisplayLocationDetail = new HashSet<>();
         typesForWhichDisplayLocationDetail.add(CustomAttraction.class);
         typesForWhichDisplayLocationDetail.add(StockAttraction.class);
         typesForWhichDisplayLocationDetail.add(Blueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
         this.typesByDetail.put(DetailType.LOCATION, typesForWhichDisplayLocationDetail);
 
+        Set<Class<? extends IAttraction>> typesForWhichDisplayCreditTypeDetail = new HashSet<>();
+        typesForWhichDisplayCreditTypeDetail.add(CustomAttraction.class);
+        typesForWhichDisplayCreditTypeDetail.add(Blueprint.class);
+        this.typesByDetail.put(DetailType.CREDIT_TYPE, typesForWhichDisplayCreditTypeDetail);
+
         Set<Class<? extends IAttraction>> typesForWhichDisplayCategoryDetail = new HashSet<>();
         typesForWhichDisplayCategoryDetail.add(CustomAttraction.class);
         typesForWhichDisplayCategoryDetail.add(Blueprint.class);
         this.typesByDetail.put(DetailType.CATEGORY, typesForWhichDisplayCategoryDetail);
+
+        Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
+        typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
+        typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
+        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
+        this.typesByDetail.put(DetailType.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
         typesForWhichDisplayStatusDetail.add(CustomAttraction.class);
@@ -233,8 +242,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void initializeDisplayModesByDetail()
     {
         this.displayModesByDetail.put(DetailType.LOCATION, DetailDisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.MANUFACTURER, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.CREDIT_TYPE, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.CATEGORY, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.MANUFACTURER, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.STATUS, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.OFF);
     }
@@ -516,14 +526,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     detailDisplayed = true;
                 }
 
-                String manufacturerName = "";
-                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.ABOVE)
+                String creditTypeName = "";
+                if(this.displayModesByDetail.get(DetailType.CREDIT_TYPE) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
-                        manufacturerName += " - ";
+                        creditTypeName += " - ";
                     }
-                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                    creditTypeName += ((IAttraction)item).getCreditType().getName();
                     detailDisplayed = true;
                 }
 
@@ -535,6 +545,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         categoryName += " - ";
                     }
                     categoryName += ((IAttraction)item).getCategory().getName();
+                    detailDisplayed = true;
+                }
+
+                String manufacturerName = "";
+                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.ABOVE)
+                {
+                    if(detailDisplayed)
+                    {
+                        manufacturerName += " - ";
+                    }
+                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
                     detailDisplayed = true;
                 }
 
@@ -560,7 +581,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 viewHolder.textViewDetailAbove.setText(
-                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, categoryName, statusName, totalRideCountString));
+                        App.getContext().getString(R.string.text_detail, locationName, creditTypeName, categoryName, manufacturerName, statusName, totalRideCountString));
             }
             else
             {
@@ -592,14 +613,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     detailDisplayed = true;
                 }
 
-                String manufacturerName = "";
-                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.BELOW)
+                String creditTypeName = "";
+                if(this.displayModesByDetail.get(DetailType.CREDIT_TYPE) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
-                        manufacturerName += " - ";
+                        creditTypeName += " - ";
                     }
-                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
+                    creditTypeName += ((IAttraction)item).getCreditType().getName();
                     detailDisplayed = true;
                 }
 
@@ -611,6 +632,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         categoryName += " - ";
                     }
                     categoryName += ((IAttraction)item).getCategory().getName();
+                    detailDisplayed = true;
+                }
+
+                String manufacturerName = "";
+                if(this.displayModesByDetail.get(DetailType.MANUFACTURER) == DetailDisplayMode.BELOW)
+                {
+                    if(detailDisplayed)
+                    {
+                        manufacturerName += " - ";
+                    }
+                    manufacturerName += ((IAttraction)item).getManufacturer().getName();
                     detailDisplayed = true;
                 }
 
@@ -636,7 +668,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 viewHolder.textViewDetailBelow.setText(
-                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, categoryName, statusName, totalRideCountString));
+                        App.getContext().getString(R.string.text_detail, locationName, creditTypeName, categoryName, manufacturerName, statusName, totalRideCountString));
             }
             else
             {
