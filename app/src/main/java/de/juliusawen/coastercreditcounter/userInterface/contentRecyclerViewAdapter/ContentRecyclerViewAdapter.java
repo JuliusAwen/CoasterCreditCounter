@@ -26,8 +26,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
@@ -208,8 +207,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
         typesForWhichDisplayManufacturerDetail.add(CustomCoaster.class);
         typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(CoasterBlueprint.class);
-        typesForWhichDisplayManufacturerDetail.add(AttractionBlueprint.class);
+        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
         typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
         this.typesByDetail.put(DetailType.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
 
@@ -217,15 +215,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         typesForWhichDisplayLocationDetail.add(CustomCoaster.class);
         typesForWhichDisplayLocationDetail.add(CustomAttraction.class);
         typesForWhichDisplayLocationDetail.add(StockAttraction.class);
-        typesForWhichDisplayLocationDetail.add(CoasterBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-        typesForWhichDisplayLocationDetail.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
+        typesForWhichDisplayLocationDetail.add(Blueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
         this.typesByDetail.put(DetailType.LOCATION, typesForWhichDisplayLocationDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayCategoryDetail = new HashSet<>();
         typesForWhichDisplayCategoryDetail.add(CustomCoaster.class);
         typesForWhichDisplayCategoryDetail.add(CustomAttraction.class);
-        typesForWhichDisplayCategoryDetail.add(CoasterBlueprint.class);
-        typesForWhichDisplayCategoryDetail.add(AttractionBlueprint.class);
+        typesForWhichDisplayCategoryDetail.add(Blueprint.class);
         this.typesByDetail.put(DetailType.CATEGORY, typesForWhichDisplayCategoryDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
@@ -514,7 +510,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 String locationName = "";
                 if(this.displayModesByDetail.get(DetailType.LOCATION) == DetailDisplayMode.ABOVE)
                 {
-                    if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                    if(item instanceof Blueprint)
                     {
                         // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
                         locationName = App.getContext().getString(R.string.text_blueprint_substitute);
@@ -590,7 +586,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 String locationName = "";
                 if(this.displayModesByDetail.get(DetailType.LOCATION) == DetailDisplayMode.BELOW)
                 {
-                    if(item instanceof CoasterBlueprint || item instanceof AttractionBlueprint)
+                    if(item instanceof Blueprint)
                     {
                         // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
                         locationName = App.getContext().getString(R.string.text_blueprint_substitute);

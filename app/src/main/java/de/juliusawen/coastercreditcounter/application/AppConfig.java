@@ -23,7 +23,7 @@ public class AppConfig
     private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = false;
     private final boolean createExportFileIfNonexistent = true;
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = true;
 
     //above is just working when isDebugBuild = true
 

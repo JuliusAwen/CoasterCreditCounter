@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
@@ -36,8 +35,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     private final Manufacturers manufacturers;
     private final Statuses statuses;
     private final Locations locations;
-    private final CoasterBlueprints coasterBlueprints;
-    private final AttractionBlueprints attractionBlueprints;
+    private final Blueprints blueprints;
 
     private static final DatabaseMock instance = new DatabaseMock();
 
@@ -53,8 +51,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.manufacturers = new Manufacturers();
         this.statuses = new Statuses();
         this.locations = new Locations();
-        this.coasterBlueprints = new CoasterBlueprints(this.manufacturers, this.categories, this.creditTypes);
-        this.attractionBlueprints = new AttractionBlueprints(this.manufacturers, this.categories);
+        this.blueprints = new Blueprints(this.manufacturers, this.categories, this.creditTypes);
     }
 
     @Override
@@ -85,8 +82,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElements(ConvertTool.convertElementsToType(categories.All, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(manufacturers.All, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(statuses.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(coasterBlueprints.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(attractionBlueprints.All, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(blueprints.All, IElement.class));
 
         Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
 
@@ -155,7 +151,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         chiapas.setManufacturer(manufacturers.Intamin);
         phantasialand.addChildAndSetParent(chiapas);
 
-        StockAttraction talocan = StockAttraction.create("Talocan", attractionBlueprints.SuspendedTopSpin);
+        StockAttraction talocan = StockAttraction.create("Talocan", blueprints.SuspendedTopSpin);
         phantasialand.addChildAndSetParent(talocan);
 
         CustomAttraction fengJuPalace = CustomAttraction.create("Feng Ju Palace");
@@ -232,7 +228,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park heidePark = Park.create("Heide Park");
         locations.Germany.addChildAndSetParent(heidePark);
 
-        StockAttraction limit = StockAttraction.create("Limit", coasterBlueprints.SuspendedLoopingCoaster, 1);
+        StockAttraction limit = StockAttraction.create("Limit", blueprints.SuspendedLoopingCoaster, 1);
         heidePark.addChildAndSetParent(limit);
 
         CustomCoaster krake = CustomCoaster.create("Krake", 14);
@@ -406,13 +402,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park walibiHolland = Park.create("Walibi Holland");
         locations.Netherlands.addChildAndSetParent(walibiHolland);
 
-        StockAttraction elCondor = StockAttraction.create("El Condor", coasterBlueprints.SuspendedLoopingCoaster, 1);
+        StockAttraction elCondor = StockAttraction.create("El Condor", blueprints.SuspendedLoopingCoaster, 1);
         walibiHolland.addChildAndSetParent(elCondor);
 
-        StockAttraction speedOfSound = StockAttraction.create("Speed of Sound", coasterBlueprints.Boomerang, 2);
+        StockAttraction speedOfSound = StockAttraction.create("Speed of Sound", blueprints.Boomerang, 2);
         walibiHolland.addChildAndSetParent(speedOfSound);
 
-        StockAttraction excalibur = StockAttraction.create("Excalibur", attractionBlueprints.TopSpin, 1);
+        StockAttraction excalibur = StockAttraction.create("Excalibur", blueprints.TopSpin, 1);
         walibiHolland.addChildAndSetParent(excalibur);
 
         CustomCoaster drako = CustomCoaster.create("Drako", 2);
@@ -604,7 +600,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         crazyMouse.setCategory(categories.RollerCoasters);
         osterwiese.addChildAndSetParent(crazyMouse);
 
-        StockAttraction tomDerTiger = StockAttraction.create("Tom der Tiger", coasterBlueprints.BigApple);
+        StockAttraction tomDerTiger = StockAttraction.create("Tom der Tiger", blueprints.BigApple);
         osterwiese.addChildAndSetParent(tomDerTiger);
 
 
@@ -853,7 +849,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         galoppers.setManufacturer(manufacturers.Zierer);
         slagharen.addChildAndSetParent(galoppers);
 
-        StockAttraction eagle = StockAttraction.create("Eagle", attractionBlueprints.Condor);
+        StockAttraction eagle = StockAttraction.create("Eagle", blueprints.Condor);
         slagharen.addChildAndSetParent(eagle);
 
         CustomAttraction tomahawk = CustomAttraction.create("Tomahawk");
@@ -905,7 +901,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park holidayPark = Park.create("Holiday Park");
         locations.Germany.addChildAndSetParent(holidayPark);
 
-        StockAttraction skyScream = StockAttraction.create("Sky Scream", coasterBlueprints.SkyRocketII);
+        StockAttraction skyScream = StockAttraction.create("Sky Scream", blueprints.SkyRocketII);
         holidayPark.addChildAndSetParent(skyScream);
 
         CustomCoaster expeditionGeForce = CustomCoaster.create("Expedition GeForce");
@@ -975,7 +971,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         bandit.setManufacturer(manufacturers.PremierRides);
         movieParkGermany.addChildAndSetParent(bandit);
 
-        StockAttraction mpXpress = StockAttraction.create("MP Xpress", coasterBlueprints.SuspendedLoopingCoaster);
+        StockAttraction mpXpress = StockAttraction.create("MP Xpress", blueprints.SuspendedLoopingCoaster);
         movieParkGermany.addChildAndSetParent(mpXpress);
 
         CustomAttraction dorasBigRiverAdventuer = CustomAttraction.create("Dora's Big River Adventure");
@@ -994,7 +990,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         theHighFall.setManufacturer(manufacturers.Intamin);
         movieParkGermany.addChildAndSetParent(theHighFall);
 
-        StockAttraction crazySurfer = StockAttraction.create("Crazy Surfer", attractionBlueprints.DiskO);
+        StockAttraction crazySurfer = StockAttraction.create("Crazy Surfer", blueprints.DiskO);
         movieParkGermany.addChildAndSetParent(crazySurfer);
 
         CustomAttraction santaMonicaWheel = CustomAttraction.create("Santa Monica Wheel");
@@ -1011,7 +1007,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         timeRiders.setCategory(categories.FamilyRides);
         movieParkGermany.addChildAndSetParent(timeRiders);
 
-        StockAttraction NycTransformer = StockAttraction.create("NYC Transformer", attractionBlueprints.TopSpin);
+        StockAttraction NycTransformer = StockAttraction.create("NYC Transformer", blueprints.TopSpin);
         movieParkGermany.addChildAndSetParent(NycTransformer);
 
 
@@ -1299,14 +1295,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         holsteinturm.setManufacturer(manufacturers.Huss);
         hansaPark.addChildAndSetParent(holsteinturm);
 
-        StockAttraction kaernapulten = StockAttraction.create("Kärnapulten", attractionBlueprints.SkyFly, 1);
+        StockAttraction kaernapulten = StockAttraction.create("Kärnapulten", blueprints.SkyFly, 1);
         hansaPark.addChildAndSetParent(kaernapulten);
 
         CustomAttraction hanseflieger = CustomAttraction.create("Hanse Flieger", 1);
         hanseflieger.setCategory(categories.FamilyRides);
         hansaPark.addChildAndSetParent(hanseflieger);
 
-        StockAttraction fliegenderHai = StockAttraction.create("Fliegender Hai", attractionBlueprints.Ranger, 2);
+        StockAttraction fliegenderHai = StockAttraction.create("Fliegender Hai", blueprints.Ranger, 2);
         fliegenderHai.setStatus(statuses.Defunct);
         hansaPark.addChildAndSetParent(fliegenderHai);
 
@@ -1752,16 +1748,24 @@ class Locations
     }
 }
 
-class CoasterBlueprints
+class Blueprints
 {
-    final CoasterBlueprint SuspendedLoopingCoaster = CoasterBlueprint.create("Suspended Looping Coaster");
-    final CoasterBlueprint Boomerang = CoasterBlueprint.create("Boomerang");
-    final CoasterBlueprint BigApple = CoasterBlueprint.create("Big Apple");
-    final CoasterBlueprint SkyRocketII = CoasterBlueprint.create("Sky Rocker II");
+    final Blueprint SuspendedLoopingCoaster = Blueprint.create("Suspended Looping Coaster");
+    final Blueprint Boomerang = Blueprint.create("Boomerang");
+    final Blueprint BigApple = Blueprint.create("Big Apple");
+    final Blueprint SkyRocketII = Blueprint.create("Sky Rocker II");
 
-    final List<CoasterBlueprint> All = new LinkedList<>();
+    final Blueprint TopSpin = Blueprint.create("Top Spin");
+    final Blueprint SuspendedTopSpin = Blueprint.create("Suspended Top Spin");
+    final Blueprint BreakDancer = Blueprint.create("Break Dancer");
+    final Blueprint DiskO = Blueprint.create("Disk'O");
+    final Blueprint Condor = Blueprint.create("Condor");
+    final Blueprint SkyFly = Blueprint.create("Sky Fly");
+    final Blueprint Ranger = Blueprint.create("Ranger");
 
-    CoasterBlueprints(Manufacturers manufacturers, Categories categories, CreditTypes creditTypes)
+    final List<Blueprint> All = new LinkedList<>();
+
+    Blueprints(Manufacturers manufacturers, Categories categories, CreditTypes creditTypes)
     {
         SuspendedLoopingCoaster.setCreditType(creditTypes.RollerCoaster);
         SuspendedLoopingCoaster.setCategory(categories.RollerCoasters);
@@ -1780,27 +1784,6 @@ class CoasterBlueprints
         SkyRocketII.setManufacturer(manufacturers.PremierRides);
 
 
-        All.add(SuspendedLoopingCoaster);
-        All.add(Boomerang);
-        All.add(BigApple);
-        All.add(SkyRocketII);
-    }
-}
-
-class AttractionBlueprints
-{
-    final AttractionBlueprint TopSpin = AttractionBlueprint.create("Top Spin");
-    final AttractionBlueprint SuspendedTopSpin = AttractionBlueprint.create("Suspended Top Spin");
-    final AttractionBlueprint BreakDancer = AttractionBlueprint.create("Break Dancer");
-    final AttractionBlueprint DiskO = AttractionBlueprint.create("Disk'O");
-    final AttractionBlueprint Condor = AttractionBlueprint.create("Condor");
-    final AttractionBlueprint SkyFly = AttractionBlueprint.create("Sky Fly");
-    final AttractionBlueprint Ranger = AttractionBlueprint.create("Ranger");
-
-    final List<AttractionBlueprint> All = new LinkedList<>();
-
-    AttractionBlueprints(Manufacturers manufacturers, Categories categories)
-    {
         TopSpin.setCategory(categories.ThrillRides);
         TopSpin.setManufacturer(manufacturers.Huss);
 
@@ -1822,6 +1805,11 @@ class AttractionBlueprints
         Ranger.setCategory(categories.ThrillRides);
         Ranger.setManufacturer(manufacturers.Huss);
 
+
+        All.add(SuspendedLoopingCoaster);
+        All.add(Boomerang);
+        All.add(BigApple);
+        All.add(SkyRocketII);
 
         All.add(TopSpin);
         All.add(SuspendedTopSpin);

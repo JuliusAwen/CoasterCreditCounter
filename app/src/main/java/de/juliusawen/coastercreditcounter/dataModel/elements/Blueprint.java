@@ -12,35 +12,35 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Blueprint for coasters from which StockAttraction is created
+ * Blueprint for attractions from which StockAttraction is created
  */
-public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElement
+public class Blueprint extends Attraction implements IBlueprint, IOrphanElement
 {
-    private CoasterBlueprint(String name, UUID uuid)
+    private Blueprint(String name, UUID uuid)
     {
         super(name, 0, uuid);
     }
 
-    public static CoasterBlueprint create(String name)
+    public static Blueprint create(String name)
     {
-        return CoasterBlueprint.create(name, UUID.randomUUID());
+        return Blueprint.create(name, UUID.randomUUID());
     }
 
-    public static CoasterBlueprint create(String name, UUID uuid)
+    public static Blueprint create(String name, UUID uuid)
     {
-        CoasterBlueprint coasterBlueprint = null;
+        Blueprint blueprint = null;
         name = name.trim();
 
         if(!name.isEmpty())
         {
-            coasterBlueprint = new CoasterBlueprint(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("CoasterBlueprint.show:: %s created.", coasterBlueprint.getFullName()));
+            blueprint = new Blueprint(name, uuid == null ? UUID.randomUUID() : uuid);
+            Log.v(Constants.LOG_TAG,  String.format("Blueprint.create:: %s created.", blueprint.getFullName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("CoasterBlueprint.show:: invalid name[%s] - CoasterBlueprint not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("Blueprint.create:: invalid name[%s] - Blueprint not created.", name));
         }
-        return coasterBlueprint;
+        return blueprint;
     }
 
     @Override
@@ -55,13 +55,13 @@ public class CoasterBlueprint extends Coaster implements IBlueprint, IOrphanElem
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
 
-            Log.v(Constants.LOG_TAG, String.format("CoasterBlueprint.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(Constants.LOG_TAG, String.format("Blueprint.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("CoasterBlueprint.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Blueprint.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

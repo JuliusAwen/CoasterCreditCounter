@@ -19,8 +19,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Settings;
-import de.juliusawen.coastercreditcounter.dataModel.elements.AttractionBlueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CoasterBlueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IBlueprint;
@@ -63,7 +62,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private List<TemporaryJsonElement> temporaryLocations;
     private List<TemporaryJsonElement> temporaryParks;
-    private List<TemporaryJsonElement> temporaryCoasterBlueprints;
+    private List<TemporaryJsonElement> temporaryBlueprints;
     private List<TemporaryJsonElement> temporaryStockAttractions;
     private List<TemporaryJsonElement> temporaryCustomAttractions;
     private List<TemporaryJsonElement> temporaryCustomCoasters;
@@ -167,7 +166,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 this.entangleElements(this.temporaryLocations, content);
                 this.entangleElements(this.temporaryParks, content);
-                this.entangleElements(this.temporaryCoasterBlueprints, content);
+                this.entangleElements(this.temporaryBlueprints, content);
                 this.entangleElements(this.temporaryStockAttractions, content);
                 this.entangleElements(this.temporaryCustomAttractions, content);
                 this.entangleElements(this.temporaryCustomCoasters, content);
@@ -238,16 +237,10 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 JSONObject jsonObjectAttractions = jsonObjectContent.getJSONObject(Constants.JSON_STRING_ATTRACTIONS);
 
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS))
+                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_BLUEPRINTS))
                 {
-                    List<TemporaryJsonElement> temporaryAttractionBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
-                    content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints, content));
-                }
-
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_COASTER_BLUEPRINTS))
-                {
-                    this.temporaryCoasterBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_COASTER_BLUEPRINTS));
-                    content.addElements(this.createCoasterBlueprints(this.temporaryCoasterBlueprints, content));
+                    this.temporaryBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_BLUEPRINTS));
+                    content.addElements(this.createBlueprints(this.temporaryBlueprints, content));
                 }
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_STOCK_ATTRACTIONS))
@@ -508,26 +501,12 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
     
-    private List<IElement> createAttractionBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
+    private List<IElement> createBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            AttractionBlueprint element = AttractionBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
-            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
-            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            elements.add(element);
-        }
-        return elements;
-    }
-
-    private List<IElement> createCoasterBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
-    {
-        List<IElement> elements = new LinkedList<>();
-        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
-        {
-            CoasterBlueprint element = CoasterBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            Blueprint element = Blueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
             element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
@@ -759,13 +738,9 @@ public class JsonHandler implements IDatabaseWrapper
 
 
             JSONObject jsonObjectAttractions = new JSONObject();
-            jsonObjectAttractions.put(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS, content.getContentOfType(AttractionBlueprint.class).isEmpty()
+            jsonObjectAttractions.put(Constants.JSON_STRING_BLUEPRINTS, content.getContentOfType(Blueprint.class).isEmpty()
                             ? JSONObject.NULL
-                            : this.createJsonArray(content.getContentOfType(AttractionBlueprint.class)));
-
-            jsonObjectAttractions.put(Constants.JSON_STRING_COASTER_BLUEPRINTS, content.getContentOfType(CoasterBlueprint.class).isEmpty()
-                    ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(CoasterBlueprint.class)));
+                            : this.createJsonArray(content.getContentOfType(Blueprint.class)));
 
             jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS, content.getContentOfType(CustomAttraction.class).isEmpty()
                     ? JSONObject.NULL

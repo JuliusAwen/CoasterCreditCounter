@@ -19,8 +19,7 @@ public abstract class Constants
     public static final String JSON_STRING_PARKS = "parks";
     public static final String JSON_STRING_VISITS = "visits";
     public static final String JSON_STRING_ATTRACTIONS = "attractions";
-    public static final String JSON_STRING_ATTRACTION_BLUEPRINTS = "attraction blueprints";
-    public static final String JSON_STRING_COASTER_BLUEPRINTS = "coaster blueprints";
+    public static final String JSON_STRING_BLUEPRINTS = "blueprints";
     public static final String JSON_STRING_CUSTOM_ATTRACTIONS = "custom attractions";
     public static final String JSON_STRING_CUSTOM_COASTERS = "custom coasters";
     public static final String JSON_STRING_STOCK_ATTRACTIONS = "stock attractions";
