@@ -21,25 +21,25 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  */
 public class StockAttraction extends Attraction implements IOnSiteAttraction
 {
-    private final IBlueprint blueprint;
+    private final Blueprint blueprint;
 
-    private StockAttraction(String name, IBlueprint blueprint, int untrackedRideCount, UUID uuid)
+    private StockAttraction(String name, Blueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         super(name, untrackedRideCount, uuid);
         this.blueprint = blueprint;
     }
 
-    public static StockAttraction create(String name, IBlueprint blueprint)
+    public static StockAttraction create(String name, Blueprint blueprint)
     {
         return StockAttraction.create(name, blueprint, 0);
     }
 
-    public static StockAttraction create(String name, IBlueprint blueprint, int untrackedRideCount)
+    public static StockAttraction create(String name, Blueprint blueprint, int untrackedRideCount)
     {
         return StockAttraction.create(name, blueprint, untrackedRideCount, UUID.randomUUID());
     }
 
-    public static StockAttraction create(String name, IBlueprint blueprint, int untrackedRideCount, UUID uuid)
+    public static StockAttraction create(String name, Blueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         StockAttraction stockAttraction = null;
         name = name.trim();

@@ -30,7 +30,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IBlueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
@@ -780,7 +779,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             IGroupHeader groupHeader = null;
 
-            if(item instanceof IBlueprint)
+            if(item instanceof Blueprint)
             {
                 groupHeader = this.getGroupHeaderForGroupTypeFromItem(item);
             }

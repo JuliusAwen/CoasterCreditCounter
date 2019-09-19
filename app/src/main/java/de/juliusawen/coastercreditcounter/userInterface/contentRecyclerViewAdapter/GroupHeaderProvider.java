@@ -16,8 +16,8 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IBlueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -60,7 +60,7 @@ public class GroupHeaderProvider
         {
             for(IElement element : attractions)
             {
-                if(IBlueprint.class.isAssignableFrom(element.getClass()))
+                if(Blueprint.class.isAssignableFrom(element.getClass()))
                 {
                     blueprints.add(element);
                 }

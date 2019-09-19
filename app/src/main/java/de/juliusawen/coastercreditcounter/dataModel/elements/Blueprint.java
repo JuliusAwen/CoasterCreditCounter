@@ -14,7 +14,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 /**
  * Blueprint for attractions from which StockAttraction is created
  */
-public class Blueprint extends Attraction implements IBlueprint, IOrphanElement
+public class Blueprint extends Attraction implements IAttraction, ICategorized, IOrphanElement
 {
     private Blueprint(String name, UUID uuid)
     {
