@@ -285,12 +285,12 @@ public class Persistence
         return file.exists();
     }
 
-    public int fetchTotalCoasterCreditsCount()
+    public int fetchTotalCreditsCount()
     {
         return this.databaseWrapper.fetchTotalCreditsCount();
     }
 
-    public int fetchTotalCoasterRidesCount()
+    public int fetchTotalCreditsRideCount()
     {
         return this.databaseWrapper.fetchTotalCreditsRideCount();
     }

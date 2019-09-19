@@ -206,8 +206,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
 
         this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, App.persistence.fetchTotalVisitedParksCount()));
-        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCoasterCreditsCount()));
-        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, App.persistence.fetchTotalCoasterRidesCount()));
+        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCreditsCount()));
+        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, App.persistence.fetchTotalCreditsRideCount()));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
