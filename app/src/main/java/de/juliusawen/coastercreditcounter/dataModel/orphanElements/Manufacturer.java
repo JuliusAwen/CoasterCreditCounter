@@ -50,11 +50,11 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
             name = name.trim();
 
             manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Manufacturer.show:: %s created", manufacturer));
+            Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Manufacturer.show:: invalid name[%s] - manufacturer not created", name));
+            Log.e(Constants.LOG_TAG,  String.format("Manufacturer.create:: invalid name[%s] - manufacturer not created", name));
         }
         return manufacturer;
     }

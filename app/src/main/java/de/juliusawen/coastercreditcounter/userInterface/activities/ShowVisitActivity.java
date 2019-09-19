@@ -27,7 +27,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Ride;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
@@ -95,8 +94,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .setTypefaceForType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
-                .addRideOnClickListener(this.getAddRideOnClickListener())
-                .deleteRideOnClickListener(this.getRemoveRideOnClickListener());
+                .addRideOnClickListener(this.getIncreaseRideCountOnClickListener())
+                .deleteRideOnClickListener(this.getDcreaseRideCountOnClickListener());
 
         this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -416,7 +415,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         this.handleFloatingActionButtonVisibility();
     }
 
-    private View.OnClickListener getAddRideOnClickListener()
+    private View.OnClickListener getIncreaseRideCountOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -425,19 +424,16 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(LOG_TAG, String.format("ShowVisitActivity.getAddRideOnClickListener.onClick:: adding ride to %s for %s", visitedAttraction, visitedAttraction.getParent()));
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getIncreaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
 
-                Ride ride = visitedAttraction.addRide();
-
-                ShowVisitActivity.super.markForCreation(ride);
+                visitedAttraction.increaseTotalRideCount(App.settings.getDefaultIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
-
                 updateContentRecyclerView(false);
             }
         };
     }
 
-    private View.OnClickListener getRemoveRideOnClickListener()
+    private View.OnClickListener getDcreaseRideCountOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -446,16 +442,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(LOG_TAG, String.format("ShowVisitActivity.getRemoveRideOnClickListener.onClick:: deleting latest ride on %s for %s",
-                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getDcreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                Ride ride = visitedAttraction.deleteLatestRide();
-                if(ride != null)
-                {
-                    ShowVisitActivity.super.markForDeletion(ride, false);
-                    ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
-                    updateContentRecyclerView(false);
-                }
+                visitedAttraction.decreaseTotalRideCount(App.settings.getDefaultIncrement());
+                ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
+                updateContentRecyclerView(false);
             }
         };
     }

@@ -47,7 +47,7 @@ public class Visit extends Element
     {
         Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
 
-        Log.v(Constants.LOG_TAG,  String.format("Visit.show:: %s created.", visit.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
         return visit;
     }
 
@@ -77,14 +77,14 @@ public class Visit extends Element
             jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
 
             boolean hasVisitedAttractions = false;
-            JSONArray jsonArrayRidesByAttractions = new JSONArray();
+            JSONArray jsonArrayRideCountsByAttractions = new JSONArray();
             for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
             {
                 JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
-                jsonArrayRidesByAttractions.put(jsonObjectRideCountByAttraction);
+                jsonArrayRideCountsByAttractions.put(jsonObjectRideCountByAttraction);
                 hasVisitedAttractions = true;
             }
-            jsonObject.put(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS, hasVisitedAttractions ? jsonArrayRidesByAttractions : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttractions : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
@@ -112,7 +112,6 @@ public class Visit extends Element
     {
         this.calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         this.setName();
-        this.setDateInRides(calendar);
     }
 
     private void setName()
@@ -122,17 +121,6 @@ public class Visit extends Element
         Log.d(Constants.LOG_TAG, String.format("Visit.setName:: set date for %s to [%s] - changing name...", this, date));
 
         super.setName(date);
-    }
-
-    private void setDateInRides(Calendar calendar)
-    {
-        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
-        {
-            for(Ride ride : visitedAttraction.getChildrenAsType(Ride.class))
-            {
-                ride.setRideDate(calendar);
-            }
-        }
     }
 
     @Override

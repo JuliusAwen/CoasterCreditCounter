@@ -63,15 +63,15 @@ public class PersistenceService extends IntentService
     private void create(Intent intent)
     {
         Set<IElement> elementsToCreate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_CREATE_UUIDS)));
-        Log.v(Constants.LOG_TAG, String.format("PersistenceService.show:: creating [%d] elements...", elementsToCreate.size()));
+        Log.v(Constants.LOG_TAG, String.format("PersistenceService.create:: creating [%d] elements...", elementsToCreate.size()));
 
         if(this.databaseWrapper.create(elementsToCreate))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.synchronize:: elements created successfully");
+            Log.d(Constants.LOG_TAG, "PersistenceService.create:: elements created successfully");
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.synchronize:: show elements failed");
+            Log.e(Constants.LOG_TAG, "PersistenceService.create:: create elements failed");
         }
     }
 

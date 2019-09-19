@@ -75,8 +75,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
 
-    private View.OnClickListener addRideOnClickListener;
-    private View.OnClickListener deleteRideOnClickListener;
+    private View.OnClickListener increaseRideCountOnClickListener;
+    private View.OnClickListener decreaseRideCountOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
@@ -733,16 +733,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.getRideCount()));
 
             viewHolder.imageViewIncrease.setTag(visitedAttraction);
-            if(!viewHolder.imageViewIncrease.hasOnClickListeners() && this.addRideOnClickListener != null)
+            if(!viewHolder.imageViewIncrease.hasOnClickListeners() && this.increaseRideCountOnClickListener != null)
             {
-                viewHolder.imageViewIncrease.setOnClickListener(this.addRideOnClickListener);
+                viewHolder.imageViewIncrease.setOnClickListener(this.increaseRideCountOnClickListener);
             }
 
-            //Todo: refactor --> ShowRides/ShowRide
             viewHolder.imageViewDecrease.setTag(visitedAttraction);
-            if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.deleteRideOnClickListener != null)
+            if(!viewHolder.imageViewDecrease.hasOnClickListeners() && this.decreaseRideCountOnClickListener != null)
             {
-                viewHolder.imageViewDecrease.setOnClickListener(this.deleteRideOnClickListener);
+                viewHolder.imageViewDecrease.setOnClickListener(this.decreaseRideCountOnClickListener);
             }
         }
         else
@@ -857,13 +856,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public ContentRecyclerViewAdapter addRideOnClickListener(View.OnClickListener increaseOnClickListener)
     {
-        this.addRideOnClickListener = increaseOnClickListener;
+        this.increaseRideCountOnClickListener = increaseOnClickListener;
         return this;
     }
 
     public ContentRecyclerViewAdapter deleteRideOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
-        this.deleteRideOnClickListener = decreaseOnClickListener;
+        this.decreaseRideCountOnClickListener = decreaseOnClickListener;
         return this;
     }
 

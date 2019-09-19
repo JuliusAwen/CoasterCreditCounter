@@ -50,11 +50,11 @@ public class AttractionCategory extends OrphanElement
             name = name.trim();
 
             attractionCategory = new AttractionCategory(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("AttractionCategory.show:: %s created.", attractionCategory));
+            Log.v(Constants.LOG_TAG,  String.format("AttractionCategory.create:: %s created.", attractionCategory));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("AttractionCategory.show:: invalid name[%s] - attractionCategory not created.", name));
+            Log.e(Constants.LOG_TAG,  String.format("AttractionCategory.create:: invalid name[%s] - attractionCategory not created.", name));
         }
         return attractionCategory;
     }

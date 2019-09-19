@@ -1441,21 +1441,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         for(Map.Entry<IOnSiteAttraction, Integer> entry : rides.entrySet())
         {
             VisitedAttraction visitedAttraction = VisitedAttraction.create(entry.getKey());
+            visitedAttraction.increaseTotalRideCount(entry.getValue());
             visit.addChildAndSetParent(visitedAttraction);
-            this.addRidesToVisit(visitedAttraction, entry.getValue());
         }
 
         return visit;
     }
 
-
-    private void addRidesToVisit(VisitedAttraction visitedAttraction, int count)
-    {
-        for(int i = 0; i < count; i++)
-        {
-            visitedAttraction.addRide();
-        }
-    }
 
     private void flattenContentTree(IElement element)
     {
@@ -1492,7 +1484,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.show:: elements not created - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: elements not created - DatabaseMock is not able to persist any data");
         return true;
     }
 

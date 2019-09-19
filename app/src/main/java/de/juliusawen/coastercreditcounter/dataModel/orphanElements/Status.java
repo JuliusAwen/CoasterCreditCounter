@@ -50,11 +50,11 @@ public class Status extends OrphanElement implements IOrphanElement
             name = name.trim();
 
             status = new Status(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Status.show:: %s created", status));
+            Log.v(Constants.LOG_TAG,  String.format("Status.create:: %s created", status));
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Status.show:: invalid name[%s] - status not created", name));
+            Log.e(Constants.LOG_TAG,  String.format("Status.create:: invalid name[%s] - status not created", name));
         }
         return status;
     }

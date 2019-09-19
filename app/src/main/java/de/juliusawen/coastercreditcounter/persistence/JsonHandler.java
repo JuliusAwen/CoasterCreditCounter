@@ -29,7 +29,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Ride;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
@@ -44,7 +43,7 @@ import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
 public class JsonHandler implements IDatabaseWrapper
 {
-    private class TemporaryElement
+    private class TemporaryJsonElement
     {
         public String name;
         public UUID uuid;
@@ -54,7 +53,7 @@ public class JsonHandler implements IDatabaseWrapper
         public int year;
         public int hour;
         public int minute;
-        public final Map<UUID, List<UUID>> ridesByAttractions = new LinkedHashMap<>();
+        public final Map<UUID, Integer> rideCountsByAttraction = new LinkedHashMap<>();
         public UUID blueprintUuid;
         public int untrackedRideCount;
         public UUID attractionCategoryUuid;
@@ -63,13 +62,13 @@ public class JsonHandler implements IDatabaseWrapper
         public boolean isDefault;
     }
 
-    private List<TemporaryElement> temporaryLocations;
-    private List<TemporaryElement> temporaryParks;
-    private List<TemporaryElement> temporaryCoasterBlueprints;
-    private List<TemporaryElement> temporaryStockAttractions;
-    private List<TemporaryElement> temporaryCustomAttractions;
-    private List<TemporaryElement> temporaryCustomCoasters;
-    private List<TemporaryElement> temporaryVisits;
+    private List<TemporaryJsonElement> temporaryLocations;
+    private List<TemporaryJsonElement> temporaryParks;
+    private List<TemporaryJsonElement> temporaryCoasterBlueprints;
+    private List<TemporaryJsonElement> temporaryStockAttractions;
+    private List<TemporaryJsonElement> temporaryCustomAttractions;
+    private List<TemporaryJsonElement> temporaryCustomCoasters;
+    private List<TemporaryJsonElement> temporaryVisits;
 
     public boolean importContent(Content content)
     {
@@ -200,19 +199,19 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
             {
-                List<TemporaryElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
+                List<TemporaryJsonElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
                 content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURERS))
             {
-                List<TemporaryElement> temporaryManufacturers = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
+                List<TemporaryJsonElement> temporaryManufacturers = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
                 content.addElements(ConvertTool.convertElementsToType(this.createManufacturers(temporaryManufacturers), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
             {
-                List<TemporaryElement> temporaryAttractionCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
+                List<TemporaryJsonElement> temporaryAttractionCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
                 content.addElements(ConvertTool.convertElementsToType(this.createAttractionCategories(temporaryAttractionCategories), IElement.class));
             }
 
@@ -235,7 +234,7 @@ public class JsonHandler implements IDatabaseWrapper
 
                 if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS))
                 {
-                    List<TemporaryElement> temporaryAttractionBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
+                    List<TemporaryJsonElement> temporaryAttractionBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ATTRACTION_BLUEPRINTS));
                     content.addElements(this.createAttractionBlueprints(temporaryAttractionBlueprints, content));
                 }
 
@@ -269,12 +268,6 @@ public class JsonHandler implements IDatabaseWrapper
                 this.temporaryVisits = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
-
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_RIDES))
-            {
-                List<TemporaryElement> temporaryRides = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_RIDES));
-                content.addElements(this.createRides(temporaryRides));
-            }
         }
         catch(JSONException e)
         {
@@ -285,25 +278,25 @@ public class JsonHandler implements IDatabaseWrapper
         return true;
     }
 
-    private List<TemporaryElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
+    private List<TemporaryJsonElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
     {
-        List<TemporaryElement> temporaryElements = new ArrayList<>();
+        List<TemporaryJsonElement> temporaryJsonElements = new ArrayList<>();
         try
         {
             for(int i = 0; i < jsonArray.length(); i++)
             {
-                TemporaryElement temporaryElement = new TemporaryElement();
+                TemporaryJsonElement temporaryJsonElement = new TemporaryJsonElement();
 
                 JSONObject jsonObjectItem = jsonArray.getJSONObject(i);
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_NAME))
                 {
-                    temporaryElement.name = jsonObjectItem.getString(Constants.JSON_STRING_NAME);
+                    temporaryJsonElement.name = jsonObjectItem.getString(Constants.JSON_STRING_NAME);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_UUID))
                 {
-                    temporaryElement.uuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_UUID));
+                    temporaryJsonElement.uuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_UUID));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_CHILDREN))
@@ -311,78 +304,60 @@ public class JsonHandler implements IDatabaseWrapper
                     JSONArray jsonArrayChildren = jsonObjectItem.getJSONArray(Constants.JSON_STRING_CHILDREN);
                     for(int j = 0; j < jsonArrayChildren.length(); j++)
                     {
-                        temporaryElement.childrenUuids.add(UUID.fromString(jsonArrayChildren.getString(j)));
+                        temporaryJsonElement.childrenUuids.add(UUID.fromString(jsonArrayChildren.getString(j)));
                     }
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_DAY) && !jsonObjectItem.isNull(Constants.JSON_STRING_MONTH) && !jsonObjectItem.isNull(Constants.JSON_STRING_YEAR))
                 {
-                    temporaryElement.day = jsonObjectItem.getInt(Constants.JSON_STRING_DAY);
-                    temporaryElement.month = jsonObjectItem.getInt(Constants.JSON_STRING_MONTH);
-                    temporaryElement.year = jsonObjectItem.getInt(Constants.JSON_STRING_YEAR);
+                    temporaryJsonElement.day = jsonObjectItem.getInt(Constants.JSON_STRING_DAY);
+                    temporaryJsonElement.month = jsonObjectItem.getInt(Constants.JSON_STRING_MONTH);
+                    temporaryJsonElement.year = jsonObjectItem.getInt(Constants.JSON_STRING_YEAR);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_HOUR) && !jsonObjectItem.isNull(Constants.JSON_STRING_MINUTE))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION))
                 {
-                    temporaryElement.hour = jsonObjectItem.getInt(Constants.JSON_STRING_HOUR);
-                    temporaryElement.minute = jsonObjectItem.getInt(Constants.JSON_STRING_MINUTE);
-                }
+                    JSONArray jsonArrayRideCountsByAttractions = jsonObjectItem.getJSONArray(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION);
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS))
-                {
-                    JSONArray jsonArrayRidesByAttractions = jsonObjectItem.getJSONArray(Constants.JSON_STRING_RIDES_BY_ATTRACTIONS);
-
-                    for(int j = 0; j < jsonArrayRidesByAttractions.length(); j++)
+                    for(int j = 0; j < jsonArrayRideCountsByAttractions.length(); j++)
                     {
-                        JSONObject jsonObjectRidesByAttraction = jsonArrayRidesByAttractions.getJSONObject(j);
-                        String key = jsonObjectRidesByAttraction.names().getString(0);
-
-                        UUID attractionUuid = UUID.fromString(key);
-                        temporaryElement.ridesByAttractions.put(attractionUuid, new LinkedList<UUID>());
-
-                        if(!jsonObjectRidesByAttraction.isNull(key))
-                        {
-                            JSONArray jsonArrayRides = jsonObjectRidesByAttraction.getJSONArray(key);
-
-                            for(int k = 0; k < jsonArrayRides.length(); k++)
-                            {
-                                temporaryElement.ridesByAttractions.get(attractionUuid).add(UUID.fromString(jsonArrayRides.getString(k)));
-                            }
-                        }
+                        JSONObject jsonObjectRideCountByAttraction = jsonArrayRideCountsByAttractions.getJSONObject(j);
+                        String key = jsonObjectRideCountByAttraction.names().getString(0);
+                        temporaryJsonElement.rideCountsByAttraction.put(UUID.fromString(key), jsonObjectRideCountByAttraction.getInt(key));
                     }
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_BLUEPRINT))
                 {
-                    temporaryElement.blueprintUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_BLUEPRINT));
+                    temporaryJsonElement.blueprintUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_BLUEPRINT));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_MANUFACTURER))
                 {
-                    temporaryElement.manufacturerUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_MANUFACTURER));
+                    temporaryJsonElement.manufacturerUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_MANUFACTURER));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORY))
                 {
-                    temporaryElement.attractionCategoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_ATTRACTION_CATEGORY));
+                    temporaryJsonElement.attractionCategoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_ATTRACTION_CATEGORY));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_STATUS))
                 {
-                    temporaryElement.statusUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_STATUS));
+                    temporaryJsonElement.statusUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_STATUS));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT))
                 {
-                    temporaryElement.untrackedRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT);
+                    temporaryJsonElement.untrackedRideCount = jsonObjectItem.getInt(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_IS_DEFAULT))
                 {
-                    temporaryElement.isDefault = jsonObjectItem.getBoolean(Constants.JSON_STRING_IS_DEFAULT);
+                    temporaryJsonElement.isDefault = jsonObjectItem.getBoolean(Constants.JSON_STRING_IS_DEFAULT);
                 }
 
-                temporaryElements.add(temporaryElement);
+                temporaryJsonElements.add(temporaryJsonElement);
             }
         }
         catch(JSONException e)
@@ -392,17 +367,17 @@ public class JsonHandler implements IDatabaseWrapper
             throw e;
         }
 
-        return temporaryElements;
+        return temporaryJsonElements;
     }
 
-    private List<Status> createStatuses(List<TemporaryElement> temporaryElements)
+    private List<Status> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<Status> statuses = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Status status = Status.create(temporaryElement.name, temporaryElement.uuid);
+            Status status = Status.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
-            if(temporaryElement.isDefault)
+            if(temporaryJsonElement.isDefault)
             {
                 Status.setDefault(status);
             }
@@ -421,14 +396,14 @@ public class JsonHandler implements IDatabaseWrapper
         return statuses;
     }
 
-    private List<Manufacturer> createManufacturers(List<TemporaryElement> temporaryElements)
+    private List<Manufacturer> createManufacturers(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<Manufacturer> manufacturers = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Manufacturer manufacturer = Manufacturer.create(temporaryElement.name, temporaryElement.uuid);
+            Manufacturer manufacturer = Manufacturer.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
-            if(temporaryElement.isDefault)
+            if(temporaryJsonElement.isDefault)
             {
                 Manufacturer.setDefault(manufacturer);
             }
@@ -447,14 +422,14 @@ public class JsonHandler implements IDatabaseWrapper
         return manufacturers;
     }
 
-    private List<AttractionCategory> createAttractionCategories(List<TemporaryElement> temporaryElements)
+    private List<AttractionCategory> createAttractionCategories(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<AttractionCategory> attractionCategories = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            AttractionCategory attractionCategory = AttractionCategory.create(temporaryElement.name, temporaryElement.uuid);
+            AttractionCategory attractionCategory = AttractionCategory.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
-            if(temporaryElement.isDefault)
+            if(temporaryJsonElement.isDefault)
             {
                 AttractionCategory.setDefault(attractionCategory);
             }
@@ -473,115 +448,104 @@ public class JsonHandler implements IDatabaseWrapper
         return attractionCategories;
     }
 
-    private List<IElement> createLocations(List<TemporaryElement> temporaryElements)
+    private List<IElement> createLocations(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Location element = Location.create(temporaryElement.name, temporaryElement.uuid);
+            Location element = Location.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createParks(List<TemporaryElement> temporaryElements)
+    private List<IElement> createParks(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Park element  = Park.create(temporaryElement.name, temporaryElement.uuid);
+            Park element  = Park.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
             elements.add(element);
         }
         return elements;
     }
     
-    private List<IElement> createAttractionBlueprints(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createAttractionBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            AttractionBlueprint element = AttractionBlueprint.create(temporaryElement.name, temporaryElement.uuid);
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
+            AttractionBlueprint element = AttractionBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createCoasterBlueprints(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCoasterBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            CoasterBlueprint element = CoasterBlueprint.create(temporaryElement.name, temporaryElement.uuid);
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
+            CoasterBlueprint element = CoasterBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createStockAttractions(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createStockAttractions(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             StockAttraction element = StockAttraction.create(
-                            temporaryElement.name,
-                            (IBlueprint)content.getContentByUuid(temporaryElement.blueprintUuid),
-                            temporaryElement.untrackedRideCount,
-                            temporaryElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
+                            temporaryJsonElement.name,
+                            (IBlueprint)content.getContentByUuid(temporaryJsonElement.blueprintUuid),
+                            temporaryJsonElement.untrackedRideCount,
+                            temporaryJsonElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createCustomAttractions(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCustomAttractions(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            CustomAttraction element = CustomAttraction.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
+            CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createCustomCoasters(List<TemporaryElement> temporaryElements, Content content)
+    private List<IElement> createCustomCoasters(List<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            CustomCoaster element = CustomCoaster.create(temporaryElement.name, temporaryElement.untrackedRideCount, temporaryElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryElement.statusUuid, content));
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryElement.attractionCategoryUuid, content));
+            CustomCoaster element = CustomCoaster.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
     }
 
-    private List<IElement> createVisits(List<TemporaryElement> temporaryElements)
+    private List<IElement> createVisits(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Visit element = Visit.create(temporaryElement.year, temporaryElement.month, temporaryElement.day, temporaryElement.uuid);
-            elements.add(element);
-        }
-        return elements;
-    }
-
-    private List<IElement> createRides(List<TemporaryElement> temporaryElements)
-    {
-        List<IElement> elements = new LinkedList<>();
-        for(TemporaryElement temporaryElement : temporaryElements)
-        {
-            Ride element = Ride.create(temporaryElement.hour, temporaryElement.minute, temporaryElement.uuid);
+            Visit element = Visit.create(temporaryJsonElement.year, temporaryJsonElement.month, temporaryJsonElement.day, temporaryJsonElement.uuid);
             elements.add(element);
         }
         return elements;
@@ -629,34 +593,24 @@ public class JsonHandler implements IDatabaseWrapper
         }
     }
 
-    private void entangleElements(List<TemporaryElement> elements, Content content)
+    private void entangleElements(List<TemporaryJsonElement> elements, Content content)
     {
-        for(TemporaryElement temporaryElement : elements)
+        for(TemporaryJsonElement temporaryJsonElement : elements)
         {
-            IElement element = content.getContentByUuid(temporaryElement.uuid);
-            element.addChildrenAndSetParent(temporaryElement.childrenUuids);
+            IElement element = content.getContentByUuid(temporaryJsonElement.uuid);
+            element.addChildrenAndSetParent(temporaryJsonElement.childrenUuids);
         }
     }
 
-    private void addVisitedAttractions(List<TemporaryElement> temporaryVisits, Content content)
+    private void addVisitedAttractions(List<TemporaryJsonElement> temporaryVisits, Content content)
     {
-        for(TemporaryElement temporaryVisit : temporaryVisits)
+        for(TemporaryJsonElement temporaryVisit : temporaryVisits)
         {
             Visit visit = (Visit)content.getContentByUuid(temporaryVisit.uuid);
-            for(Map.Entry<UUID, List<UUID>> ridesByAttractionUuid : temporaryVisit.ridesByAttractions.entrySet())
+            for(Map.Entry<UUID, Integer> rideCountsByAttractionUuid : temporaryVisit.rideCountsByAttraction.entrySet())
             {
-                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction)content.getContentByUuid(ridesByAttractionUuid.getKey()));
-
-                List<UUID> rideUuids = ridesByAttractionUuid.getValue();
-                for(UUID rideUuid : rideUuids)
-                {
-                    visitedAttraction.addChildAndSetParent(content.getContentByUuid(rideUuid));
-                }
-
-                if(rideUuids.size() > 0)
-                {
-                    visitedAttraction.getOnSiteAttraction().increaseTotalRideCount(rideUuids.size());
-                }
+                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction)content.getContentByUuid(rideCountsByAttractionUuid.getKey()));
+                visitedAttraction.increaseTotalRideCount(rideCountsByAttractionUuid.getValue());
 
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);
@@ -744,9 +698,6 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_VISITS, content.getContentOfType(Visit.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentOfType(Visit.class)));
-
-            jsonObject.put(Constants.JSON_STRING_RIDES,
-                    content.getContentOfType(Ride.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(Ride.class)));
 
 
             JSONObject jsonObjectAttractions = new JSONObject();
@@ -929,7 +880,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.show:: empty implementation to satisfy interface");
+        Log.e(Constants.LOG_TAG, "JsonHandler.create:: empty implementation to satisfy interface");
         return false;
     }
 

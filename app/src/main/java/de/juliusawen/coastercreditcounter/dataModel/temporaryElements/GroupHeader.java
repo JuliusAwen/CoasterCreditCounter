@@ -28,7 +28,7 @@ public class GroupHeader extends OrphanElement implements IGroupHeader, IElement
         GroupHeader groupHeader;
         groupHeader = new GroupHeader(groupItem.getName(), UUID.randomUUID(), groupItem);
 
-        Log.v(Constants.LOG_TAG,  String.format("GroupHeader.show:: %s created", groupHeader.getFullName()));
+        Log.v(Constants.LOG_TAG,  String.format("GroupHeader.create:: %s created", groupHeader.getFullName()));
 
         return groupHeader;
     }
