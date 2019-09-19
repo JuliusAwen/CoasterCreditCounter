@@ -19,6 +19,16 @@ public class CustomAttraction extends Attraction implements IOnSiteAttraction, I
         super(name, untrackedRideCount, uuid);
     }
 
+    public static CustomAttraction create(String name)
+    {
+        return CustomAttraction.create(name, 0);
+    }
+
+    public static CustomAttraction create(String name, int untrackedRideCount)
+    {
+        return CustomAttraction.create(name, untrackedRideCount, UUID.randomUUID());
+    }
+
     public static CustomAttraction create(String name, int untrackedRideCount, UUID uuid)
     {
         CustomAttraction customAttraction = null;

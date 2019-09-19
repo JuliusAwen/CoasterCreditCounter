@@ -21,25 +21,9 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
         super(name, uuid);
     }
 
-    @Override
-    public JSONObject toJson() throws JSONException
+    public static Manufacturer create(String name)
     {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
-
-            Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Manufacturer.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            throw e;
-        }
+        return Manufacturer.create(name, UUID.randomUUID());
     }
 
     public static Manufacturer create(String name, UUID uuid)
@@ -73,5 +57,26 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
     public static void createAndSetDefault()
     {
         Manufacturer.setDefault(new Manufacturer(App.getContext().getString(R.string.name_default_manufacturer), UUID.randomUUID()));
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
+
+            Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Manufacturer.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }

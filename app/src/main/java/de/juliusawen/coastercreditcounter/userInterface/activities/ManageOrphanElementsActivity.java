@@ -26,7 +26,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.ICategorized;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElementType;
@@ -84,9 +84,9 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 case ATTRACTION_CATEGORY:
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            App.content.getContentOfType(AttractionCategory.class),
+                            App.content.getContentOfType(Category.class),
                             childTypesToExpand)
-                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD)
+                            .setTypefaceForType(Category.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
 
@@ -100,7 +100,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             childTypesToExpand)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
 
                     break;
                 }
@@ -196,7 +196,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     case ATTRACTION_CATEGORY:
                         for(IElement element : resultElements)
                         {
-                            ((Attraction)element).setAttractionCategory((AttractionCategory)this.viewModel.longClickedElement);
+                            ((Attraction)element).setCategory((Category)this.viewModel.longClickedElement);
                             super.markForUpdate(element);
                         }
                         break;
@@ -251,7 +251,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             case ATTRACTION_CATEGORY:
             {
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(AttractionCategory.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(Category.class).size() > 1)
                         .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, true);
                 break;
             }
@@ -288,7 +288,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 ActivityDistributor.startActivitySortForResult(
                         this,
                         RequestCode.SORT_ATTRACTION_CATEGORIES,
-                        App.content.getContentOfType(AttractionCategory.class));
+                        App.content.getContentOfType(Category.class));
                 return true;
 
             case SORT_MANUFACTURERS:
@@ -345,7 +345,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 Element element = (Element)view.getTag();
 
-                if((element instanceof AttractionCategory) || (element instanceof Manufacturer))
+                if((element instanceof Category) || (element instanceof Manufacturer))
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -356,7 +356,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if((viewModel.longClickedElement instanceof AttractionCategory)
+                if((viewModel.longClickedElement instanceof Category)
                         || (viewModel.longClickedElement instanceof Manufacturer)
                         || (viewModel.longClickedElement instanceof Status))
                 {
@@ -365,7 +365,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     switch(viewModel.orphanElementTypeToManage)
                     {
                         case ATTRACTION_CATEGORY:
-                            isDefault = viewModel.longClickedElement.equals(AttractionCategory.getDefault());
+                            isDefault = viewModel.longClickedElement.equals(Category.getDefault());
                             break;
 
                         case MANUFACTURER:
@@ -409,7 +409,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     {
                         for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
                         {
-                            if(attraction.getAttractionCategory().equals(viewModel.longClickedElement))
+                            if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
                                 attractions.remove(attraction);
@@ -494,7 +494,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     switch(viewModel.orphanElementTypeToManage)
                     {
                         case ATTRACTION_CATEGORY:
-                            defaultName = AttractionCategory.getDefault().getName();
+                            defaultName = Category.getDefault().getName();
                             break;
 
                         case MANUFACTURER:
@@ -580,11 +580,11 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     {
                         case ATTRACTION_CATEGORY:
                         {
-                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default AttractionCategory", this.viewModel.longClickedElement));
+                            Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Category", this.viewModel.longClickedElement));
 
-                            super.markForUpdate(AttractionCategory.getDefault());
+                            super.markForUpdate(Category.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
-                            AttractionCategory.setDefault((AttractionCategory) this.viewModel.longClickedElement);
+                            Category.setDefault((Category) this.viewModel.longClickedElement);
 
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
 
@@ -641,7 +641,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     switch(this.viewModel.orphanElementTypeToManage)
                     {
                         case ATTRACTION_CATEGORY:
-                            child.setAttractionCategory(AttractionCategory.getDefault());
+                            child.setCategory(Category.getDefault());
                             break;
 
                         case MANUFACTURER:
@@ -700,7 +700,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             switch(this.viewModel.orphanElementTypeToManage)
             {
                 case ATTRACTION_CATEGORY:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(AttractionCategory.class));
+                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Category.class));
                     break;
 
                 case MANUFACTURER:

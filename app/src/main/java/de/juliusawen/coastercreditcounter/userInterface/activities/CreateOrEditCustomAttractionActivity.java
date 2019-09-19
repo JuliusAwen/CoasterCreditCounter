@@ -31,7 +31,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -50,7 +50,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private Spinner spinnerAttractionType;
 
     private TextView textViewManufacturer;
-    private TextView textViewAttractionCategory;
+    private TextView textViewCategory;
     private TextView textViewStatus;
 
     private EditText editTextUntrackedRideCount;
@@ -70,7 +70,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
         this.spinnerAttractionType = findViewById(R.id.spinnerCreateOrEditAttraction_AttractionType);
         this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
-        this.textViewAttractionCategory = findViewById(R.id.textViewCreateOrEditAttraction_AttractionCategory);
+        this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
@@ -137,7 +137,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         if(!(this.viewModel.attraction instanceof StockAttraction))
         {
             this.createLayoutManufacturer();
-            this.createLayoutAttractionCategory();
+            this.createLayoutCategory();
         }
         //Todo: implement goto blueprint on else
 
@@ -165,8 +165,8 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 this.setText((Manufacturer)pickedElement);
                 break;
 
-            case PICK_ATTRACTION_CATEGORY:
-                this.setText((AttractionCategory) pickedElement);
+            case PICK_CATEGORY:
+                this.setText((Category) pickedElement);
                 break;
 
             case PICK_STATUS:
@@ -183,10 +183,10 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         this.viewModel.manufacturer = element;
     }
 
-    private void setText(AttractionCategory element)
+    private void setText(Category element)
     {
-        this.textViewAttractionCategory.setText(element.getName());
-        this.viewModel.attractionCategory = element;
+        this.textViewCategory.setText(element.getName());
+        this.viewModel.category = element;
     }
 
     private void setText(Status element)
@@ -257,9 +257,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                                 somethingChanged = true;
                             }
 
-                            if(!viewModel.attraction.getAttractionCategory().equals(viewModel.attractionCategory))
+                            if(!viewModel.attraction.getCategory().equals(viewModel.category))
                             {
-                                viewModel.attraction.setAttractionCategory(viewModel.attractionCategory);
+                                viewModel.attraction.setCategory(viewModel.category);
                                 somethingChanged = true;
                             }
                         }
@@ -402,36 +402,36 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         this.viewModel.manufacturer = manufacturer;
     }
 
-    private void createLayoutAttractionCategory()
+    private void createLayoutCategory()
     {
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_AttractionCategory);
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
         linearLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickAttractionCategory> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickCategory> selected");
 
-                List<IElement> elements = App.content.getContentOfType(AttractionCategory.class);
+                List<IElement> elements = App.content.getContentOfType(Category.class);
 
                 if(elements.size() == 1)
                 {
                     Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
-                    setText((AttractionCategory)elements.get(0));
+                    setText((Category)elements.get(0));
                 }
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_ATTRACTION_CATEGORY, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_CATEGORY, elements);
                 }
             }
         });
 
-        AttractionCategory attractionCategory = this.viewModel.isEditMode ? this.viewModel.attraction.getAttractionCategory() : AttractionCategory.getDefault();
-        this.textViewAttractionCategory.setText(attractionCategory.getName());
+        Category category = this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : Category.getDefault();
+        this.textViewCategory.setText(category.getName());
         linearLayout.setVisibility(View.VISIBLE);
 
-        this.viewModel.attractionCategory = attractionCategory;
+        this.viewModel.category = category;
     }
 
     private void createLayoutStatus()
@@ -514,7 +514,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         {
             this.viewModel.attraction = attraction;
             this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
-            this.viewModel.attraction.setAttractionCategory(this.viewModel.attractionCategory);
+            this.viewModel.attraction.setCategory(this.viewModel.category);
             this.viewModel.attraction.setStatus(this.viewModel.status);
             this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 

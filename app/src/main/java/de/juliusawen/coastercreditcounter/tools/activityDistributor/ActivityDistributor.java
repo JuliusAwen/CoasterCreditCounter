@@ -79,8 +79,8 @@ public abstract class ActivityDistributor
         {
             case MANAGE_ATTRACTION_CATEGORIES:
                 orphanElementType = OrphanElementType.ATTRACTION_CATEGORY;
-                toolbarTitle = context.getString(R.string.title_attraction_categories);
-                helpTitle = context.getString(R.string.title_attraction_categories);
+                toolbarTitle = context.getString(R.string.title_categories);
+                helpTitle = context.getString(R.string.title_categories);
                 helpText = context.getString(R.string.help_text_manage_attraction_category);
                 break;
 
@@ -144,7 +144,7 @@ public abstract class ActivityDistributor
 
             case EDIT_ATTRACTION_CATEGORY:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_attraction_category_edit);
+                toolbarTitle = context.getString(R.string.title_category_edit);
                 break;
 
             case EDIT_MANUFACTURER:
@@ -224,10 +224,10 @@ public abstract class ActivityDistributor
             switch(requestCode)
             {
                 case CREATE_ATTRACTION_CATEGORY:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_attraction_category_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_attraction_category_create));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_category_create));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_category_create));
                     intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
-                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_attraction_category_name));
+                    intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_category_name));
                     break;
 
                 case CREATE_MANUFACTURER:
@@ -275,7 +275,7 @@ public abstract class ActivityDistributor
                 break;
 
             case SORT_ATTRACTION_CATEGORIES:
-                toolbarTitle = context.getString(R.string.title_attraction_categories_sort);
+                toolbarTitle = context.getString(R.string.title_categories_sort);
                 break;
 
             case SORT_MANUFACTURERS:
@@ -338,9 +338,9 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
-            case PICK_ATTRACTION_CATEGORY:
-                toolbarTitle = context.getString(R.string.title_attraction_category_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_to_attraction);
+            case PICK_CATEGORY:
+                toolbarTitle = context.getString(R.string.title_category_pick);
+                toolbarSubtitle = context.getString(R.string.subtitle_category_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
@@ -363,7 +363,7 @@ public abstract class ActivityDistributor
 
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attraction_category_to_assign_category_to);
+                toolbarSubtitle = context.getString(R.string.subtitle_category_to_assign_category_to);
                 break;
 
             case ASSIGN_STATUS_TO_ATTRACTIONS:

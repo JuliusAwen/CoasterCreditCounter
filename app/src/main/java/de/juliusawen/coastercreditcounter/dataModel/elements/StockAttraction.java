@@ -7,7 +7,8 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
@@ -28,6 +29,16 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         this.blueprint = blueprint;
     }
 
+    public static StockAttraction create(String name, IBlueprint blueprint)
+    {
+        return StockAttraction.create(name, blueprint, 0);
+    }
+
+    public static StockAttraction create(String name, IBlueprint blueprint, int untrackedRideCount)
+    {
+        return StockAttraction.create(name, blueprint, untrackedRideCount, UUID.randomUUID());
+    }
+
     public static StockAttraction create(String name, IBlueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         StockAttraction stockAttraction = null;
@@ -45,40 +56,30 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         return stockAttraction;
     }
 
-
     @Override
-    public JSONObject toJson() throws JSONException
+    public CreditType getCreditType()
     {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
-            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
-            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
-
-            Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("StockAttraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            throw e;
-        }
+        return this.blueprint.getCreditType() == null ? CreditType.getDefault() : this.blueprint.getCreditType();
     }
 
     @Override
-    public AttractionCategory getAttractionCategory()
+    public void setCreditType(CreditType creditType)
     {
-        return this.blueprint.getAttractionCategory();
+        String errorMessage = String.format("StockAttraction.setCreditType:: %s: StockAttractions can not have CreditType", this);
+        Log.e(Constants.LOG_TAG, errorMessage);
+        throw new IllegalStateException(errorMessage);
     }
 
     @Override
-    public void setAttractionCategory(AttractionCategory attractionCategory)
+    public Category getCategory()
     {
-        String errorMessage = String.format("StockAttraction.setAttractionCategory:: %s: StockAttractions cannot have AttractionCategory", this);
+        return this.blueprint.getCategory();
+    }
+
+    @Override
+    public void setCategory(Category category)
+    {
+        String errorMessage = String.format("StockAttraction.setCategory:: %s: StockAttractions can not have Category", this);
         Log.e(Constants.LOG_TAG, errorMessage);
         throw new IllegalStateException(errorMessage);
     }
@@ -92,7 +93,7 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     @Override
     public void setManufacturer(Manufacturer manufacturer)
     {
-        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions cannot have Manufacturer", this);
+        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions can not have Manufacturer", this);
         Log.e(Constants.LOG_TAG, errorMessage);
         throw new IllegalStateException(errorMessage);
     }
@@ -119,8 +120,27 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
         }
     }
 
-    public boolean isCoaster()
+
+    @Override
+    public JSONObject toJson() throws JSONException
     {
-        return this.blueprint instanceof CoasterBlueprint;
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
+            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
+            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
+
+            Log.v(Constants.LOG_TAG, String.format("StockAttraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("StockAttraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }

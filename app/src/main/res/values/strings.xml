@@ -26,7 +26,7 @@
     <string name="text_blueprint_special_group_header_name">Blueprints</string>
 
     <string name="text_total_coaster_credits"><b>Total credits: %1$d</b></string>
-    <string name="text_total_coaster_rides">Total rides: %1$d</string>
+    <string name="text_total_credit_rides">Total rides: %1$d</string>
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 
@@ -184,6 +184,19 @@
     <string name="title_custom_attraction_edit">Edit Attraction</string>
 
 
+    <!--CreditTypes-->
+    <string name="name_default_credit_type">no credit</string>
+    <string name="title_credit_types">Credit Types</string>
+    <string name="title_credit_type_create">Create Credit Type</string>
+    <string name="title_credit_type_edit">Edit Credit Type</string>
+    <string name="title_credit_type_pick">Pick Credit Type</string>
+    <string name="title_credit_type_sort">Sort Credit Types</string>
+    <string name="subtitle_credit_type_to_assign_credit_type_to">to assign credit type to</string>
+    <string name="subtitle_credit_type_to_assign_to_attraction">to assign to attraction</string>
+    <string name="hint_enter_credit_type_name">Enter credit type name</string>
+    <string name="header_credit_type">Credit Type:</string>
+
+
     <!--MANUFACTURERS-->
     <string name="name_default_manufacturer">unknown</string>
     <string name="title_manufacturers">Manufacturers</string>
@@ -197,17 +210,17 @@
     <string name="header_manufacturer">Manufacturer:</string>
 
 
-    <!--ATTRACTION CATEGORIES-->
-    <string name="name_default_attraction_category">uncategorized</string>
-    <string name="title_attraction_categories">Attraction Categories</string>
-    <string name="title_attraction_category_create">Create Attraction Category</string>
-    <string name="title_attraction_category_edit">Edit Attraction Category</string>
-    <string name="title_attraction_category_pick">Pick Attraction Category</string>
-    <string name="title_attraction_categories_sort">Sort Attraction Categories</string>
-    <string name="subtitle_attraction_category_to_assign_category_to">to assign category to</string>
-    <string name="subtitle_attraction_category_to_assign_to_attraction">to assign to attraction</string>
-    <string name="hint_enter_attraction_category_name">Enter attraction category name</string>
-    <string name="spinner_text_attraction_category">Attraction Category:</string>
+    <!--CATEGORIES-->
+    <string name="name_default_category">uncategorized</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_category_create">Create Category</string>
+    <string name="title_category_edit">Edit Category</string>
+    <string name="title_category_pick">Pick Category</string>
+    <string name="title_categories_sort">Sort Categories</string>
+    <string name="subtitle_category_to_assign_category_to">to assign category to</string>
+    <string name="subtitle_category_to_assign_to_attraction">to assign to attraction</string>
+    <string name="hint_enter_category_name">Enter category name</string>
+    <string name="header_category">Category:</string>
 
 
     <!--STATUS-->
@@ -220,7 +233,7 @@
     <string name="title_status_pick">Pick Status</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="subtitle_status_to_assign_to_attraction">to assign to attraction</string>
-    <string name="spinner_text_status">Status:</string>
+    <string name="header_status">Status:</string>
 
 
     <!--ORPHAN ELEMENTS-->

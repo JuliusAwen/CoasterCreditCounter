@@ -19,6 +19,16 @@ public class CustomCoaster extends Coaster implements IOnSiteAttraction, ICatego
         super(name, untrackedRideCount, uuid);
     }
 
+    public static CustomCoaster create(String name)
+    {
+        return CustomCoaster.create(name, 0);
+    }
+
+    public static CustomCoaster create(String name, int untrackedRideCount)
+    {
+        return CustomCoaster.create(name, untrackedRideCount, UUID.randomUUID());
+    }
+
     public static CustomCoaster create(String name, int untrackedRideCount, UUID uuid)
     {
         CustomCoaster customCoaster = null;

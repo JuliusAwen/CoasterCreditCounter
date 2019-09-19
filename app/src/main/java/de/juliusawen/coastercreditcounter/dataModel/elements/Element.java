@@ -209,7 +209,7 @@ public abstract class Element implements IElement
         List<IElement> children = new ArrayList<>();
         for(IElement element : this.getChildren())
         {
-            if(type.isInstance(element))
+            if(type.isAssignableFrom(element.getClass()))
             {
                 children.add(element);
             }
@@ -222,7 +222,7 @@ public abstract class Element implements IElement
         List<T> children = new ArrayList<>();
         for(IElement element : this.getChildren())
         {
-            if(type.isInstance(element))
+            if(type.isAssignableFrom(element.getClass()))
             {
                 children.add(type.cast(element));
             }

@@ -8,9 +8,6 @@ import java.util.UUID;
 
 public interface IElement
 {
-    String toString();
-    JSONObject toJson() throws JSONException;
-
     String getName();
     String getFullName();
     boolean setName(String name);
@@ -50,4 +47,7 @@ public interface IElement
     void reorderChildren(List<? extends IElement> children);
 
     void relocateElement(IElement newParent);
+
+    String toString();
+    JSONObject toJson() throws JSONException;
 }

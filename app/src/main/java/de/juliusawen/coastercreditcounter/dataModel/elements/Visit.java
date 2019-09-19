@@ -36,11 +36,21 @@ public class Visit extends Element
         this.calendar = calendar;
     }
 
+    public static Visit create(int year, int month, int day)
+    {
+        return Visit.create(year, month, day, UUID.randomUUID());
+    }
+
     public static Visit create(int year, int month, int day, UUID uuid)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         return Visit.create(calendar, uuid);
+    }
+
+    public static Visit create(Calendar calendar)
+    {
+        return Visit.create(calendar, UUID.randomUUID());
     }
 
     public static Visit create(Calendar calendar, UUID uuid)
@@ -49,52 +59,6 @@ public class Visit extends Element
 
         Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
         return visit;
-    }
-
-    @Override
-    public String toString()
-    {
-        if(this.getParent() != null)
-        {
-            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
-        }
-        else
-        {
-            return super.toString();
-        }
-    }
-
-    public JSONObject toJson() throws JSONException
-    {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            JsonTool.putNameAndUuid(jsonObject, this);
-
-            jsonObject.put(Constants.JSON_STRING_DAY, this.getCalendar().get(Calendar.DAY_OF_MONTH));
-            jsonObject.put(Constants.JSON_STRING_MONTH, this.getCalendar().get(Calendar.MONTH));
-            jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
-
-            boolean hasVisitedAttractions = false;
-            JSONArray jsonArrayRideCountsByAttraction = new JSONArray();
-            for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
-            {
-                JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
-                jsonArrayRideCountsByAttraction.put(jsonObjectRideCountByAttraction);
-                hasVisitedAttractions = true;
-            }
-            jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttraction : JSONObject.NULL);
-
-            Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            throw e;
-        }
     }
 
     public Calendar getCalendar()
@@ -202,5 +166,51 @@ public class Visit extends Element
     public boolean isEditingEnabled()
     {
         return this.isEditingEnabled;
+    }
+
+    @Override
+    public String toString()
+    {
+        if(this.getParent() != null)
+        {
+            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
+        }
+        else
+        {
+            return super.toString();
+        }
+    }
+
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+
+            jsonObject.put(Constants.JSON_STRING_DAY, this.getCalendar().get(Calendar.DAY_OF_MONTH));
+            jsonObject.put(Constants.JSON_STRING_MONTH, this.getCalendar().get(Calendar.MONTH));
+            jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
+
+            boolean hasVisitedAttractions = false;
+            JSONArray jsonArrayRideCountsByAttraction = new JSONArray();
+            for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+            {
+                JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
+                jsonArrayRideCountsByAttraction.put(jsonObjectRideCountByAttraction);
+                hasVisitedAttractions = true;
+            }
+            jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttraction : JSONObject.NULL);
+
+            Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }

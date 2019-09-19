@@ -3,7 +3,8 @@ package de.juliusawen.coastercreditcounter.dataModel.elements;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 
@@ -13,10 +14,10 @@ import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
  */
 public interface IAttraction extends IElement
 {
-    JSONObject toJson() throws JSONException;
-
-    AttractionCategory getAttractionCategory();
-    void setAttractionCategory(AttractionCategory attractionCategory);
+    CreditType getCreditType();
+    void setCreditType(CreditType creditType);
+    Category getCategory();
+    void setCategory(Category category);
     Manufacturer getManufacturer();
     void setManufacturer(Manufacturer manufacturer);
     Status getStatus();
@@ -26,4 +27,5 @@ public interface IAttraction extends IElement
     void decreaseTotalRideCount(int decrement);
     int getUntracktedRideCount();
     void setUntracktedRideCount(int untracktedRideCount);
+    JSONObject toJson() throws JSONException;
 }

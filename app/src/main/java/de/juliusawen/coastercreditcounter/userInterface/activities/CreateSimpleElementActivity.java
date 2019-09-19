@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -118,8 +118,8 @@ public class CreateSimpleElementActivity extends BaseActivity
             switch(requestCode)
             {
                 case CREATE_ATTRACTION_CATEGORY:
-                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating AttractionCategory [%s]", viewModel.createdString));
-                    createdElement = AttractionCategory.create(viewModel.createdString, null);
+                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating Category [%s]", viewModel.createdString));
+                    createdElement = Category.create(viewModel.createdString, null);
                     break;
 
                 case CREATE_MANUFACTURER:

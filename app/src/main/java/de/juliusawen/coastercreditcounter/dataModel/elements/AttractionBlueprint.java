@@ -21,26 +21,9 @@ public class AttractionBlueprint extends Attraction implements IBlueprint, IOrph
         super(name, 0, uuid);
     }
 
-    @Override
-    public JSONObject toJson() throws JSONException
+    public static AttractionBlueprint create(String name)
     {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORY, this.getAttractionCategory().getUuid());
-
-            Log.v(Constants.LOG_TAG, String.format("AttractionBlueprint.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("AttractionBlueprint.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            throw e;
-        }
+        return AttractionBlueprint.create(name, UUID.randomUUID());
     }
 
     public static AttractionBlueprint create(String name, UUID uuid)
@@ -58,5 +41,28 @@ public class AttractionBlueprint extends Attraction implements IBlueprint, IOrph
             Log.e(Constants.LOG_TAG,  String.format("AttractionBlueprint.create:: invalid name[%s] - AttractionBlueprint not created.", name));
         }
         return attractionBlueprint;
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+
+            Log.v(Constants.LOG_TAG, String.format("AttractionBlueprint.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("AttractionBlueprint.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }

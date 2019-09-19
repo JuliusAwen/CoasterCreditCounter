@@ -23,7 +23,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.AttractionBlueprint
 import de.juliusawen.coastercreditcounter.dataModel.elements.CoasterBlueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomCoaster;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IBlueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
@@ -31,7 +30,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.VisitedAttraction;
@@ -51,12 +51,11 @@ public class JsonHandler implements IDatabaseWrapper
         public int day;
         public int month;
         public int year;
-        public int hour;
-        public int minute;
         public final Map<UUID, Integer> rideCountsByAttraction = new LinkedHashMap<>();
         public UUID blueprintUuid;
         public int untrackedRideCount;
-        public UUID attractionCategoryUuid;
+        public UUID creditTypeUuid;
+        public UUID categoryUuid;
         public UUID manufacturerUuid;
         public UUID statusUuid;
         public boolean isDefault;
@@ -121,7 +120,7 @@ public class JsonHandler implements IDatabaseWrapper
         Log.i(Constants.LOG_TAG, "JsonHandler.provideDefaultContent:: creating default content and exporting to external json...");
         content.useDefaults();
         this.exportContent(content);
-        return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-AttractionCategories/-Statuses (lazy sloppy mock implementation)
+        return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
     }
 
     @Override
@@ -155,6 +154,7 @@ public class JsonHandler implements IDatabaseWrapper
             return success;
         }
     }
+
 
     private boolean fetchContent(String jsonString, Content content)
     {
@@ -197,10 +197,16 @@ public class JsonHandler implements IDatabaseWrapper
         {
             JSONObject jsonObjectContent = new JSONObject(jsonString);
 
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_CREDIT_TYPES))
             {
-                List<TemporaryJsonElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
-                content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
+                List<TemporaryJsonElement> temporaryCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_CREDIT_TYPES));
+                content.addElements(ConvertTool.convertElementsToType(this.createCreditTypes(temporaryCategories), IElement.class));
+            }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_CATEGORIES))
+            {
+                List<TemporaryJsonElement> temporaryCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_CATEGORIES));
+                content.addElements(ConvertTool.convertElementsToType(this.createCategories(temporaryCategories), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURERS))
@@ -209,10 +215,10 @@ public class JsonHandler implements IDatabaseWrapper
                 content.addElements(ConvertTool.convertElementsToType(this.createManufacturers(temporaryManufacturers), IElement.class));
             }
 
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORIES))
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
             {
-                List<TemporaryJsonElement> temporaryAttractionCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTION_CATEGORIES));
-                content.addElements(ConvertTool.convertElementsToType(this.createAttractionCategories(temporaryAttractionCategories), IElement.class));
+                List<TemporaryJsonElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
+                content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_LOCATIONS))
@@ -332,14 +338,19 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryJsonElement.blueprintUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_BLUEPRINT));
                 }
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_CREDIT_TYPE))
+                {
+                    temporaryJsonElement.creditTypeUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_CREDIT_TYPE));
+                }
+
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_MANUFACTURER))
                 {
                     temporaryJsonElement.manufacturerUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_MANUFACTURER));
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_ATTRACTION_CATEGORY))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_CATEGORY))
                 {
-                    temporaryJsonElement.attractionCategoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_ATTRACTION_CATEGORY));
+                    temporaryJsonElement.categoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_CATEGORY));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_STATUS))
@@ -370,30 +381,57 @@ public class JsonHandler implements IDatabaseWrapper
         return temporaryJsonElements;
     }
 
-    private List<Status> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
+
+    private List<CreditType> createCreditTypes(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<Status> statuses = new LinkedList<>();
+        List<CreditType> creditTypes = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Status status = Status.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            CreditType creditType = CreditType.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
             if(temporaryJsonElement.isDefault)
             {
-                Status.setDefault(status);
+                CreditType.setDefault(creditType);
             }
 
-            statuses.add(status);
+            creditTypes.add(creditType);
         }
 
-        if(Status.getDefault() == null)
+        if(CreditType.getDefault() == null)
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
 
-            Status.createAndSetDefault();
-            statuses.add(Status.getDefault());
+            CreditType.createAndSetDefault();
+            creditTypes.add(CreditType.getDefault());
         }
 
-        return statuses;
+        return creditTypes;
+    }
+
+    private List<Category> createCategories(List<TemporaryJsonElement> temporaryJsonElements)
+    {
+        List<Category> categories = new LinkedList<>();
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
+        {
+            Category category = Category.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+
+            if(temporaryJsonElement.isDefault)
+            {
+                Category.setDefault(category);
+            }
+
+            categories.add(category);
+        }
+
+        if(Category.getDefault() == null)
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
+
+            Category.createAndSetDefault();
+            categories.add(Category.getDefault());
+        }
+
+        return categories;
     }
 
     private List<Manufacturer> createManufacturers(List<TemporaryJsonElement> temporaryJsonElements)
@@ -422,30 +460,30 @@ public class JsonHandler implements IDatabaseWrapper
         return manufacturers;
     }
 
-    private List<AttractionCategory> createAttractionCategories(List<TemporaryJsonElement> temporaryJsonElements)
+    private List<Status> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<AttractionCategory> attractionCategories = new LinkedList<>();
+        List<Status> statuses = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            AttractionCategory attractionCategory = AttractionCategory.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            Status status = Status.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
             if(temporaryJsonElement.isDefault)
             {
-                AttractionCategory.setDefault(attractionCategory);
+                Status.setDefault(status);
             }
 
-            attractionCategories.add(attractionCategory);
+            statuses.add(status);
         }
 
-        if(AttractionCategory.getDefault() == null)
+        if(Status.getDefault() == null)
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createAttractionCategories:: no default AttractionCategory found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
 
-            AttractionCategory.createAndSetDefault();
-            attractionCategories.add(AttractionCategory.getDefault());
+            Status.createAndSetDefault();
+            statuses.add(Status.getDefault());
         }
 
-        return attractionCategories;
+        return statuses;
     }
 
     private List<IElement> createLocations(List<TemporaryJsonElement> temporaryJsonElements)
@@ -476,8 +514,9 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             AttractionBlueprint element = AttractionBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
@@ -489,8 +528,9 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             CoasterBlueprint element = CoasterBlueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
             elements.add(element);
         }
         return elements;
@@ -518,9 +558,10 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
         }
         return elements;
@@ -532,9 +573,10 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             CustomCoaster element = CustomCoaster.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            element.setAttractionCategory(this.getAttractionCategoryFromUuid(temporaryJsonElement.attractionCategoryUuid, content));
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
         }
         return elements;
@@ -551,17 +593,32 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private Status getStatusFromUuid(UUID uuid, Content content)
+
+    private CreditType getCreditTypeFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
-        if(element instanceof Status)
+        if(element instanceof CreditType)
         {
-            return (Status)element;
+            return (CreditType) element;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
-            return Status.getDefault();
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - using default", uuid));
+            return CreditType.getDefault();
+        }
+    }
+
+    private Category getCategoryFromUuid(UUID uuid, Content content)
+    {
+        IElement element = content.getContentByUuid(uuid);
+        if(element instanceof Category)
+        {
+            return (Category)element;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - using default", uuid));
+            return Category.getDefault();
         }
     }
 
@@ -579,19 +636,20 @@ public class JsonHandler implements IDatabaseWrapper
         }
     }
 
-    private AttractionCategory getAttractionCategoryFromUuid(UUID uuid, Content content)
+    private Status getStatusFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
-        if(element instanceof AttractionCategory)
+        if(element instanceof Status)
         {
-            return (AttractionCategory)element;
+            return (Status)element;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getAttractionCategoryFromUuid:: fetched Element for UUID [%s] is not an AttractionCategory - using default", uuid));
-            return AttractionCategory.getDefault();
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
+            return Status.getDefault();
         }
     }
+
 
     private void entangleElements(List<TemporaryJsonElement> elements, Content content)
     {
@@ -724,12 +782,17 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 
 
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPES, content.getContentOfType(CreditType.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(CreditType.class)));
+
+            jsonObject.put(Constants.JSON_STRING_CATEGORIES, content.getContentOfType(Category.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentOfType(Category.class)));
+
             jsonObject.put(Constants.JSON_STRING_MANUFACTURERS, content.getContentOfType(Manufacturer.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentOfType(Manufacturer.class)));
-
-            jsonObject.put(Constants.JSON_STRING_ATTRACTION_CATEGORIES,
-                    content.getContentOfType(AttractionCategory.class).isEmpty() ? JSONObject.NULL : this.createJsonArray(content.getContentOfType(AttractionCategory.class)));
 
             jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
                     ? JSONObject.NULL
@@ -899,40 +962,40 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
-    public int fetchTotalCoasterCreditsCount()
+    public int fetchTotalCreditsCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        int totalCoasterCreditsCount = 0;
+        int totalCreditsCount = 0;
 
-        for(IElement coaster : this.getAllCoasters())
+        for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
-            if(((IAttraction)coaster).getTotalRideCount() > 0)
+            if((attraction).getTotalRideCount() > 0)
             {
-                totalCoasterCreditsCount ++;
+                totalCreditsCount ++;
             }
         }
 
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterCreditsCount:: [%d] coaster credits found - took [%d]ms", totalCoasterCreditsCount, stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCreditsCount:: [%d] credits found - took [%d]ms", totalCreditsCount, stopwatch.stop()));
 
-        return totalCoasterCreditsCount;
+        return totalCreditsCount;
     }
 
     @Override
-    public int fetchTotalCoasterRidesCount()
+    public int fetchTotalCreditsRideCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        int totalCoasterRidesCount = 0;
+        int totalCreditsRideCount = 0;
 
-        for(IElement coaster : this.getAllCoasters())
+        for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
-            totalCoasterRidesCount += ((IAttraction)coaster).getTotalRideCount();
+            totalCreditsRideCount += attraction.getTotalRideCount();
         }
 
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCoasterRidesCount:: [%d] coaster rides found - took [%d]ms", totalCoasterRidesCount, stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCreditsRideCount:: [%d] rides on creditable attractions found - took [%d]ms", totalCreditsRideCount, stopwatch.stop()));
 
-        return totalCoasterRidesCount;
+        return totalCreditsRideCount;
     }
 
     @Override
@@ -950,7 +1013,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                for(IAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
+                for(IOnSiteAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
                 {
                     if(attraction.getTotalRideCount() > 0)
                     {
@@ -979,18 +1042,18 @@ public class JsonHandler implements IDatabaseWrapper
         return currentVisits;
     }
 
-    private List<IElement> getAllCoasters()
+    private List<IOnSiteAttraction> getAllCreditableAttractions()
     {
-        List<IElement> coasters = App.content.getContentOfType(CustomCoaster.class);
+        List<IOnSiteAttraction> creditableAttractions = new ArrayList<>();
 
-        for(StockAttraction stockAttraction : App.content.getContentAsType(StockAttraction.class))
+        for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
         {
-            if(stockAttraction.isCoaster())
+            if(!attraction.getCreditType().equals(CreditType.getDefault()))
             {
-                coasters.add(stockAttraction);
+                creditableAttractions.add(attraction);
             }
         }
 
-        return coasters;
+        return creditableAttractions;
     }
 }

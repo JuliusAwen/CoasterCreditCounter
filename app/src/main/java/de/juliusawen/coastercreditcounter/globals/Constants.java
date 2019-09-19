@@ -38,8 +38,10 @@ public abstract class Constants
 
     public static final String JSON_STRING_UNTRACKED_RIDE_COUNT = "untracked ride count";
 
-    public static final String JSON_STRING_ATTRACTION_CATEGORY = "attraction category";
-    public static final String JSON_STRING_ATTRACTION_CATEGORIES = "attraction categories";
+    public static final String JSON_STRING_CREDIT_TYPE = "credit type";
+    public static final String JSON_STRING_CREDIT_TYPES = "credit types";
+    public static final String JSON_STRING_CATEGORY = "category";
+    public static final String JSON_STRING_CATEGORIES = "categories";
     public static final String JSON_STRING_MANUFACTURER = "manufacturer";
     public static final String JSON_STRING_MANUFACTURERS = "manufacturers";
     public static final String JSON_STRING_STATUS = "status";

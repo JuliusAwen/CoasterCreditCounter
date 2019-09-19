@@ -287,12 +287,12 @@ public class Persistence
 
     public int fetchTotalCoasterCreditsCount()
     {
-        return this.databaseWrapper.fetchTotalCoasterCreditsCount();
+        return this.databaseWrapper.fetchTotalCreditsCount();
     }
 
     public int fetchTotalCoasterRidesCount()
     {
-        return this.databaseWrapper.fetchTotalCoasterRidesCount();
+        return this.databaseWrapper.fetchTotalCreditsRideCount();
     }
 
     public int fetchTotalVisitedParksCount()

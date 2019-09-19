@@ -21,6 +21,11 @@ public class Location extends Element
         super(name, uuid);
     }
 
+    public static Location create(String name)
+    {
+        return Location.create(name, UUID.randomUUID());
+    }
+
     public static Location create(String name, UUID uuid)
     {
         Location location = null;
@@ -36,6 +41,24 @@ public class Location extends Element
             Log.e(Constants.LOG_TAG,  String.format("Location.create:: invalid name[%s] - location not created.", name));
         }
         return location;
+    }
+
+    public Location getRootLocation()
+    {
+        if(!this.isRootLocation())
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Location.getRootLocation:: %s is not root location - calling parent", this));
+            return ((Location)super.getParent()).getRootLocation();
+        }
+        else
+        {
+            return this;
+        }
+    }
+
+    public boolean isRootLocation()
+    {
+        return this.getParent() == null;
     }
 
     public JSONObject toJson() throws JSONException
@@ -56,24 +79,6 @@ public class Location extends Element
             Log.e(Constants.LOG_TAG, String.format("Location.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
-    }
-
-    public Location getRootLocation()
-    {
-        if(!this.isRootLocation())
-        {
-            Log.v(Constants.LOG_TAG,  String.format("Location.getRootLocation:: %s is not root location - calling parent", this));
-            return ((Location)super.getParent()).getRootLocation();
-        }
-        else
-        {
-            return this;
-        }
-    }
-
-    public boolean isRootLocation()
-    {
-        return this.getParent() == null;
     }
 }
 

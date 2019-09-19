@@ -23,7 +23,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
@@ -116,7 +116,7 @@ public class PickElementsActivity extends BaseActivity
                     break;
                 }
 
-                case PICK_ATTRACTION_CATEGORY:
+                case PICK_CATEGORY:
                 case PICK_MANUFACTURER:
                 case PICK_STATUS:
                 {
@@ -128,7 +128,7 @@ public class PickElementsActivity extends BaseActivity
                             false)
                             .setTypefaceForType(Status.class, Typeface.BOLD)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForType(AttractionCategory.class, Typeface.BOLD);
+                            .setTypefaceForType(Category.class, Typeface.BOLD);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -255,7 +255,7 @@ public class PickElementsActivity extends BaseActivity
                         .add(OptionsItem.COLLAPSE_ALL);
                 break;
 
-            case PICK_ATTRACTION_CATEGORY:
+            case PICK_CATEGORY:
             case PICK_MANUFACTURER:
             case PICK_STATUS:
                 this.viewModel.optionsMenuAgent
@@ -392,7 +392,7 @@ public class PickElementsActivity extends BaseActivity
         {
             case LOCATION:
                 this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.LOCATION);
                 break;
@@ -405,7 +405,7 @@ public class PickElementsActivity extends BaseActivity
                 break;
 
             case MANUFACTURER:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.MANUFACTURER);
@@ -414,7 +414,7 @@ public class PickElementsActivity extends BaseActivity
             case STATUS:
                 this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                         .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.BELOW)
+                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.STATUS);
                 break;
         }
@@ -455,7 +455,7 @@ public class PickElementsActivity extends BaseActivity
 
                 switch(viewModel.requestCode)
                 {
-                    case PICK_ATTRACTION_CATEGORY:
+                    case PICK_CATEGORY:
                         ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_ATTRACTION_CATEGORY, null);
                         break;
 
@@ -580,7 +580,7 @@ public class PickElementsActivity extends BaseActivity
                     case PICK_STATUS:
                     case PICK_VISIT:
                     case PICK_MANUFACTURER:
-                    case PICK_ATTRACTION_CATEGORY:
+                    case PICK_CATEGORY:
                     {
                         Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());

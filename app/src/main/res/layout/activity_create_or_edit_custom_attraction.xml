@@ -104,7 +104,7 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
-                    android:id="@+id/linearLayoutCreateOrEditAttraction_AttractionCategory"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_Category"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -124,11 +124,11 @@
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
                             android:textStyle="bold"
-                            android:text="@string/spinner_text_attraction_category"/>
+                            android:text="@string/header_category"/>
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_AttractionCategory"/>
+                            android:id="@+id/textViewCreateOrEditAttraction_Category"/>
 
                     </LinearLayout>
 
@@ -155,7 +155,7 @@
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
                             android:textStyle="bold"
-                            android:text="@string/spinner_text_status"/>
+                            android:text="@string/header_status"/>
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"

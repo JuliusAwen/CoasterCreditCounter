@@ -21,7 +21,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IBlueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
@@ -87,7 +87,7 @@ public class GroupHeaderProvider
                             break;
 
                         case ATTRACTION_CATEGORY:
-                            groupElement = attraction.getAttractionCategory();
+                            groupElement = attraction.getCategory();
                             break;
 
                         case MANUFACTURER:
@@ -164,7 +164,7 @@ public class GroupHeaderProvider
                             break;
 
                         case ATTRACTION_CATEGORY:
-                            groupElement = attraction.getAttractionCategory();
+                            groupElement = attraction.getCategory();
                             break;
 
                         case MANUFACTURER:
@@ -272,7 +272,7 @@ public class GroupHeaderProvider
                     break;
 
                 case ATTRACTION_CATEGORY:
-                     groupElements = App.content.getContentOfType(AttractionCategory.class);
+                     groupElements = App.content.getContentOfType(Category.class);
                      break;
 
                 case MANUFACTURER:
@@ -284,8 +284,7 @@ public class GroupHeaderProvider
                     break;
             }
 
-            Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder::" +
-                    " sorting [%d] AttractionCategoryHeaders based on [%d] AttractionCategories", groupHeaders.size(), groupElements.size()));
+            Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder:: sorting [%d] GroupHeaders based on [%d] GroupElements", groupHeaders.size(), groupElements.size()));
 
             for(IElement groupElement : groupElements)
             {

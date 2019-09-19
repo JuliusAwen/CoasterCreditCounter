@@ -196,7 +196,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         Log.d(Constants.LOG_TAG, String.format("NavigationHubActivity.setMenuItemImportAvailability:: import enabled [%S]", enabled));
 
 
-        //Todo: remove setEnabled(false) when implemented
+        //Todo: remove setEnabled(false) when implemented --> ADD CreditTypes
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
         navigationMenu.findItem(R.id.navigationItem_ManageBlueprints).setEnabled(false);
     }
@@ -207,7 +207,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, App.persistence.fetchTotalVisitedParksCount()));
         this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCoasterCreditsCount()));
-        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_coaster_rides, App.persistence.fetchTotalCoasterRidesCount()));
+        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, App.persistence.fetchTotalCoasterRidesCount()));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)

@@ -165,7 +165,7 @@ public class Content
         List<T> content = new LinkedList<>();
         for(IElement element : this.elementsByUuid.values())
         {
-            if(type.isInstance(element))
+            if(type.isAssignableFrom(element.getClass()))
             {
                 content.add(type.cast(element));
             }
@@ -178,7 +178,7 @@ public class Content
         List<IElement> content = new LinkedList<>();
         for(IElement element : this.elementsByUuid.values())
         {
-            if(type.isInstance(element))
+            if(type.isAssignableFrom(element.getClass()))
             {
                 content.add(element);
             }

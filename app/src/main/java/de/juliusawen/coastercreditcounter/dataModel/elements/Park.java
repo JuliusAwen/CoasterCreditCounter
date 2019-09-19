@@ -21,6 +21,11 @@ public class Park extends Element
         super(name, uuid);
     }
 
+    public static Park create(String name)
+    {
+        return Park.create(name, UUID.randomUUID());
+    }
+
     public static Park create(String name, UUID uuid)
     {
         Park park = null;
@@ -57,5 +62,4 @@ public class Park extends Element
             throw e;
         }
     }
-
 }

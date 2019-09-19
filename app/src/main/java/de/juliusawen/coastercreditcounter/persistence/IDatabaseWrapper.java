@@ -18,8 +18,8 @@ public interface IDatabaseWrapper
 
     boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete);
 
-    int fetchTotalCoasterCreditsCount();
-    int fetchTotalCoasterRidesCount();
+    int fetchTotalCreditsCount();
+    int fetchTotalCreditsRideCount();
     int fetchTotalVisitedParksCount();
 
     List<Visit> fetchCurrentVisits();

@@ -37,7 +37,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.AttractionCategory;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.IGroupHeader;
@@ -221,12 +221,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         typesForWhichDisplayLocationDetail.add(AttractionBlueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
         this.typesByDetail.put(DetailType.LOCATION, typesForWhichDisplayLocationDetail);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayAttractionCategoryDetail = new HashSet<>();
-        typesForWhichDisplayAttractionCategoryDetail.add(CustomCoaster.class);
-        typesForWhichDisplayAttractionCategoryDetail.add(CustomAttraction.class);
-        typesForWhichDisplayAttractionCategoryDetail.add(CoasterBlueprint.class);
-        typesForWhichDisplayAttractionCategoryDetail.add(AttractionBlueprint.class);
-        this.typesByDetail.put(DetailType.ATTRACTION_CATEGORY, typesForWhichDisplayAttractionCategoryDetail);
+        Set<Class<? extends IAttraction>> typesForWhichDisplayCategoryDetail = new HashSet<>();
+        typesForWhichDisplayCategoryDetail.add(CustomCoaster.class);
+        typesForWhichDisplayCategoryDetail.add(CustomAttraction.class);
+        typesForWhichDisplayCategoryDetail.add(CoasterBlueprint.class);
+        typesForWhichDisplayCategoryDetail.add(AttractionBlueprint.class);
+        this.typesByDetail.put(DetailType.CATEGORY, typesForWhichDisplayCategoryDetail);
 
         Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
         typesForWhichDisplayStatusDetail.add(CustomCoaster.class);
@@ -245,7 +245,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         this.displayModesByDetail.put(DetailType.LOCATION, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.MANUFACTURER, DetailDisplayMode.OFF);
-        this.displayModesByDetail.put(DetailType.ATTRACTION_CATEGORY, DetailDisplayMode.OFF);
+        this.displayModesByDetail.put(DetailType.CATEGORY, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.STATUS, DetailDisplayMode.OFF);
         this.displayModesByDetail.put(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.OFF);
     }
@@ -538,14 +538,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     detailDisplayed = true;
                 }
 
-                String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DetailDisplayMode.ABOVE)
+                String categoryName = "";
+                if(this.displayModesByDetail.get(DetailType.CATEGORY) == DetailDisplayMode.ABOVE)
                 {
                     if(detailDisplayed)
                     {
-                        attractionCategoryName += " - ";
+                        categoryName += " - ";
                     }
-                    attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                    categoryName += ((IAttraction)item).getCategory().getName();
                     detailDisplayed = true;
                 }
 
@@ -571,7 +571,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 viewHolder.textViewDetailAbove.setText(
-                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
+                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, categoryName, statusName, totalRideCountString));
             }
             else
             {
@@ -614,14 +614,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     detailDisplayed = true;
                 }
 
-                String attractionCategoryName = "";
-                if(this.displayModesByDetail.get(DetailType.ATTRACTION_CATEGORY) == DetailDisplayMode.BELOW)
+                String categoryName = "";
+                if(this.displayModesByDetail.get(DetailType.CATEGORY) == DetailDisplayMode.BELOW)
                 {
                     if(detailDisplayed)
                     {
-                        attractionCategoryName += " - ";
+                        categoryName += " - ";
                     }
-                    attractionCategoryName += ((IAttraction)item).getAttractionCategory().getName();
+                    categoryName += ((IAttraction)item).getCategory().getName();
                     detailDisplayed = true;
                 }
 
@@ -647,7 +647,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 viewHolder.textViewDetailBelow.setText(
-                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, attractionCategoryName, statusName, totalRideCountString));
+                        App.getContext().getString(R.string.text_detail, locationName, manufacturerName, categoryName, statusName, totalRideCountString));
             }
             else
             {
@@ -730,7 +730,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
 
             viewHolder.textViewName.setText(visitedAttraction.getName());
-            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.getRideCount()));
+            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.getTotalRideCount()));
 
             viewHolder.imageViewIncrease.setTag(visitedAttraction);
             if(!viewHolder.imageViewIncrease.hasOnClickListeners() && this.increaseRideCountOnClickListener != null)
@@ -748,7 +748,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             viewHolder.linearLayoutEditable.setVisibility(View.GONE);
 
-            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.getRideCount(), visitedAttraction.getName()));
+            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.getTotalRideCount(), visitedAttraction.getName()));
             viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
         }
     }
@@ -801,7 +801,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         break;
 
                     case ATTRACTION_CATEGORY:
-                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getAttractionCategory());
+                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getCategory());
                         break;
 
                     case MANUFACTURER:
@@ -1294,7 +1294,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(item != null)
         {
-            if(item instanceof AttractionCategory)
+            if(item instanceof Category)
             {
                 for(IElement element : this.items)
                 {

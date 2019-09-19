@@ -145,7 +145,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         this.viewModel.park.reorderChildren(resultElements);
 
                         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
-                                .scrollToItem(((Attraction)selectedElement).getAttractionCategory());
+                                .scrollToItem(((Attraction)selectedElement).getCategory());
                     }
                     break;
 

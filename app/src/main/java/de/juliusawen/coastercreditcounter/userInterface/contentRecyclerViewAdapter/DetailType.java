@@ -2,8 +2,7 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 public enum DetailType
 {
-    LOCATION,
-    ATTRACTION_CATEGORY,
+    LOCATION, CATEGORY,
     MANUFACTURER,
     STATUS,
     TOTAL_RIDE_COUNT
