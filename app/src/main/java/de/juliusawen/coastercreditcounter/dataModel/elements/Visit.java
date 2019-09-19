@@ -77,14 +77,14 @@ public class Visit extends Element
             jsonObject.put(Constants.JSON_STRING_YEAR, this.getCalendar().get(Calendar.YEAR));
 
             boolean hasVisitedAttractions = false;
-            JSONArray jsonArrayRideCountsByAttractions = new JSONArray();
+            JSONArray jsonArrayRideCountsByAttraction = new JSONArray();
             for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
             {
                 JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
-                jsonArrayRideCountsByAttractions.put(jsonObjectRideCountByAttraction);
+                jsonArrayRideCountsByAttraction.put(jsonObjectRideCountByAttraction);
                 hasVisitedAttractions = true;
             }
-            jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttractions : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttraction : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
