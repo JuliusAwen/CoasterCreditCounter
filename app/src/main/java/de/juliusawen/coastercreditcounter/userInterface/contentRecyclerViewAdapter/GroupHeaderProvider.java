@@ -86,7 +86,7 @@ public class GroupHeaderProvider
                             groupElement = attraction.getParent();
                             break;
 
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                             groupElement = attraction.getCategory();
                             break;
 
@@ -163,7 +163,7 @@ public class GroupHeaderProvider
                             groupElement = attraction.getParent();
                             break;
 
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                             groupElement = attraction.getCategory();
                             break;
 
@@ -271,7 +271,7 @@ public class GroupHeaderProvider
                     groupElements = App.content.getContentOfType(Park.class);
                     break;
 
-                case ATTRACTION_CATEGORY:
+                case CATEGORY:
                      groupElements = App.content.getContentOfType(Category.class);
                      break;
 

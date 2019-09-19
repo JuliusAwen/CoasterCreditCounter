@@ -285,7 +285,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         childTypesToExpand.add(VisitedAttraction.class);
 
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), childTypesToExpand)
-                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                .groupItemsByType(GroupType.CATEGORY);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()

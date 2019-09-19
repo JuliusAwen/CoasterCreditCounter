@@ -15,7 +15,7 @@ public enum OptionsItem
     SORT_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_DESCENDING(R.string.menu_item_sort_descending, -1),
 
-    SORT_ATTRACTION_CATEGORIES(R.string.menu_item_sort, -1),
+    SORT_CATEGORIES(R.string.menu_item_sort, -1),
     SORT_MANUFACTURERS(R.string.menu_item_sort, -1),
     SORT_STATUSES(R.string.menu_item_sort, -1),
 
@@ -29,9 +29,9 @@ public enum OptionsItem
     SORT_BY_LOCATION_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_BY_LOCATION_DESCENDING(R.string.menu_item_sort_descending, -1),
 
-    SORT_BY_ATTRACTION_CATEGORY(R.string.menu_item_sort_by_attraction_category, -1),
-    SORT_BY_ATTRACTION_CATEGORY_ASCENDING(R.string.menu_item_sort_ascending, -1),
-    SORT_BY_ATTRACTION_CATEGORY_DESCENDING(R.string.menu_item_sort_descending, -1),
+    SORT_BY_CATEGORY(R.string.menu_item_sort_by_category, -1),
+    SORT_BY_CATEGORY_ASCENDING(R.string.menu_item_sort_ascending, -1),
+    SORT_BY_CATEGORY_DESCENDING(R.string.menu_item_sort_descending, -1),
 
     SORT_BY_MANUFACTURER(R.string.menu_item_sort_by_manufacturer, -1),
     SORT_BY_MANUFACTURER_ASCENDING(R.string.menu_item_sort_ascending, -1),
@@ -41,7 +41,7 @@ public enum OptionsItem
     GROUP_BY(R.string.menu_item_group_by, -1),
     GROUP_BY_LOCATION(R.string.menu_item_group_by_location, -1),
     GROUP_BY_MANUFACTURER(R.string.menu_item_group_by_manufacturer, -1),
-    GROUP_BY_ATTRACTION_CATEGORY(R.string.menu_item_group_by_attraction_category, -1),
+    GROUP_BY_CATEGORY(R.string.menu_item_group_by_category, -1),
     GROUP_BY_STATUS(R.string.menu_item_group_by_status, -1),
 
 

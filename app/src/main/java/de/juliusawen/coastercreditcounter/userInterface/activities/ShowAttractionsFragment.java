@@ -221,7 +221,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                 .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
-                .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                .groupItemsByType(GroupType.CATEGORY);
 
         return contentRecyclerViewAdapter;
     }

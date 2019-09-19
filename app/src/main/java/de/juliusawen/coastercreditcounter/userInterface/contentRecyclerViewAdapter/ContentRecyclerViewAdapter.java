@@ -144,8 +144,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.LOCATION);
                 break;
 
-            case ATTRACTION_CATEGORY:
-                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.ATTRACTION_CATEGORY);
+            case CATEGORY:
+                groupedItems = this.groupHeaderProvider.groupElementsByGroupType(this.originalItems, GroupType.CATEGORY);
                 break;
 
             case MANUFACTURER:
@@ -796,7 +796,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         groupHeader = this.getGroupHeaderForGroupTypeFromItem((item).getParent());
                         break;
 
-                    case ATTRACTION_CATEGORY:
+                    case CATEGORY:
                         groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getCategory());
                         break;
 

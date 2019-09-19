@@ -94,7 +94,7 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                            .groupItemsByType(GroupType.CATEGORY);
                     break;
                 }
 
@@ -112,7 +112,7 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                            .groupItemsByType(GroupType.CATEGORY);
                     break;
                 }
 
@@ -200,7 +200,7 @@ public class PickElementsActivity extends BaseActivity
 
         switch(RequestCode.values()[requestCode])
         {
-            case CREATE_ATTRACTION_CATEGORY:
+            case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
             {
@@ -237,15 +237,15 @@ public class PickElementsActivity extends BaseActivity
                             .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
-//                                .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, OptionsItem.SORT)
-//                                    .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_ASCENDING, OptionsItem.SORT_BY_ATTRACTION_CATEGORY)
-//                                    .addToGroup(OptionsItem.SORT_BY_ATTRACTION_CATEGORY_DESCENDING, OptionsItem.SORT_BY_ATTRACTION_CATEGORY)
+//                                .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT)
+//                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
+//                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
                             .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                         .add(OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_LOCATION, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
 
@@ -272,11 +272,11 @@ public class PickElementsActivity extends BaseActivity
     protected Menu prepareOptionsMenu(Menu menu)
     {
         boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-        boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
+        boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
 
         boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-        boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.ATTRACTION_CATEGORY;
+        boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
         boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
 
@@ -288,11 +288,11 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
                             .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
-//                            .setEnabled(OptionsItem.SORT_BY_ATTRACTION_CATEGORY, sortByCategoryEnabled)
+//                            .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
                             .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
                         .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_ATTRACTION_CATEGORY, groupByCategoryEnabled)
+                            .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
 
@@ -323,8 +323,8 @@ public class PickElementsActivity extends BaseActivity
                 this.groupElementsByType(GroupType.LOCATION);
                 return true;
 
-            case GROUP_BY_ATTRACTION_CATEGORY:
-                this.groupElementsByType(GroupType.ATTRACTION_CATEGORY);
+            case GROUP_BY_CATEGORY:
+                this.groupElementsByType(GroupType.CATEGORY);
                 return true;
 
             case GROUP_BY_MANUFACTURER:
@@ -357,12 +357,12 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
-            case SORT_BY_ATTRACTION_CATEGORY_ASCENDING:
+            case SORT_BY_CATEGORY_ASCENDING:
                 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
                 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
-            case SORT_BY_ATTRACTION_CATEGORY_DESCENDING:
+            case SORT_BY_CATEGORY_DESCENDING:
                 //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
                 //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
@@ -391,28 +391,32 @@ public class PickElementsActivity extends BaseActivity
         switch(groupType)
         {
             case LOCATION:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                         .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.LOCATION);
                 break;
 
-            case ATTRACTION_CATEGORY:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+            case CATEGORY:
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                         .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.ATTRACTION_CATEGORY);
+                        .groupItemsByType(GroupType.CATEGORY);
                 break;
 
             case MANUFACTURER:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.MANUFACTURER);
                 break;
 
             case STATUS:
-                this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                         .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                         .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                         .groupItemsByType(GroupType.STATUS);
@@ -456,7 +460,7 @@ public class PickElementsActivity extends BaseActivity
                 switch(viewModel.requestCode)
                 {
                     case PICK_CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_ATTRACTION_CATEGORY, null);
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
                         break;
 
                     case PICK_MANUFACTURER:

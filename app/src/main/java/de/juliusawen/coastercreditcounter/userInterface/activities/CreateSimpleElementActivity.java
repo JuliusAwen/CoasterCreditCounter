@@ -117,8 +117,8 @@ public class CreateSimpleElementActivity extends BaseActivity
 
             switch(requestCode)
             {
-                case CREATE_ATTRACTION_CATEGORY:
-                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_ATTRACTION_CATEGORY>:: creating Category [%s]", viewModel.createdString));
+                case CREATE_CATEGORY:
+                    Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult<CREATE_CATEGORY>:: creating Category [%s]", viewModel.createdString));
                     createdElement = Category.create(viewModel.createdString, null);
                     break;
 

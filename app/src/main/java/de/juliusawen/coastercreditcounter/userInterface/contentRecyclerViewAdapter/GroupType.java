@@ -5,7 +5,7 @@ public enum GroupType
     NONE,
     YEAR,
     LOCATION,
-    ATTRACTION_CATEGORY,
+    CATEGORY,
     MANUFACTURER,
     STATUS
 }

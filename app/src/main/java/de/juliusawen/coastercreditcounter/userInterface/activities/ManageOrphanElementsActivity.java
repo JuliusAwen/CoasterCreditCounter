@@ -81,7 +81,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             switch(this.viewModel.orphanElementTypeToManage)
             {
-                case ATTRACTION_CATEGORY:
+                case CATEGORY:
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             App.content.getContentOfType(Category.class),
@@ -164,20 +164,20 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         IElement resultElement = ResultFetcher.fetchResultElement(data);
         switch(RequestCode.values()[requestCode])
         {
-            case CREATE_ATTRACTION_CATEGORY:
+            case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
                 this.lastCreatedOrphanElement = (OrphanElement)resultElement;
                 updateContentRecyclerView(true);
                 break;
 
-            case EDIT_ATTRACTION_CATEGORY:
+            case EDIT_CATEGORY:
             case EDIT_MANUFACTURER:
             case EDIT_STATUS:
                 updateContentRecyclerView(false);
                 break;
 
-            case SORT_ATTRACTION_CATEGORIES:
+            case SORT_CATEGORIES:
             case SORT_MANUFACTURERS:
             case SORT_STATUSES:
                 List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
@@ -193,7 +193,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                 switch(this.viewModel.orphanElementTypeToManage)
                 {
-                    case ATTRACTION_CATEGORY:
+                    case CATEGORY:
                         for(IElement element : resultElements)
                         {
                             ((Attraction)element).setCategory((Category)this.viewModel.longClickedElement);
@@ -230,7 +230,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     protected Menu createOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.SORT_ATTRACTION_CATEGORIES)
+                .add(OptionsItem.SORT_CATEGORIES)
                 .add(OptionsItem.SORT_MANUFACTURERS)
                 .add(OptionsItem.SORT_STATUSES)
                 .add(OptionsItem.EXPAND_ALL)
@@ -242,17 +242,17 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     protected  Menu prepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, false)
+                .setVisible(OptionsItem.SORT_CATEGORIES, false)
                 .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
                 .setVisible(OptionsItem.SORT_STATUSES, false);
 
         switch(this.viewModel.orphanElementTypeToManage)
         {
-            case ATTRACTION_CATEGORY:
+            case CATEGORY:
             {
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_ATTRACTION_CATEGORIES, App.content.getContentOfType(Category.class).size() > 1)
-                        .setVisible(OptionsItem.SORT_ATTRACTION_CATEGORIES, true);
+                        .setEnabled(OptionsItem.SORT_CATEGORIES, App.content.getContentOfType(Category.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_CATEGORIES, true);
                 break;
             }
 
@@ -284,10 +284,10 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         switch(item)
         {
-            case SORT_ATTRACTION_CATEGORIES:
+            case SORT_CATEGORIES:
                 ActivityDistributor.startActivitySortForResult(
                         this,
-                        RequestCode.SORT_ATTRACTION_CATEGORIES,
+                        RequestCode.SORT_CATEGORIES,
                         App.content.getContentOfType(Category.class));
                 return true;
 
@@ -364,7 +364,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     switch(viewModel.orphanElementTypeToManage)
                     {
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                             isDefault = viewModel.longClickedElement.equals(Category.getDefault());
                             break;
 
@@ -405,7 +405,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                 switch(viewModel.orphanElementTypeToManage)
                 {
-                    case ATTRACTION_CATEGORY:
+                    case CATEGORY:
                     {
                         for(IAttraction attraction : ConvertTool.convertElementsToType(attractions, IAttraction.class))
                         {
@@ -469,8 +469,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 switch(viewModel.orphanElementTypeToManage)
                 {
-                    case ATTRACTION_CATEGORY:
-                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_ATTRACTION_CATEGORY, viewModel.longClickedElement);
+                    case CATEGORY:
+                        ActivityDistributor.startActivityEditForResult(ManageOrphanElementsActivity.this, RequestCode.EDIT_CATEGORY, viewModel.longClickedElement);
                         break;
 
                     case MANUFACTURER:
@@ -493,7 +493,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                     switch(viewModel.orphanElementTypeToManage)
                     {
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                             defaultName = Category.getDefault().getName();
                             break;
 
@@ -578,7 +578,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 {
                     switch(this.viewModel.orphanElementTypeToManage)
                     {
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                         {
                             Log.d(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleAlertDialogClick<SET_AS_DEFAULT>:: setting %s as default Category", this.viewModel.longClickedElement));
 
@@ -640,7 +640,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                 {
                     switch(this.viewModel.orphanElementTypeToManage)
                     {
-                        case ATTRACTION_CATEGORY:
+                        case CATEGORY:
                             child.setCategory(Category.getDefault());
                             break;
 
@@ -674,8 +674,8 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
                 switch(viewModel.orphanElementTypeToManage)
                 {
-                    case ATTRACTION_CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, RequestCode.CREATE_ATTRACTION_CATEGORY, null);
+                    case CATEGORY:
+                        ActivityDistributor.startActivityCreateForResult(ManageOrphanElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
                         break;
 
                     case MANUFACTURER:
@@ -699,7 +699,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
 
             switch(this.viewModel.orphanElementTypeToManage)
             {
-                case ATTRACTION_CATEGORY:
+                case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Category.class));
                     break;
 

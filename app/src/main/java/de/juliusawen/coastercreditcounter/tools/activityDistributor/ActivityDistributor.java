@@ -77,11 +77,11 @@ public abstract class ActivityDistributor
 
         switch(requestCode)
         {
-            case MANAGE_ATTRACTION_CATEGORIES:
-                orphanElementType = OrphanElementType.ATTRACTION_CATEGORY;
+            case MANAGE_CATEGORIES:
+                orphanElementType = OrphanElementType.CATEGORY;
                 toolbarTitle = context.getString(R.string.title_categories);
                 helpTitle = context.getString(R.string.title_categories);
-                helpText = context.getString(R.string.help_text_manage_attraction_category);
+                helpText = context.getString(R.string.help_text_manage_category);
                 break;
 
             case MANAGE_MANUFACTURERS:
@@ -142,7 +142,7 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_park_edit);
                 break;
 
-            case EDIT_ATTRACTION_CATEGORY:
+            case EDIT_CATEGORY:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_category_edit);
                 break;
@@ -223,10 +223,10 @@ public abstract class ActivityDistributor
         {
             switch(requestCode)
             {
-                case CREATE_ATTRACTION_CATEGORY:
+                case CREATE_CATEGORY:
                     intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_category_create));
                     intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_category_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_attraction_category));
+                    intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_category));
                     intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_category_name));
                     break;
 
@@ -274,7 +274,7 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_attractions_sort);
                 break;
 
-            case SORT_ATTRACTION_CATEGORIES:
+            case SORT_CATEGORIES:
                 toolbarTitle = context.getString(R.string.title_categories_sort);
                 break;
 

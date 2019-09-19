@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
 public enum OrphanElementType
 {
     NONE,
-    ATTRACTION_CATEGORY,
+    CATEGORY,
     MANUFACTURER,
     STATUS
 }
