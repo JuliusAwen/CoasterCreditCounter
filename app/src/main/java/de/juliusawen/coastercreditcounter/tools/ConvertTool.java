@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.tools;
 
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.application.App;
@@ -13,9 +13,9 @@ public abstract class ConvertTool
 {
     public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elementsToConvert, Class<T> type)
     {
-        Log.v(Constants.LOG_TAG,String.format("Element.convertElementsToType:: casting [%d] elements to type <%s>", elementsToConvert.size(), type.getSimpleName()));
+        Log.d(Constants.LOG_TAG,String.format("ConvertTool.convertElementsToType:: converting [%d] elements to type <%s>", elementsToConvert.size(), type.getSimpleName()));
 
-        List<T> convertedElements = new ArrayList<>();
+        List<T> convertedElements = new LinkedList<>();
         for(IElement element : elementsToConvert)
         {
             try
@@ -25,7 +25,7 @@ public abstract class ConvertTool
             catch(ClassCastException e)
             {
                 String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
-                Log.v(Constants.LOG_TAG, "Element.convertElementsToType:: " + errorMessage);
+                Log.v(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: " + errorMessage);
                 throw new IllegalStateException(errorMessage + "\n" + e);
             }
         }

@@ -8,7 +8,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class GroupHeader extends OrphanElement implements IGroupHeader, IElement, ITemporaryElement
+public class GroupHeader extends OrphanElement implements IGroupHeader
 {
     private final IElement groupElement;
 

@@ -51,6 +51,10 @@ public class CreditType extends OrphanElement
 
     public static CreditType getDefault()
     {
+        if(CreditType.defaultCreditType == null)
+        {
+            CreditType.createAndSetDefault();
+        }
         return CreditType.defaultCreditType;
     }
 

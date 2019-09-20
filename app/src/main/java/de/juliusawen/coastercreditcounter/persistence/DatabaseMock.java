@@ -1613,8 +1613,6 @@ class CreditTypes
 
     CreditTypes()
     {
-        CreditType.createAndSetDefault();
-
         All.add(CreditType.getDefault());
 
         All.add(RollerCoaster);

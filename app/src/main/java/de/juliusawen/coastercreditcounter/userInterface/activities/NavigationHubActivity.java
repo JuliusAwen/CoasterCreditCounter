@@ -157,7 +157,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(item.equals(OptionsItem.GO_TO_CURRENT_VISIT))
+        if(item == OptionsItem.GO_TO_CURRENT_VISIT)
         {
             if(Visit.getCurrentVisits().size() > 1)
             {

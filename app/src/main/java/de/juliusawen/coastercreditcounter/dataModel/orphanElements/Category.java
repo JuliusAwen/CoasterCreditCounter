@@ -51,6 +51,10 @@ public class Category extends OrphanElement
 
     public static Category getDefault()
     {
+        if(Category.defaultCategory == null)
+        {
+            Category.createAndSetDefault();
+        }
         return Category.defaultCategory;
     }
 

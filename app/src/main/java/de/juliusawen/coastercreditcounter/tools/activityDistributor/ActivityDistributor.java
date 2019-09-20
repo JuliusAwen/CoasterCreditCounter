@@ -112,7 +112,7 @@ public abstract class ActivityDistributor
                 break;
         }
 
-        if(!orphanElementType.equals(OrphanElementType.NONE))
+        if(orphanElementType != OrphanElementType.NONE)
         {
             Intent intent = new Intent(context, ManageOrphanElementsActivity.class);
             intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, orphanElementType.ordinal());
@@ -340,16 +340,6 @@ public abstract class ActivityDistributor
 
         switch(requestCode)
         {
-            case PICK_LOCATIONS:
-                toolbarTitle = context.getString(R.string.title_locations_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_locations_pick_description_to_add_to_new_location);
-                break;
-
-            case PICK_PARKS:
-                toolbarTitle = context.getString(R.string.title_parks_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_parks_pick_description_to_add_to_new_location);
-                break;
-
             case PICK_VISIT:
                 toolbarTitle = context.getString(R.string.title_visit_pick);
                 toolbarSubtitle = context.getString(R.string.subtitle_visit_pick_to_open);

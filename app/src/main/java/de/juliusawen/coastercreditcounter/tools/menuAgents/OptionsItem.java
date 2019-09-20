@@ -57,8 +57,8 @@ public enum OptionsItem
     ENABLE_EDITING(R.string.menu_item_enable_editing, R.drawable.ic_baseline_create),
     DISABLE_EDITING(R.string.menu_item_disable_editing, R.drawable.ic_baseline_block),
 
-    EXPAND_ALL(R.string.menu_item_expand_all, -1),
-    COLLAPSE_ALL(R.string.menu_item_collapse_all, -1),
+    EXPAND_ALL(R.string.menu_item_expand_all, R.drawable.ic_baseline_expand_more_24px),
+    COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.ic_baseline_expand_less_24px),
 
     HELP(R.string.menu_item_help, -1);
 

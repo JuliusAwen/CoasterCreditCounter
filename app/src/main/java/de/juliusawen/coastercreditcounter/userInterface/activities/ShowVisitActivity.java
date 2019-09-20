@@ -148,8 +148,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
                 .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                 .prepare(menu);
     }
 
@@ -285,7 +283,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         childTypesToExpand.add(VisitedAttraction.class);
 
         return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), childTypesToExpand)
-                .groupItemsByType(GroupType.CATEGORY);
+                .groupItems(GroupType.CATEGORY);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
@@ -381,7 +379,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        if(which == DialogInterface.BUTTON_POSITIVE && requestCode.equals(RequestCode.DELETE))
+        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.DELETE)
         {
             ConfirmSnackbar.Show(
                     Snackbar.make(
@@ -398,7 +396,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        if(requestCode.equals(RequestCode.DELETE))
+        if(requestCode == RequestCode.DELETE)
         {
             deleteVisitedAttraction();
         }

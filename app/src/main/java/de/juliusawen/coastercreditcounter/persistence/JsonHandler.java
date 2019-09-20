@@ -376,15 +376,12 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 CreditType.setDefault(creditType);
             }
-
             creditTypes.add(creditType);
         }
 
         if(CreditType.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
-
-            CreditType.createAndSetDefault();
             creditTypes.add(CreditType.getDefault());
         }
 
@@ -402,15 +399,12 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Category.setDefault(category);
             }
-
             categories.add(category);
         }
 
         if(Category.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
-
-            Category.createAndSetDefault();
             categories.add(Category.getDefault());
         }
 
@@ -428,15 +422,12 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Manufacturer.setDefault(manufacturer);
             }
-
             manufacturers.add(manufacturer);
         }
 
         if(Manufacturer.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
-
-            Manufacturer.createAndSetDefault();
             manufacturers.add(Manufacturer.getDefault());
         }
 
@@ -454,15 +445,12 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Status.setDefault(status);
             }
-
             statuses.add(status);
         }
 
         if(Status.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
-
-            Status.createAndSetDefault();
             statuses.add(Status.getDefault());
         }
 

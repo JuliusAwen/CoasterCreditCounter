@@ -17,18 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.globals.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
@@ -83,42 +87,29 @@ public class PickElementsActivity extends BaseActivity
             switch(this.viewModel.requestCode)
             {
                 case PICK_ATTRACTIONS:
-                {
-                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(Attraction.class);
-
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            childTypesToExpand,
-                            true)
-                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .groupItemsByType(GroupType.CATEGORY);
-                    break;
-                }
-
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
-                    HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(Attraction.class);
+                    Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(IAttraction.class);
+
+                    if(this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS)
+                    {
+                        this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
+                    }
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
                             true)
-                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .groupItemsByType(GroupType.CATEGORY);
+                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD);
+                            this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
 
                 case PICK_CREDIT_TYPE:
-                case PICK_PARKS:
                 case PICK_CATEGORY:
                 case PICK_MANUFACTURER:
                 case PICK_STATUS:
@@ -129,9 +120,10 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setTypefaceForType(CreditType.class, Typeface.BOLD)
+                            .setTypefaceForType(Category.class, Typeface.BOLD)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForType(Category.class, Typeface.BOLD);
+                            .setTypefaceForType(Status.class, Typeface.BOLD);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -230,6 +222,7 @@ public class PickElementsActivity extends BaseActivity
     {
         switch(this.viewModel.requestCode)
         {
+            case PICK_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
@@ -241,12 +234,9 @@ public class PickElementsActivity extends BaseActivity
                             .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
                                 .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
-                            .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
-                                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
-//                                .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT)
-//                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
-//                                    .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
+                            .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY)
+                                .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
+                                .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
                             .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
@@ -255,10 +245,7 @@ public class PickElementsActivity extends BaseActivity
                             .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
-
-            case PICK_ATTRACTIONS:
-                this.viewModel.optionsMenuAgent
+                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY)
                         .add(OptionsItem.EXPAND_ALL)
                         .add(OptionsItem.COLLAPSE_ALL);
                 break;
@@ -279,10 +266,13 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected Menu prepareOptionsMenu(Menu menu)
     {
+        boolean sortByLocationVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
+
         boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-        boolean sortByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
         boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
+
+        boolean groupByLocationVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
 
         boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
         boolean groupByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
@@ -292,26 +282,23 @@ public class PickElementsActivity extends BaseActivity
 
         switch(this.viewModel.requestCode)
         {
+            case PICK_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
+                            .setVisible(OptionsItem.SORT_BY_LOCATION, sortByLocationVisible)
                             .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
-//                            .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeEnabled)
-//                            .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
+                            .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
                             .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
                         .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
+                            .setVisible(OptionsItem.GROUP_BY_LOCATION, groupByLocationVisible)
                             .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
-
-            case PICK_ATTRACTIONS:
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                        .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed());
                 break;
         }
 
@@ -325,74 +312,64 @@ public class PickElementsActivity extends BaseActivity
         {
             case SORT_ASCENDING:
             case SORT_BY_NAME_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameAscending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_DESCENDING:
             case SORT_BY_NAME_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElementsByNameDescending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.DESCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_BY_LOCATION_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationAscending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_LOCATION, SortOrder.ASCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_BY_LOCATION_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByLocationDescending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_LOCATION, SortOrder.DESCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
-            case SORT_BY_CREDIT_TYPE_ASCENDING:
-//                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByCreditTypeAscending(viewModel.elementsToPickFrom);
-//                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_CREDIT_TYPE_DESCENDING:
-//                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByCreditTypeDescending(viewModel.elementsToPickFrom);
-//                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
             case SORT_BY_CATEGORY_ASCENDING:
-                //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryAscending(viewModel.elementsToPickFrom);
-                //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_CATEGORY, SortOrder.ASCENDING);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_BY_CATEGORY_DESCENDING:
-                //        this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByAttractionsCatgeoryDescending(viewModel.elementsToPickFrom);
-                //        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_CATEGORY, SortOrder.DESCENDING);
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_BY_MANUFACTURER_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerAscending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_MANUFACTURER, SortOrder.ASCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case SORT_BY_MANUFACTURER_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortAttractionsByManufacturerDescending(viewModel.elementsToPickFrom);
+                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_MANUFACTURER, SortOrder.DESCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
             case GROUP_BY_LOCATION:
-                this.groupElementsByType(GroupType.LOCATION);
+                this.setDetailModesAndGroupElements(GroupType.LOCATION);
                 return true;
 
             case GROUP_BY_CREDIT_TYPE:
-                this.groupElementsByType(GroupType.CREDIT_TYPE);
+                this.setDetailModesAndGroupElements(GroupType.CREDIT_TYPE);
                 return true;
 
             case GROUP_BY_CATEGORY:
-                this.groupElementsByType(GroupType.CATEGORY);
+                this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                 return true;
 
             case GROUP_BY_MANUFACTURER:
-                this.groupElementsByType(GroupType.MANUFACTURER);
+                this.setDetailModesAndGroupElements(GroupType.MANUFACTURER);
                 return true;
 
             case GROUP_BY_STATUS:
-                this.groupElementsByType(GroupType.STATUS);
+                this.setDetailModesAndGroupElements(GroupType.STATUS);
                 return true;
 
             case EXPAND_ALL:
@@ -408,53 +385,94 @@ public class PickElementsActivity extends BaseActivity
         }
     }
 
-    private void groupElementsByType(GroupType groupType)
+    private void setDetailModesAndGroupElements(GroupType groupType)
     {
-        this.viewModel.contentRecyclerViewAdapter.clearTypefaceForTypes()
+        this.viewModel.contentRecyclerViewAdapter
+                .clearTypefaceForTypes()
                 .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                .clearDisplayModeForDetails();
+                .clearDisplayModesForDetails();
 
-        switch(groupType)
+        if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
         {
-            case LOCATION:
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.LOCATION);
-                break;
+            switch(groupType)
+            {
+                case CREDIT_TYPE:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.CREDIT_TYPE);
+                    break;
 
-            case CREDIT_TYPE:
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.CREDIT_TYPE);
-                break;
+                case CATEGORY:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.CATEGORY);
+                    break;
 
-            case CATEGORY:
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.CATEGORY);
-                break;
+                case MANUFACTURER:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.MANUFACTURER);
+                    break;
 
-            case MANUFACTURER:
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.MANUFACTURER);
-                break;
+                case STATUS:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.STATUS);
+                    break;
+            }
+        }
+        else
+        {
+            switch(groupType)
+            {
+                case LOCATION:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.LOCATION);
+                    break;
 
-            case STATUS:
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .groupItemsByType(GroupType.STATUS);
-                break;
+                case CREDIT_TYPE:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.CREDIT_TYPE);
+                    break;
+
+                case CATEGORY:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.CATEGORY);
+                    break;
+
+                case MANUFACTURER:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.MANUFACTURER);
+                    break;
+
+                case STATUS:
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.STATUS);
+                    break;
+            }
         }
     }
 

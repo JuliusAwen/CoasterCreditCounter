@@ -7,11 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -26,6 +25,7 @@ import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
@@ -34,15 +34,18 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class GroupHeaderProvider
 {
-    private final Map<UUID, GroupHeader> groupHeadersByGroupElementUuid = new HashMap<>();
+    private final Map<UUID, IGroupHeader> groupHeadersByGroupElementUuid = new HashMap<>();
     private GroupType formerGroupType = GroupType.NONE;
-    private List<IAttraction> formerAttractions;
-    private List<IElement> formerGroupedAttractions;
+    private List<IElement> formerElements;
+    private List<IGroupHeader> formerGroupedAttractions;
+
 
     private final List<SpecialGroupHeader> specialGroupHeaders = new ArrayList<>();
 
-    public List<IElement> groupElementsByGroupType(List<IElement> elements, GroupType groupType)
+    public List<IElement> groupElements(List<IElement> elements, GroupType groupType)
     {
+        List<IElement> blueprints = new LinkedList<>();
+
         if(groupType == GroupType.NONE)
         {
             return elements;
@@ -51,32 +54,30 @@ public class GroupHeaderProvider
         {
             return this.groupByYear(elements);
         }
-
-        List<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
-
-        List<IElement> groupedAttractions = new ArrayList<>();
-
-        Set<IElement> blueprints = new LinkedHashSet<>(); // bluprints have neither locations nor status - they will be filtered out and added again at the end
-        if(groupType == GroupType.LOCATION || groupType == GroupType.STATUS)
+        else if(groupType == GroupType.LOCATION || groupType == GroupType.STATUS)
         {
-            for(IElement element : attractions)
+            // bluprints have neither locations nor status - they will be filtered out and added again at the end under a SpecialGroupHeader
+            for(IElement element : elements)
             {
                 if(Blueprint.class.isAssignableFrom(element.getClass()))
                 {
                     blueprints.add(element);
                 }
             }
-            attractions.removeAll(blueprints);
+            elements.removeAll(blueprints);
+            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.filterOutBlueprints:: filtered out [%d] blueprint(s)", blueprints.size()));
         }
 
-
+        List<IGroupHeader> groupedAttractions = new ArrayList<>();
         if(this.groupHeadersByGroupElementUuid.isEmpty() || this.formerGroupType != groupType)
         {
             groupHeadersByGroupElementUuid.clear();
 
-            if(!attractions.isEmpty())
+            if(!elements.isEmpty())
             {
-                Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: initalizing GroupHeaders for [%d] attractions...", attractions.size()));
+                Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: initalizing GroupHeaders for [%d] attractions...", elements.size()));
+
+                List<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
 
                 for(IAttraction attraction : attractions)
                 {
@@ -105,17 +106,17 @@ public class GroupHeaderProvider
                     }
                     UUID groupElementUuid = groupElement.getUuid();
 
-                    GroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
+                    IGroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
                     if(groupHeader != null)
                     {
                         groupHeader.addChild(attraction);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: added %s to %s", attraction, groupHeader));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to %s", attraction, groupHeader));
 
                         if(!groupedAttractions.contains(groupHeader))
                         {
                             groupedAttractions.add(groupHeader);
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: added %s to GroupedAttractions", groupHeader));
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to GroupedAttractions", groupHeader));
                         }
                     }
                     else
@@ -123,42 +124,28 @@ public class GroupHeaderProvider
                         groupHeader = GroupHeader.create(groupElement);
                         this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
                         groupedAttractions.add(groupHeader);
-
                         groupHeader.addChild(attraction);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created new %s and added %s", groupHeader, attraction));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, attraction));
                     }
                 }
-
-                Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created [%d] GroupHeaders", groupedAttractions.size()));
-                groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
-                this.addBlueprintsToGroupedAttractions(blueprints, groupedAttractions);
-
-                this.formerAttractions = attractions;
-                this.formerGroupedAttractions = groupedAttractions;
-
-                return groupedAttractions;
+                Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created [%d] GroupHeaders", groupedAttractions.size()));
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElementsByGroupType:: no attractions to group");
-
-                this.formerGroupType = groupType;
-                this.formerAttractions = attractions;
-                this.formerGroupedAttractions = groupedAttractions;
-
-                return groupedAttractions;
+                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElements:: no attractions to group - returning");
             }
         }
         else
         {
-            if(this.attractionOrderHasChanged(attractions))
+            if(this.elementsHaveChanged(elements))
             {
-                for(GroupHeader groupHeader : this.groupHeadersByGroupElementUuid.values())
+                for(IGroupHeader groupHeader : this.groupHeadersByGroupElementUuid.values())
                 {
                     groupHeader.getChildren().clear();
                 }
 
+                List<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
                 for(IAttraction attraction : attractions)
                 {
                     IElement groupElement = null;
@@ -186,12 +173,12 @@ public class GroupHeaderProvider
                     }
                     UUID groupElementUuid = groupElement.getUuid();
 
-                    GroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
+                    IGroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
                     if(groupHeader != null)
                     {
                         if(!groupHeader.getName().equals(groupElement.getName()))
                         {
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: changing name for %s to [%s]...", groupHeader, groupElement.getName()));
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: changing name for %s to [%s]...", groupHeader, groupElement.getName()));
 
                             groupHeader.setName(groupElement.getName());
                         }
@@ -199,7 +186,7 @@ public class GroupHeaderProvider
                         if(!groupedAttractions.contains(groupHeader))
                         {
                             groupedAttractions.add(groupHeader);
-                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: added %s to GroupedAttractions", groupHeader));
+                            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to GroupedAttractions", groupHeader));
                         }
 
                         groupHeader.addChild(attraction);
@@ -211,15 +198,14 @@ public class GroupHeaderProvider
                         groupedAttractions.add(groupHeader);
 
                         groupHeader.addChild(attraction);
-
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created new %s and added %s", groupHeader, attraction));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, attraction));
                     }
                 }
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElementsByGroupType:: attractions have not changed - returning former GroupedAttractions");
-                return this.formerGroupedAttractions;
+                Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElements:: attractions have not changed - returning former GroupedAttractions");
+                return ConvertTool.convertElementsToType(this.formerGroupedAttractions, IElement.class);
             }
         }
 
@@ -229,32 +215,39 @@ public class GroupHeaderProvider
             if(!header.hasChildren())
             {
                 emptyHeaders.add(header);
-                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: %s is empty - marked for removal", header));
+                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s is empty - marked for removal", header));
             }
         }
         groupedAttractions.removeAll(emptyHeaders);
 
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElementsByGroupType:: created [%d] GroupHeaders", groupedAttractions.size()));
         groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
-        this.addBlueprintsToGroupedAttractions(blueprints, groupedAttractions);
 
-        this.formerAttractions = attractions;
+        if(!blueprints.isEmpty())
+        {
+            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.addBlueprintsToGroupedAttractions:: adding [%d] blueprint(s) with special header", blueprints.size()));
+
+            SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(App.getContext().getString(R.string.text_blueprint_special_group_header_name));
+            blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
+            groupedAttractions.add(blueprintGroupHeader);
+        }
+
+        this.formerElements = elements;
+        this.formerGroupType = groupType;
         this.formerGroupedAttractions = groupedAttractions;
-
-        return groupedAttractions;
+        return ConvertTool.convertElementsToType(groupedAttractions, IElement.class);
     }
 
-    private boolean attractionOrderHasChanged(List<IAttraction> attractions)
+    private boolean elementsHaveChanged(List<IElement> attractions)
     {
-        if(attractions.size() != this.formerAttractions.size())
+        if(attractions.size() != this.formerElements.size())
         {
             return true;
         }
         else
         {
-            for(IAttraction attraction : attractions)
+            for(IElement element : attractions)
             {
-                if(!this.formerAttractions.contains(attraction) || !attraction.equals(this.formerAttractions.get(attractions.indexOf(attraction))))
+                if(!this.formerElements.contains(element) || !element.equals(this.formerElements.get(attractions.indexOf(element))))
                 {
                     return true;
                 }
@@ -264,11 +257,11 @@ public class GroupHeaderProvider
         return false;
     }
 
-    private List<IElement> sortGroupHeadersBasedOnGroupElementsOrder(List<IElement> groupHeaders, GroupType groupType)
+    private List<IGroupHeader> sortGroupHeadersBasedOnGroupElementsOrder(List<IGroupHeader> groupHeaders, GroupType groupType)
     {
         if(groupHeaders.size() > 1)
         {
-            List<IElement> sortedGroupHeaders = new ArrayList<>();
+            List<IGroupHeader> sortedGroupHeaders = new ArrayList<>();
             List<IElement> groupElements = new ArrayList<>();
 
             switch(groupType)
@@ -301,7 +294,7 @@ public class GroupHeaderProvider
 
             for(IElement groupElement : groupElements)
             {
-                for(GroupHeader groupHeader : ConvertTool.convertElementsToType(groupHeaders, GroupHeader.class))
+                for(IGroupHeader groupHeader : groupHeaders)
                 {
                     if(groupHeader.getGroupElement().equals(groupElement) && !sortedGroupHeaders.contains(groupHeader))
                     {
@@ -320,19 +313,6 @@ public class GroupHeaderProvider
         }
     }
 
-    private void addBlueprintsToGroupedAttractions(Set<IElement> blueprints, List<IElement> groupedAttractions)
-    {
-        if(!blueprints.isEmpty())
-        {
-            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.addBlueprintsToGroupedAttractions:: adding [%d] blueprint(s) with special header", blueprints.size()));
-
-            SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(App.getContext().getString(R.string.text_blueprint_special_group_header_name));
-            blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
-            groupedAttractions.add(blueprintGroupHeader);
-        }
-    }
-
-
     private List<IElement> groupByYear(List<IElement> elements)
     {
         List<Visit> visits = ConvertTool.convertElementsToType(elements, Visit.class);
@@ -343,7 +323,7 @@ public class GroupHeaderProvider
             return new ArrayList<IElement>(visits);
         }
 
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding YearHeaders to [%d] elements...", visits.size()));
+        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding special YearHeaders to [%d] elements...", visits.size()));
 
         for(SpecialGroupHeader specialGroupHeader : this.specialGroupHeaders)
         {
@@ -402,12 +382,12 @@ public class GroupHeaderProvider
 
     private List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
     {
-        if(Visit.getSortOrder().equals(SortOrder.ASCENDING))
+        if(Visit.getSortOrder() == SortOrder.ASCENDING)
         {
             visits = this.sortAscendingByDate(visits);
             Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: sorted [%d] visits <ascending>", visits.size()));
         }
-        else if(Visit.getSortOrder().equals(SortOrder.DESCENDING))
+        else
         {
             visits = this.sortDescendingByDate(visits);
             Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: sorted [%d] visits <descending>", visits.size()));

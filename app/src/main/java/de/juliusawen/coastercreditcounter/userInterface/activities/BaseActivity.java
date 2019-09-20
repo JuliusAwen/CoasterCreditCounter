@@ -252,7 +252,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(item.equals(OptionsItem.HELP))
+        if(item == OptionsItem.HELP)
         {
             HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
 

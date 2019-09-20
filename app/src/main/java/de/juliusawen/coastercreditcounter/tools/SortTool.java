@@ -10,184 +10,212 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.globals.enums.SortType;
 
 public abstract class SortTool
 {
-    public static List<IElement> sortElementsByNameAscending(List<IElement> elements)
+    public static List<IElement> sortElements(List<IElement> elements, SortType sortType, SortOrder sortOrder)
     {
         List<IElement> sortedElements = new ArrayList<>(elements); //passed list stays unsorted
         if(elements.size() > 1)
         {
-            Collections.sort(sortedElements, new Comparator<IElement>()
+            switch(sortType)
             {
-                @Override
-                public int compare(IElement element1, IElement element2)
+                case BY_NAME:
                 {
-                    return element1.getName().compareToIgnoreCase(element2.getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortElementsByNameAscending:: [%s] elements sorted", elements.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortElementsByNameAscending:: not sorted - list contains only one element");
-        }
-
-        return sortedElements;
-    }
-
-    public static List<IElement> sortElementsByNameDescending(List<IElement> elements)
-    {
-        List<IElement> sortedElements = new ArrayList<>(elements); //passed list stays unsorted
-        if(elements.size() > 1)
-        {
-            Collections.sort(sortedElements, new Comparator<IElement>()
-            {
-                @Override
-                public int compare(IElement element1, IElement element2)
-                {
-                    return element2.getName().compareToIgnoreCase(element1.getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortElementsByNameDescending:: [%s] elements sorted", elements.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortElementsByNameDescending:: not sorted - list contains only one element");
-        }
-
-        return sortedElements;
-    }
-
-    public static List<IElement> sortAttractionsByManufacturerAscending(List<IElement> attractions)
-    {
-        List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(attractions, IAttraction.class);
-        if(attractions.size() > 1)
-        {
-            Collections.sort(sortedAttractions, new Comparator<IAttraction>()
-            {
-                @Override
-                public int compare(IAttraction attraction1, IAttraction attraction2)
-                {
-                    return attraction1.getManufacturer().getName().compareToIgnoreCase(attraction2.getManufacturer().getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortAttractionsByManufacturerAscending:: [%s] attractions sorted", attractions.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortAttractionsByManufacturerAscending:: not sorted - list contains only one attraction");
-        }
-
-        return ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
-    }
-
-    public static List<IElement> sortAttractionsByManufacturerDescending(List<IElement> attractions)
-    {
-        List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(attractions, IAttraction.class);
-        if(attractions.size() > 1)
-        {
-            Collections.sort(sortedAttractions, new Comparator<IAttraction>()
-            {
-                @Override
-                public int compare(IAttraction attraction1, IAttraction attraction2)
-                {
-                    return attraction2.getManufacturer().getName().compareToIgnoreCase(attraction1.getManufacturer().getName());
-                }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortAttractionsByManufacturerDescending:: [%s] attractions sorted", attractions.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortAttractionsByManufacturerDescending:: not sorted - list contains only one attraction");
-        }
-
-        return ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
-    }
-
-    public static List<IElement> sortAttractionsByLocationAscending(List<IElement> attractions)
-    {
-        List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(attractions, IAttraction.class);
-        if(attractions.size() > 1)
-        {
-            Collections.sort(sortedAttractions, new Comparator<IAttraction>()
-            {
-                @Override
-                public int compare(IAttraction attraction1, IAttraction attraction2)
-                {
-                    IElement parent1 = attraction1.getParent();
-                    IElement parent2 = attraction2.getParent();
-
-                    // sort Blueprints to bottom of list
-                    if(parent1 == null && parent2 == null)
+                    if(sortOrder == SortOrder.ASCENDING)
                     {
-                        return 0;
-                    }
-                    else if(parent1 == null)
-                    {
-                        return 1;
-                    }
-                    else if(parent2 == null)
-                    {
-                        return -1;
+                        Collections.sort(sortedElements, new Comparator<IElement>()
+                        {
+                            @Override
+                            public int compare(IElement element1, IElement element2)
+                            {
+                                return element1.getName().compareToIgnoreCase(element2.getName());
+                            }
+                        });
                     }
                     else
                     {
-                        return parent1.getName().compareToIgnoreCase(parent2.getName());
+                        Collections.sort(sortedElements, new Comparator<IElement>()
+                        {
+                            @Override
+                            public int compare(IElement element1, IElement element2)
+                            {
+                                return element2.getName().compareToIgnoreCase(element1.getName());
+                            }
+                        });
                     }
-
+                    break;
                 }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortAttractionsByManufacturerAscending:: [%s] attractions sorted", attractions.size()));
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortAttractionsByManufacturerAscending:: not sorted - list contains only one attraction");
-        }
 
-        return ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
-    }
-
-    public static List<IElement> sortAttractionsByLocationDescending(List<IElement> attractions)
-    {
-        List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(attractions, IAttraction.class);
-        if(attractions.size() > 1)
-        {
-            Collections.sort(sortedAttractions, new Comparator<IAttraction>()
-            {
-                @Override
-                public int compare(IAttraction attraction1, IAttraction attraction2)
+                case BY_LOCATION:
                 {
-                    IElement parent1 = attraction1.getParent();
-                    IElement parent2 = attraction2.getParent();
+                    List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
 
-                    // sort Blueprints to top of list
-                    if(parent1 == null && parent2 == null)
+                    if(sortOrder == SortOrder.ASCENDING)
                     {
-                        return 0;
-                    }
-                    else if(parent2 == null)
-                    {
-                        return 1;
-                    }
-                    else if(parent1 == null)
-                    {
-                        return -1;
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                IElement parent1 = attraction1.getParent();
+                                IElement parent2 = attraction2.getParent();
+
+                                // sort Blueprints to bottom of list
+                                if(parent1 == null && parent2 == null)
+                                {
+                                    return 0;
+                                }
+                                else if(parent1 == null)
+                                {
+                                    return 1;
+                                }
+                                else if(parent2 == null)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return parent1.getName().compareToIgnoreCase(parent2.getName());
+                                }
+
+                            }
+                        });
                     }
                     else
                     {
-                        return parent2.getName().compareToIgnoreCase(parent1.getName());
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                IElement parent1 = attraction1.getParent();
+                                IElement parent2 = attraction2.getParent();
+
+                                // sort Blueprints to top of list
+                                if(parent1 == null && parent2 == null)
+                                {
+                                    return 0;
+                                }
+                                else if(parent2 == null)
+                                {
+                                    return 1;
+                                }
+                                else if(parent1 == null)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return parent2.getName().compareToIgnoreCase(parent1.getName());
+                                }
+                            }
+                        });
                     }
+                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    break;
                 }
-            });
-            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortAttractionsByManufacturerDescending:: [%s] attractions sorted", attractions.size()));
+
+                case BY_CREDIT_TYPE:
+                {
+                    List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
+
+                    if(sortOrder == SortOrder.ASCENDING)
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction1.getCreditType().getName().compareToIgnoreCase(attraction2.getCreditType().getName());
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction2.getCreditType().getName().compareToIgnoreCase(attraction1.getCreditType().getName());
+                            }
+                        });
+                    }
+                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    break;
+                }
+
+                case BY_CATEGORY:
+                {
+                    List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
+
+                    if(sortOrder == SortOrder.ASCENDING)
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction1.getCategory().getName().compareToIgnoreCase(attraction2.getCategory().getName());
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction2.getCategory().getName().compareToIgnoreCase(attraction1.getCategory().getName());
+                            }
+                        });
+                    }
+                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    break;
+                }
+
+                case BY_MANUFACTURER:
+                {
+                    List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
+
+                    if(sortOrder == SortOrder.ASCENDING)
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction1.getManufacturer().getName().compareToIgnoreCase(attraction2.getManufacturer().getName());
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Collections.sort(sortedAttractions, new Comparator<IAttraction>()
+                        {
+                            @Override
+                            public int compare(IAttraction attraction1, IAttraction attraction2)
+                            {
+                                return attraction2.getManufacturer().getName().compareToIgnoreCase(attraction1.getManufacturer().getName());
+                            }
+                        });
+                    }
+                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    break;
+                }
+            }
+            Log.i(Constants.LOG_TAG,  String.format("SortTool.sortElements:: sorted [%s] elements [%s] [%s]", elements.size(), sortType, sortOrder));
         }
         else
         {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortAttractionsByManufacturerDescending:: not sorted - list contains only one attraction");
+            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElements:: not sorted: [%d] element(s) passed", elements.size()));
         }
 
-        return ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+        return sortedElements;
     }
 
     public static List<IElement> sortElementsBasedOnComparisonList(List<IElement> elementsToSort, List<IElement> comparisonList)

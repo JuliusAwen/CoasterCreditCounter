@@ -51,6 +51,10 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
 
     public static Manufacturer getDefault()
     {
+        if(Manufacturer.defaultManufacturer == null)
+        {
+            Manufacturer.createAndSetDefault();
+        }
         return Manufacturer.defaultManufacturer;
     }
 

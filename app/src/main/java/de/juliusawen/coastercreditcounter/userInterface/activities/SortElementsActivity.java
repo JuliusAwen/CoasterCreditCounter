@@ -20,6 +20,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.globals.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
@@ -106,12 +108,12 @@ public class SortElementsActivity extends BaseActivity
         switch(item)
         {
             case SORT_ASCENDING:
-                this.viewModel.elementsToSort = SortTool.sortElementsByNameAscending(this.viewModel.elementsToSort);
+                this.viewModel.elementsToSort = SortTool.sortElements(this.viewModel.elementsToSort, SortType.BY_NAME, SortOrder.ASCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;
 
             case SORT_DESCENDING:
-                this.viewModel.elementsToSort = SortTool.sortElementsByNameDescending(this.viewModel.elementsToSort);
+                this.viewModel.elementsToSort = SortTool.sortElements(this.viewModel.elementsToSort, SortType.BY_NAME, SortOrder.DESCENDING);
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
                 return true;
 

@@ -4,10 +4,11 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
-public class SpecialGroupHeader extends OrphanElement implements IGroupHeader, ITemporaryElement
+public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
 {
     private SpecialGroupHeader(String name, UUID uuid)
     {
@@ -29,5 +30,11 @@ public class SpecialGroupHeader extends OrphanElement implements IGroupHeader, I
             Log.e(Constants.LOG_TAG,  String.format("SpecialGroupHeader.create:: invalid name[%s] - specialGroupHeader not created", name));
         }
         return specialGroupHeader;
+    }
+
+    @Override
+    public IElement getGroupElement()
+    {
+        return null;
     }
 }

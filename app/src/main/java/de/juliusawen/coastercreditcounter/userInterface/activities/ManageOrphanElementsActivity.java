@@ -34,11 +34,14 @@ import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElementType;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.globals.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -81,20 +84,35 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
             childTypesToExpand.add(ICategorized.class);
 
+            List<IElement> elementsWithOrderedChildren;
+
             switch(this.viewModel.orphanElementTypeToManage)
             {
                 case CREDIT_TYPE:
+                     elementsWithOrderedChildren = App.content.getContentOfType(CreditType.class);
+                    for(IElement element : elementsWithOrderedChildren)
+                    {
+                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                    }
+
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            App.content.getContentOfType(CreditType.class),
+                            elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForType(CreditType.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
 
                 case CATEGORY:
+                    elementsWithOrderedChildren = App.content.getContentOfType(Category.class);
+                    for(IElement element : elementsWithOrderedChildren)
+                    {
+                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                    }
+
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            App.content.getContentOfType(Category.class),
+                            elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForType(Category.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -102,21 +120,33 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     break;
 
                 case MANUFACTURER:
+                    elementsWithOrderedChildren = App.content.getContentOfType(Manufacturer.class);
+                    for(IElement element : elementsWithOrderedChildren)
+                    {
+                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                    }
+
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            App.content.getContentOfType(Manufacturer.class),
+                            elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
 
                 case STATUS:
+                    elementsWithOrderedChildren = App.content.getContentOfType(Status.class);
+                    for(IElement element : elementsWithOrderedChildren)
+                    {
+                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                    }
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            App.content.getContentOfType(Status.class),
+                            elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForType(Status.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW);
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
             }
         }
@@ -289,8 +319,6 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         }
 
         return this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                 .prepare(menu);
     }
 
@@ -665,7 +693,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
     {
         Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        if(requestCode.equals(RequestCode.DELETE))
+        if(requestCode == RequestCode.DELETE)
         {
             Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 

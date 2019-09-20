@@ -186,16 +186,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .create(menu);
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .prepare(menu);
-    }
-
-
     public boolean handleOptionsItemExpandAllSelected()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
@@ -221,7 +211,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
                 .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
-                .groupItemsByType(GroupType.CATEGORY);
+                .groupItems(GroupType.CATEGORY);
 
         return contentRecyclerViewAdapter;
     }
@@ -316,7 +306,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            if(requestCode.equals(RequestCode.DELETE))
+            if(requestCode == RequestCode.DELETE)
             {
                 ConfirmSnackbar.Show(
                         Snackbar.make(
@@ -334,7 +324,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        if(requestCode.equals(RequestCode.DELETE))
+        if(requestCode == RequestCode.DELETE)
         {
             Log.i(LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 

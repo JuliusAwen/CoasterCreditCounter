@@ -202,7 +202,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(Visit.class),
                 childTypesToExpand)
-                .groupItemsByType(GroupType.YEAR);
+                .groupItems(GroupType.YEAR);
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
@@ -324,7 +324,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        if(which == DialogInterface.BUTTON_POSITIVE && requestCode.equals(RequestCode.DELETE))
+        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.DELETE)
         {
             ConfirmSnackbar.Show(
                     Snackbar.make(
@@ -341,7 +341,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        if(requestCode.equals(RequestCode.DELETE))
+        if(requestCode == RequestCode.DELETE)
         {
             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 

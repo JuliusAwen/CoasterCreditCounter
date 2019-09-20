@@ -51,6 +51,10 @@ public class Status extends OrphanElement implements IOrphanElement
 
     public static Status getDefault()
     {
+        if(Status.defaultStatus == null)
+        {
+            Status.createAndSetDefault();
+        }
         return Status.defaultStatus;
     }
 

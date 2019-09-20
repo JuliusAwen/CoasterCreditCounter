@@ -63,7 +63,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
 
-        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)].equals(RequestCode.EDIT_CUSTOM_ATTRACTION))
+        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_CUSTOM_ATTRACTION)
         {
             this.viewModel.isEditMode = true;
         }
