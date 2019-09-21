@@ -2,9 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <dimen name="design_navigation_separator_vertical_padding" tools:override="true">0dp</dimen>
-
     <dimen name="standard_bar_height">40dp</dimen>
-
     <dimen name="expand_toggle_padding_factor">8dp</dimen>
 
 </resources>

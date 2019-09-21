@@ -89,7 +89,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             switch(this.viewModel.orphanElementTypeToManage)
             {
                 case CREDIT_TYPE:
-                     elementsWithOrderedChildren = App.content.getContentOfType(CreditType.class);
+                    elementsWithOrderedChildren = App.content.getContentOfType(CreditType.class);
                     for(IElement element : elementsWithOrderedChildren)
                     {
                         element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
@@ -149,6 +149,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
             }
+            this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_orphan_element_default);
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)

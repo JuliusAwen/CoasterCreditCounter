@@ -36,7 +36,10 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.SpecialGroupHeader;
@@ -468,11 +471,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
             //set special string respurce
-            if(this.specialStringResourcesByType.containsKey(item.getClass()))
+            if(this.specialStringResourcesByType.containsKey(item.getClass()) || this.specialStringResourcesByType.containsKey(item.getClass().getSuperclass()))
             {
                 if(item instanceof Visit)
                 {
                     viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+                }
+                else if(OrphanElement.class.isAssignableFrom(item.getClass()))
+                {
+                    if((item.getClass().equals(CreditType.class) && item.equals(CreditType.getDefault()))
+                            || (item.getClass().equals(Category.class) && item.equals(Category.getDefault()))
+                            || (item.getClass().equals(Manufacturer.class) && item.equals(Manufacturer.getDefault()))
+                            || (item.getClass().equals(Status.class) && item.equals(Status.getDefault())))
+                    {
+                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(OrphanElement.class), item.getName()));
+                    }
+                    else
+                    {
+                        viewHolder.textViewName.setText(item.getName());
+                    }
                 }
             }
             else
@@ -602,7 +619,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             else if(item instanceof Blueprint)
             {
                 // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
-                locationName = App.getContext().getString(R.string.text_blueprint_substitute);
+                locationName = App.getContext().getString(R.string.substitute_blueprint);
                 typefacesByDetailSubString.put(locationName, Typeface.BOLD_ITALIC);
             }
 

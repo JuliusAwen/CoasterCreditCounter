@@ -123,7 +123,8 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
                             .setTypefaceForContentType(Category.class, Typeface.BOLD)
                             .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForContentType(Status.class, Typeface.BOLD);
+                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
+                            .setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_orphan_element_default);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();

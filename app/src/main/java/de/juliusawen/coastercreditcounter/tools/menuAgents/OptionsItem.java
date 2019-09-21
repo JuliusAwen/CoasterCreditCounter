@@ -53,12 +53,12 @@ public enum OptionsItem
 
     //ACTION MENU ITEMS
 
+    EXPAND_ALL(R.string.menu_item_expand_all, R.drawable.ic_baseline_expand_more_24px),
+    COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.ic_baseline_expand_less_24px),
+
     GO_TO_CURRENT_VISIT(R.string.menu_item_go_to_current_visit, R.drawable.ic_baseline_local_activity),
     ENABLE_EDITING(R.string.menu_item_enable_editing, R.drawable.ic_baseline_create),
     DISABLE_EDITING(R.string.menu_item_disable_editing, R.drawable.ic_baseline_block),
-
-    EXPAND_ALL(R.string.menu_item_expand_all, R.drawable.ic_baseline_expand_more_24px),
-    COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.ic_baseline_expand_less_24px),
 
     HELP(R.string.menu_item_help, -1);
 
