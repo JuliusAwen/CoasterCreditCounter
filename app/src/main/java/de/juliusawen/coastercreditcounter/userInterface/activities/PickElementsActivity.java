@@ -393,9 +393,7 @@ public class PickElementsActivity extends BaseActivity
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .clearTypefacesForDetailType()
                 .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
-                .clearDisplayModesForDetails()
-                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
+                .clearDisplayModesForDetails();
 
         if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
         {
@@ -405,24 +403,32 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
                 case MANUFACTURER:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.STATUS);
                     break;
             }
