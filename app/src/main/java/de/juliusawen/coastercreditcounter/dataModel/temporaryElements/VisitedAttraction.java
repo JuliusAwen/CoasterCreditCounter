@@ -26,16 +26,16 @@ public class VisitedAttraction extends Attraction implements ITemporaryElement
     private final IOnSiteAttraction onSiteAttraction;
     private int rideCount;
 
-    private VisitedAttraction(String name, IOnSiteAttraction onSiteAttraction, UUID uuid)
+    private VisitedAttraction(IOnSiteAttraction onSiteAttraction, UUID uuid)
     {
-        super(name, uuid);
+        super(onSiteAttraction.getName(), uuid);
         this.onSiteAttraction = onSiteAttraction;
     }
 
     public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction)
     {
         VisitedAttraction visitedAttraction;
-        visitedAttraction = new VisitedAttraction(onSiteAttraction.getName(), onSiteAttraction, UUID.randomUUID());
+        visitedAttraction = new VisitedAttraction(onSiteAttraction, UUID.randomUUID());
 
         Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
 

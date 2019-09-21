@@ -150,9 +150,26 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     break;
 
                 case EDIT_CUSTOM_ATTRACTION:
-                    Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
-                    this.showAttractionsFragmentInteraction.markForUpdate(selectedElement);
-                    this.updateContentRecyclerView().scrollToItem(selectedElement);
+                    if(!selectedElement.getName().equals(this.viewModel.formerAttractionName))
+                    {
+                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
+
+                        for(IElement visit : selectedElement.getParent().getChildrenOfType(Visit.class))
+                        {
+                            for(IElement visitedAttraction : visit.getChildrenOfType(VisitedAttraction.class))
+                            {
+                                if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
+                                {
+                                    visitedAttraction.setName(selectedElement.getName());
+                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: renamed VisitedAttraction [%s]", visitedAttraction));
+                                }
+                            }
+                        }
+
+                        this.showAttractionsFragmentInteraction.markForUpdate(selectedElement.getParent());
+                        this.updateContentRecyclerView().scrollToItem(selectedElement);
+                    }
+                    this.viewModel.formerAttractionName = null;
                     break;
 
                 case CREATE_CUSTOM_ATTRACTION:
@@ -280,10 +297,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public void handlePopupItemEditCustomAttractionClicked()
     {
+        this.viewModel.formerAttractionName = this.viewModel.longClickedElement.getName();
+
         ActivityDistributor.startActivityEditForResult(
                 getContext(),
                 RequestCode.EDIT_CUSTOM_ATTRACTION,
-                viewModel.longClickedElement);
+                this.viewModel.longClickedElement);
     }
 
     public void handlePopupItemDeleteAttractionClicked()

@@ -126,13 +126,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction winjasFear = CustomAttraction.create("Winja's Fear", 8);
         winjasFear.setCreditType(creditTypes.RollerCoaster);
         winjasFear.setCategory(categories.RollerCoasters);
-        winjasFear.setManufacturer(manufacturers.MaurerSoehne);
+        winjasFear.setManufacturer(manufacturers.MaurerRides);
         phantasialand.addChildAndSetParent(winjasFear);
 
         CustomAttraction winjasForce = CustomAttraction.create("Winja's Force", 8);
         winjasForce.setCreditType(creditTypes.RollerCoaster);
         winjasForce.setCategory(categories.RollerCoasters);
-        winjasForce.setManufacturer(manufacturers.MaurerSoehne);
+        winjasForce.setManufacturer(manufacturers.MaurerRides);
         phantasialand.addChildAndSetParent(winjasForce);
 
         CustomAttraction mysteryCastle = CustomAttraction.create("Mystery Castle");
@@ -1245,7 +1245,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction crazyMine = CustomAttraction.create("Crazy-Mine", 3);
         crazyMine.setCreditType(creditTypes.RollerCoaster);
         crazyMine.setCategory(categories.RollerCoasters);
-        crazyMine.setManufacturer(manufacturers.MaurerSoehne);
+        crazyMine.setManufacturer(manufacturers.MaurerRides);
         hansaPark.addChildAndSetParent(crazyMine);
 
         CustomAttraction rasenderRoland = CustomAttraction.create("Rasender Roland", 2);
@@ -1652,7 +1652,7 @@ class Manufacturers
     final Manufacturer Vekoma = Manufacturer.create("Vekoma");
     final Manufacturer Huss = Manufacturer.create("Huss");
     final Manufacturer Pinfari = Manufacturer.create("Pinfari");
-    final Manufacturer MaurerSoehne = Manufacturer.create("Mauerer Söhne");
+    final Manufacturer MaurerRides = Manufacturer.create("Mauerer Rides");
     final Manufacturer EtfRideSystems = Manufacturer.create("ETF Ride Systems");
     final Manufacturer Zierer = Manufacturer.create("Zierer");
     final Manufacturer Hofmann = Manufacturer.create("Hofmann");
@@ -1685,7 +1685,7 @@ class Manufacturers
         All.add(Vekoma);
         All.add(Huss);
         All.add(Pinfari);
-        All.add(MaurerSoehne);
+        All.add(MaurerRides);
         All.add(EtfRideSystems);
         All.add(Zierer);
         All.add(Hofmann);

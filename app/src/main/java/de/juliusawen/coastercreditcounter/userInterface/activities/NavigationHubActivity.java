@@ -252,8 +252,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             int id = item.getItemId();
             switch(id)
             {
-                case R.id.navigationItem_BrowseContent:
-                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseContent> selected");
+                case R.id.navigationItem_BrowseLocations:
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseLocations> selected");
                     ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
                     break;
 

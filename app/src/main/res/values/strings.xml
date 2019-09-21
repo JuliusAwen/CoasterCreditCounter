@@ -135,7 +135,7 @@
     <string name="group_title_navigation_drawer_manage">Manage</string>
     <string name="group_title_navigation_import_export_content">Import/Export Content</string>
 
-    <string name="item_navigation_drawer_browse_content">Browse Content</string>
+    <string name="item_navigation_drawer_browse_locations">Browse Locations</string>
 
     <string name="item_navigation_drawer_manage_credit_types">Credit Types</string>
     <string name="item_navigation_drawer_manage_blueprints">Blueprints</string>

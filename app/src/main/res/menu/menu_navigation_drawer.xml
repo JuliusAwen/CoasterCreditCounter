@@ -3,9 +3,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigationItem_BrowseContent"
+            android:id="@+id/navigationItem_BrowseLocations"
             android:icon="@drawable/ic_baseline_place"
-            android:title="@string/item_navigation_drawer_browse_content"/>
+            android:title="@string/item_navigation_drawer_browse_locations"/>
     </group>
 
     <group>

@@ -13,4 +13,5 @@ public class ShowAttractionsFragmentViewModel extends ViewModel
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     public IElement longClickedElement;
     public OptionsMenuAgent optionsMenuAgent;
+    public String formerAttractionName;
 }
