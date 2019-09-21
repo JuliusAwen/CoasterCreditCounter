@@ -98,7 +98,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             elementsWithOrderedChildren,
                             childTypesToExpand)
-                            .setTypefaceForType(CreditType.class, Typeface.BOLD)
+                            .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
@@ -114,7 +114,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             elementsWithOrderedChildren,
                             childTypesToExpand)
-                            .setTypefaceForType(Category.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Category.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
                     break;
@@ -129,7 +129,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             elementsWithOrderedChildren,
                             childTypesToExpand)
-                            .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
@@ -143,7 +143,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                             elementsWithOrderedChildren,
                             childTypesToExpand)
-                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
@@ -167,7 +167,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(toolbarTitle, null);
+        super.setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
         super.addFloatingActionButton();
 
         this.decorateFloatingActionButton();

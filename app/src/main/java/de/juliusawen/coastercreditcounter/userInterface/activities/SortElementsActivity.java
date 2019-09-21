@@ -55,8 +55,7 @@ public class SortElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter =
-                    ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
 
             Set<Class<? extends IElement>> types = new HashSet<>();
             for(IElement elementToSort : this.viewModel.elementsToSort)
@@ -66,7 +65,7 @@ public class SortElementsActivity extends BaseActivity
 
             for(Class<? extends IElement> type : types)
             {
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(type, Typeface.BOLD);
+                this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(type, Typeface.BOLD);
             }
         }
         this.recyclerView = findViewById(R.id.recyclerViewSortElements);

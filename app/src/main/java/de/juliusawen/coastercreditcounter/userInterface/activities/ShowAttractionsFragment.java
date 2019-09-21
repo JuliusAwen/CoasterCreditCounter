@@ -98,7 +98,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(GroupHeader.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
@@ -210,6 +210,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         contentRecyclerViewAdapter
                 .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
                 .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                 .groupItems(GroupType.CATEGORY);
 

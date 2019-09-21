@@ -104,7 +104,7 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
                             true)
-                            .setTypefaceForType(GroupHeader.class, Typeface.BOLD);
+                            .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
                             this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
@@ -120,10 +120,10 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForType(CreditType.class, Typeface.BOLD)
-                            .setTypefaceForType(Category.class, Typeface.BOLD)
-                            .setTypefaceForType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForType(Status.class, Typeface.BOLD);
+                            .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Category.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Status.class, Typeface.BOLD);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -138,7 +138,7 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForType(Status.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
                             .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
                     break;
                 }
@@ -149,7 +149,7 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             true)
-                            .setTypefaceForType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                            .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                     break;
                 }
 
@@ -388,9 +388,13 @@ public class PickElementsActivity extends BaseActivity
     private void setDetailModesAndGroupElements(GroupType groupType)
     {
         this.viewModel.contentRecyclerViewAdapter
-                .clearTypefaceForTypes()
-                .setTypefaceForType(GroupHeader.class, Typeface.BOLD)
-                .clearDisplayModesForDetails();
+                .clearTypefacesForContentType()
+                .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                .clearTypefacesForDetailType()
+                .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
+                .clearDisplayModesForDetails()
+                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
 
         if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
         {
@@ -399,34 +403,25 @@ public class PickElementsActivity extends BaseActivity
                 case CREDIT_TYPE:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
                 case MANUFACTURER:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.STATUS);
                     break;
             }

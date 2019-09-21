@@ -91,7 +91,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView()
-                    .setTypefaceForType(GroupHeader.class, Typeface.BOLD);
+                    .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
                 .addRideOnClickListener(this.getIncreaseRideCountOnClickListener())

@@ -8,8 +8,7 @@
     <!--GENERIC TITLES AND SUBTITLES-->
     <string name="title_relocate">Relocate</string>
     <string name="subtitle_relocate">select new parent location for \'%1$s\'</string>
-    <string name="hint_edit_element_name">Edit element name</string>
-
+    <string name="subtitle_management">management</string>
 
 
     <!--GENERIC TEXTS-->
@@ -71,6 +70,7 @@
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
     <string name="hint_untracked_ride_count">e.g. 4</string>
+    <string name="hint_edit_element_name">Edit element name</string>
 
 
 

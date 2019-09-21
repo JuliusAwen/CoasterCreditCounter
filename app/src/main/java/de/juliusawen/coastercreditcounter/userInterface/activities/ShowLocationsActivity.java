@@ -77,7 +77,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
                     childTypesToExpand)
-                    .setTypefaceForType(Location.class, Typeface.BOLD);
+                    .setTypefaceForContentType(Location.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 

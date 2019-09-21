@@ -93,7 +93,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForType(SpecialGroupHeader.class, Typeface.BOLD);
+            this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(SpecialGroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
 
