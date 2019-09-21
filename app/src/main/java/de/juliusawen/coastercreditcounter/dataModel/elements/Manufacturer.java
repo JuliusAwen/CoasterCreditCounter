@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
@@ -11,8 +11,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
-public class Manufacturer extends OrphanElement implements IOrphanElement
+public class Manufacturer extends OrphanElement
 {
     private static Manufacturer defaultManufacturer;
 
@@ -29,16 +30,10 @@ public class Manufacturer extends OrphanElement implements IOrphanElement
     public static Manufacturer create(String name, UUID uuid)
     {
         Manufacturer manufacturer = null;
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
-            name = name.trim();
-
             manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Manufacturer.create:: invalid name[%s] - manufacturer not created", name));
         }
         return manufacturer;
     }

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class CreditType extends OrphanElement
 {
@@ -29,16 +30,10 @@ public class CreditType extends OrphanElement
     public static CreditType create(String name, UUID uuid)
     {
         CreditType creditType = null;
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
-            name = name.trim();
-
             creditType = new CreditType(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CreditType.create:: %s created.", creditType));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("CreditType.create:: invalid name[%s] - CreditType not created.", name));
         }
         return creditType;
     }

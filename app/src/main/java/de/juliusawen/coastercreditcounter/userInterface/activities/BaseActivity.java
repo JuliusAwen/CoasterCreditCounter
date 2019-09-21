@@ -30,7 +30,7 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.ITemporaryElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ITemporary;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -679,7 +679,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForCreation(IElement element)
     {
-        if(!(element instanceof ITemporaryElement))
+        if(!(element instanceof ITemporary))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
             this.viewModel.elementsToCreate.add(element);
@@ -697,7 +697,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForUpdate(IElement element)
     {
-        if(!(element instanceof ITemporaryElement))
+        if(!(element instanceof ITemporary))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
@@ -714,7 +714,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
-        if(!(element instanceof ITemporaryElement))
+        if(!(element instanceof ITemporary))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
             this.viewModel.elementsToDelete.add(element);

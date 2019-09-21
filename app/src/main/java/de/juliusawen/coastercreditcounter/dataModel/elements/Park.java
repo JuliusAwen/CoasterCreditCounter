@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /***
  * Parent: Location
@@ -29,16 +30,10 @@ public class Park extends Element
     public static Park create(String name, UUID uuid)
     {
         Park park = null;
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
-            name = name.trim();
-
             park = new Park(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Park.create:: %s created", park.getFullName()));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Park.create:: invalid name[%s] - park not created", name));
         }
         return park;
     }

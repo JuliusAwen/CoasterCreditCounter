@@ -19,14 +19,14 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;

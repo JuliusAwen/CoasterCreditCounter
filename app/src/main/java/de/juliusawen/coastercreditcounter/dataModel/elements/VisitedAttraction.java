@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.temporaryElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
@@ -7,21 +7,16 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ITemporary;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 /**
- * Container used in order to be able to sort attractions for every individual visit
+ * Container for Attractions - used in order to be able to sort attractions for every individual visit
  *
  * Parent: Park
- * Children: Rides
+ * Children: none
  */
-public class VisitedAttraction extends Attraction implements ITemporaryElement
+public class VisitedAttraction extends Attraction implements ITemporary
 {
     private final IOnSiteAttraction onSiteAttraction;
     private int rideCount;

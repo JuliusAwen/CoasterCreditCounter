@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;

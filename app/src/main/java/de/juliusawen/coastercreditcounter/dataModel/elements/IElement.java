@@ -6,6 +6,10 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Base interface for all Elements
+ */
+
 public interface IElement
 {
     String getName();

@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.tools;
 
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class StringTool
 {
@@ -100,5 +102,21 @@ public abstract class StringTool
     {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(App.config.getTimeFormat(), Locale.getDefault());
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static boolean nameIsValid(String name)
+    {
+        if(!name.trim().isEmpty())
+        {
+            name = name.trim();
+
+            Log.v(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is valid", name));
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is invalid", name));
+            return false;
+        }
     }
 }

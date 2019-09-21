@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class Category extends OrphanElement
 {
@@ -29,16 +30,10 @@ public class Category extends OrphanElement
     public static Category create(String name, UUID uuid)
     {
         Category category = null;
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
-            name = name.trim();
-
             category = new Category(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Category.create:: %s created.", category));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Category.create:: invalid name[%s] - category not created.", name));
         }
         return category;
     }

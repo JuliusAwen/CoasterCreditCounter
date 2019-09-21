@@ -23,16 +23,16 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.ICategorized;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElementType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElementType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.enums.SortType;
@@ -82,7 +82,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(ICategorized.class);
+            childTypesToExpand.add(IAttributed.class);
 
             List<IElement> elementsWithOrderedChildren;
 
@@ -438,7 +438,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
                             .add(PopupItem.EDIT_ELEMENT)
                             .add(PopupItem.DELETE_ELEMENT)
                             .add(PopupItem.SET_AS_DEFAULT)
-                            .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(ICategorized.class).isEmpty())
+                            .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttributed.class).isEmpty())
                             .setEnabled(PopupItem.DELETE_ELEMENT, !isDefault)
                             .setEnabled(PopupItem.SET_AS_DEFAULT, !isDefault)
                             .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.orphanElementTypeToManage.equals(OrphanElementType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> default is always "no credit"
@@ -456,7 +456,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
-                List<IElement> categorizedElements = App.content.getContentOfType(ICategorized.class);
+                List<IElement> categorizedElements = App.content.getContentOfType(IAttributed.class);
                 List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
 
                 switch(viewModel.orphanElementTypeToManage)

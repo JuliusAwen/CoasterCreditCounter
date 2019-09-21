@@ -7,10 +7,6 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 

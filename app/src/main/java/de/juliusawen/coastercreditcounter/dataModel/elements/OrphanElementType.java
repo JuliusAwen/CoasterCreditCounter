@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 public enum OrphanElementType
 {

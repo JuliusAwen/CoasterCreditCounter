@@ -7,11 +7,9 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Concrete physical entity created from blueprint
@@ -42,16 +40,10 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     public static StockAttraction create(String name, Blueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         StockAttraction stockAttraction = null;
-        name = name.trim();
-
-        if(!name.isEmpty())
+        if(StringTool.nameIsValid(name))
         {
             stockAttraction = new StockAttraction(name, blueprint, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("StockAttraction.create:: invalid name[%s] - StockAttraction not created.", name));
         }
         return stockAttraction;
     }

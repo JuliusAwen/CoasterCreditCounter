@@ -7,14 +7,18 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.IOrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Blueprint for attractions from which StockAttraction is created
+ *
+ *  * Parent: none
+ *  * Children: none
  */
-public class Blueprint extends Attraction implements IAttraction, ICategorized, IOrphanElement
+public class Blueprint extends Attraction implements IAttributed
 {
     private Blueprint(String name, UUID uuid)
     {
@@ -29,16 +33,10 @@ public class Blueprint extends Attraction implements IAttraction, ICategorized, 
     public static Blueprint create(String name, UUID uuid)
     {
         Blueprint blueprint = null;
-        name = name.trim();
-
-        if(!name.isEmpty())
+        if(StringTool.nameIsValid(name))
         {
             blueprint = new Blueprint(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Blueprint.create:: %s created.", blueprint.getFullName()));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("Blueprint.create:: invalid name[%s] - Blueprint not created.", name));
         }
         return blueprint;
     }

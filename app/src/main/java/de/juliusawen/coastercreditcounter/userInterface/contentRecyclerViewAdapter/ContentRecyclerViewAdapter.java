@@ -28,22 +28,22 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.SpecialGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.Status;
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.GroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.IGroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.SpecialGroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.temporaryElements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -780,39 +780,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(item instanceof Attraction)
         {
-            IGroupHeader groupHeader = null;
-
-            if(item instanceof Blueprint)
-            {
-                groupHeader = this.getGroupHeaderForGroupTypeFromItem(item);
-            }
-            else
-            {
-                switch(this.groupType)
-                {
-                    case YEAR:
-                        Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.getParentOfRelevantChild<YEAR>:: this should not have been called...");
-                        break;
-
-                    case LOCATION:
-                        groupHeader = this.getGroupHeaderForGroupTypeFromItem((item).getParent());
-                        break;
-
-                    case CATEGORY:
-                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getCategory());
-                        break;
-
-                    case MANUFACTURER:
-                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getManufacturer());
-                        break;
-
-                    case STATUS:
-                        groupHeader = this.getGroupHeaderForGroupTypeFromItem(((Attraction)item).getStatus());
-                        break;
-                }
-            }
-
-            return this.items.get(this.items.indexOf(groupHeader));
+            return this.getGroupHeaderForItem(item);
         }
         else if(!(item instanceof OrphanElement))
         {
@@ -824,13 +792,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private IGroupHeader getGroupHeaderForGroupTypeFromItem(IElement groupElement)
+    private IGroupHeader getGroupHeaderForItem(IElement groupElement)
     {
         for(IElement item : this.items)
         {
             if(item instanceof GroupHeader)
             {
-                if(((GroupHeader)item).getGroupElement().equals(groupElement))
+                if(item.getChildren().contains(groupElement))
                 {
                     return (GroupHeader)item;
                 }
@@ -1189,6 +1157,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectParentIfAllRelevantChildrenAreSelected:: parent %s selected", parent));
         }
     }
+
     private void deselectParentIfNotAllRelevantChildrenAreSelected(IElement parent)
     {
         if(parent != null && !allRelevantChildrenAreSelected(parent))
@@ -1292,28 +1261,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void scrollToItem(IElement item)
     {
-        if(item != null)
+        if(item != null && this.items.contains(item) && this.recyclerView != null)
         {
-            if(item instanceof Category)
-            {
-                for(IElement element : this.items)
-                {
-                    if(element instanceof GroupHeader)
-                    {
-                        if(((GroupHeader)element).getGroupElement().equals(item))
-                        {
-                            item = element;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if(this.items.contains(item) && this.recyclerView != null)
-            {
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolling to %s", item));
-                recyclerView.scrollToPosition(items.indexOf(item));
-            }
+            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolling to %s", item));
+            recyclerView.scrollToPosition(items.indexOf(item));
         }
     }
 

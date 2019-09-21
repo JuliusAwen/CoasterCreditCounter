@@ -1,11 +1,9 @@
-package de.juliusawen.coastercreditcounter.dataModel.temporaryElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class GroupHeader extends OrphanElement implements IGroupHeader
@@ -18,11 +16,6 @@ public class GroupHeader extends OrphanElement implements IGroupHeader
         this.groupElement = groupElement;
     }
 
-    public IElement getGroupElement()
-    {
-        return groupElement;
-    }
-
     public static GroupHeader create(IElement groupItem)
     {
         GroupHeader groupHeader;
@@ -31,5 +24,10 @@ public class GroupHeader extends OrphanElement implements IGroupHeader
         Log.v(Constants.LOG_TAG,  String.format("GroupHeader.create:: %s created", groupHeader.getFullName()));
 
         return groupHeader;
+    }
+
+    public IElement getGroupElement()
+    {
+        return groupElement;
     }
 }

@@ -4,7 +4,9 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Individual attraction located at a particular park
@@ -12,7 +14,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
  * Parent: Park
  * Children: none
  */
-public class CustomAttraction extends Attraction implements IOnSiteAttraction, ICategorized
+public class CustomAttraction extends Attraction implements IOnSiteAttraction, IAttributed
 {
     private CustomAttraction(String name, int untrackedRideCount, UUID uuid)
     {
@@ -32,16 +34,10 @@ public class CustomAttraction extends Attraction implements IOnSiteAttraction, I
     public static CustomAttraction create(String name, int untrackedRideCount, UUID uuid)
     {
         CustomAttraction customAttraction = null;
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
-            name = name.trim();
-
             customAttraction = new CustomAttraction(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.create:: %s created", customAttraction.getFullName()));
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG,  String.format("CustomAttraction.create:: invalid name [%s] - CustomAttraction not created", name));
         }
         return customAttraction;
     }

@@ -8,9 +8,15 @@ import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.orphanElements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 
+/**
+ * Simple Node.
+ * Has name and uuid.
+ * Can have one other Element as parent and several Elements as children.
+ * Provides tools to work with node structure.
+ */
 public abstract class Element implements IElement
 {
     private final UUID uuid;
@@ -22,7 +28,7 @@ public abstract class Element implements IElement
     protected Element(String name, UUID uuid)
     {
         this.setName(name);
-        this.uuid = uuid;
+        this.uuid = uuid == null ? UUID.randomUUID() : uuid;
     }
 
     @Override
@@ -60,10 +66,9 @@ public abstract class Element implements IElement
 
     public boolean setName(String name)
     {
-        if(!name.trim().isEmpty())
+        if(StringTool.nameIsValid(name))
         {
             this.name = name.trim();
-
             return true;
         }
         else
@@ -165,6 +170,11 @@ public abstract class Element implements IElement
 
     public void addChild(IElement child)
     {
+        if(child.equals(this))
+        {
+            throw new IllegalStateException("Element can not be it's own child!");
+        }
+
         this.getChildren().add(child);
         Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
     }
@@ -237,8 +247,13 @@ public abstract class Element implements IElement
 
     public void setParent(IElement parent)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
+        if(parent.equals(this))
+        {
+            throw new IllegalStateException("Element can not be it's own parent!");
+        }
+
         this.parent = parent;
+        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
     }
 
     public void relocateElement(IElement newParent)

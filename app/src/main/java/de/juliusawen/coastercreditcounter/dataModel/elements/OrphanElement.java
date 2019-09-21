@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.orphanElements;
+package de.juliusawen.coastercreditcounter.dataModel.elements;
 
 import android.util.Log;
 
@@ -7,12 +7,13 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public abstract class OrphanElement extends Element implements IElement, IOrphanElement
+/**
+ *
+ */
+public abstract class OrphanElement extends Element implements IOrphan
 {
     public OrphanElement(String name, UUID uuid)
     {
