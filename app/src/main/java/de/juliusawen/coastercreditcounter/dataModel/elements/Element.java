@@ -45,11 +45,6 @@ public abstract class Element implements IElement
 
         Element element = (Element) obj;
 
-        if(!this.getClass().isInstance(element))
-        {
-            return false;
-        }
-
         return element.getUuid() != null && element.getUuid().equals(this.getUuid());
     }
 
