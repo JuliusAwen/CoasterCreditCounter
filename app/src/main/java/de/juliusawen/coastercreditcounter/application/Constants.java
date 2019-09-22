@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals;
+package de.juliusawen.coastercreditcounter.application;
 
 public abstract class Constants
 {

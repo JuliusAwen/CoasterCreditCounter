@@ -5,7 +5,7 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.globals.Content;
+import de.juliusawen.coastercreditcounter.application.Content;
 
 public interface IDatabaseWrapper
 {

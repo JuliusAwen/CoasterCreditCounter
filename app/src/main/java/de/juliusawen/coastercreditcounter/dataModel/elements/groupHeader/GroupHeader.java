@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 public class GroupHeader extends OrphanElement implements IGroupHeader
 {

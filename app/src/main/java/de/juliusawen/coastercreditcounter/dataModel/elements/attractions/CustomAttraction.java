@@ -9,7 +9,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCate
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 /**
  * Individual attraction located at a particular park

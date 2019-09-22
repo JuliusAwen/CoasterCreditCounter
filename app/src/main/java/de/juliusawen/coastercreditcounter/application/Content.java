@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.globals;
+package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.persistence.DatabaseMock;

@@ -8,7 +8,7 @@ import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
 
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class AlertDialogFragment extends DialogFragment

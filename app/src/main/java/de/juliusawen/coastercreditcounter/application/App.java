@@ -7,8 +7,6 @@ import android.util.Log;
 import com.squareup.leakcanary.LeakCanary;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 
 public class App extends Application

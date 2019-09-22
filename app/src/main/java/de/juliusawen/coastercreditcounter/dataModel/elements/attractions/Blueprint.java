@@ -11,7 +11,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**

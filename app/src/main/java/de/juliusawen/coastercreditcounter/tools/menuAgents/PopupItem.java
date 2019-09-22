@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.tools.menuAgents;
 import android.util.Log;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 public enum PopupItem
 {

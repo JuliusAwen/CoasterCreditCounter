@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
-import de.juliusawen.coastercreditcounter.globals.Constants;
-
 @SuppressWarnings("FieldCanBeLocal") //
 public class AppConfig
 {

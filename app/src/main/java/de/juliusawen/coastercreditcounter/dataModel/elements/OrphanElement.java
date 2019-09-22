@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 /**
  * abstract base class for Elements which have no parent

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 
 public class OptionsMenuAgent

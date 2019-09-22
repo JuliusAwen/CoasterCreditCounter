@@ -13,8 +13,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;

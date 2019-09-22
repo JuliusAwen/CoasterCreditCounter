@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 

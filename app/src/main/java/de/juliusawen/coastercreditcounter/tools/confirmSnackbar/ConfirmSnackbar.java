@@ -6,7 +6,7 @@ import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class ConfirmSnackbar

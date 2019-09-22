@@ -9,9 +9,9 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.globals.enums.SortType;
+import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.enums.SortType;
 
 public abstract class SortTool
 {

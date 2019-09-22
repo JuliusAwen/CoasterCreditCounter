@@ -11,7 +11,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 /**
  * Container for Attractions - used in order to be able to sort attractions for every individual visit
