@@ -30,7 +30,7 @@
         <activity android:name=".userInterface.activities.ShowParkActivity" />
         <activity android:name=".userInterface.activities.ShowVisitActivity" />
         <activity android:name=".userInterface.activities.CreateVisitActivity" />
-        <activity android:name=".userInterface.activities.ManageOrphanElementsActivity" />
+        <activity android:name=".userInterface.activities.ManagePropertiesActivity" />
 
         <activity
             android:name=".userInterface.activities.CreateLocationActivity"

@@ -19,14 +19,14 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -331,7 +331,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         }));
 
-        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault();
+        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : App.settings.getDefaultManufacturer();
         this.textViewManufacturer.setText(manufacturer.getName());
         linearLayout.setVisibility(View.VISIBLE);
 
@@ -363,7 +363,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        Category category = this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : Category.getDefault();
+        Category category = this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : App.settings.getDefaultCategory();
         this.textViewCategory.setText(category.getName());
         linearLayout.setVisibility(View.VISIBLE);
 
@@ -393,7 +393,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        Status status = this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : Status.getDefault();
+        Status status = this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : App.settings.getDefaultStatus();
         this.textViewStatus.setText(status.getName());
         this.viewModel.status = status;
     }

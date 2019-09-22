@@ -298,7 +298,7 @@
 
 
     <!--SUBSTITUTES-->
-    <string name="substitute_orphan_element_default">%1$s (default)</string>
+    <string name="substitute_properties_default_postfix">%1$s (default)</string>
     <string name="substitute_blueprint">Blueprint</string>
 
 

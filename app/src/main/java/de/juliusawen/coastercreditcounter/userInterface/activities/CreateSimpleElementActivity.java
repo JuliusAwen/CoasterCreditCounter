@@ -11,11 +11,11 @@ import android.widget.TextView;
 import androidx.lifecycle.ViewModelProviders;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;

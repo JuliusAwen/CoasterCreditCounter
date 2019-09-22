@@ -28,21 +28,21 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.SpecialGroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -478,10 +478,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
                 else if(OrphanElement.class.isAssignableFrom(item.getClass()))
                 {
-                    if((item.getClass().equals(CreditType.class) && item.equals(CreditType.getDefault()))
-                            || (item.getClass().equals(Category.class) && item.equals(Category.getDefault()))
-                            || (item.getClass().equals(Manufacturer.class) && item.equals(Manufacturer.getDefault()))
-                            || (item.getClass().equals(Status.class) && item.equals(Status.getDefault())))
+                    if((item.getClass().equals(CreditType.class) && item.equals(App.settings.getDefaultCreditType()))
+                            || (item.getClass().equals(Category.class) && item.equals(App.settings.getDefaultCategory()))
+                            || (item.getClass().equals(Manufacturer.class) && item.equals(App.settings.getDefaultManufacturer()))
+                            || (item.getClass().equals(Status.class) && item.equals(App.settings.getDefaultStatus())))
                     {
                         viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(OrphanElement.class), item.getName()));
                     }

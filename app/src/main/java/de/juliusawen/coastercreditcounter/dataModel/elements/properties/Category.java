@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
 import android.util.Log;
 
@@ -7,16 +7,15 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public class Category extends OrphanElement implements IPersistable
 {
-    private static Category defaultCategory;
-
     private Category(String name, UUID uuid)
     {
         super(name, uuid);
@@ -38,26 +37,6 @@ public class Category extends OrphanElement implements IPersistable
         return category;
     }
 
-    public static void setDefault(Category category)
-    {
-        Category.defaultCategory = category;
-        Log.d(Constants.LOG_TAG, String.format("Category.setDefault:: set %s as default category", category));
-    }
-
-    public static Category getDefault()
-    {
-        if(Category.defaultCategory == null)
-        {
-            Category.createAndSetDefault();
-        }
-        return Category.defaultCategory;
-    }
-
-    public static void createAndSetDefault()
-    {
-        Category.setDefault(new Category(App.getContext().getString(R.string.name_default_category), UUID.randomUUID()));
-    }
-
     @Override
     public JSONObject toJson() throws JSONException
     {
@@ -66,7 +45,7 @@ public class Category extends OrphanElement implements IPersistable
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Category.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultCategory()));
 
             Log.v(Constants.LOG_TAG, String.format("Category.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

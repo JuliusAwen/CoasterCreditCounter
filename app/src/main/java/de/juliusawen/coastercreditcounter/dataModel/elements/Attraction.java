@@ -7,7 +7,12 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -55,7 +60,7 @@ public abstract class Attraction extends Element implements IAttraction, IPersis
 
     public CreditType getCreditType()
     {
-        return this.creditType == null ? CreditType.getDefault() : this.creditType;
+        return this.creditType == null ? App.settings.getDefaultCreditType() : this.creditType;
     }
 
     public void setCreditType(CreditType creditType)
@@ -77,7 +82,7 @@ public abstract class Attraction extends Element implements IAttraction, IPersis
 
     public Category getCategory()
     {
-        return this.category == null ? Category.getDefault() : this.category;
+        return this.category == null ? App.settings.getDefaultCategory() : this.category;
     }
 
     public void setCategory(Category category)
@@ -99,7 +104,7 @@ public abstract class Attraction extends Element implements IAttraction, IPersis
 
     public Manufacturer getManufacturer()
     {
-        return this.manufacturer == null ? Manufacturer.getDefault() : this.manufacturer;
+        return this.manufacturer == null ? App.settings.getDefaultManufacturer() : this.manufacturer;
     }
 
     public void setManufacturer(Manufacturer manufacturer)
@@ -121,7 +126,7 @@ public abstract class Attraction extends Element implements IAttraction, IPersis
 
     public Status getStatus()
     {
-        return this.status == null ? Status.getDefault() : this.status;
+        return this.status == null ? App.settings.getDefaultStatus() : this.status;
     }
 
     public void setStatus(Status status)

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements.interfaces;
+package de.juliusawen.coastercreditcounter.dataModel.elements.attributes;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 

@@ -20,19 +20,19 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Settings;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
@@ -115,7 +115,7 @@ public class JsonHandler implements IDatabaseWrapper
     private boolean provideDefaultContent(Content content)
     {
         Log.i(Constants.LOG_TAG, "JsonHandler.provideDefaultContent:: creating default content and exporting to external json...");
-        content.useDefaults();
+        content.useDatabaseMock();
         this.exportContent(content);
         return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
     }
@@ -144,7 +144,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.i(Constants.LOG_TAG, "JsonHandler.loadContent:: creating default content and saving to internal json...");
-            content.useDefaults();
+            content.useDatabaseMock();
             boolean success = this.saveContent(content);
 
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed: using default content - took [%d]ms", stopwatchLoad.stop()));
@@ -375,15 +375,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                CreditType.setDefault(creditType);
+                App.settings.setDefaultCreditType(creditType);
             }
             creditTypes.add(creditType);
         }
 
-        if(CreditType.getDefault() == null)
+        if(App.settings.getDefaultCreditType() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
-            creditTypes.add(CreditType.getDefault());
+            creditTypes.add(App.settings.getDefaultCreditType());
         }
 
         return creditTypes;
@@ -398,15 +398,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                Category.setDefault(category);
+                App.settings.setDefaultCategory(category);
             }
             categories.add(category);
         }
 
-        if(Category.getDefault() == null)
+        if(App.settings.getDefaultCategory() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
-            categories.add(Category.getDefault());
+            categories.add(App.settings.getDefaultCategory());
         }
 
         return categories;
@@ -421,15 +421,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                Manufacturer.setDefault(manufacturer);
+                App.settings.setDefaultManufacturer(manufacturer);
             }
             manufacturers.add(manufacturer);
         }
 
-        if(Manufacturer.getDefault() == null)
+        if(App.settings.getDefaultManufacturer() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
-            manufacturers.add(Manufacturer.getDefault());
+            manufacturers.add(App.settings.getDefaultManufacturer());
         }
 
         return manufacturers;
@@ -444,15 +444,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                Status.setDefault(status);
+                App.settings.setDefaultStatus(status);
             }
             statuses.add(status);
         }
 
-        if(Status.getDefault() == null)
+        if(App.settings.getDefaultStatus() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
-            statuses.add(Status.getDefault());
+            statuses.add(App.settings.getDefaultStatus());
         }
 
         return statuses;
@@ -547,7 +547,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - using default", uuid));
-            return CreditType.getDefault();
+            return App.settings.getDefaultCreditType();
         }
     }
 
@@ -561,7 +561,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - using default", uuid));
-            return Category.getDefault();
+            return App.settings.getDefaultCategory();
         }
     }
 
@@ -575,7 +575,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - using default", uuid));
-            return Manufacturer.getDefault();
+            return App.settings.getDefaultManufacturer();
         }
     }
 
@@ -589,7 +589,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
-            return Status.getDefault();
+            return App.settings.getDefaultStatus();
         }
     }
 
@@ -983,7 +983,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
         {
-            if(!attraction.getCreditType().equals(CreditType.getDefault()))
+            if(!attraction.getCreditType().equals(App.settings.getDefaultCreditType()))
             {
                 creditableAttractions.add(attraction);
             }

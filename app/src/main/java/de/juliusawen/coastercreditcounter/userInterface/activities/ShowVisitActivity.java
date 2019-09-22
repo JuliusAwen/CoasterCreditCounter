@@ -28,7 +28,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
@@ -485,7 +484,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         List<IAttraction> attractionsWithDefaultStatus = new LinkedList<>();
         for(IAttraction attraction : allAttractions)
         {
-            if(attraction.getStatus().equals(Status.getDefault()))
+            if(attraction.getStatus().equals(App.settings.getDefaultStatus()))
             {
                 attractionsWithDefaultStatus.add(attraction);
             }

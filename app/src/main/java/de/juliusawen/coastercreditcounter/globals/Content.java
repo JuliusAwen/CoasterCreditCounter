@@ -67,9 +67,9 @@ public class Content
         return false;
     }
 
-    public void useDefaults()
+    public void useDatabaseMock()
     {
-        Log.i(Constants.LOG_TAG, "Content.useDefaults:: creating default content...");
+        Log.i(Constants.LOG_TAG, "Content.useDatabaseMock:: creating default content from DatabaseMock...");
 
         if(App.DEBUG)
         {
@@ -79,7 +79,7 @@ public class Content
         else
         {
             //Todo: implement default content creation for non-debug builds ("use content provided by developer" aka "Julius' Coasters")
-            Log.e(Constants.LOG_TAG, "Content.useDefaults:: creating default content for non-debug build not yet implemented");
+            Log.e(Constants.LOG_TAG, "Content.useDatabaseMock:: creating default content for non-debug build not yet implemented");
             throw new IllegalStateException();
         }
     }

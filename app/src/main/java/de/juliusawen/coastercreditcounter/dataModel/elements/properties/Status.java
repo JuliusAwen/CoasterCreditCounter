@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
 import android.util.Log;
 
@@ -7,16 +7,15 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public class Status extends OrphanElement implements IPersistable
 {
-    private static Status defaultStatus;
-
     private Status(String name, UUID uuid)
     {
         super(name, uuid);
@@ -38,26 +37,6 @@ public class Status extends OrphanElement implements IPersistable
         return status;
     }
 
-    public static void setDefault(Status status)
-    {
-        Status.defaultStatus = status;
-        Log.d(Constants.LOG_TAG, String.format("Status.setDefault:: set %s as default status", status));
-    }
-
-    public static Status getDefault()
-    {
-        if(Status.defaultStatus == null)
-        {
-            Status.createAndSetDefault();
-        }
-        return Status.defaultStatus;
-    }
-
-    public static void createAndSetDefault()
-    {
-        Status.setDefault(new Status(App.getContext().getString(R.string.name_default_status), UUID.randomUUID()));
-    }
-
     @Override
     public JSONObject toJson() throws JSONException
     {
@@ -66,7 +45,7 @@ public class Status extends OrphanElement implements IPersistable
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Status.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultStatus()));
 
             Log.v(Constants.LOG_TAG, String.format("Status.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

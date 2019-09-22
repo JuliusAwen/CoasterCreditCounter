@@ -21,15 +21,15 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.enums.SortType;
@@ -124,7 +124,7 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForContentType(Category.class, Typeface.BOLD)
                             .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
                             .setTypefaceForContentType(Status.class, Typeface.BOLD)
-                            .setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_orphan_element_default);
+                            .setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_properties_default_postfix);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();

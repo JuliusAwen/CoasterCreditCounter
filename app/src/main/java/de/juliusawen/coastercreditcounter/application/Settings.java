@@ -8,25 +8,35 @@ import org.json.JSONObject;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
+import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
-public class Settings
+public class Settings implements IPersistable
 {
-    //ShowPark - Visits
+    private CreditType defaultCreditType;
+    private Category defaultCategory;
+    private Manufacturer defaultManufacturer;
+    private Status defaultStatus;
+
+
     private SortOrder defaultSortOrderParkVisits;
     private boolean expandLatestYearInListByDefault;
-
-    //Visit
     private int firstDayOfTheWeek;
 
-    //Defaults
     private int defaultIncrement;
 
+
     private final Persistence persistence;
+    private final String[] dayNames = new DateFormatSymbols().getWeekdays();
 
     private static Settings instance;
 
@@ -77,24 +87,142 @@ public class Settings
 
         if(this.getDefaultSortOrderParkVisits() == null)
         {
-            Log.e(Constants.LOG_TAG, "Settings.validate:: settings validation failed: default sort order for park visits is null");
-            return false;
+            String message = "Settings validation failed: default sort order for park visits is null";
+            Log.e(Constants.LOG_TAG, String.format("Settings.validate:: %s", message));
+            throw  new IllegalStateException(message);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order for park visits is [%S]", this.getDefaultSortOrderParkVisits().toString()));
+            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order for park visits is [%s]", this.getDefaultSortOrderParkVisits()));
         }
 
-        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
+        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
 
-        String[] dayNames = new DateFormatSymbols().getWeekdays();
-        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%S]", dayNames[this.getFirstDayOfTheWeek()]));
+        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
 
-        Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%S]", this.getDefaultIncrement()));
+        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%d]", this.getDefaultIncrement()));
 
 
         Log.i(Constants.LOG_TAG, "Settings.validate:: settings validation successful");
         return true;
+    }
+
+    public void useDefaults()
+    {
+        Log.i(Constants.LOG_TAG, "Settings.useDatabaseMock:: setting defaults...");
+
+        this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
+        this.setExpandLatestYearInListByDefault(true);
+        this.setFirstDayOfTheWeek(Calendar.MONDAY);
+        this.setDefaultIncrement(1);
+    }
+
+    public CreditType getDefaultCreditType()
+    {
+        if(this.defaultCreditType == null)
+        {
+            Log.w(Constants.LOG_TAG, "Settings.getDefaultCreditType:: no default set - creating default");
+            this.setDefaultCreditType(CreditType.create(App.getContext().getString(R.string.name_default_credit_type)));
+        }
+        return this.defaultCreditType;
+    }
+
+    public void setDefaultCreditType(CreditType defaultCreditType)
+    {
+        this.defaultCreditType = defaultCreditType;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultCreditType:: %s set as default", defaultCreditType));
+    }
+
+    public Category getDefaultCategory()
+    {
+        if(this.defaultCategory == null)
+        {
+            Log.w(Constants.LOG_TAG, "Settings.getDefaultCategory:: no default set - creating default");
+            this.setDefaultCategory(Category.create((App.getContext().getString(R.string.name_default_category))));
+        }
+        return this.defaultCategory;
+    }
+
+    public void setDefaultCategory(Category defaultCategory)
+    {
+        this.defaultCategory = defaultCategory;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultCategory:: %s set as default", defaultCategory));
+    }
+
+    public Manufacturer getDefaultManufacturer()
+    {
+        if(this.defaultManufacturer == null)
+        {
+            Log.w(Constants.LOG_TAG, "Settings.getDefaultManufacturer:: no default set - creating default");
+            this.setDefaultManufacturer(Manufacturer.create((App.getContext().getString(R.string.name_default_manufacturer))));
+        }
+        return this.defaultManufacturer;
+    }
+
+    public void setDefaultManufacturer(Manufacturer defaultManufacturer)
+    {
+        this.defaultManufacturer = defaultManufacturer;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultManufacturer:: %s set as default", defaultManufacturer));
+    }
+
+    public Status getDefaultStatus()
+    {
+        if(this.defaultStatus == null)
+        {
+            Log.w(Constants.LOG_TAG, "Settings.getDefaultStatus:: no default set - creating default");
+            this.setDefaultStatus(Status.create((App.getContext().getString(R.string.name_default_status))));
+        }
+        return this.defaultStatus;
+    }
+
+    public void setDefaultStatus(Status defaultStatus)
+    {
+        this.defaultStatus = defaultStatus;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultStatus:: %s set as default", defaultStatus));
+    }
+
+    public SortOrder getDefaultSortOrderParkVisits()
+    {
+        return defaultSortOrderParkVisits;
+    }
+
+    public void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
+    {
+        this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultSortOrderParkVisits:: [%s] set as default", defaultSortOrderParkVisits));
+    }
+
+    public boolean expandLatestYearInListByDefault()
+    {
+        return expandLatestYearInListByDefault;
+    }
+
+    public void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
+    {
+        this.expandLatestYearInListByDefault = expandLatestYearInListByDefault;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setExpandLatestYearInListByDefault:: set to [%S]", expandLatestYearInListByDefault));
+    }
+
+    public int getFirstDayOfTheWeek()
+    {
+        return this.firstDayOfTheWeek;
+    }
+
+    public void setFirstDayOfTheWeek(int firstDayOfTheWeek)
+    {
+        this.firstDayOfTheWeek = firstDayOfTheWeek;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setFirstDayOfTheWeek:: set to [%s]", this.dayNames[firstDayOfTheWeek]));
+    }
+
+    public int getDefaultIncrement()
+    {
+        return this.defaultIncrement;
+    }
+
+    public void setDefaultIncrement(int defaultIncrement)
+    {
+        this.defaultIncrement = defaultIncrement;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultIncrement:: [%d] set as default", defaultIncrement));
     }
 
     public JSONObject toJson()
@@ -119,55 +247,5 @@ public class Settings
             Log.e(Constants.LOG_TAG, String.format("Element.toJson:: failed with JSONException [%s]", e.getMessage()));
             return null;
         }
-    }
-
-    public void useDefaults()
-    {
-        Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
-
-        this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
-        this.setExpandLatestYearInListByDefault(true);
-        this.setFirstDayOfTheWeek(Calendar.MONDAY);
-        this.setDefaultIncrement(1);
-    }
-
-    public SortOrder getDefaultSortOrderParkVisits()
-    {
-        return defaultSortOrderParkVisits;
-    }
-
-    public void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
-    {
-        this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
-    }
-
-    public boolean expandLatestYearInListByDefault()
-    {
-        return expandLatestYearInListByDefault;
-    }
-
-    public void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
-    {
-        this.expandLatestYearInListByDefault = expandLatestYearInListByDefault;
-    }
-
-    public int getFirstDayOfTheWeek()
-    {
-        return this.firstDayOfTheWeek;
-    }
-
-    public void setFirstDayOfTheWeek(int firstDayOfTheWeek)
-    {
-        this.firstDayOfTheWeek = firstDayOfTheWeek;
-    }
-
-    public int getDefaultIncrement()
-    {
-        return this.defaultIncrement;
-    }
-
-    public void setDefaultIncrement(int defaultIncrement)
-    {
-        this.defaultIncrement = defaultIncrement;
     }
 }

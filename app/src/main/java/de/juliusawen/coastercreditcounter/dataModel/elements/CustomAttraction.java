@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IAttributed;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 /**

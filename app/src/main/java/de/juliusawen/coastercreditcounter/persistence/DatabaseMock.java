@@ -10,18 +10,18 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
@@ -1613,7 +1613,7 @@ class CreditTypes
 
     CreditTypes()
     {
-        All.add(CreditType.getDefault());
+        All.add(App.settings.getDefaultCreditType());
 
         All.add(RollerCoaster);
     }
@@ -1632,9 +1632,7 @@ class Categories
 
     Categories()
     {
-        Category.createAndSetDefault();
-
-        All.add(Category.getDefault());
+        All.add(App.settings.getDefaultCategory());
 
         All.add(RollerCoasters);
         All.add(ThrillRides);
@@ -1676,9 +1674,7 @@ class Manufacturers
 
     Manufacturers()
     {
-        Manufacturer.createAndSetDefault();
-
-        All.add(Manufacturer.getDefault());
+        All.add(App.settings.getDefaultManufacturer());
 
         All.add(BolligerAndMabillard);
         All.add(Intamin);
@@ -1718,9 +1714,7 @@ class Statuses
 
     Statuses()
     {
-        Status.createAndSetDefault();
-
-        All.add(Status.getDefault());
+        All.add(App.settings.getDefaultStatus());
 
         All.add(ClosedForRefurbishment);
         All.add(ClosedForConversion);

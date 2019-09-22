@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
 import android.util.Log;
 
@@ -7,16 +7,15 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public class Manufacturer extends OrphanElement implements IPersistable
 {
-    private static Manufacturer defaultManufacturer;
-
     private Manufacturer(String name, UUID uuid)
     {
         super(name, uuid);
@@ -38,26 +37,6 @@ public class Manufacturer extends OrphanElement implements IPersistable
         return manufacturer;
     }
 
-    public static void setDefault(Manufacturer manufacturer)
-    {
-        Manufacturer.defaultManufacturer = manufacturer;
-        Log.d(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: set %s as default manufacturer", manufacturer));
-    }
-
-    public static Manufacturer getDefault()
-    {
-        if(Manufacturer.defaultManufacturer == null)
-        {
-            Manufacturer.createAndSetDefault();
-        }
-        return Manufacturer.defaultManufacturer;
-    }
-
-    public static void createAndSetDefault()
-    {
-        Manufacturer.setDefault(new Manufacturer(App.getContext().getString(R.string.name_default_manufacturer), UUID.randomUUID()));
-    }
-
     @Override
     public JSONObject toJson() throws JSONException
     {
@@ -66,7 +45,7 @@ public class Manufacturer extends OrphanElement implements IPersistable
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultManufacturer()));
 
             Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

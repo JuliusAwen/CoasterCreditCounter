@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
 import android.util.Log;
 
@@ -7,16 +7,15 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public class CreditType extends OrphanElement implements IPersistable
 {
-    private static CreditType defaultCreditType;
-
     private CreditType(String name, UUID uuid)
     {
         super(name, uuid);
@@ -38,25 +37,10 @@ public class CreditType extends OrphanElement implements IPersistable
         return creditType;
     }
 
-    public static void setDefault(CreditType creditType)
-    {
-        CreditType.defaultCreditType = creditType;
-        Log.d(Constants.LOG_TAG, String.format("CreditType.setDefault:: set %s as default CreditType", creditType));
-    }
-
-    public static CreditType getDefault()
-    {
-        if(CreditType.defaultCreditType == null)
-        {
-            CreditType.createAndSetDefault();
-        }
-        return CreditType.defaultCreditType;
-    }
-
-    public static void createAndSetDefault()
-    {
-        CreditType.setDefault(new CreditType(App.getContext().getString(R.string.name_default_credit_type), UUID.randomUUID()));
-    }
+//    public CreditType getDefault()
+//    {
+//        return App.settings.getDefaultCreditType();
+//    }
 
     @Override
     public JSONObject toJson() throws JSONException
@@ -66,7 +50,7 @@ public class CreditType extends OrphanElement implements IPersistable
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(CreditType.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultCreditType()));
 
             Log.v(Constants.LOG_TAG, String.format("CreditType.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

@@ -7,6 +7,9 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -50,7 +53,7 @@ public class StockAttraction extends Attraction implements IOnSiteAttraction
     @Override
     public CreditType getCreditType()
     {
-        return this.blueprint.getCreditType() == null ? CreditType.getDefault() : this.blueprint.getCreditType();
+        return this.blueprint.getCreditType();
     }
 
     @Override

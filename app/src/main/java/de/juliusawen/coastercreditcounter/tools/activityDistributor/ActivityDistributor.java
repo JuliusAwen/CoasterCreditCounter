@@ -13,8 +13,8 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateLocationActivity;
@@ -23,7 +23,7 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.CreateParkAct
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditElementActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.ManageOrphanElementsActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropertiesActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowLocationsActivity;
@@ -70,7 +70,7 @@ public abstract class ActivityDistributor
 
     public static  void startActivityManageForResult(Context context, RequestCode requestCode)
     {
-        OrphanElementType orphanElementType = OrphanElementType.NONE;
+        PropertyType propertyType = null;
         String toolbarTitle;
         String helpTitle;
         String helpText;
@@ -78,28 +78,28 @@ public abstract class ActivityDistributor
         switch(requestCode)
         {
             case MANAGE_CREDIT_TYPES:
-                orphanElementType = OrphanElementType.CREDIT_TYPE;
+                propertyType = PropertyType.CREDIT_TYPE;
                 toolbarTitle = context.getString(R.string.title_credit_types);
                 helpTitle = context.getString(R.string.title_credit_types);
                 helpText = context.getString(R.string.help_text_manage_credit_types);
                 break;
 
             case MANAGE_CATEGORIES:
-                orphanElementType = OrphanElementType.CATEGORY;
+                propertyType = PropertyType.CATEGORY;
                 toolbarTitle = context.getString(R.string.title_categories);
                 helpTitle = context.getString(R.string.title_categories);
                 helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
             case MANAGE_MANUFACTURERS:
-                orphanElementType = OrphanElementType.MANUFACTURER;
+                propertyType = PropertyType.MANUFACTURER;
                 toolbarTitle = context.getString(R.string.title_manufacturers);
                 helpTitle = context.getString(R.string.title_manufacturers);
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
             case MANAGE_STATUSES:
-                orphanElementType = OrphanElementType.STATUS;
+                propertyType = PropertyType.STATUS;
                 toolbarTitle = context.getString(R.string.title_statuses);
                 helpTitle = context.getString(R.string.title_statuses);
                 helpText = context.getString(R.string.help_text_manage_statuses);
@@ -112,10 +112,10 @@ public abstract class ActivityDistributor
                 break;
         }
 
-        if(orphanElementType != OrphanElementType.NONE)
+        if(propertyType != null)
         {
-            Intent intent = new Intent(context, ManageOrphanElementsActivity.class);
-            intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, orphanElementType.ordinal());
+            Intent intent = new Intent(context, ManagePropertiesActivity.class);
+            intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, propertyType.ordinal());
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
