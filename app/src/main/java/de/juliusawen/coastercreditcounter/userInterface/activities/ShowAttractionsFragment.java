@@ -311,7 +311,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
                         getString(R.string.alert_dialog_title_delete_attraction),
-                        getString(R.string.alert_dialog_message_delete_attraction, viewModel.longClickedElement.getName()),
+                        getString(R.string.alert_dialog_message_confirm_delete_attraction, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.DELETE,

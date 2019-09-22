@@ -42,10 +42,10 @@ public class CreateParkActivity extends BaseActivity
             this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_park_create)), this.getText(R.string.help_text_create_park));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_create_park)), this.getText(R.string.help_text_create_park));
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_park_create));
+        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_create_park));
         super.addFloatingActionButton();
 
         this.decorateFloatingActionButton();

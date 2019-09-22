@@ -93,7 +93,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void decorateToolbar()
     {
-        super.setToolbarTitleAndSubtitle(this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_visit_create), this.viewModel.park.getName());
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit != null ? this.viewModel.visit.getName() : getString(R.string.title_create_visit), this.viewModel.park.getName());
     }
 
     private void pickDate()
@@ -211,8 +211,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 R.drawable.ic_baseline_notification_important,
-                getString(R.string.alert_dialog_title_add_attractions_to_visit),
-                getString(R.string.alert_dialog_message_add_attractions_to_visit),
+                getString(R.string.alert_dialog_title_add_attractions),
+                getString(R.string.alert_dialog_message_confirm_add_attractions_to_visit),
                 getString(R.string.text_accept),
                 getString(R.string.text_cancel),
                 RequestCode.PICK_ATTRACTIONS,

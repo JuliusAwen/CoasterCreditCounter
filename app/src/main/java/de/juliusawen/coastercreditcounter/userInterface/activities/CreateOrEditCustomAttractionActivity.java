@@ -87,20 +87,20 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         if(this.viewModel.toolbarTitle == null)
         {
-            this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_custom_attraction_create);
+            this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_create_custom_attraction);
         }
 
         if(this.viewModel.toolbarSubtitle == null)
         {
             this.viewModel.toolbarSubtitle = this.viewModel.isEditMode
                     ? this.viewModel.attraction.getName()
-                    : getString(R.string.subtitle_custom_attraction_create, this.viewModel.parentPark.getName());
+                    : getString(R.string.subtitle_create_custom_attraction, this.viewModel.parentPark.getName());
         }
 
         super.addHelpOverlayFragment(
                 getString(R.string.title_help, this.viewModel.isEditMode
                         ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
-                        : getString(R.string.title_custom_attraction_create)),
+                        : getString(R.string.title_create_custom_attraction)),
                 getText(R.string.help_text_create_or_edit_custom_attraction));
         super.addToolbar();
         super.addToolbarHomeButton();

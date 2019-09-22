@@ -41,10 +41,10 @@ public class CreateLocationActivity extends BaseActivity
             this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_location_create)), this.getText(R.string.help_text_create_location))
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_create_location)), this.getText(R.string.help_text_create_location))
         ;super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_location_create));
+        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_create_location));
         super.addFloatingActionButton();
 
         this.decorateFloatingActionButton();

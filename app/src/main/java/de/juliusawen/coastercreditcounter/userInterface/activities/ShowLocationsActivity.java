@@ -146,7 +146,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", enabled));
         ShowLocationsActivity.super.setToolbarTitleAndSubtitle(
                 enabled ? getString(R.string.title_relocate) : getString(R.string.title_locations),
-                enabled ? getString(R.string.subtitle_relocate, this.viewModel.longClickedElement.getName()) : null);
+                enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : null);
         this.viewModel.selectionMode = enabled;
     }
 
@@ -319,7 +319,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
                         getString(R.string.alert_dialog_title_remove_element),
-                        getString(R.string.alert_dialog_message_remove_element, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
+                        getString(R.string.alert_dialog_message_confirm_remove, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.REMOVE,
@@ -337,7 +337,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
                         getString(R.string.alert_dialog_title_delete_element),
-                        getString(R.string.alert_dialog_message_delete_element, viewModel.longClickedElement.getName()),
+                        getString(R.string.alert_dialog_message_confirm_delete, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.DELETE,
@@ -367,7 +367,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         AlertDialogFragment alertDialogFragmentRelocate = AlertDialogFragment.newInstance(
                                 R.drawable.ic_baseline_warning,
                                 getString(R.string.alert_dialog_title_relocate),
-                                getString(R.string.alert_dialog_message_relocate, viewModel.longClickedElement.getName(), element.getName()),
+                                getString(R.string.alert_dialog_message_confirm_relocate, viewModel.longClickedElement.getName(), element.getName()),
                                 getString(R.string.text_accept),
                                 getString(R.string.text_cancel),
                                 RequestCode.RELOCATE,

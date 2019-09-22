@@ -589,14 +589,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_children,
+                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_orphan_element_has_children,
                             viewModel.longClickedElement.getChildCount(),
                             viewModel.longClickedElement.getName(),
                             defaultName);
                 }
                 else
                 {
-                    alertDialogMessage = getString(R.string.alert_dialog_message_delete_orphan_element_has_no_children,
+                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_orphan_element_has_no_children,
                             viewModel.longClickedElement.getName());
                 }
 
@@ -616,7 +616,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             case SET_AS_DEFAULT:
             {
-                String alterDialogMessage = getString(R.string.alert_dialog_message_set_as_default, viewModel.longClickedElement.getName());
+                String alterDialogMessage = getString(R.string.alert_dialog_message_confirm_set_as_default, viewModel.longClickedElement.getName());
 
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,

@@ -313,7 +313,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
                     R.drawable.ic_baseline_warning,
                     getString(R.string.alert_dialog_title_overwrite_content),
-                    getString(R.string.alert_dialog_message_overwrite_content),
+                    getString(R.string.alert_dialog_message_confirm_overwrite_content),
                     getString(R.string.text_accept),
                     getString(R.string.text_cancel),
                     RequestCode.OVERWRITE_CONTENT,

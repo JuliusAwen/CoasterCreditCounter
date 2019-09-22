@@ -122,7 +122,7 @@ public class Settings implements IPersistable
         if(this.defaultCreditType == null)
         {
             Log.w(Constants.LOG_TAG, "Settings.getDefaultCreditType:: no default set - creating default");
-            this.setDefaultCreditType(CreditType.create(App.getContext().getString(R.string.name_default_credit_type)));
+            this.setDefaultCreditType(CreditType.create(App.getContext().getString(R.string.default_credit_type_name)));
         }
         return this.defaultCreditType;
     }
@@ -138,7 +138,7 @@ public class Settings implements IPersistable
         if(this.defaultCategory == null)
         {
             Log.w(Constants.LOG_TAG, "Settings.getDefaultCategory:: no default set - creating default");
-            this.setDefaultCategory(Category.create((App.getContext().getString(R.string.name_default_category))));
+            this.setDefaultCategory(Category.create((App.getContext().getString(R.string.default_category_name))));
         }
         return this.defaultCategory;
     }
@@ -154,7 +154,7 @@ public class Settings implements IPersistable
         if(this.defaultManufacturer == null)
         {
             Log.w(Constants.LOG_TAG, "Settings.getDefaultManufacturer:: no default set - creating default");
-            this.setDefaultManufacturer(Manufacturer.create((App.getContext().getString(R.string.name_default_manufacturer))));
+            this.setDefaultManufacturer(Manufacturer.create((App.getContext().getString(R.string.default_manufacturer_name))));
         }
         return this.defaultManufacturer;
     }
@@ -170,7 +170,7 @@ public class Settings implements IPersistable
         if(this.defaultStatus == null)
         {
             Log.w(Constants.LOG_TAG, "Settings.getDefaultStatus:: no default set - creating default");
-            this.setDefaultStatus(Status.create((App.getContext().getString(R.string.name_default_status))));
+            this.setDefaultStatus(Status.create((App.getContext().getString(R.string.default_status_name))));
         }
         return this.defaultStatus;
     }

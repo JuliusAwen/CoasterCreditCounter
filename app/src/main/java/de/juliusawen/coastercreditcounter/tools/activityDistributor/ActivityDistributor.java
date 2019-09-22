@@ -141,37 +141,37 @@ public abstract class ActivityDistributor
         {
             case EDIT_LOCATION:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_location_edit);
+                toolbarTitle = context.getString(R.string.title_edit_location);
                 break;
 
             case EDIT_PARK:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_park_edit);
+                toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
             case EDIT_CUSTOM_ATTRACTION:
                 type = CreateOrEditCustomAttractionActivity.class;
-                toolbarTitle = context.getString(R.string.title_custom_attraction_edit);
+                toolbarTitle = context.getString(R.string.title_edit_custom_attraction);
                 break;
 
             case EDIT_CREDIT_TYPE:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_credit_type_edit);
+                toolbarTitle = context.getString(R.string.title_edit_credit_type);
                 break;
 
             case EDIT_CATEGORY:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_category_edit);
+                toolbarTitle = context.getString(R.string.title_edit_category);
                 break;
 
             case EDIT_MANUFACTURER:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_manufacturer_edit);
+                toolbarTitle = context.getString(R.string.title_edit_manufacturer);
                 break;
 
             case EDIT_STATUS:
                 type = EditElementActivity.class;
-                toolbarTitle = context.getString(R.string.title_status_edit);
+                toolbarTitle = context.getString(R.string.title_edit_status);
                 break;
         }
 
@@ -236,29 +236,29 @@ public abstract class ActivityDistributor
             switch(requestCode)
             {
                 case CREATE_CREDIT_TYPE:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_credit_type_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_credit_type_create));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_create_credit_type));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_create_credit_type));
                     intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_credit_type));
                     intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_credit_type_name));
                     break;
 
                 case CREATE_CATEGORY:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_category_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_category_create));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_create_category));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_create_category));
                     intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_category));
                     intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_category_name));
                     break;
 
                 case CREATE_MANUFACTURER:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_manufacturer_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_manufacturer_create));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_create_manufacturer));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_create_manufacturer));
                     intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_manufacturer));
                     intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_manufacturer_name));
                     break;
 
                 case CREATE_STATUS:
-                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_status_create));
-                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_status_create));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_create_status));
+                    intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_create_status));
                     intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_create_status));
                     intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_enter_status_name));
                     break;
@@ -282,31 +282,31 @@ public abstract class ActivityDistributor
         switch(requestCode)
         {
             case SORT_LOCATIONS:
-                toolbarTitle = context.getString(R.string.title_locations_sort);
+                toolbarTitle = context.getString(R.string.title_sort_locations);
                 break;
 
             case SORT_PARKS:
-                toolbarTitle = context.getString(R.string.title_parks_sort);
+                toolbarTitle = context.getString(R.string.title_sort_parks);
                 break;
 
             case SORT_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_sort);
+                toolbarTitle = context.getString(R.string.title_sort_attractions);
                 break;
 
             case SORT_CREDIT_TYPES:
-                toolbarTitle = context.getString(R.string.title_credit_type_sort);
+                toolbarTitle = context.getString(R.string.title_sort_credit_type);
                 break;
 
             case SORT_CATEGORIES:
-                toolbarTitle = context.getString(R.string.title_categories_sort);
+                toolbarTitle = context.getString(R.string.title_sort_categories);
                 break;
 
             case SORT_MANUFACTURERS:
-                toolbarTitle = context.getString(R.string.title_manufacturers_sort);
+                toolbarTitle = context.getString(R.string.title_sort_manufacturers);
                 break;
 
             case SORT_STATUSES:
-                toolbarTitle = context.getString(R.string.title_statuses_sort);
+                toolbarTitle = context.getString(R.string.title_sort_statuses);
                 break;
 
                 default:
@@ -341,57 +341,42 @@ public abstract class ActivityDistributor
         switch(requestCode)
         {
             case PICK_VISIT:
-                toolbarTitle = context.getString(R.string.title_visit_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_visit_pick_to_open);
+                toolbarTitle = context.getString(R.string.title_pick_visit);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_open);
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
             case PICK_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_attractions_description_pick_to_add_to_visit);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_attractions_to_add_to_visit);
                 break;
 
             case PICK_CREDIT_TYPE:
-                toolbarTitle = context.getString(R.string.title_credit_type_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_credit_type_to_assign_to_attraction);
-                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
-                break;
-
             case PICK_CATEGORY:
-                toolbarTitle = context.getString(R.string.title_category_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_category_to_assign_to_attraction);
-                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
-                break;
-
             case PICK_MANUFACTURER:
-                toolbarTitle = context.getString(R.string.title_manufacturer_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_to_attraction);
-                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
-                break;
-
             case PICK_STATUS:
-                toolbarTitle = context.getString(R.string.title_status_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_status_to_assign_to_attraction);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_credit_type_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_credit_type_to_assign_credit_type_to);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_credit_type_to);
                 break;
 
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_category_to_assign_category_to);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_category_to);
                 break;
 
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_attractions_pick);
-                toolbarSubtitle = context.getString(R.string.subtitle_manufacturer_to_assign_manufacturer_to);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_manufacturer_to);
                 break;
 
             case ASSIGN_STATUS_TO_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_status_pick);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_status_to_assign_status_to);
                 break;
         }
