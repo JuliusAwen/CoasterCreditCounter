@@ -10,11 +10,10 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public class CreditType extends OrphanElement implements IPersistable
+public class CreditType extends OrphanElement implements IProperty
 {
     private CreditType(String name, UUID uuid)
     {
@@ -37,10 +36,10 @@ public class CreditType extends OrphanElement implements IPersistable
         return creditType;
     }
 
-//    public CreditType getDefault()
-//    {
-//        return App.settings.getDefaultCreditType();
-//    }
+    public boolean isDefault()
+    {
+        return App.settings.getDefaultCreditType().equals(this);
+    }
 
     @Override
     public JSONObject toJson() throws JSONException

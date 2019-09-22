@@ -22,27 +22,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.BottomSpacer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -250,7 +247,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private static class ViewHolderItem extends RecyclerView.ViewHolder
     {
         final LinearLayout linearLayoutItem;
-        final View viewSeperator;
         final ImageView imageViewExpandToggle;
         final TextView textViewDetailAbove;
         final TextView textViewName;
@@ -263,7 +259,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             super(view);
             this.linearLayoutItem = view.findViewById(R.id.linearLayoutRecyclerViewItem);
-            this.viewSeperator = view.findViewById(R.id.viewRecyclerViewItem_Seperator);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
             this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_UpperDetail);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
@@ -301,14 +296,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
 
             this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
-        }
-    }
-
-    private class BottomSpacer extends OrphanElement
-    {
-        private BottomSpacer()
-        {
-            super("BottomSpacer", UUID.randomUUID());
         }
     }
 
@@ -469,33 +456,33 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
 
-            //set special string respurce
-            if(this.specialStringResourcesByType.containsKey(item.getClass()) || this.specialStringResourcesByType.containsKey(item.getClass().getSuperclass()))
+            //set special string resource
+            boolean specialStringResourceSet = false;
+            for(Class type : this.specialStringResourcesByType.keySet())
             {
-                if(item instanceof Visit)
+                if(type.isAssignableFrom(item.getClass()))
                 {
-                    viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
-                }
-                else if(OrphanElement.class.isAssignableFrom(item.getClass()))
-                {
-                    if((item.getClass().equals(CreditType.class) && item.equals(App.settings.getDefaultCreditType()))
-                            || (item.getClass().equals(Category.class) && item.equals(App.settings.getDefaultCategory()))
-                            || (item.getClass().equals(Manufacturer.class) && item.equals(App.settings.getDefaultManufacturer()))
-                            || (item.getClass().equals(Status.class) && item.equals(App.settings.getDefaultStatus())))
+                    if(item instanceof Visit)
                     {
-                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(OrphanElement.class), item.getName()));
+                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+                        specialStringResourceSet = true;
+                        break;
                     }
-                    else
+                    else if(IProperty.class.isAssignableFrom(item.getClass()) && ((IProperty) item).isDefault())
                     {
-                        viewHolder.textViewName.setText(item.getName());
+                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(IProperty.class), item.getName()));
+                        specialStringResourceSet = true;
+                        break;
                     }
                 }
             }
-            else
+
+
+            //settext
+            if(!specialStringResourceSet)
             {
                 viewHolder.textViewName.setText(item.getName());
             }
-
 
 
             //decorate details
@@ -783,6 +770,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         else if(!(OrphanElement.class.isAssignableFrom(item.getClass())))
         {
+            Log.e(Constants.LOG_TAG, String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]", item.getClass().getSimpleName()));
             return this.items.get(this.items.indexOf(item.getParent()));
         }
         else

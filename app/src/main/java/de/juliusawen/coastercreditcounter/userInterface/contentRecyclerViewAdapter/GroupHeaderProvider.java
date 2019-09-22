@@ -15,11 +15,11 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;

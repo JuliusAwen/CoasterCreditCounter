@@ -10,13 +10,13 @@ import java.util.Calendar;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 

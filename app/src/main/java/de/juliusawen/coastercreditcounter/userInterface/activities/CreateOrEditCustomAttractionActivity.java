@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -19,11 +18,11 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
@@ -39,8 +38,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private CreateOrEditCustomAttractionActivityViewModel viewModel;
 
     private EditText editTextAttractionName;
-
-    private Spinner spinnerAttractionType;
 
     private TextView textViewManufacturer;
     private TextView textViewCategory;

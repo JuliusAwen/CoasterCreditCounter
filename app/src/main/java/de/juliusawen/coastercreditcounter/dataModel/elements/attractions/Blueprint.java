@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
 import android.util.Log;
 
@@ -7,7 +7,10 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IAttributed;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -17,7 +20,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  *  * Parent: none
  *  * Children: none
  */
-public class Blueprint extends Attraction implements IAttributed
+public class Blueprint extends Attraction implements IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
 {
     private Blueprint(String name, UUID uuid)
     {

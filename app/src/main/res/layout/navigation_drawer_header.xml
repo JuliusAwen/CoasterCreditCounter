@@ -1,43 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/navigationDrawerHeader"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:gravity="bottom"
-    android:orientation="vertical"
     android:background="?attr/colorPrimaryDark"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="32dp"
+    android:paddingBottom="16dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
-    <LinearLayout
+    <TextView
+        style="@style/NavigationDrawerHeadline"
+        android:gravity="start"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="32dp"
-        android:paddingBottom="16dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp" >
+        android:layout_height="wrap_content"
+        android:text="@string/name_app"/>
 
-        <TextView
-            style="@style/NavigationDrawerHeadline"
-            android:gravity="start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/name_app"/>
+    <TextView
+        style="@style/NavigationDrawerSubhead"
+        android:gravity="start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_navigation_hub"/>
 
-        <TextView
-            style="@style/NavigationDrawerSubhead"
-            android:gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/subtitle_navigation_hub"/>
-
-        <SearchView
-            android:id="@+id/searchView"
-            android:queryHint="@string/hint_search_content"
-            android:paddingTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-
-    </LinearLayout>
+    <SearchView
+        android:id="@+id/searchView"
+        android:queryHint="@string/hint_search_content"
+        android:paddingTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
 
 </LinearLayout>

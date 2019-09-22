@@ -2,82 +2,75 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".userInterface.toolFragments.HelpOverlayFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".userInterface.toolFragments.HelpOverlayFragment">
+    android:layout_marginTop="24dp"
+    android:layout_marginBottom="24dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    android:elevation="24dp"
+    android:background="@color/colorPrimaryDark">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:elevation="24dp"
-        android:background="@color/colorPrimaryDark" >
+        android:padding="2dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="2dp"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <TextView
+                style="@style/StandardTextView"
+                android:id="@+id/textViewHelp_Title"
+                android:layout_width="0dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
 
-                <TextView
-                    style="@style/StandardTextView"
-                    android:id="@+id/textViewHelp_Title"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:textColor="@color/white"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    style="@style/StandardImageHolder"
-                    android:id="@+id/imageButtonHelp_Close"
-                    android:layout_height="30dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/colorPrimary"
-                    android:contentDescription="@string/description_close" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/white"/>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textViewHelp_Message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"/>
-
-            </ScrollView>
+            <ImageButton
+                style="@style/StandardImageHolder"
+                android:id="@+id/imageButtonHelp_Close"
+                android:layout_height="30dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/description_close" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/white"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewHelp_Message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"/>
+
+        </ScrollView>
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements.attributes;
+package de.juliusawen.coastercreditcounter.persistence;
 
 import org.json.JSONException;
 import org.json.JSONObject;

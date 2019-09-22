@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
 import android.util.Log;
 
@@ -8,12 +8,13 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**

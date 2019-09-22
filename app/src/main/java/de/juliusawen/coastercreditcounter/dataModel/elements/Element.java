@@ -67,7 +67,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
+            Log.e(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
             return false;
         }
     }
@@ -83,7 +83,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is invalid", name));
+            Log.w(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is invalid", name));
             return false;
         }
     }
@@ -105,7 +105,7 @@ public abstract class Element implements IElement
 
     public void addChildAndSetParent(IElement child)
     {
-        this.addChildAndSetParentAtIndex(this.getChildCount(), child);
+        this.addChildAtIndexAndSetParent(this.getChildCount(), child);
     }
 
     public void addChildrenAndSetParent(List<UUID> childUuids)
@@ -116,43 +116,34 @@ public abstract class Element implements IElement
         }
     }
 
-    public void addChildrenAndSetParentsAtIndex(int index, List<IElement> children)
+    public void addChildrenAtIndexAndSetParent(int index, List<IElement> children)
     {
-        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAndSetParentsAtIndex:: called with [%d] children", children.size()));
+        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAtIndexAndSetParent:: called with [%d] children", children.size()));
         int increment = 0;
         for (IElement child : children)
         {
-            this.addChildAndSetParentAtIndex(index + increment, child);
+            this.addChildAtIndexAndSetParent(index + increment, child);
             child.setParent(this);
             increment ++;
         }
     }
 
-    public void addChildAndSetParentAtIndex(int index, IElement child)
+    public void addChildAtIndexAndSetParent(int index, IElement child)
     {
-        if(!(OrphanElement.class.isAssignableFrom(this.getClass())))
+        if(!this.containsChild(child))
         {
-            if(!this.containsChild(child))
+            if(child.getParent() != null)
             {
-                if(child.getParent() != null)
-                {
-                    Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
-                }
-                child.setParent(this);
+                Log.w(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
+            }
+            child.setParent(this);
 
-                Log.v(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s -> child %s added", this, child));
-                this.children.add(index, child);
-            }
-            else
-            {
-                Log.w(Constants.LOG_TAG, String.format("Element.addChildAndSetParentAtIndex:: %s already contains child [%s]", this, child));
-            }
+            Log.v(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s -> child %s added", this, child));
+            this.children.add(index, child);
         }
         else
         {
-            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is assignable from <OrphanElement> - adding not possible", child);
-            Log.e(Constants.LOG_TAG, "Element.addChildAndSetParentAtIndex:: " + errorMessage);
-            throw new IllegalStateException(errorMessage);
+            Log.w(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s already contains child [%s]", this, child));
         }
     }
 
@@ -308,7 +299,7 @@ public abstract class Element implements IElement
         int index = this.parent.getIndexOfChild(this);
 
         this.parent.deleteChild(this);
-        this.parent.addChildrenAndSetParentsAtIndex(index, new ArrayList<>(this.getChildren()));
+        this.parent.addChildrenAtIndexAndSetParent(index, new ArrayList<>(this.getChildren()));
         for(IElement child : new ArrayList<>(this.children))
         {
             this.deleteChild(child);

@@ -22,22 +22,24 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IAttributed;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.enums.SortType;
-import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.ConfirmSnackbar;
-import de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -45,6 +47,8 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
+import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
@@ -149,7 +153,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
             }
-            this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_properties_default_postfix);
+            this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -407,7 +411,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if((OrphanElement.class.isAssignableFrom(viewModel.longClickedElement.getClass())))
+                if((IProperty.class.isAssignableFrom(viewModel.longClickedElement.getClass())))
                 {
                     boolean isDefault = false;
 
@@ -456,13 +460,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
-                List<IElement> categorizedElements = App.content.getContentOfType(IAttributed.class);
-                List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
-
                 switch(viewModel.propertyTypeToManage)
                 {
                     case CREDIT_TYPE:
                     {
+                        List<IElement> categorizedElements = App.content.getContentOfType(IHasCreditTypeProperty.class);
+                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
+
                         for(IAttraction attraction : categorizedAttractions)
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
@@ -481,6 +485,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case CATEGORY:
                     {
+                        List<IElement> categorizedElements = App.content.getContentOfType(IHasCategoryProperty.class);
+                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
+
                         for(IAttraction attraction : categorizedAttractions)
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
@@ -499,6 +506,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case MANUFACTURER:
                     {
+                        List<IElement> categorizedElements = App.content.getContentOfType(IHasManufacturerProperty.class);
+                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
                         for(IAttraction attraction : categorizedAttractions)
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
@@ -517,6 +526,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case STATUS:
                     {
+                        List<IElement> categorizedElements = App.content.getContentOfType(IHasStatusProperty.class);
+                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
+
                         for(IAttraction attraction : categorizedAttractions)
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))

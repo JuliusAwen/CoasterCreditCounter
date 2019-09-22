@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.enums.SortType;

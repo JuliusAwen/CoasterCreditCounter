@@ -1,5 +1,6 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;

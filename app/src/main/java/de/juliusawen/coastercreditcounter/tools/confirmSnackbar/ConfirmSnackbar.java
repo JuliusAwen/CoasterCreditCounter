@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar;
+package de.juliusawen.coastercreditcounter.tools.confirmSnackbar;
 
 import android.util.Log;
 import android.view.View;
@@ -11,8 +11,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class ConfirmSnackbar
 {
-    IConfirmSnackbarClient client;
-    RequestCode requestCode;
+    final IConfirmSnackbarClient client;
+    final RequestCode requestCode;
     boolean actionConfirmed = false;
 
     public static void Show(Snackbar snackbar, RequestCode requestCode, IConfirmSnackbarClient client)

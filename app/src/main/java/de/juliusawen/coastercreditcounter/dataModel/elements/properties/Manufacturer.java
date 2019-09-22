@@ -10,11 +10,10 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public class Manufacturer extends OrphanElement implements IPersistable
+public class Manufacturer extends OrphanElement implements IProperty
 {
     private Manufacturer(String name, UUID uuid)
     {
@@ -35,6 +34,11 @@ public class Manufacturer extends OrphanElement implements IPersistable
             Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));
         }
         return manufacturer;
+    }
+
+    public boolean isDefault()
+    {
+        return App.settings.getDefaultManufacturer().equals(this);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.tools.ConfirmSnackbar;
+package de.juliusawen.coastercreditcounter.tools.confirmSnackbar;
 
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 

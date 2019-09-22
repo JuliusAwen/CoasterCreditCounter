@@ -42,11 +42,6 @@ public class Content
         Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
     }
 
-    public int getSize()
-    {
-        return this.elementsByUuid.size();
-    }
-
     public boolean initialize()
     {
 

@@ -10,11 +10,10 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attributes.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public class Category extends OrphanElement implements IPersistable
+public class Category extends OrphanElement implements IProperty
 {
     private Category(String name, UUID uuid)
     {
@@ -35,6 +34,10 @@ public class Category extends OrphanElement implements IPersistable
             Log.v(Constants.LOG_TAG,  String.format("Category.create:: %s created.", category));
         }
         return category;
+    }
+    public boolean isDefault()
+    {
+        return App.settings.getDefaultCategory().equals(this);
     }
 
     @Override

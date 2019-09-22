@@ -239,7 +239,6 @@
     <string name="title_credit_types">Credit Types</string>
     <string name="title_create_credit_type">Create Credit Type</string>
     <string name="title_edit_credit_type">Edit Credit Type</string>
-    <string name="title_pick_credit_type">Pick Credit Type</string>
     <string name="title_sort_credit_type">Sort Credit Types</string>
     <string name="subtitle_to_assign_credit_type_to">to assign credit type to</string>
     <string name="hint_enter_credit_type_name">Enter credit type name</string>
@@ -252,7 +251,6 @@
     <string name="title_manufacturers">Manufacturers</string>
     <string name="title_create_manufacturer">Create Manufacturer</string>
     <string name="title_edit_manufacturer">Edit Manufacturer</string>
-    <string name="title_pick_manufacturer">Pick Manufacturer</string>
     <string name="title_sort_manufacturers">Sort Manufacturers</string>
     <string name="subtitle_to_assign_manufacturer_to">to assign manufacturer to</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
@@ -265,7 +263,6 @@
     <string name="title_categories">Categories</string>
     <string name="title_create_category">Create Category</string>
     <string name="title_edit_category">Edit Category</string>
-    <string name="title_pick_category">Pick Category</string>
     <string name="title_sort_categories">Sort Categories</string>
     <string name="subtitle_to_assign_category_to">to assign category to</string>
     <string name="hint_enter_category_name">Enter category name</string>
@@ -278,7 +275,6 @@
     <string name="title_statuses">Statuses</string>
     <string name="title_create_status">Create Status</string>
     <string name="title_edit_status">Edit Status</string>
-    <string name="title_pick_status">Pick Status</string>
     <string name="title_sort_statuses">Sort Statuses</string>
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
