@@ -11,11 +11,11 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public abstract class ConvertTool
 {
-    public static <T extends IElement> List<T> convertElementsToType(List<? extends IElement> elementsToConvert, Class<T> type)
+    public static <T extends IElement> LinkedList<T> convertElementsToType(List<? extends IElement> elementsToConvert, Class<T> type)
     {
         Log.d(Constants.LOG_TAG,String.format("ConvertTool.convertElementsToType:: converting [%d] elements to type [%s]", elementsToConvert.size(), type.getSimpleName()));
 
-        List<T> convertedElements = new LinkedList<>();
+        LinkedList<T> convertedElements = new LinkedList<>();
         for(IElement element : elementsToConvert)
         {
             try

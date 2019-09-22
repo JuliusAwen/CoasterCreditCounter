@@ -45,7 +45,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         public String name;
         public UUID uuid;
-        public final List<UUID> childrenUuids = new LinkedList<>();
+        public final List<UUID> childrenUuids = new ArrayList<>();
         public int day;
         public int month;
         public int year;
@@ -59,12 +59,12 @@ public class JsonHandler implements IDatabaseWrapper
         public boolean isDefault;
     }
 
-    private List<TemporaryJsonElement> temporaryLocations;
-    private List<TemporaryJsonElement> temporaryParks;
-    private List<TemporaryJsonElement> temporaryBlueprints;
-    private List<TemporaryJsonElement> temporaryStockAttractions;
-    private List<TemporaryJsonElement> temporaryCustomAttractions;
-    private List<TemporaryJsonElement> temporaryVisits;
+    private LinkedList<TemporaryJsonElement> temporaryLocations;
+    private LinkedList<TemporaryJsonElement> temporaryParks;
+    private LinkedList<TemporaryJsonElement> temporaryBlueprints;
+    private LinkedList<TemporaryJsonElement> temporaryStockAttractions;
+    private LinkedList<TemporaryJsonElement> temporaryCustomAttractions;
+    private LinkedList<TemporaryJsonElement> temporaryVisits;
 
     public boolean importContent(Content content)
     {
@@ -268,9 +268,9 @@ public class JsonHandler implements IDatabaseWrapper
         return true;
     }
 
-    private List<TemporaryJsonElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
+    private LinkedList<TemporaryJsonElement> createTemporaryElements(JSONArray jsonArray) throws JSONException
     {
-        List<TemporaryJsonElement> temporaryJsonElements = new ArrayList<>();
+        LinkedList<TemporaryJsonElement> temporaryJsonElements = new LinkedList<>();
         try
         {
             for(int i = 0; i < jsonArray.length(); i++)
@@ -458,9 +458,9 @@ public class JsonHandler implements IDatabaseWrapper
         return statuses;
     }
 
-    private List<IElement> createLocations(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createLocations(LinkedList<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Location element = Location.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -469,9 +469,9 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private List<IElement> createParks(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createParks(LinkedList<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Park element  = Park.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -480,9 +480,9 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
     
-    private List<IElement> createBlueprints(List<TemporaryJsonElement> temporaryJsonElements, Content content)
+    private LinkedList<IElement> createBlueprints(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Blueprint element = Blueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -494,9 +494,9 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private List<IElement> createStockAttractions(List<TemporaryJsonElement> temporaryJsonElements, Content content)
+    private LinkedList<IElement> createStockAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             StockAttraction element = StockAttraction.create(
@@ -510,9 +510,9 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private List<IElement> createCustomAttractions(List<TemporaryJsonElement> temporaryJsonElements, Content content)
+    private LinkedList<IElement> createCustomAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
@@ -525,9 +525,9 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private List<IElement> createVisits(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createVisits(LinkedList<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<IElement> elements = new LinkedList<>();
+        LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Visit element = Visit.create(temporaryJsonElement.year, temporaryJsonElement.month, temporaryJsonElement.day, temporaryJsonElement.uuid);

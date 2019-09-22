@@ -82,7 +82,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(IAttributed.class);
+            childTypesToExpand.add(IAttraction.class);
 
             List<IElement> elementsWithOrderedChildren;
 
@@ -216,7 +216,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case SORT_CATEGORIES:
             case SORT_MANUFACTURERS:
             case SORT_STATUSES:
-                List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
+                ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                 App.content.reorderElements(resultElements);
                 updateContentRecyclerView(true).scrollToItem(resultElement);
                 super.markForUpdate(resultElements);
@@ -438,7 +438,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             .add(PopupItem.EDIT_ELEMENT)
                             .add(PopupItem.DELETE_ELEMENT)
                             .add(PopupItem.SET_AS_DEFAULT)
-                            .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttributed.class).isEmpty())
+                            .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty())
                             .setEnabled(PopupItem.DELETE_ELEMENT, !isDefault)
                             .setEnabled(PopupItem.SET_AS_DEFAULT, !isDefault)
                             .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> default is always "no credit"

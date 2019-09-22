@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.tools;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
@@ -29,10 +29,10 @@ public abstract class ResultFetcher
         return resultElement;
     }
 
-    public static List<IElement> fetchResultElements(Intent data)
+    public static ArrayList<IElement> fetchResultElements(Intent data)
     {
-        List<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
-        List<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
+        ArrayList<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
+        ArrayList<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
         Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElements:: [%d] result elements fetched", resultElements.size()));
 
