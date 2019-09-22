@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
 {
@@ -17,7 +16,7 @@ public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
     public static SpecialGroupHeader create(String name)
     {
         SpecialGroupHeader specialGroupHeader = null;
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             specialGroupHeader = new SpecialGroupHeader(name, UUID.randomUUID());
             Log.v(Constants.LOG_TAG,  String.format("SpecialGroupHeader.create:: %s created", specialGroupHeader.getFullName()));

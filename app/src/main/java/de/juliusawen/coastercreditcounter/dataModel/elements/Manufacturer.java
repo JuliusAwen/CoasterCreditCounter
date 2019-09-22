@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class Manufacturer extends OrphanElement
 {
@@ -30,7 +29,7 @@ public class Manufacturer extends OrphanElement
     public static Manufacturer create(String name, UUID uuid)
     {
         Manufacturer manufacturer = null;
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));

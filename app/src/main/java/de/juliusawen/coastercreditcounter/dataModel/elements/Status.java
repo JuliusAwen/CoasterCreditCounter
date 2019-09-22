@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 public class Status extends OrphanElement
 {
@@ -30,7 +29,7 @@ public class Status extends OrphanElement
     public static Status create(String name, UUID uuid)
     {
         Status status = null;
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             status = new Status(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Status.create:: %s created", status));

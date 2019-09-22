@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Simple Node.
@@ -66,7 +65,7 @@ public abstract class Element implements IElement
 
     public boolean setName(String name)
     {
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             this.name = name.trim();
             return true;
@@ -74,6 +73,22 @@ public abstract class Element implements IElement
         else
         {
             Log.w(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
+            return false;
+        }
+    }
+
+    public static boolean nameIsValid(String name)
+    {
+        if(!name.trim().isEmpty())
+        {
+            name = name.trim();
+
+            Log.v(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is valid", name));
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is invalid", name));
             return false;
         }
     }

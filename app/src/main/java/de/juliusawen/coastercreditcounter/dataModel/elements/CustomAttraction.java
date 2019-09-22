@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Individual attraction located at a particular park
@@ -34,7 +33,7 @@ public class CustomAttraction extends Attraction implements IOnSiteAttraction, I
     public static CustomAttraction create(String name, int untrackedRideCount, UUID uuid)
     {
         CustomAttraction customAttraction = null;
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             customAttraction = new CustomAttraction(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.create:: %s created", customAttraction.getFullName()));

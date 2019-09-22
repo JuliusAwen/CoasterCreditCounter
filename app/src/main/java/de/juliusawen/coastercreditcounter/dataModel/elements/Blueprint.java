@@ -10,7 +10,6 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
-import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
  * Blueprint for attractions from which StockAttraction is created
@@ -33,7 +32,7 @@ public class Blueprint extends Attraction implements IAttributed
     public static Blueprint create(String name, UUID uuid)
     {
         Blueprint blueprint = null;
-        if(StringTool.nameIsValid(name))
+        if(Element.nameIsValid(name))
         {
             blueprint = new Blueprint(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Blueprint.create:: %s created.", blueprint.getFullName()));
