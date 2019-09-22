@@ -1,9 +1,11 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader;
 
 import android.util.Log;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
