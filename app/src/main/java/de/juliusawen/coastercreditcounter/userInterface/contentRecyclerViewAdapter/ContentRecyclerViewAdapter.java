@@ -31,7 +31,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IGroupHeader;
@@ -167,7 +166,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(App.settings.expandLatestYearInListByDefault())
                 {
-                    SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getLatestYearHeader(groupedItems);
+                    SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
                     this.expandedItems.add(latestSpecialGroupHeader);
                 }
                 break;
@@ -796,18 +795,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         for(IElement item : this.items)
         {
-            if(item instanceof GroupHeader)
+            if(item instanceof IGroupHeader)
             {
                 if(item.getChildren().contains(groupElement))
                 {
-                    return (GroupHeader)item;
-                }
-            }
-            else if(item instanceof SpecialGroupHeader)
-            {
-                if(item.getChildren().contains(groupElement))
-                {
-                    return (SpecialGroupHeader)item;
+                    return (IGroupHeader)item;
                 }
             }
         }

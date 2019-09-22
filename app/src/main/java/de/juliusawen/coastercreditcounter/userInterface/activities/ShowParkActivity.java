@@ -120,6 +120,9 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                     case SORT_DESCENDING:
                         showVisitsFragment.handleOptionsItemSortDescendingSelected();
                         return true;
+
+                    case SORT:
+                        return true;
                 }
         }
         return super.handleOptionsItemSelected(item);

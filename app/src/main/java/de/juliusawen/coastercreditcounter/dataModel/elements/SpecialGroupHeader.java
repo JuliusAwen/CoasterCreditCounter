@@ -24,10 +24,4 @@ public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
         }
         return specialGroupHeader;
     }
-
-    @Override
-    public IElement getGroupElement()
-    {
-        return null;
-    }
 }
