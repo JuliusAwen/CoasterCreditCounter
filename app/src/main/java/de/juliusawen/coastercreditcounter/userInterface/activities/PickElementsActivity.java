@@ -656,7 +656,7 @@ public class PickElementsActivity extends BaseActivity
 
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                         {
-                            if(!(selectedElement instanceof OrphanElement))
+                            if(!(OrphanElement.class.isAssignableFrom(selectedElement.getClass())))
                             {
                                 selectedElementsWithoutOrphanElements.add(selectedElement);
                             }

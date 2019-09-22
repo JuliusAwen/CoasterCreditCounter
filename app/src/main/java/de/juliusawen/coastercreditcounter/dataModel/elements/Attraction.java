@@ -7,13 +7,15 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Abstract base class for all Attractions containing all base methods
+ * Abstract base class for all Attractions containing all base methods.
+ * Can be CustomAttraction, Blueprint, StockAttraction or VisitedAttraction
  */
-public abstract class Attraction extends Element implements IAttraction
+public abstract class Attraction extends Element implements IAttraction, IPersistable
 {
 
     private CreditType creditType;

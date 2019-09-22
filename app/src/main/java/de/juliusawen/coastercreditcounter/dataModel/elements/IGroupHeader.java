@@ -1,8 +1,6 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ITemporary;
-
 /**
- *
+ * Base interface for GroupHeaders
  */
-public interface IGroupHeader extends IOrphan, ITemporary {}
+public interface IGroupHeader extends IElement {}

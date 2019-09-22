@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ITemporary;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 
 /**
@@ -16,7 +15,7 @@ import de.juliusawen.coastercreditcounter.globals.Constants;
  * Parent: Park
  * Children: none
  */
-public class VisitedAttraction extends Attraction implements ITemporary
+public class VisitedAttraction extends Attraction
 {
     private final IOnSiteAttraction onSiteAttraction;
     private int rideCount;

@@ -1750,7 +1750,7 @@ class Blueprints
     final Blueprint SuspendedLoopingCoaster = Blueprint.create("Suspended Looping Coaster");
     final Blueprint Boomerang = Blueprint.create("Boomerang");
     final Blueprint BigApple = Blueprint.create("Big Apple");
-    final Blueprint SkyRocketII = Blueprint.create("Sky Rocker II");
+    final Blueprint SkyRocketII = Blueprint.create("Sky Rocket II");
 
     final Blueprint TopSpin = Blueprint.create("Top Spin");
     final Blueprint SuspendedTopSpin = Blueprint.create("Suspended Top Spin");

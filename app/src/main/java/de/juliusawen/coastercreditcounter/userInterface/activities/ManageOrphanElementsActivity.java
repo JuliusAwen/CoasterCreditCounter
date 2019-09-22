@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IAttributed;
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IAttributed;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.globals.enums.SortType;
@@ -407,7 +407,7 @@ public class ManageOrphanElementsActivity extends BaseActivity implements AlertD
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if((viewModel.longClickedElement instanceof OrphanElement))
+                if((OrphanElement.class.isAssignableFrom(viewModel.longClickedElement.getClass())))
                 {
                     boolean isDefault = false;
 

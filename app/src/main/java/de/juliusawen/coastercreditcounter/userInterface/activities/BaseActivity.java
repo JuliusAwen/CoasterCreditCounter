@@ -30,7 +30,7 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ITemporary;
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -679,12 +679,18 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForCreation(IElement element)
     {
-        if(!(element instanceof ITemporary))
+        if((IPersistable.class.isAssignableFrom(element.getClass())))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
             this.viewModel.elementsToCreate.add(element);
+            App.content.addElement(element);
         }
-        App.content.addElement(element);
+        else
+        {
+            String message = String.format("[%s] does not implement IPersistable", this);
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: [%s]", message));
+            throw new IllegalStateException(message);
+        }
     }
 
     protected void markForUpdate(List<IElement> elements)
@@ -697,10 +703,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForUpdate(IElement element)
     {
-        if(!(element instanceof ITemporary))
+        if((IPersistable.class.isAssignableFrom(element.getClass())))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
+        }
+        else
+        {
+            String message = String.format("[%s] does not implement IPersistable", this);
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: [%s]", message));
+            throw new IllegalStateException(message);
         }
     }
 
@@ -714,20 +726,27 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
-        if(!(element instanceof ITemporary))
+        if((IPersistable.class.isAssignableFrom(element.getClass())))
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
             this.viewModel.elementsToDelete.add(element);
-        }
 
-        if(deleteDescendants && element.hasChildren())
-        {
-            for(IElement child : element.getChildren())
+            if(deleteDescendants && element.hasChildren())
             {
-                this.markForDeletion(child, true);
+                for(IElement child : element.getChildren())
+                {
+                    this.markForDeletion(child, true);
+                }
             }
+
+            App.content.removeElement(element);
         }
-        App.content.removeElement(element);
+        else
+        {
+            String message = String.format("[%s] does not implement IPersistable", this);
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s]", message));
+            throw new IllegalStateException(message);
+        }
     }
 
     protected void synchronizePersistency()

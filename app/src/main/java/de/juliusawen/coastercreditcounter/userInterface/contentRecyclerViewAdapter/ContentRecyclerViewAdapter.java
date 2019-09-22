@@ -781,7 +781,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return this.getGroupHeaderForItem(item);
         }
-        else if(!(item instanceof OrphanElement))
+        else if(!(OrphanElement.class.isAssignableFrom(item.getClass())))
         {
             return this.items.get(this.items.indexOf(item.getParent()));
         }

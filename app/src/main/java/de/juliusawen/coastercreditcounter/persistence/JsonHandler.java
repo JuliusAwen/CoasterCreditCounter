@@ -32,6 +32,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Status;
 import de.juliusawen.coastercreditcounter.dataModel.elements.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.globals.Content;
 import de.juliusawen.coastercreditcounter.globals.enums.SortOrder;
@@ -689,48 +690,48 @@ public class JsonHandler implements IDatabaseWrapper
 
             jsonObject.put(Constants.JSON_STRING_LOCATIONS, content.getContentOfType(Location.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Location.class)));
+                    : this.createJsonArray(content.getContentAsType(Location.class)));
 
             jsonObject.put(Constants.JSON_STRING_PARKS, content.getContentOfType(Park.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Park.class)));
+                    : this.createJsonArray(content.getContentAsType(Park.class)));
 
             jsonObject.put(Constants.JSON_STRING_VISITS, content.getContentOfType(Visit.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Visit.class)));
+                    : this.createJsonArray(content.getContentAsType(Visit.class)));
 
 
             JSONObject jsonObjectAttractions = new JSONObject();
             jsonObjectAttractions.put(Constants.JSON_STRING_BLUEPRINTS, content.getContentOfType(Blueprint.class).isEmpty()
                             ? JSONObject.NULL
-                            : this.createJsonArray(content.getContentOfType(Blueprint.class)));
+                            : this.createJsonArray(content.getContentAsType(Blueprint.class)));
 
             jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS, content.getContentOfType(CustomAttraction.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(CustomAttraction.class)));
+                    : this.createJsonArray(content.getContentAsType(CustomAttraction.class)));
 
             jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS, content.getContentOfType(StockAttraction.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(StockAttraction.class)));
+                    : this.createJsonArray(content.getContentAsType(StockAttraction.class)));
 
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 
 
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPES, content.getContentOfType(CreditType.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(CreditType.class)));
+                    : this.createJsonArray(content.getContentAsType(CreditType.class)));
 
             jsonObject.put(Constants.JSON_STRING_CATEGORIES, content.getContentOfType(Category.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Category.class)));
+                    : this.createJsonArray(content.getContentAsType(Category.class)));
 
             jsonObject.put(Constants.JSON_STRING_MANUFACTURERS, content.getContentOfType(Manufacturer.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Manufacturer.class)));
+                    : this.createJsonArray(content.getContentAsType(Manufacturer.class)));
 
             jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentOfType(Status.class)));
+                    : this.createJsonArray(content.getContentAsType(Status.class)));
 
             Log.i(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: creating json object from content - took [%d]ms", stopwatch.stop()));
             return jsonObject;
@@ -744,7 +745,7 @@ public class JsonHandler implements IDatabaseWrapper
         return null;
     }
 
-    private JSONArray createJsonArray(List<IElement> elements) throws JSONException
+    private JSONArray createJsonArray(List<? extends IPersistable> elements) throws JSONException
     {
         JSONArray jsonArray = new JSONArray();
 
@@ -752,7 +753,7 @@ public class JsonHandler implements IDatabaseWrapper
         {
             try
             {
-                for(IElement element : elements)
+                for(IPersistable element : elements)
                 {
                     jsonArray.put(element.toJson());
                 }

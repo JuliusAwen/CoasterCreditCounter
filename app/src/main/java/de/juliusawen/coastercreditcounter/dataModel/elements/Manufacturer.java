@@ -9,10 +9,11 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public class Manufacturer extends OrphanElement
+public class Manufacturer extends OrphanElement implements IPersistable
 {
     private static Manufacturer defaultManufacturer;
 

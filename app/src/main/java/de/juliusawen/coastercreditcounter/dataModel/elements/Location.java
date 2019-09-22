@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.dataModel.elements.interfaces.IPersistable;
 import de.juliusawen.coastercreditcounter.globals.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -14,7 +15,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Location
  * Children: Location, Park
  */
-public class Location extends Element
+public class Location extends Element implements IPersistable
 {
     private Location(String name, UUID uuid)
     {

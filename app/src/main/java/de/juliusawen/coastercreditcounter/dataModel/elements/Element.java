@@ -135,7 +135,7 @@ public abstract class Element implements IElement
 
     public void addChildAndSetParentAtIndex(int index, IElement child)
     {
-        if(!(this instanceof OrphanElement))
+        if(!(OrphanElement.class.isAssignableFrom(this.getClass())))
         {
             if(!this.containsChild(child))
             {
@@ -155,7 +155,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is instance of <OrphanElement> - adding not possible", child);
+            String errorMessage = String.format(Locale.getDefault(), "type mismatch: %s is assignable from <OrphanElement> - adding not possible", child);
             Log.e(Constants.LOG_TAG, "Element.addChildAndSetParentAtIndex:: " + errorMessage);
             throw new IllegalStateException(errorMessage);
         }
