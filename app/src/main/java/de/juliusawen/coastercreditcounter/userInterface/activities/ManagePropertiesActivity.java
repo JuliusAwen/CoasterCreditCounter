@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
@@ -37,7 +38,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IPropert
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
@@ -62,19 +62,19 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ManageOrphanElementsViewModel viewModel;
+    private ManagePropertiesViewModel viewModel;
     private RecyclerView recyclerView;
     private OrphanElement lastCreatedOrphanElement;
 
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_manage_orphan_elements);
+        setContentView(R.layout.activity_manage_properties);
     }
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(ManageOrphanElementsViewModel.class);
+        this.viewModel = ViewModelProviders.of(this).get(ManagePropertiesViewModel.class);
 
         this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
 
@@ -159,7 +159,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.contentRecyclerViewAdapter != null)
         {
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            this.recyclerView = findViewById(R.id.recyclerViewManageOrphanElements);
+            this.recyclerView = findViewById(R.id.recyclerViewManageProperties);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
@@ -705,11 +705,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
+            Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
             if(this.viewModel.longClickedElement.hasChildren())
             {

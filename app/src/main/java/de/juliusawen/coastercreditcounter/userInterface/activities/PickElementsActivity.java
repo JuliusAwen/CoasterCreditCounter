@@ -21,6 +21,7 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -30,7 +31,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -187,7 +187,7 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode != Activity.RESULT_OK)
         {
@@ -209,7 +209,7 @@ public class PickElementsActivity extends BaseActivity
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned");
+                    Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.onActivityResult:: no element returned");
                 }
 
                 break;
@@ -509,7 +509,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManageOrphanElementsActivity.onClickFloatingActionButton<Add>:: FloatingActionButton pressed - RequestCode [%s]", viewModel.requestCode));
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onClickFloatingActionButton:: FloatingActionButton pressed - RequestCode [%s]", viewModel.requestCode));
 
                 switch(viewModel.requestCode)
                 {
