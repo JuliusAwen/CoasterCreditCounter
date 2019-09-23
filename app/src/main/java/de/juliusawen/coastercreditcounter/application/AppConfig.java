@@ -22,6 +22,8 @@ public class AppConfig
     private final boolean alwaysImportFromDatabaseMock = false;
     private final boolean createExportFileIfNonexistent = true;
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
+    private final boolean useDefaultSettingsOnStartup = false;
+    private final boolean saveDefaultSettingsOnStartup = false;
 
     //above is just working when isDebugBuild = true
 
@@ -105,6 +107,15 @@ public class AppConfig
         return this.isDebugBuild && this.useDefaultContentFromDatabaseMockOnStartup;
     }
 
+    public boolean useDefaultSettingsOnStartup()
+    {
+        return this.isDebugBuild && this.useDefaultSettingsOnStartup;
+    }
+
+    public boolean saveDefaultSettingsOnStartup()
+    {
+        return this.isDebugBuild && this.saveDefaultSettingsOnStartup;
+    }
 
     public boolean validateContent()
     {

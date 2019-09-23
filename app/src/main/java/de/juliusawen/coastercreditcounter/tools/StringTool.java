@@ -5,7 +5,7 @@ import android.text.style.StyleSpan;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
@@ -58,7 +58,7 @@ public abstract class StringTool
         return spannableString;
     }
 
-    public static SpannableString buildSpannableString(String originalString, LinkedHashMap<String, Integer> typefacesBySubString)
+    public static SpannableString buildSpannableString(String originalString, HashMap<String, Integer> typefacesBySubString)
     {
         SpannableString spannableString = new SpannableString(originalString);
         for(String subString : typefacesBySubString.keySet())

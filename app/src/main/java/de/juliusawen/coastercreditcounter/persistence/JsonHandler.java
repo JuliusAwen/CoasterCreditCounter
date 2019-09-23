@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.application.Settings;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
@@ -32,11 +34,10 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class JsonHandler implements IDatabaseWrapper
 {
@@ -701,9 +702,10 @@ public class JsonHandler implements IDatabaseWrapper
 
 
             JSONObject jsonObjectAttractions = new JSONObject();
+
             jsonObjectAttractions.put(Constants.JSON_STRING_BLUEPRINTS, content.getContentOfType(Blueprint.class).isEmpty()
-                            ? JSONObject.NULL
-                            : this.createJsonArray(content.getContentAsType(Blueprint.class)));
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentAsType(Blueprint.class)));
 
             jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS, content.getContentOfType(CustomAttraction.class).isEmpty()
                     ? JSONObject.NULL
@@ -776,21 +778,31 @@ public class JsonHandler implements IDatabaseWrapper
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
-        Stopwatch stopwatchRead = new Stopwatch(true);
-        String jsonString = App.persistence.readStringFromInternalFile(App.config.getSettingsFileName());
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchRead.stop()));
+        boolean success = false;
 
-        if(this.fetchSettings(jsonString, settings))
+        if(!App.config.useDefaultSettingsOnStartup())
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
-            return true;
+            Stopwatch stopwatchRead = new Stopwatch(true);
+            String jsonString = App.persistence.readStringFromInternalFile(App.config.getSettingsFileName());
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchRead.stop()));
+
+            if(this.fetchSettings(jsonString, settings))
+            {
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
+                return true;
+            }
         }
 
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating and saving default settings"));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating default settings"));
         settings.useDefaults();
-        boolean success = this.saveSettings(settings);
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings failed - using default settings. Took [%d]ms", stopwatchLoad.stop()));
+        if(App.config.saveDefaultSettingsOnStartup() || !success)
+        {
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving default settings"));
+            success = this.saveSettings(settings);
+        }
+
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: using default settings. Took [%d]ms", stopwatchLoad.stop()));
         return success;
     }
 
@@ -804,9 +816,22 @@ public class JsonHandler implements IDatabaseWrapper
             try
             {
                 JSONObject jsonObjectSettings = new JSONObject(jsonString);
+
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DETAIL_ORDER))
+                {
+                    JSONArray jsonArrayDetailType = jsonObjectSettings.getJSONArray(Constants.JSON_STRING_DETAIL_ORDER);
+
+                    ArrayList<DetailType> detailTypes = new ArrayList<>();
+                    for(int i = 0; i < jsonArrayDetailType.length(); i++)
+                    {
+                        detailTypes.add(DetailType.getValue(jsonArrayDetailType.getInt(i)));
+                    }
+                    settings.setDetailsOrder(detailTypes);
+                }
+
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
                 {
-                    settings.setDefaultSortOrderParkVisits(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
+                    settings.setDefaultSortOrder(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
                 }
 
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
@@ -819,9 +844,9 @@ public class JsonHandler implements IDatabaseWrapper
                     settings.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
                 }
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_INCREMENT))
+                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_INCREMENT))
                 {
-                    settings.setDefaultIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_INCREMENT));
+                    settings.setIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_INCREMENT));
                 }
 
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: fetching settings from json string successful - took [%d]ms", stopwatch.stop()));

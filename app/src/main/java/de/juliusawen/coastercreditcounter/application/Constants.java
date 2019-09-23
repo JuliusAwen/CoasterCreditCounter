@@ -45,12 +45,14 @@ public abstract class Constants
     public static final String JSON_STRING_STATUS = "status";
     public static final String JSON_STRING_STATUSES = "statuses";
 
+    public static final String JSON_STRING_DETAIL_ORDER = "detail order";
+
     public static final String JSON_STRING_IS_DEFAULT = "is default";
 
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
     public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";
     public static final String JSON_STRING_FIRST_DAY_OF_THE_WEEK = "first day of the week";
-    public static final String JSON_STRING_DEFAULT_INCREMENT = "default increment";
+    public static final String JSON_STRING_INCREMENT = "increment";
 
 
     public static final String ACTION_SAVE = "de.juliusawen.coding.action_save";

@@ -27,9 +27,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -120,11 +118,8 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
-                            .setTypefaceForContentType(Category.class, Typeface.BOLD)
-                            .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
-                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
-                            .setSpecialStringResourceForType(OrphanElement.class, R.string.substitute_properties_default_postfix);
+                            .setTypefaceForContentType(IProperty.class, Typeface.BOLD)
+                            .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
                     super.addFloatingActionButton();
                     this.decorateFloatingActionButtonAdd();
@@ -251,6 +246,7 @@ public class PickElementsActivity extends BaseActivity
                         .add(OptionsItem.COLLAPSE_ALL);
                 break;
 
+            case PICK_CREDIT_TYPE:
             case PICK_CATEGORY:
             case PICK_MANUFACTURER:
             case PICK_STATUS:
@@ -401,37 +397,37 @@ public class PickElementsActivity extends BaseActivity
             {
                 case CREDIT_TYPE:
                     this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
                 case MANUFACTURER:
                     this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.STATUS);
                     break;
             }
+            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
         }
         else
         {
@@ -439,24 +435,25 @@ public class PickElementsActivity extends BaseActivity
             {
                 case LOCATION:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.LOCATION);
                     break;
 
                 case CREDIT_TYPE:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
@@ -464,14 +461,16 @@ public class PickElementsActivity extends BaseActivity
                     this.viewModel.contentRecyclerViewAdapter
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.STATUS);
                     break;
             }

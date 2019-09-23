@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
@@ -22,8 +24,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
@@ -1607,7 +1607,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
 class CreditTypes
 {
-    final CreditType RollerCoaster = CreditType.create("RollerCoaster");
+    final CreditType RollerCoaster = CreditType.create("CoasterCredit");
 
     final List<CreditType> All = new LinkedList<>();
 

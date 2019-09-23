@@ -41,7 +41,7 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
-                    android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_CreditType"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -61,11 +61,11 @@
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
                             android:textStyle="bold"
-                            android:text="@string/header_manufacturer"/>
+                            android:text="@string/header_credit_type"/>
 
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
+                            android:id="@+id/textViewCreateOrEditAttraction_CreditType"/>
 
                     </LinearLayout>
 
@@ -98,6 +98,38 @@
                         <TextView
                             style="@style/CreateOrEditAttractionTextView"
                             android:id="@+id/textViewCreateOrEditAttraction_Category"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/StandardBarLayout"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="?selectableItemBackground"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        style="@style/StandardBarLayout"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CreateOrEditAttractionTextView"
+                            android:textStyle="bold"
+                            android:text="@string/header_manufacturer"/>
+
+                        <TextView
+                            style="@style/CreateOrEditAttractionTextView"
+                            android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
 
                     </LinearLayout>
 

@@ -28,12 +28,12 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
@@ -138,8 +138,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         }
     }
 
-    //region --- OPTIONS MENU
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
@@ -175,9 +173,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.updateContentRecyclerView();
         return true;
     }
-
-    //endregion --- OPTIONS MENU
-
 
     @Override
     public void onAttach(Context context)

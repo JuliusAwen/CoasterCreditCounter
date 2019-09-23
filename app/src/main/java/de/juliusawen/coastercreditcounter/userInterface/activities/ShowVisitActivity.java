@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -30,7 +31,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttrac
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
@@ -423,7 +423,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 Log.v(LOG_TAG, String.format("ShowVisitActivity.getIncreaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
 
-                visitedAttraction.increaseTotalRideCount(App.settings.getDefaultIncrement());
+                visitedAttraction.increaseTotalRideCount(App.settings.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
@@ -441,7 +441,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 Log.v(LOG_TAG, String.format("ShowVisitActivity.getDcreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                visitedAttraction.decreaseTotalRideCount(App.settings.getDefaultIncrement());
+                visitedAttraction.decreaseTotalRideCount(App.settings.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }

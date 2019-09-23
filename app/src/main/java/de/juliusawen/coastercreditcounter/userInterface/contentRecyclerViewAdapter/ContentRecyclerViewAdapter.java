@@ -25,6 +25,7 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.BottomSpacer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
@@ -39,8 +40,11 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAt
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -445,11 +449,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(!this.formatAsPrettyPrint)
         {
             //set typeface
-            if(typefacesByContentType.containsKey(item.getClass()))
+            boolean typefaceSet = false;
+            for(Class type : typefacesByContentType.keySet())
             {
-                viewHolder.textViewName.setTypeface(null, typefacesByContentType.get(item.getClass()));
+                if(type.isAssignableFrom(item.getClass()))
+                {
+                    viewHolder.textViewName.setTypeface(null, typefacesByContentType.get(type));
+                    typefaceSet = true;
+                    break;
+                }
             }
-            else
+
+            if(!typefaceSet)
             {
                 viewHolder.textViewName.setTypeface(null, Typeface.NORMAL);
             }
@@ -464,14 +475,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     if(item instanceof Visit)
                     {
-                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
-                        specialStringResourceSet = true;
+                        if(this.specialStringResourcesByType.containsKey(Visit.class))
+                        {
+                            viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(Visit.class), item.getName(), item.getParent().getName()));
+                            specialStringResourceSet = true;
+                        }
                         break;
                     }
                     else if(IProperty.class.isAssignableFrom(item.getClass()) && ((IProperty) item).isDefault())
                     {
-                        viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(IProperty.class), item.getName()));
-                        specialStringResourceSet = true;
+                        if(this.specialStringResourcesByType.containsKey(IProperty.class))
+                        {
+                            viewHolder.textViewName.setText(App.getContext().getString(this.specialStringResourcesByType.get(IProperty.class), item.getName()));
+                            specialStringResourceSet = true;
+                        }
                         break;
                     }
                 }
@@ -587,113 +604,97 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private SpannableString getSpannableDetailString(IElement item, DetailDisplayMode detailDisplayMode)
     {
-        LinkedHashMap<String, Integer> typefacesByDetailSubString = new LinkedHashMap<>();
+        HashMap<String, Integer> typefacesByDetailSubString = new HashMap<>();
+        HashMap<DetailType, String> detailSubStringsByDetailType = new HashMap<>();
 
-        boolean detailDisplayed = false;
-
-        String locationName = "";
+        String locationDetail = "";
         if(this.displayModesByDetailType.get(DetailType.LOCATION) == detailDisplayMode)
         {
             if(item instanceof IOnSiteAttraction)
             {
-                locationName = item.getParent().getName();
+                detailSubStringsByDetailType.put(DetailType.LOCATION, item.getParent().getName());
 
-                typefacesByDetailSubString.put(locationName, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
+                typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
                         ? this.typefacesByDetailType.get(DetailType.LOCATION)
                         : Typeface.NORMAL);
             }
             else if(item instanceof Blueprint)
             {
                 // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
-                locationName = App.getContext().getString(R.string.substitute_blueprint);
-                typefacesByDetailSubString.put(locationName, Typeface.BOLD_ITALIC);
+                detailSubStringsByDetailType.put(DetailType.LOCATION, App.getContext().getString(R.string.substitute_blueprint));
+                typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
             }
-
-            detailDisplayed = true;
         }
 
-        String creditTypeName = "";
-        if(this.displayModesByDetailType.get(DetailType.CREDIT_TYPE) == detailDisplayMode)
+        String creditTypeDetail = "";
+        if(item instanceof IHasCreditTypeProperty && this.displayModesByDetailType.get(DetailType.CREDIT_TYPE) == detailDisplayMode)
         {
-            if(detailDisplayed)
-            {
-                creditTypeName += " - ";
-            }
-            creditTypeName += ((IAttraction)item).getCreditType().getName();
+            detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, ((IHasCreditTypeProperty)item).getCreditType().getName());
 
-            typefacesByDetailSubString.put(creditTypeName, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
+            typefacesByDetailSubString.put(creditTypeDetail, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
                     ? this.typefacesByDetailType.get(DetailType.CREDIT_TYPE)
                     : Typeface.NORMAL);
-
-            detailDisplayed = true;
         }
 
-        String statusName = "";
-        if(this.displayModesByDetailType.get(DetailType.STATUS) == detailDisplayMode)
+        String categoryDetail = "";
+        if(item instanceof IHasCategoryProperty && this.displayModesByDetailType.get(DetailType.CATEGORY) == detailDisplayMode)
         {
-            if(detailDisplayed)
-            {
-                statusName += " - ";
-            }
-            statusName += ((IAttraction)item).getStatus().getName();
+            detailSubStringsByDetailType.put(DetailType.CATEGORY, ((IHasCategoryProperty)item).getCategory().getName());
 
-            typefacesByDetailSubString.put(statusName, this.typefacesByDetailType.containsKey(DetailType.STATUS)
-                    ? this.typefacesByDetailType.get(DetailType.STATUS)
-                    : Typeface.NORMAL);
-
-            detailDisplayed = true;
-        }
-
-        String categoryName = "";
-        if(this.displayModesByDetailType.get(DetailType.CATEGORY) == detailDisplayMode)
-        {
-            if(detailDisplayed)
-            {
-                categoryName += " - ";
-            }
-            categoryName += ((IAttraction)item).getCategory().getName();
-
-            typefacesByDetailSubString.put(categoryName, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
+            typefacesByDetailSubString.put(categoryDetail, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
                     ? this.typefacesByDetailType.get(DetailType.CATEGORY)
                     : Typeface.NORMAL);
-
-            detailDisplayed = true;
         }
 
-        String manufacturerName = "";
-        if(this.displayModesByDetailType.get(DetailType.MANUFACTURER) == detailDisplayMode)
+        String manufacturerDetail = "";
+        if(item instanceof IHasManufacturerProperty && this.displayModesByDetailType.get(DetailType.MANUFACTURER) == detailDisplayMode)
         {
-            if(detailDisplayed)
-            {
-                manufacturerName += " - ";
-            }
-            manufacturerName += ((IAttraction)item).getManufacturer().getName();
+            detailSubStringsByDetailType.put(DetailType.MANUFACTURER, ((IHasManufacturerProperty)item).getManufacturer().getName());
 
-            typefacesByDetailSubString.put(manufacturerName, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
+            typefacesByDetailSubString.put(manufacturerDetail, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
                     ? this.typefacesByDetailType.get(DetailType.MANUFACTURER)
                     : Typeface.NORMAL);
-
-            detailDisplayed = true;
         }
 
-        String totalRideCountString = "";
+        String statusDetail = "";
+        if(item instanceof IHasStatusProperty && this.displayModesByDetailType.get(DetailType.STATUS) == detailDisplayMode)
+        {
+            detailSubStringsByDetailType.put(DetailType.STATUS, ((IHasStatusProperty)item).getStatus().getName());
+
+            typefacesByDetailSubString.put(statusDetail, this.typefacesByDetailType.containsKey(DetailType.STATUS)
+                    ? this.typefacesByDetailType.get(DetailType.STATUS)
+                    : Typeface.NORMAL);
+        }
+
+        String totalRideCountDetail = "";
         if(this.displayModesByDetailType.get(DetailType.TOTAL_RIDE_COUNT) == detailDisplayMode)
         {
-            if(detailDisplayed)
-            {
-                totalRideCountString = " - ";
-            }
-            totalRideCountString += App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+            detailSubStringsByDetailType.put(DetailType.TOTAL_RIDE_COUNT, App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount()));
 
-            typefacesByDetailSubString.put(totalRideCountString, this.typefacesByDetailType.containsKey(DetailType.TOTAL_RIDE_COUNT)
+            typefacesByDetailSubString.put(totalRideCountDetail, this.typefacesByDetailType.containsKey(DetailType.TOTAL_RIDE_COUNT)
                     ? this.typefacesByDetailType.get(DetailType.TOTAL_RIDE_COUNT)
                     : Typeface.NORMAL);
         }
 
+        return StringTool.buildSpannableString(this.getOrderedDetailString(detailSubStringsByDetailType), typefacesByDetailSubString);
+    }
 
-        String detailString = App.getContext().getString(R.string.text_detail, locationName, creditTypeName, statusName, categoryName, manufacturerName, totalRideCountString);
+    private String getOrderedDetailString(HashMap<DetailType, String> detailSubsStringsByDetailType)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
 
-        return StringTool.buildSpannableString(detailString, typefacesByDetailSubString);
+        for(DetailType detailType : App.settings.getDetailsOrder())
+        {
+            if(detailSubsStringsByDetailType.containsKey(detailType))
+            {
+                if(stringBuilder.length() != 0)
+                {
+                    stringBuilder.append(" - ");
+                }
+                stringBuilder.append(detailSubsStringsByDetailType.get(detailType));
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)

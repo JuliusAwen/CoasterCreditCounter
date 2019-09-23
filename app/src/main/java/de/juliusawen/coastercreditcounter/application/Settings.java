@@ -2,11 +2,14 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -18,6 +21,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class Settings implements IPersistable
 {
@@ -26,12 +30,14 @@ public class Settings implements IPersistable
     private Manufacturer defaultManufacturer;
     private Status defaultStatus;
 
+    private ArrayList<DetailType> detailsOrder = new ArrayList<>();
 
-    private SortOrder defaultSortOrderParkVisits;
+
+    private SortOrder defaultSortOrder;
     private boolean expandLatestYearInListByDefault;
     private int firstDayOfTheWeek;
 
-    private int defaultIncrement;
+    private int increment;
 
 
     private final Persistence persistence;
@@ -63,7 +69,7 @@ public class Settings implements IPersistable
         {
             if(this.validate())
             {
-                Visit.setSortOrder(this.getDefaultSortOrderParkVisits());
+                Visit.setSortOrder(this.getDefaultSortOrder());
                 Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
@@ -84,22 +90,22 @@ public class Settings implements IPersistable
     {
         Log.i(Constants.LOG_TAG, "Settings.validate:: validating settings...");
 
-        if(this.getDefaultSortOrderParkVisits() == null)
+        if(this.getDefaultSortOrder() == null)
         {
-            String message = "Settings validation failed: default sort order for park visits is null";
+            String message = "Settings validation failed: default sort order is null";
             Log.e(Constants.LOG_TAG, String.format("Settings.validate:: %s", message));
             throw  new IllegalStateException(message);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order for park visits is [%s]", this.getDefaultSortOrderParkVisits()));
+            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
         }
 
         Log.i(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
 
         Log.i(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
 
-        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%d]", this.getDefaultIncrement()));
+        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%d]", this.getIncrement()));
 
 
         Log.i(Constants.LOG_TAG, "Settings.validate:: settings validation successful");
@@ -110,10 +116,24 @@ public class Settings implements IPersistable
     {
         Log.i(Constants.LOG_TAG, "Settings.useDatabaseMock:: setting defaults...");
 
-        this.setDefaultSortOrderParkVisits(SortOrder.DESCENDING);
+        this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearInListByDefault(true);
         this.setFirstDayOfTheWeek(Calendar.MONDAY);
-        this.setDefaultIncrement(1);
+        this.setIncrement(1);
+        this.setDetailsOrder(this.getDefaultDetailsOrder());
+    }
+
+    private ArrayList<DetailType> getDefaultDetailsOrder()
+    {
+        ArrayList<DetailType> defaultDetailsOrder = new ArrayList<>();
+        defaultDetailsOrder.add(DetailType.LOCATION);
+        defaultDetailsOrder.add(DetailType.CATEGORY);
+        defaultDetailsOrder.add(DetailType.MANUFACTURER);
+        //defaultDetailsOrder.add(DetailType.Model);
+        defaultDetailsOrder.add(DetailType.CREDIT_TYPE);
+        defaultDetailsOrder.add(DetailType.STATUS);
+        defaultDetailsOrder.add(DetailType.TOTAL_RIDE_COUNT);
+        return defaultDetailsOrder;
     }
 
     public CreditType getDefaultCreditType()
@@ -180,15 +200,26 @@ public class Settings implements IPersistable
         Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultStatus:: %s set as default", defaultStatus));
     }
 
-    public SortOrder getDefaultSortOrderParkVisits()
+    public List<DetailType> getDetailsOrder()
     {
-        return defaultSortOrderParkVisits;
+        return this.detailsOrder;
     }
 
-    public void setDefaultSortOrderParkVisits(SortOrder defaultSortOrderParkVisits)
+    public void setDetailsOrder(ArrayList<DetailType> detailsOrder)
     {
-        this.defaultSortOrderParkVisits = defaultSortOrderParkVisits;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultSortOrderParkVisits:: [%s] set as default", defaultSortOrderParkVisits));
+        this.detailsOrder = detailsOrder;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDetailsOrder:: [%d] details set in order", detailsOrder.size()));
+    }
+
+    public SortOrder getDefaultSortOrder()
+    {
+        return defaultSortOrder;
+    }
+
+    public void setDefaultSortOrder(SortOrder defaultSortOrder)
+    {
+        this.defaultSortOrder = defaultSortOrder;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultSortOrder:: [%s] set as default", defaultSortOrder));
     }
 
     public boolean expandLatestYearInListByDefault()
@@ -213,15 +244,15 @@ public class Settings implements IPersistable
         Log.i(Constants.LOG_TAG, String.format("Settings.setFirstDayOfTheWeek:: set to [%s]", this.dayNames[firstDayOfTheWeek]));
     }
 
-    public int getDefaultIncrement()
+    public int getIncrement()
     {
-        return this.defaultIncrement;
+        return this.increment;
     }
 
-    public void setDefaultIncrement(int defaultIncrement)
+    public void setIncrement(int increment)
     {
-        this.defaultIncrement = defaultIncrement;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultIncrement:: [%d] set as default", defaultIncrement));
+        this.increment = increment;
+        Log.i(Constants.LOG_TAG, String.format("Settings.setIncrement:: [%d] set as default", increment));
     }
 
     public JSONObject toJson()
@@ -230,14 +261,21 @@ public class Settings implements IPersistable
 
         try
         {
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObjectSettings = new JSONObject();
 
-            jsonObject.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrderParkVisits().ordinal());
-            jsonObject.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
-            jsonObject.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
-            jsonObject.put(Constants.JSON_STRING_DEFAULT_INCREMENT, this.getDefaultIncrement());
+            JSONArray jsonArrayDetailTypeOrder = new JSONArray();
+            for(DetailType detailType : this.getDetailsOrder())
+            {
+                jsonArrayDetailTypeOrder.put(detailType.ordinal());
+            }
+            jsonObjectSettings.put(Constants.JSON_STRING_DETAIL_ORDER, jsonArrayDetailTypeOrder);
 
-            return jsonObject;
+            jsonObjectSettings.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrder().ordinal());
+            jsonObjectSettings.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
+            jsonObjectSettings.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
+            jsonObjectSettings.put(Constants.JSON_STRING_INCREMENT, this.getIncrement());
+
+            return jsonObjectSettings;
         }
         catch(JSONException e)
         {

@@ -18,15 +18,19 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
@@ -39,8 +43,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
     private EditText editTextAttractionName;
 
-    private TextView textViewManufacturer;
+    private TextView textViewCreditType;
     private TextView textViewCategory;
+    private TextView textViewManufacturer;
     private TextView textViewStatus;
 
     private EditText editTextUntrackedRideCount;
@@ -53,8 +58,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     protected void create()
     {
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
-        this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
+        this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
         this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
+        this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
@@ -107,14 +113,28 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         this.decorateFloatingActionButton();
         this.createEditTextAttractionName();
 
-        if(!(this.viewModel.attraction instanceof StockAttraction))
+        //Todo: implement goto blueprint
+
+        if(this.viewModel.attraction instanceof IHasCreditTypeProperty)
         {
-            this.createLayoutManufacturer();
+            this.createLayoutCreditType();
+        }
+
+        if(this.viewModel.attraction instanceof IHasCategoryProperty)
+        {
             this.createLayoutCategory();
         }
-        //Todo: implement goto blueprint on else
 
-        this.createLayoutStatus();
+        if(this.viewModel.attraction instanceof IHasManufacturerProperty)
+        {
+            this.createLayoutManufacturer();
+        }
+
+        if(this.viewModel.attraction instanceof IHasStatusProperty)
+        {
+            this.createLayoutStatus();
+        }
+
         this.createEditTextUntrackedRideCount();
     }
 
@@ -132,14 +152,18 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         IElement pickedElement = ResultFetcher.fetchResultElement(data);
 
-        switch(RequestCode.values()[requestCode])
+        switch(RequestCode.getValue(requestCode))
         {
-            case PICK_MANUFACTURER:
-                this.setText((Manufacturer)pickedElement);
+            case PICK_CREDIT_TYPE:
+                this.setText((CreditType)pickedElement);
                 break;
 
             case PICK_CATEGORY:
-                this.setText((Category) pickedElement);
+                this.setText((Category)pickedElement);
+                break;
+
+            case PICK_MANUFACTURER:
+                this.setText((Manufacturer)pickedElement);
                 break;
 
             case PICK_STATUS:
@@ -150,16 +174,22 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
     }
 
-    private void setText(Manufacturer element)
+    private void setText(CreditType element)
     {
-        this.textViewManufacturer.setText(element.getName());
-        this.viewModel.manufacturer = element;
+        this.textViewCreditType.setText(element.getName());
+        this.viewModel.creditType = element;
     }
 
     private void setText(Category element)
     {
         this.textViewCategory.setText(element.getName());
         this.viewModel.category = element;
+    }
+
+    private void setText(Manufacturer element)
+    {
+        this.textViewManufacturer.setText(element.getName());
+        this.viewModel.manufacturer = element;
     }
 
     private void setText(Status element)
@@ -222,14 +252,17 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if(!(viewModel.attraction instanceof StockAttraction))
+                        if((viewModel.attraction instanceof IHasCreditTypeProperty))
                         {
-                            if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
+                            if(!viewModel.attraction.getCreditType().equals(viewModel.creditType))
                             {
-                                viewModel.attraction.setManufacturer(viewModel.manufacturer);
+                                viewModel.attraction.setCreditType(viewModel.creditType);
                                 somethingChanged = true;
                             }
+                        }
 
+                        if((viewModel.attraction instanceof IHasCategoryProperty))
+                        {
                             if(!viewModel.attraction.getCategory().equals(viewModel.category))
                             {
                                 viewModel.attraction.setCategory(viewModel.category);
@@ -237,10 +270,22 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if(!viewModel.attraction.getStatus().equals(viewModel.status))
+                        if((viewModel.attraction instanceof IHasManufacturerProperty))
                         {
-                            viewModel.attraction.setStatus(viewModel.status);
-                            somethingChanged = true;
+                            if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
+                            {
+                                viewModel.attraction.setManufacturer(viewModel.manufacturer);
+                                somethingChanged = true;
+                            }
+                        }
+
+                        if((viewModel.attraction instanceof IHasStatusProperty))
+                        {
+                            if(!viewModel.attraction.getStatus().equals(viewModel.status))
+                            {
+                                viewModel.attraction.setStatus(viewModel.status);
+                                somethingChanged = true;
+                            }
                         }
 
                         if(viewModel.attraction.getUntracktedRideCount() != viewModel.untrackedRideCount)
@@ -274,7 +319,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
                             viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
 
-
                             CreateOrEditCustomAttractionActivity.super.markForCreation(viewModel.attraction);
                             CreateOrEditCustomAttractionActivity.super.markForUpdate(viewModel.parentPark);
 
@@ -303,36 +347,36 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         }
     }
 
-    private void createLayoutManufacturer()
+    private void createLayoutCreditType()
     {
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
-        linearLayout.setOnClickListener((new View.OnClickListener()
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
+        linearLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
+            public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickManufacturer> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickCreditType> selected");
 
-                List<IElement> elements = App.content.getContentOfType(Manufacturer.class);
+                List<IElement> elements = App.content.getContentOfType(CreditType.class);
 
                 if(elements.size() == 1)
                 {
                     Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
-                    setText((Manufacturer)elements.get(0));
+                    setText((CreditType)elements.get(0));
                 }
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_MANUFACTURER, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, elements);
                 }
             }
-        }));
+        });
 
-        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : App.settings.getDefaultManufacturer();
-        this.textViewManufacturer.setText(manufacturer.getName());
+        CreditType creditType = this.viewModel.isEditMode ? this.viewModel.attraction.getCreditType() : App.settings.getDefaultCreditType();
+        this.textViewCreditType.setText(creditType.getName());
         linearLayout.setVisibility(View.VISIBLE);
 
-        this.viewModel.manufacturer = manufacturer;
+        this.viewModel.creditType = creditType;
     }
 
     private void createLayoutCategory()
@@ -365,6 +409,38 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
         linearLayout.setVisibility(View.VISIBLE);
 
         this.viewModel.category = category;
+    }
+
+    private void createLayoutManufacturer()
+    {
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
+        linearLayout.setOnClickListener((new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickManufacturer> selected");
+
+                List<IElement> elements = App.content.getContentOfType(Manufacturer.class);
+
+                if(elements.size() == 1)
+                {
+                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    setText((Manufacturer)elements.get(0));
+                }
+                else
+                {
+
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_MANUFACTURER, elements);
+                }
+            }
+        }));
+
+        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : App.settings.getDefaultManufacturer();
+        this.textViewManufacturer.setText(manufacturer.getName());
+        linearLayout.setVisibility(View.VISIBLE);
+
+        this.viewModel.manufacturer = manufacturer;
     }
 
     private void createLayoutStatus()
@@ -432,13 +508,14 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private boolean createAttraction()
     {
         boolean success = false;
-        IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount, null);
+        IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount);
 
         if(attraction != null)
         {
             this.viewModel.attraction = attraction;
-            this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
+            this.viewModel.attraction.setCreditType(this.viewModel.creditType);
             this.viewModel.attraction.setCategory(this.viewModel.category);
+            this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
             this.viewModel.attraction.setStatus(this.viewModel.status);
             this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
@@ -447,8 +524,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: show - success[%S]", success));
-
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: created successfuly [%S]", success));
         return success;
     }
 
