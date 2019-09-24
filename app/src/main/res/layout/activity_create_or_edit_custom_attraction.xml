@@ -10,7 +10,6 @@
         layout="@layout/floating_action_button"/>
 
     <LinearLayout
-        tools:ignore="UselessParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -20,6 +19,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
+            android:layout_marginTop="14dp"
             android:layout_height="0dp"
             android:layout_weight="1">
 
