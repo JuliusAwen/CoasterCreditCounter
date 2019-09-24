@@ -7,6 +7,7 @@
 
     <!--GENERIC TITLES AND SUBTITLES-->
     <string name="title_relocate">Relocate</string>
+    <string name="title_sort">Sort</string>
 
     <string name="subtitle_relocate_select_new_parent">select new parent location for \'%1$s\'</string>
     <string name="subtitle_management">management</string>
@@ -174,8 +175,7 @@
 
 
     <!--LOCATIONS-->
-    <string name="title_locations">Locations</string>
-    <string name="title_sort_locations">Sort Locations</string>
+    <string name="locations">Locations</string>
     <string name="title_edit_location">Edit Location</string>
     <string name="subtitle_create_location">create child location</string>
     <string name="hint_enter_location_name">Enter location name</string>
@@ -183,7 +183,7 @@
 
 
     <!--PARKS-->
-    <string name="title_sort_parks">Sort Parks</string>
+    <string name="parks">Parks</string>
     <string name="title_edit_park">Edit Park</string>
     <string name="subtitle_create_park">create park</string>
     <string name="subtitle_park_show_tab_overview">Overview</string>
@@ -214,7 +214,7 @@
 
 
     <!--SHOW_ATTRACTIONS-->
-    <string name="title_sort_attractions">Sort Attractions</string>
+    <string name="attractions">Attractions</string>
     <string name="title_pick_attractions">Pick Attractions</string>
     <string name="subtitle_attractions_to_add_to_visit">to add to your visit</string>
 
@@ -235,10 +235,10 @@
 
     <!--CREDIT TYPES-->
     <string name="default_credit_type_name">no credit</string>
-    <string name="title_credit_type">Credit Type</string>
+    <string name="credit_type">Credit Type</string>
+    <string name="credit_types">Credit Types</string>
     <string name="title_create_credit_type">Create Credit Type</string>
     <string name="title_edit_credit_type">Edit Credit Type</string>
-    <string name="title_sort_credit_type">Sort Credit Types</string>
     <string name="subtitle_to_assign_credit_type_to">to assign credit type to</string>
     <string name="hint_enter_credit_type_name">Enter credit type name</string>
     <string name="header_credit_type">Credit Type:</string>
@@ -247,10 +247,10 @@
 
     <!--CATEGORIES-->
     <string name="default_category_name">uncategorized</string>
-    <string name="title_category">Category</string>
+    <string name="category">Category</string>
+    <string name="categories">Categories</string>
     <string name="title_create_category">Create Category</string>
     <string name="title_edit_category">Edit Category</string>
-    <string name="title_sort_categories">Sort Categories</string>
     <string name="subtitle_to_assign_category_to">to assign category to</string>
     <string name="hint_enter_category_name">Enter category name</string>
     <string name="header_category">Category:</string>
@@ -258,10 +258,10 @@
 
     <!--MANUFACTURERS-->
     <string name="default_manufacturer_name">unknown</string>
-    <string name="title_manufacturer">Manufacturer</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="manufacturers">Manufacturers</string>
     <string name="title_create_manufacturer">Create Manufacturer</string>
     <string name="title_edit_manufacturer">Edit Manufacturer</string>
-    <string name="title_sort_manufacturers">Sort Manufacturers</string>
     <string name="subtitle_to_assign_manufacturer_to">to assign manufacturer to</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
     <string name="header_manufacturer">Manufacturer:</string>
@@ -270,10 +270,10 @@
 
     <!--STATUS-->
     <string name="default_status_name">operational</string>
-    <string name="title_status">Status</string>
+    <string name="status">Status</string>
+    <string name="statuses">Statuses</string>
     <string name="title_create_status">Create Status</string>
     <string name="title_edit_status">Edit Status</string>
-    <string name="title_sort_statuses">Sort Statuses</string>
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="header_status">Status:</string>

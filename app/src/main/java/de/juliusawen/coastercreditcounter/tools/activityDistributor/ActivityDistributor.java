@@ -79,29 +79,29 @@ public abstract class ActivityDistributor
         {
             case MANAGE_CREDIT_TYPES:
                 propertyType = PropertyType.CREDIT_TYPE;
-                toolbarTitle = context.getString(R.string.title_credit_type);
-                helpTitle = context.getString(R.string.title_credit_type);
+                toolbarTitle = context.getString(R.string.credit_type);
+                helpTitle = context.getString(R.string.credit_type);
                 helpText = context.getString(R.string.help_text_manage_credit_types);
                 break;
 
             case MANAGE_CATEGORIES:
                 propertyType = PropertyType.CATEGORY;
-                toolbarTitle = context.getString(R.string.title_category);
-                helpTitle = context.getString(R.string.title_category);
+                toolbarTitle = context.getString(R.string.category);
+                helpTitle = context.getString(R.string.category);
                 helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
             case MANAGE_MANUFACTURERS:
                 propertyType = PropertyType.MANUFACTURER;
-                toolbarTitle = context.getString(R.string.title_manufacturer);
-                helpTitle = context.getString(R.string.title_manufacturer);
+                toolbarTitle = context.getString(R.string.manufacturer);
+                helpTitle = context.getString(R.string.manufacturer);
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
             case MANAGE_STATUSES:
                 propertyType = PropertyType.STATUS;
-                toolbarTitle = context.getString(R.string.title_status);
-                helpTitle = context.getString(R.string.title_status);
+                toolbarTitle = context.getString(R.string.status);
+                helpTitle = context.getString(R.string.status);
                 helpText = context.getString(R.string.help_text_manage_statuses);
                 break;
 
@@ -277,47 +277,48 @@ public abstract class ActivityDistributor
 
     public static void startActivitySortForResult(Context context, RequestCode requestCode, List<IElement> elementsToSort)
     {
-        String toolbarTitle;
+        String toolbarSubtitle;
 
         switch(requestCode)
         {
             case SORT_LOCATIONS:
-                toolbarTitle = context.getString(R.string.title_sort_locations);
+                toolbarSubtitle = context.getString(R.string.locations);
                 break;
 
             case SORT_PARKS:
-                toolbarTitle = context.getString(R.string.title_sort_parks);
+                toolbarSubtitle = context.getString(R.string.parks);
                 break;
 
             case SORT_ATTRACTIONS:
-                toolbarTitle = context.getString(R.string.title_sort_attractions);
+                toolbarSubtitle = context.getString(R.string.attractions);
                 break;
 
             case SORT_CREDIT_TYPES:
-                toolbarTitle = context.getString(R.string.title_sort_credit_type);
+                toolbarSubtitle = context.getString(R.string.credit_types);
                 break;
 
             case SORT_CATEGORIES:
-                toolbarTitle = context.getString(R.string.title_sort_categories);
+                toolbarSubtitle = context.getString(R.string.categories);
                 break;
 
             case SORT_MANUFACTURERS:
-                toolbarTitle = context.getString(R.string.title_sort_manufacturers);
+                toolbarSubtitle = context.getString(R.string.manufacturers);
                 break;
 
             case SORT_STATUSES:
-                toolbarTitle = context.getString(R.string.title_sort_statuses);
+                toolbarSubtitle = context.getString(R.string.statuses);
                 break;
 
                 default:
-                    toolbarTitle = context.getString(R.string.error_missing_text);
+                    toolbarSubtitle = context.getString(R.string.error_missing_text);
 
         }
 
-        if(!toolbarTitle.equals(context.getString(R.string.error_missing_text)))
+        if(!toolbarSubtitle.equals(context.getString(R.string.error_missing_text)))
         {
             Intent intent = new Intent(context, SortElementsActivity.class);
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_sort));
+            intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
             ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 

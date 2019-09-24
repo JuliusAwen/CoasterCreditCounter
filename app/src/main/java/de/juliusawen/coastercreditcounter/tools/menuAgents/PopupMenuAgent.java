@@ -46,7 +46,7 @@ public class PopupMenuAgent
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
+                Log.w(Constants.LOG_TAG, String.format("PopupMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
             }
         }
         return this;
@@ -61,7 +61,7 @@ public class PopupMenuAgent
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
+            Log.w(Constants.LOG_TAG, String.format("PopupMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
             return false;
         }
     }

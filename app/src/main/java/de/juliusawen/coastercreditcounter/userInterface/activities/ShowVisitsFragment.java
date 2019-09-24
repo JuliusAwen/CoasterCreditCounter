@@ -57,6 +57,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
     private RecyclerView recyclerView;
 
+    boolean optionsMenuIsInvalid = false;
+
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitsFragment.newInstance:: instantiating fragment...");
@@ -145,6 +147,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 .add(OptionsItem.SORT)
                     .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
                     .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
                 .create(menu);
 
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -155,22 +159,38 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         this.viewModel.optionsMenuAgent
                 .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                 .prepare(menu);
 
         super.onPrepareOptionsMenu(menu);
     }
 
-    public boolean handleOptionsItemMenuItemSortAscendingSelected()
+    public boolean sortAscending()
     {
         Visit.setSortOrder(SortOrder.ASCENDING);
         this.updateContentRecyclerView();
         return true;
     }
 
-    public boolean handleOptionsItemSortDescendingSelected()
+    public boolean sortDecending()
     {
         Visit.setSortOrder(SortOrder.DESCENDING);
         this.updateContentRecyclerView();
+        return true;
+    }
+
+    public boolean expandAll()
+    {
+        this.viewModel.contentRecyclerViewAdapter.expandAll();
+        getActivity().invalidateOptionsMenu();
+        return true;
+    }
+
+    public boolean collapseAll()
+    {
+        this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        getActivity().invalidateOptionsMenu();
         return true;
     }
 

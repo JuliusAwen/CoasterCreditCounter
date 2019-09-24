@@ -22,9 +22,9 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -101,12 +101,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 switch(item)
                 {
                     case EXPAND_ALL:
-                        showAttractionsFragment.handleOptionsItemExpandAllSelected();
-                        return true;
+                        return showAttractionsFragment.expandAll();
 
                     case COLLAPSE_ALL:
-                        showAttractionsFragment.handleOptionsItemCollapseAllSelected();
-                        return true;
+                        return showAttractionsFragment.collapseAll();
                 }
 
             case SHOW_VISITS:
@@ -114,12 +112,16 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                 switch(item)
                 {
                     case SORT_ASCENDING:
-                        showVisitsFragment.handleOptionsItemMenuItemSortAscendingSelected();
-                        return true;
+                        return showVisitsFragment.sortAscending();
 
                     case SORT_DESCENDING:
-                        showVisitsFragment.handleOptionsItemSortDescendingSelected();
-                        return true;
+                        return showVisitsFragment.sortDecending();
+                        
+                    case EXPAND_ALL:
+                        return showVisitsFragment.expandAll();
+                        
+                    case COLLAPSE_ALL:
+                        return showVisitsFragment.collapseAll();
 
                     case SORT:
                         return true;

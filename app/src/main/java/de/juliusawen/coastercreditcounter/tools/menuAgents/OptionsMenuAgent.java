@@ -40,7 +40,7 @@ public class OptionsMenuAgent
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
+                Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
             }
         }
         return this;
@@ -55,7 +55,7 @@ public class OptionsMenuAgent
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
+            Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
             return false;
         }
     }
@@ -227,6 +227,15 @@ public class OptionsMenuAgent
             return true;
         }
         return client.handleOptionsItemSelected(optionsItem);
+    }
+
+    public void clear()
+    {
+        this.itemsToAdd.clear();
+        this.groupByItem.clear();
+        this.subMenuByGroup.clear();
+
+        Log.i(Constants.LOG_TAG, "OptionsMenuAgent.clear:: OptionsMenuAgent cleared");
     }
 }
 

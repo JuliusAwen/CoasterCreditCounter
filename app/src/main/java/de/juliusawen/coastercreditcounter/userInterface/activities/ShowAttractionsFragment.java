@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
@@ -35,7 +36,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attract
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -60,7 +60,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 {
     private ShowAttractionsFragmentViewModel viewModel;
     private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     public static ShowAttractionsFragment newInstance(String uuidString)
     {
@@ -203,15 +203,17 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .create(menu);
     }
 
-    public boolean handleOptionsItemExpandAllSelected()
+    public boolean expandAll()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
+        getActivity().invalidateOptionsMenu();
         return true;
     }
 
-    public boolean handleOptionsItemCollapseAllSelected()
+    public boolean collapseAll()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
+        getActivity().invalidateOptionsMenu();
         return true;
     }
 

@@ -23,11 +23,11 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -87,7 +87,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_locations)), getString(R.string.help_text_show_locations));
+        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
 
         this.setSelectionModeEnabled(this.viewModel.selectionMode);
     }
@@ -145,7 +145,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", enabled));
         ShowLocationsActivity.super.setToolbarTitleAndSubtitle(
-                enabled ? getString(R.string.title_relocate) : getString(R.string.title_locations),
+                enabled ? getString(R.string.title_relocate) : getString(R.string.locations),
                 enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : null);
         this.viewModel.selectionMode = enabled;
     }

@@ -1,6 +1,8 @@
-package de.juliusawen.coastercreditcounter.dataModel.elements;
+package de.juliusawen.coastercreditcounter.dataModel.elements.temporary;
 
 import java.util.UUID;
+
+import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 
 public class BottomSpacer extends OrphanElement
 {
