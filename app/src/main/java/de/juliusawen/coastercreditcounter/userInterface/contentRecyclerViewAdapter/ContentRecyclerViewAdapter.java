@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -61,10 +59,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private RecyclerView recyclerView;
     private final GroupHeaderProvider groupHeaderProvider;
 
-    private List<IElement> originalItems;
-    private List<IElement> items = new ArrayList<>();
+    private ArrayList<IElement> originalItems;
+    private ArrayList<IElement> items = new ArrayList<>();
 
-    private final Map<IElement, Integer> generationByItem = new LinkedHashMap<>();
+    private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
 
     private final ContentRecyclerViewAdapterType contentRecyclerViewAdapterType;
     private GroupType groupType;
@@ -81,17 +79,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
-    private final List<IElement> selectedItemsInOrderOfSelection = new ArrayList<>();
-    private final Set<IElement> expandedItems = new HashSet<>();
+    private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
+    private final HashSet<IElement> expandedItems = new HashSet<>();
 
-    private final Map<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
+    private final HashMap<Class<? extends IElement>, Integer> specialStringResourcesByType = new HashMap<>();
 
-    private final Map<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
-    private final Map<DetailType, Integer> typefacesByDetailType = new HashMap<>();
+    private final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
+    private final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
 
-    private final Map<DetailType, Set<Class<? extends IAttraction>>> contentTypesByDetailType = new HashMap<>();
+    private final HashMap<DetailType, Set<Class<? extends IAttraction>>> contentTypesByDetailType = new HashMap<>();
 
-    private final Map<DetailType, DetailDisplayMode> displayModesByDetailType = new HashMap<>();
+    private final HashMap<DetailType, DetailDisplayMode> displayModesByDetailType = new HashMap<>();
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
@@ -120,7 +118,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
 
-        this.originalItems = new LinkedList<>(items);
+        this.originalItems = new ArrayList<>(items);
         this.generationByItem.clear();
         this.items.clear();
 
@@ -134,12 +132,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.groupType = groupType;
         this.selectedItemsInOrderOfSelection.clear();
 
-        List<IElement> groupedItems = new ArrayList<>();
+        List<IElement> groupedItems = new LinkedList<>();
 
         switch(groupType)
         {
             case NONE:
-                groupedItems = this.originalItems;
+                groupedItems = new LinkedList<>(this.originalItems);
                 break;
 
             case LOCATION:
@@ -179,12 +177,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    private List<IElement> initializeItems(List<IElement> items, int generation)
+    private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
     {
-        List<IElement> initializedItems = new ArrayList<>();
-
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: initializing [%d] items - generation [%d]...", items.size(), generation));
 
+        ArrayList<IElement> initializedItems = new ArrayList<>();
         for(IElement item : items)
         {
             initializedItems.add(item);
@@ -192,7 +189,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             if(this.expandedItems.contains(item))
             {
-                List<IElement> relevantChildren = this.getRelevantChildren(item);
+                ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
                 Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: item %s is expanded - adding [%d] children", item, relevantChildren.size()));
                 initializedItems.addAll(this.initializeItems(relevantChildren, generation + 1));
             }
@@ -450,7 +447,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             //set typeface
             boolean typefaceSet = false;
-            for(Class type : typefacesByContentType.keySet())
+            for(Class<? extends IElement> type : typefacesByContentType.keySet())
             {
                 if(type.isAssignableFrom(item.getClass()))
                 {
@@ -469,7 +466,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             //set special string resource
             boolean specialStringResourceSet = false;
-            for(Class type : this.specialStringResourcesByType.keySet())
+            for(Class<? extends IElement> type : this.specialStringResourcesByType.keySet())
             {
                 if(type.isAssignableFrom(item.getClass()))
                 {
@@ -482,7 +479,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                         break;
                     }
-                    else if(IProperty.class.isAssignableFrom(item.getClass()) && ((IProperty) item).isDefault())
+                    else if(IProperty.class.isAssignableFrom(item.getClass()) && ((IProperty)item).isDefault())
                     {
                         if(this.specialStringResourcesByType.containsKey(IProperty.class))
                         {
@@ -751,9 +748,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return generation;
     }
 
-    private List<IElement> getRelevantChildren(IElement item)
+    private ArrayList<IElement> getRelevantChildren(IElement item)
     {
-        List<IElement> relevantChildren = new ArrayList<>();
+        ArrayList<IElement> relevantChildren = new ArrayList<>();
 
         for(Class<? extends IElement> childType : this.relevantChildTypes)
         {
@@ -885,7 +882,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(!this.expandedItems.contains(item))
         {
-            List<IElement> relevantChildren = this.getRelevantChildren(item);
+            ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
                 this.expandedItems.add(item);
@@ -1197,7 +1194,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllItems:: deselecting all elements...");
 
-        List<IElement> selectedItems = new ArrayList<>(this.selectedItemsInOrderOfSelection);
+        LinkedList<IElement> selectedItems = new LinkedList<>(this.selectedItemsInOrderOfSelection);
         this.selectedItemsInOrderOfSelection.clear();
 
         for(IElement selectedItem : selectedItems)
@@ -1206,9 +1203,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public List<IElement> getSelectedItemsInOrderOfSelection()
+    public LinkedList<IElement> getSelectedItemsInOrderOfSelection()
     {
-        List<IElement> selectedItems = new ArrayList<>();
+        LinkedList<IElement> selectedItems = new LinkedList<>();
 
         for(IElement item : this.selectedItemsInOrderOfSelection)
         {
@@ -1236,7 +1233,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         Collections.swap(this.items, index1, index2);
         notifyItemMoved(index1, index2);
-
         this.scrollToItem(item1);
     }
 

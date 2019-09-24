@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -27,7 +28,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -41,13 +41,13 @@ public class GroupHeaderProvider
     private List<IElement> formerElements;
     private List<IGroupHeader> formerGroupedAttractions;
 
-    public List<IElement> groupElements(List<IElement> elements, GroupType groupType)
+    public LinkedList<IElement> groupElements(ArrayList<IElement> elements, GroupType groupType)
     {
-        List<IElement> blueprints = new LinkedList<>();
+        LinkedList<IElement> blueprints = new LinkedList<>();
 
         if(groupType == GroupType.NONE)
         {
-            return elements;
+            return new LinkedList<>(elements);
         }
         else if(groupType == GroupType.YEAR)
         {
@@ -76,7 +76,7 @@ public class GroupHeaderProvider
             {
                 Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: initalizing GroupHeaders for [%d] attractions...", elements.size()));
 
-                List<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
+                LinkedList<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
 
                 for(IAttraction attraction : attractions)
                 {
@@ -208,7 +208,7 @@ public class GroupHeaderProvider
             }
         }
 
-        List<IElement> emptyHeaders = new ArrayList<>();
+        LinkedList<IElement> emptyHeaders = new LinkedList<>();
         for(IElement header : groupedAttractions)
         {
             if(!header.hasChildren())
@@ -313,14 +313,14 @@ public class GroupHeaderProvider
         }
     }
 
-    private List<IElement> groupByYear(List<IElement> elements)
+    private LinkedList<IElement> groupByYear(List<IElement> elements)
     {
-        List<Visit> visits = ConvertTool.convertElementsToType(elements, Visit.class);
+        LinkedList<Visit> visits = ConvertTool.convertElementsToType(elements, Visit.class);
 
         if(visits.isEmpty())
         {
             Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByYear:: no elements to group");
-            return new ArrayList<IElement>(visits);
+            return new LinkedList<IElement>(visits);
         }
 
         Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding SpecialGroupHeaders to [%d] elements...", visits.size()));
@@ -332,7 +332,7 @@ public class GroupHeaderProvider
 
         visits = this.sortVisitsByDateAccordingToSortOrder(visits);
 
-        List<IElement> groupedVisits = new ArrayList<>();
+        LinkedList<IElement> groupedVisits = new LinkedList<>();
 
         for(Visit visit : visits)
         {
@@ -380,7 +380,7 @@ public class GroupHeaderProvider
         return groupedVisits;
     }
 
-    private List<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
+    private LinkedList<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
     {
         DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         HashMap<String, Visit> visitsByDateString = new HashMap<>();
@@ -392,10 +392,10 @@ public class GroupHeaderProvider
             Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: parsed date [%s] from name %s", dateString, visit));
         }
 
-        List<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
+        ArrayList<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
         Collections.sort(dateStrings);
 
-        List<Visit> sortedVisits = new ArrayList<>();
+        LinkedList<Visit> sortedVisits = new LinkedList<>();
 
         if(Visit.getSortOrder() == SortOrder.ASCENDING)
         {

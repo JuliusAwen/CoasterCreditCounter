@@ -235,7 +235,7 @@
 
     <!--CREDIT TYPES-->
     <string name="default_credit_type_name">no credit</string>
-    <string name="title_credit_types">Credit Types</string>
+    <string name="title_credit_type">Credit Type</string>
     <string name="title_create_credit_type">Create Credit Type</string>
     <string name="title_edit_credit_type">Edit Credit Type</string>
     <string name="title_sort_credit_type">Sort Credit Types</string>
@@ -245,9 +245,20 @@
 
 
 
+    <!--CATEGORIES-->
+    <string name="default_category_name">uncategorized</string>
+    <string name="title_category">Category</string>
+    <string name="title_create_category">Create Category</string>
+    <string name="title_edit_category">Edit Category</string>
+    <string name="title_sort_categories">Sort Categories</string>
+    <string name="subtitle_to_assign_category_to">to assign category to</string>
+    <string name="hint_enter_category_name">Enter category name</string>
+    <string name="header_category">Category:</string>
+
+
     <!--MANUFACTURERS-->
     <string name="default_manufacturer_name">unknown</string>
-    <string name="title_manufacturers">Manufacturers</string>
+    <string name="title_manufacturer">Manufacturer</string>
     <string name="title_create_manufacturer">Create Manufacturer</string>
     <string name="title_edit_manufacturer">Edit Manufacturer</string>
     <string name="title_sort_manufacturers">Sort Manufacturers</string>
@@ -257,21 +268,9 @@
 
 
 
-    <!--CATEGORIES-->
-    <string name="default_category_name">uncategorized</string>
-    <string name="title_categories">Categories</string>
-    <string name="title_create_category">Create Category</string>
-    <string name="title_edit_category">Edit Category</string>
-    <string name="title_sort_categories">Sort Categories</string>
-    <string name="subtitle_to_assign_category_to">to assign category to</string>
-    <string name="hint_enter_category_name">Enter category name</string>
-    <string name="header_category">Category:</string>
-
-
-
     <!--STATUS-->
     <string name="default_status_name">operational</string>
-    <string name="title_statuses">Statuses</string>
+    <string name="title_status">Status</string>
     <string name="title_create_status">Create Status</string>
     <string name="title_edit_status">Edit Status</string>
     <string name="title_sort_statuses">Sort Statuses</string>

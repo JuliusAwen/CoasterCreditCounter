@@ -14,9 +14,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -35,7 +34,6 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
-import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
@@ -122,7 +120,6 @@ public class PickElementsActivity extends BaseActivity
                             .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
                     super.addFloatingActionButton();
-                    this.decorateFloatingActionButtonAdd();
                     break;
                 }
 
@@ -500,42 +497,6 @@ public class PickElementsActivity extends BaseActivity
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void decorateFloatingActionButtonAdd()
-    {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onClickFloatingActionButton:: FloatingActionButton pressed - RequestCode [%s]", viewModel.requestCode));
-
-                switch(viewModel.requestCode)
-                {
-                    case PICK_CREDIT_TYPE:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
-                        break;
-
-                    case PICK_CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
-                        break;
-
-                    case PICK_MANUFACTURER:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_MANUFACTURER, null);
-                        break;
-
-                    case PICK_STATUS:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_STATUS, null);
-                        break;
-
-                        default:
-                            break;
-                }
-            }
-        });
-        super.setFloatingActionButtonVisibility(true);
-    }
-
     private void addSelectOrDeselectAllBar()
     {
         LinearLayout linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
@@ -651,7 +612,7 @@ public class PickElementsActivity extends BaseActivity
 
                     default:
                     {
-                        List<IElement> selectedElementsWithoutOrphanElements = new ArrayList<>();
+                        LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
 
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                         {

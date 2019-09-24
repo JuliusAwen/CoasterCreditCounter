@@ -12,10 +12,10 @@ import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateLocationActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateOrEditCustomAttractionActivity;
@@ -79,29 +79,29 @@ public abstract class ActivityDistributor
         {
             case MANAGE_CREDIT_TYPES:
                 propertyType = PropertyType.CREDIT_TYPE;
-                toolbarTitle = context.getString(R.string.title_credit_types);
-                helpTitle = context.getString(R.string.title_credit_types);
+                toolbarTitle = context.getString(R.string.title_credit_type);
+                helpTitle = context.getString(R.string.title_credit_type);
                 helpText = context.getString(R.string.help_text_manage_credit_types);
                 break;
 
             case MANAGE_CATEGORIES:
                 propertyType = PropertyType.CATEGORY;
-                toolbarTitle = context.getString(R.string.title_categories);
-                helpTitle = context.getString(R.string.title_categories);
+                toolbarTitle = context.getString(R.string.title_category);
+                helpTitle = context.getString(R.string.title_category);
                 helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
             case MANAGE_MANUFACTURERS:
                 propertyType = PropertyType.MANUFACTURER;
-                toolbarTitle = context.getString(R.string.title_manufacturers);
-                helpTitle = context.getString(R.string.title_manufacturers);
+                toolbarTitle = context.getString(R.string.title_manufacturer);
+                helpTitle = context.getString(R.string.title_manufacturer);
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
             case MANAGE_STATUSES:
                 propertyType = PropertyType.STATUS;
-                toolbarTitle = context.getString(R.string.title_statuses);
-                helpTitle = context.getString(R.string.title_statuses);
+                toolbarTitle = context.getString(R.string.title_status);
+                helpTitle = context.getString(R.string.title_status);
                 helpText = context.getString(R.string.help_text_manage_statuses);
                 break;
 

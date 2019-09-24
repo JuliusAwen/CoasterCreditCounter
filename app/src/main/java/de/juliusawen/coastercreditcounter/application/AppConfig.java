@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
-@SuppressWarnings("FieldCanBeLocal") //
+@SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class AppConfig
 {
     private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
@@ -24,6 +24,8 @@ public class AppConfig
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
     private final boolean useDefaultSettingsOnStartup = false;
     private final boolean saveDefaultSettingsOnStartup = false;
+
+    private final boolean createAllDefaultsOnStartup = false; //this overrides useDefaultContentFromDatabaseMock, useDefaultSettings and saveDefaultSettings
 
     //above is just working when isDebugBuild = true
 
@@ -104,17 +106,17 @@ public class AppConfig
 
     public boolean useDefaultContentFromDatabaseMockOnStartup()
     {
-        return this.isDebugBuild && this.useDefaultContentFromDatabaseMockOnStartup;
+        return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup || this.createAllDefaultsOnStartup);
     }
 
     public boolean useDefaultSettingsOnStartup()
     {
-        return this.isDebugBuild && this.useDefaultSettingsOnStartup;
+        return this.isDebugBuild && (this.useDefaultSettingsOnStartup || this.createAllDefaultsOnStartup);
     }
 
     public boolean saveDefaultSettingsOnStartup()
     {
-        return this.isDebugBuild && this.saveDefaultSettingsOnStartup;
+        return this.isDebugBuild && (this.saveDefaultSettingsOnStartup || this.createAllDefaultsOnStartup);
     }
 
     public boolean validateContent()
