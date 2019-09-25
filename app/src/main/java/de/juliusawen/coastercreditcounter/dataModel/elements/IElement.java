@@ -50,4 +50,19 @@ public interface IElement
     void relocateElement(IElement newParent);
 
     String toString();
+
+    boolean isLocation();
+    boolean isPark();
+    boolean isVisit();
+    boolean isAttraction();
+    boolean isBlueprint();
+    boolean isOnSiteAttraction();
+    boolean isVisitedAttraction();
+    boolean isProperty();
+    boolean hasCreditType();
+    boolean hasCategory();
+    boolean hasManufacturer();
+    boolean hasStatus();
+    boolean isIPersistable();
+    boolean isGroupHeader();
 }

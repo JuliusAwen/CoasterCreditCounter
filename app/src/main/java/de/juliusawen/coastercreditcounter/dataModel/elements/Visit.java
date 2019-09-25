@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
@@ -23,7 +23,7 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
  * Parent: Park
  * Children: VisitedAttraction
  */
-public class Visit extends Element implements IPersistable
+public final class Visit extends Element implements IPersistable
 {
     private static final List<Visit> currentVisits = new ArrayList<>();
     private static SortOrder sortOrder = SortOrder.DESCENDING;

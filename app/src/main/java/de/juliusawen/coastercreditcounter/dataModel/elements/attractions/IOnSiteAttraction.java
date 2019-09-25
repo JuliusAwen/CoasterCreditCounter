@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
 /**
  * Marks attraction as concrete inidividual entity located at a particular location - can be StockAttraction or CustomAttraction/-Coaster
@@ -8,4 +8,5 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
  * Parent: Park
  * Children: none
  */
-public interface IOnSiteAttraction extends IElement, IAttraction {}
+public interface IOnSiteAttraction extends IAttraction, IPersistable
+{}

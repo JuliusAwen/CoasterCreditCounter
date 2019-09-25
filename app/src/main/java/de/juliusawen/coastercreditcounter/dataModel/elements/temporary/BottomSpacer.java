@@ -1,10 +1,11 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.temporary;
 
+
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 
-public class BottomSpacer extends OrphanElement
+public final class BottomSpacer extends Element
 {
     public BottomSpacer()
     {

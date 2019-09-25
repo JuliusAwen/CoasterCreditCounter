@@ -228,11 +228,11 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             public void onClick(View view)
             {
                 Element element = (Element) view.getTag();
-                if(element instanceof Visit)
+                if(element.isVisit())
                 {
                     ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, element);
                 }
-                else if(element instanceof SpecialGroupHeader)
+                else if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -243,7 +243,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 viewModel.longClickedElement = (IElement) view.getTag();
 
-                if(viewModel.longClickedElement instanceof Visit)
+                if(viewModel.longClickedElement.isVisit())
                 {
 
                     PopupMenuAgent.getMenu()

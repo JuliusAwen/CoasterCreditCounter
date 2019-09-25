@@ -15,7 +15,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Location
  * Children: CustomAttraction, StockAttraction, Visit
  */
-public class Park extends Element implements IPersistable
+public final class Park extends Element implements IPersistable
 {
     private Park(String name, UUID uuid)
     {

@@ -25,14 +25,11 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
@@ -310,7 +307,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         IElement item = this.items.get(position);
 
-        if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.COUNTABLE && (item instanceof VisitedAttraction))
+        if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.COUNTABLE && (item.isVisitedAttraction()))
         {
             return ViewType.VISITED_ATTRACTION.ordinal();
         }
@@ -466,7 +463,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 if(type.isAssignableFrom(item.getClass()))
                 {
-                    if(item instanceof Visit)
+                    if(item.isVisit())
                     {
                         if(this.specialStringResourcesByType.containsKey(Visit.class))
                         {
@@ -475,7 +472,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                         break;
                     }
-                    else if(IProperty.class.isAssignableFrom(item.getClass()) && ((IProperty)item).isDefault())
+                    else if(item.isProperty() && ((IProperty)item).isDefault())
                     {
                         if(this.specialStringResourcesByType.containsKey(IProperty.class))
                         {
@@ -499,7 +496,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.textViewDetailAbove.setVisibility(View.GONE);
             viewHolder.textViewDetailBelow.setVisibility(View.GONE);
 
-            if(IAttraction.class.isAssignableFrom(item.getClass()))
+            if(item.isAttraction())
             {
                 //decorate details
                 boolean displayDetailAbove = false;
@@ -600,7 +597,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(this.displayModesByDetailType.get(DetailType.LOCATION) == detailDisplayMode)
         {
             String locationDetail;
-            if(item instanceof IOnSiteAttraction)
+            if(item.isVisitedAttraction())
             {
                 locationDetail = item.getParent().getName();
                 detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
@@ -608,7 +605,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         ? this.typefacesByDetailType.get(DetailType.LOCATION)
                         : Typeface.NORMAL);
             }
-            else if(item instanceof Blueprint)
+            else if(item.isBlueprint())
             {
                 // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
                 locationDetail = App.getContext().getString(R.string.substitute_blueprint);
@@ -617,7 +614,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        if(this.displayModesByDetailType.get(DetailType.CREDIT_TYPE) == detailDisplayMode)
+        if(item.hasCreditType() && this.displayModesByDetailType.get(DetailType.CREDIT_TYPE) == detailDisplayMode)
         {
             String creditTypeDetail = ((IAttraction)item).getCreditType().getName();
             detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
@@ -627,7 +624,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
 
-        if(this.displayModesByDetailType.get(DetailType.CATEGORY) == detailDisplayMode)
+        if(item.hasCategory() && this.displayModesByDetailType.get(DetailType.CATEGORY) == detailDisplayMode)
         {
             String categoryDetail = ((IAttraction)item).getCategory().getName();
             detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
@@ -636,7 +633,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     : Typeface.NORMAL);
         }
 
-        if(this.displayModesByDetailType.get(DetailType.MANUFACTURER) == detailDisplayMode)
+        if(item.hasManufacturer() && this.displayModesByDetailType.get(DetailType.MANUFACTURER) == detailDisplayMode)
         {
             String manufacturerDetail = ((IAttraction)item).getManufacturer().getName();
             detailSubStringsByDetailType.put(DetailType.MANUFACTURER, manufacturerDetail);
@@ -646,7 +643,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
 
-        if((item instanceof IOnSiteAttraction) && this.displayModesByDetailType.get(DetailType.STATUS) == detailDisplayMode)
+        if(item.hasStatus() && this.displayModesByDetailType.get(DetailType.STATUS) == detailDisplayMode)
         {
             String statusDetail = ((IAttraction)item).getStatus().getName();
             detailSubStringsByDetailType.put(DetailType.STATUS, statusDetail);
@@ -753,7 +750,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private IElement getParentOfRelevantChild(IElement item)
     {
-        if(item instanceof Attraction)
+        if(item.isAttraction())
         {
             return this.getGroupHeaderForItem(item);
         }
@@ -772,7 +769,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         for(IElement item : this.items)
         {
-            if(item instanceof IGroupHeader)
+            if(item.isGroupHeader())
             {
                 if(item.getChildren().contains(groupElement))
                 {
@@ -914,7 +911,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             for(IElement relevantChild : this.getRelevantChildren(item))
             {
-                if(relevantChild instanceof Location)
+                if(relevantChild.isLocation())
                 {
                     List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
                     if(!relevantGrandchildren.isEmpty())
@@ -925,7 +922,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                     }
                 }
-                else if(relevantChild instanceof Attraction || relevantChild instanceof VisitedAttraction || relevantChild instanceof Visit)
+                else if(relevantChild.isAttraction() || relevantChild.isVisitedAttraction() || relevantChild.isVisit())
                 {
                     if(!this.expandedItems.contains(item))
                     {
@@ -1200,7 +1197,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         for(IElement item : this.selectedItemsInOrderOfSelection)
         {
-            if(!(item instanceof IGroupHeader))
+            if(!(item.isGroupHeader()))
             {
                 selectedItems.add(item);
             }

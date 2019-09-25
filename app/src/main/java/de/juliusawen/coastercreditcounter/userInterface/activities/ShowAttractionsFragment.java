@@ -245,11 +245,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             {
                 Element element = (Element) view.getTag();
 
-                if(element instanceof Attraction)
+                if(element.isAttraction())
                 {
                     Toaster.notYetImplemented(getContext());
                 }
-                else if(element instanceof GroupHeader)
+                else if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -260,7 +260,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if(view.getTag() instanceof GroupHeader)
+                if(viewModel.longClickedElement.isGroupHeader())
                 {
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.SORT_ATTRACTIONS)

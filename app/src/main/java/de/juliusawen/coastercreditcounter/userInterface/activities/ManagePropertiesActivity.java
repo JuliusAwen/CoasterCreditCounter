@@ -400,7 +400,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 Element element = (Element)view.getTag();
 
-                if((element instanceof Category) || (element instanceof Manufacturer))
+                if(element.isProperty())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
@@ -411,7 +411,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
-                if((IProperty.class.isAssignableFrom(viewModel.longClickedElement.getClass())))
+                if(viewModel.longClickedElement.isProperty())
                 {
                     boolean isDefault = false;
 

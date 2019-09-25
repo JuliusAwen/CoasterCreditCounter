@@ -19,7 +19,6 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
@@ -58,7 +57,7 @@ public class GroupHeaderProvider
             // bluprints have neither locations nor status - they will be filtered out and added again at the end under a SpecialGroupHeader
             for(IElement element : elements)
             {
-                if(Blueprint.class.isAssignableFrom(element.getClass()))
+                if(element.isBlueprint())
                 {
                     blueprints.add(element);
                 }

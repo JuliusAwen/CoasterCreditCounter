@@ -2,14 +2,18 @@ package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
-import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  * Individual attraction located at a particular park
@@ -17,7 +21,7 @@ import de.juliusawen.coastercreditcounter.application.Constants;
  * Parent: Park
  * Children: none
  */
-public class CustomAttraction extends Attraction implements IOnSiteAttraction, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty, IHasStatusProperty
+public final class CustomAttraction extends Attraction implements IOnSiteAttraction, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty, IHasStatusProperty
 {
     private CustomAttraction(String name, int untrackedRideCount, UUID uuid)
     {
@@ -43,5 +47,30 @@ public class CustomAttraction extends Attraction implements IOnSiteAttraction, I
             Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.create:: %s created", customAttraction.getFullName()));
         }
         return customAttraction;
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
+            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
+
+            Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }

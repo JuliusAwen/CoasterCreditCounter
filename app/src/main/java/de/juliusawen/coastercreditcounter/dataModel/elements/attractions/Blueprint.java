@@ -12,6 +12,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
@@ -20,7 +21,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  *  * Parent: none
  *  * Children: none
  */
-public class Blueprint extends Attraction implements IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
+public final class Blueprint extends Attraction implements IPersistable, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
 {
     private Blueprint(String name, UUID uuid)
     {

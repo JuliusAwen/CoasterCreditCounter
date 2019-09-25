@@ -9,6 +9,17 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
 /**
  * Simple Node.
@@ -321,4 +332,76 @@ public abstract class Element implements IElement
             return this.getParent().isDescendantOf(ancestor);
         }
     }
+
+    public boolean isLocation()
+    {
+        return this instanceof Location;
+    }
+
+    public boolean isPark()
+    {
+        return this instanceof Park;
+    }
+
+    public boolean isVisit()
+    {
+        return this instanceof Visit;
+    }
+
+    public boolean isAttraction()
+    {
+        return this instanceof IAttraction;
+    }
+
+    public boolean isBlueprint()
+    {
+        return this instanceof Blueprint;
+    }
+
+    public boolean isOnSiteAttraction()
+    {
+        return this instanceof IOnSiteAttraction;
+    }
+
+    public boolean isVisitedAttraction()
+    {
+        return this instanceof VisitedAttraction;
+    }
+
+    public boolean isProperty()
+    {
+        return this instanceof IProperty;
+    }
+
+    public boolean hasCreditType()
+    {
+        return this instanceof IHasCreditTypeProperty;
+    }
+
+    public boolean hasCategory()
+    {
+        return this instanceof IHasCategoryProperty;
+    }
+
+    public boolean hasManufacturer()
+    {
+        return this instanceof IHasManufacturerProperty;
+    }
+
+    public boolean hasStatus()
+    {
+        return this instanceof IHasStatusProperty;
+    }
+
+    public boolean isIPersistable()
+    {
+        return this instanceof IPersistable;
+    }
+
+    public boolean isGroupHeader()
+    {
+        return this instanceof IGroupHeader;
+    }
+
+
 }

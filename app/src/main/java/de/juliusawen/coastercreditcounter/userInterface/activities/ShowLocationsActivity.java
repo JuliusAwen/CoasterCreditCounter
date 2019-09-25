@@ -221,11 +221,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 if(!viewModel.selectionMode)
                 {
-                    if(element instanceof Location)
+                    if(element.isLocation())
                     {
                         viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                     }
-                    else if(element instanceof Park)
+                    else if(element.isPark())
                     {
                         ActivityDistributor.startActivityShow(ShowLocationsActivity.this, RequestCode.SHOW_PARK, element);
                     }
@@ -244,7 +244,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 if(!viewModel.selectionMode)
                 {
-                    boolean isLocation = viewModel.longClickedElement instanceof Location;
+                    boolean isLocation = viewModel.longClickedElement.isLocation();
                     boolean isRootLocation = isLocation && viewModel.longClickedElement.equals(App.content.getRootLocation());
                     boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
                     boolean sortParksEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
@@ -351,7 +351,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void handleRelocation(IElement element)
     {
-        if(element instanceof Location)
+        if(element.isLocation())
         {
             if(!element.equals(this.viewModel.longClickedElement))
             {

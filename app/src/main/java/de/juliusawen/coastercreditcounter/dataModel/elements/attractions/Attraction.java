@@ -2,26 +2,21 @@ package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.persistence.IPersistable;
-import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  * Abstract base class for all Attractions containing all base methods.
  * Can be CustomAttraction, Blueprint, StockAttraction or VisitedAttraction
  */
-public abstract class Attraction extends Element implements IAttraction, IPersistable
+public abstract class Attraction extends Element implements IAttraction
 {
 
     private CreditType creditType;
@@ -191,31 +186,6 @@ public abstract class Attraction extends Element implements IAttraction, IPersis
                 Log.e(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d] ([%d] rides untracked): " +
                         "decreasing by [%d] would make it negative - not decreasing", this, this.getTotalRideCount(), this.untracktedRideCount, decrement));
             }
-        }
-    }
-
-    @Override
-    public JSONObject toJson() throws JSONException
-    {
-        try
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
-            jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
-
-            Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
-            return jsonObject;
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
-            throw e;
         }
     }
 }

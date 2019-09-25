@@ -94,7 +94,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
                 .addRideOnClickListener(this.getIncreaseRideCountOnClickListener())
-                .deleteRideOnClickListener(this.getDcreaseRideCountOnClickListener());
+                .deleteRideOnClickListener(this.getDecreaseRideCountOnClickListener());
 
         this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -203,8 +203,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     {
                         VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-
-                        super.markForCreation(visitedAttraction);
                     }
 
                     this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
@@ -294,11 +292,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 Element element = (Element) view.getTag();
 
-                if(element instanceof GroupHeader)
+                if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                 }
-                else if(element instanceof Attraction)
+                else if(element.isAttraction())
                 {
                     Toaster.makeToast(ShowVisitActivity.this, element + " clicked");
                 }
@@ -309,7 +307,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 viewModel.longClickedElement = (Element) view.getTag();
 
-                if(viewModel.longClickedElement instanceof GroupHeader)
+                if(viewModel.longClickedElement.isGroupHeader())
                 {
                     boolean sortAttractionsIsEnabled =
                             viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1;
@@ -319,7 +317,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                             .setEnabled(PopupItem.SORT_ATTRACTIONS, sortAttractionsIsEnabled)
                             .show(ShowVisitActivity.this, view);
                 }
-                else if(viewModel.longClickedElement instanceof Attraction)
+                else if(viewModel.longClickedElement.isAttraction())
                 {
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.DELETE_ELEMENT)
@@ -405,7 +403,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         Log.i(LOG_TAG, String.format("ShowVisitActivity.deleteVisitedAttraction:: deleting %s...", viewModel.longClickedElement));
 
-        super.markForDeletion(this.viewModel.longClickedElement, true);
         super.markForUpdate(this.viewModel.longClickedElement.getParent());
         this.viewModel.longClickedElement.deleteElementAndDescendants();
         updateContentRecyclerView(true);
@@ -430,7 +427,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         };
     }
 
-    private View.OnClickListener getDcreaseRideCountOnClickListener()
+    private View.OnClickListener getDecreaseRideCountOnClickListener()
     {
         return new View.OnClickListener()
         {
@@ -439,7 +436,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(LOG_TAG, String.format("ShowVisitActivity.getDcreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getDecreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
                 visitedAttraction.decreaseTotalRideCount(App.settings.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);

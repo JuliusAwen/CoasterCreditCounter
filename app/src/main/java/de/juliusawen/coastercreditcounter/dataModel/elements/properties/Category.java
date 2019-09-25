@@ -8,12 +8,12 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
-public class Category extends OrphanElement implements IProperty
+public final class Category extends OrphanElement implements IProperty
 {
     private Category(String name, UUID uuid)
     {

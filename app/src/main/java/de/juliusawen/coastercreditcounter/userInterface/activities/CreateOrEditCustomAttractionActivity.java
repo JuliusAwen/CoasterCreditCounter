@@ -26,10 +26,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomA
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -132,22 +128,22 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         //Todo: implement goto blueprint
 
-        if(this.viewModel.attraction instanceof IHasCreditTypeProperty)
+        if(this.viewModel.attraction.hasCreditType())
         {
             this.createLayoutCreditType();
         }
 
-        if(this.viewModel.attraction instanceof IHasCategoryProperty)
+        if(this.viewModel.attraction.hasCategory())
         {
             this.createLayoutCategory();
         }
 
-        if(this.viewModel.attraction instanceof IHasManufacturerProperty)
+        if(this.viewModel.attraction.hasManufacturer())
         {
             this.createLayoutManufacturer();
         }
 
-        if(this.viewModel.attraction instanceof IHasStatusProperty)
+        if(this.viewModel.attraction.hasStatus())
         {
             this.createLayoutStatus();
         }
@@ -274,7 +270,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if((viewModel.attraction instanceof IHasCreditTypeProperty))
+                        if(viewModel.attraction.hasCreditType())
                         {
                             if(!viewModel.attraction.getCreditType().equals(viewModel.creditType))
                             {
@@ -283,7 +279,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if((viewModel.attraction instanceof IHasCategoryProperty))
+                        if(viewModel.attraction.hasCategory())
                         {
                             if(!viewModel.attraction.getCategory().equals(viewModel.category))
                             {
@@ -292,7 +288,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if((viewModel.attraction instanceof IHasManufacturerProperty))
+                        if(viewModel.attraction.hasManufacturer())
                         {
                             if(!viewModel.attraction.getManufacturer().equals(viewModel.manufacturer))
                             {
@@ -301,7 +297,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             }
                         }
 
-                        if((viewModel.attraction instanceof IHasStatusProperty))
+                        if(viewModel.attraction.hasStatus())
                         {
                             if(!viewModel.attraction.getStatus().equals(viewModel.status))
                             {
