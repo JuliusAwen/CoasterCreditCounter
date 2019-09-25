@@ -246,8 +246,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     boolean isLocation = viewModel.longClickedElement.isLocation();
                     boolean isRootLocation = isLocation && viewModel.longClickedElement.equals(App.content.getRootLocation());
-                    boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
-                    boolean sortParksEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
+                    boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Location.class).size() > 1;
+                    boolean sortParksEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Park.class).size() > 1;
 
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.ADD)
@@ -289,14 +289,14 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_LOCATIONS,
-                        viewModel.longClickedElement.getChildrenOfType(Location.class));
+                        viewModel.longClickedElement.fetchChildrenOfType(Location.class));
                 break;
 
             case SORT_PARKS:
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_PARKS,
-                        viewModel.longClickedElement.getChildrenOfType(Park.class));
+                        viewModel.longClickedElement.fetchChildrenOfType(Park.class));
                 break;
 
             case ADD_LOCATION:

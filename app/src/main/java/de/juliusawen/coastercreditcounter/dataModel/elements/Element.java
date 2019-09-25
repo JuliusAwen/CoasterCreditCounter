@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
@@ -19,6 +18,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCred
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
+import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
 /**
@@ -208,7 +208,7 @@ public abstract class Element implements IElement
 
     public boolean hasChildrenOfType(Class<? extends IElement> type)
     {
-        return !this.getChildrenOfType(type).isEmpty();
+        return !this.fetchChildrenOfType(type).isEmpty();
     }
 
     public int getChildCount()
@@ -218,7 +218,7 @@ public abstract class Element implements IElement
 
     public int getChildCountOfType(Class<? extends IElement> type)
     {
-        return this.getChildrenOfType(type).size();
+        return this.fetchChildrenOfType(type).size();
     }
 
     public List<IElement> getChildren()
@@ -226,7 +226,7 @@ public abstract class Element implements IElement
         return this.children;
     }
 
-    public List<IElement> getChildrenOfType(Class<? extends IElement> type)
+    public List<IElement> fetchChildrenOfType(Class<? extends IElement> type)
     {
         List<IElement> children = new ArrayList<>();
         for(IElement element : this.getChildren())
@@ -239,7 +239,7 @@ public abstract class Element implements IElement
         return children;
     }
 
-    public <T extends IElement> List<T> getChildrenAsType(Class<T> type)
+    public <T extends IElement> List<T> fetchChildrenAsType(Class<T> type)
     {
         List<T> children = new ArrayList<>();
         for(IElement element : this.getChildren())
@@ -259,6 +259,11 @@ public abstract class Element implements IElement
 
     public void setParent(IElement parent)
     {
+        if(this.isOrphan())
+        {
+            Log.e(Constants.LOG_TAG, "setParent ORPHAN");
+        }
+
         if(parent.equals(this))
         {
             throw new IllegalStateException("Element can not be it's own parent!");
@@ -270,7 +275,12 @@ public abstract class Element implements IElement
 
     public void relocateElement(IElement newParent)
     {
-        this.parent.getChildren().remove(this);
+        if(this.isOrphan())
+        {
+            Log.e(Constants.LOG_TAG, "relocateElement ORPHAN");
+        }
+
+        this.getParent().getChildren().remove(this);
         newParent.addChildAndSetParent(this);
     }
 
@@ -285,14 +295,19 @@ public abstract class Element implements IElement
 
     public void deleteElement()
     {
-        this.parent.deleteChild(this);
+        if(this.isOrphan())
+        {
+            Log.e(Constants.LOG_TAG, "delete Element ORPHAN");
+        }
+
+        this.getParent().deleteChild(this);
     }
 
     public void deleteChild(IElement child)
     {
         if(this.containsChild(child))
         {
-            this.children.remove(child);
+            this.getChildren().remove(child);
             Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s deleted", this, child));
         }
         else
@@ -305,6 +320,11 @@ public abstract class Element implements IElement
 
     public void removeElement()
     {
+        if(this.isOrphan())
+        {
+            Log.e(Constants.LOG_TAG, "removeElement ORPHAN");
+        }
+
         Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s...", this));
 
         int index = this.parent.getIndexOfChild(this);
@@ -358,11 +378,6 @@ public abstract class Element implements IElement
         return this instanceof Blueprint;
     }
 
-    public boolean isOnSiteAttraction()
-    {
-        return this instanceof IOnSiteAttraction;
-    }
-
     public boolean isVisitedAttraction()
     {
         return this instanceof VisitedAttraction;
@@ -403,5 +418,8 @@ public abstract class Element implements IElement
         return this instanceof IGroupHeader;
     }
 
-
+    public boolean isOrphan()
+    {
+        return this instanceof IOrphan;
+    }
 }

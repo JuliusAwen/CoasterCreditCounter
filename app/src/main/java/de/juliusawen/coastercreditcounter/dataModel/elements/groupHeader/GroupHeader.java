@@ -4,11 +4,11 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
-public class GroupHeader extends OrphanElement implements IGroupHeader
+public class GroupHeader extends Element implements IGroupHeader
 {
     private final IElement groupElement; // eg. [Category "XYZ] - needed to find GroupHeader for Element when sorting
 

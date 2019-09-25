@@ -205,7 +205,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class));
 
                     super.markForUpdate(this.viewModel.visit);
                     break;
@@ -279,7 +279,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
         childTypesToExpand.add(VisitedAttraction.class);
 
-        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), childTypesToExpand)
+        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class), childTypesToExpand)
                 .groupItems(GroupType.CATEGORY);
     }
 
@@ -338,11 +338,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 List<IElement> attractions = new ArrayList<>();
                 if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
                 {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+                    attractions = this.viewModel.longClickedElement.fetchChildrenOfType(Attraction.class);
                 }
                 else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
                 {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                    attractions = this.viewModel.longClickedElement.fetchChildrenOfType(VisitedAttraction.class);
                 }
                 ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
                 break;
@@ -470,12 +470,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     private List<IAttraction> getNotYetAddedAttractionsWithDefaultStatus()
     {
         List<IAttraction> visitedAttractions = new ArrayList<>();
-        for(VisitedAttraction visitedAttraction : viewModel.visit.getChildrenAsType(VisitedAttraction.class))
+        for(VisitedAttraction visitedAttraction : viewModel.visit.fetchChildrenAsType(VisitedAttraction.class))
         {
             visitedAttractions.add(visitedAttraction.getOnSiteAttraction());
         }
 
-        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
+        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().fetchChildrenAsType(IOnSiteAttraction.class));
         allAttractions.removeAll(visitedAttractions);
 
         List<IAttraction> attractionsWithDefaultStatus = new LinkedList<>();
@@ -495,7 +495,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(resetContent)
         {
             Log.d(LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class))
                     .expandAll();
 
             if(!this.allAttractionsAdded())

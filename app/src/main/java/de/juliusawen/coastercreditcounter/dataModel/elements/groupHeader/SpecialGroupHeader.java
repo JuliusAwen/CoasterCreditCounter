@@ -4,11 +4,10 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 
-public class SpecialGroupHeader extends OrphanElement implements IGroupHeader
+public class SpecialGroupHeader extends Element implements IGroupHeader
 {
     private SpecialGroupHeader(String name, UUID uuid)
     {

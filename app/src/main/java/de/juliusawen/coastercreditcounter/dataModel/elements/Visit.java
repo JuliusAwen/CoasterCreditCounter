@@ -98,7 +98,7 @@ public final class Visit extends Element implements IPersistable
             Log.i(Constants.LOG_TAG, String.format("Visit.deleteElementAndDescendands:: %s removed from current visits", this));
         }
 
-        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+        for(VisitedAttraction visitedAttraction : this.fetchChildrenAsType(VisitedAttraction.class))
         {
             visitedAttraction.deleteElementAndDescendants();
         }
@@ -196,7 +196,7 @@ public final class Visit extends Element implements IPersistable
 
             boolean hasVisitedAttractions = false;
             JSONArray jsonArrayRideCountsByAttraction = new JSONArray();
-            for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+            for(VisitedAttraction visitedAttraction : this.fetchChildrenAsType(VisitedAttraction.class))
             {
                 JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
                 jsonArrayRideCountsByAttraction.put(jsonObjectRideCountByAttraction);

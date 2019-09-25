@@ -22,7 +22,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
@@ -616,7 +615,7 @@ public class PickElementsActivity extends BaseActivity
 
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                         {
-                            if(!(OrphanElement.class.isAssignableFrom(selectedElement.getClass())))
+                            if(!selectedElement.isOrphan())
                             {
                                 selectedElementsWithoutOrphanElements.add(selectedElement);
                             }

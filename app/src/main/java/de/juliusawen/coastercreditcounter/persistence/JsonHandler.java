@@ -972,7 +972,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                for(IOnSiteAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
+                for(IOnSiteAttraction attraction : park.fetchChildrenAsType(IOnSiteAttraction.class))
                 {
                     if(attraction.getTotalRideCount() > 0)
                     {

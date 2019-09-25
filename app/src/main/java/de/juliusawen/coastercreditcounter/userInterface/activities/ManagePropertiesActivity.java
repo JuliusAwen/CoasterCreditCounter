@@ -25,7 +25,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
@@ -64,7 +63,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 {
     private ManagePropertiesViewModel viewModel;
     private RecyclerView recyclerView;
-    private OrphanElement lastCreatedOrphanElement;
+    private IProperty lastCreatedProperty;
 
 
     protected void setContentView()
@@ -205,7 +204,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
-                this.lastCreatedOrphanElement = (OrphanElement)resultElement;
+                this.lastCreatedProperty = (IProperty) resultElement;
                 updateContentRecyclerView(true);
                 break;
 
@@ -378,7 +377,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            if(this.lastCreatedOrphanElement != null)
+            if(this.lastCreatedProperty != null)
             {
                 this.returnResult(RESULT_OK);
             }
@@ -713,7 +712,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             if(this.viewModel.longClickedElement.hasChildren())
             {
-                List<IAttraction> children = new ArrayList<>(this.viewModel.longClickedElement.getChildrenAsType(IAttraction.class));
+                List<IAttraction> children = new ArrayList<>(this.viewModel.longClickedElement.fetchChildrenAsType(IAttraction.class));
 
                 for(IAttraction child : children)
                 {
@@ -820,8 +819,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning new %s", this.lastCreatedOrphanElement));
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedOrphanElement.getUuid().toString());
+            Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning new %s", this.lastCreatedProperty));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedProperty.getUuid().toString());
         }
 
         setResult(resultCode, intent);

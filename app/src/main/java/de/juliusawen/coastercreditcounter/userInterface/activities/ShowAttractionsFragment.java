@@ -144,7 +144,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         this.viewModel.park.reorderChildren(resultElements);
 
-                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class))
+                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class))
                                 .scrollToItem(((Attraction)selectedElement).getCategory());
                     }
                     break;
@@ -154,9 +154,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
 
-                        for(IElement visit : selectedElement.getParent().getChildrenOfType(Visit.class))
+                        for(IElement visit : selectedElement.getParent().fetchChildrenOfType(Visit.class))
                         {
-                            for(IElement visitedAttraction : visit.getChildrenOfType(VisitedAttraction.class))
+                            for(IElement visitedAttraction : visit.fetchChildrenOfType(VisitedAttraction.class))
                             {
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
@@ -223,7 +223,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         childTypesToExpand.add(Attraction.class);
 
         ContentRecyclerViewAdapter contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
+                this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand);
 
         contentRecyclerViewAdapter
@@ -287,11 +287,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
         {
-            attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+            attractions = this.viewModel.longClickedElement.fetchChildrenOfType(Attraction.class);
         }
         else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
         {
-            attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+            attractions = this.viewModel.longClickedElement.fetchChildrenOfType(VisitedAttraction.class);
         }
 
         ActivityDistributor.startActivitySortForResult(getContext(), RequestCode.SORT_ATTRACTIONS, attractions);
@@ -350,9 +350,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             Log.i(LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
-            for(Visit visit : this.viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
+            for(Visit visit : this.viewModel.longClickedElement.getParent().fetchChildrenAsType(Visit.class))
             {
-                for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
+                for(VisitedAttraction visitedAttraction : visit.fetchChildrenAsType(VisitedAttraction.class))
                 {
                     if(visitedAttraction.getOnSiteAttraction().equals(this.viewModel.longClickedElement))
                     {
@@ -371,7 +371,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     private ContentRecyclerViewAdapter updateContentRecyclerView()
     {
         Log.i(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class));
 
         return this.viewModel.contentRecyclerViewAdapter;
     }

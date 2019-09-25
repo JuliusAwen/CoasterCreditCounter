@@ -6,7 +6,6 @@ import java.util.UUID;
 /**
  * Base interface for all Elements
  */
-
 public interface IElement
 {
     String getName();
@@ -26,8 +25,8 @@ public interface IElement
     void addChildrenAtIndexAndSetParent(int index, List<IElement> children);
 
     List<IElement> getChildren();
-    List<IElement> getChildrenOfType(Class<? extends IElement> type);
-    <T extends IElement> List<T> getChildrenAsType(Class<T> type);
+    List<IElement> fetchChildrenOfType(Class<? extends IElement> type);
+    <T extends IElement> List<T> fetchChildrenAsType(Class<T> type);
 
     int getChildCount();
     int getChildCountOfType(Class<? extends IElement> type);
@@ -56,7 +55,6 @@ public interface IElement
     boolean isVisit();
     boolean isAttraction();
     boolean isBlueprint();
-    boolean isOnSiteAttraction();
     boolean isVisitedAttraction();
     boolean isProperty();
     boolean hasCreditType();
@@ -65,4 +63,5 @@ public interface IElement
     boolean hasStatus();
     boolean isIPersistable();
     boolean isGroupHeader();
+    boolean isOrphan();
 }

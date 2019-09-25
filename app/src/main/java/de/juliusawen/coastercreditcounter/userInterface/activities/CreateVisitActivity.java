@@ -16,13 +16,13 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -115,7 +115,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.datePicked = true;
 
 
-                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
+                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.fetchChildrenAsType(Visit.class));
                 viewModel.existingVisit = existingVisits.isEmpty() ? null : existingVisits.get(0);
                 if(viewModel.existingVisit != null)
                 {
@@ -234,7 +234,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityDistributor.startActivityPickForResult(
                             CreateVisitActivity.this,
                             RequestCode.PICK_ATTRACTIONS,
-                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
+                            new ArrayList<IElement>(viewModel.park.fetchChildrenAsType(IOnSiteAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {

@@ -25,7 +25,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.OrphanElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
@@ -742,7 +741,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         for(Class<? extends IElement> childType : this.relevantChildTypes)
         {
-            relevantChildren.addAll(item.getChildrenOfType(childType));
+            relevantChildren.addAll(item.fetchChildrenOfType(childType));
         }
 
         return relevantChildren;
@@ -754,7 +753,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return this.getGroupHeaderForItem(item);
         }
-        else if(!(OrphanElement.class.isAssignableFrom(item.getClass())))
+        else if(!item.isOrphan())
         {
             Log.e(Constants.LOG_TAG, String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]", item.getClass().getSimpleName()));
             return this.items.get(this.items.indexOf(item.getParent()));
