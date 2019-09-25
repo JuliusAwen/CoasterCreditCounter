@@ -35,6 +35,11 @@ public abstract class ActivityDistributor
 {
     public static void startActivityShow(Context context, RequestCode requestCode, IElement element)
     {
+        ActivityDistributor.startActivityShow(context, requestCode, element, false);
+    }
+
+    public static void startActivityShow(Context context, RequestCode requestCode, IElement element, boolean flagActivityClearTop)
+    {
         Class type = null;
 
         switch(requestCode)
@@ -56,6 +61,10 @@ public abstract class ActivityDistributor
         {
             Intent intent = new Intent(context, type);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+            if(flagActivityClearTop)
+            {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
             context.startActivity(intent);
 
             Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityShow:: started [%s] for %s from [%s]",

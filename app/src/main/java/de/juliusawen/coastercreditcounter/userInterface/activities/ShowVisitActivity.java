@@ -78,7 +78,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
         super.addToolbar();
         super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getParent().getName(), this.viewModel.visit.getName());
         super.setToolbarOnClickListener(this.getToolbarOnClickListener());
     }
 
@@ -147,6 +147,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
                 .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled())
                 .prepare(menu);
     }
 
@@ -237,7 +239,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent());
+                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent(), true);
             }
         };
     }
