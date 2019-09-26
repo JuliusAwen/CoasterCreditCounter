@@ -103,25 +103,13 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         if(this.viewModel.attraction != null)
         {
-            if(this.viewModel.attraction.hasCreditType())
+            if(!this.viewModel.attraction.isStockAttraction())
             {
                 this.createLayoutCreditType();
-            }
-
-            if(this.viewModel.attraction.hasCategory())
-            {
                 this.createLayoutCategory();
-            }
-
-            if(this.viewModel.attraction.hasManufacturer())
-            {
                 this.createLayoutManufacturer();
             }
-
-            if(this.viewModel.attraction.hasStatus())
-            {
-                this.createLayoutStatus();
-            }
+            this.createLayoutStatus();
         }
         else
         {

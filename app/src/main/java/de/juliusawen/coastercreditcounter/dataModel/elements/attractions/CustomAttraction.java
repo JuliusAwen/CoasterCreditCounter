@@ -9,10 +9,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
@@ -21,7 +17,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Park
  * Children: none
  */
-public final class CustomAttraction extends Attraction implements IOnSiteAttraction, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty, IHasStatusProperty
+public final class CustomAttraction extends Attraction implements IOnSiteAttraction
 {
     private CustomAttraction(String name, int untrackedRideCount, UUID uuid)
     {

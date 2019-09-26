@@ -55,6 +55,7 @@ public interface IElement
     boolean isVisit();
     boolean isAttraction();
     boolean isBlueprint();
+    boolean isStockAttraction();
     boolean isVisitedAttraction();
     boolean isProperty();
     boolean hasCreditType();

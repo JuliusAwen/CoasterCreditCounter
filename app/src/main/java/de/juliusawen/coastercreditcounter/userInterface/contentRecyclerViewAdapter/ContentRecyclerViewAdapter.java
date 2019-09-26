@@ -596,20 +596,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(this.displayModesByDetailType.get(DetailType.LOCATION) == detailDisplayMode)
         {
             String locationDetail;
-            if(item.isVisitedAttraction())
+            if(item.isBlueprint())
+            {
+                // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
+                locationDetail = App.getContext().getString(R.string.substitute_blueprint);
+                detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
+                typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
+            }
+            else
             {
                 locationDetail = item.getParent().getName();
                 detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
                 typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
                         ? this.typefacesByDetailType.get(DetailType.LOCATION)
                         : Typeface.NORMAL);
-            }
-            else if(item.isBlueprint())
-            {
-                // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
-                locationDetail = App.getContext().getString(R.string.substitute_blueprint);
-                detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
-                typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
             }
         }
 

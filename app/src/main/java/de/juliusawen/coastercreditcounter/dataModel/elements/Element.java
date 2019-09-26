@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
@@ -376,6 +377,11 @@ public abstract class Element implements IElement
     public boolean isBlueprint()
     {
         return this instanceof Blueprint;
+    }
+
+    public boolean isStockAttraction()
+    {
+        return this instanceof StockAttraction;
     }
 
     public boolean isVisitedAttraction()

@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -21,7 +20,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Park
  * Children: none
  */
-public final class StockAttraction extends Attraction implements IOnSiteAttraction, IHasStatusProperty
+public final class StockAttraction extends Attraction implements IOnSiteAttraction
 {
     private final Blueprint blueprint;
 
