@@ -51,6 +51,7 @@ public interface IElement
     String toString();
 
     boolean isLocation();
+    boolean isRootLocation();
     boolean isPark();
     boolean isVisit();
     boolean isAttraction();

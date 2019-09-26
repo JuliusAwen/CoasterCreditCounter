@@ -359,6 +359,11 @@ public abstract class Element implements IElement
         return this instanceof Location;
     }
 
+    public boolean isRootLocation()
+    {
+        return this.isLocation() && this.equals(App.content.getRootLocation());
+    }
+
     public boolean isPark()
     {
         return this instanceof Park;
