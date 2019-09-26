@@ -101,6 +101,38 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
+        if(this.viewModel.attraction != null)
+        {
+            if(this.viewModel.attraction.hasCreditType())
+            {
+                this.createLayoutCreditType();
+            }
+
+            if(this.viewModel.attraction.hasCategory())
+            {
+                this.createLayoutCategory();
+            }
+
+            if(this.viewModel.attraction.hasManufacturer())
+            {
+                this.createLayoutManufacturer();
+            }
+
+            if(this.viewModel.attraction.hasStatus())
+            {
+                this.createLayoutStatus();
+            }
+        }
+        else
+        {
+            this.createLayoutCreditType();
+            this.createLayoutCategory();
+            this.createLayoutManufacturer();
+            this.createLayoutStatus();
+        }
+
+        this.createEditTextUntrackedRideCount();
+
         if(this.viewModel.toolbarTitle == null)
         {
             this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_create_custom_attraction);
@@ -125,30 +157,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         this.decorateFloatingActionButton();
         this.createEditTextAttractionName();
-
-        //Todo: implement goto blueprint
-
-        if(this.viewModel.attraction.hasCreditType())
-        {
-            this.createLayoutCreditType();
-        }
-
-        if(this.viewModel.attraction.hasCategory())
-        {
-            this.createLayoutCategory();
-        }
-
-        if(this.viewModel.attraction.hasManufacturer())
-        {
-            this.createLayoutManufacturer();
-        }
-
-        if(this.viewModel.attraction.hasStatus())
-        {
-            this.createLayoutStatus();
-        }
-
-        this.createEditTextUntrackedRideCount();
     }
 
     @Override
