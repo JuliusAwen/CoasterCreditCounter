@@ -59,12 +59,12 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:adjustViewBounds">true</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="IncreaseDecreaseImageHolder" parent="StandardImageHolder">
         <item name="android:layout_height">32dp</item>
         <item name="android:layout_width">48dp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="ExpandToggleImageHolder" parent="StandardImageHolder">
@@ -75,6 +75,7 @@
     <style name="ManagePropertyImageHolder" parent="StandardImageHolder">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">32dp</item>
+        <item name="android:background">@color/default_color</item>
     </style>
 
     <style name="StandardEditText" parent="AppTheme">

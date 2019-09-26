@@ -529,11 +529,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     private void createEditTextUntrackedRideCount()
     {
         this.editTextUntrackedRideCount.setOnEditorActionListener(this.getOnEditorActionListener());
-
-        if(this.viewModel.isEditMode)
-        {
-            this.editTextUntrackedRideCount.setText(String.valueOf(this.viewModel.attraction.getUntracktedRideCount()));
-        }
+        this.editTextUntrackedRideCount.setText(this.viewModel.isEditMode
+                ? String.valueOf(this.viewModel.attraction.getUntracktedRideCount())
+                : String.valueOf(0));
     }
 
     private TextView.OnEditorActionListener getOnEditorActionListener()
