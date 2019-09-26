@@ -114,16 +114,27 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
+    protected Menu prepareOptionsMenu(Menu menu)
+    {
+        return this.viewModel.optionsMenuAgent
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.currentLocation.hasChildren())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.currentLocation.hasChildren())
+                .prepare(menu);
+    }
+
+    @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
         switch(item)
         {
             case EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
+                invalidateOptionsMenu();
                 return true;
 
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                invalidateOptionsMenu();
                 return true;
 
             default:
@@ -172,6 +183,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     IElement resultElement = ResultFetcher.fetchResultElement(data);
                     super.markForUpdate(resultElement.getParent());
                     this.updateContentRecyclerView(true);
+                    this.viewModel.contentRecyclerViewAdapter.expandItem(resultElement.getParent());
+                    invalidateOptionsMenu();
                     break;
                 }
 
@@ -250,9 +263,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 if(!viewModel.selectionMode)
                 {
                     boolean isLocation = viewModel.longClickedElement.isLocation();
-                    boolean isRootLocation = isLocation && viewModel.longClickedElement.equals(App.content.getRootLocation());
                     boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Location.class).size() > 1;
                     boolean sortParksEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Park.class).size() > 1;
+
+                    int locationsCount = App.content.getContentOfType(Location.class).size();
+                    boolean relocateEnabled = !viewModel.longClickedElement.isRootLocation() && viewModel.longClickedElement.isLocation()
+                            ? (locationsCount - 1) > 1
+                            : locationsCount > 1;
 
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.ADD)
@@ -273,10 +290,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             .setEnabled(PopupItem.SORT_PARKS, isLocation && sortParksEnabled)
                             .setVisible(PopupItem.EDIT_LOCATION, isLocation)
                             .setVisible(PopupItem.EDIT_PARK, !isLocation)
-                            .setEnabled(PopupItem.DELETE_ELEMENT, !isRootLocation)
+                            .setEnabled(PopupItem.DELETE_ELEMENT, !viewModel.longClickedElement.isRootLocation())
                             .setVisible(PopupItem.REMOVE_LOCATION, isLocation)
-                            .setEnabled(PopupItem.REMOVE_LOCATION, viewModel.longClickedElement.hasChildren() && !isRootLocation)
-                            .setEnabled(PopupItem.RELOCATE_ELEMENT, !isRootLocation)
+                            .setEnabled(PopupItem.REMOVE_LOCATION, viewModel.longClickedElement.hasChildren() && !viewModel.longClickedElement.isRootLocation())
+                            .setEnabled(PopupItem.RELOCATE_ELEMENT, relocateEnabled)
                             .show(ShowLocationsActivity.this, view);
                 }
 
@@ -448,6 +465,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 this.viewModel.longClickedElement.deleteElementAndDescendants();
                 updateContentRecyclerView(true);
+                invalidateOptionsMenu();
                 break;
             }
 
@@ -463,6 +481,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 this.viewModel.longClickedElement.removeElement();
 
                 updateContentRecyclerView(true);
+                invalidateOptionsMenu();
                 break;
             }
         }

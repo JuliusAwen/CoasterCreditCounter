@@ -41,6 +41,11 @@ public abstract class Attraction extends Element implements IAttraction
     @Override
     public void deleteElement()
     {
+        if(this.creditType != null)
+        {
+            this.creditType.deleteChild(this);
+        }
+
         if(this.category != null)
         {
             this.category.deleteChild(this);
@@ -49,6 +54,11 @@ public abstract class Attraction extends Element implements IAttraction
         if(this.manufacturer != null)
         {
             this.manufacturer.deleteChild(this);
+        }
+
+        if(this.status != null)
+        {
+            this.status.deleteChild(this);
         }
 
         super.deleteElement();

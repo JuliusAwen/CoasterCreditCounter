@@ -161,9 +161,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
                 .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.hasChildrenOfType(Visit.class))
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.hasChildrenOfType(Visit.class))
                 .prepare(menu);
-
-        super.onPrepareOptionsMenu(menu);
     }
 
     public boolean sortAscending()

@@ -322,8 +322,49 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 break;
         }
 
+        boolean propertyIsAssigned = this.propertyIsAssigned();
         return this.viewModel.optionsMenuAgent
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .setVisible(OptionsItem.EXPAND_ALL, propertyIsAssigned)
+                .setVisible(OptionsItem.COLLAPSE_ALL, propertyIsAssigned)
                 .prepare(menu);
+    }
+
+    private boolean propertyIsAssigned()
+    {
+        Class<? extends IProperty> type;
+
+        switch(this.viewModel.propertyTypeToManage)
+        {
+            case CREDIT_TYPE:
+                type = CreditType.class;
+                break;
+
+            case CATEGORY:
+                type = Category.class;
+                break;
+
+            case MANUFACTURER:
+                type = Manufacturer.class;
+                break;
+
+            case STATUS:
+                type = Status.class;
+                break;
+
+            default:
+                throw new IllegalStateException();
+        }
+
+        for(IProperty property : App.content.getContentAsType(type))
+        {
+            if(property.hasChildren())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -361,10 +402,12 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             case EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
+                invalidateOptionsMenu();
                 return true;
 
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                invalidateOptionsMenu();
                 return true;
 
             default:
@@ -600,14 +643,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_orphan_element_has_children,
+                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_children,
                             viewModel.longClickedElement.getChildCount(),
                             viewModel.longClickedElement.getName(),
                             defaultName);
                 }
                 else
                 {
-                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_orphan_element_has_no_children,
+                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_no_children,
                             viewModel.longClickedElement.getName());
                 }
 

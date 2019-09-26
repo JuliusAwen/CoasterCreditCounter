@@ -59,12 +59,12 @@ public class JsonHandler implements IDatabaseWrapper
         public boolean isDefault;
     }
 
-    private LinkedList<TemporaryJsonElement> temporaryLocations;
-    private LinkedList<TemporaryJsonElement> temporaryParks;
-    private LinkedList<TemporaryJsonElement> temporaryBlueprints;
-    private LinkedList<TemporaryJsonElement> temporaryStockAttractions;
-    private LinkedList<TemporaryJsonElement> temporaryCustomAttractions;
-    private LinkedList<TemporaryJsonElement> temporaryVisits;
+    private LinkedList<TemporaryJsonElement> temporaryLocations = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryParks = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryBlueprints = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryStockAttractions = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryCustomAttractions = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryVisits = new LinkedList<>();
 
     public boolean importContent(Content content)
     {

@@ -93,7 +93,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         super.onResume();
 
-        if(App.isInitialized)
+        if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             if(!this.viewModel.activityIsCreated)
             {
@@ -126,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         super.onPause();
 
-        if(App.isInitialized)
+        if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             this.synchronizePersistency();
             this.pause();
@@ -212,7 +212,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             this.viewModel.optionsMenuAgent.add(OptionsItem.HELP).create(menu);
             menu = this.createOptionsMenu(menu);
@@ -229,7 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(App.isInitialized)
+        if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             menu = this.prepareOptionsMenu(menu);
         }
@@ -734,7 +734,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             {
                 for(IElement child : element.getChildren())
                 {
-                    this.markForDeletion(child, true);
+                    if(child.isIPersistable())
+                    {
+                        this.markForDeletion(child, true);
+                    }
                 }
             }
 

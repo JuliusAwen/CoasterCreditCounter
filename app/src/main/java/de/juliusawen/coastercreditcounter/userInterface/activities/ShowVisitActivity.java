@@ -147,8 +147,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
                 .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled())
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled() && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class))
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled() && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class))
                 .prepare(menu);
     }
 
@@ -159,10 +161,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             case EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
+                invalidateOptionsMenu();
                 return true;
 
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                invalidateOptionsMenu();
                 return true;
 
             case ENABLE_EDITING:

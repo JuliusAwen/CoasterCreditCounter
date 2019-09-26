@@ -295,7 +295,26 @@ public class PickElementsActivity extends BaseActivity
                 break;
         }
 
-        return this.viewModel.optionsMenuAgent.prepare(menu);
+        boolean elementsToPickFromHaveAnyChildren = this.elementsToPickFromHaveAnyChildren();
+
+        return this.viewModel.optionsMenuAgent
+                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                .setVisible(OptionsItem.EXPAND_ALL, elementsToPickFromHaveAnyChildren)
+                .setVisible(OptionsItem.COLLAPSE_ALL, elementsToPickFromHaveAnyChildren)
+                .prepare(menu);
+    }
+
+    private boolean elementsToPickFromHaveAnyChildren()
+    {
+        for(IElement element : this.viewModel.elementsToPickFrom)
+        {
+            if(element.hasChildren())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -367,10 +386,12 @@ public class PickElementsActivity extends BaseActivity
 
             case EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
+                invalidateOptionsMenu();
                 return true;
 
             case COLLAPSE_ALL:
                 this.viewModel.contentRecyclerViewAdapter.collapseAll();
+                invalidateOptionsMenu();
                 return true;
 
             default:
