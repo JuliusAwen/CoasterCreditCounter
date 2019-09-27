@@ -21,7 +21,7 @@ public class AppConfig
     private final boolean useExternalStorage = true;
     private final boolean alwaysImportFromDatabaseMock = false;
     private final boolean createExportFileIfNonexistent = true;
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = true;
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
 
     private final boolean useDefaultSettingsOnStartup = false;
     private final boolean saveDefaultSettingsOnStartup = false;
@@ -35,7 +35,7 @@ public class AppConfig
 
     public final String dateFormat = "d. MMMM yyyy";
     public final String yearFormat = "yyyy";
-    public final String timeFormat = "HH:mm";
+    public final String timeFormat = "HH:mm:ss";
 
 
     AppConfig()

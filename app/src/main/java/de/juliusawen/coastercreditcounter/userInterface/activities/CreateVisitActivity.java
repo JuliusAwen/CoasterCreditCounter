@@ -76,7 +76,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     App.content.addElement(visitedAttraction);
-                    super.markForCreation(visitedAttraction);
                 }
 
                 super.markForUpdate(this.viewModel.visit);

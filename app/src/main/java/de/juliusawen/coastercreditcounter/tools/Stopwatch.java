@@ -9,8 +9,6 @@ public class Stopwatch
     private long startTimeInMs = 0;
     private long lapStartTimeInMs = 0;
 
-    public Stopwatch() {}
-
     public Stopwatch(boolean start)
     {
         if(start)
