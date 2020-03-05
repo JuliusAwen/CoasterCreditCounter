@@ -426,7 +426,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 Log.v(LOG_TAG, String.format("ShowVisitActivity.getIncreaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
 
-                visitedAttraction.increaseTotalRideCount(App.settings.getIncrement());
+                visitedAttraction.increaseTotalRideCount(App.preferences.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
@@ -442,9 +442,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             {
                 VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
 
-                Log.v(LOG_TAG, String.format("ShowVisitActivity.getDecreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+                Log.v(LOG_TAG, String.format("ShowVisitActivity.getDecreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s",
+                        visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                visitedAttraction.decreaseTotalRideCount(App.settings.getIncrement());
+                visitedAttraction.decreaseTotalRideCount(App.preferences.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }

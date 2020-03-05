@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
-public class Settings implements IPersistable
+public class Preferences implements IPersistable
 {
     private ArrayList<DetailType> detailsOrder = new ArrayList<>();
 
@@ -32,44 +32,44 @@ public class Settings implements IPersistable
     private final Persistence persistence;
     private final String[] dayNames = new DateFormatSymbols().getWeekdays();
 
-    private static Settings instance;
+    private static Preferences instance;
 
-    public static Settings getInstance(Persistence persistence)
+    public static Preferences getInstance(Persistence persistence)
     {
-        if(Settings.instance == null)
+        if(Preferences.instance == null)
         {
-            Settings.instance = new Settings(persistence);
+            Preferences.instance = new Preferences(persistence);
         }
         return instance;
     }
 
-    private Settings(Persistence persistence)
+    private Preferences(Persistence persistence)
     {
         this.persistence = persistence;
-        Log.i(Constants.LOG_TAG,"Settings.Constructor:: <Settings> instantiated");
+        Log.i(Constants.LOG_TAG,"Preferences.Constructor:: <Preferences> instantiated");
     }
 
     public boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "Settings.initialize:: loading Settings...");
+        Log.i(Constants.LOG_TAG, "Preferences.initialize:: loading preferences...");
         Stopwatch stopwatch = new Stopwatch(true);
 
-        if(persistence.loadSettings(this))
+        if(persistence.loadPreferences(this))
         {
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrder());
-                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: initializing settings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: initializing settings failed - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences failed - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -77,33 +77,33 @@ public class Settings implements IPersistable
 
     private boolean validate()
     {
-        Log.i(Constants.LOG_TAG, "Settings.validate:: validating settings...");
+        Log.i(Constants.LOG_TAG, "Preferences.validate:: validating preferences...");
 
         if(this.getDefaultSortOrder() == null)
         {
-            String message = "Settings validation failed: default sort order is null";
-            Log.e(Constants.LOG_TAG, String.format("Settings.validate:: %s", message));
+            String message = "Preferences validation failed: default sort order is null";
+            Log.e(Constants.LOG_TAG, String.format("Preferences.validate:: %s", message));
             throw  new IllegalStateException(message);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Settings.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
+            Log.d(Constants.LOG_TAG, String.format("Preferences.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
 
-        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
 
-        Log.i(Constants.LOG_TAG, String.format("Settings.validate:: default increment is [%d]", this.getIncrement()));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: default increment is [%d]", this.getIncrement()));
 
 
-        Log.i(Constants.LOG_TAG, "Settings.validate:: settings validation successful");
+        Log.i(Constants.LOG_TAG, "Preferences.validate:: validation successful");
         return true;
     }
 
     public void useDefaults()
     {
-        Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
+        Log.i(Constants.LOG_TAG, "Preferences.useDefaults:: setting defaults...");
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearInListByDefault(true);
@@ -133,7 +133,7 @@ public class Settings implements IPersistable
     public void setDetailsOrder(ArrayList<DetailType> detailsOrder)
     {
         this.detailsOrder = detailsOrder;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDetailsOrder:: [%d] details set in order", detailsOrder.size()));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setDetailsOrder:: [%d] details set in order", detailsOrder.size()));
     }
 
     public SortOrder getDefaultSortOrder()
@@ -144,7 +144,7 @@ public class Settings implements IPersistable
     public void setDefaultSortOrder(SortOrder defaultSortOrder)
     {
         this.defaultSortOrder = defaultSortOrder;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultSortOrder:: [%s] set as default", defaultSortOrder));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setDefaultSortOrder:: [%s] set as default", defaultSortOrder));
     }
 
     public boolean expandLatestYearInListByDefault()
@@ -155,7 +155,7 @@ public class Settings implements IPersistable
     public void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
     {
         this.expandLatestYearInListByDefault = expandLatestYearInListByDefault;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setExpandLatestYearInListByDefault:: set to [%S]", expandLatestYearInListByDefault));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearInListByDefault:: set to [%S]", expandLatestYearInListByDefault));
     }
 
     public int getFirstDayOfTheWeek()
@@ -166,7 +166,7 @@ public class Settings implements IPersistable
     public void setFirstDayOfTheWeek(int firstDayOfTheWeek)
     {
         this.firstDayOfTheWeek = firstDayOfTheWeek;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setFirstDayOfTheWeek:: set to [%s]", this.dayNames[firstDayOfTheWeek]));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setFirstDayOfTheWeek:: set to [%s]", this.dayNames[firstDayOfTheWeek]));
     }
 
     public int getIncrement()
@@ -177,12 +177,12 @@ public class Settings implements IPersistable
     public void setIncrement(int increment)
     {
         this.increment = increment;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setIncrement:: [%d] set as default", increment));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setIncrement:: [%d] set as default", increment));
     }
 
     public JSONObject toJson()
     {
-        Log.d(Constants.LOG_TAG, ("Settings.toJson:: creating json object from settings..."));
+        Log.d(Constants.LOG_TAG, ("Settings.toJson:: creating json object from preferences..."));
 
         try
         {
@@ -206,7 +206,7 @@ public class Settings implements IPersistable
         {
             e.printStackTrace();
 
-            Log.e(Constants.LOG_TAG, String.format("Element.toJson:: failed with JSONException [%s]", e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Preferences.toJson:: failed with JSONException [%s]", e.getMessage()));
             return null;
         }
     }

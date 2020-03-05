@@ -18,7 +18,7 @@ public class App extends Application
 
     //TODO: use SharedPreferences
     public static AppConfig config;
-    public static Settings settings;
+    public static Preferences preferences;
 
     private static Application instance;
 
@@ -57,12 +57,12 @@ public class App extends Application
 
     public static boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
+        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Preferences> and <Content>...");
 
-        App.settings = Settings.getInstance(App.persistence);
+        App.preferences = Preferences.getInstance(App.persistence);
         App.content = Content.getInstance(App.persistence);
 
-        if(App.settings.initialize() && App.content.initialize())
+        if(App.preferences.initialize() && App.content.initialize())
         {
             App.isInitialized = true;
             return true;

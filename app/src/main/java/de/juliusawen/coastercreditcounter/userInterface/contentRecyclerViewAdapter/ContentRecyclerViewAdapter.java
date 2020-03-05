@@ -155,7 +155,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             case YEAR:
                 groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.YEAR);
 
-                if(App.settings.expandLatestYearInListByDefault())
+                if(App.preferences.expandLatestYearInListByDefault())
                 {
                     SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
                     this.expandedItems.add(latestSpecialGroupHeader);
@@ -667,7 +667,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(DetailType detailType : App.settings.getDetailsOrder())
+        for(DetailType detailType : App.preferences.getDetailsOrder())
         {
             if(detailSubsStringsByDetailType.containsKey(detailType))
             {

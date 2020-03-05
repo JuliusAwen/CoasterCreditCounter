@@ -11,7 +11,7 @@ public class AppConfig
     private final String databaseWrapperToUse = JSON_HANDLER;
 
     private final String contentFileName = "CoasterCreditCounterExport.json";
-    private final String settingsFileName = "Settings.json";
+    private final String preferencesFileName = "Settings.json";
 
 
     private final boolean isDebugBuild = true;
@@ -23,10 +23,10 @@ public class AppConfig
     private final boolean alwaysImportFromDatabaseMock = false; // import from database mock instead of export.json file on startup? - default false
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup? - default false
 
-    private final boolean useDefaultSettingsOnStartup = false; // use default settings on startup? - default false
-    private final boolean saveDefaultSettingsOnStartup = false; // save default settings to settings.json on startup? - default false
+    private final boolean useDefaultPreferencesOnStartup = false; // use default preferences on startup? - default false
+    private final boolean saveDefaultPreferencesOnStartup = false; // save default preferences to preferences.json on startup? - default false
 
-    private final boolean createAllDefaultsOnStartup = false; // create defaults on startup? - overrides useDefaultContentFromDatabaseMock, useDefaultSettings and saveDefaultSettings! - default false
+    private final boolean createAllDefaultsOnStartup = false; // overrides useDefaultContentFromDatabaseMock, useDefaultPreferences and saveDefaultPreferences! - default false
 
     //above is just working when isDebugBuild = true
 
@@ -51,7 +51,7 @@ public class AppConfig
                 Constants.LOG_DIVIDER + "\n" +
                         "databaseWrapperToUse [%s]\n" +
                         "contentFileName [%s]\n" +
-                        "settingsFileName [%s]\n" +
+                        "preferencesFileName [%s]\n" +
                         "isDebugBuild [%S]\n" +
                         "useExternalStorage [%S]\n" +
                         "createExportFileIfNonexistent [%S]\n" +
@@ -61,7 +61,7 @@ public class AppConfig
 
                 this.databaseWrapperToUse(),
                 this.getContentFileName(),
-                this.getSettingsFileName(),
+                this.getPreferencesFileName(),
                 this.isDebugBuild(),
                 this.useExternalStorage(),
                 this.createExportFileIfNonexistant(),
@@ -80,9 +80,9 @@ public class AppConfig
         return this.contentFileName;
     }
 
-    public String getSettingsFileName()
+    public String getPreferencesFileName()
     {
-        return this.settingsFileName;
+        return this.preferencesFileName;
     }
 
     public boolean isDebugBuild()
@@ -110,14 +110,14 @@ public class AppConfig
         return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup || this.createAllDefaultsOnStartup);
     }
 
-    public boolean useDefaultSettingsOnStartup()
+    public boolean useDefaultPreferencesOnStartup()
     {
-        return this.isDebugBuild && (this.useDefaultSettingsOnStartup || this.createAllDefaultsOnStartup);
+        return this.isDebugBuild && (this.useDefaultPreferencesOnStartup || this.createAllDefaultsOnStartup);
     }
 
-    public boolean saveDefaultSettingsOnStartup()
+    public boolean saveDefaultPreferencesOnStartup()
     {
-        return this.isDebugBuild && (this.saveDefaultSettingsOnStartup || this.createAllDefaultsOnStartup);
+        return this.isDebugBuild && (this.saveDefaultPreferencesOnStartup || this.createAllDefaultsOnStartup);
     }
 
     public boolean validateContent()

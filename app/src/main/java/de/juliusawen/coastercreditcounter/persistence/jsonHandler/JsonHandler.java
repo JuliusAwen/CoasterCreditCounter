@@ -19,7 +19,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.application.Content;
-import de.juliusawen.coastercreditcounter.application.Settings;
+import de.juliusawen.coastercreditcounter.application.Preferences;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
@@ -771,48 +771,48 @@ public class JsonHandler implements IDatabaseWrapper
         return jsonArray;
     }
 
-    public boolean loadSettings(Settings settings)
+    public boolean loadPreferences(Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: trying to read internal json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferencess:: trying to read internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
         boolean success = false;
 
-        if(!App.config.useDefaultSettingsOnStartup())
+        if(!App.config.useDefaultPreferencesOnStartup())
         {
             Stopwatch stopwatchRead = new Stopwatch(true);
-            String jsonString = App.persistence.readStringFromInternalFile(App.config.getSettingsFileName());
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchRead.stop()));
+            String jsonString = App.persistence.readStringFromInternalFile(App.config.getPreferencesFileName());
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-            if(!jsonString.isEmpty() && this.fetchSettings(jsonString, settings))
+            if(!jsonString.isEmpty() && this.fetchPreferences(jsonString, preferences))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: loading preferences successful - took [%d]ms", stopwatchLoad.stop()));
                 success = true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading settings failed");
+                Log.e(Constants.LOG_TAG, "JsonHandler.loadPreferences:: loading preferences failed");
             }
         }
 
-        if(App.config.saveDefaultSettingsOnStartup() || !success)
+        if(App.config.saveDefaultPreferencesOnStartup() || !success)
         {
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating default settings"));
-            settings.useDefaults();
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferences:: creating default preferences"));
+            preferences.useDefaults();
 
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving default settings"));
-            success = this.saveSettings(settings);
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferences:: saving default preferences"));
+            success = this.savePreferences(preferences);
 
-            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: using default settings");
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadPreferences:: using default preferences");
         }
 
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings took [%d]ms", stopwatchLoad.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: loading preferences took [%d]ms", stopwatchLoad.stop()));
         return success;
     }
 
-    private boolean fetchSettings(String jsonString, Settings settings)
+    private boolean fetchPreferences(String jsonString, Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchSettings:: fetching settings from json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchPreferences:: fetching settings from json string..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(!jsonString.isEmpty())
@@ -830,64 +830,64 @@ public class JsonHandler implements IDatabaseWrapper
                     {
                         detailTypes.add(DetailType.getValue(jsonArrayDetailType.getInt(i)));
                     }
-                    settings.setDetailsOrder(detailTypes);
+                    preferences.setDetailsOrder(detailTypes);
                 }
 
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
                 {
-                    settings.setDefaultSortOrder(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
+                    preferences.setDefaultSortOrder(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
                 }
 
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
                 {
-                    settings.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                    preferences.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
                 }
 
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
                 {
-                    settings.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
+                    preferences.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
                 }
 
                 if(!jsonObjectSettings.isNull(Constants.JSON_STRING_INCREMENT))
                 {
-                    settings.setIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_INCREMENT));
+                    preferences.setIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_INCREMENT));
                 }
 
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: fetching settings from json string successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetching preferences from json string successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             catch(JSONException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchSettings:: json string is corrupt: JSONException [%s]", e.getMessage()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: json string is corrupt: JSONException [%s]", e.getMessage()));
                 return false;
             }
         }
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching settings from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetching preferences from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
         return false;
     }
 
-    public boolean saveSettings(Settings settings)
+    public boolean savePreferences(Preferences preferences)
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        JSONObject jsonObject = settings.toJson();
+        JSONObject jsonObject = preferences.toJson();
 
         if(jsonObject != null)
         {
-            if(App.persistence.writeStringToInternalFile(App.config.getSettingsFileName(), jsonObject.toString()))
+            if(App.persistence.writeStringToInternalFile(App.config.getPreferencesFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: saving preferences successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings failed: could not write to json file - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: saving preferences failed: could not write to json file - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.saveSettings:: saving settings failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: saving preferences failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;

@@ -17,7 +17,7 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.application.Content;
-import de.juliusawen.coastercreditcounter.application.Settings;
+import de.juliusawen.coastercreditcounter.application.Preferences;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.persistence.jsonHandler.JsonHandler;
@@ -71,17 +71,17 @@ public class Persistence
         return this.databaseWrapper.loadContent(content);
     }
 
-    public boolean loadSettings(Settings settings)
+    public boolean loadPreferences(Preferences preferences)
     {
-        Log.d(Constants.LOG_TAG, "Persistence.loadSettings:: loading settings...");
+        Log.d(Constants.LOG_TAG, "Persistence.loadPreferences:: loading preferences...");
 
-        return this.jsonHandler.loadSettings(settings);
+        return this.jsonHandler.loadPreferences(preferences);
     }
 
-    public boolean saveSettings(Settings settings)
+    public boolean savePreferences(Preferences preferences)
     {
-        Log.e(Constants.LOG_TAG, "Persistence.saveSettings:: saving settings...");
-        return this.jsonHandler.saveSettings(settings);
+        Log.e(Constants.LOG_TAG, "Persistence.savePreferences:: saving preferences...");
+        return this.jsonHandler.savePreferences(preferences);
     }
 
     public boolean importContent()
