@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -60,7 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         this.setContentView();
 
         //ViewModel has to be instantiated before initialization!
-        this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(BaseActivityViewModel.class);
 
         if(App.isInitialized)
         {

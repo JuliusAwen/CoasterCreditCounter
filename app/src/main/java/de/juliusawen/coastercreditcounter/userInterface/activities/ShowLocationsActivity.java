@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,7 +55,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     public void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(ShowLocationsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowLocationsActivityViewModel.class);
 
         if(this.viewModel.optionsMenuAgent == null)
         {

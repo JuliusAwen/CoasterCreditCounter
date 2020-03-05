@@ -8,7 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class EditElementActivity extends BaseActivity
     {
         this.editText = findViewById(R.id.editTextEditElement);
 
-        this.viewModel = ViewModelProviders.of(this).get(EditElementActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(EditElementActivityViewModel.class);
 
         if(this.viewModel.elementToEdit == null)
         {

@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -73,7 +73,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(ManagePropertiesViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesViewModel.class);
 
         this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
 

@@ -8,15 +8,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -45,7 +45,7 @@ public class CreateSimpleElementActivity extends BaseActivity
 
         this.editText.setHint(hint);
 
-        this.viewModel = ViewModelProviders.of(this).get(CreateSimpleElementActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateSimpleElementActivityViewModel.class);
 
         super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
         super.addToolbar();

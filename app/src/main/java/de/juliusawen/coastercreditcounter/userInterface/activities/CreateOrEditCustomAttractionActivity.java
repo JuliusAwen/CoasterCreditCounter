@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +77,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
-        this.viewModel = ViewModelProviders.of(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
 
         if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_CUSTOM_ATTRACTION)
         {

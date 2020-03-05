@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -81,7 +81,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         Log.v(LOG_TAG, "ShowAttractionsFragment.onCreate:: creating fragment...");
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowAttractionsFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowAttractionsFragmentViewModel.class);
 
         if(this.viewModel.park == null)
         {

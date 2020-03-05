@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,7 +77,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreate:: creating fragment...");
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowVisitsFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowVisitsFragmentViewModel.class);
 
         if(this.viewModel.park == null)
         {

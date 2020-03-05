@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -55,7 +55,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(NavigationHubActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModel.class);
 
         if(this.viewModel.exportFileAbsolutePath == null)
         {

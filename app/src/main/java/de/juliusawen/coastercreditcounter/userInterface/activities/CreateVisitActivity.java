@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.DatePicker;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,7 +40,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(CreateVisitActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateVisitActivityViewModel.class);
 
         if(this.viewModel.park == null)
         {

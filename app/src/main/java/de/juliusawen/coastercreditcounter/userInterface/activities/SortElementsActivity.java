@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +41,7 @@ public class SortElementsActivity extends BaseActivity
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(SortElementsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(SortElementsActivityViewModel.class);
 
         if(this.viewModel.optionsMenuAgent == null)
         {

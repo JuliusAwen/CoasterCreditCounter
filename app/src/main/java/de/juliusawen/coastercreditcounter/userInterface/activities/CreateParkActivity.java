@@ -8,15 +8,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 
@@ -35,7 +35,7 @@ public class CreateParkActivity extends BaseActivity
     {
         this.editText = findViewById(R.id.editTextCreatePark);
 
-        this.viewModel = ViewModelProviders.of(this).get(CreateParkActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateParkActivityViewModel.class);
 
         if(this.viewModel.parentLocation == null)
         {

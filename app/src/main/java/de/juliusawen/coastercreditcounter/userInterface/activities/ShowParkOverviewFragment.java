@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class ShowParkOverviewFragment extends Fragment
@@ -38,7 +38,7 @@ public class ShowParkOverviewFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(ShowParkOverviewFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowParkOverviewFragmentViewModel.class);
 
         if(this.viewModel.park == null)
         {

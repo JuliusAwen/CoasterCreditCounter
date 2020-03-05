@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +58,7 @@ public class PickElementsActivity extends BaseActivity
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(PickElementsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {

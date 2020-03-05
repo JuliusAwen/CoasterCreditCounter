@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +63,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     protected void create()
     {
-        this.viewModel = ViewModelProviders.of(this).get(ShowVisitActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowVisitActivityViewModel.class);
 
         if(this.viewModel.visit == null)
         {

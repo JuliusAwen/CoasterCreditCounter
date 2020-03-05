@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.Constants;
@@ -50,7 +50,7 @@ public class HelpOverlayFragment extends Fragment
 
         super.onCreate(savedInstanceState);
 
-        this.viewModel = ViewModelProviders.of(this).get(BaseActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(BaseActivityViewModel.class);
 
         if (getArguments() != null)
         {
