@@ -238,7 +238,8 @@ public class Persistence
             try
             {
                 fileInputStream = new FileInputStream(file);
-                int ergebnis = fileInputStream.read(bytes);
+                //noinspection ResultOfMethodCallIgnored
+                fileInputStream.read(bytes);
             }
             catch(FileNotFoundException e)
             {
@@ -265,7 +266,6 @@ public class Persistence
         {
             Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: file [%s] does not exist - returning empty output", fileName));
         }
-
 
         return output;
     }
