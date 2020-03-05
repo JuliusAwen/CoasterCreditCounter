@@ -182,25 +182,25 @@ public class Preferences implements IPersistable
 
     public JSONObject toJson()
     {
-        Log.d(Constants.LOG_TAG, ("Settings.toJson:: creating json object from preferences..."));
+        Log.d(Constants.LOG_TAG, ("Preferences.toJson:: creating json object from preferences..."));
 
         try
         {
-            JSONObject jsonObjectSettings = new JSONObject();
+            JSONObject jsonObjectPreferences = new JSONObject();
 
             JSONArray jsonArrayDetailTypeOrder = new JSONArray();
             for(DetailType detailType : this.getDetailsOrder())
             {
                 jsonArrayDetailTypeOrder.put(detailType.ordinal());
             }
-            jsonObjectSettings.put(Constants.JSON_STRING_DETAIL_ORDER, jsonArrayDetailTypeOrder);
+            jsonObjectPreferences.put(Constants.JSON_STRING_DETAIL_ORDER, jsonArrayDetailTypeOrder);
 
-            jsonObjectSettings.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrder().ordinal());
-            jsonObjectSettings.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
-            jsonObjectSettings.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
-            jsonObjectSettings.put(Constants.JSON_STRING_INCREMENT, this.getIncrement());
+            jsonObjectPreferences.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrder().ordinal());
+            jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
+            jsonObjectPreferences.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
+            jsonObjectPreferences.put(Constants.JSON_STRING_INCREMENT, this.getIncrement());
 
-            return jsonObjectSettings;
+            return jsonObjectPreferences;
         }
         catch(JSONException e)
         {

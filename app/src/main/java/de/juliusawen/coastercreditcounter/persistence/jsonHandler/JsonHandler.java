@@ -812,18 +812,18 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean fetchPreferences(String jsonString, Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchPreferences:: fetching settings from json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchPreferences:: fetching preferences from json string..."));
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(!jsonString.isEmpty())
         {
             try
             {
-                JSONObject jsonObjectSettings = new JSONObject(jsonString);
+                JSONObject jsonObjectPreferences = new JSONObject(jsonString);
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DETAIL_ORDER))
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_DETAIL_ORDER))
                 {
-                    JSONArray jsonArrayDetailType = jsonObjectSettings.getJSONArray(Constants.JSON_STRING_DETAIL_ORDER);
+                    JSONArray jsonArrayDetailType = jsonObjectPreferences.getJSONArray(Constants.JSON_STRING_DETAIL_ORDER);
 
                     ArrayList<DetailType> detailTypes = new ArrayList<>();
                     for(int i = 0; i < jsonArrayDetailType.length(); i++)
@@ -833,24 +833,24 @@ public class JsonHandler implements IDatabaseWrapper
                     preferences.setDetailsOrder(detailTypes);
                 }
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_DEFAULT_SORT_ORDER))
                 {
-                    preferences.setDefaultSortOrder(SortOrder.values()[jsonObjectSettings.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
+                    preferences.setDefaultSortOrder(SortOrder.values()[jsonObjectPreferences.getInt(Constants.JSON_STRING_DEFAULT_SORT_ORDER)]);
                 }
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
                 {
-                    preferences.setExpandLatestYearInListByDefault(jsonObjectSettings.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                    preferences.setExpandLatestYearInListByDefault(jsonObjectPreferences.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
                 }
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
                 {
-                    preferences.setFirstDayOfTheWeek(jsonObjectSettings.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
+                    preferences.setFirstDayOfTheWeek(jsonObjectPreferences.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));
                 }
 
-                if(!jsonObjectSettings.isNull(Constants.JSON_STRING_INCREMENT))
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_INCREMENT))
                 {
-                    preferences.setIncrement(jsonObjectSettings.getInt(Constants.JSON_STRING_INCREMENT));
+                    preferences.setIncrement(jsonObjectPreferences.getInt(Constants.JSON_STRING_INCREMENT));
                 }
 
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetching preferences from json string successful - took [%d]ms", stopwatch.stop()));

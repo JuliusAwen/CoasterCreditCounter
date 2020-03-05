@@ -11,7 +11,7 @@ public class AppConfig
     private final String databaseWrapperToUse = JSON_HANDLER;
 
     private final String contentFileName = "CoasterCreditCounterExport.json";
-    private final String preferencesFileName = "Settings.json";
+    private final String preferencesFileName = "Preferences.json";
 
 
     private final boolean isDebugBuild = true;
