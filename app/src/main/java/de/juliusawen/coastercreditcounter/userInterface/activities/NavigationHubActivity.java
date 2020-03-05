@@ -372,7 +372,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED && this.viewModel != null)
         {
             this.onNavigationItemSelected(this.viewModel.selectedMenuItem);
         }
