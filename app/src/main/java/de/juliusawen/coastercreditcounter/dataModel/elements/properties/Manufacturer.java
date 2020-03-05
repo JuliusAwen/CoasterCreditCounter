@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
@@ -14,6 +15,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public final class Manufacturer extends Element implements IProperty
 {
+    private static Manufacturer defaultManufacturer;
+
     private Manufacturer(String name, UUID uuid)
     {
         super(name, uuid);
@@ -35,9 +38,25 @@ public final class Manufacturer extends Element implements IProperty
         return manufacturer;
     }
 
+    public static Manufacturer getDefault()
+    {
+        if(Manufacturer.defaultManufacturer == null)
+        {
+            Log.w(Constants.LOG_TAG, "Manufacturer.getDefault:: no default set - creating default");
+            Manufacturer.setDefault(Manufacturer.create((App.getContext().getString(R.string.default_manufacturer_name))));
+        }
+        return Manufacturer.defaultManufacturer;
+    }
+
+    public static void setDefault(Manufacturer defaultManufacturer)
+    {
+        Manufacturer.defaultManufacturer = defaultManufacturer;
+        Log.i(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: %s set as default", defaultManufacturer));
+    }
+
     public boolean isDefault()
     {
-        return App.settings.getDefaultManufacturer().equals(this);
+        return Manufacturer.getDefault().equals(this);
     }
 
     @Override
@@ -48,7 +67,7 @@ public final class Manufacturer extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultManufacturer()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Manufacturer.getDefault()));
 
             Log.v(Constants.LOG_TAG, String.format("Manufacturer.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

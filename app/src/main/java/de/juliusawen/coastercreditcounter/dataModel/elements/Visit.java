@@ -114,9 +114,12 @@ public final class Visit extends Element implements IPersistable
     {
         if(visit != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
             visit.setEditingEnabled(true);
-            Visit.currentVisits.add(visit);
+            if(!Visit.currentVisits.contains(visit))
+            {
+                Visit.currentVisits.add(visit);
+                Log.d(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
+            }
         }
     }
 

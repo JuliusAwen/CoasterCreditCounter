@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 
 public class App extends Application
@@ -58,31 +57,19 @@ public class App extends Application
 
     public static boolean initialize()
     {
+        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
+
         App.settings = Settings.getInstance(App.persistence);
         App.content = Content.getInstance(App.persistence);
 
-
-        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Settings> and <Content>...");
-
         if(App.settings.initialize() && App.content.initialize())
         {
-            App.initializeCurrentVisit();
-
             App.isInitialized = true;
             return true;
         }
         else
         {
             return false;
-        }
-    }
-
-    private static void initializeCurrentVisit()
-    {
-        Log.i(Constants.LOG_TAG, "App.initializeCurrentVisit:: initializing current visits...");
-        for(Visit visit : App.persistence.fetchCurrentVisits())
-        {
-            Visit.addCurrentVisit(visit);
         }
     }
 }

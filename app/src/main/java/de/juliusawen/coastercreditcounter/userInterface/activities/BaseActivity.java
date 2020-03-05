@@ -97,7 +97,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             if(!this.viewModel.activityIsCreated)
             {
-                Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
+                Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME +
+                        String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
                 this.create();
             }
 

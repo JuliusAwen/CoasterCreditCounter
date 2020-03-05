@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
@@ -14,6 +15,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public final class Category extends Element implements IProperty
 {
+    private static Category defaultCategory;
+
     private Category(String name, UUID uuid)
     {
         super(name, uuid);
@@ -34,9 +37,26 @@ public final class Category extends Element implements IProperty
         }
         return category;
     }
+
+    public static Category getDefault()
+    {
+        if(Category.defaultCategory == null)
+        {
+            Log.w(Constants.LOG_TAG, "Category.getDefault:: no default set - creating default");
+            Category.setDefault(Category.create((App.getContext().getString(R.string.default_category_name))));
+        }
+        return Category.defaultCategory;
+    }
+
+    public static void setDefault(Category defaultCategory)
+    {
+        Category.defaultCategory = defaultCategory;
+        Log.i(Constants.LOG_TAG, String.format("Category.setDefault:: %s set as default", defaultCategory));
+    }
+
     public boolean isDefault()
     {
-        return App.settings.getDefaultCategory().equals(this);
+        return Category.getDefault().equals(this);
     }
 
     @Override
@@ -47,7 +67,7 @@ public final class Category extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultCategory()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
             Log.v(Constants.LOG_TAG, String.format("Category.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

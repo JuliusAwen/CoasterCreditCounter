@@ -18,20 +18,20 @@ public class AppConfig
 
     //below is just working when isDebugBuild = true
 
-    private final boolean useExternalStorage = true;
-    private final boolean alwaysImportFromDatabaseMock = false;
-    private final boolean createExportFileIfNonexistent = true;
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = false;
+    private final boolean useExternalStorage = true; // use external file location accessable to user to export file to? - default true
+    private final boolean createExportFileIfNonexistent = true; // create export.json file if it does not exist? - default true
+    private final boolean alwaysImportFromDatabaseMock = false; // import from database mock instead of export.json file on startup? - default false
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup? - default false
 
-    private final boolean useDefaultSettingsOnStartup = false;
-    private final boolean saveDefaultSettingsOnStartup = false;
+    private final boolean useDefaultSettingsOnStartup = false; // use default settings on startup? - default false
+    private final boolean saveDefaultSettingsOnStartup = false; // save default settings to settings.json on startup? - default false
 
-    private final boolean createAllDefaultsOnStartup = false; //this overrides useDefaultContentFromDatabaseMock, useDefaultSettings and saveDefaultSettings
+    private final boolean createAllDefaultsOnStartup = false; // create defaults on startup? - overrides useDefaultContentFromDatabaseMock, useDefaultSettings and saveDefaultSettings! - default false
 
     //above is just working when isDebugBuild = true
 
 
-    private final boolean validateContent = true;
+    private final boolean validateContent = true; // default true
 
     public final String dateFormat = "d. MMMM yyyy";
     public final String yearFormat = "yyyy";
@@ -64,7 +64,7 @@ public class AppConfig
                 this.getSettingsFileName(),
                 this.isDebugBuild(),
                 this.useExternalStorage(),
-                this.createExportFileIfNotExists(),
+                this.createExportFileIfNonexistant(),
                 this.useDefaultContentFromDatabaseMockOnStartup(),
                 this.validateContent()
         );
@@ -95,14 +95,14 @@ public class AppConfig
         return this.isDebugBuild && this.useExternalStorage;
     }
 
+    public boolean createExportFileIfNonexistant()
+    {
+        return this.isDebugBuild && this.createExportFileIfNonexistent;
+    }
+
     public boolean alwaysImportFromDatabaseMock()
     {
         return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
-    }
-
-    public boolean createExportFileIfNotExists()
-    {
-        return this.isDebugBuild && this.createExportFileIfNonexistent;
     }
 
     public boolean useDefaultContentFromDatabaseMockOnStartup()

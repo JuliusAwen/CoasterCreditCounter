@@ -487,7 +487,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         List<IAttraction> attractionsWithDefaultStatus = new LinkedList<>();
         for(IAttraction attraction : allAttractions)
         {
-            if(attraction.getStatus().equals(App.settings.getDefaultStatus()))
+            if(attraction.getStatus().isDefault())
             {
                 attractionsWithDefaultStatus.add(attraction);
             }

@@ -460,19 +460,19 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     switch(viewModel.propertyTypeToManage)
                     {
                         case CREDIT_TYPE:
-                            isDefault = viewModel.longClickedElement.equals(App.settings.getDefaultCreditType());
+                            isDefault = ((CreditType)viewModel.longClickedElement).isDefault();
                             break;
 
                         case CATEGORY:
-                            isDefault = viewModel.longClickedElement.equals(App.settings.getDefaultCategory());
+                            isDefault = ((Category)viewModel.longClickedElement).isDefault();
                             break;
 
                         case MANUFACTURER:
-                            isDefault = viewModel.longClickedElement.equals(App.settings.getDefaultManufacturer());
+                            isDefault = ((Manufacturer)viewModel.longClickedElement).isDefault();
                             break;
 
                         case STATUS:
-                            isDefault = viewModel.longClickedElement.equals(App.settings.getDefaultStatus());
+                            isDefault = ((Status)viewModel.longClickedElement).isDefault();
                             break;
                     }
 
@@ -623,19 +623,19 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     switch(viewModel.propertyTypeToManage)
                     {
                         case CREDIT_TYPE:
-                            defaultName = App.settings.getDefaultCreditType().getName();
+                            defaultName = CreditType.getDefault().getName();
                             break;
 
                         case CATEGORY:
-                            defaultName = App.settings.getDefaultCategory().getName();
+                            defaultName = Category.getDefault().getName();
                             break;
 
                         case MANUFACTURER:
-                            defaultName = App.settings.getDefaultManufacturer().getName();
+                            defaultName = Manufacturer.getDefault().getName();
                             break;
 
                         case STATUS:
-                            defaultName = App.settings.getDefaultStatus().getName();
+                            defaultName = Status.getDefault().getName();
                             break;
 
                         default:
@@ -716,23 +716,23 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
 
                         case CATEGORY:
-                            super.markForUpdate(App.settings.getDefaultCategory());
+                            super.markForUpdate(Category.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
-                            App.settings.setDefaultCategory((Category) this.viewModel.longClickedElement);
+                            Category.setDefault((Category) this.viewModel.longClickedElement);
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                             break;
 
                         case MANUFACTURER:
-                            super.markForUpdate(App.settings.getDefaultManufacturer());
+                            super.markForUpdate(Manufacturer.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
-                            App.settings.setDefaultManufacturer((Manufacturer) this.viewModel.longClickedElement);
+                            Manufacturer.setDefault((Manufacturer) this.viewModel.longClickedElement);
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                             break;
 
                         case STATUS:
-                            super.markForUpdate(App.settings.getDefaultStatus());
+                            super.markForUpdate(Status.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
-                            App.settings.setDefaultStatus((Status) this.viewModel.longClickedElement);
+                            Status.setDefault((Status) this.viewModel.longClickedElement);
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                             break;
                     }
@@ -741,6 +741,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     break;
                 }
             }
+            this.updateContentRecyclerView(false);
         }
     }
 
@@ -762,19 +763,19 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     switch(this.viewModel.propertyTypeToManage)
                     {
                         case CREDIT_TYPE:
-                            child.setCreditType(App.settings.getDefaultCreditType());
+                            child.setCreditType(CreditType.getDefault());
                             break;
 
                         case CATEGORY:
-                            child.setCategory(App.settings.getDefaultCategory());
+                            child.setCategory(Category.getDefault());
                             break;
 
                         case MANUFACTURER:
-                            child.setManufacturer(App.settings.getDefaultManufacturer());
+                            child.setManufacturer(Manufacturer.getDefault());
                             break;
 
                         case STATUS:
-                            child.setStatus(App.settings.getDefaultStatus());
+                            child.setStatus(Status.getDefault());
                             break;
                     }
 

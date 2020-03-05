@@ -11,12 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
@@ -25,13 +20,8 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class Settings implements IPersistable
 {
-    private CreditType defaultCreditType;
-    private Category defaultCategory;
-    private Manufacturer defaultManufacturer;
-    private Status defaultStatus;
 
     private ArrayList<DetailType> detailsOrder = new ArrayList<>();
-
 
     private SortOrder defaultSortOrder;
     private boolean expandLatestYearInListByDefault;
@@ -70,7 +60,7 @@ public class Settings implements IPersistable
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrder());
-                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: loading settings successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Settings.initialize:: initializing settings successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
@@ -80,7 +70,7 @@ public class Settings implements IPersistable
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: loading settings failed - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("Settings.initialize:: initializing settings failed - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -114,7 +104,7 @@ public class Settings implements IPersistable
 
     public void useDefaults()
     {
-        Log.i(Constants.LOG_TAG, "Settings.useDatabaseMock:: setting defaults...");
+        Log.i(Constants.LOG_TAG, "Settings.useDefaults:: setting defaults...");
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearInListByDefault(true);
@@ -129,75 +119,11 @@ public class Settings implements IPersistable
         defaultDetailsOrder.add(DetailType.LOCATION);
         defaultDetailsOrder.add(DetailType.CATEGORY);
         defaultDetailsOrder.add(DetailType.MANUFACTURER);
-        //defaultDetailsOrder.add(DetailType.Model);
+        // defaultDetailsOrder.add(DetailType.Model); //Todo: comment in as soon as models exist
         defaultDetailsOrder.add(DetailType.CREDIT_TYPE);
         defaultDetailsOrder.add(DetailType.STATUS);
         defaultDetailsOrder.add(DetailType.TOTAL_RIDE_COUNT);
         return defaultDetailsOrder;
-    }
-
-    public CreditType getDefaultCreditType()
-    {
-        if(this.defaultCreditType == null)
-        {
-            Log.w(Constants.LOG_TAG, "Settings.getDefaultCreditType:: no default set - creating default");
-            this.setDefaultCreditType(CreditType.create(App.getContext().getString(R.string.default_credit_type_name)));
-        }
-        return this.defaultCreditType;
-    }
-
-    public void setDefaultCreditType(CreditType defaultCreditType)
-    {
-        this.defaultCreditType = defaultCreditType;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultCreditType:: %s set as default", defaultCreditType));
-    }
-
-    public Category getDefaultCategory()
-    {
-        if(this.defaultCategory == null)
-        {
-            Log.w(Constants.LOG_TAG, "Settings.getDefaultCategory:: no default set - creating default");
-            this.setDefaultCategory(Category.create((App.getContext().getString(R.string.default_category_name))));
-        }
-        return this.defaultCategory;
-    }
-
-    public void setDefaultCategory(Category defaultCategory)
-    {
-        this.defaultCategory = defaultCategory;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultCategory:: %s set as default", defaultCategory));
-    }
-
-    public Manufacturer getDefaultManufacturer()
-    {
-        if(this.defaultManufacturer == null)
-        {
-            Log.w(Constants.LOG_TAG, "Settings.getDefaultManufacturer:: no default set - creating default");
-            this.setDefaultManufacturer(Manufacturer.create((App.getContext().getString(R.string.default_manufacturer_name))));
-        }
-        return this.defaultManufacturer;
-    }
-
-    public void setDefaultManufacturer(Manufacturer defaultManufacturer)
-    {
-        this.defaultManufacturer = defaultManufacturer;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultManufacturer:: %s set as default", defaultManufacturer));
-    }
-
-    public Status getDefaultStatus()
-    {
-        if(this.defaultStatus == null)
-        {
-            Log.w(Constants.LOG_TAG, "Settings.getDefaultStatus:: no default set - creating default");
-            this.setDefaultStatus(Status.create((App.getContext().getString(R.string.default_status_name))));
-        }
-        return this.defaultStatus;
-    }
-
-    public void setDefaultStatus(Status defaultStatus)
-    {
-        this.defaultStatus = defaultStatus;
-        Log.i(Constants.LOG_TAG, String.format("Settings.setDefaultStatus:: %s set as default", defaultStatus));
     }
 
     public List<DetailType> getDetailsOrder()

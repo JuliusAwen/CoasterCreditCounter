@@ -24,9 +24,9 @@ import java.util.ArrayList;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -86,16 +86,21 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void resume()
     {
-        invalidateOptionsMenu();
+        Log.i(Constants.LOG_TAG, "NavigationHubActivity.resume:: fetching current visits...");
+        for(Visit visit : App.persistence.fetchCurrentVisits())
+        {
+            Visit.addCurrentVisit(visit);
+        }
 
-        this.setStatistics();
+        invalidateOptionsMenu();
 
         for (int i = 0; i < this.navigationView.getMenu().size(); i++)
         {
             this.navigationView.getMenu().getItem(i).setChecked(false);
         }
-
         this.closeNavigationDrawer();
+
+        this.setStatistics();
     }
 
     @Override

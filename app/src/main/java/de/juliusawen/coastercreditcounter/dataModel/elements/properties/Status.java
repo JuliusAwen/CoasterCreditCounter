@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
@@ -14,6 +15,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 public final class Status extends Element implements IProperty
 {
+    private static Status defaultStatus;
+
     private Status(String name, UUID uuid)
     {
         super(name, uuid);
@@ -35,9 +38,25 @@ public final class Status extends Element implements IProperty
         return status;
     }
 
+    public static Status getDefault()
+    {
+        if(Status.defaultStatus == null)
+        {
+            Log.w(Constants.LOG_TAG, "Status.getDefault:: no default set - creating default");
+            Status.setDefault(Status.create((App.getContext().getString(R.string.default_status_name))));
+        }
+        return Status.defaultStatus;
+    }
+
+    public static void setDefault(Status defaultStatus)
+    {
+        Status.defaultStatus = defaultStatus;
+        Log.i(Constants.LOG_TAG, String.format("Status.setDefault:: %s set as default", defaultStatus));
+    }
+
     public boolean isDefault()
     {
-        return App.settings.getDefaultStatus().equals(this);
+        return Status.getDefault().equals(this);
     }
 
     @Override
@@ -48,7 +67,7 @@ public final class Status extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(App.settings.getDefaultStatus()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Status.getDefault()));
 
             Log.v(Constants.LOG_TAG, String.format("Status.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

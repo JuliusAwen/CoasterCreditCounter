@@ -17,11 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.application.Settings;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.application.Content;
+import de.juliusawen.coastercreditcounter.persistence.jsonHandler.JsonHandler;
 
 public class Persistence
 {
@@ -214,22 +215,31 @@ public class Persistence
 
     public String readStringFromInternalFile(String fileName)
     {
-        Log.d(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: reading string from internal file [%s]...", fileName));
-
         String output = "";
-        try
-        {
-            FileInputStream fileInputStream = App.getContext().openFileInput(fileName);
 
-            if(fileInputStream != null)
+        if(this.fileExists(fileName))
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: reading string from internal file [%s]...", fileName));
+
+            try
             {
-                output = this.readStringFromFile(fileInputStream);
+                FileInputStream fileInputStream = App.getContext().openFileInput(fileName);
+
+                if(fileInputStream != null)
+                {
+                    output = this.readStringFromFile(fileInputStream);
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exist: [%s]", fileName, e.getMessage()));
             }
         }
-        catch (FileNotFoundException e)
+        else
         {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exists: [%s]", fileName, e.getMessage()));
+            Log.w(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: file [%s] does not exist - returning empty output", fileName));
         }
+
         return output;
     }
 
@@ -238,6 +248,7 @@ public class Persistence
         Log.d(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: reading string from external storage [%s]...", file.getAbsolutePath()));
 
         String output = "";
+
         try
         {
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -245,7 +256,7 @@ public class Persistence
         }
         catch (FileNotFoundException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exists: [%s]", file.getAbsolutePath(), e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
         }
         return output;
     }

@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.persistence;
+package de.juliusawen.coastercreditcounter.persistence.jsonHandler;
 
 import android.content.Intent;
 import android.util.Log;
@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,30 +34,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditTy
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
+import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class JsonHandler implements IDatabaseWrapper
 {
-    private class TemporaryJsonElement
-    {
-        public String name;
-        public UUID uuid;
-        public final List<UUID> childrenUuids = new ArrayList<>();
-        public int day;
-        public int month;
-        public int year;
-        public final Map<UUID, Integer> rideCountsByAttraction = new LinkedHashMap<>();
-        public UUID blueprintUuid;
-        public int untrackedRideCount;
-        public UUID creditTypeUuid;
-        public UUID categoryUuid;
-        public UUID manufacturerUuid;
-        public UUID statusUuid;
-        public boolean isDefault;
-    }
-
     private LinkedList<TemporaryJsonElement> temporaryLocations = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryParks = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryBlueprints = new LinkedList<>();
@@ -83,22 +67,36 @@ public class JsonHandler implements IDatabaseWrapper
             return this.readExternalJsonStringAndFetchContent(content);
         }
     }
+
     private boolean readExternalJsonStringAndFetchContent(Content content)
     {
         Log.d(Constants.LOG_TAG, ("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string..."));
         Stopwatch stopwatchImport = new Stopwatch(true);
-        Stopwatch stopwatchRead = new Stopwatch(true);
 
         File file = new File(App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
-        String jsonString = App.persistence.readStringFromExternalFile(file);
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
-
-        if(this.fetchContent(jsonString, content))
+        if(file.exists())
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
-            return true;
+            Stopwatch stopwatchRead = new Stopwatch(true);
+
+            String jsonString = App.persistence.readStringFromExternalFile(file);
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
+
+            if(this.fetchContent(jsonString, content))
+            {
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+                return true;
+            }
+            else
+            {
+                Log.w(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+            }
         }
-        else if(App.config.createExportFileIfNotExists())
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: file [%s] does not exist", App.config.getContentFileName()));
+        }
+
+        if(App.config.createExportFileIfNonexistant())
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
             boolean success = this.provideDefaultContent(content);
@@ -143,7 +141,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "JsonHandler.loadContent:: creating default content and saving to internal json...");
+            Log.i(Constants.LOG_TAG, "JsonHandler.loadContent:: creating default content and saving to json file...");
             content.useDatabaseMock();
             boolean success = this.saveContent(content);
 
@@ -375,15 +373,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                App.settings.setDefaultCreditType(creditType);
+                CreditType.setDefault(creditType);
             }
             creditTypes.add(creditType);
         }
 
-        if(App.settings.getDefaultCreditType() == null)
+        if(CreditType.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
-            creditTypes.add(App.settings.getDefaultCreditType());
+            creditTypes.add(CreditType.getDefault());
         }
 
         return creditTypes;
@@ -398,15 +396,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                App.settings.setDefaultCategory(category);
+                Category.setDefault(category);
             }
             categories.add(category);
         }
 
-        if(App.settings.getDefaultCategory() == null)
+        if(Category.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
-            categories.add(App.settings.getDefaultCategory());
+            categories.add(Category.getDefault());
         }
 
         return categories;
@@ -421,15 +419,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                App.settings.setDefaultManufacturer(manufacturer);
+                Manufacturer.setDefault(manufacturer);
             }
             manufacturers.add(manufacturer);
         }
 
-        if(App.settings.getDefaultManufacturer() == null)
+        if(Manufacturer.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
-            manufacturers.add(App.settings.getDefaultManufacturer());
+            manufacturers.add(Manufacturer.getDefault());
         }
 
         return manufacturers;
@@ -444,15 +442,15 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(temporaryJsonElement.isDefault)
             {
-                App.settings.setDefaultStatus(status);
+                Status.setDefault(status);
             }
             statuses.add(status);
         }
 
-        if(App.settings.getDefaultStatus() == null)
+        if(Status.getDefault() == null)
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
-            statuses.add(App.settings.getDefaultStatus());
+            statuses.add(Status.getDefault());
         }
 
         return statuses;
@@ -547,7 +545,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - using default", uuid));
-            return App.settings.getDefaultCreditType();
+            return CreditType.getDefault();
         }
     }
 
@@ -561,7 +559,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - using default", uuid));
-            return App.settings.getDefaultCategory();
+            return Category.getDefault();
         }
     }
 
@@ -575,7 +573,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - using default", uuid));
-            return App.settings.getDefaultManufacturer();
+            return Manufacturer.getDefault();
         }
     }
 
@@ -589,7 +587,7 @@ public class JsonHandler implements IDatabaseWrapper
         else
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
-            return App.settings.getDefaultStatus();
+            return Status.getDefault();
         }
     }
 
@@ -775,10 +773,8 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean loadSettings(Settings settings)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: reading internal json string..."));
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: trying to read internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
-
-        boolean success = false;
 
         if(!App.config.useDefaultSettingsOnStartup())
         {
@@ -786,23 +782,28 @@ public class JsonHandler implements IDatabaseWrapper
             String jsonString = App.persistence.readStringFromInternalFile(App.config.getSettingsFileName());
             Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-            if(this.fetchSettings(jsonString, settings))
+            if(!jsonString.isEmpty() && this.fetchSettings(jsonString, settings))
             {
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
                 return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings not succesful - using defaults. Operation took [%d]ms", stopwatchLoad.stop()));
             }
         }
 
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating default settings"));
         settings.useDefaults();
 
+        boolean success = false;
         if(App.config.saveDefaultSettingsOnStartup() || !success)
         {
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving default settings"));
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving initial default settings"));
             success = this.saveSettings(settings);
         }
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: using default settings. Took [%d]ms", stopwatchLoad.stop()));
+        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: using default settings. Operation took [%d]ms", stopwatchLoad.stop()));
         return success;
     }
 
@@ -1007,7 +1008,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
         {
-            if(!attraction.getCreditType().equals(App.settings.getDefaultCreditType()))
+            if(!attraction.getCreditType().isDefault())
             {
                 creditableAttractions.add(attraction);
             }

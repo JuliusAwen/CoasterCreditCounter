@@ -384,7 +384,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        CreditType creditType = this.viewModel.isEditMode ? this.viewModel.attraction.getCreditType() : App.settings.getDefaultCreditType();
+        CreditType creditType = this.viewModel.isEditMode ? this.viewModel.attraction.getCreditType() : CreditType.getDefault();
         this.textViewCreditType.setText(creditType.getName());
 
         this.imageViewCreditType.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
@@ -426,7 +426,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        Category category = this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : App.settings.getDefaultCategory();
+        Category category = this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : Category.getDefault();
         this.textViewCategory.setText(category.getName());
 
         this.imageViewCategory.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
@@ -469,7 +469,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         }));
 
-        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : App.settings.getDefaultManufacturer();
+        Manufacturer manufacturer = this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault();
         this.textViewManufacturer.setText(manufacturer.getName());
 
         this.imageViewManufacturer.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
@@ -510,7 +510,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             }
         });
 
-        Status status = this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : App.settings.getDefaultStatus();
+        Status status = this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : Status.getDefault();
         this.textViewStatus.setText(status.getName());
 
         this.imageViewStatus.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));

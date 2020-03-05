@@ -56,6 +56,8 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
+        Log.i(Constants.LOG_TAG, "DatabaseMock.loadContent:: mocking load content");
+
         Stopwatch stopwatch = new Stopwatch(true);
 
         this.mockPhantasialand();
@@ -73,15 +75,16 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.mockHansaPark();
         this.mockMagicParkVerden();
         this.mockEuropaPark();
+        this.mockEnergylandia();
 
         content.addElement(locations.Germany); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
 
-        content.addElements(ConvertTool.convertElementsToType(creditTypes.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(categories.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(manufacturers.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(statuses.All, IElement.class));
-        content.addElements(ConvertTool.convertElementsToType(blueprints.All, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(creditTypes.AllCreditTypes, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(categories.AllCategories, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(manufacturers.AllManufacturers, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(statuses.AllStatuses, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(blueprints.AllBlueprints, IElement.class));
 
         Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
 
@@ -90,6 +93,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockPhantasialand()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockPhantasialand");
+
         Park phantasialand = Park.create("Phantasialand");
         locations.Germany.addChildAndSetParent(phantasialand);
 
@@ -220,10 +225,28 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides14122018.put(hollywoodTour, 1);
         rides14122018.put(chiapas, 1);
         phantasialand.addChildAndSetParent(this.createVisit(14, 12, 2018, rides14122018));
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides28092019 = new LinkedHashMap<>();
+        rides28092019.put(coloradoAdventure, 1);
+        rides28092019.put(blackMamba, 1);
+        rides28092019.put(winjasForce, 1);
+        rides28092019.put(winjasFear, 1);
+        rides28092019.put(taron, 2);
+        rides28092019.put(mysteryCastle, 1);
+        rides28092019.put(talocan, 1);
+        rides28092019.put(fengJuPalace, 1);
+        rides28092019.put(tikal, 1);
+        rides28092019.put(wellenflug, 1);
+        rides28092019.put(chiapas, 1);
+        rides28092019.put(riverQuest, 1);
+        rides28092019.put(geisterRiksha, 1);
+        phantasialand.addChildAndSetParent(this.createVisit(28, 9, 2019, rides28092019));
     }
 
     private void mockHeidePark()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHeidePark");
+
         Park heidePark = Park.create("Heide Park");
         locations.Germany.addChildAndSetParent(heidePark);
 
@@ -398,6 +421,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockWalibiHolland()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockWalibiHolland");
+
         Park walibiHolland = Park.create("Walibi Holland");
         locations.Netherlands.addChildAndSetParent(walibiHolland);
 
@@ -582,6 +607,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockOsterwiese()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockOsterwiese");
+
         Park osterwiese = Park.create("Bremer Osterwiese");
         locations.Germany.addChildAndSetParent(osterwiese);
 
@@ -612,6 +639,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockFreimarkt()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockFreimarkt");
+
         Park freimarkt = Park.create("Bremer Freimarkt");
         locations.Germany.addChildAndSetParent(freimarkt);
 
@@ -631,10 +660,32 @@ public final class DatabaseMock implements IDatabaseWrapper
         euroCoaster.setCreditType(creditTypes.RollerCoaster);
         euroCoaster.setCategory(categories.RollerCoasters);
         freimarkt.addChildAndSetParent(euroCoaster);
+
+        //2019
+        CustomAttraction rockAndRollerCoaster = CustomAttraction.create("Rock & Roller Coaster");
+        rockAndRollerCoaster.setCreditType(creditTypes.RollerCoaster);
+        rockAndRollerCoaster.setCategory(categories.RollerCoasters);
+        freimarkt.addChildAndSetParent(rockAndRollerCoaster);
+
+        CustomAttraction wildeMausXXL = CustomAttraction.create("Wilde Maus XXL");
+        wildeMausXXL.setCreditType(creditTypes.RollerCoaster);
+        wildeMausXXL.setCategory(categories.RollerCoasters);
+        freimarkt.addChildAndSetParent(wildeMausXXL);
+
+        StockAttraction kuddelDerHai = StockAttraction.create("Kuddel der Hai", blueprints.BigApple);
+        freimarkt.addChildAndSetParent(kuddelDerHai);
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides2112019 = new LinkedHashMap<>();
+        rides2112019.put(rockAndRollerCoaster, 1);
+        rides2112019.put(wildeMausXXL, 1);
+        rides2112019.put(kuddelDerHai, 1);
+        freimarkt.addChildAndSetParent(this.createVisit(2, 11, 2019, rides2112019));
     }
 
     private void mockPortAventura()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockPortAventura");
+
         Park portAventura = Park.create("Port Aventura");
         locations.Spain.addChildAndSetParent(portAventura);
 
@@ -756,6 +807,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockFerrariLand()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockFerrariLand");
+
         Park ferrariLand = Park.create("Ferrari Land");
         locations.Spain.addChildAndSetParent(ferrariLand);
 
@@ -805,6 +858,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockSlagharen()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockSlagharen");
+
         Park slagharen = Park.create("Attractiepark Slagharen");
         locations.Netherlands.addChildAndSetParent(slagharen);
 
@@ -897,6 +952,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockHolidayPark()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHolidayPark");
+
         Park holidayPark = Park.create("Holiday Park");
         locations.Germany.addChildAndSetParent(holidayPark);
 
@@ -931,6 +988,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockMovieParkGermany()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockMovieParkGermany");
+
         Park movieParkGermany = Park.create("Movie Park Germany");
         locations.Germany.addChildAndSetParent(movieParkGermany);
 
@@ -964,7 +1023,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         jimmyNeutronsAtomicFlyer.setManufacturer(manufacturers.Vekoma);
         movieParkGermany.addChildAndSetParent(jimmyNeutronsAtomicFlyer);
 
-        CustomAttraction bandit = CustomAttraction.create("Bandit");
+        CustomAttraction bandit = CustomAttraction.create("The Bandit");
         bandit.setCreditType(creditTypes.RollerCoaster);
         bandit.setCategory(categories.RollerCoasters);
         bandit.setManufacturer(manufacturers.PremierRides);
@@ -978,16 +1037,16 @@ public final class DatabaseMock implements IDatabaseWrapper
         dorasBigRiverAdventuer.setManufacturer(manufacturers.Zamperla);
         movieParkGermany.addChildAndSetParent(dorasBigRiverAdventuer);
 
-        CustomAttraction bermudaTriangle = CustomAttraction.create("Bermuda Triangle: Alien Encounter");
-        bermudaTriangle.setCategory(categories.DarkRides);
-        bermudaTriangle.setManufacturer(manufacturers.Intamin);
-        bermudaTriangle.setStatus(statuses.Converted);
-        movieParkGermany.addChildAndSetParent(bermudaTriangle);
+        CustomAttraction area51TopSecret = CustomAttraction.create("Area 51 - Top Secret");
+        area51TopSecret.setCategory(categories.DarkRides);
+        area51TopSecret.setManufacturer(manufacturers.Intamin);
+        area51TopSecret.setStatus(statuses.Converted);
+        movieParkGermany.addChildAndSetParent(area51TopSecret);
 
-        CustomAttraction theHighFall = CustomAttraction.create("The High Fall");
-        theHighFall.setCategory(categories.ThrillRides);
-        theHighFall.setManufacturer(manufacturers.Intamin);
-        movieParkGermany.addChildAndSetParent(theHighFall);
+        CustomAttraction highFall = CustomAttraction.create("The High Fall");
+        highFall.setCategory(categories.ThrillRides);
+        highFall.setManufacturer(manufacturers.Intamin);
+        movieParkGermany.addChildAndSetParent(highFall);
 
         StockAttraction crazySurfer = StockAttraction.create("Crazy Surfer", blueprints.DiskO);
         movieParkGermany.addChildAndSetParent(crazySurfer);
@@ -1009,10 +1068,28 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction NycTransformer = StockAttraction.create("NYC Transformer", blueprints.TopSpin);
         movieParkGermany.addChildAndSetParent(NycTransformer);
 
+        StockAttraction pierPatrolJetSki = StockAttraction.create("Pier Patrol Jet Ski", blueprints.WildWaterRondell);
+        movieParkGermany.addChildAndSetParent(pierPatrolJetSki);
+
+        CustomAttraction fairyWorldSpin = CustomAttraction.create("Fairy World Spin");
+        fairyWorldSpin.setCategory(categories.FamilyRides);
+        fairyWorldSpin.setManufacturer(manufacturers.Mack);
+        movieParkGermany.addChildAndSetParent(fairyWorldSpin);
+
+        CustomAttraction splatOSphere = CustomAttraction.create("Splat-O-Sphere");
+        splatOSphere.setCategory(categories.FamilyRides);
+        splatOSphere.setManufacturer(manufacturers.ChanceRides);
+        movieParkGermany.addChildAndSetParent(splatOSphere);
+
+        CustomAttraction lostTemple = CustomAttraction.create("The Lost Temple");
+        lostTemple.setCategory(categories.DarkRides);
+        lostTemple.setManufacturer(manufacturers.Simworx);
+        movieParkGermany.addChildAndSetParent(lostTemple);
+
 
         // 2018
         LinkedHashMap<IOnSiteAttraction, Integer> rides11062018 = new LinkedHashMap<>();
-        rides11062018.put(bermudaTriangle, 1);
+        rides11062018.put(area51TopSecret, 1);
         rides11062018.put(vanHelsingsFactory, 2);
         rides11062018.put(backyardigans, 1);
         rides11062018.put(dorasBigRiverAdventuer, 1);
@@ -1020,7 +1097,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides11062018.put(jimmyNeutronsAtomicFlyer, 1);
         rides11062018.put(bandit, 1);
         rides11062018.put(mpXpress, 1);
-        rides11062018.put(theHighFall, 3);
+        rides11062018.put(highFall, 3);
         rides11062018.put(crazySurfer, 1);
         rides11062018.put(santaMonicaWheel, 1);
         rides11062018.put(excalibur, 1);
@@ -1028,10 +1105,30 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides11062018.put(timeRiders, 1);
         rides11062018.put(NycTransformer, 1);
         movieParkGermany.addChildAndSetParent(this.createVisit(11, 6, 2018, rides11062018));
+
+        // 2019
+        LinkedHashMap<IOnSiteAttraction, Integer> rides29091019 = new LinkedHashMap<>();
+        rides29091019.put(vanHelsingsFactory, 2);
+        rides29091019.put(starTrekOperationEnterprise, 1);
+        rides29091019.put(mpXpress, 1);
+        rides29091019.put(bandit, 1);
+        rides29091019.put(ghostChasers, 1);
+        rides29091019.put(jimmyNeutronsAtomicFlyer, 1);
+        rides29091019.put(highFall, 2);
+        rides29091019.put(pierPatrolJetSki, 2);
+        rides29091019.put(crazySurfer, 1);
+        rides29091019.put(fairyWorldSpin, 1);
+        rides29091019.put(splatOSphere, 1);
+        rides29091019.put(lostTemple, 1);
+        rides29091019.put(excalibur, 1);
+        rides29091019.put(area51TopSecret, 1);
+        movieParkGermany.addChildAndSetParent(this.createVisit(29, 9, 2019, rides29091019));
     }
 
     private void mockToverland()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockToverland");
+
         Park toverland = Park.create("Toverland");
         this.locations.Netherlands.addChildAndSetParent(toverland);
 
@@ -1125,6 +1222,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockEfteling()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEfteling");
+
         Park efteling = Park.create("Efteling");
         locations.Netherlands.addChildAndSetParent(efteling);
 
@@ -1221,6 +1320,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockHansaPark()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHansaPark");
+
         Park hansaPark = Park.create("Hansa Park");
         locations.Germany.addChildAndSetParent(hansaPark);
 
@@ -1321,26 +1422,28 @@ public final class DatabaseMock implements IDatabaseWrapper
         blumenmeerbootsfahrt.setCategory(categories.WaterRides);
         hansaPark.addChildAndSetParent(blumenmeerbootsfahrt);
 
-        LinkedHashMap<IOnSiteAttraction, Integer> rides08091029 = new LinkedHashMap<>();
-        rides08091029.put(hansaParkExpress, 1);
-        rides08091029.put(hanseflieger, 1);
-        rides08091029.put(highlander, 2);
-        rides08091029.put(nessie, 1);
-        rides08091029.put(rasenderRoland, 1);
-        rides08091029.put(barracudaSlide, 1);
-        rides08091029.put(schwurDesKaernan, 1);
-        rides08091029.put(stoertebekersKaperfahrt, 1);
-        rides08091029.put(fluchVonNovgorod, 1);
-        rides08091029.put(blumenmeerbootsfahrt, 1);
-        rides08091029.put(fliegenderHollaender, 1);
-        rides08091029.put(wasserwolfAmIlmensee, 1);
-        rides08091029.put(superSplash, 1);
-        rides08091029.put(kaernapulten, 1);
-        hansaPark.addChildAndSetParent(this.createVisit(8, 9, 2019, rides08091029));
+        LinkedHashMap<IOnSiteAttraction, Integer> rides08092019 = new LinkedHashMap<>();
+        rides08092019.put(hansaParkExpress, 1);
+        rides08092019.put(hanseflieger, 1);
+        rides08092019.put(highlander, 2);
+        rides08092019.put(nessie, 1);
+        rides08092019.put(rasenderRoland, 1);
+        rides08092019.put(barracudaSlide, 1);
+        rides08092019.put(schwurDesKaernan, 1);
+        rides08092019.put(stoertebekersKaperfahrt, 1);
+        rides08092019.put(fluchVonNovgorod, 1);
+        rides08092019.put(blumenmeerbootsfahrt, 1);
+        rides08092019.put(fliegenderHollaender, 1);
+        rides08092019.put(wasserwolfAmIlmensee, 1);
+        rides08092019.put(superSplash, 1);
+        rides08092019.put(kaernapulten, 1);
+        hansaPark.addChildAndSetParent(this.createVisit(8, 9, 2019, rides08092019));
     }
 
     private void mockMagicParkVerden()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockMagicParkVerden");
+
         Park magicParkVerden = Park.create("Magic Park Verden");
         locations.Germany.addChildAndSetParent(magicParkVerden);
 
@@ -1363,6 +1466,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockEuropaPark()
     {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEuropaPark");
+
         Park europaPark = Park.create("Europa Park");
         locations.Germany.addChildAndSetParent(europaPark);
 
@@ -1372,11 +1477,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         silverStar.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(silverStar);
 
-        CustomAttraction blueFire = CustomAttraction.create("Blue Fire Megacoaster", 4);
-        blueFire.setCreditType(creditTypes.RollerCoaster);
-        blueFire.setCategory(categories.RollerCoasters);
-        blueFire.setManufacturer(manufacturers.Mack);
-        europaPark.addChildAndSetParent(blueFire);
+        CustomAttraction blueFireMegacoaster = CustomAttraction.create("Blue Fire Megacoaster", 4);
+        blueFireMegacoaster.setCreditType(creditTypes.RollerCoaster);
+        blueFireMegacoaster.setCategory(categories.RollerCoasters);
+        blueFireMegacoaster.setManufacturer(manufacturers.Mack);
+        europaPark.addChildAndSetParent(blueFireMegacoaster);
 
         CustomAttraction wodan = CustomAttraction.create("Wodan - Timburcoaster", 4);
         wodan.setCreditType(creditTypes.RollerCoaster);
@@ -1506,6 +1611,196 @@ public final class DatabaseMock implements IDatabaseWrapper
         kolumbusjolle.setCategory(categories.FamilyRides);
         kolumbusjolle.setManufacturer(manufacturers.Mack);
         europaPark.addChildAndSetParent(kolumbusjolle);
+
+        StockAttraction feriaSwing = StockAttraction.create("Feria Swing", blueprints.MusikExpress);
+        europaPark.addChildAndSetParent(feriaSwing);
+
+        CustomAttraction poppyTowers = CustomAttraction.create("Poppy Towers");
+        poppyTowers.setCategory(categories.FamilyRides);
+        poppyTowers.setManufacturer(manufacturers.Zierer);
+        europaPark.addChildAndSetParent(poppyTowers);
+
+        CustomAttraction madameFreudenreichsCuriosites = CustomAttraction.create("Madame Freudenreichs Curiosités");
+        madameFreudenreichsCuriosites.setCategory(categories.DarkRides);
+        madameFreudenreichsCuriosites.setManufacturer(manufacturers.Mack);
+        europaPark.addChildAndSetParent(madameFreudenreichsCuriosites);
+
+        CustomAttraction panoramabahn = CustomAttraction.create("Panoramabahn");
+        panoramabahn.setCategory(categories.TransportRides);
+        panoramabahn.setManufacturer(manufacturers.ChanceRides);
+        europaPark.addChildAndSetParent(panoramabahn);
+
+
+        // 2019
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides04102019 = new LinkedHashMap<>();
+        rides04102019.put(arthur, 1);
+        rides04102019.put(alpenexpressEnzian, 1);
+        rides04102019.put(wodan, 3);
+        rides04102019.put(silverStar, 3);
+        rides04102019.put(eurosatCanCanCoaster, 2);
+        rides04102019.put(matterhornBlitz, 1);
+        rides04102019.put(schweizerBobbahn, 1);
+        rides04102019.put(euroMir, 1);
+        rides04102019.put(blueFireMegacoaster, 2);
+        rides04102019.put(feriaSwing, 1);
+        rides04102019.put(fluchDerKassandra, 1);
+        rides04102019.put(voletarium, 1);
+        rides04102019.put(geisterschloss, 1);
+        europaPark.addChildAndSetParent(this.createVisit(4, 10, 2019, rides04102019));
+
+        LinkedHashMap<IOnSiteAttraction, Integer> rides05102019 = new LinkedHashMap<>();
+        rides05102019.put(blueFireMegacoaster, 1);
+        rides05102019.put(wodan, 1);
+        rides05102019.put(atlantica, 1);
+        rides05102019.put(silverStar, 2);
+        rides05102019.put(poseidon, 1);
+        rides05102019.put(matterhornBlitz, 1);
+        rides05102019.put(euroMir, 1);
+        rides05102019.put(eurosatCanCanCoaster, 1);
+        rides05102019.put(wienerWellenflieger, 1);
+        rides05102019.put(poppyTowers, 1);
+        rides05102019.put(voletarium, 1);
+        rides05102019.put(tirolerWildwasserbahn, 1);
+        rides05102019.put(fjordRafting, 1);
+        rides05102019.put(madameFreudenreichsCuriosites, 1);
+        rides05102019.put(geisterschloss, 1);
+        rides05102019.put(panoramabahn, 1);
+        europaPark.addChildAndSetParent(this.createVisit(5, 10, 2019, rides05102019));
+    }
+
+    private void mockEnergylandia()
+    {
+        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEnergylandia");
+
+        Park energylandia = Park.create("Energylandia");
+        locations.Poland.addChildAndSetParent(energylandia);
+
+        CustomAttraction zadra = CustomAttraction.create("Zadra");
+        zadra.setCreditType(creditTypes.RollerCoaster);
+        zadra.setCategory(categories.RollerCoasters);
+        zadra.setManufacturer(manufacturers.RMC);
+        energylandia.addChildAndSetParent(zadra);
+
+        CustomAttraction hyperion = CustomAttraction.create("Hyperion");
+        hyperion.setCreditType(creditTypes.RollerCoaster);
+        hyperion.setCategory(categories.RollerCoasters);
+        hyperion.setManufacturer(manufacturers.Intamin);
+        energylandia.addChildAndSetParent(hyperion);
+
+        CustomAttraction formula = CustomAttraction.create("Formula");
+        formula.setCreditType(creditTypes.RollerCoaster);
+        formula.setCategory(categories.RollerCoasters);
+        formula.setManufacturer(manufacturers.Vekoma);
+        energylandia.addChildAndSetParent(formula);
+
+        StockAttraction mayan = StockAttraction.create("Mayan", blueprints.SuspendedLoopingCoaster);
+        energylandia.addChildAndSetParent(mayan);
+
+        CustomAttraction draken = CustomAttraction.create("Draken");
+        draken.setCreditType(creditTypes.RollerCoaster);
+        draken.setCategory(categories.RollerCoasters);
+        draken.setManufacturer(manufacturers.PrestonAndBarbieri);
+        energylandia.addChildAndSetParent(draken);
+
+        CustomAttraction frida = CustomAttraction.create("Frida");
+        frida.setCreditType(creditTypes.RollerCoaster);
+        frida.setCategory(categories.RollerCoasters);
+        frida.setManufacturer(manufacturers.Vekoma);
+        energylandia.addChildAndSetParent(frida);
+
+        CustomAttraction dragon = CustomAttraction.create("Dragon");
+        dragon.setCreditType(creditTypes.RollerCoaster);
+        dragon.setCategory(categories.RollerCoasters);
+        dragon.setManufacturer(manufacturers.Vekoma);
+        energylandia.addChildAndSetParent(dragon);
+
+        CustomAttraction speed = CustomAttraction.create("Speed");
+        speed.setCreditType(creditTypes.RollerCoaster);
+        speed.setCategory(categories.RollerCoasters);
+        speed.setManufacturer(manufacturers.Intamin);
+        energylandia.addChildAndSetParent(speed);
+
+        CustomAttraction happyLoops = CustomAttraction.create("Happy Loops");
+        happyLoops.setCreditType(creditTypes.RollerCoaster);
+        happyLoops.setCategory(categories.RollerCoasters);
+        happyLoops.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(happyLoops);
+
+        CustomAttraction energus = CustomAttraction.create("Energuś");
+        energus.setCreditType(creditTypes.RollerCoaster);
+        energus.setCategory(categories.RollerCoasters);
+        energus.setManufacturer(manufacturers.Vekoma);
+        energylandia.addChildAndSetParent(energus);
+
+        CustomAttraction fruttiLoop = CustomAttraction.create("Frutti Loop");
+        fruttiLoop.setCreditType(creditTypes.RollerCoaster);
+        fruttiLoop.setCategory(categories.RollerCoasters);
+        fruttiLoop.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(fruttiLoop);
+
+        CustomAttraction boomerang = CustomAttraction.create("Boomerang");
+        boomerang.setCreditType(creditTypes.RollerCoaster);
+        boomerang.setCategory(categories.RollerCoasters);
+        boomerang.setManufacturer(manufacturers.Vekoma);
+        energylandia.addChildAndSetParent(boomerang);
+
+        CustomAttraction viking = CustomAttraction.create("Viking");
+        viking.setCreditType(creditTypes.RollerCoaster);
+        viking.setCategory(categories.RollerCoasters);
+        viking.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(viking);
+
+        CustomAttraction circusCoaster = CustomAttraction.create("Circus Coaster");
+        circusCoaster.setCreditType(creditTypes.RollerCoaster);
+        circusCoaster.setCategory(categories.RollerCoasters);
+        circusCoaster.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(circusCoaster);
+
+        CustomAttraction mars = CustomAttraction.create("Mars");
+        mars.setCreditType(creditTypes.RollerCoaster);
+        mars.setCategory(categories.RollerCoasters);
+        mars.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(mars);
+
+
+        CustomAttraction monsterAttack = CustomAttraction.create("Monster Attack");
+        monsterAttack.setCategory(categories.DarkRides);
+        monsterAttack.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(monsterAttack);
+
+        CustomAttraction aztecSwing = CustomAttraction.create("Aztec Swing");
+        aztecSwing.setCategory(categories.ThrillRides);
+        aztecSwing.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(aztecSwing);
+
+        CustomAttraction spaceGun = CustomAttraction.create("Space Gun");
+        spaceGun.setCategory(categories.ThrillRides);
+        spaceGun.setManufacturer(manufacturers.SbfVisa);
+        energylandia.addChildAndSetParent(spaceGun);
+
+
+        // 2019
+        LinkedHashMap<IOnSiteAttraction, Integer> rides02102019 = new LinkedHashMap<>();
+        rides02102019.put(zadra, 16);
+        rides02102019.put(hyperion, 5);
+        rides02102019.put(formula, 2);
+        rides02102019.put(mayan, 2);
+        rides02102019.put(draken, 1);
+        rides02102019.put(frida, 1);
+        rides02102019.put(dragon, 1);
+        rides02102019.put(speed, 1);
+        rides02102019.put(happyLoops, 1);
+        rides02102019.put(energus, 1);
+        rides02102019.put(fruttiLoop, 1);
+        rides02102019.put(boomerang, 1);
+        rides02102019.put(viking, 1);
+        rides02102019.put(circusCoaster, 1);
+        rides02102019.put(mars, 1);
+        rides02102019.put(aztecSwing, 1);
+        rides02102019.put(spaceGun, 1);
+        rides02102019.put(monsterAttack, 1);
+        energylandia.addChildAndSetParent(this.createVisit(2, 10, 2019, rides02102019));
     }
 
     private Visit createVisit(int day, int month, int year, LinkedHashMap<IOnSiteAttraction, Integer> rides)
@@ -1544,35 +1839,35 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.saveContent:: content is not persited - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.saveContent:: DatabaseMock is not able to persist any data - content not persited");
         return true;
     }
 
     @Override
     public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: persistence not synchronized - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: DatabaseMock is not able to persist any data - persistence not synchronized");
         return true;
     }
 
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: elements not created - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: DatabaseMock is not able to persist any data - elements not created");
         return true;
     }
 
     @Override
     public boolean update(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.update:: elements not updated - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.update:: DatabaseMock is not able to persist any data - elements not updated");
         return true;
     }
 
     @Override
     public boolean delete(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.delete:: elements not updated - DatabaseMock is not able to persist any data");
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.delete:: DatabaseMock is not able to persist any data - elements not deleted");
         return true;
     }
 
@@ -1609,13 +1904,15 @@ class CreditTypes
 {
     final CreditType RollerCoaster = CreditType.create("CoasterCredit");
 
-    final List<CreditType> All = new LinkedList<>();
+    final List<CreditType> AllCreditTypes = new LinkedList<>();
 
     CreditTypes()
     {
-        All.add(App.settings.getDefaultCreditType());
+        AllCreditTypes.add(CreditType.getDefault());
 
-        All.add(RollerCoaster);
+        AllCreditTypes.add(RollerCoaster);
+
+        Log.e(Constants.LOG_TAG,  String.format("CreditTypes.Constructor:: mocked [%d] CreditTypes", AllCreditTypes.size()));
     }
 }
 
@@ -1628,18 +1925,20 @@ class Categories
     final Category DarkRides = Category.create("Dark Rides");
     final Category TransportRides = Category.create("Transport Rides");
 
-    final List<Category> All = new LinkedList<>();
+    final List<Category> AllCategories = new LinkedList<>();
 
     Categories()
     {
-        All.add(App.settings.getDefaultCategory());
+        AllCategories.add(Category.getDefault());
 
-        All.add(RollerCoasters);
-        All.add(ThrillRides);
-        All.add(FamilyRides);
-        All.add(WaterRides);
-        All.add(DarkRides);
-        All.add(TransportRides);
+        AllCategories.add(RollerCoasters);
+        AllCategories.add(ThrillRides);
+        AllCategories.add(FamilyRides);
+        AllCategories.add(WaterRides);
+        AllCategories.add(DarkRides);
+        AllCategories.add(TransportRides);
+
+        Log.e(Constants.LOG_TAG,  String.format("Categories.Constructor:: mocked [%d] Categories", AllCategories.size()));
     }
 }
 
@@ -1669,37 +1968,41 @@ class Manufacturers
     final Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer Amusement Rides");
     final Manufacturer PremierRides = Manufacturer.create("Premier Rides");
     final Manufacturer GCI = Manufacturer.create("Great Coasters International");
+    final Manufacturer ChanceRides = Manufacturer.create("Chance Rides");
 
-    final List<Manufacturer> All = new LinkedList<>();
+    final List<Manufacturer> AllManufacturers = new LinkedList<>();
 
     Manufacturers()
     {
-        All.add(App.settings.getDefaultManufacturer());
+        AllManufacturers.add(Manufacturer.getDefault());
 
-        All.add(BolligerAndMabillard);
-        All.add(Intamin);
-        All.add(Vekoma);
-        All.add(Huss);
-        All.add(Pinfari);
-        All.add(MaurerRides);
-        All.add(EtfRideSystems);
-        All.add(Zierer);
-        All.add(Hofmann);
-        All.add(Hafema);
-        All.add(PrestonAndBarbieri);
-        All.add(Schwarzkopf);
-        All.add(Mack);
-        All.add(SAndS);
-        All.add(SbfVisa);
-        All.add(Triotech);
-        All.add(Zamperla);
-        All.add(ArrowDynamics);
-        All.add(Simworx);
-        All.add(CCI);
-        All.add(RMC);
-        All.add(Gerstlauer);
-        All.add(PremierRides);
-        All.add(GCI);
+        AllManufacturers.add(BolligerAndMabillard);
+        AllManufacturers.add(Intamin);
+        AllManufacturers.add(Vekoma);
+        AllManufacturers.add(Huss);
+        AllManufacturers.add(Pinfari);
+        AllManufacturers.add(MaurerRides);
+        AllManufacturers.add(EtfRideSystems);
+        AllManufacturers.add(Zierer);
+        AllManufacturers.add(Hofmann);
+        AllManufacturers.add(Hafema);
+        AllManufacturers.add(PrestonAndBarbieri);
+        AllManufacturers.add(Schwarzkopf);
+        AllManufacturers.add(Mack);
+        AllManufacturers.add(SAndS);
+        AllManufacturers.add(SbfVisa);
+        AllManufacturers.add(Triotech);
+        AllManufacturers.add(Zamperla);
+        AllManufacturers.add(ArrowDynamics);
+        AllManufacturers.add(Simworx);
+        AllManufacturers.add(CCI);
+        AllManufacturers.add(RMC);
+        AllManufacturers.add(Gerstlauer);
+        AllManufacturers.add(PremierRides);
+        AllManufacturers.add(GCI);
+        AllManufacturers.add(ChanceRides);
+
+        Log.e(Constants.LOG_TAG,  String.format("Manufacturers.Constructor:: mocked [%d] Manufacturers", AllManufacturers.size()));
     }
 }
 
@@ -1710,16 +2013,18 @@ class Statuses
     final Status Converted = Status.create("converted");
     final Status Defunct = Status.create("defunct");
 
-    final List<Status> All = new LinkedList<>();
+    final List<Status> AllStatuses = new LinkedList<>();
 
     Statuses()
     {
-        All.add(App.settings.getDefaultStatus());
+        AllStatuses.add(Status.getDefault());
 
-        All.add(ClosedForRefurbishment);
-        All.add(ClosedForConversion);
-        All.add(Defunct);
-        All.add(Converted);
+        AllStatuses.add(ClosedForRefurbishment);
+        AllStatuses.add(ClosedForConversion);
+        AllStatuses.add(Defunct);
+        AllStatuses.add(Converted);
+
+        Log.e(Constants.LOG_TAG,  String.format("Statuses.Constructor:: mocked [%d] Statuses", AllStatuses.size()));
     }
 }
 
@@ -1730,12 +2035,16 @@ class Locations
     final Location Germany = Location.create("Germany");
     final Location Netherlands = Location.create("Netherlands");
     final Location Spain = Location.create("Spain");
+    final Location Poland = Location.create("Poland");
 
     Locations()
     {
         Europe.addChildAndSetParent(Germany);
         Europe.addChildAndSetParent(Netherlands);
         Europe.addChildAndSetParent(Spain);
+        Europe.addChildAndSetParent(Poland);
+
+        Log.e(Constants.LOG_TAG,  "Locations.Constructor:: mocked Locations");
     }
 }
 
@@ -1753,8 +2062,10 @@ class Blueprints
     final Blueprint Condor = Blueprint.create("Condor");
     final Blueprint SkyFly = Blueprint.create("Sky Fly");
     final Blueprint Ranger = Blueprint.create("Ranger");
+    final Blueprint WildWaterRondell = Blueprint.create("Wild Water Rondell");
+    final Blueprint MusikExpress = Blueprint.create("Musik Express");
 
-    final List<Blueprint> All = new LinkedList<>();
+    final List<Blueprint> AllBlueprints = new LinkedList<>();
 
     Blueprints(Manufacturers manufacturers, Categories categories, CreditTypes creditTypes)
     {
@@ -1796,18 +2107,28 @@ class Blueprints
         Ranger.setCategory(categories.ThrillRides);
         Ranger.setManufacturer(manufacturers.Huss);
 
+        WildWaterRondell.setCategory(categories.FamilyRides);
+        WildWaterRondell.setManufacturer(manufacturers.Zierer);
 
-        All.add(SuspendedLoopingCoaster);
-        All.add(Boomerang);
-        All.add(BigApple);
-        All.add(SkyRocketII);
+        MusikExpress.setCategory(categories.FamilyRides);
+        MusikExpress.setManufacturer(manufacturers.Mack);
 
-        All.add(TopSpin);
-        All.add(SuspendedTopSpin);
-        All.add(BreakDancer);
-        All.add(DiskO);
-        All.add(Condor);
-        All.add(SkyFly);
-        All.add(Ranger);
+
+        AllBlueprints.add(SuspendedLoopingCoaster);
+        AllBlueprints.add(Boomerang);
+        AllBlueprints.add(BigApple);
+        AllBlueprints.add(SkyRocketII);
+
+        AllBlueprints.add(TopSpin);
+        AllBlueprints.add(SuspendedTopSpin);
+        AllBlueprints.add(BreakDancer);
+        AllBlueprints.add(DiskO);
+        AllBlueprints.add(Condor);
+        AllBlueprints.add(SkyFly);
+        AllBlueprints.add(Ranger);
+        AllBlueprints.add(WildWaterRondell);
+        AllBlueprints.add(MusikExpress);
+
+        Log.e(Constants.LOG_TAG,  String.format("Blueprints.Constructor:: mocked [%d] Blueprints", AllBlueprints.size()));
     }
 }
