@@ -20,7 +20,6 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class Settings implements IPersistable
 {
-
     private ArrayList<DetailType> detailsOrder = new ArrayList<>();
 
     private SortOrder defaultSortOrder;

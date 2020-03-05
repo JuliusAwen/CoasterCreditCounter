@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.persistence;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -11,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -164,22 +162,34 @@ public class Persistence
 
     public boolean writeStringToInternalFile(String fileName, String input)
     {
+        File file = new File(App.getContext().getFilesDir(), fileName);
+
+        FileOutputStream fileOutputStream = null;
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(App.getContext().openFileOutput(fileName, Context.MODE_PRIVATE));
-            outputStreamWriter.write(input);
-            outputStreamWriter.close();
-
-            Log.d(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file [%s] written to internal storage", fileName));
-
-            return true;
+            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(input.getBytes());
         }
-        catch (Exception e)
+        catch(FileNotFoundException e)
         {
-            e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: Exception while writing string to internal file [%s] [%s]", fileName, e.getMessage()));
-            return false;
+            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
         }
+        catch(IOException e)
+        {
+            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: IOException: writing FileOutputStream failed!\n[%s]", e.getMessage()));
+        }
+        finally
+        {
+            try
+            {
+                fileOutputStream.close();
+            }
+            catch(IOException e)
+            {
+                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: IOException: closing FileOutputStream failed!\n[%s]", e.getMessage()));
+            }
+        }
+        return true;
     }
 
     public boolean writeStringToExternalFile(File file, String input)
@@ -217,28 +227,45 @@ public class Persistence
     {
         String output = "";
 
-        if(this.fileExists(fileName))
-        {
-            Log.d(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: reading string from internal file [%s]...", fileName));
+        File file = new File(App.getContext().getFilesDir(), fileName);
 
+        if(file.exists())
+        {
+            int length = (int) file.length();
+            byte[] bytes = new byte[length];
+
+            FileInputStream fileInputStream = null;
             try
             {
-                FileInputStream fileInputStream = App.getContext().openFileInput(fileName);
-
-                if(fileInputStream != null)
-                {
-                    output = this.readStringFromFile(fileInputStream);
-                }
+                fileInputStream = new FileInputStream(file);
+                int ergebnis = fileInputStream.read(bytes);
             }
-            catch (FileNotFoundException e)
+            catch(FileNotFoundException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exist: [%s]", fileName, e.getMessage()));
+                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
+            }
+            catch(IOException e)
+            {
+                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: IOException: reading FileInputStream failed!\n[%s] ", e.getMessage()));
+            }
+            finally
+            {
+                try
+                {
+                    fileInputStream.close();
+                    output = new String(bytes);
+                }
+                catch(IOException e)
+                {
+                    Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: IOException: closing FileInputStream failed!\n[%s] ", e.getMessage()));
+                }
             }
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: file [%s] does not exist - returning empty output", fileName));
+            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: file [%s] does not exist - returning empty output", fileName));
         }
+
 
         return output;
     }

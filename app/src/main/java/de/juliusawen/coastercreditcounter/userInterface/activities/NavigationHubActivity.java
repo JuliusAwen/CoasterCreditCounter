@@ -348,7 +348,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     getString(R.string.alert_dialog_message_overwrite_file),
                     getString(R.string.text_accept),
                     getString(R.string.text_cancel),
-                    RequestCode.OVERWRITE_FILE,
+                    RequestCode.OVERWRITE_EXPORT_FILE,
                     false
             );
 
@@ -383,7 +383,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         switch(requestCode)
         {
-            case OVERWRITE_FILE:
+            case OVERWRITE_EXPORT_FILE:
                 if(which == DialogInterface.BUTTON_POSITIVE)
                 {
                     this.startExportContent();

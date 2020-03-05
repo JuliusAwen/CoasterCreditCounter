@@ -776,6 +776,8 @@ public class JsonHandler implements IDatabaseWrapper
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: trying to read internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
+        boolean success = false;
+
         if(!App.config.useDefaultSettingsOnStartup())
         {
             Stopwatch stopwatchRead = new Stopwatch(true);
@@ -785,25 +787,26 @@ public class JsonHandler implements IDatabaseWrapper
             if(!jsonString.isEmpty() && this.fetchSettings(jsonString, settings))
             {
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings successful - took [%d]ms", stopwatchLoad.stop()));
-                return true;
+                success = true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings not succesful - using defaults. Operation took [%d]ms", stopwatchLoad.stop()));
+                Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: loading settings failed");
             }
         }
 
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating default settings"));
-        settings.useDefaults();
-
-        boolean success = false;
         if(App.config.saveDefaultSettingsOnStartup() || !success)
         {
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving initial default settings"));
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: creating default settings"));
+            settings.useDefaults();
+
+            Log.i(Constants.LOG_TAG, ("JsonHandler.loadSettings:: saving default settings"));
             success = this.saveSettings(settings);
+
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadSettings:: using default settings");
         }
 
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: using default settings. Operation took [%d]ms", stopwatchLoad.stop()));
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadSettings:: loading settings took [%d]ms", stopwatchLoad.stop()));
         return success;
     }
 
