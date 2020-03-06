@@ -749,7 +749,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             String message = String.format("[%s] is not persistable", this);
             Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s]", message));
-//            throw new IllegalStateException(message);
         }
     }
 

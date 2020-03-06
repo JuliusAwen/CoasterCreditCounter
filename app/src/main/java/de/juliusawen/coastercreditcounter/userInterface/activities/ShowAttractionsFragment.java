@@ -153,7 +153,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 case EDIT_CUSTOM_ATTRACTION:
                     if(!selectedElement.getName().equals(this.viewModel.formerAttractionName))
                     {
-                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: edited %s", selectedElement));
+                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
 
                         for(IElement visit : selectedElement.getParent().fetchChildrenOfType(Visit.class))
                         {
@@ -162,19 +162,19 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
                                     visitedAttraction.setName(selectedElement.getName());
-                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: renamed VisitedAttraction [%s]", visitedAttraction));
+                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: renamed VisitedAttraction %s to %s",
+                                            this.viewModel.formerAttractionName, visitedAttraction));
                                 }
                             }
                         }
-
-                        this.showAttractionsFragmentInteraction.markForUpdate(selectedElement.getParent());
-                        this.updateContentRecyclerView().scrollToItem(selectedElement);
                     }
                     this.viewModel.formerAttractionName = null;
+                    this.showAttractionsFragmentInteraction.markForUpdate(selectedElement.getParent());
+                    this.updateContentRecyclerView().scrollToItem(selectedElement);
                     break;
 
                 case CREATE_CUSTOM_ATTRACTION:
-                    this.updateContentRecyclerView();
+                    this.updateContentRecyclerView().scrollToItem(selectedElement);
                     break;
             }
         }
@@ -382,9 +382,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     private ContentRecyclerViewAdapter updateContentRecyclerView()
     {
-        Log.i(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class));
-
+        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         return this.viewModel.contentRecyclerViewAdapter;
     }
 

@@ -663,6 +663,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         euroCoaster.setCategory(categories.RollerCoasters);
         freimarkt.addChildAndSetParent(euroCoaster);
 
+        LinkedHashMap<IOnSiteAttraction, Integer> rides20102018 = new LinkedHashMap<>();
+        rides20102018.put(alpinaBahn, 1);
+        rides20102018.put(wildeMaus, 1);
+        rides20102018.put(euroCoaster, 1);
+        freimarkt.addChildAndSetParent(this.createVisit(20, 10, 2018, rides20102018));
+
+
+
         //2019
         CustomAttraction rockAndRollerCoaster = CustomAttraction.create("Rock & Roller Coaster");
         rockAndRollerCoaster.setCreditType(creditTypes.RollerCoaster);
@@ -677,11 +685,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         StockAttraction kuddelDerHai = StockAttraction.create("Kuddel der Hai", blueprints.BigApple);
         freimarkt.addChildAndSetParent(kuddelDerHai);
 
-        LinkedHashMap<IOnSiteAttraction, Integer> rides2112019 = new LinkedHashMap<>();
-        rides2112019.put(rockAndRollerCoaster, 1);
-        rides2112019.put(wildeMausXXL, 1);
-        rides2112019.put(kuddelDerHai, 1);
-        freimarkt.addChildAndSetParent(this.createVisit(2, 11, 2019, rides2112019));
+        LinkedHashMap<IOnSiteAttraction, Integer> rides02112019 = new LinkedHashMap<>();
+        rides02112019.put(rockAndRollerCoaster, 1);
+        rides02112019.put(wildeMausXXL, 1);
+        rides02112019.put(kuddelDerHai, 1);
+        freimarkt.addChildAndSetParent(this.createVisit(2, 11, 2019, rides02112019));
     }
 
     private void mockPortAventura()
