@@ -51,7 +51,7 @@ public class Preferences implements IPersistable
 
     public boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "Preferences.initialize:: loading preferences...");
+        Log.i(Constants.LOG_TAG, "Preferences.initialize:: initializing preferences...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(persistence.loadPreferences(this))
@@ -59,20 +59,41 @@ public class Preferences implements IPersistable
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrder());
-                Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization successful - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: validation failed - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization failed - took [%d]ms", stopwatch.stop()));
+                return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences failed - took [%d]ms", stopwatch.stop()));
+            this.createDefaultPreferences();
+            Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization successful - took [%d]ms", stopwatch.stop()));
+            return true;
         }
+    }
 
-        return false;
+    public boolean createDefaultPreferences()
+    {
+        Log.e(Constants.LOG_TAG, "Preferences.createDefaultPrefernces:: creating default preferences");
+
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        this.setDefaults();
+
+        if(persistence.savePreferences(this))
+        {
+            Log.i(Constants.LOG_TAG, String.format("Preferences.createDefaultPrefernces:: default preferences successfully created - took [%d]ms", stopwatch.stop()));
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences failed - took [%d]ms", stopwatch.stop()));
+            return false;
+        }
     }
 
     private boolean validate()
@@ -101,7 +122,7 @@ public class Preferences implements IPersistable
         return true;
     }
 
-    public void useDefaults()
+    public void setDefaults()
     {
         Log.i(Constants.LOG_TAG, "Preferences.useDefaults:: setting defaults...");
 

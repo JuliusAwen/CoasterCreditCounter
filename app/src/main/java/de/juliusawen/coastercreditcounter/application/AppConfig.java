@@ -5,30 +5,27 @@ import android.util.Log;
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class AppConfig
 {
-    private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
+//    private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
     private final String JSON_HANDLER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
 
     private final String databaseWrapperToUse = JSON_HANDLER;
 
-    private final String contentFileName = "CoasterCreditCounterExport.json";
+    private final String contentExportFileName = "CoasterCreditCounterExport.json";
     private final String preferencesFileName = "Preferences.json";
 
 
     private final boolean isDebugBuild = true;
 
-    //below is just working when isDebugBuild = true
+    //below is only working when isDebugBuild = true
 
-    private final boolean useExternalStorage = true; // use external file location accessable to user to export file to? - default true
-    private final boolean createExportFileIfNonexistent = true; // create export.json file if it does not exist? - default true
-    private final boolean alwaysImportFromDatabaseMock = false; // import from database mock instead of export.json file on startup? - default false
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup? - default false
+    private final boolean useLeakCanary = false;
+    private final boolean useExternalStorage = true; // use external file location accessable to user?
+    private final boolean createExportFileWithDefaultsIfNonexistent = true; // create export.json file if it does not exist?
+    private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
+    private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup?
+    private final boolean useDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
 
-    private final boolean useDefaultPreferencesOnStartup = false; // use default preferences on startup? - default false
-    private final boolean saveDefaultPreferencesOnStartup = false; // save default preferences to preferences.json on startup? - default false
-
-    private final boolean createAllDefaultsOnStartup = false; // overrides useDefaultContentFromDatabaseMock, useDefaultPreferences and saveDefaultPreferences! - default false
-
-    //above is just working when isDebugBuild = true
+    //above is only working when isDebugBuild = true
 
 
     private final boolean validateContent = true; // default true
@@ -50,22 +47,28 @@ public class AppConfig
         return String.format(
                 Constants.LOG_DIVIDER + "\n" +
                         "databaseWrapperToUse [%s]\n" +
-                        "contentFileName [%s]\n" +
+                        "contentExportFileName [%s]\n" +
                         "preferencesFileName [%s]\n" +
                         "isDebugBuild [%S]\n" +
+                        "useLeakCanary [%S]\n" +
                         "useExternalStorage [%S]\n" +
-                        "createExportFileIfNonexistent [%S]\n" +
+                        "alwaysLoadFromDatabaseMock [%S]\n" +
+                        "createExportFileWithDefaultsIfNonexistent [%S]\n" +
                         "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
+                        "useDefaultPreferencesOnStartup [%S]\n" +
                         "validateContent [%S]\n" +
                         Constants.LOG_DIVIDER,
 
                 this.databaseWrapperToUse(),
-                this.getContentFileName(),
+                this.getContentExportFileName(),
                 this.getPreferencesFileName(),
                 this.isDebugBuild(),
+                this.useLeakCanary(),
                 this.useExternalStorage(),
-                this.createExportFileIfNonexistant(),
+                this.alwaysLoadFromDatabaseMock(),
+                this.createExportFileWithDefaultsIfNonexistant(),
                 this.useDefaultContentFromDatabaseMockOnStartup(),
+                this.useDefaultPreferencesOnStartup(),
                 this.validateContent()
         );
     }
@@ -75,9 +78,9 @@ public class AppConfig
         return this.databaseWrapperToUse;
     }
 
-    public String getContentFileName()
+    public String getContentExportFileName()
     {
-        return this.contentFileName;
+        return this.contentExportFileName;
     }
 
     public String getPreferencesFileName()
@@ -90,34 +93,34 @@ public class AppConfig
         return this.isDebugBuild;
     }
 
+    public boolean useLeakCanary()
+    {
+        return this.isDebugBuild && this.useLeakCanary;
+    }
+
     public boolean useExternalStorage()
     {
         return this.isDebugBuild && this.useExternalStorage;
     }
 
-    public boolean createExportFileIfNonexistant()
+    public boolean createExportFileWithDefaultsIfNonexistant()
     {
-        return this.isDebugBuild && this.createExportFileIfNonexistent;
+        return this.isDebugBuild && this.createExportFileWithDefaultsIfNonexistent;
     }
 
-    public boolean alwaysImportFromDatabaseMock()
+    public boolean alwaysLoadFromDatabaseMock()
     {
-        return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
+        return this.isDebugBuild && this.alwaysLoadFromDatabaseMock;
     }
 
     public boolean useDefaultContentFromDatabaseMockOnStartup()
     {
-        return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup || this.createAllDefaultsOnStartup);
+        return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup);
     }
 
     public boolean useDefaultPreferencesOnStartup()
     {
-        return this.isDebugBuild && (this.useDefaultPreferencesOnStartup || this.createAllDefaultsOnStartup);
-    }
-
-    public boolean saveDefaultPreferencesOnStartup()
-    {
-        return this.isDebugBuild && (this.saveDefaultPreferencesOnStartup || this.createAllDefaultsOnStartup);
+        return this.isDebugBuild && (this.useDefaultPreferencesOnStartup);
     }
 
     public boolean validateContent()

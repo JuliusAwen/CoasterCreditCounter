@@ -10,7 +10,12 @@ public class NavigationHubActivityViewModel extends ViewModel
 {
     public MenuItem selectedMenuItem;
     public String exportFileAbsolutePath;
-    public boolean isImporting;
-    public boolean isExporting;
+
+    public boolean isImporting = false;
+    public boolean isImportSuccessful = false;
+
+    public boolean isExporting = false;
+    public boolean isExportSuccessful = false;
+
     public OptionsMenuAgent optionsMenuAgent;
 }

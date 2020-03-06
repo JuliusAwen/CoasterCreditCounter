@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.persistence.DatabaseMock;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
@@ -43,37 +42,18 @@ public class Content
 
     public boolean initialize()
     {
-
-        Log.i(Constants.LOG_TAG, "Content.initialize:: loading content...");
+        Log.i(Constants.LOG_TAG, "Content.initialize:: initializing content...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(this.persistence.loadContent(this))
         {
-            Log.i(Constants.LOG_TAG, String.format("Content.initialize:: loading content successful - took [%d]ms", stopwatch.stop()));
+            Log.i(Constants.LOG_TAG, String.format("Content.initialize:: content initialization successful - took [%d]ms", stopwatch.stop()));
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Content.initialize:: loading content failed - took [%d]ms", stopwatch.stop()));
-        }
-
-        return false;
-    }
-
-    public void useDatabaseMock()
-    {
-        Log.i(Constants.LOG_TAG, "Content.useDatabaseMock:: creating default content from DatabaseMock...");
-
-        if(App.DEBUG)
-        {
-            DatabaseMock databaseMock = DatabaseMock.getInstance();
-            databaseMock.loadContent(this);
-        }
-        else
-        {
-            //Todo: implement default content creation for non-debug builds ("use content provided by developer" aka "Julius' Coasters")
-            Log.e(Constants.LOG_TAG, "Content.useDatabaseMock:: creating default content for non-debug build not yet implemented");
-            throw new IllegalStateException();
+            Log.e(Constants.LOG_TAG, String.format("Content.initialize:: content initialization failed - took [%d]ms", stopwatch.stop()));
+            return false;
         }
     }
 
@@ -89,18 +69,18 @@ public class Content
 
     private boolean backup()
     {
-        this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
-
-        this.isRestoreBackupPossible = true;
-
         if(this.elementsByUuid.size() > 0)
         {
+            this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
+
+            this.isRestoreBackupPossible = true;
             Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
             return true;
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "Content.backup:: content is empty");
+            this.isRestoreBackupPossible = false;
+            Log.i(Constants.LOG_TAG, "Content.backup:: no backup created - content is empty");
             return false;
         }
     }
@@ -143,14 +123,23 @@ public class Content
 
     private void setRootLocation()
     {
-        Location rootLocation = this.getContentAsType(Location.class).get(0).getRootLocation();
-        this.rootLocation = rootLocation;
-        Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
+        List<Location> locations = this.getContentAsType(Location.class);
+        if(!locations.isEmpty())
+        {
+            this.rootLocation = locations.get(0).getRootLocation();;
+            Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
+        }
+        else
+        {
+            String message = "not able to set root location: no location located in content - closing app";
+            Log.e(Constants.LOG_TAG, "Content.setRootLocation:: " + message);
+            throw new IllegalStateException(message);
+        }
     }
 
     public boolean containsElement(IElement element)
     {
-        return this.elementsByUuid.values().contains(element);
+        return this.elementsByUuid.containsValue(element);
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)

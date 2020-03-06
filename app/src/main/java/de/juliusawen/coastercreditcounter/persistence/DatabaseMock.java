@@ -45,6 +45,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private DatabaseMock()
     {
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.Constructor:: instantiating DatabaseMock");
+
         this.creditTypes = new CreditTypes();
         this.categories = new Categories();
         this.manufacturers = new Manufacturers();
@@ -56,7 +58,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, "DatabaseMock.loadContent:: mocking load content");
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: creating mock content");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -86,7 +88,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElements(ConvertTool.convertElementsToType(statuses.AllStatuses, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(blueprints.AllBlueprints, IElement.class));
 
-        Log.i(Constants.LOG_TAG, String.format("DatabaseMock.loadContent:: creating mock data successful - took [%d]ms", stopwatch.stop()));
+        Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: mock data successfully created - took [%d]ms", stopwatch.stop()));
 
         return true;
     }
@@ -1911,8 +1913,6 @@ class CreditTypes
         AllCreditTypes.add(CreditType.getDefault());
 
         AllCreditTypes.add(RollerCoaster);
-
-        Log.e(Constants.LOG_TAG,  String.format("CreditTypes.Constructor:: mocked [%d] CreditTypes", AllCreditTypes.size()));
     }
 }
 
@@ -1937,8 +1937,6 @@ class Categories
         AllCategories.add(WaterRides);
         AllCategories.add(DarkRides);
         AllCategories.add(TransportRides);
-
-        Log.e(Constants.LOG_TAG,  String.format("Categories.Constructor:: mocked [%d] Categories", AllCategories.size()));
     }
 }
 
@@ -2001,8 +1999,6 @@ class Manufacturers
         AllManufacturers.add(PremierRides);
         AllManufacturers.add(GCI);
         AllManufacturers.add(ChanceRides);
-
-        Log.e(Constants.LOG_TAG,  String.format("Manufacturers.Constructor:: mocked [%d] Manufacturers", AllManufacturers.size()));
     }
 }
 
@@ -2023,8 +2019,6 @@ class Statuses
         AllStatuses.add(ClosedForConversion);
         AllStatuses.add(Defunct);
         AllStatuses.add(Converted);
-
-        Log.e(Constants.LOG_TAG,  String.format("Statuses.Constructor:: mocked [%d] Statuses", AllStatuses.size()));
     }
 }
 
@@ -2043,8 +2037,6 @@ class Locations
         Europe.addChildAndSetParent(Netherlands);
         Europe.addChildAndSetParent(Spain);
         Europe.addChildAndSetParent(Poland);
-
-        Log.e(Constants.LOG_TAG,  "Locations.Constructor:: mocked Locations");
     }
 }
 
@@ -2128,7 +2120,5 @@ class Blueprints
         AllBlueprints.add(Ranger);
         AllBlueprints.add(WildWaterRondell);
         AllBlueprints.add(MusikExpress);
-
-        Log.e(Constants.LOG_TAG,  String.format("Blueprints.Constructor:: mocked [%d] Blueprints", AllBlueprints.size()));
     }
 }

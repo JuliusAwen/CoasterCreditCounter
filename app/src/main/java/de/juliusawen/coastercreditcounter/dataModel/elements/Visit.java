@@ -110,6 +110,12 @@ public final class Visit extends Element implements IPersistable
         return Visit.currentVisits;
     }
 
+    public static void clearCurrentVisits()
+    {
+        Visit.currentVisits.clear();
+        Log.d(Constants.LOG_TAG, "Visit.clearCurrentVisits:: current visits cleared");
+    }
+
     public static void addCurrentVisit(Visit visit)
     {
         if(visit != null)

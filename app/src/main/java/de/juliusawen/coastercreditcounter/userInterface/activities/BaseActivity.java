@@ -178,16 +178,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         @Override
         protected BaseActivity doInBackground(BaseActivity... baseActivities)
         {
-            boolean success = App.initialize();
-
-            if(success)
-            {
-                return baseActivities[0];
-            }
-
-            String message = "App initialization failed";
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.InitializeApp.doInBackground:: %s", message));
-            throw new IllegalStateException(message);
+            baseActivities[0].viewModel.isAppProperlyInitialized = App.initialize();
+            return baseActivities[0];
         }
 
         @Override
@@ -202,11 +194,19 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         this.showProgressBar(false);
 
-        Intent intent = getIntent();
-        Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
+        if(this.viewModel.isAppProperlyInitialized)
+        {
+            Intent intent = getIntent();
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //this clears the stacktrace
-        ActivityDistributor.startActivityViaIntent(this, intent);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //this clears the stacktrace
+            ActivityDistributor.startActivityViaIntent(this, intent);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.InitializeApp.doInBackground:: App initialization failed - closing App");
+            finishAndRemoveTask();
+        }
     }
 
 
@@ -298,7 +298,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         if(helpOverlayFragment == null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with title [%s] and message", title));
+            Log.d(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with title [%s]", title));
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with message [%s]", message));
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
             fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);

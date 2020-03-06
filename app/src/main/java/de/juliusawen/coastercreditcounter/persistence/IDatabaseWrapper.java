@@ -3,9 +3,9 @@ package de.juliusawen.coastercreditcounter.persistence;
 import java.util.List;
 import java.util.Set;
 
+import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.application.Content;
 
 public interface IDatabaseWrapper
 {
@@ -18,6 +18,8 @@ public interface IDatabaseWrapper
 
     boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete);
 
+
+    //Todo: implement statistics object
     int fetchTotalCreditsCount();
     int fetchTotalCreditsRideCount();
     int fetchTotalVisitedParksCount();

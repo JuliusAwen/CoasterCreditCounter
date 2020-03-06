@@ -189,6 +189,7 @@ public class Persistence
                 Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: IOException: closing FileOutputStream failed!\n[%s]", e.getMessage()));
             }
         }
+
         return true;
     }
 
@@ -285,6 +286,7 @@ public class Persistence
         {
             Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
         }
+
         return output;
     }
 

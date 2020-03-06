@@ -11,7 +11,6 @@ import de.juliusawen.coastercreditcounter.persistence.Persistence;
 public class App extends Application
 {
     public static boolean isInitialized;
-    public static boolean DEBUG;
 
     public static Persistence persistence;
     public static Content content;
@@ -39,20 +38,19 @@ public class App extends Application
 
         super.onCreate();
 
-        if(LeakCanary.isInAnalyzerProcess(this))
-        {
-            return;
-        }
-        LeakCanary.install(this);
-
         App.isInitialized = false;
-
         App.instance = this;
-
         App.config = new AppConfig();
-        App.DEBUG = App.config.isDebugBuild();
-
         App.persistence = Persistence.getInstance();
+
+        if(App.config.useLeakCanary())
+        {
+            if(LeakCanary.isInAnalyzerProcess(this))
+            {
+                return;
+            }
+            LeakCanary.install(this);
+        }
     }
 
     public static boolean initialize()

@@ -34,6 +34,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditTy
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.persistence.DatabaseMock;
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
@@ -54,68 +55,98 @@ public class JsonHandler implements IDatabaseWrapper
     {
         content.clear();
 
-        if((!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup()) || (App.isInitialized && App.config.alwaysImportFromDatabaseMock()))
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        boolean success;
+        if(App.config.alwaysLoadFromDatabaseMock())
         {
-            Log.w(Constants.LOG_TAG, "JsonHandler.importContent:: importing default content from DatabaseMock");
-            Stopwatch stopwatch = new Stopwatch(true);
-            boolean success = this.provideDefaultContent(content);
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: creating, exporting and importing default content from DatabaseMock successful [%S]- took [%d]ms", success, stopwatch.stop()));
-            return success;
+            Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.alwaysLoadFromDatabaseMock = true");
+            success = this.loadDefaultContentFromDatabaseMock(content);
         }
         else
         {
-            return this.readExternalJsonStringAndFetchContent(content);
+            if(!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup())
+            {
+                Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.useDefaultContentFromDatabaseMockOnStartup = true");
+                success = this.loadDefaultContentFromDatabaseMock(content);
+            }
+            else if(this.readExternalJsonStringAndFetchContent(content))
+            {
+                success = true;
+            }
+            else
+            {
+
+
+                if(App.config.createExportFileWithDefaultsIfNonexistant())
+                {
+                    Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.createExportFileWithDefaultsIfNonexistant = true...");
+                    success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
+                    //return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
+                }
+                else
+                {
+                    //Todo: implement default content creation for non-debug builds ("use content provided by developer" aka "Julius' Coasters")
+                    success = this.initializeForFirstUse(content);
+                }
+            }
+        }
+
+        if(success)
+        {
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: content successfully imported - took [%d]ms", stopwatch.stop()));
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: content import failed - took [%d]ms", stopwatch.stop()));
+            return false;
+        }
+    }
+
+    private boolean loadDefaultContentFromDatabaseMock(Content content)
+    {
+        DatabaseMock databaseMock = DatabaseMock.getInstance();
+        if(databaseMock.loadContent(content))
+        {
+            Log.i(Constants.LOG_TAG, "JsonHandler.loadDefaultContentFromDatabaseMock:: default content successfully loaded from database mock");
+            return true;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.loadDefaultContentFromDatabaseMock:: loading default content from database mock failed");
+            return false;
         }
     }
 
     private boolean readExternalJsonStringAndFetchContent(Content content)
     {
         Log.d(Constants.LOG_TAG, ("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string..."));
-        Stopwatch stopwatchImport = new Stopwatch(true);
+        Stopwatch stopwatchFetch = new Stopwatch(true);
 
-        File file = new File(App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentFileName());
+        File file = new File(App.persistence.getExternalStorageDocumentsDirectory().getAbsolutePath(), App.config.getContentExportFileName());
         if(file.exists())
         {
             Stopwatch stopwatchRead = new Stopwatch(true);
-
             String jsonString = App.persistence.readStringFromExternalFile(file);
             Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: reading external json string took [%d]ms", stopwatchRead.stop()));
 
             if(this.fetchContent(jsonString, content))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: success - took [%d]ms", stopwatchFetch.stop()));
                 return true;
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: fail - took [%d]ms", stopwatchFetch.stop()));
+                return false;
             }
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: file [%s] does not exist", App.config.getContentFileName()));
-        }
-
-        if(App.config.createExportFileIfNonexistant())
-        {
-            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: export file not viable: using default content");
-            boolean success = this.provideDefaultContent(content);
-            Log.w(Constants.LOG_TAG, String.format("JsonHandler.importContent:: export file not viable: using default content successful[%S] - took [%d]ms", success, stopwatchImport.stop()));
-            return success;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from file [%s] failed - took [%d]ms", App.config.getContentFileName(), stopwatchImport.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.readExternalJsonStringAndFetchContent:: file [%s] does not exist", App.config.getContentExportFileName()));
             return false;
         }
-    }
-
-    private boolean provideDefaultContent(Content content)
-    {
-        Log.i(Constants.LOG_TAG, "JsonHandler.provideDefaultContent:: creating default content and exporting to external json...");
-        content.useDatabaseMock();
-        this.exportContent(content);
-        return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
     }
 
     @Override
@@ -131,25 +162,34 @@ public class JsonHandler implements IDatabaseWrapper
 
         Log.d(Constants.LOG_TAG, ("JsonHandler.loadContent:: reading internal json string..."));
         Stopwatch stopwatchRead = new Stopwatch(true);
-        String jsonString = App.persistence.readStringFromInternalFile(App.config.getContentFileName());
+        String jsonString = App.persistence.readStringFromInternalFile(App.config.getContentExportFileName());
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-        if(this.fetchContent(jsonString, content))
+        if(!jsonString.isEmpty())
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content successful - took [%d]ms", stopwatchLoad.stop()));
-            return true;
+            if(this.fetchContent(jsonString, content))
+            {
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: content loaded successfully - took [%d]ms", stopwatchLoad.stop()));
+                return true;
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed - took [%d]ms", stopwatchLoad.stop()));
+                return false;
+            }
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "JsonHandler.loadContent:: creating default content and saving to json file...");
-            content.useDatabaseMock();
-            boolean success = this.saveContent(content);
-
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: loading content failed: using default content - took [%d]ms", stopwatchLoad.stop()));
-            return success;
+            return this.initializeForFirstUse(content);
         }
     }
 
+    private boolean initializeForFirstUse(Content content)
+    {
+        Log.i(Constants.LOG_TAG, "JsonHandler.initializeForFirstUse:: creating root location for first use...");
+        content.addElement(Location.create("root"));
+        return this.saveContent(content);
+    }
 
     private boolean fetchContent(String jsonString, Content content)
     {
@@ -168,21 +208,23 @@ public class JsonHandler implements IDatabaseWrapper
 
                 this.createVisitedAttractionsAndAddToVisits(this.temporaryVisits, content);
 
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: content fetched successfully from json string  - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.fetchContent:: json string is corrupt - restoring content backup");
+                Log.e(Constants.LOG_TAG, "JsonHandler.fetchContent:: json string corrupt - restoring content backup");
                 App.content.restoreBackup();
 
                 Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed - took [%d]ms", stopwatch.stop()));
                 return false;
             }
         }
-
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
-        return false;
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
+            return false;
+        }
     }
 
     private boolean createElementsAndAddToContent(String jsonString, Content content)
@@ -619,29 +661,32 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean exportContent(Content content)
     {
+        Log.i(Constants.LOG_TAG, "JsonHandler.exportContent:: exporting content to external json [%s]...");
+
         Stopwatch stopwatch = new Stopwatch(true);
 
         JSONObject jsonObject = this.createContentJsonObject(content);
-
-        File file = new File(App.persistence.getExternalStorageDocumentsDirectory(), App.config.getContentFileName());
         if(jsonObject != null)
         {
+            File file = new File(App.persistence.getExternalStorageDocumentsDirectory(), App.config.getContentExportFileName());
             if(App.persistence.writeStringToExternalFile(file , jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG, String.format("Content.export:: exporting content to external json [%s] successful - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: content successfully exported to external json [%s] - took [%d]ms",
+                        App.config.getContentExportFileName(), stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Content.export:: exporting content failed: could not write to external json [%s] - took [%d]ms", App.config.getContentFileName(), stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: exporting content to external json [%s] failed - took [%d]ms",
+                        App.config.getContentExportFileName(), stopwatch.stop()));
+                return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Content.export:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: exporting content failed: json object is null - took [%d]ms", stopwatch.stop()));
+            return false;
         }
-
-        return false;
     }
 
     @Override
@@ -659,7 +704,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(jsonObject != null)
         {
-            if(App.persistence.writeStringToInternalFile(App.config.getContentFileName(), jsonObject.toString()))
+            if(App.persistence.writeStringToInternalFile(App.config.getContentExportFileName(), jsonObject.toString()))
             {
                 Log.i(Constants.LOG_TAG,  String.format("Content.saveContent:: saving content to internal json file successful - took [%d]ms", stopwatch.stop()));
                 return true;
@@ -738,7 +783,8 @@ public class JsonHandler implements IDatabaseWrapper
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: creating json object from content failed: JSONException [%s] - took [%d]ms",
+                    e.getMessage(), stopwatch.stop()));
         }
 
         return null;
@@ -776,47 +822,36 @@ public class JsonHandler implements IDatabaseWrapper
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferencess:: trying to read internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
-        boolean success = false;
-
         if(!App.config.useDefaultPreferencesOnStartup())
         {
             Stopwatch stopwatchRead = new Stopwatch(true);
             String jsonString = App.persistence.readStringFromInternalFile(App.config.getPreferencesFileName());
             Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: reading internal json string took [%d]ms", stopwatchRead.stop()));
 
-            if(!jsonString.isEmpty() && this.fetchPreferences(jsonString, preferences))
+            if(this.fetchPreferences(jsonString, preferences))
             {
                 Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: loading preferences successful - took [%d]ms", stopwatchLoad.stop()));
-                success = true;
+                return true;
             }
             else
             {
                 Log.e(Constants.LOG_TAG, "JsonHandler.loadPreferences:: loading preferences failed");
+                return false;
             }
         }
-
-        if(App.config.saveDefaultPreferencesOnStartup() || !success)
+        else
         {
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferences:: creating default preferences"));
-            preferences.useDefaults();
-
-            Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferences:: saving default preferences"));
-            success = this.savePreferences(preferences);
-
-            Log.e(Constants.LOG_TAG, "JsonHandler.loadPreferences:: using default preferences");
+            return false;
         }
-
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: loading preferences took [%d]ms", stopwatchLoad.stop()));
-        return success;
     }
 
     private boolean fetchPreferences(String jsonString, Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.fetchPreferences:: fetching preferences from json string..."));
-        Stopwatch stopwatch = new Stopwatch(true);
-
         if(!jsonString.isEmpty())
         {
+            Log.i(Constants.LOG_TAG, ("JsonHandler.fetchPreferences:: fetching preferences from json string..."));
+            Stopwatch stopwatch = new Stopwatch(true);
+
             try
             {
                 JSONObject jsonObjectPreferences = new JSONObject(jsonString);
@@ -853,7 +888,7 @@ public class JsonHandler implements IDatabaseWrapper
                     preferences.setIncrement(jsonObjectPreferences.getInt(Constants.JSON_STRING_INCREMENT));
                 }
 
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetching preferences from json string successful - took [%d]ms", stopwatch.stop()));
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetched preferences from json string successfully - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             catch(JSONException e)
@@ -862,9 +897,11 @@ public class JsonHandler implements IDatabaseWrapper
                 return false;
             }
         }
-
-        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchPreferences:: fetching preferences from json string failed: json string is empty - took [%d]ms", stopwatch.stop()));
-        return false;
+        else
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.fetchPreferences:: fetching preferences from json string failed: json string is empty");
+            return false;
+        }
     }
 
     public boolean savePreferences(Preferences preferences)
@@ -877,7 +914,7 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(App.persistence.writeStringToInternalFile(App.config.getPreferencesFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: saving preferences successful - took [%d]ms", stopwatch.stop()));
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: preferences successfully saved - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
