@@ -340,6 +340,11 @@ public class Persistence
         return this.databaseWrapper.fetchTotalVisitedParksCount();
     }
 
+    public int fetchTotalVisits()
+    {
+        return this.databaseWrapper.fetchTotalVisits();
+    }
+
     public List<Visit> fetchCurrentVisits()
     {
         return this.databaseWrapper.fetchCurrentVisits();

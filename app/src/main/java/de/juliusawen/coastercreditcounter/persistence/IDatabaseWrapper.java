@@ -23,6 +23,7 @@ public interface IDatabaseWrapper
     int fetchTotalCreditsCount();
     int fetchTotalCreditsRideCount();
     int fetchTotalVisitedParksCount();
+    int fetchTotalVisits();
 
     List<Visit> fetchCurrentVisits();
 }

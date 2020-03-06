@@ -1007,6 +1007,23 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
+    public int fetchTotalVisits()
+    {
+        Stopwatch stopwatch = new Stopwatch(true);
+
+        int totalVisits = 0;
+
+        for(IElement visit : App.content.getContentOfType(Visit.class))
+        {
+            totalVisits += 1;
+        }
+
+        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalVisits:: [%d] visits found - took [%d]ms", totalVisits, stopwatch.stop()));
+
+        return totalVisits;
+    }
+
+    @Override
     public int fetchTotalVisitedParksCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
