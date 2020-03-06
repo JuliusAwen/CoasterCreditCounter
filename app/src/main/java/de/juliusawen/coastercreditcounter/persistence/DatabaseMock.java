@@ -1476,7 +1476,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         CustomAttraction silverStar = CustomAttraction.create("Silver Star", 5);
         silverStar.setCreditType(creditTypes.RollerCoaster);
         silverStar.setCategory(categories.RollerCoasters);
-        silverStar.setManufacturer(manufacturers.Mack);
+        silverStar.setManufacturer(manufacturers.BolligerAndMabillard);
         europaPark.addChildAndSetParent(silverStar);
 
         CustomAttraction blueFireMegacoaster = CustomAttraction.create("Blue Fire Megacoaster", 4);
@@ -1956,7 +1956,7 @@ class Manufacturers
     final Manufacturer Schwarzkopf = Manufacturer.create("Schwarzkopf");
     final Manufacturer Mack = Manufacturer.create("Mack");
     final Manufacturer SAndS = Manufacturer.create("S&S");
-    final Manufacturer SbfVisa = Manufacturer.create("SBF Visa");
+    final Manufacturer SbfVisa = Manufacturer.create("SBF Visa Group");
     final Manufacturer Triotech = Manufacturer.create("Triotech");
     final Manufacturer Zamperla = Manufacturer.create("Zamperla");
     final Manufacturer ArrowDynamics = Manufacturer.create("Arrow Dynamics");
