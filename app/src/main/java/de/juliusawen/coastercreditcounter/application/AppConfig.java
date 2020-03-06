@@ -20,9 +20,9 @@ public class AppConfig
 
     private final boolean useLeakCanary = false;
     private final boolean useExternalStorage = true; // use external file location accessable to user?
-    private final boolean createExportFileWithDefaultsIfNonexistent = true; // create export.json file if it does not exist?
+    private final boolean createExportFileWithDefaultsIfNotFound = true; // create export.json file if it does not exist?
     private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
-    private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
+    private final boolean resetToDefaultContentOnStartup = true; // // use mocked default content on startup? (OVERRIDES existing content!)
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
 
     //above is only working when isDebugBuild = true
@@ -66,7 +66,7 @@ public class AppConfig
                 this.useLeakCanary(),
                 this.useExternalStorage(),
                 this.alwaysLoadFromDatabaseMock(),
-                this.createExportFileWithDefaultsIfNonexistant(),
+                this.createExportFileWithDefaultsIfNotFound(),
                 this.resetTomDefaultContentOnStartup(),
                 this.resetToDefaultPreferencesOnStartup(),
                 this.validateContent()
@@ -103,9 +103,9 @@ public class AppConfig
         return this.isDebugBuild && this.useExternalStorage;
     }
 
-    public boolean createExportFileWithDefaultsIfNonexistant()
+    public boolean createExportFileWithDefaultsIfNotFound()
     {
-        return this.isDebugBuild && this.createExportFileWithDefaultsIfNonexistent;
+        return this.isDebugBuild && this.createExportFileWithDefaultsIfNotFound;
     }
 
     public boolean alwaysLoadFromDatabaseMock()

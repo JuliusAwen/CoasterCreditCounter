@@ -60,14 +60,14 @@ public class JsonHandler implements IDatabaseWrapper
         boolean success;
         if(App.config.alwaysLoadFromDatabaseMock())
         {
-            Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.alwaysLoadFromDatabaseMock = true");
+            Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.alwaysLoadFromDatabaseMock = true --> loading default content from DatabaseMock");
             success = this.loadDefaultContentFromDatabaseMock(content);
         }
         else
         {
             if(!App.isInitialized && App.config.resetTomDefaultContentOnStartup())
             {
-                Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.useDefaultContentFromDatabaseMockOnStartup = true");
+                Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.resetTomDefaultContentOnStartup = true --> loading and exporting default content");
                 success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
             }
             else if(this.readExternalJsonStringAndFetchContent(content))
@@ -78,9 +78,9 @@ public class JsonHandler implements IDatabaseWrapper
             {
 
 
-                if(App.config.createExportFileWithDefaultsIfNonexistant())
+                if(App.config.createExportFileWithDefaultsIfNotFound())
                 {
-                    Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.createExportFileWithDefaultsIfNonexistant = true...");
+                    Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.createExportFileWithDefaultsIfNotFound = true --> loading and exporting default content");
                     success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
                     //return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
                 }
@@ -154,7 +154,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         if(App.config.useExternalStorage())
         {
-            Log.w(Constants.LOG_TAG, ("JsonHandler.loadContent:: App.config.useExternalStorage = true - importing content"));
+            Log.e(Constants.LOG_TAG, ("JsonHandler.loadContent:: App.config.useExternalStorage = true --> trying to import content from external storage"));
             return this.importContent(content);
         }
 
