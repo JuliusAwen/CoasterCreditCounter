@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutRecyclerViewItem"
         style="@style/StandardBarLayout"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <View
@@ -35,7 +35,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|start"
                 android:layout_gravity="center"
-                android:minHeight="@dimen/standard_bar_height"
                 android:orientation="vertical">
 
                 <TextView
@@ -45,14 +44,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4sp"
                     android:gravity="start"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/textViewRecyclerViewItem_Name"
                     style="@style/StandardTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start" />
+                    android:gravity="start"/>
 
                 <TextView
                     android:id="@+id/textViewRecyclerViewItem_LowerDetail"
@@ -61,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4sp"
                     android:gravity="start"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

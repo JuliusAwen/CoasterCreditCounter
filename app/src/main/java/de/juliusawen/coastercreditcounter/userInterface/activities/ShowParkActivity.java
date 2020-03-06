@@ -79,6 +79,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     public void onDestroy()
     {
         getSupportFragmentManager().getFragments().clear();
+        this.showParkOverviewFragment = null;
+        this.showAttractionsFragment = null;
+        this.showVisitsFragment = null;
+        this.viewPager = null;
         super.onDestroy();
     }
 
@@ -384,7 +388,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
-
         }
 
         @Override

@@ -22,7 +22,7 @@ public class AppConfig
     private final boolean useExternalStorage = true; // use external file location accessable to user?
     private final boolean createExportFileWithDefaultsIfNotFound = true; // create export.json file if it does not exist?
     private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
-    private final boolean resetToDefaultContentOnStartup = true; // // use mocked default content on startup? (OVERRIDES existing content!)
+    private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
 
     //above is only working when isDebugBuild = true

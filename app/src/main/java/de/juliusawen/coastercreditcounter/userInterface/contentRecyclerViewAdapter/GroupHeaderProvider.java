@@ -427,7 +427,7 @@ public class GroupHeaderProvider
                 {
                     latestSpecialGroupHeader = (SpecialGroupHeader) yearHeader;
                 }
-                else if((Integer.valueOf(yearHeader.getName()) > (Integer.valueOf(latestSpecialGroupHeader.getName()))))
+                else if((Integer.parseInt(yearHeader.getName()) > (Integer.parseInt(latestSpecialGroupHeader.getName()))))
                 {
                     latestSpecialGroupHeader = (SpecialGroupHeader) yearHeader;
                 }

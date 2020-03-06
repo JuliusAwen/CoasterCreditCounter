@@ -25,6 +25,7 @@
         <com.google.android.material.tabs.TabLayout
             style="@style/StandardBarLayout"
             android:id="@+id/tabLayoutShowPark"
+            android:layout_height="40dp"
             app:tabGravity="fill"
             app:tabMinWidth="100sp"
             app:tabMode="fixed"
@@ -36,17 +37,17 @@
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabItemShowPark_Overview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabItemShowPark_Attractions"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabItemShowPark_Visits"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
         </com.google.android.material.tabs.TabLayout>
 

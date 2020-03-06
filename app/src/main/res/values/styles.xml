@@ -10,7 +10,7 @@
 
     <style name="StandardBarLayout" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_height">40sp</item>
     </style>
 
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -34,7 +34,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:gravity">start</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="PrettyPrintHeader" parent="PrettyPrintTextView">
@@ -62,13 +62,13 @@
     </style>
 
     <style name="IncreaseDecreaseImageHolder" parent="StandardImageHolder">
-        <item name="android:layout_height">48sp</item>
-        <item name="android:layout_width">48sp</item>
+        <item name="android:layout_height">56sp</item>
+        <item name="android:layout_width">56sp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="ExpandToggleImageHolder" parent="StandardImageHolder">
-        <item name="android:layout_height">56sp</item>
+        <item name="android:layout_height">40sp</item>
         <item name="android:background">@color/default_color</item>
     </style>
 

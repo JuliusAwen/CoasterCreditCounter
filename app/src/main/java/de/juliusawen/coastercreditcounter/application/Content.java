@@ -126,7 +126,7 @@ public class Content
         List<Location> locations = this.getContentAsType(Location.class);
         if(!locations.isEmpty())
         {
-            this.rootLocation = locations.get(0).getRootLocation();;
+            this.rootLocation = locations.get(0).getRootLocation();
             Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
         }
         else
