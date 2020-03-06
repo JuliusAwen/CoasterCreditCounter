@@ -23,7 +23,7 @@ public class AppConfig
     private final boolean createExportFileWithDefaultsIfNonexistent = true; // create export.json file if it does not exist?
     private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
     private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup?
-    private final boolean useDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
+    private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
 
     //above is only working when isDebugBuild = true
 
@@ -68,7 +68,7 @@ public class AppConfig
                 this.alwaysLoadFromDatabaseMock(),
                 this.createExportFileWithDefaultsIfNonexistant(),
                 this.useDefaultContentFromDatabaseMockOnStartup(),
-                this.useDefaultPreferencesOnStartup(),
+                this.resetToDefaultPreferencesOnStartup(),
                 this.validateContent()
         );
     }
@@ -118,9 +118,9 @@ public class AppConfig
         return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup);
     }
 
-    public boolean useDefaultPreferencesOnStartup()
+    public boolean resetToDefaultPreferencesOnStartup()
     {
-        return this.isDebugBuild && (this.useDefaultPreferencesOnStartup);
+        return this.isDebugBuild && (this.resetToDefaultPreferencesOnStartup);
     }
 
     public boolean validateContent()

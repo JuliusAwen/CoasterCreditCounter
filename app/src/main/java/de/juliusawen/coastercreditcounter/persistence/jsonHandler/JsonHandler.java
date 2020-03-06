@@ -822,7 +822,7 @@ public class JsonHandler implements IDatabaseWrapper
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferencess:: trying to read internal json string..."));
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
-        if(!App.config.useDefaultPreferencesOnStartup())
+        if(!App.config.resetToDefaultPreferencesOnStartup())
         {
             Stopwatch stopwatchRead = new Stopwatch(true);
             String jsonString = App.persistence.readStringFromInternalFile(App.config.getPreferencesFileName());
