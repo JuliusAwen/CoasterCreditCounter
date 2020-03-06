@@ -16,8 +16,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -44,6 +42,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
     private ShowParkActivityViewModel viewModel;
     private ViewPager viewPager;
+
+    private ShowParkOverviewFragment showParkOverviewFragment;
+    private ShowAttractionsFragment showAttractionsFragment;
+    private ShowVisitsFragment showVisitsFragment;
 
 
     protected void setContentView()
@@ -94,40 +96,47 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
+        if(super.handleOptionsItemSelected(item))
+        {
+            return true;
+        }
+
         switch(this.getCurrentTab())
         {
             case SHOW_ATTRACTIONS:
-                ShowAttractionsFragment showAttractionsFragment = ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
                 switch(item)
                 {
                     case EXPAND_ALL:
-                        return showAttractionsFragment.expandAll();
+                        return this.showAttractionsFragment.expandAll();
 
                     case COLLAPSE_ALL:
-                        return showAttractionsFragment.collapseAll();
+                        return this.showAttractionsFragment.collapseAll();
                 }
 
             case SHOW_VISITS:
-                ShowVisitsFragment showVisitsFragment = ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
                 switch(item)
                 {
                     case SORT_ASCENDING:
-                        return showVisitsFragment.sortAscending();
+                        return this.showVisitsFragment.sortAscending();
 
                     case SORT_DESCENDING:
-                        return showVisitsFragment.sortDecending();
+                        return this.showVisitsFragment.sortDecending();
                         
                     case EXPAND_ALL:
-                        return showVisitsFragment.expandAll();
+                        return this.showVisitsFragment.expandAll();
                         
                     case COLLAPSE_ALL:
-                        return showVisitsFragment.collapseAll();
+                        return this.showVisitsFragment.collapseAll();
 
                     case SORT:
                         return true;
                 }
+
+            default:
+                break;
         }
-        return super.handleOptionsItemSelected(item);
+
+        return false;
     }
 
     @Override
@@ -136,39 +145,39 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         switch(this.getCurrentTab())
         {
             case SHOW_ATTRACTIONS:
-                ShowAttractionsFragment showAttractionsFragment = ((ShowAttractionsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
                 switch(item)
                 {
                     case DELETE_ATTRACTION:
-                        showAttractionsFragment.handlePopupItemDeleteAttractionClicked();
+                        this.showAttractionsFragment.handlePopupItemDeleteAttractionClicked();
                         break;
 
                     case EDIT_CUSTOM_ATTRACTION:
-                        showAttractionsFragment.handlePopupItemEditCustomAttractionClicked();
+                        this.showAttractionsFragment.handlePopupItemEditCustomAttractionClicked();
                         break;
 
                     case SORT_ATTRACTIONS:
-                        showAttractionsFragment.handlePopupItemSortAttractionsClicked();
+                        this.showAttractionsFragment.handlePopupItemSortAttractionsClicked();
                         break;
                 }
                 break;
 
             case SHOW_VISITS:
-                ShowVisitsFragment showVisitsFragment = ((ShowVisitsFragment)((TabPagerAdapter)this.viewPager.getAdapter()).getFragment(this.viewPager.getCurrentItem()));
                 switch(item)
                 {
                     case DELETE_ELEMENT:
-                        showVisitsFragment.handlePopupItemDeleteElementClicked();
+                        this.showVisitsFragment.handlePopupItemDeleteElementClicked();
                         break;
 
                     case EDIT_ELEMENT:
-                        showVisitsFragment.handlePopupItemEditElementClicked();
+                        this.showVisitsFragment.handlePopupItemEditElementClicked();
                         break;
                 }
                 break;
+
+            default:
+                break;
         }
     }
-
 
     @Override
     public void markForDeletion(IElement elementToDelete)
@@ -305,7 +314,6 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
         private final String parkUuid;
-        private final Map<Integer, Fragment> fragmentsByPosition = new HashMap<>();
 
         private final Drawable[] tabTitleDrawables = new Drawable[]
                 {
@@ -330,21 +338,15 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             {
                 case SHOW_OVERVIEW:
                 {
-                    ShowParkOverviewFragment showParkOverviewFragment = ShowParkOverviewFragment.newInstance(this.parkUuid);
-                    this.fragmentsByPosition.put(position, showParkOverviewFragment);
-                    return showParkOverviewFragment;
+                    return ShowParkOverviewFragment.newInstance(this.parkUuid);
                 }
                 case SHOW_ATTRACTIONS:
                 {
-                    ShowAttractionsFragment showAttractionsFragment = ShowAttractionsFragment.newInstance(this.parkUuid);
-                    this.fragmentsByPosition.put(position, showAttractionsFragment);
-                    return showAttractionsFragment;
+                    return ShowAttractionsFragment.newInstance(this.parkUuid);
                 }
                 case SHOW_VISITS:
                 {
-                    ShowVisitsFragment showVisitsFragment = ShowVisitsFragment.newInstance(this.parkUuid);
-                    this.fragmentsByPosition.put(position, showVisitsFragment);
-                    return showVisitsFragment;
+                    return ShowVisitsFragment.newInstance(this.parkUuid);
                 }
                 default:
                     Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
@@ -355,25 +357,40 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         @Override
         public Object instantiateItem(ViewGroup container, int position)
         {
-            return super.instantiateItem(container, position);
+            Fragment instantiatedFragment = (Fragment)super.instantiateItem(container, position);
+
+            switch(Tab.values()[position])
+            {
+                case SHOW_OVERVIEW:
+                {
+                    showParkOverviewFragment = (ShowParkOverviewFragment)instantiatedFragment;
+                    break;
+                }
+                case SHOW_ATTRACTIONS:
+                {
+                    showAttractionsFragment = (ShowAttractionsFragment)instantiatedFragment;
+                    break;
+                }
+                case SHOW_VISITS:
+                {
+                    showVisitsFragment = (ShowVisitsFragment)instantiatedFragment;
+                    break;
+                }
+            }
+            return instantiatedFragment;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
-            this.fragmentsByPosition.remove(position);
+
         }
 
         @Override
         public int getCount()
         {
             return Tab.values().length;
-        }
-
-        public Fragment getFragment(int position)
-        {
-            return this.fragmentsByPosition.get(position);
         }
 
         View getTabTitleView(int position)

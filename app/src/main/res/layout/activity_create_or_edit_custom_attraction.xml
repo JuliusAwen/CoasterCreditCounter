@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="12sp"
                     android:background="?selectableItemBackground"
                     android:visibility="gone">
 
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="12sp"
                     android:background="?selectableItemBackground"
                     android:visibility="gone">
 
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="12sp"
                     android:background="?selectableItemBackground"
                     android:visibility="gone">
 
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="12sp"
                     android:background="?selectableItemBackground">
 
                     <LinearLayout
@@ -191,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="12sp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -200,8 +200,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:layout_gravity="center_vertical"
-                        android:paddingStart="5dip"
-                        android:paddingEnd="0dip"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
                         android:textStyle="bold"
                         android:text="@string/text_untracked_rides"/>
 

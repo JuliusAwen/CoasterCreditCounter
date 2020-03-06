@@ -8,11 +8,11 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:layout_marginTop="24dp"
-    android:layout_marginBottom="24dp"
-    android:layout_marginStart="24dp"
-    android:layout_marginEnd="24dp"
-    android:elevation="24dp"
+    android:layout_marginTop="32dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:elevation="16dp"
     android:background="@color/colorPrimaryDark">
 
     <LinearLayout
@@ -40,11 +40,11 @@
             <ImageButton
                 style="@style/StandardImageHolder"
                 android:id="@+id/imageButtonHelp_Close"
-                android:layout_height="30dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="32sp"
+                android:layout_marginTop="16sp"
+                android:layout_marginStart="16sp"
+                android:layout_marginEnd="16sp"
+                android:layout_marginBottom="16sp"
                 android:background="@color/colorPrimary"
                 android:contentDescription="@string/description_close" />
 

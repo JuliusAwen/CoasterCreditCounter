@@ -9,8 +9,8 @@
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="78dp"
-        android:minWidth="78dp"
+        android:minHeight="78sp"
+        android:minWidth="78sp"
         android:indeterminateTint="@color/colorPrimaryDark"
         android:layout_gravity="center"/>
 

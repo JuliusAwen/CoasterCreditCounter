@@ -43,7 +43,7 @@
                     style="@style/DetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="4sp"
                     android:gravity="start"
                     android:visibility="gone" />
 
@@ -59,7 +59,7 @@
                     style="@style/DetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="4sp"
                     android:gravity="start"
                     android:visibility="gone" />
 

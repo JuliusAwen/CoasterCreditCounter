@@ -26,10 +26,10 @@
             style="@style/StandardBarLayout"
             android:id="@+id/tabLayoutShowPark"
             app:tabGravity="fill"
-            app:tabMinWidth="100dp"
+            app:tabMinWidth="100sp"
             app:tabMode="fixed"
             app:tabIndicatorColor="@color/white"
-            app:tabIndicatorHeight="3dp"
+            app:tabIndicatorHeight="3sp"
             android:background="@color/colorPrimary"
             android:elevation="6dp">
 

@@ -7,6 +7,7 @@
     <ImageView
         style="@style/StandardImageHolder"
         android:id="@+id/imageViewTabTitle"
-        android:contentDescription="@string/description_tab_title"/>
+        android:contentDescription="@string/description_tab_title"
+        android:layout_height="32dp"/>
 
 </LinearLayout>

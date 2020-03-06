@@ -46,7 +46,6 @@
 
 
     <!--GENERIC ERROR MESSAGES-->
-    <string name="error_app_initalization_failed">App initialization failed!</string>
     <string name="error_name_not_valid">Name is not valid!</string>
     <string name="error_number_not_valid">Number is not valid!</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
