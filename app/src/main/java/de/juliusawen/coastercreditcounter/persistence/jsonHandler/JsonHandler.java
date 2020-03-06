@@ -53,6 +53,8 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean importContent(Content content)
     {
+        Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: importing content...");
+
         content.clear();
 
         Stopwatch stopwatch = new Stopwatch(true);
@@ -152,6 +154,8 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
+        Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: loading content..."));
+
         if(App.config.useExternalStorage())
         {
             Log.e(Constants.LOG_TAG, ("JsonHandler.loadContent:: App.config.useExternalStorage = true --> trying to import content from external storage"));
@@ -213,7 +217,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.fetchContent:: json string corrupt - restoring content backup");
+                Log.e(Constants.LOG_TAG, "JsonHandler.fetchContent:: json string corrupt - trying to restore content backup");
                 App.content.restoreBackup();
 
                 Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContent:: fetching content from json string failed - took [%d]ms", stopwatch.stop()));
@@ -229,6 +233,8 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean createElementsAndAddToContent(String jsonString, Content content)
     {
+        Log.d(Constants.LOG_TAG, "JsonHandler.createElementsAndAddToContent:: creating elements and populating content");
+
         try
         {
             JSONObject jsonObjectContent = new JSONObject(jsonString);
@@ -301,7 +307,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         catch(JSONException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.setChildlessOrphanElements:: JSONException [%s]", e.getMessage()));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createElementsAndAddToContent:: JSONException [%s]", e.getMessage()));
             return false;
         }
 
@@ -405,7 +411,6 @@ public class JsonHandler implements IDatabaseWrapper
         return temporaryJsonElements;
     }
 
-
     private List<CreditType> createCreditTypes(List<TemporaryJsonElement> temporaryJsonElements)
     {
         List<CreditType> creditTypes = new LinkedList<>();
@@ -420,7 +425,7 @@ public class JsonHandler implements IDatabaseWrapper
             creditTypes.add(creditType);
         }
 
-        if(CreditType.getDefault() == null)
+        if(!creditTypes.contains(CreditType.getDefault()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
             creditTypes.add(CreditType.getDefault());
@@ -443,7 +448,7 @@ public class JsonHandler implements IDatabaseWrapper
             categories.add(category);
         }
 
-        if(Category.getDefault() == null)
+        if(!categories.contains(Category.getDefault()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
             categories.add(Category.getDefault());
@@ -466,7 +471,7 @@ public class JsonHandler implements IDatabaseWrapper
             manufacturers.add(manufacturer);
         }
 
-        if(Manufacturer.getDefault() == null)
+        if(!manufacturers.contains(Manufacturer.getDefault()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
             manufacturers.add(Manufacturer.getDefault());
@@ -489,7 +494,7 @@ public class JsonHandler implements IDatabaseWrapper
             statuses.add(status);
         }
 
-        if(Status.getDefault() == null)
+        if(!statuses.contains(Status.getDefault()))
         {
             Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
             statuses.add(Status.getDefault());
@@ -582,7 +587,7 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof CreditType)
         {
-            return (CreditType) element;
+            return (CreditType)element;
         }
         else
         {
