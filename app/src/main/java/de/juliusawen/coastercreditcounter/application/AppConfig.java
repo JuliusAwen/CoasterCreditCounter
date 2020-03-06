@@ -22,7 +22,7 @@ public class AppConfig
     private final boolean useExternalStorage = true; // use external file location accessable to user?
     private final boolean createExportFileWithDefaultsIfNonexistent = true; // create export.json file if it does not exist?
     private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
-    private final boolean useDefaultContentFromDatabaseMockOnStartup = false; // // use mocked default content on startup?
+    private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
 
     //above is only working when isDebugBuild = true
@@ -67,7 +67,7 @@ public class AppConfig
                 this.useExternalStorage(),
                 this.alwaysLoadFromDatabaseMock(),
                 this.createExportFileWithDefaultsIfNonexistant(),
-                this.useDefaultContentFromDatabaseMockOnStartup(),
+                this.resetTomDefaultContentOnStartup(),
                 this.resetToDefaultPreferencesOnStartup(),
                 this.validateContent()
         );
@@ -113,9 +113,9 @@ public class AppConfig
         return this.isDebugBuild && this.alwaysLoadFromDatabaseMock;
     }
 
-    public boolean useDefaultContentFromDatabaseMockOnStartup()
+    public boolean resetTomDefaultContentOnStartup()
     {
-        return this.isDebugBuild && (this.useDefaultContentFromDatabaseMockOnStartup);
+        return this.isDebugBuild && (this.resetToDefaultContentOnStartup);
     }
 
     public boolean resetToDefaultPreferencesOnStartup()

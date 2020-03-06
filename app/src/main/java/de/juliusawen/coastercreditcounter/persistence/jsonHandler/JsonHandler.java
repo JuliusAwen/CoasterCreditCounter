@@ -65,10 +65,10 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            if(!App.isInitialized && App.config.useDefaultContentFromDatabaseMockOnStartup())
+            if(!App.isInitialized && App.config.resetTomDefaultContentOnStartup())
             {
                 Log.i(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.useDefaultContentFromDatabaseMockOnStartup = true");
-                success = this.loadDefaultContentFromDatabaseMock(content);
+                success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
             }
             else if(this.readExternalJsonStringAndFetchContent(content))
             {
@@ -154,7 +154,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         if(App.config.useExternalStorage())
         {
-            Log.w(Constants.LOG_TAG, ("JsonHandler.loadContent:: running DEBUG build - using external json..."));
+            Log.w(Constants.LOG_TAG, ("JsonHandler.loadContent:: App.config.useExternalStorage = true - importing content"));
             return this.importContent(content);
         }
 
