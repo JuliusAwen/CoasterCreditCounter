@@ -755,7 +755,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         else if(!item.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]", item.getClass().getSimpleName()));
+            Log.e(Constants.LOG_TAG, String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]",
+                    item.getClass().getSimpleName()));
             return this.items.get(this.items.indexOf(item.getParent()));
         }
         else
@@ -865,8 +866,23 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    public void expandGroupHeaderOfElement(IElement element)
+    {
+        for(IElement item : this.items)
+        {
+            if(item.isGroupHeader() && item.getChildren().contains(element))
+            {
+                this.expandItem(item);
+                break;
+            }
+        }
+    }
+
+
     public void expandItem(IElement item)
     {
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
+
         if(!this.expandedItems.contains(item))
         {
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
@@ -956,6 +972,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void collapseItem(IElement item, boolean scrollToItem)
     {
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
+
         if(this.expandedItems.contains(item))
         {
             List<IElement> relevantChildren = this.getRelevantChildren(item);

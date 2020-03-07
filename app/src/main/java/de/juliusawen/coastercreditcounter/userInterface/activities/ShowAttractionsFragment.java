@@ -134,7 +134,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(resultCode == Activity.RESULT_OK)
         {
-            IElement selectedElement = ResultFetcher.fetchResultElement(data);
+            IElement resultElement = ResultFetcher.fetchResultElement(data);
 
             switch(RequestCode.values()[requestCode])
             {
@@ -146,22 +146,22 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         this.viewModel.park.reorderChildren(resultElements);
 
                         this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class))
-                                .scrollToItem(((Attraction)selectedElement).getCategory());
+                                .scrollToItem(((Attraction)resultElement).getCategory());
                     }
                     break;
 
                 case EDIT_CUSTOM_ATTRACTION:
-                    if(!selectedElement.getName().equals(this.viewModel.formerAttractionName))
+                    if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
                     {
                         Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
 
-                        for(IElement visit : selectedElement.getParent().fetchChildrenOfType(Visit.class))
+                        for(IElement visit : resultElement.getParent().fetchChildrenOfType(Visit.class))
                         {
                             for(IElement visitedAttraction : visit.fetchChildrenOfType(VisitedAttraction.class))
                             {
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
-                                    visitedAttraction.setName(selectedElement.getName());
+                                    visitedAttraction.setName(resultElement.getName());
                                     Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: renamed VisitedAttraction %s to %s",
                                             this.viewModel.formerAttractionName, visitedAttraction));
                                 }
@@ -169,12 +169,14 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                         }
                     }
                     this.viewModel.formerAttractionName = null;
-                    this.showAttractionsFragmentInteraction.markForUpdate(selectedElement.getParent());
-                    this.updateContentRecyclerView().scrollToItem(selectedElement);
+                    this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
+                    this.updateContentRecyclerView(false).scrollToItem(resultElement);
                     break;
 
                 case CREATE_CUSTOM_ATTRACTION:
-                    this.updateContentRecyclerView().scrollToItem(selectedElement);
+                    this.updateContentRecyclerView(true);
+                    this.viewModel.contentRecyclerViewAdapter.expandGroupHeaderOfElement(resultElement);
+                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
                     break;
             }
         }
@@ -376,13 +378,23 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
             this.showAttractionsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
             this.viewModel.longClickedElement.deleteElementAndDescendants();
-            updateContentRecyclerView();
+            updateContentRecyclerView(false);
         }
     }
 
-    private ContentRecyclerViewAdapter updateContentRecyclerView()
+    private ContentRecyclerViewAdapter updateContentRecyclerView(boolean resetContent)
     {
-        this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+        if(resetContent)
+        {
+            Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: resetting content...");
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class));
+        }
+        else
+        {
+            Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: notifying data set changed...");
+            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+        }
+
         return this.viewModel.contentRecyclerViewAdapter;
     }
 
