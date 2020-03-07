@@ -147,10 +147,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
                 .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled() && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class))
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled() && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class))
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled()
+                        && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class)
+                        && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled()
+                        && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class)
+                        && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 

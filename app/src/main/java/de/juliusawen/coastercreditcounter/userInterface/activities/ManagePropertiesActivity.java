@@ -324,10 +324,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         boolean propertyIsAssigned = this.propertyIsAssigned();
         return this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .setVisible(OptionsItem.EXPAND_ALL, propertyIsAssigned)
-                .setVisible(OptionsItem.COLLAPSE_ALL, propertyIsAssigned)
+                .setVisible(OptionsItem.EXPAND_ALL, propertyIsAssigned && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, propertyIsAssigned && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 

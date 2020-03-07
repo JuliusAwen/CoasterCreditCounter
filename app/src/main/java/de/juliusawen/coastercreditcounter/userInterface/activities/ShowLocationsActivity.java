@@ -117,8 +117,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     protected Menu prepareOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.currentLocation.hasChildren())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.currentLocation.hasChildren())
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.currentLocation.hasChildren() && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.currentLocation.hasChildren() && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 
@@ -498,6 +498,5 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: notifying data set changed...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
-
     }
 }

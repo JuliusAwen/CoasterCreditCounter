@@ -298,10 +298,8 @@ public class PickElementsActivity extends BaseActivity
         boolean elementsToPickFromHaveAnyChildren = this.elementsToPickFromHaveAnyChildren();
 
         return this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .setVisible(OptionsItem.EXPAND_ALL, elementsToPickFromHaveAnyChildren)
-                .setVisible(OptionsItem.COLLAPSE_ALL, elementsToPickFromHaveAnyChildren)
+                .setVisible(OptionsItem.EXPAND_ALL, elementsToPickFromHaveAnyChildren && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, elementsToPickFromHaveAnyChildren && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 

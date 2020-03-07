@@ -212,10 +212,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     public void onPrepareOptionsMenu(Menu menu)
     {
         this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.EXPAND_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setEnabled(OptionsItem.COLLAPSE_ALL, !this.viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.hasChildrenOfType(IAttraction.class))
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.hasChildrenOfType(IAttraction.class))
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.hasChildrenOfType(IAttraction.class) && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.hasChildrenOfType(IAttraction.class) && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 
