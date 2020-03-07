@@ -819,7 +819,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         };
     }
 
-    public void toggleExpansion(IElement item)
+    public ContentRecyclerViewAdapter toggleExpansion(IElement item)
     {
         if(!this.relevantChildTypes.isEmpty())
         {
@@ -832,9 +832,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 this.collapseItem(item, true);
             }
         }
+
+        return this;
     }
 
-    public void expandAll()
+    public ContentRecyclerViewAdapter expandAll()
     {
         if(!this.items.isEmpty() && !this.isAllExpanded())
         {
@@ -864,9 +866,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: no items to expand");
         }
+
+        return this;
     }
 
-    public void expandGroupHeaderOfElement(IElement element)
+    public ContentRecyclerViewAdapter expandGroupHeaderOfElement(IElement element)
     {
         for(IElement item : this.items)
         {
@@ -876,10 +880,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
             }
         }
+
+        return this;
     }
 
 
-    public void expandItem(IElement item)
+    public ContentRecyclerViewAdapter expandItem(IElement item)
     {
         Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
 
@@ -918,6 +924,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: %s already expanded", item));
         }
+
+        return this;
     }
 
     public boolean isAllExpanded()
@@ -949,7 +957,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return true;
     }
 
-    public void collapseAll()
+    public ContentRecyclerViewAdapter collapseAll()
     {
         if(!this.items.isEmpty() && !this.isAllCollapsed())
         {
@@ -968,6 +976,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: no items to collapse");
         }
+
+        return this;
     }
 
     private void collapseItem(IElement item, boolean scrollToItem)

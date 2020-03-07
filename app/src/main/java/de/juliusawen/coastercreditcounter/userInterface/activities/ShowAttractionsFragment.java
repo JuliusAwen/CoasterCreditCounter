@@ -145,8 +145,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         this.viewModel.park.reorderChildren(resultElements);
 
-                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class))
-                                .scrollToItem(((Attraction)resultElement).getCategory());
+                        this.updateContentRecyclerView(true)
+                                .expandGroupHeaderOfElement(resultElement)
+                                .scrollToItem(resultElement);
                     }
                     break;
 
@@ -170,13 +171,14 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                     this.viewModel.formerAttractionName = null;
                     this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
-                    this.updateContentRecyclerView(false).scrollToItem(resultElement);
+                    this.updateContentRecyclerView(false)
+                            .scrollToItem(resultElement);
                     break;
 
                 case CREATE_CUSTOM_ATTRACTION:
-                    this.updateContentRecyclerView(true);
-                    this.viewModel.contentRecyclerViewAdapter.expandGroupHeaderOfElement(resultElement);
-                    this.viewModel.contentRecyclerViewAdapter.scrollToItem(resultElement);
+                    this.updateContentRecyclerView(true)
+                            .expandGroupHeaderOfElement(resultElement)
+                            .scrollToItem(resultElement);
                     break;
             }
         }

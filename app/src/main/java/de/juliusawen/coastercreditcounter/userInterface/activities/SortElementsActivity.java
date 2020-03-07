@@ -2,8 +2,10 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -32,6 +34,9 @@ public class SortElementsActivity extends BaseActivity
 {
     private SortElementsActivityViewModel viewModel;
     private RecyclerView recyclerView;
+
+    private View frameLayoutDialogDown;
+    private View frameLayoutDialogUp;
 
 
     protected void setContentView()
@@ -141,76 +146,149 @@ public class SortElementsActivity extends BaseActivity
         ImageButton buttonDown = findViewById(R.id.buttonActionDialogUpDown_Down);
         buttonDown.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_downward, R.color.white));
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
-        findViewById(R.id.frameLayoutDialogUpDown_Down).setOnClickListener(this.getActionDialogOnClickListenerDown());
+        this.frameLayoutDialogDown = findViewById(R.id.frameLayoutDialogUpDown_Down);
+        this.frameLayoutDialogDown.setOnClickListener(this.getActionDialogOnClickListener());
+        this.frameLayoutDialogDown.setOnTouchListener(this.getActionDialogOnTouchListener());
 
         ImageButton buttonUp = findViewById(R.id.buttonActionDialogUpDown_Up);
         buttonUp.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_upward, R.color.white));
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
-        findViewById(R.id.frameLayoutDialogUpDown_Up).setOnClickListener(this.getActionDialogOnClickListenerUp());
+        this.frameLayoutDialogUp = findViewById(R.id.frameLayoutDialogUpDown_Up);
+        this.frameLayoutDialogUp.setOnClickListener(this.getActionDialogOnClickListener());
+        this.frameLayoutDialogUp.setOnTouchListener(this.getActionDialogOnTouchListener());
     }
 
-    private View.OnClickListener getActionDialogOnClickListenerDown()
+    private View.OnClickListener getActionDialogOnClickListener()
     {
         return new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: button<DOWN> clicked");
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+                if(view.equals(frameLayoutDialogDown))
                 {
-                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
-
-                    if(position < viewModel.elementsToSort.size() - 1)
-                    {
-                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: swapping elements");
-                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
-                        Collections.swap(viewModel.elementsToSort, position, position + 1);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: end of list - not swapping elements");
-                    }
+                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonClicked:: button<DOWN> clicked");
                 }
-                else
+                else if(view.equals(frameLayoutDialogUp))
                 {
-                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonDown:: no element selected");
+                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonClicked:: button<UP> clicked");
                 }
             }
         };
     }
 
-    private View.OnClickListener getActionDialogOnClickListenerUp()
+    private View.OnTouchListener getActionDialogOnTouchListener()
     {
-        return new View.OnClickListener()
+        return (new View.OnTouchListener()
         {
-            @Override
-            public void onClick(View view)
+            private final long DELAY_IN_MS = 200;
+            private Handler handler;
+
+            @Override public boolean onTouch(View view, MotionEvent event)
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: button<UP> clicked");
-
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+                switch(event.getAction())
                 {
-                    int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
+                    case MotionEvent.ACTION_DOWN:
+                        view.performClick();
+                        if (handler != null)
+                        {
+                            return true;
+                        }
+                        handler = new Handler();
+                        if(view.equals(frameLayoutDialogDown))
+                        {
+                            handler.post(actionSortDown);
+                        }
+                        else if(view.equals(frameLayoutDialogUp))
+                        {
+                            handler.post(actionSortUp);
+                        }
+                        break;
 
-                    if(position > 0)
-                    {
-                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp.onClick:: swapping elements");
-
-                        viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
-                        Collections.swap(viewModel.elementsToSort, position, position - 1);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: end of list - not swapping elements");
-                    }
+                    case MotionEvent.ACTION_UP:
+                        if (handler == null)
+                        {
+                            return true;
+                        }
+                        if(view.equals(frameLayoutDialogDown))
+                        {
+                            handler.removeCallbacks(actionSortDown);
+                        }
+                        else if(view.equals(frameLayoutDialogUp))
+                        {
+                            handler.removeCallbacks(actionSortUp);
+                        }
+                        handler = null;
+                        break;
                 }
-                else
-                {
-                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonUp:: no element selected");
-                }
+                return false;
             }
-        };
+
+            Runnable actionSortDown = new Runnable()
+            {
+                @Override public void run()
+                {
+                    sortDown();
+                    handler.postDelayed(this, DELAY_IN_MS);
+                }
+            };
+
+            Runnable actionSortUp = new Runnable()
+            {
+                @Override public void run()
+                {
+                    sortUp();
+                    handler.postDelayed(this, DELAY_IN_MS);
+                }
+            };
+        });
+    }
+
+    private void sortDown()
+    {
+        if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+        {
+            int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
+
+            if(position < viewModel.elementsToSort.size() - 1)
+            {
+                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: swapping elements");
+                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
+                Collections.swap(viewModel.elementsToSort, position, position + 1);
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: end of list - not swapping elements");
+            }
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: no element selected");
+        }
+    }
+
+    private void sortUp()
+    {
+        if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+        {
+            int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
+
+            if(position > 0)
+            {
+                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: swapping elements");
+
+                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
+                Collections.swap(viewModel.elementsToSort, position, position - 1);
+            }
+            else
+            {
+                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: end of list - not swapping elements");
+            }
+        }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: no element selected");
+        }
     }
 
     private void returnResult(int resultCode)
