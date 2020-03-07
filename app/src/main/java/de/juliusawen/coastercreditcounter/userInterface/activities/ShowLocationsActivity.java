@@ -280,7 +280,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             .add(PopupItem.EDIT_LOCATION)
                             .add(PopupItem.EDIT_PARK)
                             .add(PopupItem.DELETE_ELEMENT)
-                            .add(PopupItem.REMOVE_LOCATION)
+                            .add(PopupItem.REMOVE_ELEMENT)
                             .add(PopupItem.RELOCATE_ELEMENT)
                             .setVisible(PopupItem.ADD, isLocation)
                             .setEnabled(PopupItem.SORT, isLocation && sortLocationsEnabled || sortParksEnabled)
@@ -290,8 +290,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                             .setVisible(PopupItem.EDIT_LOCATION, isLocation)
                             .setVisible(PopupItem.EDIT_PARK, !isLocation)
                             .setEnabled(PopupItem.DELETE_ELEMENT, !viewModel.longClickedElement.isRootLocation())
-                            .setVisible(PopupItem.REMOVE_LOCATION, isLocation)
-                            .setEnabled(PopupItem.REMOVE_LOCATION, viewModel.longClickedElement.hasChildren() && !viewModel.longClickedElement.isRootLocation())
+                            .setVisible(PopupItem.REMOVE_ELEMENT, isLocation)
+                            .setEnabled(PopupItem.REMOVE_ELEMENT, viewModel.longClickedElement.hasChildren() && !viewModel.longClickedElement.isRootLocation())
                             .setEnabled(PopupItem.RELOCATE_ELEMENT, relocateEnabled)
                             .show(ShowLocationsActivity.this, view);
                 }
@@ -336,11 +336,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ActivityDistributor.startActivityEditForResult(ShowLocationsActivity.this, RequestCode.EDIT_PARK, viewModel.longClickedElement);
                 break;
 
-            case REMOVE_LOCATION:
+            case REMOVE_ELEMENT:
                 AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
-                        getString(R.string.alert_dialog_title_remove_element),
-                        getString(R.string.alert_dialog_message_confirm_remove, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
+                        getString(R.string.alert_dialog_title_remove),
+                        getString(R.string.alert_dialog_message_confirm_remove_location, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.REMOVE,
@@ -357,7 +357,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             case DELETE_ELEMENT:
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
-                        getString(R.string.alert_dialog_title_delete_element),
+                        getString(R.string.alert_dialog_title_delete),
                         getString(R.string.alert_dialog_message_confirm_delete, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),

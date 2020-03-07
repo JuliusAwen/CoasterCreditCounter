@@ -20,6 +20,7 @@ import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.application.Preferences;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
 import de.juliusawen.coastercreditcounter.persistence.jsonHandler.JsonHandler;
 
 public class Persistence

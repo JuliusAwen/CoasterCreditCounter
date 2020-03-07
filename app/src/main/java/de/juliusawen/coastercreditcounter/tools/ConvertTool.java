@@ -6,29 +6,38 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
 public abstract class ConvertTool
 {
     public static <T extends IElement> LinkedList<T> convertElementsToType(List<? extends IElement> elementsToConvert, Class<T> type)
     {
-        Log.d(Constants.LOG_TAG,String.format("ConvertTool.convertElementsToType:: converting [%d] elements to type [%s]", elementsToConvert.size(), type.getSimpleName()));
-
         LinkedList<T> convertedElements = new LinkedList<>();
-        for(IElement element : elementsToConvert)
+        if(!elementsToConvert.isEmpty())
         {
-            try
+            Log.d(Constants.LOG_TAG, String.format("ConvertTool.convertElementsToType:: converting [%d] elements of type [%s] to type [%s]",
+                    elementsToConvert.size(), elementsToConvert.get(0).getClass().getSimpleName(), type.getSimpleName()));
+
+            for(IElement element : elementsToConvert)
             {
-                convertedElements.add(type.cast(element));
-            }
-            catch(ClassCastException e)
-            {
-                String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
-                Log.v(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: " + errorMessage);
-                throw new IllegalStateException(errorMessage + "\n" + e);
+                try
+                {
+                    convertedElements.add(type.cast(element));
+                }
+                catch(ClassCastException e)
+                {
+                    String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
+                    Log.v(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: " + errorMessage);
+                    throw new IllegalStateException(errorMessage + "\n" + e);
+                }
             }
         }
+        else
+        {
+            Log.v(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: no elements to convert");
+        }
+
         return convertedElements;
     }
 

@@ -326,7 +326,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 else if(viewModel.longClickedElement.isAttraction())
                 {
                     PopupMenuAgent.getMenu()
-                            .add(PopupItem.DELETE_ELEMENT)
+                            .add(PopupItem.REMOVE_ELEMENT)
                             .show(ShowVisitActivity.this, view);
                 }
 
@@ -353,26 +353,25 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
                 break;
 
-            case DELETE_ELEMENT:
-                //let user verify delete when any rides are counted
-                if(viewModel.longClickedElement.getChildCount() > 0)
+            case REMOVE_ELEMENT:
+                if(((VisitedAttraction)this.viewModel.longClickedElement).getTotalRideCount() > 0)
                 {
-                    AlertDialogFragment alertDialogFragmentDelete =
+                    AlertDialogFragment alertDialogFragmentRemove =
                             AlertDialogFragment.newInstance(
                                     R.drawable.ic_baseline_warning,
-                                    getString(R.string.alert_dialog_title_delete_element),
-                                    getString(R.string.alert_dialog_message_delete_visited_attraction, viewModel.longClickedElement.getName()),
+                                    getString(R.string.alert_dialog_title_remove),
+                                    getString(R.string.alert_dialog_message_remove_visited_attraction, viewModel.longClickedElement.getName()),
                                     getString(R.string.text_accept),
                                     getString(R.string.text_cancel),
-                                    RequestCode.DELETE,
+                                    RequestCode.REMOVE,
                                     false);
 
-                    alertDialogFragmentDelete.setCancelable(false);
-                    alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                    alertDialogFragmentRemove.setCancelable(false);
+                    alertDialogFragmentRemove.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
                 }
                 else
                 {
-                    deleteVisitedAttraction();
+                    removeVisitedAttraction();
                 }
                 break;
         }
@@ -382,12 +381,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.DELETE)
+        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.REMOVE)
         {
             ConfirmSnackbar.Show(
                     Snackbar.make(
                             findViewById(android.R.id.content),
-                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                            getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()),
                             Snackbar.LENGTH_LONG),
                     requestCode,
                     this);
@@ -399,15 +398,15 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        if(requestCode == RequestCode.DELETE)
+        if(requestCode == RequestCode.REMOVE)
         {
-            deleteVisitedAttraction();
+            removeVisitedAttraction();
         }
     }
 
-    private void deleteVisitedAttraction()
+    private void removeVisitedAttraction()
     {
-        Log.i(LOG_TAG, String.format("ShowVisitActivity.deleteVisitedAttraction:: deleting %s...", viewModel.longClickedElement));
+        Log.i(LOG_TAG, String.format("ShowVisitActivity.removeVisitedAttraction:: removing %s...", viewModel.longClickedElement));
 
         super.markForUpdate(this.viewModel.longClickedElement.getParent());
         this.viewModel.longClickedElement.deleteElementAndDescendants();

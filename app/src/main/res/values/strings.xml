@@ -60,18 +60,9 @@
 
 
     <!--GENERIC DIALOG TEXTS-->
-    <string name="alert_dialog_title_delete_element">DELETE</string>
+    <string name="alert_dialog_title_delete">DELETE</string>
     <string name="alert_dialog_message_confirm_delete">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
-
-    <string name="alert_dialog_title_remove_element">REMOVE</string>
-    <string name="alert_dialog_message_confirm_remove">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
-
-    <string name="alert_dialog_title_relocate">RELOCATE</string>
-    <string name="alert_dialog_message_confirm_relocate">Do you really want to relocate \'%1$s\' to \'%2$s\'?</string>
-
-    <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
-    <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
-
+    <string name="alert_dialog_title_remove">REMOVE</string>
 
 
     <!--GENERIC HINT TEXTS-->
@@ -183,6 +174,9 @@
     <string name="title_edit_location">Edit Location</string>
     <string name="subtitle_create_location">create child location</string>
     <string name="hint_enter_location_name">Enter location name</string>
+    <string name="alert_dialog_message_confirm_remove_location">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
+    <string name="alert_dialog_title_relocate">RELOCATE</string>
+    <string name="alert_dialog_message_confirm_relocate">Do you really want to relocate \'%1$s\' to \'%2$s\'?</string>
 
 
 
@@ -207,7 +201,7 @@
 
     <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
     <string name="alert_dialog_message_visit_already_exists">Do you want to override existing visit? \n(existing data will be lost, ride counts will be adjusted)</string>
-    <string name="alert_dialog_message_delete_visited_attraction">Do you want to delete visited %1$s? \n(tracked rides will be lost, ride count will be adjusted)</string>
+    <string name="alert_dialog_message_remove_visited_attraction">Do you want to remove visited %1$s? \n(tracked rides will be lost, ride count will be adjusted)</string>
 
     <string name="description_decrease_ride_count">decrease ride count</string>
     <string name="description_increase_ride_count">increase ride count</string>
@@ -235,6 +229,11 @@
 
     <string name="title_edit_custom_attraction">Edit Attraction</string>
 
+
+
+    <!--GENERERIC PROPERTIES-->
+    <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
+    <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
 
 
     <!--CREDIT TYPES-->

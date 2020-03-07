@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.persistence;
+package de.juliusawen.coastercreditcounter.persistence.databaseMock;
 
 import android.util.Log;
 
@@ -24,6 +24,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 
@@ -45,7 +46,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private DatabaseMock()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.Constructor:: instantiating DatabaseMock");
+        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.Constructor:: initializing DatabaseMock...");
 
         this.creditTypes = new CreditTypes();
         this.categories = new Categories();
@@ -58,7 +59,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: creating mock content");
+        Log.e(Constants.LOG_TAG, "DatabaseMock.loadContent:: mocking Parks and Visits...");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -79,8 +80,12 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.mockEuropaPark();
         this.mockEnergylandia();
 
+        Log.e(Constants.LOG_TAG, "DatabaseMock.loadContent:: creating node tree");
+
         content.addElement(locations.Germany); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
+
+        Log.i(Constants.LOG_TAG, "DatabaseMock.loadContent:: adding Properties to content");
 
         content.addElements(ConvertTool.convertElementsToType(creditTypes.AllCreditTypes, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(categories.AllCategories, IElement.class));
@@ -88,8 +93,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElements(ConvertTool.convertElementsToType(statuses.AllStatuses, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(blueprints.AllBlueprints, IElement.class));
 
-        Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: mock data successfully created - took [%d]ms", stopwatch.stop()));
-
+        Log.e(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: mock data successfully created - took [%d]ms", stopwatch.stop()));
         return true;
     }
 
@@ -1815,6 +1819,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private Visit createVisit(int day, int month, int year, LinkedHashMap<IOnSiteAttraction, Integer> rides)
     {
+        Log.i(Constants.LOG_TAG, String.format("DatabaseMock.createVisit:: creating Visit at [%s]...", day + "." + month + "." + year));
+
         Visit visit = Visit.create(year, month - 1, day);
 
         for(Map.Entry<IOnSiteAttraction, Integer> entry : rides.entrySet())

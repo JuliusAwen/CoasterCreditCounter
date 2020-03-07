@@ -656,7 +656,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
-                        getString(R.string.alert_dialog_title_delete_element),
+                        getString(R.string.alert_dialog_title_delete),
                         alertDialogMessage,
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),

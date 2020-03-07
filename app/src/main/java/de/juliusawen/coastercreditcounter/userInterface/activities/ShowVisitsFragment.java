@@ -266,7 +266,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         AlertDialogFragment alertDialogFragmentDelete =
                 AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
-                        getString(R.string.alert_dialog_title_delete_element),
+                        getString(R.string.alert_dialog_title_delete),
                         getString(R.string.alert_dialog_message_confirm_delete, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),

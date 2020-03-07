@@ -26,7 +26,7 @@ public enum PopupItem
     DELETE_ELEMENT(R.string.menu_item_delete),
     DELETE_ATTRACTION(R.string.menu_item_delete),
 
-    REMOVE_LOCATION(R.string.menu_item_remove),
+    REMOVE_ELEMENT(R.string.menu_item_remove),
 
     RELOCATE_ELEMENT(R.string.menu_item_relocate),
 

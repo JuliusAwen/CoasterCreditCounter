@@ -66,13 +66,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             this.viewModel.isInitializingApp = false;
 
-            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
             this.create();
             this.viewModel.activityIsCreated = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: app is not initialized");
+            Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
 
             if(!App.config.useExternalStorage())
             {
