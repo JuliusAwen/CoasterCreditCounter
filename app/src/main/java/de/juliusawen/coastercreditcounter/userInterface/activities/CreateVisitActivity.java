@@ -186,12 +186,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         super.markForCreation(this.viewModel.visit);
         super.markForUpdate(this.viewModel.park);
 
-        if(Visit.isSameDay(this.viewModel.visit.getCalendar(), Calendar.getInstance()))
-        {
-            Log.i(Constants.LOG_TAG, "CreateVisitActivity.createVisit:: created visit is today - adding to current visits");
-            Visit.addCurrentVisit(this.viewModel.visit);
-        }
-
         this.decorateToolbar();
     }
 
@@ -212,8 +206,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 R.drawable.ic_baseline_notification_important,
                 getString(R.string.alert_dialog_title_add_attractions),
                 getString(R.string.alert_dialog_message_confirm_add_attractions_to_visit),
-                getString(R.string.text_accept),
-                getString(R.string.text_cancel),
+                getString(R.string.text_yes),
+                getString(R.string.text_no),
                 RequestCode.PICK_ATTRACTIONS,
                 false
         );
