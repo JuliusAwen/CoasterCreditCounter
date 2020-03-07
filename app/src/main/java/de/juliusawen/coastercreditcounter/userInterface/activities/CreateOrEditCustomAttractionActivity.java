@@ -243,7 +243,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                     Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
 
                     somethingWentWrong = true;
-                    Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_number_not_valid));
+                    Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_number_not_valid));
                 }
 
 
@@ -262,7 +262,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             else
                             {
                                 somethingWentWrong = true;
-                                Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                                Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
                             }
                         }
 
@@ -340,7 +340,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                         }
                         else
                         {
-                            Toaster.makeToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                            Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
                         }
                     }
                 }

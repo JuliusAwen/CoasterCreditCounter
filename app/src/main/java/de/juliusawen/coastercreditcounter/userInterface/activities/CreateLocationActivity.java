@@ -100,7 +100,7 @@ public class CreateLocationActivity extends BaseActivity
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_name_not_valid));
+            Toaster.makeShortToast(this, getString(R.string.error_name_not_valid));
         }
     }
 

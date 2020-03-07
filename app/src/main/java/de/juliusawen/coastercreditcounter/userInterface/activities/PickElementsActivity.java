@@ -510,7 +510,7 @@ public class PickElementsActivity extends BaseActivity
                 else
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<Check>:: no element selected");
-                    Toaster.makeToast(PickElementsActivity.this, getString(R.string.error_no_entry_selected));
+                    Toaster.makeShortToast(PickElementsActivity.this, getString(R.string.error_no_entry_selected));
                 }
             }
         });

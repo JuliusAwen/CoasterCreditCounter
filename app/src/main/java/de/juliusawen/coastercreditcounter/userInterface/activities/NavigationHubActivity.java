@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -47,6 +48,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private TextView textViewTotalVisitedParksCount;
     private TextView textViewTotalCoasterCreditCount;
     private TextView textViewTotalCoasterRidesCount;
+
+    Toast clickBackAgainToExitToast;
 
     protected void setContentView()
     {
@@ -222,9 +225,27 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             if(keyCode == KeyEvent.KEYCODE_BACK)
             {
-                Log.d(LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
-                this.closeNavigationDrawer();
-                return true;
+                Log.i(LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
+
+                if(this.isNavigationDrawerOpen())
+                {
+                    this.closeNavigationDrawer();
+                    return true;
+                }
+                else
+                {
+                    long MAX_DELAY_FOR_DOUBLE_BACK_PRESS_TO_EXIT = 2000;
+                    if(this.viewModel.lastBackPressedInMS + MAX_DELAY_FOR_DOUBLE_BACK_PRESS_TO_EXIT > System.currentTimeMillis())
+                    {
+                        this.clickBackAgainToExitToast.cancel();
+                        finishAndRemoveTask();
+                    }
+                    else
+                    {
+                        this.clickBackAgainToExitToast = Toaster.makeShortToast(this, "Click BACK again to exit");
+                        this.viewModel.lastBackPressedInMS = System.currentTimeMillis();
+                    }
+                }
             }
         }
         return true;
@@ -232,11 +253,16 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void closeNavigationDrawer()
     {
-        if(this.drawerLayout.isDrawerOpen(GravityCompat.START))
+        if(this.isNavigationDrawerOpen())
         {
             Log.d(Constants.LOG_TAG, "NavigationHubActivity.closeNavigationDrawer:: closing navigation drawer...");
             this.drawerLayout.closeDrawers();
         }
+    }
+
+    private boolean isNavigationDrawerOpen()
+    {
+        return this.drawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
     private NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener()
@@ -453,12 +479,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
                     if(App.content.restoreBackup())
                     {
-                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
+                        Toaster.makeShortToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
                     }
                     else
                     {
                         Log.e(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent.onSnackbarClick:: restoring content backup failed");
-                        Toaster.makeToast(NavigationHubActivity.this, getString(R.string.error_undo_not_possible));
+                        Toaster.makeShortToast(NavigationHubActivity.this, getString(R.string.error_undo_not_possible));
                     }
                 }
             });

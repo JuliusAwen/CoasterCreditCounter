@@ -266,7 +266,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 updateContentRecyclerView(false);
-                Toaster.makeToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
+                Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
                 Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions", this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
         }

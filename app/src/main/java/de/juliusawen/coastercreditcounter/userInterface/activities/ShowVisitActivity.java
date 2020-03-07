@@ -304,7 +304,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 }
                 else if(element.isAttraction())
                 {
-                    Toaster.makeToast(ShowVisitActivity.this, element + " clicked");
+                    Toaster.makeShortToast(ShowVisitActivity.this, element + " clicked");
                 }
             }
 

@@ -99,7 +99,7 @@ public class EditElementActivity extends BaseActivity
             Log.i(Constants.LOG_TAG, String.format("EditElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
             if(!this.viewModel.elementToEdit.setName(editText))
             {
-                Toaster.makeToast(this, getString(R.string.error_name_not_valid));
+                Toaster.makeShortToast(this, getString(R.string.error_name_not_valid));
                 return false;
             }
         }

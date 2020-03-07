@@ -142,7 +142,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
@@ -401,7 +400,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Toaster.makeToast(this, getString(R.string.error_new_parent_is_own_descendant));
+                        Toaster.makeShortToast(this, getString(R.string.error_new_parent_is_own_descendant));
                     }
                 }
                 else
@@ -412,7 +411,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
         else
         {
-            Toaster.makeToast(this, getString(R.string.error_new_parent_is_not_location));
+            Toaster.makeShortToast(this, getString(R.string.error_new_parent_is_not_location));
         }
     }
 
