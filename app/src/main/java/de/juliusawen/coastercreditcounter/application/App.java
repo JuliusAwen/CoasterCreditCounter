@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 
 public class App extends Application
@@ -42,15 +40,6 @@ public class App extends Application
         App.instance = this;
         App.config = new AppConfig();
         App.persistence = Persistence.getInstance();
-
-        if(App.config.useLeakCanary())
-        {
-            if(LeakCanary.isInAnalyzerProcess(this))
-            {
-                return;
-            }
-            LeakCanary.install(this);
-        }
     }
 
     public static boolean initialize()

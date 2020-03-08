@@ -18,7 +18,6 @@ public class AppConfig
 
     //below is only working when isDebugBuild = true
 
-    private final boolean useLeakCanary = true;
     private final boolean useExternalStorage = true; // use external file location accessable to user?
     private final boolean createExportFileWithDefaultsIfNotFound = true; // create export.json file if it does not exist?
     private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
@@ -50,7 +49,6 @@ public class AppConfig
                         "contentExportFileName [%s]\n" +
                         "preferencesFileName [%s]\n" +
                         "isDebugBuild [%S]\n" +
-                        "useLeakCanary [%S]\n" +
                         "useExternalStorage [%S]\n" +
                         "alwaysLoadFromDatabaseMock [%S]\n" +
                         "createExportFileWithDefaultsIfNonexistent [%S]\n" +
@@ -63,7 +61,6 @@ public class AppConfig
                 this.getContentExportFileName(),
                 this.getPreferencesFileName(),
                 this.isDebugBuild(),
-                this.useLeakCanary(),
                 this.useExternalStorage(),
                 this.alwaysLoadFromDatabaseMock(),
                 this.createExportFileWithDefaultsIfNotFound(),
@@ -91,11 +88,6 @@ public class AppConfig
     public boolean isDebugBuild()
     {
         return this.isDebugBuild;
-    }
-
-    public boolean useLeakCanary()
-    {
-        return this.isDebugBuild && this.useLeakCanary;
     }
 
     public boolean useExternalStorage()
