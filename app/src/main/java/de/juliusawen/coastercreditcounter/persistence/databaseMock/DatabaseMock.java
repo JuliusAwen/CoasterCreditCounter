@@ -615,85 +615,87 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         Log.e(Constants.LOG_TAG, "DatabaseMock.mockOsterwiese");
 
-        Park osterwiese = Park.create("Bremer Osterwiese");
-        locations.Germany.addChildAndSetParent(osterwiese);
-
-
         //2018
+        Park osterwiese2018 = Park.create("Osterwiese 2018");
+        locations.Bremen.addChildAndSetParent(osterwiese2018);
+
         CustomAttraction bergUndTal = CustomAttraction.create("Berg & Tal", 1);
         bergUndTal.setCreditType(creditTypes.RollerCoaster);
         bergUndTal.setCategory(categories.RollerCoasters);
-        osterwiese.addChildAndSetParent(bergUndTal);
+        osterwiese2018.addChildAndSetParent(bergUndTal);
 
 
         //2019
+        Park osterwiese2019 = Park.create("Osterwiese 2019");
+        locations.Bremen.addChildAndSetParent(osterwiese2019);
+
         CustomAttraction crazyMouse = CustomAttraction.create("Crazy Mouse");
         crazyMouse.setCreditType(creditTypes.RollerCoaster);
         crazyMouse.setCategory(categories.RollerCoasters);
-        osterwiese.addChildAndSetParent(crazyMouse);
+        osterwiese2019.addChildAndSetParent(crazyMouse);
 
         StockAttraction tomDerTiger = StockAttraction.create("Tom der Tiger", blueprints.BigApple);
-        osterwiese.addChildAndSetParent(tomDerTiger);
+        osterwiese2019.addChildAndSetParent(tomDerTiger);
 
-
-        //2019
         LinkedHashMap<IOnSiteAttraction, Integer> rides13042019 = new LinkedHashMap<>();
         rides13042019.put(crazyMouse, 1);
         rides13042019.put(tomDerTiger, 1);
-        osterwiese.addChildAndSetParent(this.createVisit(13, 4, 2019, rides13042019));
+        osterwiese2019.addChildAndSetParent(this.createVisit(13, 4, 2019, rides13042019));
     }
 
     private void mockFreimarkt()
     {
         Log.e(Constants.LOG_TAG, "DatabaseMock.mockFreimarkt");
 
-        Park freimarkt = Park.create("Bremer Freimarkt");
-        locations.Germany.addChildAndSetParent(freimarkt);
-
         //2018
+        Park freimarkt2018 = Park.create("Freimarkt 2018");
+        locations.Bremen.addChildAndSetParent(freimarkt2018);
+
         CustomAttraction alpinaBahn = CustomAttraction.create("Alpina Bahn", 2);
         alpinaBahn.setCreditType(creditTypes.RollerCoaster);
         alpinaBahn.setCategory(categories.RollerCoasters);
         alpinaBahn.setManufacturer(manufacturers.Schwarzkopf);
-        freimarkt.addChildAndSetParent(alpinaBahn);
+        freimarkt2018.addChildAndSetParent(alpinaBahn);
 
         CustomAttraction wildeMaus = CustomAttraction.create("Wilde Maus", 1);
         wildeMaus.setCreditType(creditTypes.RollerCoaster);
         wildeMaus.setCategory(categories.RollerCoasters);
-        freimarkt.addChildAndSetParent(wildeMaus);
+        freimarkt2018.addChildAndSetParent(wildeMaus);
 
         CustomAttraction euroCoaster = CustomAttraction.create("Euro Coaster", 1);
         euroCoaster.setCreditType(creditTypes.RollerCoaster);
         euroCoaster.setCategory(categories.RollerCoasters);
-        freimarkt.addChildAndSetParent(euroCoaster);
+        freimarkt2018.addChildAndSetParent(euroCoaster);
 
         LinkedHashMap<IOnSiteAttraction, Integer> rides20102018 = new LinkedHashMap<>();
         rides20102018.put(alpinaBahn, 1);
         rides20102018.put(wildeMaus, 1);
         rides20102018.put(euroCoaster, 1);
-        freimarkt.addChildAndSetParent(this.createVisit(20, 10, 2018, rides20102018));
-
+        freimarkt2018.addChildAndSetParent(this.createVisit(20, 10, 2018, rides20102018));
 
 
         //2019
+        Park freimarkt2019 = Park.create("Freimarkt 2019");
+        locations.Bremen.addChildAndSetParent(freimarkt2019);
+
         CustomAttraction rockAndRollerCoaster = CustomAttraction.create("Rock & Roller Coaster");
         rockAndRollerCoaster.setCreditType(creditTypes.RollerCoaster);
         rockAndRollerCoaster.setCategory(categories.RollerCoasters);
-        freimarkt.addChildAndSetParent(rockAndRollerCoaster);
+        freimarkt2019.addChildAndSetParent(rockAndRollerCoaster);
 
         CustomAttraction wildeMausXXL = CustomAttraction.create("Wilde Maus XXL");
         wildeMausXXL.setCreditType(creditTypes.RollerCoaster);
         wildeMausXXL.setCategory(categories.RollerCoasters);
-        freimarkt.addChildAndSetParent(wildeMausXXL);
+        freimarkt2019.addChildAndSetParent(wildeMausXXL);
 
         StockAttraction kuddelDerHai = StockAttraction.create("Kuddel der Hai", blueprints.BigApple);
-        freimarkt.addChildAndSetParent(kuddelDerHai);
+        freimarkt2019.addChildAndSetParent(kuddelDerHai);
 
         LinkedHashMap<IOnSiteAttraction, Integer> rides02112019 = new LinkedHashMap<>();
         rides02112019.put(rockAndRollerCoaster, 1);
         rides02112019.put(wildeMausXXL, 1);
         rides02112019.put(kuddelDerHai, 1);
-        freimarkt.addChildAndSetParent(this.createVisit(2, 11, 2019, rides02112019));
+        freimarkt2019.addChildAndSetParent(this.createVisit(2, 11, 2019, rides02112019));
     }
 
     private void mockPortAventura()
@@ -2048,12 +2050,16 @@ class Locations
     final Location Europe = Location.create("Europe");
 
     final Location Germany = Location.create("Germany");
+    final Location Bremen = Location.create("Bremen");
+
     final Location Netherlands = Location.create("Netherlands");
     final Location Spain = Location.create("Spain");
     final Location Poland = Location.create("Poland");
 
     Locations()
     {
+        Germany.addChildAndSetParent(Bremen);
+
         Europe.addChildAndSetParent(Germany);
         Europe.addChildAndSetParent(Netherlands);
         Europe.addChildAndSetParent(Spain);
