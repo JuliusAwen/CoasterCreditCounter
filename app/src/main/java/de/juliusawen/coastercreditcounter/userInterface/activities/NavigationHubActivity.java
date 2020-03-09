@@ -89,12 +89,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void resume()
     {
-        Log.i(Constants.LOG_TAG, "NavigationHubActivity.resume:: fetching current visits...");
-        Visit.clearCurrentVisits();
-        for(Visit visit : App.persistence.fetchCurrentVisits())
-        {
-            Visit.addCurrentVisit(visit);
-        }
+        this.updateCurrentVisits();
 
         invalidateOptionsMenu();
 
@@ -210,6 +205,16 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         navigationMenu.findItem(R.id.navigationItem_ManageBlueprints).setEnabled(false);
     }
 
+    private void updateCurrentVisits()
+    {
+        Log.i(Constants.LOG_TAG, "NavigationHubActivity.updateCurrentVisits:: updating current visits...");
+        Visit.clearCurrentVisits();
+        for(Visit visit : App.persistence.fetchCurrentVisits())
+        {
+            Visit.addCurrentVisit(visit);
+        }
+    }
+
     private void setStatistics()
     {
         Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
@@ -249,15 +254,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
         }
         return true;
-    }
-
-    private void closeNavigationDrawer()
-    {
-        if(this.isNavigationDrawerOpen())
-        {
-            Log.d(Constants.LOG_TAG, "NavigationHubActivity.closeNavigationDrawer:: closing navigation drawer...");
-            this.drawerLayout.closeDrawers();
-        }
     }
 
     private boolean isNavigationDrawerOpen()
@@ -554,6 +550,15 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
 
         this.closeNavigationDrawer();
+    }
+
+    private void closeNavigationDrawer()
+    {
+        if(this.isNavigationDrawerOpen())
+        {
+            Log.d(Constants.LOG_TAG, "NavigationHubActivity.closeNavigationDrawer:: closing navigation drawer...");
+            this.drawerLayout.closeDrawers();
+        }
     }
 }
 
