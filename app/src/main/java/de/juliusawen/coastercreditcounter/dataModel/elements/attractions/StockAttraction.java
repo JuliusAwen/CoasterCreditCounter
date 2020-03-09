@@ -48,6 +48,9 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
             stockAttraction = new StockAttraction(name, blueprint, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));
         }
+
+        blueprint.addChild(stockAttraction);
+
         return stockAttraction;
     }
 
@@ -110,11 +113,10 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
+            Log.e(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
                     this, decrement, this.getTotalRideCount()));
         }
     }
-
 
     @Override
     public JSONObject toJson() throws JSONException

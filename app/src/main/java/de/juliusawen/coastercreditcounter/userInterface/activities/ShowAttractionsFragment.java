@@ -370,7 +370,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 {
                     if(visitedAttraction.getOnSiteAttraction().equals(this.viewModel.longClickedElement))
                     {
-                        this.showAttractionsFragmentInteraction.markForDeletion(visitedAttraction);
                         visitedAttraction.deleteElementAndDescendants();
                     }
                 }
@@ -378,7 +377,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
             this.showAttractionsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
             this.viewModel.longClickedElement.deleteElementAndDescendants();
-            updateContentRecyclerView(false);
+            updateContentRecyclerView(true);
         }
     }
 

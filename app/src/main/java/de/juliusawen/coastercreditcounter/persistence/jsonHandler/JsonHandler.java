@@ -84,7 +84,6 @@ public class JsonHandler implements IDatabaseWrapper
                 {
                     Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.createExportFileWithDefaultsIfNotFound = true --> loading and exporting default content");
                     success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
-                    //return this.readExternalJsonStringAndFetchContent(content); //reload to properly attach defaultManufacturers/-Categories/-Statuses (lazy sloppy mock implementation)
                 }
                 else
                 {
@@ -193,8 +192,12 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean initializeForFirstUse(Content content)
     {
-        Log.i(Constants.LOG_TAG, "JsonHandler.initializeForFirstUse:: creating root location for first use...");
+        Log.i(Constants.LOG_TAG, "JsonHandler.initializeForFirstUse:: creating root location and defaults for first use...");
         content.addElement(Location.create("root"));
+        content.addElement(CreditType.getDefault());
+        content.addElement(Category.getDefault());
+        content.addElement(Manufacturer.getDefault());
+        content.addElement(Status.getDefault());
         return this.saveContent(content);
     }
 

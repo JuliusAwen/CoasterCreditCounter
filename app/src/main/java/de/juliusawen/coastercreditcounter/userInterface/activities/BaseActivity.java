@@ -688,9 +688,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            String message = String.format("[%s] is not persistable", this);
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: [%s]", message));
-//            throw new IllegalStateException(message);
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: [%s] is not persistable", element));
         }
     }
 
@@ -711,9 +709,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            String message = String.format("[%s] is not persistable", this);
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: [%s]", message));
-//            throw new IllegalStateException(message);
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: [%s] is not persistable", element));
         }
     }
 
@@ -742,14 +738,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
                     }
                 }
             }
-
-            App.content.removeElement(element);
         }
         else
         {
-            String message = String.format("[%s] is not persistable", this);
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s]", message));
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s] is not persistable", element));
         }
+
+        App.content.removeElement(element);
     }
 
     protected void synchronizePersistency()

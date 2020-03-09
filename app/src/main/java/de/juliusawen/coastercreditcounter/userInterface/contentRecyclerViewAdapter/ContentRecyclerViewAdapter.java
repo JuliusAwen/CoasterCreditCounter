@@ -744,7 +744,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             relevantChildren.addAll(item.fetchChildrenOfType(childType));
         }
 
-        return relevantChildren;
+        return new ArrayList<>(new HashSet<>(relevantChildren));
     }
 
     private IElement getParentOfRelevantChild(IElement item)
