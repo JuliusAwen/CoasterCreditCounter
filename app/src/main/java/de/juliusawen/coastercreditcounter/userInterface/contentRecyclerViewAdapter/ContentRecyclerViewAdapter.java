@@ -737,14 +737,21 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private ArrayList<IElement> getRelevantChildren(IElement item)
     {
-        ArrayList<IElement> relevantChildren = new ArrayList<>();
+        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
 
         for(Class<? extends IElement> childType : this.relevantChildTypes)
         {
-            relevantChildren.addAll(item.fetchChildrenOfType(childType));
+            ArrayList<IElement> allRelevantChildren = new ArrayList<>(item.fetchChildrenOfType(childType));
+            for(IElement child : allRelevantChildren)
+            {
+                if(!distinctRelevantChildren.contains(child))
+                {
+                    distinctRelevantChildren.add(child);
+                }
+            }
         }
 
-        return new ArrayList<>(new HashSet<>(relevantChildren));
+        return distinctRelevantChildren;
     }
 
     private IElement getParentOfRelevantChild(IElement item)
