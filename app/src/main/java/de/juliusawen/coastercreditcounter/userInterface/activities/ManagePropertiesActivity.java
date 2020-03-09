@@ -352,7 +352,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 break;
 
             default:
-                throw new IllegalStateException();
+                String message = String.format("Could not assign property - unexpected type [%s]", this.viewModel.propertyTypeToManage);
+                Log.e(Constants.LOG_TAG, "ManagePropertiesActivity.propertyIsAssigned:: " + message);
+                throw new IllegalStateException(message);
         }
 
         for(IProperty property : App.content.getContentAsType(type))
