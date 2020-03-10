@@ -220,7 +220,7 @@
     <string name="alert_dialog_message_confirm_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
 
     <string name="alert_dialog_title_delete_attraction">DELETE ATTRACTION</string>
-    <string name="alert_dialog_message_confirm_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all tracked rides will be deleted as well)</string>
+    <string name="alert_dialog_message_confirm_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all rides will be deleted as well)</string>
 
     <string name="hint_enter_attraction_name">Enter attraction name</string>
 

@@ -55,6 +55,13 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     }
 
     @Override
+    public void deleteElement()
+    {
+        this.blueprint.deleteChild(this);
+        super.deleteElement();
+    }
+
+    @Override
     public CreditType getCreditType()
     {
         return this.blueprint.getCreditType();
