@@ -1749,10 +1749,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         energus.setManufacturer(manufacturers.Vekoma);
         energylandia.addChildAndSetParent(energus);
 
-        CustomAttraction fruttiLoop = CustomAttraction.create("Frutti Loop");
-        fruttiLoop.setCreditType(creditTypes.RollerCoaster);
-        fruttiLoop.setCategory(categories.RollerCoasters);
-        fruttiLoop.setManufacturer(manufacturers.SbfVisa);
+        StockAttraction fruttiLoop = StockAttraction.create("Frutti Loop", blueprints.BigApple);
         energylandia.addChildAndSetParent(fruttiLoop);
 
         CustomAttraction boomerang = CustomAttraction.create("Boomerang");
@@ -2071,7 +2068,7 @@ class Blueprints
 {
     final Blueprint SuspendedLoopingCoaster = Blueprint.create("Suspended Looping Coaster");
     final Blueprint Boomerang = Blueprint.create("Boomerang");
-    final Blueprint BigApple = Blueprint.create("Big Apple");
+    final Blueprint BigApple = Blueprint.create("Big Apple/WackyWorm");
     final Blueprint SkyRocketII = Blueprint.create("Sky Rocket II");
 
     final Blueprint TopSpin = Blueprint.create("Top Spin");
