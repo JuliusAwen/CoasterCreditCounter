@@ -619,11 +619,14 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park osterwiese2018 = Park.create("Osterwiese 2018");
         locations.Bremen.addChildAndSetParent(osterwiese2018);
 
-        CustomAttraction bergUndTal = CustomAttraction.create("Berg & Tal", 1);
+        CustomAttraction bergUndTal = CustomAttraction.create("Berg & Tal");
         bergUndTal.setCreditType(creditTypes.RollerCoaster);
         bergUndTal.setCategory(categories.RollerCoasters);
         osterwiese2018.addChildAndSetParent(bergUndTal);
 
+        LinkedHashMap<IOnSiteAttraction, Integer> rides24032018 = new LinkedHashMap<>();
+        rides24032018.put(bergUndTal, 1);
+        osterwiese2018.addChildAndSetParent(this.createVisit(24, 3, 2018, rides24032018));
 
         //2019
         Park osterwiese2019 = Park.create("Osterwiese 2019");
