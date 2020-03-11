@@ -243,7 +243,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     if(this.viewModel.lastBackPressedInMS + MAX_DELAY_FOR_DOUBLE_BACK_PRESS_TO_EXIT > System.currentTimeMillis())
                     {
                         this.clickBackAgainToExitToast.cancel();
-                        finishAndRemoveTask();
+                        finish();
                     }
                     else
                     {
