@@ -14,6 +14,7 @@ public class BaseActivityViewModel extends ViewModel
     public boolean isAppProperlyInitialized = false;
     public boolean activityIsCreated = false;
 
+    public boolean isHelpOverlayAdded = false;
     public boolean helpOverlayFragmentIsVisible = false;
     public String helpOverlayFragmentTitle;
     public CharSequence helpOverlayFragmentMessage;

@@ -48,6 +48,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
 
+    HelpOverlayFragment helpOverlayFragment;
+
     private BaseActivityViewModel viewModel;
 
     @Override
@@ -108,11 +110,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             }
 
 
-            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-
-            if(helpOverlayFragment != null)
+            if(this.viewModel.isHelpOverlayAdded)
             {
-                this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
+                this.helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
+
+                if(this.helpOverlayFragment != null)
+                {
+                    this.setHelpOverlayVisibility(this.viewModel.helpOverlayFragmentIsVisible);
+                }
             }
 
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: calling [%s].resume()", this.getClass().getSimpleName()));
@@ -254,18 +259,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(item == OptionsItem.HELP)
         {
-            HelpOverlayFragment helpOverlayFragment = (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
-
-            if(helpOverlayFragment != null)
-            {
-                Log.i(Constants.LOG_TAG, "BaseActivity.handleOptionsItemSelected:: showing HelpOverlay");
-                this.setHelpOverlayVisibility(true);
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, "BaseActivity.handleOptionsItemSelected:: HelpOverlayFragment not added");
-            }
-            return true;
+            return this.showHelpOverlayFragment();
         }
         else
         {
@@ -292,48 +286,67 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
+    protected void setHelpOverlayTitleAndMessage(String title, String message)
+    {
+        Log.d(Constants.LOG_TAG, "BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title and message...");
+        Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting title [%s] and message [%s]", title, message));
+
+        if(this.helpOverlayFragment != null)
+        {
+            this.helpOverlayFragment.setTitleAndMessage(title, message);
+        }
+
+        this.viewModel.helpOverlayFragmentTitle = title;
+        this.viewModel.helpOverlayFragmentMessage = message;
+    }
+
     protected void addHelpOverlayFragment(String title, CharSequence message)
     {
-        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
+        Log.i(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
 
-        if(helpOverlayFragment == null)
+        this.viewModel.isHelpOverlayAdded = true;
+        this.viewModel.helpOverlayFragmentTitle = title;
+        this.viewModel.helpOverlayFragmentMessage = message;
+    }
+
+    private boolean showHelpOverlayFragment()
+    {
+        if(this.helpOverlayFragment == null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with title [%s]", title));
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.addHelpOverlayFragment:: creating HelpOverlayFragment with message [%s]", message));
+            this.createHelpOverlayFragment();
+        }
+
+        Log.i(Constants.LOG_TAG, "BaseActivity.showHelpOverlayFragment:: showing HelpOverlayFragment");
+        Log.v(Constants.LOG_TAG, String.format("BaseActivity.showHelpOverlayFragment:: ...with title [%s] and message [%s]...",
+                this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage));
+
+        this.setHelpOverlayVisibility(true);
+        return true;
+    }
+
+    private void createHelpOverlayFragment()
+    {
+        if(this.helpOverlayFragment == null)
+        {
+            Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating HelpOverlayFragment...");
+
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            helpOverlayFragment = HelpOverlayFragment.newInstance(title, message);
-            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
-            fragmentTransaction.hide(helpOverlayFragment);
+            this.helpOverlayFragment = HelpOverlayFragment.newInstance(this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage);
+            fragmentTransaction.add(this.findViewById(android.R.id.content).getId(), this.helpOverlayFragment, Constants.FRAGMENT_TAG_HELP_OVERLAY);
+            fragmentTransaction.hide(this.helpOverlayFragment);
             fragmentTransaction.commit();
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: re-using HelpOverlayFragment");
+            Log.e(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: re-using HelpOverlayFragment");
         }
     }
 
-    protected void setHelpOverlayTitleAndMessage(String title, String message)
+    private void setHelpOverlayVisibility(boolean isVisible)
     {
-        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
-
-        if(helpOverlayFragment != null)
+        if(this.helpOverlayFragment != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title [%s] and message", title));
-            helpOverlayFragment.setTitleAndMessage(title, message);
-        }
-        else
-        {
-            this.addHelpOverlayFragment(title, message);
-        }
-    }
-
-    protected void setHelpOverlayVisibility(boolean isVisible)
-    {
-        HelpOverlayFragment helpOverlayFragment = this.fetchHelpOverlayFragment();
-
-        if(helpOverlayFragment != null)
-        {
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment isVisible [%s]", isVisible));
+            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: setting HelpOverlayFragment to isVisible[%S]...", isVisible));
 
             if(isVisible)
             {
@@ -342,11 +355,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
                     this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = this.floatingActionButton.getVisibility() == View.VISIBLE;
                     this.setFloatingActionButtonVisibility(false);
                 }
-                this.showFragmentFadeIn(helpOverlayFragment);
+                this.showFragmentFadeIn(this.helpOverlayFragment);
             }
             else
             {
-                this.hideFragmentFadeOut(helpOverlayFragment);
+                this.hideFragmentFadeOut(this.helpOverlayFragment);
                 if(this.floatingActionButton != null && this.viewModel.wasFloatingActionButtonVisibleBeforeShowingHelpOverlay)
                 {
                     this.setFloatingActionButtonVisibility(true);
@@ -357,13 +370,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            this.addHelpOverlayFragment(this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage);
+            Log.e(Constants.LOG_TAG, "BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment not created");
         }
-    }
-
-    private HelpOverlayFragment fetchHelpOverlayFragment()
-    {
-        return (HelpOverlayFragment)getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_HELP_OVERLAY);
     }
 
 
