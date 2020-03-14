@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userInterface.activities.CreateOrEditCustomAttractionActivity">
+    tools:context=".userInterface.activities.CreateOrEditAttractionActivity">
 
     <include
         layout="@layout/floating_action_button"/>
@@ -48,8 +48,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12sp"
-                    android:background="?selectableItemBackground"
-                    android:visibility="gone">
+                    android:background="?selectableItemBackground">
 
                     <LinearLayout
                         style="@style/StandardBarLayout"
@@ -85,8 +84,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12sp"
-                    android:background="?selectableItemBackground"
-                    android:visibility="gone">
+                    android:background="?selectableItemBackground">
 
                     <LinearLayout
                         style="@style/StandardBarLayout"
@@ -122,8 +120,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12sp"
-                    android:background="?selectableItemBackground"
-                    android:visibility="gone">
+                    android:background="?selectableItemBackground">
 
                     <LinearLayout
                         style="@style/StandardBarLayout"

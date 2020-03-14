@@ -9,7 +9,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditTy
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 
-public class CreateOrEditCustomAttractionActivityViewModel extends ViewModel
+public class CreateOrEditAttractionActivityViewModel extends ViewModel
 {
     public boolean isEditMode = false;
 

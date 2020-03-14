@@ -34,9 +34,9 @@ import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
-public class CreateOrEditCustomAttractionActivity extends BaseActivity
+public class CreateOrEditAttractionActivity extends BaseActivity
 {
-    private CreateOrEditCustomAttractionActivityViewModel viewModel;
+    private CreateOrEditAttractionActivityViewModel viewModel;
 
     private EditText editTextAttractionName;
 
@@ -77,9 +77,9 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
 
         this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
 
-        this.viewModel = new ViewModelProvider(this).get(CreateOrEditCustomAttractionActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateOrEditAttractionActivityViewModel.class);
 
-        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_CUSTOM_ATTRACTION)
+        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_ATTRACTION)
         {
             this.viewModel.isEditMode = true;
         }
@@ -89,10 +89,6 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             if(this.viewModel.attraction == null)
             {
                 this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-            }
-
-            if(this.viewModel.parentPark == null)
-            {
                 this.viewModel.parentPark = (Park) this.viewModel.attraction.getParent();
             }
         }
@@ -152,7 +148,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
 
         if(resultCode != RESULT_OK)
         {
@@ -184,7 +180,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                     this.setText((Status)pickedElement);
                     break;
             }
-            Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onActivityResult:: picked %s", pickedElement));
+            Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onActivityResult:: picked %s", pickedElement));
         }
     }
 
@@ -223,7 +219,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                 boolean somethingWentWrong = false;
 
                 viewModel.name = editTextAttractionName.getText().toString();
-                Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: attraction name entered [%s]", viewModel.name));
+                Log.v(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onClickFab:: attraction name entered [%s]", viewModel.name));
 
                 String untrackedRideCountString = editTextUntrackedRideCount.getText().toString();
                 try
@@ -236,14 +232,14 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                     {
                         viewModel.untrackedRideCount = 0;
                     }
-                    Log.v(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: untracked ride count set to [%d]", viewModel.untrackedRideCount));
+                    Log.v(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onClickFab:: untracked ride count set to [%d]", viewModel.untrackedRideCount));
                 }
                 catch(NumberFormatException nfe)
                 {
-                    Log.w(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.onClickFab:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+                    Log.w(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onClickFab:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
 
                     somethingWentWrong = true;
-                    Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_number_not_valid));
+                    Toaster.makeShortToast(CreateOrEditAttractionActivity.this, getString(R.string.error_number_not_valid));
                 }
 
 
@@ -262,7 +258,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                             else
                             {
                                 somethingWentWrong = true;
-                                Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                                Toaster.makeShortToast(CreateOrEditAttractionActivity.this, getString(R.string.error_name_not_valid));
                             }
                         }
 
@@ -329,18 +325,18 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
                     {
                         if(createAttraction())
                         {
-                            Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
+                            Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
 
                             viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
 
-                            CreateOrEditCustomAttractionActivity.super.markForCreation(viewModel.attraction);
-                            CreateOrEditCustomAttractionActivity.super.markForUpdate(viewModel.parentPark);
+                            CreateOrEditAttractionActivity.super.markForCreation(viewModel.attraction);
+                            CreateOrEditAttractionActivity.super.markForUpdate(viewModel.parentPark);
 
                             returnResult(RESULT_OK);
                         }
                         else
                         {
-                            Toaster.makeShortToast(CreateOrEditCustomAttractionActivity.this, getString(R.string.error_name_not_valid));
+                            Toaster.makeShortToast(CreateOrEditAttractionActivity.this, getString(R.string.error_name_not_valid));
                         }
                     }
                 }
@@ -368,18 +364,18 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickCreditType> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: <PickCreditType> selected");
 
                 List<IElement> elements = App.content.getContentOfType(CreditType.class);
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
                     setText((CreditType)elements.get(0));
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, elements);
                 }
             }
         });
@@ -393,7 +389,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
+                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
             }
         });
 
@@ -409,19 +405,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickCategory> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: <PickCategory> selected");
 
                 List<IElement> elements = App.content.getContentOfType(Category.class);
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
                     setText((Category)elements.get(0));
                 }
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_CATEGORY, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_CATEGORY, elements);
                 }
             }
         });
@@ -435,7 +431,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.MANAGE_CATEGORIES);
+                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_CATEGORIES);
             }
         });
 
@@ -452,19 +448,19 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickManufacturer> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: <PickManufacturer> selected");
 
                 List<IElement> elements = App.content.getContentOfType(Manufacturer.class);
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
                     setText((Manufacturer)elements.get(0));
                 }
                 else
                 {
 
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_MANUFACTURER, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_MANUFACTURER, elements);
                 }
             }
         }));
@@ -478,7 +474,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.MANAGE_MANUFACTURERS);
+                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_MANUFACTURERS);
             }
         });
 
@@ -494,18 +490,18 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: <PickStatus> selected");
+                Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: <PickStatus> selected");
 
                 List<IElement> elements = App.content.getContentOfType(Status.class);
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.onClick:: only one element found - picked!");
+                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
                     setText((Status)elements.get(0));
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.PICK_STATUS, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_STATUS, elements);
                 }
             }
         });
@@ -519,7 +515,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditCustomAttractionActivity.this, RequestCode.MANAGE_STATUSES);
+                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_STATUSES);
             }
         });
 
@@ -541,7 +537,7 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.getOnEditorActionListener.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.getOnEditorActionListener.onClickEditorAction:: actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -572,29 +568,29 @@ public class CreateOrEditCustomAttractionActivity extends BaseActivity
             this.viewModel.attraction.setStatus(this.viewModel.status);
             this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
-            Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: created %s", this.viewModel.attraction.getFullName()));
+            Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.createAttraction:: created %s", this.viewModel.attraction.getFullName()));
 
             success = true;
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.createAttraction:: created successfuly [%S]", success));
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.createAttraction:: created successfuly [%S]", success));
         return success;
     }
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateOrEditCustomAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
+            Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "CreateOrEditCustomAttractionActivity.returnResult:: no changes - returning no element");
+            Log.i(Constants.LOG_TAG, "CreateOrEditAttractionActivity.returnResult:: no changes - returning no element");
         }
 
         setResult(resultCode, intent);

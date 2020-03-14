@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateLocationActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.CreateOrEditCustomAttractionActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.CreateOrEditAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateParkActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
@@ -158,9 +158,9 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
-            case EDIT_CUSTOM_ATTRACTION:
-                type = CreateOrEditCustomAttractionActivity.class;
-                toolbarTitle = context.getString(R.string.title_edit_custom_attraction);
+            case EDIT_ATTRACTION:
+                type = CreateOrEditAttractionActivity.class;
+                toolbarTitle = context.getString(R.string.title_edit_attraction);
                 break;
 
             case EDIT_CREDIT_TYPE:
@@ -222,7 +222,7 @@ public abstract class ActivityDistributor
                 break;
 
             case CREATE_CUSTOM_ATTRACTION:
-                type = CreateOrEditCustomAttractionActivity.class;
+                type = CreateOrEditAttractionActivity.class;
                 break;
 
             default:

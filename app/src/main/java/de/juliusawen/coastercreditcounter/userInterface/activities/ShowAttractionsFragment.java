@@ -151,10 +151,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                     break;
 
-                case EDIT_CUSTOM_ATTRACTION:
+                case EDIT_ATTRACTION:
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
                     {
-                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
+                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
 
                         for(IElement visit : resultElement.getParent().fetchChildrenOfType(Visit.class))
                         {
@@ -163,7 +163,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
                                     visitedAttraction.setName(resultElement.getName());
-                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditCustomAttraction>:: renamed VisitedAttraction %s to %s",
+                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: renamed VisitedAttraction %s to %s",
                                             this.viewModel.formerAttractionName, visitedAttraction));
                                 }
                             }
@@ -311,13 +311,13 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         ActivityDistributor.startActivitySortForResult(getContext(), RequestCode.SORT_ATTRACTIONS, attractions);
     }
 
-    public void handlePopupItemEditCustomAttractionClicked()
+    public void handlePopupItemEditAttractionClicked()
     {
         this.viewModel.formerAttractionName = this.viewModel.longClickedElement.getName();
 
         ActivityDistributor.startActivityEditForResult(
                 getContext(),
-                RequestCode.EDIT_CUSTOM_ATTRACTION,
+                RequestCode.EDIT_ATTRACTION,
                 this.viewModel.longClickedElement);
     }
 

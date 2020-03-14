@@ -156,7 +156,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                         break;
 
                     case EDIT_CUSTOM_ATTRACTION:
-                        this.showAttractionsFragment.handlePopupItemEditCustomAttractionClicked();
+                        this.showAttractionsFragment.handlePopupItemEditAttractionClicked();
                         break;
 
                     case SORT_ATTRACTIONS:
