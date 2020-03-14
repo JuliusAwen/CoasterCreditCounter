@@ -224,8 +224,8 @@
 
     <string name="hint_enter_attraction_name">Enter attraction name</string>
 
-    <string name="title_create_custom_attraction">Create Attraction</string>
-    <string name="subtitle_create_custom_attraction">for %1$s</string>
+    <string name="title_create_attraction">Create Attraction</string>
+    <string name="subtitle_create_attraction">for %1$s</string>
 
     <string name="title_edit_attraction">Edit Attraction</string>
 
@@ -343,6 +343,6 @@
     <string name="help_text_manage_manufacturers">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_statuses">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_or_edit_custom_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_or_edit_attraction">@string/help_text_not_yet_available</string>
 
 </resources>

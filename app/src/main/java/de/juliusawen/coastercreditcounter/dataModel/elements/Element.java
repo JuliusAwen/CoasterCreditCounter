@@ -10,6 +10,7 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
@@ -382,6 +383,11 @@ public abstract class Element implements IElement
     public boolean isBlueprint()
     {
         return this instanceof Blueprint;
+    }
+
+    public boolean isCustomAttraction()
+    {
+        return this instanceof CustomAttraction;
     }
 
     public boolean isStockAttraction()

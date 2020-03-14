@@ -38,6 +38,11 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 {
     private CreateOrEditAttractionActivityViewModel viewModel;
 
+    private LinearLayout layoutCreditType;
+    private LinearLayout layoutCategory;
+    private LinearLayout layoutManufacturer;
+    private LinearLayout layoutStatus;
+
     private EditText editTextAttractionName;
 
     private TextView textViewCreditType;
@@ -84,7 +89,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             this.viewModel.isEditMode = true;
         }
 
-        if(this.viewModel.isEditMode)
+        if(this.viewModel.isEditMode) //adjust to work with Blueprints
         {
             if(this.viewModel.attraction == null)
             {
@@ -92,23 +97,37 @@ public class CreateOrEditAttractionActivity extends BaseActivity
                 this.viewModel.parentPark = (Park) this.viewModel.attraction.getParent();
             }
         }
-        else if(this.viewModel.parentPark == null)
+        else if(this.viewModel.parentPark == null) //adjust to work with ManageBlueprints
         {
             this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        if(this.viewModel.attraction != null)
+        if(this.viewModel.attraction != null) //edit mode
         {
-            if(!this.viewModel.attraction.isStockAttraction())
+            if(this.viewModel.attraction.isCustomAttraction())
             {
+                //this.decorateViewForEditCustomAttraction();
                 this.createLayoutCreditType();
                 this.createLayoutCategory();
                 this.createLayoutManufacturer();
             }
+            else if(this.viewModel.attraction.isStockAttraction())
+            {
+                //this.decorateViewForEditStockAttraction();
+            }
+            else if(this.viewModel.attraction.isBlueprint())
+            {
+                //this.decorateViewForEditBlueprint();
+            }
+            else
+            {
+                //log error
+            }
             this.createLayoutStatus();
         }
-        else
+        else //create mode
         {
+            //distuingish between create createAttraction and CreateBlueprint (via RequestCode?)
             this.createLayoutCreditType();
             this.createLayoutCategory();
             this.createLayoutManufacturer();
@@ -117,23 +136,26 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         this.createEditTextUntrackedRideCount();
 
+
+
+
         if(this.viewModel.toolbarTitle == null)
         {
-            this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_create_custom_attraction);
+            this.viewModel.toolbarTitle = this.viewModel.isEditMode ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE) : getString(R.string.title_create_attraction);
         }
 
         if(this.viewModel.toolbarSubtitle == null)
         {
             this.viewModel.toolbarSubtitle = this.viewModel.isEditMode
                     ? this.viewModel.attraction.getName()
-                    : getString(R.string.subtitle_create_custom_attraction, this.viewModel.parentPark.getName());
+                    : getString(R.string.subtitle_create_attraction, this.viewModel.parentPark.getName());
         }
 
         super.addHelpOverlayFragment(
                 getString(R.string.title_help, this.viewModel.isEditMode
                         ? getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)
-                        : getString(R.string.title_create_custom_attraction)),
-                getText(R.string.help_text_create_or_edit_custom_attraction));
+                        : getString(R.string.title_create_attraction)),
+                getText(R.string.help_text_create_or_edit_attraction));
         super.addToolbar();
         super.addToolbarHomeButton();
         super.setToolbarTitleAndSubtitle(this.viewModel.toolbarTitle, this.viewModel.toolbarSubtitle);
@@ -152,7 +174,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         if(resultCode != RESULT_OK)
         {
-            return;
+            return; //what...?!
         }
 
         IElement pickedElement = ResultFetcher.fetchResultElement(data);
@@ -358,8 +380,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private void createLayoutCreditType()
     {
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
-        linearLayout.setOnClickListener(new View.OnClickListener()
+        this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
+        this.layoutCreditType.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -393,14 +415,13 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             }
         });
 
-        linearLayout.setVisibility(View.VISIBLE);
         this.viewModel.creditType = creditType;
     }
 
     private void createLayoutCategory()
     {
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
-        linearLayout.setOnClickListener(new View.OnClickListener()
+        this.layoutCategory = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
+        this.layoutCategory.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -435,15 +456,13 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             }
         });
 
-        linearLayout.setVisibility(View.VISIBLE);
-
         this.viewModel.category = category;
     }
 
     private void createLayoutManufacturer()
     {
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
-        linearLayout.setOnClickListener((new View.OnClickListener()
+        this.layoutManufacturer = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
+        this.layoutManufacturer.setOnClickListener((new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -478,14 +497,13 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             }
         });
 
-        linearLayout.setVisibility(View.VISIBLE);
-
         this.viewModel.manufacturer = manufacturer;
     }
 
     private void createLayoutStatus()
     {
-        findViewById(R.id.linearLayoutCreateOrEditAttraction_Status).setOnClickListener(new View.OnClickListener()
+        this.layoutStatus = findViewById(R.id.linearLayoutCreateOrEditAttraction_Status);
+        this.layoutStatus.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -554,10 +572,14 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         };
     }
 
-    private boolean createAttraction()
+    private boolean createAttraction() //adjust to make it work for Blueprints
     {
         boolean success = false;
         IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount);
+
+//        IAttraction attraction = Blueprint.create(this.editTextAttractionName.getText().toString());
+//
+//        IAttraction attraction = StockAttraction.create(this.editTextAttractionName.getText().toString(), Blueprint.create("unnamed"));
 
         if(attraction != null)
         {

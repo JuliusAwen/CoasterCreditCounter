@@ -55,6 +55,7 @@ public interface IElement
     boolean isPark();
     boolean isVisit();
     boolean isAttraction();
+    boolean isCustomAttraction();
     boolean isBlueprint();
     boolean isStockAttraction();
     boolean isVisitedAttraction();
