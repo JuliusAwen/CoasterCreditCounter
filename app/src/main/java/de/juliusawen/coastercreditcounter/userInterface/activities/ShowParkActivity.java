@@ -292,7 +292,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                             @Override
                             public void onClick(View view)
                             {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_CUSTOM_ATTRACTION, viewModel.park);
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_ATTRACTION, viewModel.park);
                             }
                         });
                 break;

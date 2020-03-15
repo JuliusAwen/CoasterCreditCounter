@@ -174,7 +174,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         if(resultCode != RESULT_OK)
         {
-            return; //what...?!
+            return;
         }
 
         IElement pickedElement = ResultFetcher.fetchResultElement(data);

@@ -175,7 +175,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             .scrollToItem(resultElement);
                     break;
 
-                case CREATE_CUSTOM_ATTRACTION:
+                case CREATE_ATTRACTION:
                     this.updateContentRecyclerView(true)
                             .expandGroupHeaderOfElement(resultElement)
                             .scrollToItem(resultElement);
@@ -315,10 +315,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         this.viewModel.formerAttractionName = this.viewModel.longClickedElement.getName();
 
-        ActivityDistributor.startActivityEditForResult(
-                getContext(),
-                RequestCode.EDIT_ATTRACTION,
-                this.viewModel.longClickedElement);
+        ActivityDistributor.startActivityEditForResult(getContext(), RequestCode.EDIT_ATTRACTION, this.viewModel.longClickedElement);
     }
 
     public void handlePopupItemDeleteAttractionClicked()

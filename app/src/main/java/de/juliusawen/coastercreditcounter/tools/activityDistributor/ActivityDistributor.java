@@ -221,7 +221,7 @@ public abstract class ActivityDistributor
                 type = CreateVisitActivity.class;
                 break;
 
-            case CREATE_CUSTOM_ATTRACTION:
+            case CREATE_ATTRACTION:
                 type = CreateOrEditAttractionActivity.class;
                 break;
 
