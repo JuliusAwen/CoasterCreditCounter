@@ -48,16 +48,8 @@ public class OptionsMenuAgent
 
     private boolean addItem(OptionsItem item)
     {
-        if(!this.itemsToAdd.contains(item))
-        {
-            this.itemsToAdd.add(item);
-            return true;
-        }
-        else
-        {
-            Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.add:: Item [#%d - %s] already added", item.ordinal(), item));
-            return false;
-        }
+        this.itemsToAdd.add(item);
+        return true;
     }
 
     public OptionsMenuAgent setEnabled(OptionsItem item, boolean setEnabled)
