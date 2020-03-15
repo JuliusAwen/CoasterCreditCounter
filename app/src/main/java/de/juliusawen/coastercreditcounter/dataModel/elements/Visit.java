@@ -25,7 +25,6 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
  */
 public final class Visit extends Element implements IPersistable
 {
-    private static final List<Visit> currentVisits = new ArrayList<>();
     private static SortOrder sortOrder = SortOrder.DESCENDING;
     private final Calendar calendar;
 
@@ -91,13 +90,6 @@ public final class Visit extends Element implements IPersistable
     @Override
     public void deleteElementAndDescendants()
     {
-
-        if(Visit.isCurrentVisit(this))
-        {
-            Visit.currentVisits.remove(this);
-            Log.i(Constants.LOG_TAG, String.format("Visit.deleteElementAndDescendands:: %s removed from current visits", this));
-        }
-
         for(VisitedAttraction visitedAttraction : this.fetchChildrenAsType(VisitedAttraction.class))
         {
             visitedAttraction.deleteElementAndDescendants();
@@ -105,33 +97,9 @@ public final class Visit extends Element implements IPersistable
         super.deleteElement();
     }
 
-    public static List<Visit> getCurrentVisits()
-    {
-        return Visit.currentVisits;
-    }
-
-    public static void clearCurrentVisits()
-    {
-        Visit.currentVisits.clear();
-        Log.d(Constants.LOG_TAG, "Visit.clearCurrentVisits:: current visits cleared");
-    }
-
-    public static void addCurrentVisit(Visit visit)
-    {
-        if(visit != null)
-        {
-            visit.setEditingEnabled(true);
-            if(!Visit.currentVisits.contains(visit))
-            {
-                Visit.currentVisits.add(visit);
-                Log.d(Constants.LOG_TAG, String.format("Visit.addCurrentVisit:: %s added to current visits", visit));
-            }
-        }
-    }
-
     public static boolean isCurrentVisit(Visit visit)
     {
-        return Visit.currentVisits.contains(visit);
+        return Visit.isSameDay(Calendar.getInstance(), visit.getCalendar());
     }
 
     public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)

@@ -4,6 +4,9 @@ import android.view.MenuItem;
 
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class NavigationHubActivityViewModel extends ViewModel
@@ -20,4 +23,6 @@ public class NavigationHubActivityViewModel extends ViewModel
     long lastBackPressedInMS = 0;
 
     public OptionsMenuAgent optionsMenuAgent;
+
+    public List<Visit> currentVisits;
 }

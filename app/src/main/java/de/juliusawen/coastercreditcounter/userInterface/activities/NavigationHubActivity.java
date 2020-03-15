@@ -89,7 +89,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void resume()
     {
-        this.updateCurrentVisits();
+        this.viewModel.currentVisits = App.persistence.fetchCurrentVisits();
 
         invalidateOptionsMenu();
 
@@ -131,7 +131,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     protected Menu prepareOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !Visit.getCurrentVisits().isEmpty())
+                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !this.viewModel.currentVisits.isEmpty())
                 .prepare(menu);
     }
 
@@ -163,22 +163,22 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(item == OptionsItem.GO_TO_CURRENT_VISIT)
         {
-            if(Visit.getCurrentVisits().size() > 1)
+            if(this.viewModel.currentVisits.size() > 1)
             {
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
-                        Visit.getCurrentVisits().size()));
+                        this.viewModel.currentVisits.size()));
 
                 ActivityDistributor.startActivityPickForResult(
                         this,
                         RequestCode.PICK_VISIT,
-                        new ArrayList<IElement>(Visit.getCurrentVisits()));
+                        new ArrayList<IElement>(this.viewModel.currentVisits));
             }
             else
             {
                 Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
-                        Visit.getCurrentVisits().get(0)));
+                        this.viewModel.currentVisits.get(0)));
 
-                ActivityDistributor.goToCurrentVisit(this, Visit.getCurrentVisits().get(0));
+                ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
             }
             return true;
         }
@@ -203,16 +203,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         //Todo: remove setEnabled(false) when implemented
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
         navigationMenu.findItem(R.id.navigationItem_ManageBlueprints).setEnabled(false);
-    }
-
-    private void updateCurrentVisits()
-    {
-        Log.i(Constants.LOG_TAG, "NavigationHubActivity.updateCurrentVisits:: updating current visits...");
-        Visit.clearCurrentVisits();
-        for(Visit visit : App.persistence.fetchCurrentVisits())
-        {
-            Visit.addCurrentVisit(visit);
-        }
     }
 
     private void setStatistics()

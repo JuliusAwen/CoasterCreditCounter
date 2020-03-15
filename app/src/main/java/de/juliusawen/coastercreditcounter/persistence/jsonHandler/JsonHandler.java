@@ -1062,8 +1062,7 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        Calendar todaysCalendar = Calendar.getInstance();
-        List<Visit> currentVisits = Visit.fetchVisitsForYearAndDay(todaysCalendar, App.content.getContentAsType(Visit.class));
+        List<Visit> currentVisits = Visit.fetchVisitsForYearAndDay(Calendar.getInstance(), App.content.getContentAsType(Visit.class));
 
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisits:: fetching current visits took [%d]ms", stopwatch.stop()));
 
