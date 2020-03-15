@@ -130,7 +130,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {

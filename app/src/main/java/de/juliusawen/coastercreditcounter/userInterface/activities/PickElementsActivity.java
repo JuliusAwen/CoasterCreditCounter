@@ -178,7 +178,7 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode != Activity.RESULT_OK)
         {

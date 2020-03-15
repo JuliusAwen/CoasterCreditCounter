@@ -190,7 +190,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode != Activity.RESULT_OK)
         {
@@ -420,14 +420,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            if(this.lastCreatedProperty != null)
-            {
-                this.returnResult(RESULT_OK);
-            }
-            else
-            {
-                this.returnResult(RESULT_CANCELED);
-            }
+            this.returnResult(RESULT_OK);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -863,8 +856,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning new %s", this.lastCreatedProperty));
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedProperty.getUuid().toString());
+            if(this.lastCreatedProperty != null)
+            {
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning new %s", this.lastCreatedProperty));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedProperty.getUuid().toString());
+            }
         }
 
         setResult(resultCode, intent);

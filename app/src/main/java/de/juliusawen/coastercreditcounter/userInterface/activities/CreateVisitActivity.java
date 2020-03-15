@@ -63,7 +63,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {

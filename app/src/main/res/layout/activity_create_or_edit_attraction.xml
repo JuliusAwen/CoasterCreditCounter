@@ -62,15 +62,30 @@
                             android:textStyle="bold"
                             android:text="@string/header_credit_type"/>
 
-                        <TextView
-                            style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_CreditType"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/StandardImageHolder"
+                                android:id="@+id/imageViewCreateOrEditAttraction_PickCreditType"
+                                android:contentDescription="@string/description_image_view" />
+
+                            <TextView
+                                style="@style/CreateOrEditAttractionTextView"
+                                android:id="@+id/textViewCreateOrEditAttraction_CreditType"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"/>
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
                     <ImageView
                         style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_CreditType"
+                        android:id="@+id/imageViewCreateOrEditAttraction_ManageCreditType"
                         android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>
@@ -98,15 +113,27 @@
                             android:textStyle="bold"
                             android:text="@string/header_category"/>
 
-                        <TextView
-                            style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_Category"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/StandardImageHolder"
+                                android:id="@+id/imageViewCreateOrEditAttraction_PickCategory"
+                                android:contentDescription="@string/description_image_view" />
+
+                            <TextView
+                                style="@style/CreateOrEditAttractionTextView"
+                                android:id="@+id/textViewCreateOrEditAttraction_Category"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                     <ImageView
                         style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_Category"
+                        android:id="@+id/imageViewCreateOrEditAttraction_ManageCategory"
                         android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>
@@ -134,15 +161,27 @@
                             android:textStyle="bold"
                             android:text="@string/header_manufacturer"/>
 
-                        <TextView
-                            style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/StandardImageHolder"
+                                android:id="@+id/imageViewCreateOrEditAttraction_PickManufacturer"
+                                android:contentDescription="@string/description_image_view" />
+
+                            <TextView
+                                style="@style/CreateOrEditAttractionTextView"
+                                android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                     <ImageView
                         style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_Manufacturer"
+                        android:id="@+id/imageViewCreateOrEditAttraction_ManageManufacturer"
                         android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>
@@ -170,15 +209,27 @@
                             android:textStyle="bold"
                             android:text="@string/header_status"/>
 
-                        <TextView
-                            style="@style/CreateOrEditAttractionTextView"
-                            android:id="@+id/textViewCreateOrEditAttraction_Status"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/StandardImageHolder"
+                                android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
+                                android:contentDescription="@string/description_image_view" />
+
+                            <TextView
+                                style="@style/CreateOrEditAttractionTextView"
+                                android:id="@+id/textViewCreateOrEditAttraction_Status"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                     <ImageView
                         style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_Status"
+                        android:id="@+id/imageViewCreateOrEditAttraction_ManageStatus"
                         android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>

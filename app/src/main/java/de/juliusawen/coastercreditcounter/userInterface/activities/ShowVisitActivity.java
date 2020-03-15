@@ -197,7 +197,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", requestCode, resultCode));
+        Log.i(LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
