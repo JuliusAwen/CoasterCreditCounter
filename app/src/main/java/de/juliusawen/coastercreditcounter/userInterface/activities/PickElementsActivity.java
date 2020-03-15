@@ -14,8 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -225,13 +227,15 @@ public class PickElementsActivity extends BaseActivity
                 else
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned - updating ElementsToPickFrom...");
+                    List<IElement> updatedElementsToPickFrom = new ArrayList<>();
                     for(IElement element : this.viewModel.elementsToPickFrom)
                     {
-                        if(!App.content.containsElement(element))
+                        if(App.content.containsElement(element))
                         {
-                            this.viewModel.elementsToPickFrom.remove(element);
+                            updatedElementsToPickFrom.add(element);
                         }
                     }
+                    this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
 
                     if(this.viewModel.elementsToPickFrom.size() > 1)
                     {

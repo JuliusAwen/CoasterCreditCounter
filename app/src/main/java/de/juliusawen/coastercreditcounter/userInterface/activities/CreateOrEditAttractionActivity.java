@@ -186,33 +186,68 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         if(resultCode != RESULT_OK)
         {
-            return;
-        }
+            switch(RequestCode.getValue(requestCode))
+            {
+                case PICK_CREDIT_TYPE:
+                    this.updateLayoutCreditType(App.content.containsElement(this.viewModel.creditType)
+                            ? this.viewModel.creditType
+                            : CreditType.getDefault());
+                    break;
 
-        IElement pickedElement = ResultFetcher.fetchResultElement(data);
-        switch(RequestCode.getValue(requestCode))
+                case PICK_CATEGORY:
+                    this.updateLayoutCategory(App.content.containsElement(this.viewModel.category)
+                            ? this.viewModel.category
+                            : Category.getDefault());
+                    break;
+
+                case PICK_MANUFACTURER:
+                    this.updateLayoutManufacturer(App.content.containsElement(this.viewModel.manufacturer)
+                            ? this.viewModel.manufacturer
+                            : Manufacturer.getDefault());
+                    break;
+
+                case PICK_STATUS:
+                    this.updateLayoutStatus(App.content.containsElement(this.viewModel.status)
+                            ? this.viewModel.status
+                            : Status.getDefault());
+                    break;
+            }
+        }
+        else if(resultCode == RESULT_OK)
         {
-            case MANAGE_CREDIT_TYPES:
-            case PICK_CREDIT_TYPE:
-                this.updateLayoutCreditType(pickedElement != null ? (CreditType)pickedElement : this.viewModel.attraction.getCreditType());
-                break;
+            IElement pickedElement = ResultFetcher.fetchResultElement(data);
+            switch(RequestCode.getValue(requestCode))
+            {
+                case CREATE_CREDIT_TYPE:
+                case PICK_CREDIT_TYPE:
+                    this.updateLayoutCreditType(pickedElement != null
+                            ? (CreditType)pickedElement
+                            : this.viewModel.creditType);
+                    break;
 
-            case MANAGE_CATEGORIES:
-            case PICK_CATEGORY:
-                this.updateLayoutCategory(pickedElement != null ? (Category)pickedElement : this.viewModel.attraction.getCategory());
-                break;
+                case CREATE_CATEGORY:
+                case PICK_CATEGORY:
+                    this.updateLayoutCategory(pickedElement != null
+                            ? (Category)pickedElement
+                            : this.viewModel.category);
+                    break;
 
-            case MANAGE_MANUFACTURERS:
-            case PICK_MANUFACTURER:
-                this.updateLayoutManufacturer(pickedElement != null ? (Manufacturer)pickedElement : this.viewModel.attraction.getManufacturer());
-                break;
+                case CREATE_MANUFACTURER:
+                case PICK_MANUFACTURER:
+                    this.updateLayoutManufacturer(pickedElement != null
+                            ? (Manufacturer)pickedElement
+                            : this.viewModel.manufacturer);
+                    break;
 
-            case MANAGE_STATUSES:
-            case PICK_STATUS:
-                this.updateLayoutStatus(pickedElement != null ? (Status)pickedElement : this.viewModel.attraction.getStatus());
-                break;
+                case CREATE_STATUS:
+                case PICK_STATUS:
+                    this.updateLayoutStatus(pickedElement != null
+                            ? (Status)pickedElement
+                            : this.viewModel.status);
+                    break;
+            }
+            Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onActivityResult:: picked %s", pickedElement));
         }
-        Log.i(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.onActivityResult:: picked %s", pickedElement));
     }
 
     private void decorateFloatingActionButton()
@@ -376,8 +411,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
-                    updateLayoutCreditType((CreditType)elements.get(0));
+                    ActivityDistributor.startActivityCreateForResult(CreateOrEditAttractionActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
                 }
                 else
                 {
@@ -391,6 +425,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private void updateLayoutCreditType(CreditType creditType)
     {
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.updateLayoutCreditType:: setting CreditType %s...", creditType));
+
         this.textViewCreditType.setText(creditType.getName());
         this.viewModel.creditType = creditType;
 
@@ -410,8 +446,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
-                    updateLayoutCategory((Category)elements.get(0));
+                    ActivityDistributor.startActivityCreateForResult(CreateOrEditAttractionActivity.this, RequestCode.CREATE_CATEGORY, null);
                 }
                 else
                 {
@@ -426,6 +461,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private void updateLayoutCategory(Category category)
     {
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.updateLayoutCategory:: setting Category %s", category));
+
         this.textViewCategory.setText(category.getName());
         this.viewModel.category = category;
 
@@ -445,8 +482,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
-                    updateLayoutManufacturer((Manufacturer)elements.get(0));
+                    ActivityDistributor.startActivityCreateForResult(CreateOrEditAttractionActivity.this, RequestCode.CREATE_MANUFACTURER, null);
                 }
                 else
                 {
@@ -461,6 +497,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private void updateLayoutManufacturer(Manufacturer manufacturer)
     {
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.updateLayoutManufacturer:: setting Manufacturer %s", manufacturer));
+
         this.textViewManufacturer.setText(manufacturer.getName());
         this.viewModel.manufacturer = manufacturer;
 
@@ -480,8 +518,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
                 if(elements.size() == 1)
                 {
-                    Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: only one element found - picked!");
-                    updateLayoutStatus((Status)elements.get(0));
+                    ActivityDistributor.startActivityCreateForResult(CreateOrEditAttractionActivity.this, RequestCode.CREATE_STATUS, null);
                 }
                 else
                 {
@@ -495,6 +532,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private void updateLayoutStatus(Status status)
     {
+        Log.d(Constants.LOG_TAG, String.format("CreateOrEditAttractionActivity.updateLayoutStatus:: setting Status %s", status));
+
         this.textViewStatus.setText(status.getName());
         this.viewModel.status = status;
 
