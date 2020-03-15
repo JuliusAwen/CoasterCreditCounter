@@ -57,6 +57,8 @@ public enum OptionsItem
     COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.ic_baseline_expand_less_24px),
 
     GO_TO_CURRENT_VISIT(R.string.menu_item_go_to_current_visit, R.drawable.ic_baseline_local_activity),
+    GO_TO_MANAGE_PROPERTIES(R.string.menu_item_go_to_manage_properties, R.drawable.ic_baseline_build),
+
     ENABLE_EDITING(R.string.menu_item_enable_editing, R.drawable.ic_baseline_create),
     DISABLE_EDITING(R.string.menu_item_disable_editing, R.drawable.ic_baseline_block),
 

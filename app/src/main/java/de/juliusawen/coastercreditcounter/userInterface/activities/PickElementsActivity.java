@@ -201,13 +201,48 @@ public class PickElementsActivity extends BaseActivity
 
                 if(returnElement != null)
                 {
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
                     returnResult(RESULT_OK, returnElement);
                 }
                 else
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned");
                 }
+                break;
+            }
+            case MANAGE_CREDIT_TYPES:
+            case MANAGE_CATEGORIES:
+            case MANAGE_MANUFACTURERS:
+            case MANAGE_STATUSES:
+            {
+                IElement returnElement = ResultFetcher.fetchResultElement(data);
 
+                if(returnElement != null)
+                {
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
+                    returnResult(RESULT_OK, returnElement);
+                }
+                else
+                {
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned - updating ElementsToPickFrom...");
+                    for(IElement element : this.viewModel.elementsToPickFrom)
+                    {
+                        if(!App.content.containsElement(element))
+                        {
+                            this.viewModel.elementsToPickFrom.remove(element);
+                        }
+                    }
+
+                    if(this.viewModel.elementsToPickFrom.size() > 1)
+                    {
+                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                    }
+                    else
+                    {
+                        Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: only one element remaining in ElementsToPickFrom - returning element");
+                        returnResult(RESULT_OK, this.viewModel.elementsToPickFrom.get(0));
+                    }
+                }
                 break;
             }
         }
@@ -253,7 +288,8 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.optionsMenuAgent
                         .add(OptionsItem.SORT)
                             .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
+                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
+                        .add(OptionsItem.GO_TO_MANAGE_PROPERTIES);
                 break;
         }
 
@@ -396,6 +432,10 @@ public class PickElementsActivity extends BaseActivity
                 invalidateOptionsMenu();
                 return true;
 
+            case GO_TO_MANAGE_PROPERTIES:
+                this.gotoManageProperties();
+                return true;
+
             default:
                 return false;
         }
@@ -493,6 +533,28 @@ public class PickElementsActivity extends BaseActivity
                             .groupItems(GroupType.STATUS);
                     break;
             }
+        }
+    }
+
+    private void gotoManageProperties()
+    {
+        switch(viewModel.requestCode)
+        {
+            case PICK_CREDIT_TYPE:
+                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
+                break;
+
+            case PICK_CATEGORY:
+                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_CATEGORIES);
+                break;
+
+            case PICK_MANUFACTURER:
+                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_MANUFACTURERS);
+                break;
+
+            case PICK_STATUS:
+                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_STATUSES);
+                break;
         }
     }
 

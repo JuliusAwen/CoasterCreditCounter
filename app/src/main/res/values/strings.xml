@@ -125,6 +125,8 @@
     <string name="menu_item_disable_editing">disable editing</string>
 
     <string name="menu_item_go_to_current_visit">go to current visit</string>
+    <string name="menu_item_go_to_manage_properties">manage</string>
+
     <string name="menu_item_set_as_default">set as default</string>
     <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
