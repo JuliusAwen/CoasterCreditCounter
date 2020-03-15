@@ -61,7 +61,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_create_or_edit_custom_attraction);
+        setContentView(R.layout.activity_create_or_edit_attraction);
     }
 
     protected void create()
