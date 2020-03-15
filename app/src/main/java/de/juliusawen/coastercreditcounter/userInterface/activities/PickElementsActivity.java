@@ -65,7 +65,8 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
         }
 
-        this.viewModel.isSimplePick = getIntent().getBooleanExtra(Constants.EXTRA_SIMPLE_PICK, false);
+        this.viewModel.isSinglePick = getIntent().getBooleanExtra(Constants.EXTRA_SINGLE_PICK, false);
+        this.viewModel.allowCreate = getIntent().getBooleanExtra(Constants.EXTRA_ALLOW_CREATE, false);
 
         if(this.viewModel.elementsToPickFrom == null)
         {
@@ -118,7 +119,6 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForContentType(IProperty.class, Typeface.BOLD)
                             .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
-                    super.addFloatingActionButton();
                     break;
                 }
 
@@ -144,7 +144,6 @@ public class PickElementsActivity extends BaseActivity
                             .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                     break;
                 }
-
             }
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
@@ -157,7 +156,7 @@ public class PickElementsActivity extends BaseActivity
         super.addToolbarHomeButton();
         super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
-        if(!this.viewModel.isSimplePick)
+        if(!this.viewModel.isSinglePick)
         {
             super.addFloatingActionButton();
             this.decorateFloatingActionButtonCheck();
@@ -560,7 +559,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(PickElementsActivity.this.viewModel.isSimplePick)
+                if(PickElementsActivity.this.viewModel.isSinglePick)
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: simple pick - return code <OK>");
                     returnResult(RESULT_OK, null);

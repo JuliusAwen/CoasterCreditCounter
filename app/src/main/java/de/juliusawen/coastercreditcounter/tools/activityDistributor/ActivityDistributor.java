@@ -350,24 +350,44 @@ public abstract class ActivityDistributor
 
         switch(requestCode)
         {
+            // SINGLE PICK
+
             case PICK_VISIT:
                 toolbarTitle = context.getString(R.string.title_pick_visit);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_open);
-                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 break;
+
+            case PICK_CREDIT_TYPE:
+                toolbarTitle = context.getString(R.string.title_pick_credit_type);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
+                break;
+
+            case PICK_CATEGORY:
+                toolbarTitle = context.getString(R.string.title_pick_category);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
+                break;
+
+            case PICK_MANUFACTURER:
+                toolbarTitle = context.getString(R.string.title_pick_manufacturer);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
+                break;
+
+            case PICK_STATUS:
+                toolbarTitle = context.getString(R.string.title_pick_status);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
+                break;
+
+
+            // MULTIPLE PICK
 
             case PICK_ATTRACTIONS:
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_attractions_to_add_to_visit);
-                break;
-
-            case PICK_CREDIT_TYPE:
-            case PICK_CATEGORY:
-            case PICK_MANUFACTURER:
-            case PICK_STATUS:
-                toolbarTitle = context.getString(R.string.title_pick_attractions);
-                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                intent.putExtra(Constants.EXTRA_SIMPLE_PICK, true);
                 break;
 
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:

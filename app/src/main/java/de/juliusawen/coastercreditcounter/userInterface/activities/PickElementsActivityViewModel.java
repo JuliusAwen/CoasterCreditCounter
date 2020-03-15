@@ -12,7 +12,8 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 public class PickElementsActivityViewModel extends ViewModel
 {
     public RequestCode requestCode;
-    public boolean isSimplePick;
+    public boolean isSinglePick;
+    public boolean allowCreate;
     public List<IElement> elementsToPickFrom;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     public OptionsMenuAgent optionsMenuAgent;

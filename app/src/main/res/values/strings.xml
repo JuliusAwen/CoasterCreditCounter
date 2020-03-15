@@ -16,6 +16,7 @@
     <string name="subtitle_to_open">to open</string>
 
 
+
     <!--GENERIC TEXTS-->
     <string name="text_accept">Accept</string>
     <string name="text_cancel">Cancel</string>
@@ -63,6 +64,7 @@
     <string name="alert_dialog_title_delete">DELETE</string>
     <string name="alert_dialog_message_confirm_delete">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
     <string name="alert_dialog_title_remove">REMOVE</string>
+
 
 
     <!--GENERIC HINT TEXTS-->
@@ -242,6 +244,7 @@
     <string name="credit_types">Credit Types</string>
     <string name="title_create_credit_type">Create Credit Type</string>
     <string name="title_edit_credit_type">Edit Credit Type</string>
+    <string name="title_pick_credit_type">Pick Credit Type</string>
     <string name="subtitle_to_assign_credit_type_to">to assign credit type to</string>
     <string name="hint_enter_credit_type_name">Enter credit type name</string>
     <string name="header_credit_type">Credit Type:</string>
@@ -254,6 +257,7 @@
     <string name="categories">Categories</string>
     <string name="title_create_category">Create Category</string>
     <string name="title_edit_category">Edit Category</string>
+    <string name="title_pick_category">Pick Category</string>
     <string name="subtitle_to_assign_category_to">to assign category to</string>
     <string name="hint_enter_category_name">Enter category name</string>
     <string name="header_category">Category:</string>
@@ -265,6 +269,7 @@
     <string name="manufacturers">Manufacturers</string>
     <string name="title_create_manufacturer">Create Manufacturer</string>
     <string name="title_edit_manufacturer">Edit Manufacturer</string>
+    <string name="title_pick_manufacturer">Pick Manufacturer</string>
     <string name="subtitle_to_assign_manufacturer_to">to assign manufacturer to</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
     <string name="header_manufacturer">Manufacturer:</string>
@@ -277,6 +282,7 @@
     <string name="statuses">Statuses</string>
     <string name="title_create_status">Create Status</string>
     <string name="title_edit_status">Edit Status</string>
+    <string name="title_pick_status">Pick Status</string>
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="header_status">Status:</string>
