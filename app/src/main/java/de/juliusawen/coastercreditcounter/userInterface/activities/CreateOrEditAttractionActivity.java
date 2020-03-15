@@ -43,22 +43,18 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
     private LinearLayout layoutCreditType;
     private TextView textViewCreditType;
-    private ImageView imageViewManageCreditType;
     private ImageView imageViewPickCreditType;
 
     private LinearLayout layoutCategory;
     private TextView textViewCategory;
-    private ImageView imageViewManageCategory;
     private ImageView imageViewPickCategory;
 
     private LinearLayout layoutManufacturer;
     private TextView textViewManufacturer;
-    private ImageView imageViewManageManufacturer;
     private ImageView imageViewPickManufacturer;
 
     private LinearLayout layoutStatus;
     private TextView textViewStatus;
-    private ImageView imageViewManageStatus;
     private ImageView imageViewPickStatus;
 
     private EditText editTextUntrackedRideCount;
@@ -77,22 +73,18 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
-        this.imageViewManageCreditType = findViewById(R.id.imageViewCreateOrEditAttraction_ManageCreditType);
         this.imageViewPickCreditType = findViewById(R.id.imageViewCreateOrEditAttraction_PickCreditType);
 
         this.layoutCategory = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
         this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
-        this.imageViewManageCategory = findViewById(R.id.imageViewCreateOrEditAttraction_ManageCategory);
         this.imageViewPickCategory = findViewById(R.id.imageViewCreateOrEditAttraction_PickCategory);
 
         this.layoutManufacturer = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
         this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
-        this.imageViewManageManufacturer = findViewById(R.id.imageViewCreateOrEditAttraction_ManageManufacturer);
         this.imageViewPickManufacturer = findViewById(R.id.imageViewCreateOrEditAttraction_PickManufacturer);
 
         this.layoutStatus = findViewById(R.id.linearLayoutCreateOrEditAttraction_Status);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
-        this.imageViewManageStatus = findViewById(R.id.imageViewCreateOrEditAttraction_ManageStatus);
         this.imageViewPickStatus = findViewById(R.id.imageViewCreateOrEditAttraction_PickStatus);
 
         this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
@@ -394,16 +386,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             }
         });
 
-        this.imageViewManageCreditType.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
-        this.imageViewManageCreditType.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
-            }
-        });
-
         this.updateLayoutCreditType(this.viewModel.isEditMode ? this.viewModel.attraction.getCreditType() : CreditType.getDefault());
     }
 
@@ -436,16 +418,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
                     ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_CATEGORY, elements);
                 }
-            }
-        });
-
-        this.imageViewManageCategory.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
-        this.imageViewManageCategory.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_CATEGORIES);
             }
         });
 
@@ -484,16 +456,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             }
         }));
 
-        this.imageViewManageManufacturer.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
-        this.imageViewManageManufacturer.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_MANUFACTURERS);
-            }
-        });
-
         this.updateLayoutManufacturer(this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault());
     }
 
@@ -525,16 +487,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
                 {
                     ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_STATUS, elements);
                 }
-            }
-        });
-
-        this.imageViewManageStatus.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_build, R.color.black));
-        this.imageViewManageStatus.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityManageForResult(CreateOrEditAttractionActivity.this, RequestCode.MANAGE_STATUSES);
             }
         });
 

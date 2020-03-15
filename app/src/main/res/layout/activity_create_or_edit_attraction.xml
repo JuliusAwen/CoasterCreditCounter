@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userInterface.activities.CreateOrEditAttractionActivity">
+    tools:context=".userInterface.activities.CreateOrEditAttractionActivity"
+    tools:ignore="UseCompoundDrawables">
 
     <include
         layout="@layout/floating_action_button"/>
@@ -80,13 +81,7 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
-
-                    <ImageView
-                        style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_ManageCreditType"
-                        android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>
 
@@ -131,11 +126,6 @@
 
                     </LinearLayout>
 
-                    <ImageView
-                        style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_ManageCategory"
-                        android:contentDescription="@string/description_image_view" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -179,11 +169,6 @@
 
                     </LinearLayout>
 
-                    <ImageView
-                        style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_ManageManufacturer"
-                        android:contentDescription="@string/description_image_view" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -226,11 +211,6 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
-                    <ImageView
-                        style="@style/ManagePropertyImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_ManageStatus"
-                        android:contentDescription="@string/description_image_view" />
 
                 </LinearLayout>
 

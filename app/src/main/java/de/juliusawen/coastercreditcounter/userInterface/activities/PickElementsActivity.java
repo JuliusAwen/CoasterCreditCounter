@@ -33,6 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
+import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
@@ -161,6 +162,11 @@ public class PickElementsActivity extends BaseActivity
             super.addFloatingActionButton();
             this.decorateFloatingActionButtonCheck();
         }
+        else if(this.viewModel.isSinglePick && this.viewModel.allowCreate)
+        {
+            super.addFloatingActionButton();
+            this.decorateFloatingActionButtonAdd();
+        }
 
         this.addSelectOrDeselectAllBar();
     }
@@ -177,7 +183,7 @@ public class PickElementsActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode != Activity.RESULT_OK)
         {
@@ -199,13 +205,12 @@ public class PickElementsActivity extends BaseActivity
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.onActivityResult:: no element returned");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned");
                 }
 
                 break;
             }
         }
-
     }
 
     @Override
@@ -493,21 +498,60 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButtonCheck()
     {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.decorateFloatingActionButtonCheck:: decorating FloatingActionButton <CHECK>...");
+
         super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
+                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: pressed");
+
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButtonCheck:: accepted - return code <OK>");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: accepted - return code <OK>");
                     returnResult(RESULT_OK, null);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<Check>:: no element selected");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: no element selected");
                     Toaster.makeShortToast(PickElementsActivity.this, getString(R.string.error_no_entry_selected));
+                }
+            }
+        });
+        super.setFloatingActionButtonVisibility(true);
+    }
+
+    private void decorateFloatingActionButtonAdd()
+    {
+        Log.d(Constants.LOG_TAG, "PickElementsActivity.decorateFloatingActionButtonAdd:: decorating FloatingActionButton<ADD>...");
+
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<ADD>:: pressed");
+
+                switch(viewModel.requestCode)
+                {
+                    case PICK_CREDIT_TYPE:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
+                        break;
+
+                    case PICK_CATEGORY:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
+                        break;
+
+                    case PICK_MANUFACTURER:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_MANUFACTURER, null);
+                        break;
+
+                    case PICK_STATUS:
+                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_STATUS, null);
+                        break;
                 }
             }
         });
