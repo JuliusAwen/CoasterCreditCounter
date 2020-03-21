@@ -69,7 +69,6 @@ public class PickElementsActivity extends BaseActivity
         }
 
         this.viewModel.isSinglePick = getIntent().getBooleanExtra(Constants.EXTRA_SINGLE_PICK, false);
-        this.viewModel.allowCreate = getIntent().getBooleanExtra(Constants.EXTRA_ALLOW_CREATE, false);
 
         if(this.viewModel.elementsToPickFrom == null)
         {
@@ -164,11 +163,6 @@ public class PickElementsActivity extends BaseActivity
             super.addFloatingActionButton();
             this.decorateFloatingActionButtonCheck();
         }
-        else if(this.viewModel.isSinglePick && this.viewModel.allowCreate)
-        {
-            super.addFloatingActionButton();
-            this.decorateFloatingActionButtonAdd();
-        }
 
         this.addSelectOrDeselectAllBar();
     }
@@ -187,67 +181,37 @@ public class PickElementsActivity extends BaseActivity
 
         Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode != Activity.RESULT_OK)
+        if(resultCode == Activity.RESULT_OK)
         {
-            return;
-        }
+            IElement returnElement = ResultFetcher.fetchResultElement(data);
 
-        switch(RequestCode.getValue(requestCode))
-        {
-            case CREATE_CREDIT_TYPE:
-            case CREATE_CATEGORY:
-            case CREATE_MANUFACTURER:
-            case CREATE_STATUS:
+            if(returnElement != null)
             {
-                IElement returnElement = ResultFetcher.fetchResultElement(data);
-
-                if(returnElement != null)
-                {
-                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
-                    returnResult(RESULT_OK, returnElement);
-                }
-                else
-                {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned");
-                }
-                break;
+                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
+                returnResult(RESULT_OK, returnElement);
             }
-            case MANAGE_CREDIT_TYPES:
-            case MANAGE_CATEGORIES:
-            case MANAGE_MANUFACTURERS:
-            case MANAGE_STATUSES:
+            else
             {
-                IElement returnElement = ResultFetcher.fetchResultElement(data);
-
-                if(returnElement != null)
+                Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned - updating ElementsToPickFrom...");
+                List<IElement> updatedElementsToPickFrom = new ArrayList<>();
+                for(IElement element : this.viewModel.elementsToPickFrom)
                 {
-                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
-                    returnResult(RESULT_OK, returnElement);
+                    if(App.content.containsElement(element))
+                    {
+                        updatedElementsToPickFrom.add(element);
+                    }
+                }
+                this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
+
+                if(this.viewModel.elementsToPickFrom.size() > 1)
+                {
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned - updating ElementsToPickFrom...");
-                    List<IElement> updatedElementsToPickFrom = new ArrayList<>();
-                    for(IElement element : this.viewModel.elementsToPickFrom)
-                    {
-                        if(App.content.containsElement(element))
-                        {
-                            updatedElementsToPickFrom.add(element);
-                        }
-                    }
-                    this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
-
-                    if(this.viewModel.elementsToPickFrom.size() > 1)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                    }
-                    else
-                    {
-                        Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: only one element remaining in ElementsToPickFrom - returning element");
-                        returnResult(RESULT_OK, this.viewModel.elementsToPickFrom.get(0));
-                    }
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: only one element remaining in ElementsToPickFrom - returning element");
+                    returnResult(RESULT_OK, this.viewModel.elementsToPickFrom.get(0));
                 }
-                break;
             }
         }
     }
@@ -589,40 +553,6 @@ public class PickElementsActivity extends BaseActivity
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void decorateFloatingActionButtonAdd()
-    {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.decorateFloatingActionButtonAdd:: decorating FloatingActionButton<ADD>...");
-
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<ADD>:: pressed");
-
-                switch(viewModel.requestCode)
-                {
-                    case PICK_CREDIT_TYPE:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
-                        break;
-
-                    case PICK_CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_CATEGORY, null);
-                        break;
-
-                    case PICK_MANUFACTURER:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_MANUFACTURER, null);
-                        break;
-
-                    case PICK_STATUS:
-                        ActivityDistributor.startActivityCreateForResult(PickElementsActivity.this, RequestCode.CREATE_STATUS, null);
-                        break;
-                }
-            }
-        });
-        super.setFloatingActionButtonVisibility(true);
-    }
 
     private void addSelectOrDeselectAllBar()
     {

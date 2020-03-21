@@ -74,7 +74,6 @@ public abstract class Constants
     public static final String EXTRA_TYPE_TO_MANAGE = "de.juliusawen.coding.extra_type_to_manage";
     public static final String EXTRA_REQUEST_CODE = "de.juliusawen.coding.extra_request_code";
     public static final String EXTRA_SINGLE_PICK = "de.juliusawen.coding.extra_single_pick";
-    public static final String EXTRA_ALLOW_CREATE = "de.juliusawen.coding.extra_allow_create";
 
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";

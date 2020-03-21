@@ -362,28 +362,24 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
-                intent.putExtra(Constants.EXTRA_ALLOW_CREATE, true);
                 break;
 
             case PICK_CATEGORY:
                 toolbarTitle = context.getString(R.string.title_pick_category);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
-                intent.putExtra(Constants.EXTRA_ALLOW_CREATE, true);
                 break;
 
             case PICK_MANUFACTURER:
                 toolbarTitle = context.getString(R.string.title_pick_manufacturer);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
-                intent.putExtra(Constants.EXTRA_ALLOW_CREATE, true);
                 break;
 
             case PICK_STATUS:
                 toolbarTitle = context.getString(R.string.title_pick_status);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
-                intent.putExtra(Constants.EXTRA_ALLOW_CREATE, true);
                 break;
 
 
