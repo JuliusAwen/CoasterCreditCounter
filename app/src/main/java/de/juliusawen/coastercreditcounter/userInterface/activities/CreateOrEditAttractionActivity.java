@@ -37,6 +37,13 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class CreateOrEditAttractionActivity extends BaseActivity
 {
+    private enum AttractionType
+    {
+        CustomAttraction,
+        StockAttraction,
+        Blueprint
+    }
+
     private CreateOrEditAttractionActivityViewModel viewModel;
 
     private EditText editTextAttractionName;
@@ -62,6 +69,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
     private Drawable pickIconBlack;
     private  Drawable pickIconGrey;
 
+    private AttractionType attractionType;
+
     protected void setContentView()
     {
         setContentView(R.layout.activity_create_or_edit_attraction);
@@ -72,18 +81,23 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
 
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
+        this.layoutCreditType.setVisibility(View.GONE);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
         this.imageViewPickCreditType = findViewById(R.id.imageViewCreateOrEditAttraction_PickCreditType);
 
+
         this.layoutCategory = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
+        this.layoutCategory.setVisibility(View.GONE);
         this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
         this.imageViewPickCategory = findViewById(R.id.imageViewCreateOrEditAttraction_PickCategory);
 
         this.layoutManufacturer = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
+        this.layoutManufacturer.setVisibility(View.GONE);
         this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
         this.imageViewPickManufacturer = findViewById(R.id.imageViewCreateOrEditAttraction_PickManufacturer);
 
         this.layoutStatus = findViewById(R.id.linearLayoutCreateOrEditAttraction_Status);
+        this.layoutStatus.setVisibility(View.GONE);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.imageViewPickStatus = findViewById(R.id.imageViewCreateOrEditAttraction_PickStatus);
 
@@ -421,6 +435,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         });
 
         this.updateLayoutCreditType(this.viewModel.isEditMode ? this.viewModel.attraction.getCreditType() : CreditType.getDefault());
+
+        this.layoutCreditType.setVisibility(View.VISIBLE);
     }
 
     private void updateLayoutCreditType(CreditType creditType)
@@ -457,6 +473,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         });
 
         this.updateLayoutCategory(this.viewModel.isEditMode ? this.viewModel.attraction.getCategory() : Category.getDefault());
+
+        this.layoutCategory.setVisibility(View.VISIBLE);
     }
 
     private void updateLayoutCategory(Category category)
@@ -493,6 +511,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         }));
 
         this.updateLayoutManufacturer(this.viewModel.isEditMode ? this.viewModel.attraction.getManufacturer() : Manufacturer.getDefault());
+
+        this.layoutManufacturer.setVisibility(View.VISIBLE);
     }
 
     private void updateLayoutManufacturer(Manufacturer manufacturer)
@@ -528,6 +548,8 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         });
 
         this.updateLayoutStatus(this.viewModel.isEditMode ? this.viewModel.attraction.getStatus() : Status.getDefault());
+
+        this.layoutStatus.setVisibility(View.VISIBLE);
     }
 
     private void updateLayoutStatus(Status status)
