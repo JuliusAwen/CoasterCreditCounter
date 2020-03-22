@@ -47,8 +47,7 @@ public class JsonHandler implements IDatabaseWrapper
     private LinkedList<TemporaryJsonElement> temporaryLocations = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryParks = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryBlueprints = new LinkedList<>();
-    private LinkedList<TemporaryJsonElement> temporaryStockAttractions = new LinkedList<>();
-    private LinkedList<TemporaryJsonElement> temporaryCustomAttractions = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryOnSiteAttractions = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryVisits = new LinkedList<>();
 
     public boolean importContent(Content content)
@@ -78,8 +77,6 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-
-
                 if(App.config.createExportFileWithDefaultsIfNotFound())
                 {
                     Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.createExportFileWithDefaultsIfNotFound = true --> loading and exporting default content");
@@ -213,8 +210,7 @@ public class JsonHandler implements IDatabaseWrapper
                 this.buildNodeTree(this.temporaryLocations, content);
                 this.buildNodeTree(this.temporaryParks, content);
                 this.buildNodeTree(this.temporaryBlueprints, content);
-                this.buildNodeTree(this.temporaryStockAttractions, content);
-                this.buildNodeTree(this.temporaryCustomAttractions, content);
+                this.buildNodeTree(this.temporaryOnSiteAttractions, content);
 
                 this.createVisitedAttractionsAndAddToVisits(this.temporaryVisits, content);
 
@@ -292,16 +288,10 @@ public class JsonHandler implements IDatabaseWrapper
                     content.addElements(this.createBlueprints(this.temporaryBlueprints, content));
                 }
 
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_STOCK_ATTRACTIONS))
+                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ON_SITE_ATTRACTIONS))
                 {
-                    this.temporaryStockAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_STOCK_ATTRACTIONS));
-                    content.addElements(this.createStockAttractions(this.temporaryStockAttractions, content));
-                }
-
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_CUSTOM_ATTRACTIONS))
-                {
-                    this.temporaryCustomAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_CUSTOM_ATTRACTIONS));
-                    content.addElements(this.createCustomAttractions(this.temporaryCustomAttractions, content));
+                    this.temporaryOnSiteAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ON_SITE_ATTRACTIONS));
+                    content.addElements(this.createOnSiteAttractions(this.temporaryOnSiteAttractions, content));
                 }
             }
 
@@ -545,33 +535,30 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
-    private LinkedList<IElement> createStockAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
+    private LinkedList<IElement> createOnSiteAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            StockAttraction element = StockAttraction.create(
-                            temporaryJsonElement.name,
-                            (Blueprint)content.getContentByUuid(temporaryJsonElement.blueprintUuid),
-                            temporaryJsonElement.untrackedRideCount,
-                            temporaryJsonElement.uuid);
-            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
-            elements.add(element);
-        }
-        return elements;
-    }
-
-    private LinkedList<IElement> createCustomAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
-    {
-        LinkedList<IElement> elements = new LinkedList<>();
-        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
-        {
-            CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
-            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
-            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
-            elements.add(element);
+            if(temporaryJsonElement.blueprintUuid != null)
+            {
+                StockAttraction element = StockAttraction.create(
+                        temporaryJsonElement.name,
+                        (Blueprint)content.getContentByUuid(temporaryJsonElement.blueprintUuid),
+                        temporaryJsonElement.untrackedRideCount,
+                        temporaryJsonElement.uuid);
+                element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+                elements.add(element);
+            }
+            else
+            {
+                CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
+                element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+                element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
+                element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+                element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+                elements.add(element);
+            }
         }
         return elements;
     }
@@ -760,13 +747,9 @@ public class JsonHandler implements IDatabaseWrapper
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Blueprint.class)));
 
-            jsonObjectAttractions.put(Constants.JSON_STRING_CUSTOM_ATTRACTIONS, content.getContentOfType(CustomAttraction.class).isEmpty()
+            jsonObjectAttractions.put(Constants.JSON_STRING_ON_SITE_ATTRACTIONS, content.getContentOfType(IOnSiteAttraction.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentAsType(CustomAttraction.class)));
-
-            jsonObjectAttractions.put(Constants.JSON_STRING_STOCK_ATTRACTIONS, content.getContentOfType(StockAttraction.class).isEmpty()
-                    ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentAsType(StockAttraction.class)));
+                    : this.createJsonArray(content.getContentAsType(IOnSiteAttraction.class)));
 
             jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
 

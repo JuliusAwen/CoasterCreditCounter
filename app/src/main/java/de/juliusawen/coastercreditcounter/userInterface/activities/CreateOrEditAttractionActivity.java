@@ -23,8 +23,10 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -37,16 +39,13 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class CreateOrEditAttractionActivity extends BaseActivity
 {
-    private enum AttractionType
-    {
-        CustomAttraction,
-        StockAttraction,
-        Blueprint
-    }
-
     private CreateOrEditAttractionActivityViewModel viewModel;
 
     private EditText editTextAttractionName;
+
+    private LinearLayout layoutBlueprint;
+    private TextView textViewBlueprint;
+    private ImageView imageViewPickBlueprint;
 
     private LinearLayout layoutCreditType;
     private TextView textViewCreditType;
@@ -69,8 +68,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
     private Drawable pickIconBlack;
     private  Drawable pickIconGrey;
 
-    private AttractionType attractionType;
-
     protected void setContentView()
     {
         setContentView(R.layout.activity_create_or_edit_attraction);
@@ -80,11 +77,15 @@ public class CreateOrEditAttractionActivity extends BaseActivity
     {
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
 
+        this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
+        this.layoutBlueprint.setVisibility(View.GONE);
+        this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
+        this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
+
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
         this.layoutCreditType.setVisibility(View.GONE);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
         this.imageViewPickCreditType = findViewById(R.id.imageViewCreateOrEditAttraction_PickCreditType);
-
 
         this.layoutCategory = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
         this.layoutCategory.setVisibility(View.GONE);
@@ -115,7 +116,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             this.viewModel.isEditMode = true;
         }
 
-        if(this.viewModel.isEditMode) //adjust to work with Blueprints
+        if(this.viewModel.isEditMode)
         {
             if(this.viewModel.attraction == null)
             {
@@ -132,18 +133,17 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         {
             if(this.viewModel.attraction.isCustomAttraction())
             {
-                //this.decorateViewForEditCustomAttraction();
                 this.decorateLayoutCreditType();
                 this.decorateLayoutCategory();
                 this.decorateLayoutManufacturer();
             }
             else if(this.viewModel.attraction.isStockAttraction())
             {
-                //this.decorateViewForEditStockAttraction();
+                this.decorateLayoutBlueprint();
             }
             else if(this.viewModel.attraction.isBlueprint())
             {
-                //this.decorateViewForEditBlueprint();
+                //handle blueprint
             }
             else
             {
@@ -161,8 +161,6 @@ public class CreateOrEditAttractionActivity extends BaseActivity
         }
 
         this.decorateEditTextUntrackedRideCount();
-
-
 
 
         if(this.viewModel.toolbarTitle == null)
@@ -200,7 +198,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         if(resultCode != RESULT_OK)
         {
-            switch(RequestCode.getValue(requestCode))
+            switch(RequestCode.getValue(requestCode)) //no Property was selected in PickActivity - but it is possible that former Property was deleted in ManageProperty
             {
                 case PICK_CREDIT_TYPE:
                     this.updateLayoutCreditType(App.content.containsElement(this.viewModel.creditType)
@@ -410,6 +408,37 @@ public class CreateOrEditAttractionActivity extends BaseActivity
             this.editTextAttractionName.setText(this.viewModel.attraction.getName());
             this.editTextAttractionName.setSelection(this.viewModel.attraction.getName().length());
         }
+    }
+
+    private void decorateLayoutBlueprint()
+    {
+        this.layoutBlueprint.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.d(Constants.LOG_TAG, "CreateOrEditAttractionActivity.onClick:: <PickBlueprint> selected");
+
+                List<IElement> elements = App.content.getContentOfType(Blueprint.class);
+
+                ActivityDistributor.startActivityPickForResult(CreateOrEditAttractionActivity.this, RequestCode.PICK_BLUEPRINT, elements);
+            }
+        });
+
+        this.textViewBlueprint.setText(((StockAttraction)this.viewModel.attraction).getBlueprint().getName());
+
+        Drawable pickIcon;
+        if(this.viewModel.isEditMode)
+        {
+            pickIcon = App.content.getContentOfType(Blueprint.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey;
+        }
+        else
+        {
+            pickIcon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
+        }
+        this.imageViewPickBlueprint.setImageDrawable(pickIcon);
+
+        this.layoutBlueprint.setVisibility(View.VISIBLE);
     }
 
     private void decorateLayoutCreditType()

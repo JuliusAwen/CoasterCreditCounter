@@ -3,8 +3,7 @@
     android:id="@+id/linearLayoutProgressBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/semi_transparent"
-    android:visibility="gone">
+    android:background="@color/semi_transparent">
 
     <ProgressBar
         android:layout_width="match_parent"

@@ -22,12 +22,13 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  */
 public final class StockAttraction extends Attraction implements IOnSiteAttraction
 {
-    private final Blueprint blueprint;
+    private Blueprint blueprint;
 
     private StockAttraction(String name, Blueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         super(name, untrackedRideCount, uuid);
         this.blueprint = blueprint;
+        this.blueprint.addChild(this);
     }
 
     public static StockAttraction create(String name, Blueprint blueprint)
@@ -49,9 +50,22 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
             Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));
         }
 
-        blueprint.addChild(stockAttraction);
-
         return stockAttraction;
+    }
+
+    public Blueprint getBlueprint()
+    {
+        return this.blueprint;
+    }
+
+    public void changeBlueprint(Blueprint newBlueprint)
+    {
+        this.blueprint.decreaseTotalRideCount(this.getTotalRideCount());
+        this.blueprint.deleteChild(this);
+
+        newBlueprint.increaseTotalRideCount(this.getTotalRideCount());
+        newBlueprint.addChild(this);
+        this.blueprint = newBlueprint;
     }
 
     @Override

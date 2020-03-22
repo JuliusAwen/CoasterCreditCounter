@@ -42,7 +42,7 @@
 
                 <LinearLayout
                     style="@style/StandardBarLayout"
-                    android:id="@+id/linearLayoutCreateOrEditAttraction_BlueprintName"
+                    android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
@@ -68,14 +68,14 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
-<!--                            <ImageView-->
-<!--                                style="@style/StandardImageHolder"-->
-<!--                                android:id="@+id/imageViewCreateOrEditAttraction_PickCreditType"-->
-<!--                                android:contentDescription="@string/description_image_view" />-->
+                            <ImageView
+                                style="@style/StandardImageHolder"
+                                android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"
+                                android:contentDescription="@string/description_image_view" />
 
                             <TextView
                                 style="@style/CreateOrEditAttractionTextView"
-                                android:id="@+id/textViewCreateOrEditAttraction_BlueprintName"
+                                android:id="@+id/textViewCreateOrEditAttraction_Blueprint"
                                 android:layout_weight="1"
                                 android:layout_width="0dp"/>
 

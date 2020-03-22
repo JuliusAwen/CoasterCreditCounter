@@ -235,8 +235,9 @@
 
 
 
-    <!--BLUEPRINTs-->
+    <!--BLUEPRINTS-->
     <string name="title_edit_blueprint">Edit Blueprint</string>
+    <string name="title_pick_blueprint">Pick Blueprint</string>
     <string name="header_blueprint">Blueprint:</string>
 
 

@@ -361,6 +361,12 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 break;
 
+            case PICK_BLUEPRINT:
+                toolbarTitle = context.getString(R.string.title_pick_blueprint);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
+                break;
+
             case PICK_CREDIT_TYPE:
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);

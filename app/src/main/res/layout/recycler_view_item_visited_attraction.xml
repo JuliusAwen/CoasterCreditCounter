@@ -9,8 +9,7 @@
         android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_OpenForEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <View
             android:layout_height="1dp"
@@ -68,7 +67,6 @@
         style="@style/PrettyPrintTextView"
         android:id="@+id/textViewRecyclerViewItemVisitedAttraction_PrettyPrint"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:visibility="gone"/>
+        android:layout_marginEnd="24dp"/>
 
 </LinearLayout>
