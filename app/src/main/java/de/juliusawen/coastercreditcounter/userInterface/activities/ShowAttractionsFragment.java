@@ -139,6 +139,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             switch(RequestCode.values()[requestCode])
             {
                 case SORT_ATTRACTIONS:
+                {
                     List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                     IElement parent = resultElements.get(0).getParent();
                     if(parent != null)
@@ -150,8 +151,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                 .scrollToItem(resultElement);
                     }
                     break;
+                }
 
                 case EDIT_ON_SITE_ATTRACTION:
+                {
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
                     {
                         Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
@@ -171,15 +174,19 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                     this.viewModel.formerAttractionName = null;
                     this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
-                    this.updateContentRecyclerView(false)
+                    this.updateContentRecyclerView(true)
                             .scrollToItem(resultElement);
                     break;
+                }
 
                 case CREATE_ON_SITE_ATTRACTION:
+                {
                     this.updateContentRecyclerView(true)
                             .expandGroupHeaderOfElement(resultElement)
                             .scrollToItem(resultElement);
                     break;
+                }
+
             }
         }
     }

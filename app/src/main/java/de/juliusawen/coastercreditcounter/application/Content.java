@@ -139,7 +139,15 @@ public class Content
 
     public boolean containsElement(IElement element)
     {
-        return this.elementsByUuid.containsValue(element);
+        if(this.elementsByUuid.containsValue(element))
+        {
+            return true;
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("Content.containsElement:: Content does not contain %s", element));
+            return false;
+        }
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)

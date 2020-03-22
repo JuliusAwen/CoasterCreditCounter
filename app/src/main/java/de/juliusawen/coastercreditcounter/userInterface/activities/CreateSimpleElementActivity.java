@@ -36,6 +36,7 @@ public class CreateSimpleElementActivity extends BaseActivity
     {
         this.editText = findViewById(R.id.editTextCreateSimpleElement);
         this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
+        this.editText.requestFocus();
 
         Intent intent = getIntent();
         String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);

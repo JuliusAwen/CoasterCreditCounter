@@ -872,6 +872,11 @@ public class JsonHandler implements IDatabaseWrapper
                     preferences.setExpandLatestYearInListByDefault(jsonObjectPreferences.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
                 }
 
+                if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_EXPAND_SINGLE_GROUP_HEADER))
+                {
+                    preferences.setExpandSingleGroupHeaderByDefault(jsonObjectPreferences.getBoolean(Constants.JSON_STRING_EXPAND_SINGLE_GROUP_HEADER));
+                }
+
                 if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK))
                 {
                     preferences.setFirstDayOfTheWeek(jsonObjectPreferences.getInt(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK));

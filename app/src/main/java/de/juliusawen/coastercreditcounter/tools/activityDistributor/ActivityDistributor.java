@@ -17,11 +17,12 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.userInterface.activities.CreateAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateLocationActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.CreateOrEditAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateParkActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.EditAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropertiesActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
@@ -160,11 +161,6 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
-            case EDIT_ON_SITE_ATTRACTION:
-                type = CreateOrEditAttractionActivity.class;
-                toolbarTitle = context.getString(R.string.title_edit_on_site_attraction);
-                break;
-
             case EDIT_CREDIT_TYPE:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_credit_type);
@@ -183,6 +179,11 @@ public abstract class ActivityDistributor
             case EDIT_STATUS:
                 type = EditElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_status);
+                break;
+
+            case EDIT_ON_SITE_ATTRACTION:
+                type = EditAttractionActivity.class;
+                toolbarTitle = context.getString(R.string.title_edit_on_site_attraction);
                 break;
         }
 
@@ -225,7 +226,7 @@ public abstract class ActivityDistributor
                 break;
 
             case CREATE_ON_SITE_ATTRACTION:
-                type = CreateOrEditAttractionActivity.class;
+                type = CreateAttractionActivity.class;
                 break;
 
             default:

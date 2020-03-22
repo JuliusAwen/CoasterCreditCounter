@@ -4,7 +4,6 @@
     <string name="name_app">CoasterCreditCounter</string>
 
 
-
     <!--GENERIC TITLES AND SUBTITLES-->
     <string name="title_relocate">Relocate</string>
     <string name="title_sort">Sort</string>
@@ -14,7 +13,6 @@
     <string name="subtitle_to_assign_to_attraction">to assign to attraction</string>
 
     <string name="subtitle_to_open">to open</string>
-
 
 
     <!--GENERIC TEXTS-->
@@ -40,14 +38,12 @@
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 
-
     <!--GENERIC ACTION TEXTS-->
     <string name="action_undo_title">UNDO</string>
 
     <string name="action_confirm_text">CONFIRM</string>
     <string name="action_confirm_delete_text">Confirm deletion of \'%1$s\'</string>
     <string name="action_confirm_remove_text">Confirm removal of \'%1$s\'</string>
-
 
 
     <!--GENERIC ERROR MESSAGES-->
@@ -59,12 +55,10 @@
     <string name="error_missing_text">-text is missing-</string>
 
 
-
     <!--GENERIC DIALOG TEXTS-->
     <string name="alert_dialog_title_delete">DELETE</string>
     <string name="alert_dialog_message_confirm_delete">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
     <string name="alert_dialog_title_remove">REMOVE</string>
-
 
 
     <!--GENERIC HINT TEXTS-->
@@ -73,14 +67,12 @@
     <string name="hint_edit_element_name">Edit element name</string>
 
 
-
     <!--GENERIC DESCRIPTIONS-->
     <string name="description_ok">@string/text_close</string>
     <string name="description_cancel">@string/text_cancel</string>
     <string name="description_close">@string/text_close</string>
     <string name="description_image_view">image</string>
     <string name="description_tab_title">title</string>
-
 
 
     <!--MENU ITEMS-->
@@ -131,7 +123,6 @@
     <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
 
-
     <!--NAVIGATION HUB-->
     <string name="subtitle_navigation_hub">Navigation Hub</string>
 
@@ -167,10 +158,8 @@
     <string name="information_restore_content_backup_success">Content restored</string>
 
 
-
     <!--SEARCH-->
     <string name="hint_search_content">Search content</string>
-
 
 
     <!--LOCATIONS-->
@@ -183,7 +172,6 @@
     <string name="alert_dialog_message_confirm_relocate">Do you really want to relocate \'%1$s\' to \'%2$s\'?</string>
 
 
-
     <!--PARKS-->
     <string name="parks">Parks</string>
     <string name="title_edit_park">Edit Park</string>
@@ -192,7 +180,6 @@
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
     <string name="subtitle_park_show_tab_visits">Visits</string>
     <string name="hint_enter_park_name">Enter park name</string>
-
 
 
     <!--VISITS-->
@@ -214,7 +201,6 @@
     <string name="text_visit_display_full_name">%1$s @ %2$s</string>
 
 
-
     <!--ATTRACTIONS-->
     <string name="attractions">Attractions</string>
     <string name="title_pick_attractions">Pick Attractions</string>
@@ -234,12 +220,10 @@
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
-
     <!--BLUEPRINTS-->
     <string name="title_edit_blueprint">Edit Blueprint</string>
     <string name="title_pick_blueprint">Pick Blueprint</string>
     <string name="header_blueprint">Blueprint:</string>
-
 
 
     <!--CREDIT TYPES-->
@@ -254,7 +238,6 @@
     <string name="header_credit_type">Credit Type:</string>
 
 
-
     <!--CATEGORIES-->
     <string name="default_category_name">uncategorized</string>
     <string name="category">Category</string>
@@ -265,7 +248,6 @@
     <string name="subtitle_to_assign_category_to">to assign category to</string>
     <string name="hint_enter_category_name">Enter category name</string>
     <string name="header_category">Category:</string>
-
 
 
     <!--MANUFACTURERS-->
@@ -280,7 +262,6 @@
     <string name="header_manufacturer">Manufacturer:</string>
 
 
-
     <!--STATUS-->
     <string name="default_status_name">operational</string>
     <string name="status">Status</string>
@@ -293,11 +274,9 @@
     <string name="header_status">Status:</string>
 
 
-
     <!--GENERERIC PROPERTIES-->
     <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
     <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
-
 
 
     <!--ORPHAN ELEMENTS-->
@@ -314,7 +293,6 @@
     <!--SUBSTITUTES-->
     <string name="substitute_properties_default_postfix">%1$s (default)</string>
     <string name="substitute_blueprint">Blueprint</string>
-
 
 
     <!--HELP-->
@@ -360,6 +338,7 @@
     <string name="help_text_manage_manufacturers">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_statuses">@string/help_text_not_yet_available</string>
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_or_edit_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
 
 </resources>

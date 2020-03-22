@@ -638,7 +638,7 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(PickElementsActivity.this.viewModel.isSinglePick)
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: simple pick - return code <OK>");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
                     returnResult(RESULT_OK, null);
                 }
                 else
