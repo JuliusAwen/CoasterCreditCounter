@@ -140,6 +140,22 @@ public class Persistence
         Log.i(Constants.LOG_TAG, String.format("Persistence.synchronize:: creating [%d], updating [%d], deleting [%d] elements...",
                 elementsToCreate.size(), elementsToUpdate.size(), elementsToDelete.size()));
 
+
+        for(IElement element : elementsToCreate)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: CREATE %s", element));
+        }
+
+        for(IElement element : elementsToUpdate)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: UPDATE %s", element));
+        }
+
+        for(IElement element : elementsToDelete)
+        {
+            Log.d(Constants.LOG_TAG, String.format("Persistence.synchronize:: DELETE %s", element));
+        }
+
         return this.databaseWrapper.synchronize(elementsToCreate, elementsToUpdate, elementsToDelete);
     }
 

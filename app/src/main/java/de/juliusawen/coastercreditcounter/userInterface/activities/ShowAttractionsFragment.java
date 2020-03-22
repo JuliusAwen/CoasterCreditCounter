@@ -146,6 +146,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         this.viewModel.park.reorderChildren(resultElements);
 
+                        this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
+
                         this.updateContentRecyclerView(true)
                                 .expandGroupHeaderOfElement(resultElement)
                                 .scrollToItem(resultElement);
@@ -171,9 +173,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                                 }
                             }
                         }
+
+                        this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
                     }
                     this.viewModel.formerAttractionName = null;
-                    this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
                     this.updateContentRecyclerView(true)
                             .scrollToItem(resultElement);
                     break;

@@ -659,7 +659,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean exportContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, "JsonHandler.exportContent:: exporting content to external json [%s]...");
+        Log.i(Constants.LOG_TAG, "JsonHandler.exportContent:: exporting content to external json...");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
