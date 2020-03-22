@@ -110,7 +110,7 @@ public class CreateOrEditAttractionActivity extends BaseActivity
 
         this.viewModel = new ViewModelProvider(this).get(CreateOrEditAttractionActivityViewModel.class);
 
-        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_ATTRACTION)
+        if(RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)] == RequestCode.EDIT_ON_SITE_ATTRACTION)
         {
             this.viewModel.isEditMode = true;
         }

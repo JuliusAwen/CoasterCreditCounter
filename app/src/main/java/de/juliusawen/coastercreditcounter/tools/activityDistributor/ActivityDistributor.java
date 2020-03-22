@@ -72,7 +72,8 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),"ActivityDistributor.startActivityShow:: unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
+                    "ActivityDistributor.startActivityShow:: unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
@@ -136,7 +137,8 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown RequestCode [%s]", requestCode));
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
+                    "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown RequestCode [%s]", requestCode));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
     }
@@ -158,9 +160,9 @@ public abstract class ActivityDistributor
                 toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
-            case EDIT_ATTRACTION:
+            case EDIT_ON_SITE_ATTRACTION:
                 type = CreateOrEditAttractionActivity.class;
-                toolbarTitle = context.getString(R.string.title_edit_attraction);
+                toolbarTitle = context.getString(R.string.title_edit_on_site_attraction);
                 break;
 
             case EDIT_CREDIT_TYPE:
@@ -197,7 +199,8 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(), "ActivityDistributor.startActivityEditForResult:: unable to start activity: unknown RequestCode [%s] for type [%s] from [%s]",
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
+                    "ActivityDistributor.startActivityEditForResult:: unable to start activity: unknown RequestCode [%s] for type [%s] from [%s]",
                     requestCode, element, context.getClass().getSimpleName()));
         }
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
@@ -221,7 +224,7 @@ public abstract class ActivityDistributor
                 type = CreateVisitActivity.class;
                 break;
 
-            case CREATE_ATTRACTION:
+            case CREATE_ON_SITE_ATTRACTION:
                 type = CreateOrEditAttractionActivity.class;
                 break;
 

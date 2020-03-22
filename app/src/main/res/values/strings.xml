@@ -195,7 +195,7 @@
 
 
 
-    <!--SHOW_VISITS-->
+    <!--VISITS-->
     <string name="title_create_visit">Create Visit</string>
     <string name="title_show_visit">Visit</string>
     <string name="title_pick_visit">Pick Visit</string>
@@ -215,7 +215,7 @@
 
 
 
-    <!--SHOW_ATTRACTIONS-->
+    <!--ATTRACTIONS-->
     <string name="attractions">Attractions</string>
     <string name="title_pick_attractions">Pick Attractions</string>
     <string name="subtitle_attractions_to_add_to_visit">to add to your visit</string>
@@ -231,13 +231,14 @@
     <string name="title_create_attraction">Create Attraction</string>
     <string name="subtitle_create_attraction">for %1$s</string>
 
-    <string name="title_edit_attraction">Edit Attraction</string>
+    <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
 
-    <!--GENERERIC PROPERTIES-->
-    <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
-    <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
+    <!--BLUEPRINTs-->
+    <string name="title_edit_blueprint">Edit Blueprint</string>
+    <string name="header_blueprint">Blueprint:</string>
+
 
 
     <!--CREDIT TYPES-->
@@ -265,6 +266,7 @@
     <string name="header_category">Category:</string>
 
 
+
     <!--MANUFACTURERS-->
     <string name="default_manufacturer_name">unknown</string>
     <string name="manufacturer">Manufacturer</string>
@@ -288,6 +290,12 @@
     <string name="hint_enter_status_name">Enter status name</string>
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="header_status">Status:</string>
+
+
+
+    <!--GENERERIC PROPERTIES-->
+    <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
+    <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
 
 
 
