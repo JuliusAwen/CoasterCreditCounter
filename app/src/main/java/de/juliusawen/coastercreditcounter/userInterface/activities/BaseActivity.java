@@ -163,9 +163,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private void startAppInitialization()
     {
         //Todo: introduce SplashScreen
-        this.createToolbar();
-        this.setToolbarTitleAndSubtitle(getString(R.string.name_app), null);
-
         if(this.viewModel.isInitializingApp)
         {
             Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: app is initializing...");
@@ -381,8 +378,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected BaseActivity createToolbar()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
-        setSupportActionBar(toolbar);
+        Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: setting SupportActionBar...");
+        setSupportActionBar(this.toolbar);
 
         return this;
     }
@@ -589,13 +586,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void showProgressBar(boolean show)
     {
-        View progressBar = this.fetchProgressBar();
+        View rootView = findViewById(android.R.id.content);
+        View progressBar = rootView.findViewById(R.id.linearLayoutProgressBar);
 
         if(progressBar == null)
         {
-            ViewGroup viewGroup = (ViewGroup)this.fetchRootView();
-            progressBar = getLayoutInflater().inflate(R.layout.progress_bar, viewGroup, false);
-            viewGroup.addView(progressBar);
+            progressBar = getLayoutInflater().inflate(R.layout.progress_bar, (ViewGroup)rootView, false);
+            ((ViewGroup)rootView).addView(progressBar);
         }
 
         if(show)
@@ -608,24 +605,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    private View fetchProgressBar()
-    {
-        return this.fetchRootView().findViewById(R.id.linearLayoutProgressBar);
-    }
-
-    private View fetchRootView()
-    {
-        View rootView = findViewById(android.R.id.content);
-        if(rootView != null)
-        {
-            return rootView;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.fetchRootView:: View not found.");
-            return null;
-        }
-    }
 
     protected boolean requestPermissionWriteExternalStorage()
     {
