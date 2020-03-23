@@ -67,10 +67,10 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        super.addHelpOverlayFragment(null, null);
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(null, null);
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .createFloatingActionButton();
 
         this.createTabPagerAdapter();
     }

@@ -80,10 +80,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
-        super.addToolbar();
-        super.addToolbarMenuIcon();
-        super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
+        super.createToolbar()
+                .addToolbarMenuIcon()
+                .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
     }
 
     @Override

@@ -20,15 +20,16 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class Preferences implements IPersistable
 {
-    private ArrayList<DetailType> detailsOrder = new ArrayList<>();
-
-    private SortOrder defaultSortOrder;
-    private boolean expandLatestYearInListByDefault;
-    private boolean expandSingleGroupHeaderByDefault;
     private int firstDayOfTheWeek;
 
-
     private int increment;
+
+    private SortOrder defaultSortOrder;
+    private ArrayList<DetailType> detailsOrder = new ArrayList<>();
+
+    private boolean expandLatestYearHeaderByDefault;
+    private boolean expandSingleGroupHeaderByDefault;
+
 
 
     private final Persistence persistence;
@@ -113,7 +114,7 @@ public class Preferences implements IPersistable
             Log.d(Constants.LOG_TAG, String.format("Preferences.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: expand latest year in visits list [%S]", this.expandLatestYearInListByDefault()));
+        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: expand latest year in visits list [%S]", this.expandLatestYearHeaderByDefault()));
 
         Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
 
@@ -129,7 +130,7 @@ public class Preferences implements IPersistable
         Log.i(Constants.LOG_TAG, "Preferences.useDefaults:: setting defaults...");
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
-        this.setExpandLatestYearInListByDefault(true);
+        this.setExpandLatestYearHeaderByDefault(true);
         this.setExpandSingleGroupHeaderByDefault(true);
         this.setFirstDayOfTheWeek(Calendar.MONDAY);
         this.setIncrement(1);
@@ -171,25 +172,25 @@ public class Preferences implements IPersistable
         Log.i(Constants.LOG_TAG, String.format("Preferences.setDefaultSortOrder:: [%s] set as default", defaultSortOrder));
     }
 
-    public boolean expandLatestYearInListByDefault()
+    public boolean expandLatestYearHeaderByDefault()
     {
-        return this.expandLatestYearInListByDefault;
+        return this.expandLatestYearHeaderByDefault;
     }
 
-    public void setExpandLatestYearInListByDefault(boolean expandLatestYearInListByDefault)
+    public void setExpandLatestYearHeaderByDefault(boolean expandLatestYearHeaderByDefault)
     {
-        this.expandLatestYearInListByDefault = expandLatestYearInListByDefault;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearInListByDefault:: set to [%S]", expandLatestYearInListByDefault));
+        this.expandLatestYearHeaderByDefault = expandLatestYearHeaderByDefault;
+        Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearHeaderByDefault:: set to [%S]", expandLatestYearHeaderByDefault));
     }
 
     public boolean expandSingleGroupHeaderByDefault()
     {
-        return this.expandLatestYearInListByDefault;
+        return this.expandSingleGroupHeaderByDefault;
     }
 
     public void setExpandSingleGroupHeaderByDefault(boolean expandSingleGroupHeaderByDefault)
     {
-        this.expandLatestYearInListByDefault = expandSingleGroupHeaderByDefault;
+        this.expandSingleGroupHeaderByDefault = expandSingleGroupHeaderByDefault;
         Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandSingleGroupHeaderByDefault:: set to [%S]", expandSingleGroupHeaderByDefault));
     }
 
@@ -231,7 +232,7 @@ public class Preferences implements IPersistable
             jsonObjectPreferences.put(Constants.JSON_STRING_DETAIL_ORDER, jsonArrayDetailTypeOrder);
 
             jsonObjectPreferences.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrder().ordinal());
-            jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearInListByDefault());
+            jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearHeaderByDefault());
             jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_SINGLE_GROUP_HEADER, this.expandSingleGroupHeaderByDefault());
             jsonObjectPreferences.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
             jsonObjectPreferences.put(Constants.JSON_STRING_INCREMENT, this.getIncrement());

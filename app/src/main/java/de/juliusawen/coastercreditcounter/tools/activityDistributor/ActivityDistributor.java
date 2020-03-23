@@ -23,7 +23,7 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.CreateParkAct
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditAttractionActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.EditElementActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.EditSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropertiesActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
@@ -152,32 +152,32 @@ public abstract class ActivityDistributor
         switch(requestCode)
         {
             case EDIT_LOCATION:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_location);
                 break;
 
             case EDIT_PARK:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
             case EDIT_CREDIT_TYPE:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_credit_type);
                 break;
 
             case EDIT_CATEGORY:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_category);
                 break;
 
             case EDIT_MANUFACTURER:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_manufacturer);
                 break;
 
             case EDIT_STATUS:
-                type = EditElementActivity.class;
+                type = EditSimpleElementActivity.class;
                 toolbarTitle = context.getString(R.string.title_edit_status);
                 break;
 

@@ -142,14 +142,13 @@ public class EditAttractionActivity extends BaseActivity
 
         this.decorateEditTextUntrackedRideCount();
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit_attraction));
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.attraction.getName());
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit_attraction));
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.attraction.getName());
+        super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
-
     }
 
     @Override

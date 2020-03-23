@@ -40,7 +40,7 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".userInterface.activities.EditElementActivity"
+            android:name=".userInterface.activities.EditSimpleElementActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity

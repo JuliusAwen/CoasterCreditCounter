@@ -75,11 +75,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getParent().getName(), this.viewModel.visit.getName());
-        super.setToolbarOnClickListener(this.getToolbarOnClickListener());
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(this.viewModel.visit.getParent().getName(), this.viewModel.visit.getName())
+                .setToolbarOnClickListener(this.getToolbarOnClickListener());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
         }
 
-        super.addFloatingActionButton();
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
         this.handleFloatingActionButtonVisibility();
 

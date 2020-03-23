@@ -48,11 +48,11 @@ public class CreateSimpleElementActivity extends BaseActivity
 
         this.viewModel = new ViewModelProvider(this).get(CreateSimpleElementActivityViewModel.class);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(toolbarTitle, null);
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(toolbarTitle, null);
+        super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
     }

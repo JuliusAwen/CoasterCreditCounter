@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
-public class EditElementActivityViewModel extends ViewModel
+public class EditSimpleElementActivityViewModel extends ViewModel
 {
     public IElement elementToEdit;
 }

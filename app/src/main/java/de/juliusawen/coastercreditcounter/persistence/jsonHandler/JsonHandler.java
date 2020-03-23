@@ -869,7 +869,7 @@ public class JsonHandler implements IDatabaseWrapper
 
                 if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER))
                 {
-                    preferences.setExpandLatestYearInListByDefault(jsonObjectPreferences.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
+                    preferences.setExpandLatestYearHeaderByDefault(jsonObjectPreferences.getBoolean(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER));
                 }
 
                 if(!jsonObjectPreferences.isNull(Constants.JSON_STRING_EXPAND_SINGLE_GROUP_HEADER))

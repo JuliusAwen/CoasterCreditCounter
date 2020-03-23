@@ -168,15 +168,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
         String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
+        super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
     }
-
 
     @Override
     protected void onDestroy()

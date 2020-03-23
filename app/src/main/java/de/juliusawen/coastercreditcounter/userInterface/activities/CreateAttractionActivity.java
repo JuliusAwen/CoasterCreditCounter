@@ -125,11 +125,11 @@ public class CreateAttractionActivity extends BaseActivity
         this.decorateEditTextUntrackedRideCount();
 
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_create_attraction)), getText(R.string.help_text_create_attraction));
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getString(R.string.title_create_attraction), getString(R.string.subtitle_create_attraction, this.viewModel.parentPark.getName()));
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_create_attraction)), getText(R.string.help_text_create_attraction));
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(getString(R.string.title_create_attraction), getString(R.string.subtitle_create_attraction, this.viewModel.parentPark.getName()));
+        super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
     }

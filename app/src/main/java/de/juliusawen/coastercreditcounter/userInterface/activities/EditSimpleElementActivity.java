@@ -18,9 +18,9 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 
-public class EditElementActivity extends BaseActivity
+public class EditSimpleElementActivity extends BaseActivity
 {
-    private EditElementActivityViewModel viewModel;
+    private EditSimpleElementActivityViewModel viewModel;
     private EditText editText;
 
 
@@ -32,19 +32,20 @@ public class EditElementActivity extends BaseActivity
     protected void create()
     {
         this.editText = findViewById(R.id.editTextEditElement);
+        this.editText.requestFocus();
 
-        this.viewModel = new ViewModelProvider(this).get(EditElementActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(EditSimpleElementActivityViewModel.class);
 
         if(this.viewModel.elementToEdit == null)
         {
             this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
-        super.addFloatingActionButton();
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
+        super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
         this.createEditText();
@@ -69,7 +70,7 @@ public class EditElementActivity extends BaseActivity
 
     private void createEditText()
     {
-        Log.d(Constants.LOG_TAG, String.format("EditElementActivity.createEditText:: edit %s", this.viewModel.elementToEdit));
+        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.createEditText:: edit %s", this.viewModel.elementToEdit));
         this.editText.append(this.viewModel.elementToEdit.getName());
 
         this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -79,7 +80,7 @@ public class EditElementActivity extends BaseActivity
             {
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    Log.d(Constants.LOG_TAG, "EditElementActivity.onEditorAction<IME_ACTION_DONE>:: ");
+                    Log.d(Constants.LOG_TAG, "EditSimpleElementActivity.onEditorAction<IME_ACTION_DONE>:: ");
                     if(handleOnEditorActionDone())
                     {
                         returnResult(RESULT_OK);
@@ -96,7 +97,7 @@ public class EditElementActivity extends BaseActivity
         String editText = this.editText.getText().toString();
         if(!this.viewModel.elementToEdit.getName().equals(editText))
         {
-            Log.i(Constants.LOG_TAG, String.format("EditElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
+            Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
             if(!this.viewModel.elementToEdit.setName(editText))
             {
                 Toaster.makeShortToast(this, getString(R.string.error_name_not_valid));
@@ -105,7 +106,7 @@ public class EditElementActivity extends BaseActivity
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "EditElementActivity.createEditText:: name has not changed");
+            Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.createEditText:: name has not changed");
         }
 
         return true;
@@ -113,13 +114,13 @@ public class EditElementActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("AddElementsActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
+            Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.elementToEdit.getUuid().toString());
 
             super.markForUpdate(this.viewModel.elementToEdit);

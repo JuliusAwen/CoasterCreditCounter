@@ -45,6 +45,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverla
 
 public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
+    private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
 
@@ -67,6 +68,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(App.isInitialized)
         {
             this.viewModel.isInitializingApp = false;
+
+            this.toolbar = findViewById(R.id.toolbar);
 
             Log.i(Constants.LOG_TAG, String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
             this.create();
@@ -160,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private void startAppInitialization()
     {
         //Todo: introduce SplashScreen
-        this.addToolbar();
+        this.createToolbar();
         this.setToolbarTitleAndSubtitle(getString(R.string.name_app), null);
 
         if(this.viewModel.isInitializingApp)
@@ -286,7 +289,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void setHelpOverlayTitleAndMessage(String title, String message)
+    protected void createHelpOverlayFragment(String title, CharSequence message)
+    {
+        Log.i(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
+
+        this.viewModel.isHelpOverlayAdded = true;
+        this.viewModel.helpOverlayFragmentTitle = title;
+        this.viewModel.helpOverlayFragmentMessage = message;
+    }
+
+    protected BaseActivity setHelpOverlayTitleAndMessage(String title, String message)
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title and message...");
         Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting title [%s] and message [%s]", title, message));
@@ -298,22 +310,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         this.viewModel.helpOverlayFragmentTitle = title;
         this.viewModel.helpOverlayFragmentMessage = message;
-    }
 
-    protected void addHelpOverlayFragment(String title, CharSequence message)
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
-
-        this.viewModel.isHelpOverlayAdded = true;
-        this.viewModel.helpOverlayFragmentTitle = title;
-        this.viewModel.helpOverlayFragmentMessage = message;
+        return this;
     }
 
     private boolean showHelpOverlayFragment()
     {
         if(this.helpOverlayFragment == null)
         {
-            this.createHelpOverlayFragment();
+            this.instantiateHelpOverlayFragment();
         }
 
         Log.i(Constants.LOG_TAG, "BaseActivity.showHelpOverlayFragment:: showing HelpOverlayFragment");
@@ -324,7 +329,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return true;
     }
 
-    private void createHelpOverlayFragment()
+    private void instantiateHelpOverlayFragment()
     {
         if(this.helpOverlayFragment == null)
         {
@@ -374,20 +379,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-
-
-    protected void addToolbar()
+    protected BaseActivity createToolbar()
     {
-        Toolbar toolbar = this.fetchToolbar();
-        if(toolbar != null)
-        {
-            toolbar.setVisibility(View.VISIBLE);
-            setSupportActionBar(toolbar);
-            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
-        }
+        Log.d(Constants.LOG_TAG, "BaseActivity.addToolbar:: setting toolbar...");
+        setSupportActionBar(toolbar);
+
+        return this;
     }
 
-    protected void addToolbarHomeButton()
+    protected BaseActivity addToolbarHomeButton()
     {
         if(getSupportActionBar() != null)
         {
@@ -396,23 +396,25 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            Toolbar toolbar = this.fetchToolbar();
-
-            if(toolbar != null)
+            this.toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
-                this.fetchToolbar().setNavigationOnClickListener(new View.OnClickListener()
+                @Override
+                public void onClick(View view)
                 {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        onToolbarHomeButtonBackClicked();
-                    }
-                });
-            }
+                    Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button clicked...");
+                    onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
+                }
+            });
         }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: SupportActionBar not found");
+        }
+
+        return this;
     }
 
-    protected void addToolbarMenuIcon()
+    protected BaseActivity addToolbarMenuIcon()
     {
         if(getSupportActionBar() != null)
         {
@@ -421,15 +423,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
         }
+        else
+        {
+            Log.e(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: SupportActionBar not found");
+        }
+
+        return this;
     }
 
-    protected   void onToolbarHomeButtonBackClicked()
-    {
-        Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button pressed...");
-        this.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
-    }
-
-    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
+    protected BaseActivity setToolbarTitleAndSubtitle(String title, String subtitle)
     {
         if(getSupportActionBar() != null)
         {
@@ -457,29 +459,19 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Log.e(Constants.LOG_TAG, "BaseActivity.setToolbarTitleAndSubtitle:: SupportActionBar not found");
         }
+
+        return this;
     }
 
-    protected void setToolbarOnClickListener(View.OnClickListener onClickListener)
+    protected BaseActivity setToolbarOnClickListener(View.OnClickListener onClickListener)
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.setToolbarOnClickListener:: setting onClickListener");
-        this.fetchToolbar().setOnClickListener(onClickListener);
+        this.toolbar.setOnClickListener(onClickListener);
+
+        return this;
     }
 
-    public Toolbar fetchToolbar()
-    {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if(toolbar != null)
-        {
-            return toolbar;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.fetchToolbar:: View<toolbar> not found");
-            return null;
-        }
-    }
-
-    protected void addFloatingActionButton()
+    protected void createFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 

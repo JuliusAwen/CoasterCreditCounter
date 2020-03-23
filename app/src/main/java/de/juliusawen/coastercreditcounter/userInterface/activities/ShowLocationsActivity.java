@@ -90,9 +90,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation);
         }
 
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.addHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
+        super.createToolbar()
+                .addToolbarHomeButton();
 
         this.setSelectionModeEnabled(this.viewModel.selectionMode);
     }

@@ -155,7 +155,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             case YEAR:
                 groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.YEAR);
 
-                if(App.preferences.expandLatestYearInListByDefault())
+                if(App.preferences.expandLatestYearHeaderByDefault())
                 {
                     SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
                     this.expandedItems.add(latestSpecialGroupHeader);
@@ -1078,18 +1078,26 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                     else
                     {
-                        IElement previouslySelectedItem = getLastSelectedItem();
-
-                        if(previouslySelectedItem != null)
+                        if(!selectedItem.isGroupHeader())
                         {
-                            selectedItemsInOrderOfSelection.remove(previouslySelectedItem);
-                            notifyItemChanged(items.indexOf(previouslySelectedItem));
-                            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedItem));
+                            IElement previouslySelectedItem = getLastSelectedItem();
+
+                            if(previouslySelectedItem != null)
+                            {
+                                selectedItemsInOrderOfSelection.remove(previouslySelectedItem);
+                                notifyItemChanged(items.indexOf(previouslySelectedItem));
+                                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedItem));
+                            }
+
+                            selectedItemsInOrderOfSelection.add(selectedItem);
+                            notifyItemChanged(items.indexOf(selectedItem));
+                            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
+                        }
+                        else
+                        {
+                            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s clicked - GroupHeaders are ignored.", selectedItem));
                         }
 
-                        selectedItemsInOrderOfSelection.add(selectedItem);
-                        notifyItemChanged(items.indexOf(selectedItem));
-                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
                     }
                 }
                 else

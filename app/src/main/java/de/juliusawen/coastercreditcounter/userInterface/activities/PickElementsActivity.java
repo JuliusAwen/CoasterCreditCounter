@@ -164,10 +164,10 @@ public class PickElementsActivity extends BaseActivity
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
-        super.addHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
-        super.addToolbar();
-        super.addToolbarHomeButton();
-        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
+        super.createToolbar()
+                .addToolbarHomeButton()
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         this.linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
         this.linearLayoutSelectAll.setVisibility(View.GONE);
@@ -176,7 +176,7 @@ public class PickElementsActivity extends BaseActivity
         {
             this.addSelectOrDeselectAllBar();
 
-            super.addFloatingActionButton();
+            super.createFloatingActionButton();
             this.decorateFloatingActionButtonCheck();
         }
 
@@ -218,16 +218,7 @@ public class PickElementsActivity extends BaseActivity
                     }
                 }
                 this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
-
-                if(this.viewModel.elementsToPickFrom.size() > 1)
-                {
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                }
-                else
-                {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: only one element remaining in ElementsToPickFrom - returning element");
-                    returnResult(RESULT_OK, this.viewModel.elementsToPickFrom.get(0));
-                }
+                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
             }
         }
     }
@@ -574,7 +565,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: pressed");
+                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: clicked");
 
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
@@ -638,8 +629,12 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(PickElementsActivity.this.viewModel.isSinglePick)
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
-                    returnResult(RESULT_OK, null);
+                    IElement pickedElement = (IElement)view.getTag();
+                    if(!pickedElement.isGroupHeader())
+                    {
+                        Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
+                        returnResult(RESULT_OK, pickedElement);
+                    }
                 }
                 else
                 {
@@ -724,7 +719,7 @@ public class PickElementsActivity extends BaseActivity
             }
             else
             {
-                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning created %s", element));
+                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning picked %s", element));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             }
         }
