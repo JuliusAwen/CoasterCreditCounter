@@ -163,11 +163,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
         }
 
-        if(groupedItems.size() == 1 && groupType != GroupType.YEAR && App.preferences.expandSingleGroupHeaderByDefault())
-        {
-            this.expandedItems.add(groupedItems.get(0));
-        }
-
         this.items = this.initializeItems(groupedItems, 0);
         notifyDataSetChanged();
 

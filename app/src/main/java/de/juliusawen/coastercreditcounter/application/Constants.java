@@ -50,7 +50,6 @@ public abstract class Constants
 
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
     public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";
-    public static final String JSON_STRING_EXPAND_SINGLE_GROUP_HEADER = "expand single group header";
     public static final String JSON_STRING_FIRST_DAY_OF_THE_WEEK = "first day of the week";
     public static final String JSON_STRING_INCREMENT = "increment";
 

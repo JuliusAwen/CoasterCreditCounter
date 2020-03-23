@@ -132,7 +132,6 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForContentType(IProperty.class, Typeface.BOLD)
                             .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
                     break;
                 }

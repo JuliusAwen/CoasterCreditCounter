@@ -146,66 +146,86 @@ public class CreateAttractionActivity extends BaseActivity
             switch(RequestCode.getValue(requestCode))
             {
                 case PICK_CREDIT_TYPE:
-                    this.updateLayoutCreditType(App.content.containsElement(this.viewModel.creditType)
-                            ? this.viewModel.creditType
-                            : CreditType.getDefault());
+                {
+                    if(!App.content.containsElement(this.viewModel.creditType))
+                    {
+                        this.updateLayoutCreditType(CreditType.getDefault());
+                    }
                     break;
+                }
 
                 case PICK_CATEGORY:
-                    this.updateLayoutCategory(App.content.containsElement(this.viewModel.category)
-                            ? this.viewModel.category
-                            : Category.getDefault());
+                {
+                    if(!App.content.containsElement(this.viewModel.category))
+                    {
+                        this.updateLayoutCategory(Category.getDefault());
+                    }
                     break;
+                }
 
                 case PICK_MANUFACTURER:
-                    this.updateLayoutManufacturer(App.content.containsElement(this.viewModel.manufacturer)
-                            ? this.viewModel.manufacturer
-                            : Manufacturer.getDefault());
+                {
+                    if(!App.content.containsElement(this.viewModel.manufacturer))
+                    {
+                        this.updateLayoutManufacturer(Manufacturer.getDefault());
+                    }
                     break;
+                }
 
                 case PICK_STATUS:
-                    this.updateLayoutStatus(App.content.containsElement(this.viewModel.status)
-                            ? this.viewModel.status
-                            : Status.getDefault());
+                {
+                    if(!App.content.containsElement(this.viewModel.status))
+                    {
+                        this.updateLayoutStatus(Status.getDefault());
+                    }
                     break;
+                }
             }
         }
         else if(resultCode == RESULT_OK) // a Property was selected in PickPropertyActivity
         {
             IElement pickedElement = ResultFetcher.fetchResultElement(data);
-
-            if(App.config.isDebugBuild() && pickedElement == null)
+            if(pickedElement != null)
             {
-                Toaster.makeShortToast(this, "RESULT OK - NO PROPERTY FETCHED!");
-            }
+                switch(RequestCode.getValue(requestCode))
+                {
+                    case PICK_CREDIT_TYPE:
+                    {
+                        this.updateLayoutCreditType((CreditType)pickedElement);
+                        break;
+                    }
 
-            switch(RequestCode.getValue(requestCode))
+                    case PICK_CATEGORY:
+                    {
+                        this.updateLayoutCategory((Category)pickedElement);
+                        break;
+                    }
+
+                    case PICK_MANUFACTURER:
+                    {
+                        this.updateLayoutManufacturer((Manufacturer)pickedElement);
+                        break;
+                    }
+
+                    case PICK_STATUS:
+                    {
+                        this.updateLayoutStatus((Status)pickedElement);
+                        break;
+                    }
+                }
+
+                Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.onActivityResult:: picked %s", pickedElement));
+            }
+            else
             {
-                case PICK_CREDIT_TYPE:
-                    this.updateLayoutCreditType(pickedElement != null
-                            ? (CreditType)pickedElement
-                            : this.viewModel.creditType);
-                    break;
+                Log.e(Constants.LOG_TAG, String.format("CreateAttractionActivity.onActivityResult:: result OK but no picked Element returned for RequestCode [%s]",
+                        RequestCode.getValue(requestCode)));
 
-                case PICK_CATEGORY:
-                    this.updateLayoutCategory(pickedElement != null
-                            ? (Category)pickedElement
-                            : this.viewModel.category);
-                    break;
-
-                case PICK_MANUFACTURER:
-                    this.updateLayoutManufacturer(pickedElement != null
-                            ? (Manufacturer)pickedElement
-                            : this.viewModel.manufacturer);
-                    break;
-
-                case PICK_STATUS:
-                    this.updateLayoutStatus(pickedElement != null
-                            ? (Status)pickedElement
-                            : this.viewModel.status);
-                    break;
+                if(App.config.isDebugBuild())
+                {
+                    Toaster.makeLongToast(this, "result OK but no picked Element returned");
+                }
             }
-            Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.onActivityResult:: picked %s", pickedElement));
         }
     }
 

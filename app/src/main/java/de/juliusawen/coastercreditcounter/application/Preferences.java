@@ -28,7 +28,6 @@ public class Preferences implements IPersistable
     private ArrayList<DetailType> detailsOrder = new ArrayList<>();
 
     private boolean expandLatestYearHeaderByDefault;
-    private boolean expandSingleGroupHeaderByDefault;
 
 
 
@@ -131,7 +130,6 @@ public class Preferences implements IPersistable
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearHeaderByDefault(true);
-        this.setExpandSingleGroupHeaderByDefault(true);
         this.setFirstDayOfTheWeek(Calendar.MONDAY);
         this.setIncrement(1);
         this.setDetailsOrder(this.getDefaultDetailsOrder());
@@ -183,17 +181,6 @@ public class Preferences implements IPersistable
         Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearHeaderByDefault:: set to [%S]", expandLatestYearHeaderByDefault));
     }
 
-    public boolean expandSingleGroupHeaderByDefault()
-    {
-        return this.expandSingleGroupHeaderByDefault;
-    }
-
-    public void setExpandSingleGroupHeaderByDefault(boolean expandSingleGroupHeaderByDefault)
-    {
-        this.expandSingleGroupHeaderByDefault = expandSingleGroupHeaderByDefault;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandSingleGroupHeaderByDefault:: set to [%S]", expandSingleGroupHeaderByDefault));
-    }
-
     public int getFirstDayOfTheWeek()
     {
         return this.firstDayOfTheWeek;
@@ -233,7 +220,6 @@ public class Preferences implements IPersistable
 
             jsonObjectPreferences.put(Constants.JSON_STRING_DEFAULT_SORT_ORDER, this.getDefaultSortOrder().ordinal());
             jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_LATEST_YEAR_HEADER, this.expandLatestYearHeaderByDefault());
-            jsonObjectPreferences.put(Constants.JSON_STRING_EXPAND_SINGLE_GROUP_HEADER, this.expandSingleGroupHeaderByDefault());
             jsonObjectPreferences.put(Constants.JSON_STRING_FIRST_DAY_OF_THE_WEEK, this.getFirstDayOfTheWeek());
             jsonObjectPreferences.put(Constants.JSON_STRING_INCREMENT, this.getIncrement());
 
