@@ -23,7 +23,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
@@ -170,7 +169,6 @@ public class EditAttractionActivity extends BaseActivity
                     }
                     break;
                 }
-
                 case PICK_CREDIT_TYPE:
                 {
                     if(!App.content.containsElement(this.viewModel.creditType))
@@ -179,7 +177,6 @@ public class EditAttractionActivity extends BaseActivity
                     }
                     break;
                 }
-
                 case PICK_CATEGORY:
                 {
                     if(!App.content.containsElement(this.viewModel.category))
@@ -188,7 +185,6 @@ public class EditAttractionActivity extends BaseActivity
                     }
                     break;
                 }
-
                 case PICK_MANUFACTURER:
                 {
                     if(!App.content.containsElement(this.viewModel.manufacturer))
@@ -197,7 +193,6 @@ public class EditAttractionActivity extends BaseActivity
                     }
                     break;
                 }
-
                 case PICK_STATUS:
                 {
                     if(!App.content.containsElement(this.viewModel.status))
@@ -220,25 +215,21 @@ public class EditAttractionActivity extends BaseActivity
                         this.updateLayoutBlueprint((Blueprint) pickedElement);
                         break;
                     }
-
                     case PICK_CREDIT_TYPE:
                     {
                         this.updateLayoutCreditType((CreditType)pickedElement);
                         break;
                     }
-
                     case PICK_CATEGORY:
                     {
                         this.updateLayoutCategory((Category)pickedElement);
                         break;
                     }
-
                     case PICK_MANUFACTURER:
                     {
                         this.updateLayoutManufacturer((Manufacturer)pickedElement);
                         break;
                     }
-
                     case PICK_STATUS:
                     {
                         this.updateLayoutStatus((Status)pickedElement);
@@ -270,6 +261,7 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View view)
             {
                 boolean somethingWentWrong = false;
+                boolean somethingChanged = false;
 
                 viewModel.name = editTextAttractionName.getText().toString();
                 Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.onClickFab:: attraction name entered [%s]", viewModel.name));
@@ -295,24 +287,21 @@ public class EditAttractionActivity extends BaseActivity
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_number_not_valid));
                 }
 
+                if(!viewModel.attraction.getName().equals(viewModel.name))
+                {
+                    if(viewModel.attraction.setName(viewModel.name))
+                    {
+                        somethingChanged = true;
+                    }
+                    else
+                    {
+                        somethingWentWrong = true;
+                        Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_name_not_valid));
+                    }
+                }
 
                 if(!somethingWentWrong)
                 {
-                    boolean somethingChanged = false;
-
-                    if(!viewModel.attraction.getName().equals(viewModel.name))
-                    {
-                        if(viewModel.attraction.setName(viewModel.name))
-                        {
-                            somethingChanged = true;
-                        }
-                        else
-                        {
-                            somethingWentWrong = true;
-                            Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_name_not_valid));
-                        }
-                    }
-
                     if(viewModel.attraction.hasCreditType())
                     {
                         if(!viewModel.attraction.getCreditType().equals(viewModel.creditType))
@@ -355,23 +344,24 @@ public class EditAttractionActivity extends BaseActivity
                         somethingChanged = true;
                     }
 
-                    if(!somethingWentWrong && somethingChanged)
+                    if(viewModel.attraction.isStockAttraction())
                     {
-                        markForUpdate(viewModel.attraction);
+                        if(!((StockAttraction)viewModel.attraction).getBlueprint().equals(viewModel.blueprint))
+                        {
+                            markForUpdate(((StockAttraction)viewModel.attraction).getBlueprint());
+                            ((StockAttraction)viewModel.attraction).changeBlueprint(viewModel.blueprint);
+                            somethingChanged = true;
+                        }
                     }
 
-                    if(!somethingWentWrong)
+                    if(somethingChanged)
                     {
-                        if(somethingChanged)
-                        {
-                            returnResult(RESULT_OK);
-                        }
-                        else
-                        {
-                            returnResult(RESULT_CANCELED);
-                        }
+                        markForUpdate(viewModel.attraction);
+                        returnResult(RESULT_OK);
                     }
                 }
+
+                returnResult(RESULT_CANCELED);
             }
         });
 
@@ -415,7 +405,8 @@ public class EditAttractionActivity extends BaseActivity
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "EditAttractionActivity.updateLayoutBlueprint:: no Blueprint available %s...");
+            this.textViewBlueprint.setText(R.string.blueprint_not_available);
+            Log.d(Constants.LOG_TAG, "EditAttractionActivity.updateLayoutBlueprint:: no Blueprint available");
         }
 
         this.viewModel.blueprint = blueprint;
@@ -558,33 +549,6 @@ public class EditAttractionActivity extends BaseActivity
                 return handled;
             }
         };
-    }
-
-    private boolean createAttraction() //adjust to make it work for Blueprints
-    {
-        boolean success = false;
-        IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount);
-
-        //        IAttraction attraction = Blueprint.create(this.editTextAttractionName.getText().toString());
-        //
-        //        IAttraction attraction = StockAttraction.create(this.editTextAttractionName.getText().toString(), Blueprint.create("unnamed"));
-
-        if(attraction != null)
-        {
-            this.viewModel.attraction = attraction;
-            this.viewModel.attraction.setCreditType(this.viewModel.creditType);
-            this.viewModel.attraction.setCategory(this.viewModel.category);
-            this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
-            this.viewModel.attraction.setStatus(this.viewModel.status);
-            this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
-
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.createAttraction:: created %s", this.viewModel.attraction.getFullName()));
-
-            success = true;
-        }
-
-        Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.createAttraction:: created successfuly [%S]", success));
-        return success;
     }
 
     private void returnResult(int resultCode)

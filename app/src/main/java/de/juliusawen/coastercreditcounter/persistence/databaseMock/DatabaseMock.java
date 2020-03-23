@@ -450,7 +450,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         lostGravity.setManufacturer(manufacturers.Mack);
         walibiHolland.addChildAndSetParent(lostGravity);
 
-
         CustomAttraction xpressPlatform13 = CustomAttraction.create("Xpress: Platform 13", 2);
         xpressPlatform13.setCreditType(creditTypes.RollerCoaster);
         xpressPlatform13.setCategory(categories.RollerCoasters);
@@ -1839,14 +1838,14 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void flattenContentTree(IElement element)
     {
-        if(!App.content.containsElement(element))
+        if(App.content.containsElement(element))
         {
-            Log.v(Constants.LOG_TAG, String.format("DatabaseMock.flattenContentTree:: adding %s to content", element));
-            App.content.addElement(element);
+            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: not adding %s to content as it is already known", element));
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: not adding %s to content as it is already known", element));
+            Log.v(Constants.LOG_TAG, String.format("DatabaseMock.flattenContentTree:: adding %s to content", element));
+            App.content.addElement(element);
         }
 
         for (IElement child : element.getChildren())

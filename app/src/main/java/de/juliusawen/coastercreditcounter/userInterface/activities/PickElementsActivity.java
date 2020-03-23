@@ -629,7 +629,12 @@ public class PickElementsActivity extends BaseActivity
                 if(PickElementsActivity.this.viewModel.isSinglePick)
                 {
                     IElement pickedElement = (IElement)view.getTag();
-                    if(!pickedElement.isGroupHeader())
+                    if(pickedElement.isGroupHeader())
+                    {
+                        viewModel.contentRecyclerViewAdapter.toggleExpansion(pickedElement);
+
+                    }
+                    else
                     {
                         Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
                         returnResult(RESULT_OK, pickedElement);

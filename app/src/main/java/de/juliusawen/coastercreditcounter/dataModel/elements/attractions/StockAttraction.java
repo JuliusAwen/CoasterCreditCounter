@@ -29,6 +29,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
         super(name, untrackedRideCount, uuid);
         this.blueprint = blueprint;
         this.blueprint.addChild(this);
+        this.blueprint.increaseTotalRideCount(untrackedRideCount);
     }
 
     public static StockAttraction create(String name, Blueprint blueprint)
@@ -71,6 +72,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     @Override
     public void deleteElement()
     {
+        this.blueprint.decreaseTotalRideCount(this.getTotalRideCount());
         this.blueprint.deleteChild(this);
         super.deleteElement();
     }
@@ -84,9 +86,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     @Override
     public void setCreditType(CreditType creditType)
     {
-        String errorMessage = String.format("StockAttraction.setCreditType:: %s: StockAttractions can not have CreditType", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
-        throw new IllegalStateException(errorMessage);
+        Log.v(Constants.LOG_TAG,  String.format("StockAttraction.setCreditType:: %s: StockAttractions can not have CreditType", this));
     }
 
     @Override
@@ -98,9 +98,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     @Override
     public void setCategory(Category category)
     {
-        String errorMessage = String.format("StockAttraction.setCategory:: %s: StockAttractions can not have Category", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
-        throw new IllegalStateException(errorMessage);
+        Log.v(Constants.LOG_TAG,  String.format("StockAttraction.setCategory:: %s: StockAttractions can not have Category\"", this));
     }
 
     @Override
@@ -112,9 +110,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     @Override
     public void setManufacturer(Manufacturer manufacturer)
     {
-        String errorMessage = String.format("StockAttraction.setManufacturer:: %s: StockAttractions can not have Manufacturer", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
-        throw new IllegalStateException(errorMessage);
+        Log.v(Constants.LOG_TAG,  String.format("StockAttraction.setCategory:: %s: StockAttractions can not have Manufacturer\"", this));
     }
 
     @Override

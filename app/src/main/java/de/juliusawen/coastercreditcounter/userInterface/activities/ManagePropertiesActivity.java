@@ -266,7 +266,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 updateContentRecyclerView(false);
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
-                Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions", this.viewModel.longClickedElement, resultElements.size()));
+                Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
+                        this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
         }
 
@@ -505,7 +506,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                        attraction, viewModel.longClickedElement));
                                 categorizedElements.remove(attraction);
                             }
                         }
@@ -526,7 +528,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                        attraction, viewModel.longClickedElement));
                                 categorizedElements.remove(attraction);
                             }
                         }
@@ -546,7 +549,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                        attraction, viewModel.longClickedElement));
                                 categorizedElements.remove(attraction);
                             }
                         }
@@ -567,7 +571,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                        attraction, viewModel.longClickedElement));
                                 categorizedElements.remove(attraction);
                             }
                         }
