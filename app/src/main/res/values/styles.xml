@@ -21,7 +21,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginStart">16sp</item>
         <item name="android:layout_marginEnd">16sp</item>
-        <item name="android:layout_marginBottom">12sp</item>
+        <item name="android:layout_marginBottom">6sp</item>
     </style>
 
     <style name="CreateOrEditAttractionSelectBarLayout" parent="CreateOrEditAttractionBarLayout">
@@ -108,10 +108,6 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">32sp</item>
         <item name="android:background">@color/default_color</item>
-    </style>
-
-    <style name="CreateOrEditPickImageHolder" parent="StandardImageHolder">
-        <item name="android:layout_gravity">end|center_horizontal|center_vertical</item>
     </style>
 
 

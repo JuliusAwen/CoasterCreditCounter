@@ -52,6 +52,8 @@
     <string name="error_undo_not_possible">UNDO is not possible…</string>
     <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected!</string>
+    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint!</string>
+
     <string name="error_missing_text">-text is missing-</string>
 
 
@@ -224,6 +226,7 @@
     <string name="title_edit_blueprint">Edit Blueprint</string>
     <string name="title_pick_blueprint">Pick Blueprint</string>
     <string name="blueprint_not_available">No Blueprint available</string>
+    <string name="blueprint_not_selected">none</string>
     <string name="header_blueprint">Blueprint:</string>
 
 
@@ -344,3 +347,4 @@
     <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
 
 </resources>
+
