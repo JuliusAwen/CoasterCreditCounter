@@ -13,265 +13,193 @@
 
         <EditText
             style="@style/StandardEditText"
+            android:textSize="16sp"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
             android:id="@+id/editTextCreateOrEditAttractionName"
             android:hint="@string/hint_enter_attraction_name"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12dp"
-            tools:ignore="Autofill"
-            android:imeOptions="actionDone"/>
+            tools:ignore="Autofill"/>
 
         <LinearLayout
-            style="@style/StandardBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
-            android:background="?selectableItemBackground">
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_blueprint"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Blueprint"
+                android:width="0sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"/>
 
             <LinearLayout
-                style="@style/StandardBarLayout"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="top">
 
-                <TextView
-                    style="@style/CreateOrEditAttractionTextView"
-                    android:textStyle="bold"
-                    android:text="@string/header_blueprint"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/StandardImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"
-                        android:contentDescription="@string/description_image_view" />
-
-                    <TextView
-                        style="@style/CreateOrEditAttractionTextView"
-                        android:id="@+id/textViewCreateOrEditAttraction_Blueprint"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"/>
-
-                </LinearLayout>
+                <ImageView
+                    style="@style/CreateOrEditPickImageHolder"
+                    android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"
+                    android:contentDescription="@string/description_image_view" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            style="@style/StandardBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_CreditType"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
-            android:background="?selectableItemBackground">
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_CreditType">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_credit_type"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_CreditType"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
 
             <LinearLayout
-                style="@style/StandardBarLayout"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="top">
 
-                <TextView
-                    style="@style/CreateOrEditAttractionTextView"
-                    android:textStyle="bold"
-                    android:text="@string/header_credit_type"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/StandardImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_PickCreditType"
-                        android:contentDescription="@string/description_image_view" />
-
-                    <TextView
-                        style="@style/CreateOrEditAttractionTextView"
-                        android:id="@+id/textViewCreateOrEditAttraction_CreditType"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"/>
-
-                </LinearLayout>
+                <ImageView
+                    style="@style/CreateOrEditPickImageHolder"
+                    android:id="@+id/imageViewCreateOrEditAttraction_PickCreditType"
+                    android:contentDescription="@string/description_image_view" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            style="@style/StandardBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Category"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
-            android:background="?selectableItemBackground">
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Category">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_category"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Category"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
 
             <LinearLayout
-                style="@style/StandardBarLayout"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="top">
 
-                <TextView
-                    style="@style/CreateOrEditAttractionTextView"
-                    android:textStyle="bold"
-                    android:text="@string/header_category"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/StandardImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_PickCategory"
-                        android:contentDescription="@string/description_image_view" />
-
-                    <TextView
-                        style="@style/CreateOrEditAttractionTextView"
-                        android:id="@+id/textViewCreateOrEditAttraction_Category"/>
-
-                </LinearLayout>
+                <ImageView
+                    style="@style/CreateOrEditPickImageHolder"
+                    android:id="@+id/imageViewCreateOrEditAttraction_PickCategory"
+                    android:contentDescription="@string/description_image_view" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            style="@style/StandardBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
-            android:background="?selectableItemBackground">
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_manufacturer"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
 
             <LinearLayout
-                style="@style/StandardBarLayout"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="top">
 
-                <TextView
-                    style="@style/CreateOrEditAttractionTextView"
-                    android:textStyle="bold"
-                    android:text="@string/header_manufacturer"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/StandardImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_PickManufacturer"
-                        android:contentDescription="@string/description_image_view" />
-
-                    <TextView
-                        style="@style/CreateOrEditAttractionTextView"
-                        android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"/>
-
-                </LinearLayout>
+                <ImageView
+                    style="@style/CreateOrEditPickImageHolder"
+                    android:id="@+id/imageViewCreateOrEditAttraction_PickManufacturer"
+                    android:contentDescription="@string/description_image_view" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            style="@style/StandardBarLayout"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
-            android:background="?selectableItemBackground">
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Status">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_status"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Status"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
 
             <LinearLayout
-                style="@style/StandardBarLayout"
-                android:id="@+id/linearLayoutCreateOrEditAttraction_Status"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="top">
 
-                <TextView
-                    style="@style/CreateOrEditAttractionTextView"
-                    android:textStyle="bold"
-                    android:text="@string/header_status"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/StandardImageHolder"
-                        android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
-                        android:contentDescription="@string/description_image_view" />
-
-                    <TextView
-                        style="@style/CreateOrEditAttractionTextView"
-                        android:id="@+id/textViewCreateOrEditAttraction_Status"/>
-
-                </LinearLayout>
+                <ImageView
+                    style="@style/CreateOrEditPickImageHolder"
+                    android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
+                    android:contentDescription="@string/description_image_view" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            style="@style/CreateOrEditAttractionBarLayout"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12sp"
             android:orientation="horizontal">
 
             <TextView
-                style="@style/StandardTextView"
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="0dp"
+                android:gravity="start|center_vertical"
                 android:textStyle="bold"
                 android:text="@string/text_untracked_rides"/>
 
             <EditText
-                android:id="@+id/editTextCreateOrEditAttractionUntrackedRideCount"
                 style="@style/StandardEditText"
-                android:layout_width="match_parent"
-                android:layout_gravity="center_vertical"
-                android:hint="@string/hint_untracked_ride_count"
+                android:id="@+id/editTextCreateOrEditAttractionUntrackedRideCount"
+                android:layout_weight="1"
+                android:layout_width="0sp"
+                android:gravity="start|center_vertical"
                 android:inputType="number"
                 android:textSize="16sp"
                 tools:ignore="Autofill"
-                android:imeOptions="actionDone"/>
+                android:hint="@string/hint_untracked_ride_count"/>
 
         </LinearLayout>
+
+        <include
+            layout="@layout/bottom_spacer"/>
 
     </LinearLayout>
 

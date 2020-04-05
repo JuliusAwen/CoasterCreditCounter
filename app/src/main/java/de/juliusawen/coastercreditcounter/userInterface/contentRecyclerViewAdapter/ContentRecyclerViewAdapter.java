@@ -342,7 +342,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
 
             case BOTTOM_SPACER:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_bottom_spacer, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.bottom_spacer, viewGroup, false);
                 viewHolder = new ViewHolderBottomSpacer(view);
                 break;
 

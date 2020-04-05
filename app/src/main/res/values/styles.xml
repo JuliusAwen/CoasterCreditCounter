@@ -8,18 +8,32 @@
         <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
     </style>
 
+
+
+    <!--LAYOUT-->
+
     <style name="StandardBarLayout" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40sp</item>
     </style>
 
-    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
+    <style name="CreateOrEditAttractionBarLayout" parent="StandardBarLayout">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginStart">16sp</item>
+        <item name="android:layout_marginEnd">16sp</item>
+        <item name="android:layout_marginBottom">12sp</item>
     </style>
 
-    <style name="ToolbarSubtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
+    <style name="CreateOrEditAttractionSelectBarLayout" parent="CreateOrEditAttractionBarLayout">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:baselineAligned">false</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
+
+
+
+    <!--TEXT VIEW-->
 
     <style name="StandardTextView" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
@@ -48,10 +62,28 @@
     <style name="CreateOrEditAttractionTextView" parent="StandardTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
         <item name="android:gravity">start</item>
-        <item name="android:paddingStart">5dp</item>
-        <item name="android:paddingEnd">5dp</item>
+        <item name="android:padding">5dp</item>
     </style>
+
+
+
+    <!--EDIT TEXT-->
+
+    <style name="StandardEditText" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:imeOptions">actionDone|flagNoExtractUi</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <!--IMAGE HOLDER-->
 
     <style name="StandardImageHolder" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
@@ -78,16 +110,25 @@
         <item name="android:background">@color/default_color</item>
     </style>
 
-    <style name="StandardEditText" parent="AppTheme">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:inputType">textCapWords</item>
-        <item name="android:textCursorDrawable">@null</item>
-        <item name="android:imeOptions">actionDone|flagNoExtractUi</item>
-        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
-        <item name="android:gravity">start</item>
-        <item name="android:textSize">18sp</item>
+    <style name="CreateOrEditPickImageHolder" parent="StandardImageHolder">
+        <item name="android:layout_gravity">end|center_horizontal|center_vertical</item>
     </style>
+
+
+
+    <!--TOOLBAR-->
+
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
+    </style>
+
+    <style name="ToolbarSubtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
+    </style>
+
+
+
+    <!--NAVIGATION HEADER-->
 
     <style name="NavigationDrawerHeadline" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize" tools:ignore="SpUsage">22dp</item>
@@ -101,6 +142,10 @@
     <style name="NavigationDrawerItem">
         <item name="android:textSize">18sp</item>
     </style>
+
+
+
+    <!--POPUP MENU-->
 
     <style name="PopupMenuListView" parent="@style/Widget.AppCompat.ListView.DropDown">
         <item name="android:divider">#000000</item>

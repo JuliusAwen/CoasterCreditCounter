@@ -63,7 +63,7 @@
 
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
-    <string name="hint_untracked_ride_count">Enter number of rides so far</string>
+    <string name="hint_untracked_ride_count">Enter previous count</string>
     <string name="hint_edit_element_name">Edit element name</string>
 
 
