@@ -1977,7 +1977,7 @@ class Manufacturers
     final Manufacturer Hafema = Manufacturer.create("Hafema");
     final Manufacturer PrestonAndBarbieri = Manufacturer.create("Preston & Barbieri");
     final Manufacturer Schwarzkopf = Manufacturer.create("Schwarzkopf");
-    final Manufacturer Mack = Manufacturer.create("Mack");
+    final Manufacturer Mack = Manufacturer.create("Mack Rides");
     final Manufacturer SAndS = Manufacturer.create("S&S");
     final Manufacturer SbfVisa = Manufacturer.create("SBF Visa Group");
     final Manufacturer Triotech = Manufacturer.create("Triotech");
