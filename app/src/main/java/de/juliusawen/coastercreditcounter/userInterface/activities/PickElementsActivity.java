@@ -632,7 +632,10 @@ public class PickElementsActivity extends BaseActivity
                     if(pickedElement.isGroupHeader())
                     {
                         viewModel.contentRecyclerViewAdapter.toggleExpansion(pickedElement);
-
+                        if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                        {
+                            invalidateOptionsMenu();
+                        }
                     }
                     else
                     {

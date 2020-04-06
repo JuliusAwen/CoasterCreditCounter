@@ -184,6 +184,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
+    public void invalidateOptionsMenu()
+    {
+        super.invalidateOptionsMenu();
+    }
+
+    @Override
     public void markForDeletion(IElement elementToDelete)
     {
         super.markForDeletion(elementToDelete, true);

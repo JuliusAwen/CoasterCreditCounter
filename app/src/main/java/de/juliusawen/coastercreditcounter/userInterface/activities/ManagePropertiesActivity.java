@@ -438,6 +438,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 if(element.isProperty())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    {
+                        invalidateOptionsMenu();
+                    }
                 }
             }
 

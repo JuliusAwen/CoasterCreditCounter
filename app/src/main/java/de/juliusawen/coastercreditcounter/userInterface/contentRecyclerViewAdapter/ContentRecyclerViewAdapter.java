@@ -68,7 +68,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private View.OnClickListener increaseRideCountOnClickListener;
     private View.OnClickListener decreaseRideCountOnClickListener;
-    private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
 
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
@@ -101,7 +100,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.setItems(request.elements);
 
-        this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
@@ -425,8 +423,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
             }
-
-            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
         }
         else
         {
@@ -803,27 +799,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         this.decreaseRideCountOnClickListener = decreaseOnClickListener;
         return this;
-    }
-
-    private View.OnClickListener getExpansionOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                final IElement item = (IElement) view.getTag();
-
-                if(!expandedItems.contains(item))
-                {
-                    expandItem(item);
-                }
-                else
-                {
-                    collapseItem(item, true);
-                }
-            }
-        };
     }
 
     public ContentRecyclerViewAdapter toggleExpansion(IElement item)

@@ -276,6 +276,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 else if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    {
+                        getActivity().invalidateOptionsMenu();
+                    }
                 }
             }
 
@@ -406,6 +410,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public interface ShowAttractionsFragmentInteraction
     {
+        void invalidateOptionsMenu();
         void markForUpdate(IElement elementToUpdate);
         void markForDeletion(IElement elemtToDelete);
     }

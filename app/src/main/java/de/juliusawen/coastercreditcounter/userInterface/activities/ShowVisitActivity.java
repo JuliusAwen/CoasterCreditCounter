@@ -303,6 +303,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    {
+                        invalidateOptionsMenu();
+                    }
                 }
                 else if(element.isAttraction())
                 {

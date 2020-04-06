@@ -233,6 +233,10 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 else if(element.isGroupHeader())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    {
+                        getActivity().invalidateOptionsMenu();
+                    }
                 }
             }
 
@@ -372,6 +376,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public interface ShowVisitsFragmentInteraction
     {
+        void invalidateOptionsMenu();
         void markForDeletion(IElement elementToDelete);
         void markForUpdate(IElement elementToDelete);
     }

@@ -241,6 +241,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     if(element.isLocation())
                     {
                         viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                        if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                        {
+                            invalidateOptionsMenu();
+                        }
+
                     }
                     else if(element.isPark())
                     {
