@@ -273,8 +273,12 @@ public class PickElementsActivity extends BaseActivity
             case PICK_BLUEPRINT:
             {
                 this.viewModel.optionsMenuAgent
+                        .add(OptionsItem.SORT)
+                            .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
                         .add(OptionsItem.EXPAND_ALL)
-                        .add(OptionsItem.COLLAPSE_ALL);
+                        .add(OptionsItem.COLLAPSE_ALL)
+                        .add(OptionsItem.GO_TO_MANAGE_PROPERTIES);
                 break;
             }
         }
@@ -321,34 +325,31 @@ public class PickElementsActivity extends BaseActivity
                             .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
                 break;
             }
+
+            case PICK_BLUEPRINT:
+                boolean isExpandable = this.isExpandable();
+                this.viewModel.optionsMenuAgent
+                        .setVisible(OptionsItem.EXPAND_ALL, isExpandable && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setVisible(OptionsItem.COLLAPSE_ALL, isExpandable && this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+                break;
         }
 
-        boolean isExpandable = this.isExpandable();
-
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, isExpandable && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, isExpandable && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setEnabled(OptionsItem.SORT, this.viewModel.elementsToPickFrom.size() > 1)
                 .prepare(menu);
     }
 
     private boolean isExpandable()
     {
-        if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
+        for(IElement element : this.viewModel.elementsToPickFrom)
         {
-            return true;
-        }
-        else
-        {
-            for(IElement element : this.viewModel.elementsToPickFrom)
+            if(element.hasChildren())
             {
-                if(element.hasChildren())
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 
     @Override
@@ -433,7 +434,7 @@ public class PickElementsActivity extends BaseActivity
                 return true;
 
             default:
-                return false;
+                return super.handleOptionsItemSelected(item);
         }
     }
 
@@ -483,6 +484,16 @@ public class PickElementsActivity extends BaseActivity
                     break;
             }
             this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
+        }
+        else if(this.viewModel.requestCode == RequestCode.PICK_BLUEPRINT)
+        {
+            if(groupType.equals(GroupType.CATEGORY))
+            {
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .groupItems(GroupType.CATEGORY);
+            }
         }
         else
         {
@@ -536,6 +547,10 @@ public class PickElementsActivity extends BaseActivity
     {
         switch(viewModel.requestCode)
         {
+            case PICK_BLUEPRINT:
+                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_BLUEPRINTS);
+                break;
+
             case PICK_CREDIT_TYPE:
                 ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
                 break;
