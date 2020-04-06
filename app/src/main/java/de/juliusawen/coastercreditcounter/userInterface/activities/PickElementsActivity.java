@@ -104,7 +104,7 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
-                            this.setDetailModesAndGroupElements(GroupType.CATEGORY);
+                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
 
@@ -119,7 +119,7 @@ public class PickElementsActivity extends BaseActivity
                             false)
                             .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                             .groupItems(GroupType.CATEGORY);
-
+                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
 
