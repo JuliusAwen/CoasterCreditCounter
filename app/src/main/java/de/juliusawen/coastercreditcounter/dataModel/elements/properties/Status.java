@@ -30,7 +30,7 @@ public final class Status extends Element implements IProperty
     public static Status create(String name, UUID uuid)
     {
         Status status = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             status = new Status(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Status.create:: %s created", status));

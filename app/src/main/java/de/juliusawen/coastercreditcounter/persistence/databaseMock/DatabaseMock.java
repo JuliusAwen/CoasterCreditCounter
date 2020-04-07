@@ -1968,7 +1968,7 @@ class Manufacturers
     final Manufacturer BolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard");
     final Manufacturer Intamin = Manufacturer.create("Intamin");
     final Manufacturer Vekoma = Manufacturer.create("Vekoma");
-    final Manufacturer Huss = Manufacturer.create("Huss");
+    final Manufacturer Huss = Manufacturer.create("HUSS");
     final Manufacturer Pinfari = Manufacturer.create("Pinfari");
     final Manufacturer MaurerRides = Manufacturer.create("Mauerer Rides");
     final Manufacturer EtfRideSystems = Manufacturer.create("ETF Ride Systems");

@@ -26,10 +26,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
@@ -63,7 +60,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final boolean selectMultipleItems;
     private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
 
-
+    private boolean useDedicatedExpansionOnClickListener;
+    private final View.OnClickListener expansionOnClickListener;
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
 
     private View.OnClickListener increaseRideCountOnClickListener;
@@ -78,17 +76,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
     private final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
 
-    private final HashMap<DetailType, Set<Class<? extends IAttraction>>> contentTypesByDetailType = new HashMap<>();
-
-    private final HashMap<DetailType, DetailDisplayMode> displayModesByDetailType = new HashMap<>();
+    private HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {
         this.contentRecyclerViewAdapterType = request.contentRecyclerViewAdapterType;
         this.selectMultipleItems = request.selectMultiple;
 
-        this.populateContentTypesByDetailType();
-        this.populateDisplayModesByDetailType();
+        this.initializeContentTypesByDetailDisplayModeByDetailType();
 
         this.groupHeaderProvider = new GroupHeaderProvider();
         this.groupType = GroupType.NONE;
@@ -100,9 +95,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.setItems(request.elements);
 
+        this.expansionOnClickListener = this.getExpansionOnClickListener();
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
-
 
     public ContentRecyclerViewAdapter setItems(List<IElement> items)
     {
@@ -188,51 +183,37 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return initializedItems;
     }
 
-    private void populateContentTypesByDetailType()
+    private void initializeContentTypesByDetailDisplayModeByDetailType()
     {
-        Set<Class<? extends IAttraction>> typesForWhichDisplayLocationDetail = new HashSet<>();
-        typesForWhichDisplayLocationDetail.add(CustomAttraction.class);
-        typesForWhichDisplayLocationDetail.add(StockAttraction.class);
-        typesForWhichDisplayLocationDetail.add(Blueprint.class); // as blueprints are not on site attractions, they have no location and "blueprint" is displayed instead
-        this.contentTypesByDetailType.put(DetailType.LOCATION, typesForWhichDisplayLocationDetail);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayModeLocation = new HashMap<>();
+        contentTypesByDetailDisplayModeLocation.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayModeLocation.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.LOCATION, contentTypesByDetailDisplayModeLocation);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayCreditTypeDetail = new HashSet<>();
-        typesForWhichDisplayCreditTypeDetail.add(CustomAttraction.class);
-        typesForWhichDisplayCreditTypeDetail.add(StockAttraction.class);
-        typesForWhichDisplayCreditTypeDetail.add(Blueprint.class);
-        this.contentTypesByDetailType.put(DetailType.CREDIT_TYPE, typesForWhichDisplayCreditTypeDetail);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayModeCreditType = new HashMap<>();
+        contentTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.CREDIT_TYPE, contentTypesByDetailDisplayModeCreditType);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayCategoryDetail = new HashSet<>();
-        typesForWhichDisplayCategoryDetail.add(CustomAttraction.class);
-        typesForWhichDisplayCategoryDetail.add(StockAttraction.class);
-        typesForWhichDisplayCategoryDetail.add(Blueprint.class);
-        this.contentTypesByDetailType.put(DetailType.CATEGORY, typesForWhichDisplayCategoryDetail);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayModeCategory = new HashMap<>();
+        contentTypesByDetailDisplayModeCategory.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayModeCategory.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.CATEGORY, contentTypesByDetailDisplayModeCategory);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayManufacturerDetail = new HashSet<>();
-        typesForWhichDisplayManufacturerDetail.add(CustomAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(StockAttraction.class);
-        typesForWhichDisplayManufacturerDetail.add(Blueprint.class);
-        this.contentTypesByDetailType.put(DetailType.MANUFACTURER, typesForWhichDisplayManufacturerDetail);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayManufacturer = new HashMap<>();
+        contentTypesByDetailDisplayManufacturer.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayManufacturer.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.MANUFACTURER, contentTypesByDetailDisplayManufacturer);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayStatusDetail = new HashSet<>();
-        typesForWhichDisplayStatusDetail.add(CustomAttraction.class);
-        typesForWhichDisplayStatusDetail.add(StockAttraction.class);
-        this.contentTypesByDetailType.put(DetailType.STATUS, typesForWhichDisplayStatusDetail);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayStatus = new HashMap<>();
+        contentTypesByDetailDisplayStatus.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayStatus.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.STATUS, contentTypesByDetailDisplayStatus);
 
-        Set<Class<? extends IAttraction>> typesForWhichDisplayTotalRideCountDetail = new HashSet<>();
-        typesForWhichDisplayTotalRideCountDetail.add(CustomAttraction.class);
-        typesForWhichDisplayTotalRideCountDetail.add(StockAttraction.class);
-        this.contentTypesByDetailType.put(DetailType.TOTAL_RIDE_COUNT, typesForWhichDisplayTotalRideCountDetail);
-    }
-
-    private void populateDisplayModesByDetailType()
-    {
-        this.displayModesByDetailType.put(DetailType.LOCATION, DetailDisplayMode.OFF);
-        this.displayModesByDetailType.put(DetailType.CREDIT_TYPE, DetailDisplayMode.OFF);
-        this.displayModesByDetailType.put(DetailType.CATEGORY, DetailDisplayMode.OFF);
-        this.displayModesByDetailType.put(DetailType.MANUFACTURER, DetailDisplayMode.OFF);
-        this.displayModesByDetailType.put(DetailType.STATUS, DetailDisplayMode.OFF);
-        this.displayModesByDetailType.put(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.OFF);
+        HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>> contentTypesByDetailDisplayTotalRideCount = new HashMap<>();
+        contentTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IAttraction>>());
+        contentTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IAttraction>>());
+        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.TOTAL_RIDE_COUNT, contentTypesByDetailDisplayTotalRideCount);
     }
 
     private static class ViewHolderItem extends RecyclerView.ViewHolder
@@ -429,6 +410,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
         }
 
+        if(this.useDedicatedExpansionOnClickListener)
+        {
+            viewHolder.imageViewExpandToggle.setOnClickListener(this.expansionOnClickListener);
+        }
 
 
         if(!this.formatAsPrettyPrint)
@@ -494,36 +479,40 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             if(item.isAttraction())
             {
                 //decorate details
-                boolean displayDetailAbove = false;
-                boolean displayDetailBelow = false;
 
-                for(Set<Class<? extends IAttraction>> types : this.contentTypesByDetailType.values())
+                Set<DetailType> detailTypesToDiplayAbove = new HashSet<>();
+                Set<DetailType> detailTypesToDisplayBelow = new HashSet<>();
+
+                for(DetailType detailType : this.contentTypesByDetailDisplayModeByDetailType.keySet())
                 {
-                    if(types.contains(item.getClass()))
+                    for(Class<? extends IAttraction> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.ABOVE))
                     {
-                        displayDetailBelow = this.displayModesByDetailType.containsValue(DetailDisplayMode.BELOW);
-                        break;
+                        if(contentType.isInstance(item))
+                        {
+                            detailTypesToDiplayAbove.add(detailType);
+                            break;
+                        }
+                    }
+
+                    for(Class<? extends IAttraction> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW))
+                    {
+                        if(contentType.isInstance(item))
+                        {
+                            detailTypesToDisplayBelow.add(detailType);
+                            break;
+                        }
                     }
                 }
 
-                for(Set<Class<? extends IAttraction>> types : this.contentTypesByDetailType.values())
+                if(detailTypesToDiplayAbove.size() > 0)
                 {
-                    if(types.contains(item.getClass()))
-                    {
-                        displayDetailAbove = this.displayModesByDetailType.containsValue(DetailDisplayMode.ABOVE);
-                        break;
-                    }
-                }
-
-                if(displayDetailAbove)
-                {
-                    viewHolder.textViewDetailAbove.setText(this.getSpannableDetailString(item, DetailDisplayMode.ABOVE));
+                    viewHolder.textViewDetailAbove.setText(this.getSpannableDetailString(item, detailTypesToDiplayAbove));
                     viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
                 }
 
-                if(displayDetailBelow)
+                if(detailTypesToDisplayBelow.size() > 0)
                 {
-                    viewHolder.textViewDetailBelow.setText(this.getSpannableDetailString(item, DetailDisplayMode.BELOW));
+                    viewHolder.textViewDetailBelow.setText(this.getSpannableDetailString(item, detailTypesToDisplayBelow));
                     viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
                 }
             }
@@ -584,76 +573,113 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private SpannableString getSpannableDetailString(IElement item, DetailDisplayMode detailDisplayMode)
+    private SpannableString getSpannableDetailString(IElement item, Set<DetailType> detailTypes)
     {
         HashMap<String, Integer> typefacesByDetailSubString = new HashMap<>();
         HashMap<DetailType, String> detailSubStringsByDetailType = new HashMap<>();
 
-        if(this.displayModesByDetailType.get(DetailType.LOCATION) == detailDisplayMode)
+        for(DetailType detailType : detailTypes)
         {
-            String locationDetail;
-            if(item.isBlueprint())
+            switch(detailType)
             {
-                // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
-                locationDetail = App.getContext().getString(R.string.substitute_blueprint);
-                detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
-                typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
+                case LOCATION:
+                {
+                    String locationDetail;
+                    if(item.isBlueprint())
+                    {
+                        // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
+                        locationDetail = App.getContext().getString(R.string.substitute_blueprint);
+                        detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
+                        typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
+                    }
+                    else
+                    {
+                        locationDetail = item.getParent().getName();
+                        detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
+                        typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
+                                ? this.typefacesByDetailType.get(DetailType.LOCATION)
+                                : Typeface.NORMAL);
+                    }
+                    break;
+                }
+                case CREDIT_TYPE:
+                {
+                    if(item.hasCreditType())
+                    {
+                        String creditTypeDetail = ((IAttraction)item).getCreditType().getName();
+                        detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
+                        typefacesByDetailSubString.put(creditTypeDetail, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
+                                ? this.typefacesByDetailType.get(DetailType.CREDIT_TYPE)
+                                : Typeface.NORMAL);
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no CreditType", item));
+                    }
+                    break;
+                }
+                case CATEGORY:
+                {
+                    if(item.hasCategory())
+                    {
+                        String categoryDetail = ((IAttraction)item).getCategory().getName();
+                        detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
+                        typefacesByDetailSubString.put(categoryDetail, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
+                                ? this.typefacesByDetailType.get(DetailType.CATEGORY)
+                                : Typeface.NORMAL);
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Category", item));
+                    }
+                    break;
+                }
+                case MANUFACTURER:
+                {
+                    if(item.hasManufacturer())
+                    {
+                        String manufacturerDetail = ((IAttraction)item).getManufacturer().getName();
+                        detailSubStringsByDetailType.put(DetailType.MANUFACTURER, manufacturerDetail);
+                        typefacesByDetailSubString.put(manufacturerDetail, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
+                                ? this.typefacesByDetailType.get(DetailType.MANUFACTURER)
+                                : Typeface.NORMAL);
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Manufacturer", item));
+                    }
+                    break;
+                }
+                case STATUS:
+                {
+                    if(item.hasStatus())
+                    {
+                        String statusDetail = ((IAttraction)item).getStatus().getName();
+                        detailSubStringsByDetailType.put(DetailType.STATUS, statusDetail);
+                        typefacesByDetailSubString.put(statusDetail, this.typefacesByDetailType.containsKey(DetailType.STATUS)
+                                ? this.typefacesByDetailType.get(DetailType.STATUS)
+                                : Typeface.NORMAL);
+                    }
+                    else
+                    {
+                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Status", item));
+                    }
+                    break;
+                }
+                case TOTAL_RIDE_COUNT:
+                {
+                    String totalRideCountDetail = App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+                    detailSubStringsByDetailType.put(DetailType.TOTAL_RIDE_COUNT, totalRideCountDetail);
+                    typefacesByDetailSubString.put(totalRideCountDetail, this.typefacesByDetailType.containsKey(DetailType.TOTAL_RIDE_COUNT)
+                            ? this.typefacesByDetailType.get(DetailType.TOTAL_RIDE_COUNT)
+                            : Typeface.NORMAL);
+                    break;
+                }
+                default:
+                    Log.e(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: DetailType [%s] for %s not found",
+                            DetailType.getValue(detailType.ordinal()), item));
+                    break;
             }
-            else
-            {
-                locationDetail = item.getParent().getName();
-                detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
-                typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
-                        ? this.typefacesByDetailType.get(DetailType.LOCATION)
-                        : Typeface.NORMAL);
-            }
-        }
-
-        if(item.hasCreditType() && this.displayModesByDetailType.get(DetailType.CREDIT_TYPE) == detailDisplayMode)
-        {
-            String creditTypeDetail = ((IAttraction)item).getCreditType().getName();
-            detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
-            typefacesByDetailSubString.put(creditTypeDetail, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
-                    ? this.typefacesByDetailType.get(DetailType.CREDIT_TYPE)
-                    : Typeface.NORMAL);
-        }
-
-
-        if(item.hasCategory() && this.displayModesByDetailType.get(DetailType.CATEGORY) == detailDisplayMode)
-        {
-            String categoryDetail = ((IAttraction)item).getCategory().getName();
-            detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
-            typefacesByDetailSubString.put(categoryDetail, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
-                    ? this.typefacesByDetailType.get(DetailType.CATEGORY)
-                    : Typeface.NORMAL);
-        }
-
-        if(item.hasManufacturer() && this.displayModesByDetailType.get(DetailType.MANUFACTURER) == detailDisplayMode)
-        {
-            String manufacturerDetail = ((IAttraction)item).getManufacturer().getName();
-            detailSubStringsByDetailType.put(DetailType.MANUFACTURER, manufacturerDetail);
-            typefacesByDetailSubString.put(manufacturerDetail, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
-                    ? this.typefacesByDetailType.get(DetailType.MANUFACTURER)
-                    : Typeface.NORMAL);
-        }
-
-
-        if(item.hasStatus() && this.displayModesByDetailType.get(DetailType.STATUS) == detailDisplayMode)
-        {
-            String statusDetail = ((IAttraction)item).getStatus().getName();
-            detailSubStringsByDetailType.put(DetailType.STATUS, statusDetail);
-            typefacesByDetailSubString.put(statusDetail, this.typefacesByDetailType.containsKey(DetailType.STATUS)
-                    ? this.typefacesByDetailType.get(DetailType.STATUS)
-                    : Typeface.NORMAL);
-        }
-
-        if(this.displayModesByDetailType.get(DetailType.TOTAL_RIDE_COUNT) == detailDisplayMode)
-        {
-            String totalRideCountDetail = App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
-            detailSubStringsByDetailType.put(DetailType.TOTAL_RIDE_COUNT, totalRideCountDetail);
-            typefacesByDetailSubString.put(totalRideCountDetail, this.typefacesByDetailType.containsKey(DetailType.TOTAL_RIDE_COUNT)
-                    ? this.typefacesByDetailType.get(DetailType.TOTAL_RIDE_COUNT)
-                    : Typeface.NORMAL);
         }
 
         return StringTool.buildSpannableString(this.getOrderedDetailString(detailSubStringsByDetailType), typefacesByDetailSubString);
@@ -789,13 +815,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter addRideOnClickListener(View.OnClickListener increaseOnClickListener)
+    public ContentRecyclerViewAdapter addIncreaseRideCountOnClickListener(View.OnClickListener increaseOnClickListener)
     {
         this.increaseRideCountOnClickListener = increaseOnClickListener;
         return this;
     }
 
-    public ContentRecyclerViewAdapter deleteRideOnClickListener(View.OnClickListener decreaseOnClickListener)
+    public ContentRecyclerViewAdapter addDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
         this.decreaseRideCountOnClickListener = decreaseOnClickListener;
         return this;
@@ -1021,6 +1047,27 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return true;
     }
 
+    private View.OnClickListener getExpansionOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                final IElement item = (IElement) view.getTag();
+
+                if(!expandedItems.contains(item))
+                {
+                    expandItem(item);
+                }
+                else
+                {
+                    collapseItem(item, true);
+                }
+            }
+        };
+    }
+
     private View.OnClickListener getSelectionOnClickListener()
     {
         return new View.OnClickListener()
@@ -1067,7 +1114,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         {
                             Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s clicked - GroupHeaders are ignored.", selectedItem));
                         }
-
                     }
                 }
                 else
@@ -1308,21 +1354,19 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public ContentRecyclerViewAdapter setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
     {
         this.specialStringResourcesByType.put(type, stringResource);
-
         return this;
     }
 
-    public ContentRecyclerViewAdapter clearDisplayModesForDetails()
+    public ContentRecyclerViewAdapter clearDetailTypesAndModeForContentType()
     {
-        this.displayModesByDetailType.clear();
-        this.populateDisplayModesByDetailType();
-
+        this.contentTypesByDetailDisplayModeByDetailType.clear();
+        this.initializeContentTypesByDetailDisplayModeByDetailType();
         return this;
     }
 
-    public ContentRecyclerViewAdapter setDisplayModeForDetail(DetailType detailType, DetailDisplayMode detailDisplayMode)
+    public ContentRecyclerViewAdapter setDetailTypesAndModeForContentType(Class<? extends IAttraction> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
-        this.displayModesByDetailType.put(detailType, detailDisplayMode);
+        this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);
         return this;
     }
 
@@ -1337,5 +1381,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public GroupType getGroupType()
     {
         return this.groupType;
+    }
+
+    public ContentRecyclerViewAdapter setUseDedicatedExpansionOnClickListener(boolean useDedicatedExpansionOnClickListener)
+    {
+        this.useDedicatedExpansionOnClickListener = useDedicatedExpansionOnClickListener;
+        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setUseDedicatedExpansionOnClickListener:: set to [%S]", useDedicatedExpansionOnClickListener));
+        return this;
     }
 }

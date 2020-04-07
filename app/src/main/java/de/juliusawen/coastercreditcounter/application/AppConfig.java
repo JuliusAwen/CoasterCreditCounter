@@ -64,7 +64,7 @@ public class AppConfig
                 this.useExternalStorage(),
                 this.alwaysLoadFromDatabaseMock(),
                 this.createExportFileWithDefaultsIfNotFound(),
-                this.resetTomDefaultContentOnStartup(),
+                this.resetToDefaultContentOnStartup(),
                 this.resetToDefaultPreferencesOnStartup(),
                 this.validateContent()
         );
@@ -105,7 +105,7 @@ public class AppConfig
         return this.isDebugBuild && this.alwaysLoadFromDatabaseMock;
     }
 
-    public boolean resetTomDefaultContentOnStartup()
+    public boolean resetToDefaultContentOnStartup()
     {
         return this.isDebugBuild && (this.resetToDefaultContentOnStartup);
     }

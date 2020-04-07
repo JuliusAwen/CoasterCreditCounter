@@ -12,6 +12,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -21,7 +22,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  *  * Parent: none
  *  * Children: none
  */
-public final class Blueprint extends Attraction implements IPersistable, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
+public final class Blueprint extends Attraction implements IOrphan, IPersistable, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
 {
     private Blueprint(String name, UUID uuid)
     {
@@ -36,7 +37,7 @@ public final class Blueprint extends Attraction implements IPersistable, IHasCre
     public static Blueprint create(String name, UUID uuid)
     {
         Blueprint blueprint = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             blueprint = new Blueprint(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Blueprint.create:: %s created.", blueprint.getFullName()));

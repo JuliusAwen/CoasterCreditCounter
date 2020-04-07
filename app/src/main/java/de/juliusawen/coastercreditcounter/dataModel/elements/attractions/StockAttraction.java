@@ -45,7 +45,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     public static StockAttraction create(String name, Blueprint blueprint, int untrackedRideCount, UUID uuid)
     {
         StockAttraction stockAttraction = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             stockAttraction = new StockAttraction(name, blueprint, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("StockAttraction.create:: %s created.", stockAttraction.getFullName()));

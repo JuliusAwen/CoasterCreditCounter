@@ -192,17 +192,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void setMenuItemImportAvailability()
     {
-        boolean enabled = App.persistence.fileExists(this.viewModel.exportFileAbsolutePath);
-
         Menu navigationMenu = navigationView.getMenu();
+
+        boolean enabled = App.persistence.fileExists(this.viewModel.exportFileAbsolutePath);
         navigationMenu.findItem(R.id.navigationItem_Import).setEnabled(enabled);
-
         Log.d(Constants.LOG_TAG, String.format("NavigationHubActivity.setMenuItemImportAvailability:: import enabled [%S]", enabled));
-
 
         //Todo: remove setEnabled(false) when implemented
         navigationMenu.findItem(R.id.navigationItem_ManageModels).setEnabled(false);
-        navigationMenu.findItem(R.id.navigationItem_ManageBlueprints).setEnabled(false);
     }
 
     private void setStatistics()
@@ -291,6 +288,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     break;
 
                 case R.id.navigationItem_ManageBlueprints:
+                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints> selected");
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_BLUEPRINTS);
+                    break;
+
                 case R.id.navigationItem_ManageModels:
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints/Models> selected");
                     Toaster.notYetImplemented(NavigationHubActivity.this);

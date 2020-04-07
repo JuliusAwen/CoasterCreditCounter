@@ -62,6 +62,7 @@ public class EditAttractionActivity extends BaseActivity
     private ImageView imageViewPickStatus;
 
     private EditText editTextUntrackedRideCount;
+    private LinearLayout layoutUntrackedRideCount;
 
     private Drawable pickIconBlack;
     private  Drawable pickIconGrey;
@@ -100,7 +101,8 @@ public class EditAttractionActivity extends BaseActivity
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.imageViewPickStatus = findViewById(R.id.imageViewCreateOrEditAttraction_PickStatus);
 
-        this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttractionUntrackedRideCount);
+        this.layoutUntrackedRideCount = findViewById(R.id.linearLayoutCreateOrEditAttraction_UntrackedRideCount);
+        this.editTextUntrackedRideCount = findViewById(R.id.editTextCreateOrEditAttraction_UntrackedRideCount);
 
 
         this.pickIconBlack = DrawableProvider.getColoredDrawableMutation(R.drawable.ic_baseline_arrow_drop_down, R.color.black);
@@ -114,32 +116,29 @@ public class EditAttractionActivity extends BaseActivity
             this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        if(this.viewModel.attraction != null)
-        {
-            this.decorateEditTextAttractionName();
 
-            if(this.viewModel.attraction.isCustomAttraction())
-            {
-                this.decorateLayoutCreditType();
-                this.decorateLayoutCategory();
-                this.decorateLayoutManufacturer();
-            }
-            else if(this.viewModel.attraction.isStockAttraction())
-            {
-                this.decorateLayoutBlueprint();
-            }
-            else if(this.viewModel.attraction.isBlueprint())
-            {
-                //handle blueprint
-            }
-            else
-            {
-                //log error
-            }
-            this.decorateLayoutStatus();
+        this.layoutBlueprint.setVisibility(View.GONE);
+        this.layoutCreditType.setVisibility(View.GONE);
+        this.layoutCategory.setVisibility(View.GONE);
+        this.layoutManufacturer.setVisibility(View.GONE);
+        this.layoutStatus.setVisibility(View.GONE);
+        this.layoutUntrackedRideCount.setVisibility(View.GONE);
+
+        this.decorateEditTextAttractionName();
+        this.decorateLayoutCreditType();
+        this.decorateLayoutCategory();
+        this.decorateLayoutManufacturer();
+
+        if(this.viewModel.attraction.isStockAttraction())
+        {
+            this.decorateLayoutBlueprint();
         }
 
-        this.decorateEditTextUntrackedRideCount();
+        if(!this.viewModel.attraction.isBlueprint())
+        {
+            this.decorateLayoutStatus();
+            this.decorateEditTextUntrackedRideCount();
+        }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit_attraction));
         super.createToolbar()
@@ -157,8 +156,8 @@ public class EditAttractionActivity extends BaseActivity
 
         Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode != RESULT_OK) // no Property was selected in PickPropertyActivity
-        { // as it is possible that former Property was deleted via Pick-->ManageProperty, it's existence has to be validated
+        if(resultCode != RESULT_OK) // no Element was picked in PickElementActivity
+        { // as it is possible that former Element was deleted via Pick-->ManageProperty, it's existence has to be validated
             switch(RequestCode.getValue(requestCode))
             {
                 case PICK_BLUEPRINT:
@@ -203,7 +202,7 @@ public class EditAttractionActivity extends BaseActivity
                 }
             }
         }
-        else if(resultCode == RESULT_OK) // a Property was selected in PickPropertyActivity
+        else if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
         {
             IElement pickedElement = ResultFetcher.fetchResultElement(data);
             if(pickedElement != null)
@@ -402,11 +401,23 @@ public class EditAttractionActivity extends BaseActivity
             Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutBlueprint:: setting Blueprint %s...", blueprint));
 
             this.textViewBlueprint.setText(blueprint.getName());
+
+            this.textViewCreditType.setText(blueprint.getCreditType().getName());
+            this.textViewCreditType.setTextColor(getColor(R.color.grey));
+            this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
+
+            this.textViewCategory.setText(blueprint.getCategory().getName());
+            this.textViewCategory.setTextColor(getColor(R.color.grey));
+            this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
+
+            this.textViewManufacturer.setText(blueprint.getManufacturer().getName());
+            this.textViewManufacturer.setTextColor(getColor(R.color.grey));
+            this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
         }
         else
         {
             this.textViewBlueprint.setText(R.string.blueprint_not_available);
-            Log.d(Constants.LOG_TAG, "EditAttractionActivity.updateLayoutBlueprint:: no Blueprint available");
+            Log.d(Constants.LOG_TAG, "EditAttractionActivity.updateLayoutBlueprint:: no Blueprint selected");
         }
 
         this.viewModel.blueprint = blueprint;
@@ -421,7 +432,15 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View view)
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCreditType> selected");
-                ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, App.content.getContentOfType(CreditType.class));
+
+                if(viewModel.blueprint != null)
+                {
+                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "CreditType"));
+                }
+                else
+                {
+                    ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, App.content.getContentOfType(CreditType.class));
+                }
             }
         });
 
@@ -448,7 +467,14 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCategory> selected");
-                ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CATEGORY, App.content.getContentOfType(Category.class));
+                if(viewModel.blueprint != null)
+                {
+                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Category"));
+                }
+                else
+                {
+                    ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CATEGORY, App.content.getContentOfType(Category.class));
+                }
             }
         });
 
@@ -475,7 +501,14 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickManufacturer> selected");
-                ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
+                if(viewModel.blueprint != null)
+                {
+                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Manufacturer"));
+                }
+                else
+                {
+                    ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
+                }
             }
         }));
 
@@ -525,6 +558,8 @@ public class EditAttractionActivity extends BaseActivity
     {
         this.editTextUntrackedRideCount.setOnEditorActionListener(this.getOnEditorActionListener());
         this.editTextUntrackedRideCount.setText(String.valueOf(this.viewModel.attraction.getUntracktedRideCount()));
+
+        this.layoutUntrackedRideCount.setVisibility(View.VISIBLE);
     }
 
     private TextView.OnEditorActionListener getOnEditorActionListener()

@@ -30,7 +30,7 @@ public final class Location extends Element implements IPersistable
     public static Location create(String name, UUID uuid)
     {
         Location location = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             location = new Location(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));

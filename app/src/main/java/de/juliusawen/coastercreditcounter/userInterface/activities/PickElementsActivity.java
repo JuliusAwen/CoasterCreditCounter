@@ -29,7 +29,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Bluepri
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -103,7 +102,8 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
                             true)
-                            .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
+                            .setUseDedicatedExpansionOnClickListener(true);
+
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
@@ -117,7 +117,6 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             childTypesToExpand,
                             false)
-                            .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                             .groupItems(GroupType.CATEGORY);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
@@ -132,7 +131,8 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+                            .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix)
+                            .setTypefaceForContentType(IProperty.class, Typeface.BOLD);
                     break;
                 }
 
@@ -142,7 +142,7 @@ public class PickElementsActivity extends BaseActivity
                             this.viewModel.elementsToPickFrom,
                             null,
                             false)
-                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
+                            .setTypefaceForContentType(Visit.class, Typeface.BOLD)
                             .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
                     break;
                 }
@@ -200,24 +200,20 @@ public class PickElementsActivity extends BaseActivity
         {
             IElement returnElement = ResultFetcher.fetchResultElement(data);
 
+            List<IElement> updatedElementsToPickFrom = new ArrayList<>();
+            for(IElement element : this.viewModel.elementsToPickFrom)
+            {
+                if(App.content.containsElement(element))
+                {
+                    updatedElementsToPickFrom.add(element);
+                }
+            }
+            this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+
             if(returnElement != null)
             {
-                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: %s returned - returning element", returnElement));
-                returnResult(RESULT_OK, returnElement);
-            }
-            else
-            {
-                Log.d(Constants.LOG_TAG, "PickElementsActivity.onActivityResult:: no element returned - updating ElementsToPickFrom...");
-                List<IElement> updatedElementsToPickFrom = new ArrayList<>();
-                for(IElement element : this.viewModel.elementsToPickFrom)
-                {
-                    if(App.content.containsElement(element))
-                    {
-                        updatedElementsToPickFrom.add(element);
-                    }
-                }
-                this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
+                this.viewModel.contentRecyclerViewAdapter.scrollToItem(returnElement);
             }
         }
     }
@@ -445,7 +441,7 @@ public class PickElementsActivity extends BaseActivity
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .clearTypefacesForDetailType()
                 .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
-                .clearDisplayModesForDetails();
+                .clearDetailTypesAndModeForContentType();
 
         if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
         {
@@ -453,90 +449,94 @@ public class PickElementsActivity extends BaseActivity
             {
                 case CREDIT_TYPE:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
                 case MANUFACTURER:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .groupItems(GroupType.STATUS);
                     break;
             }
-            this.viewModel.contentRecyclerViewAdapter.setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
+            this.viewModel.contentRecyclerViewAdapter
+                    .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
         }
         else if(this.viewModel.requestCode == RequestCode.PICK_BLUEPRINT)
         {
             if(groupType.equals(GroupType.CATEGORY))
             {
                 this.viewModel.contentRecyclerViewAdapter
-                        .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                         .groupItems(GroupType.CATEGORY);
             }
         }
         else
         {
+            this.viewModel.contentRecyclerViewAdapter
+                    .setTypefaceForContentType(IProperty.class, Typeface.BOLD);
+
             switch(groupType)
             {
                 case LOCATION:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.LOCATION);
                     break;
 
                 case CREDIT_TYPE:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER ,DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.CREDIT_TYPE);
                     break;
 
                 case CATEGORY:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.CATEGORY);
                     break;
 
                 case MANUFACTURER:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.MANUFACTURER);
                     break;
 
                 case STATUS:
                     this.viewModel.contentRecyclerViewAdapter
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .groupItems(GroupType.STATUS);
                     break;
             }

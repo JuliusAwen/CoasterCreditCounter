@@ -438,18 +438,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             {
                 getSupportActionBar().setTitle(title);
             }
-            else
-            {
-                getSupportActionBar().setTitle("");
-            }
 
             if(subtitle != null && !subtitle.trim().isEmpty())
             {
                 getSupportActionBar().setSubtitle(subtitle);
-            }
-            else
-            {
-                getSupportActionBar().setSubtitle("");
             }
         }
         else

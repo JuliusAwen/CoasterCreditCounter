@@ -102,9 +102,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
 
                 case CATEGORY:
@@ -118,8 +118,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForContentType(Category.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW);
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
                     break;
 
                 case MANUFACTURER:
@@ -133,8 +133,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
 
                 case STATUS:
@@ -147,9 +147,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             elementsWithOrderedChildren,
                             childTypesToExpand)
                             .setTypefaceForContentType(Status.class, Typeface.BOLD)
-                            .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDisplayModeForDetail(DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDisplayModeForDetail(DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                     break;
             }
             this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
@@ -270,7 +270,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
         }
-
     }
 
     @Override
@@ -802,19 +801,19 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 switch(viewModel.propertyTypeToManage)
                 {
                     case CREDIT_TYPE:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CREDIT_TYPE, null);
+                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CREDIT_TYPE);
                         break;
 
                     case CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CATEGORY, null);
+                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CATEGORY);
                         break;
 
                     case MANUFACTURER:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MANUFACTURER, null);
+                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MANUFACTURER);
                         break;
 
                     case STATUS:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_STATUS, null);
+                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_STATUS);
                         break;
                 }
             }
@@ -866,7 +865,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             if(this.lastCreatedProperty != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning new %s", this.lastCreatedProperty));
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.lastCreatedProperty));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedProperty.getUuid().toString());
             }
         }

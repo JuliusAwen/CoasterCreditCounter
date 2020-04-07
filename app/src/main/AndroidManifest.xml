@@ -18,6 +18,7 @@
         <activity android:name=".userInterface.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,6 +30,7 @@
         <activity android:name=".userInterface.activities.ShowVisitActivity" />
         <activity android:name=".userInterface.activities.CreateVisitActivity" />
         <activity android:name=".userInterface.activities.ManagePropertiesActivity" />
+        <activity android:name=".userInterface.activities.ManageBlueprintsActivity" />
         <activity android:name=".userInterface.activities.EditAttractionActivity" />
         <activity android:name=".userInterface.activities.CreateAttractionActivity" />
         <activity

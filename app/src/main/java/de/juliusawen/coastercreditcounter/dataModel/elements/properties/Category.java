@@ -30,7 +30,7 @@ public final class Category extends Element implements IProperty
     public static Category create(String name, UUID uuid)
     {
         Category category = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             category = new Category(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Category.create:: %s created.", category));

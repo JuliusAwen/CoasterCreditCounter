@@ -39,7 +39,7 @@ public abstract class Element implements IElement
 
     protected Element(String name, UUID uuid)
     {
-        this.setName(name);
+        this.name = name;
         this.uuid = uuid == null ? UUID.randomUUID() : uuid;
     }
 
@@ -73,7 +73,7 @@ public abstract class Element implements IElement
 
     public boolean setName(String name)
     {
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             this.name = name.trim();
             return true;
@@ -85,18 +85,18 @@ public abstract class Element implements IElement
         }
     }
 
-    public static boolean nameIsValid(String name)
+    public static boolean isNameValid(String name)
     {
         if(!name.trim().isEmpty())
         {
             name = name.trim();
 
-            Log.v(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is valid", name));
+            Log.v(Constants.LOG_TAG,  String.format("Element.verifyName:: name [%s] is valid", name));
             return true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("StringTool.verifyName:: name [%s] is invalid", name));
+            Log.w(Constants.LOG_TAG,  String.format("Element.verifyName:: name [%s] is invalid", name));
             return false;
         }
     }
@@ -297,12 +297,14 @@ public abstract class Element implements IElement
 
     public void deleteElement()
     {
-        if(this.isOrphan())
+        if(!this.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, "delete Element ORPHAN");
+            this.getParent().deleteChild(this);
         }
-
-        this.getParent().deleteChild(this);
+        else
+        {
+            Log.v(Constants.LOG_TAG, String.format("Element.deleteElement:: %s is an ORPHAN - no need to remove from parent", this));
+        }
     }
 
     public void deleteChild(IElement child)

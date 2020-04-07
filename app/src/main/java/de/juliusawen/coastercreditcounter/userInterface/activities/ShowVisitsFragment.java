@@ -57,8 +57,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
     private RecyclerView recyclerView;
 
-    boolean optionsMenuIsInvalid = false;
-
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitsFragment.newInstance:: instantiating fragment...");
@@ -376,7 +374,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public interface ShowVisitsFragmentInteraction
     {
-        void invalidateOptionsMenu();
         void markForDeletion(IElement elementToDelete);
         void markForUpdate(IElement elementToDelete);
     }

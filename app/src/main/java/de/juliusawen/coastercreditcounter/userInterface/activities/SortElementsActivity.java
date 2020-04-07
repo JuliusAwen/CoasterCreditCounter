@@ -21,6 +21,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -29,6 +30,8 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -60,7 +63,10 @@ public class SortElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false);
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false)
+                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW);
 
             Set<Class<? extends IElement>> types = new HashSet<>();
             for(IElement elementToSort : this.viewModel.elementsToSort)

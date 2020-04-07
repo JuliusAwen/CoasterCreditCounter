@@ -29,7 +29,7 @@ public final class CreditType extends Element implements IProperty
     public static CreditType create(String name, UUID uuid)
     {
         CreditType creditType = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             creditType = new CreditType(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("CreditType.create:: %s created.", creditType));

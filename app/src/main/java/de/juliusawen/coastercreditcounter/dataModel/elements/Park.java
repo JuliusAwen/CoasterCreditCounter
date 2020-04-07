@@ -30,7 +30,7 @@ public final class Park extends Element implements IPersistable
     public static Park create(String name, UUID uuid)
     {
         Park park = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             park = new Park(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Park.create:: %s created", park.getFullName()));

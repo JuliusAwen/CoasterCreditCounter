@@ -30,7 +30,7 @@ public final class Manufacturer extends Element implements IProperty
     public static Manufacturer create(String name, UUID uuid)
     {
         Manufacturer manufacturer = null;
-        if(Element.nameIsValid(name))
+        if(Element.isNameValid(name))
         {
             manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
             Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));

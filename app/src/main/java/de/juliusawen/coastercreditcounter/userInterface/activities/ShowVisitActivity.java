@@ -93,8 +93,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
-                .addRideOnClickListener(this.getIncreaseRideCountOnClickListener())
-                .deleteRideOnClickListener(this.getDecreaseRideCountOnClickListener());
+                .addIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener())
+                .addDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
 
         this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));

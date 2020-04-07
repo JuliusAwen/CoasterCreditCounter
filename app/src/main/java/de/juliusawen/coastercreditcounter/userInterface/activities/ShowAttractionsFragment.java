@@ -99,7 +99,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerViewAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
@@ -154,7 +153,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                     break;
                 }
-
                 case EDIT_ON_SITE_ATTRACTION:
                 {
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
@@ -181,7 +179,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             .scrollToItem(resultElement);
                     break;
                 }
-
                 case CREATE_ON_SITE_ATTRACTION:
                 {
                     this.updateContentRecyclerView(true)
@@ -189,7 +186,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             .scrollToItem(resultElement);
                     break;
                 }
-
             }
         }
     }
@@ -246,18 +242,15 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
         childTypesToExpand.add(Attraction.class);
 
-        ContentRecyclerViewAdapter contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class),
-                childTypesToExpand);
-
-        contentRecyclerViewAdapter
-                .setDisplayModeForDetail(DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                .setDisplayModeForDetail(DetailType.STATUS, DetailDisplayMode.BELOW)
+                childTypesToExpand)
+                .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.ABOVE)
                 .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
-                .setDisplayModeForDetail(DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
                 .groupItems(GroupType.CATEGORY);
-
-        return contentRecyclerViewAdapter;
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
@@ -410,7 +403,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public interface ShowAttractionsFragmentInteraction
     {
-        void invalidateOptionsMenu();
         void markForUpdate(IElement elementToUpdate);
         void markForDeletion(IElement elemtToDelete);
     }

@@ -65,7 +65,7 @@
 
     <!--GENERIC HINT TEXTS-->
     <string name="hint_enter_string">Enter string</string>
-    <string name="hint_untracked_ride_count">Enter previous count</string>
+    <string name="hint_untracked_ride_count">Enter count</string>
     <string name="hint_edit_element_name">Edit element name</string>
 
 
@@ -212,22 +212,30 @@
     <string name="alert_dialog_message_confirm_add_attractions_to_visit">Do you want to add attractions to your visit?</string>
 
     <string name="alert_dialog_title_delete_attraction">DELETE ATTRACTION</string>
-    <string name="alert_dialog_message_confirm_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from all visits, all rides will be deleted as well)</string>
+    <string name="alert_dialog_message_confirm_delete_attraction">Do you really want to delete \'%1$s\'? \n(attraction is also removed from visits, rides are deleted and ride count as well as credit count is adjusted)</string>
 
     <string name="hint_enter_attraction_name">Enter attraction name</string>
 
     <string name="title_create_attraction">Create Attraction</string>
-    <string name="subtitle_create_attraction">for %1$s</string>
+    <string name="subtitle_create_attraction">at %1$s</string>
 
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
     <!--BLUEPRINTS-->
+    <string name="blueprints">Blueprints</string>
+    <string name="title_create_blueprint">Create Blueprint</string>
     <string name="title_edit_blueprint">Edit Blueprint</string>
     <string name="title_pick_blueprint">Pick Blueprint</string>
-    <string name="blueprint_not_available">No Blueprint available</string>
+    <string name="title_manage_blueprints">Manage Blueprints</string>
+    <string name="blueprint_not_available">No blueprint selected</string>
     <string name="blueprint_not_selected">none</string>
     <string name="header_blueprint">Blueprint:</string>
+
+    <string name="alert_dialog_message_confirm_delete_blueprint_has_no_children">Do you really want to delete \'%1$s\'?</string>
+    <string name="alert_dialog_message_confirm_delete_blueprint_has_children">Do you really want to delete \'%1$s\'? \n(attractions made from this blueprint are deleted as well, removed from visits, rides are deleted and ride count as well as credit count is adjusted)</string>
+
+    <string name="hint_enter_blueprint_name">Enter blueprint name</string>
 
 
     <!--CREDIT TYPES-->
@@ -344,6 +352,9 @@
     <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
     <string name="help_text_create_attraction">@string/help_text_not_yet_available</string>
     <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_blueprint">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_blueprint">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_blueprints">@string/help_text_not_yet_available</string>
 
 </resources>
 

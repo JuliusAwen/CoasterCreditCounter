@@ -179,7 +179,6 @@ public abstract class Attraction extends Element implements IAttraction
         }
     }
 
-
     public void decreaseTotalRideCount(int decrement)
     {
         if(decrement > 0)

@@ -66,9 +66,9 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            if(!App.isInitialized && App.config.resetTomDefaultContentOnStartup())
+            if(!App.isInitialized && App.config.resetToDefaultContentOnStartup())
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.resetTomDefaultContentOnStartup = true --> loading and exporting default content");
+                Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: App.config.resetToDefaultContentOnStartup = true --> loading and exporting default content");
                 success = this.loadDefaultContentFromDatabaseMock(content) && this.exportContent(content);
             }
             else if(this.readExternalJsonStringAndFetchContent(content))
