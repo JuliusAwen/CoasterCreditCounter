@@ -697,6 +697,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 case DELETE:
                 {
+                    super.setFloatingActionButtonVisibility(false);
+
                     ConfirmSnackbar.Show(
                             Snackbar.make(
                                     findViewById(android.R.id.content),
@@ -749,6 +751,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        super.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {

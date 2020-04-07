@@ -59,7 +59,6 @@ public class ShowParkOverviewFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowParkOverviewFragment.onCreateView:: creating view...");
         return inflater.inflate(R.layout.fragment_show_park_overview, container, false);
     }
 }

@@ -387,15 +387,20 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.REMOVE)
+        if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            ConfirmSnackbar.Show(
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()),
-                            Snackbar.LENGTH_LONG),
-                    requestCode,
-                    this);
+            if(requestCode == RequestCode.REMOVE)
+            {
+                super.setFloatingActionButtonVisibility(false);
+
+                ConfirmSnackbar.Show(
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()),
+                                Snackbar.LENGTH_LONG),
+                        requestCode,
+                        this);
+            }
         }
     }
 
@@ -408,6 +413,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         {
             removeVisitedAttraction();
         }
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private void removeVisitedAttraction()

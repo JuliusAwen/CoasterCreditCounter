@@ -428,6 +428,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             switch(requestCode)
             {
                 case DELETE:
+                    super.setFloatingActionButtonVisibility(false);
                     ConfirmSnackbar.Show(
                             Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG),
                             requestCode,
@@ -435,6 +436,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     break;
 
                 case REMOVE:
+                    super.setFloatingActionButtonVisibility(false);
                     ConfirmSnackbar.Show(
                             Snackbar.make(findViewById(android.R.id.content), getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()), Snackbar.LENGTH_LONG),
                             requestCode,
@@ -457,6 +459,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        super.setFloatingActionButtonVisibility(true);
 
         switch(requestCode)
         {

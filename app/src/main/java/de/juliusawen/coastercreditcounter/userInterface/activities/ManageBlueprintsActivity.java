@@ -294,6 +294,8 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
         {
             if(requestCode.equals(RequestCode.DELETE))
             {
+                super.setFloatingActionButtonVisibility(false);
+
                 ConfirmSnackbar.Show(
                         Snackbar.make(
                                 findViewById(android.R.id.content),
@@ -311,6 +313,8 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ManageBlueprintActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        super.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {

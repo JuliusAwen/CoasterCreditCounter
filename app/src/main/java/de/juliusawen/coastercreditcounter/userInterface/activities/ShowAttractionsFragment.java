@@ -348,6 +348,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             if(requestCode == RequestCode.DELETE)
             {
+                this.showAttractionsFragmentInteraction.setFloatingActionButtonVisibility(false);
                 ConfirmSnackbar.Show(
                         Snackbar.make(
                                 getActivity().findViewById(android.R.id.content),
@@ -363,6 +364,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        this.showAttractionsFragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
@@ -403,6 +406,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public interface ShowAttractionsFragmentInteraction
     {
+        void setFloatingActionButtonVisibility(boolean isVisible);
         void markForUpdate(IElement elementToUpdate);
         void markForDeletion(IElement elemtToDelete);
     }

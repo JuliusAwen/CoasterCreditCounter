@@ -184,6 +184,12 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
+    public void setFloatingActionButtonVisibility(boolean isVisible)
+    {
+        super.setFloatingActionButtonVisibility(isVisible);
+    }
+
+    @Override
     public void markForDeletion(IElement elementToDelete)
     {
         super.markForDeletion(elementToDelete, true);

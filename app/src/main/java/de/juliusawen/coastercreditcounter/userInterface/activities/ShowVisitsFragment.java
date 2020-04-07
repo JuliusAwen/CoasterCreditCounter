@@ -339,15 +339,20 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void handleAlertDialogClick(RequestCode requestCode, int which)
     {
-        if(which == DialogInterface.BUTTON_POSITIVE && requestCode == RequestCode.DELETE)
+        if(which == DialogInterface.BUTTON_POSITIVE)
         {
-            ConfirmSnackbar.Show(
-                    Snackbar.make(
-                            getActivity().findViewById(android.R.id.content),
-                            getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
-                            Snackbar.LENGTH_LONG),
-                    requestCode,
-                    this);
+            if(requestCode == RequestCode.DELETE)
+            {
+                this.showVisitsFragmentInteraction.setFloatingActionButtonVisibility(false);
+
+                ConfirmSnackbar.Show(
+                        Snackbar.make(
+                                getActivity().findViewById(android.R.id.content),
+                                getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                                Snackbar.LENGTH_LONG),
+                        requestCode,
+                        this);
+            }
         }
     }
 
@@ -355,6 +360,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+
+        this.showVisitsFragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
@@ -374,6 +381,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public interface ShowVisitsFragmentInteraction
     {
+        void setFloatingActionButtonVisibility(boolean isVisible);
         void markForDeletion(IElement elementToDelete);
         void markForUpdate(IElement elementToDelete);
     }

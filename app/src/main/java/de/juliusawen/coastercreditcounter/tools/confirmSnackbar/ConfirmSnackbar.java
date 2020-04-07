@@ -52,16 +52,17 @@ public class ConfirmSnackbar
             @Override
             public void onDismissed(Snackbar snackbar, int event)
             {
+                Log.i(Constants.LOG_TAG, String.format("ConfirmSnackbar.onDismissed:: action [%s] confirmed[%S] - calling client [%s]",
+                        requestCode, actionConfirmed, client.getClass().getSimpleName()));
+
                 if(actionConfirmed)
                 {
                     actionConfirmed = false;
-
-                    Log.i(Constants.LOG_TAG, String.format("ConfirmSnackbar.onDismissed:: action [%s] confirmed - calling client [%s]", requestCode, client.getClass().getSimpleName()));
                     client.handleActionConfirmed(requestCode);
                 }
                 else
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ConfirmSnackbar.onDismissed:: action [%s] in [%s] not confirmed - doing nothing", requestCode, client.getClass().getSimpleName()));
+                    client.handleActionConfirmed(RequestCode.INVALID);
                 }
             }
         });
