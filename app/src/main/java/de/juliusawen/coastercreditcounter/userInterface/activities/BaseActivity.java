@@ -300,6 +300,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         Log.d(Constants.LOG_TAG, "BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title and message...");
         Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting title [%s] and message [%s]", title, message));
 
+        title = title.trim();
+        message = message.trim();
+
         if(this.helpOverlayFragment != null)
         {
             this.helpOverlayFragment.setTitleAndMessage(title, message);
@@ -434,14 +437,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title [%s] and subtitle [%s]", title, subtitle));
 
-            if(title != null && !title.trim().isEmpty())
+            if(title != null)
             {
-                getSupportActionBar().setTitle(title);
+                getSupportActionBar().setTitle(title.trim());
             }
 
-            if(subtitle != null && !subtitle.trim().isEmpty())
+            if(subtitle != null)
             {
-                getSupportActionBar().setSubtitle(subtitle);
+                getSupportActionBar().setSubtitle(subtitle.trim());
             }
         }
         else

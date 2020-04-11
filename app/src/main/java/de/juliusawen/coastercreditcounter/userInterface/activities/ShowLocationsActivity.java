@@ -28,6 +28,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -46,7 +47,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 {
     private ShowLocationsActivityViewModel viewModel;
     private RecyclerView recyclerView;
-
 
     protected void setContentView()
     {
@@ -77,7 +77,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
                     childTypesToExpand)
-                    .setTypefaceForContentType(Location.class, Typeface.BOLD);
+                    .setTypefaceForContentType(Location.class, Typeface.BOLD)
+                    .addBottomSpacer();
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
@@ -93,6 +94,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
         super.createToolbar()
                 .addToolbarHomeButton();
+
+        super.createFloatingActionButton();
+        this.decorateFloatingActionButton();
 
         this.setSelectionModeEnabled(this.viewModel.selectionMode);
     }
@@ -156,12 +160,29 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         return super.onKeyDown(keyCode, event);
     }
 
+    private void decorateFloatingActionButton()
+    {
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_close, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                setSelectionModeEnabled(false);
+            }
+        });
+    }
+
     private void setSelectionModeEnabled(boolean enabled)
     {
         Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", enabled));
-        ShowLocationsActivity.super.setToolbarTitleAndSubtitle(
+
+        super.setToolbarTitleAndSubtitle(
                 enabled ? getString(R.string.title_relocate) : getString(R.string.locations),
-                enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : null);
+                enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : "");
+
+        super.setFloatingActionButtonVisibility(enabled);
         this.viewModel.selectionMode = enabled;
     }
 

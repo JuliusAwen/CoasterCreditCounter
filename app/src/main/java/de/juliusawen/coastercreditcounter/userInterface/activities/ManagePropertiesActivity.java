@@ -172,8 +172,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
-        super.createFloatingActionButton();
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
     }
 

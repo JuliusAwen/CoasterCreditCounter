@@ -1296,7 +1296,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void addBottomSpacer()
+    public ContentRecyclerViewAdapter addBottomSpacer()
     {
         if(!this.items.isEmpty() && !(this.items.get(this.items.size() - 1) instanceof BottomSpacer))
         {
@@ -1304,6 +1304,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             notifyItemInserted(this.items.size() - 1);
             Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.addBottomSpacer:: added BottomSpacer");
         }
+
+        return this;
     }
 
     public ContentRecyclerViewAdapter setTypefaceForContentType(Class<? extends IElement> type, int typeface)
