@@ -289,6 +289,10 @@ public class PickElementsActivity extends BaseActivity
     {
         switch(item)
         {
+            case SORT_BY:
+            case GROUP_BY:
+                return true;
+
             case SORT_ASCENDING:
             case SORT_BY_NAME_ASCENDING:
                 this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
