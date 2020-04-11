@@ -537,15 +537,22 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
 
 
-                    PopupMenuAgent.getMenu()
-                            .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
+                    PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
+
+                    if(!viewModel.isSelectionMode)
+                    {
+                        popupMenuAgent
+                                .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
+                                .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty());
+                    }
+
+                    popupMenuAgent
                             .add(PopupItem.EDIT_ELEMENT)
                             .add(PopupItem.DELETE_ELEMENT)
                             .add(PopupItem.SET_AS_DEFAULT)
-                            .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty())
                             .setEnabled(PopupItem.DELETE_ELEMENT, !isDefault)
                             .setEnabled(PopupItem.SET_AS_DEFAULT, !isDefault)
-                            .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> default is always "no credit"
+                            .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> is always "no credit"
                             .show(ManagePropertiesActivity.this, view);
                 }
                 return true;
