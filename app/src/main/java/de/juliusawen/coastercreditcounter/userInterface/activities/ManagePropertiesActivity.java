@@ -376,14 +376,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 break;
         }
 
-        boolean propertyIsAssigned = this.propertyIsAssigned();
+        boolean anyPropertyHasChildren = this.anyPropertyHasChildren();
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, propertyIsAssigned && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, propertyIsAssigned && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.EXPAND_ALL, !this.viewModel.isSelectionMode && anyPropertyHasChildren && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, !this.viewModel.isSelectionMode && anyPropertyHasChildren && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 
-    private boolean propertyIsAssigned()
+    private boolean anyPropertyHasChildren()
     {
         Class<? extends IProperty> type;
 

@@ -190,8 +190,8 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
     protected  Menu prepareOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, App.content.getContentOfType(Blueprint.class).size() > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, App.content.getContentOfType(Blueprint.class).size() > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.EXPAND_ALL, App.content.getContentOfType(Blueprint.class).size() > 0 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, App.content.getContentOfType(Blueprint.class).size() > 0 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 

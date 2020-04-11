@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -14,10 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -25,17 +22,14 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
-import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
-import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
@@ -103,20 +97,6 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
-                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
-                    break;
-                }
-
-                case PICK_BLUEPRINT:
-                {
-                    Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(Blueprint.class);
-
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            childTypesToExpand,
-                            false)
-                            .groupItems(GroupType.CATEGORY);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
@@ -193,35 +173,6 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
-
-        if(resultCode == Activity.RESULT_OK) //returning from ManagePropertiesActivity
-        {
-            IElement returnElement = ResultFetcher.fetchResultElement(data);
-
-            List<IElement> updatedElementsToPickFrom = new ArrayList<>();
-            for(IElement element : this.viewModel.elementsToPickFrom)
-            {
-                if(App.content.containsElement(element))
-                {
-                    updatedElementsToPickFrom.add(element);
-                }
-            }
-            this.viewModel.elementsToPickFrom = updatedElementsToPickFrom;
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-
-            if(returnElement != null)
-            {
-                this.viewModel.contentRecyclerViewAdapter.scrollToItem(returnElement);
-            }
-        }
-    }
-
-    @Override
     protected Menu createOptionsMenu(Menu menu)
     {
         switch(this.viewModel.requestCode)
@@ -264,20 +215,7 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.optionsMenuAgent
                         .add(OptionsItem.SORT)
                             .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-                        .add(OptionsItem.GO_TO_MANAGE_PROPERTIES);
-                break;
-            }
-
-            case PICK_BLUEPRINT:
-            {
-                this.viewModel.optionsMenuAgent
-                        .add(OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-                        .add(OptionsItem.EXPAND_ALL)
-                        .add(OptionsItem.COLLAPSE_ALL)
-                        .add(OptionsItem.GO_TO_MANAGE_PROPERTIES);
+                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
                 break;
             }
         }
@@ -321,16 +259,11 @@ public class PickElementsActivity extends BaseActivity
                             .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
+                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled)
+                        .setVisible(OptionsItem.EXPAND_ALL, this.anyElementHasChildren() && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                        .setVisible(OptionsItem.COLLAPSE_ALL, this.anyElementHasChildren() && this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
                 break;
             }
-
-            case PICK_BLUEPRINT:
-                boolean isExpandable = this.isExpandable();
-                this.viewModel.optionsMenuAgent
-                        .setVisible(OptionsItem.EXPAND_ALL, isExpandable && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                        .setVisible(OptionsItem.COLLAPSE_ALL, isExpandable && this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
-                break;
         }
 
         return this.viewModel.optionsMenuAgent
@@ -338,7 +271,7 @@ public class PickElementsActivity extends BaseActivity
                 .prepare(menu);
     }
 
-    private boolean isExpandable()
+    private boolean anyElementHasChildren()
     {
         for(IElement element : this.viewModel.elementsToPickFrom)
         {
@@ -428,10 +361,6 @@ public class PickElementsActivity extends BaseActivity
                 invalidateOptionsMenu();
                 return true;
 
-            case GO_TO_MANAGE_PROPERTIES:
-                this.gotoManageActivity();
-                return true;
-
             default:
                 return super.handleOptionsItemSelected(item);
         }
@@ -485,16 +414,6 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.contentRecyclerViewAdapter
                     .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
         }
-        else if(this.viewModel.requestCode == RequestCode.PICK_BLUEPRINT)
-        {
-            if(groupType.equals(GroupType.CATEGORY))
-            {
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                        .groupItems(GroupType.CATEGORY);
-            }
-        }
         else
         {
             this.viewModel.contentRecyclerViewAdapter
@@ -543,32 +462,6 @@ public class PickElementsActivity extends BaseActivity
                             .groupItems(GroupType.STATUS);
                     break;
             }
-        }
-    }
-
-    private void gotoManageActivity()
-    {
-        switch(viewModel.requestCode)
-        {
-            case PICK_BLUEPRINT:
-                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_BLUEPRINTS);
-                break;
-
-            case PICK_CREDIT_TYPE:
-                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
-                break;
-
-            case PICK_CATEGORY:
-                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_CATEGORIES);
-                break;
-
-            case PICK_MANUFACTURER:
-                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_MANUFACTURERS);
-                break;
-
-            case PICK_STATUS:
-                ActivityDistributor.startActivityManageForResult(PickElementsActivity.this, RequestCode.MANAGE_STATUSES);
-                break;
         }
     }
 
@@ -644,12 +537,13 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
+                IElement element = (IElement)view.getTag();
+
                 if(PickElementsActivity.this.viewModel.isSinglePick)
                 {
-                    IElement pickedElement = (IElement)view.getTag();
-                    if(pickedElement.isGroupHeader())
+                    if(element.isGroupHeader())
                     {
-                        viewModel.contentRecyclerViewAdapter.toggleExpansion(pickedElement);
+                        viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                         if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
                         {
                             invalidateOptionsMenu();
@@ -658,7 +552,7 @@ public class PickElementsActivity extends BaseActivity
                     else
                     {
                         Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
-                        returnResult(RESULT_OK, pickedElement);
+                        returnResult(RESULT_OK, element);
                     }
                 }
                 else
@@ -674,6 +568,12 @@ public class PickElementsActivity extends BaseActivity
                             changeRadioButtonToSelectAll();
                         }
                     }
+
+                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    {
+                        invalidateOptionsMenu();
+                    }
+
                 }
             }
 
