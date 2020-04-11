@@ -63,8 +63,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 {
     private ManagePropertiesViewModel viewModel;
     private RecyclerView recyclerView;
-    private IProperty lastCreatedProperty;
-
+    private IElement propertyToReturn;
 
     protected void setContentView()
     {
@@ -75,82 +74,143 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         this.viewModel = new ViewModelProvider(this).get(ManagePropertiesViewModel.class);
 
-        this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
-
         if(this.viewModel.optionsMenuAgent == null)
         {
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
+        RequestCode requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+        if(requestCode == RequestCode.PICK_CREDIT_TYPE
+                || requestCode == RequestCode.PICK_CATEGORY
+                || requestCode == RequestCode.PICK_MANUFACTURER
+                || requestCode == RequestCode.PICK_STATUS)
+        {
+            this.viewModel.isSelectionMode = true;
+        }
+
+        this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
+
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
+            List<IElement> elements;
             HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
             childTypesToExpand.add(IAttraction.class);
-
-            List<IElement> elementsWithOrderedChildren;
 
             switch(this.viewModel.propertyTypeToManage)
             {
                 case CREDIT_TYPE:
-                    elementsWithOrderedChildren = App.content.getContentOfType(CreditType.class);
-                    for(IElement element : elementsWithOrderedChildren)
+                {
+                    elements = App.content.getContentOfType(CreditType.class);
+
+                    if(this.viewModel.isSelectionMode)
                     {
-                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                elements,
+                                null,
+                                false)
+                                .setTypefaceForContentType(CreditType.class, Typeface.BOLD);
                     }
+                    else
+                    {
+                        for(IElement element : elements)
+                        {
+                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        }
 
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            elementsWithOrderedChildren,
-                            childTypesToExpand)
-                            .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                                elements,
+                                childTypesToExpand)
+                                .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                    }
                     break;
-
+                }
                 case CATEGORY:
-                    elementsWithOrderedChildren = App.content.getContentOfType(Category.class);
-                    for(IElement element : elementsWithOrderedChildren)
+                {
+                    elements = App.content.getContentOfType(Category.class);
+
+                    if(this.viewModel.isSelectionMode)
                     {
-                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                elements,
+                                null,
+                                false)
+                                .setTypefaceForContentType(Category.class, Typeface.BOLD);
                     }
+                    else
+                    {
+                        for(IElement element : elements)
+                        {
+                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        }
 
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            elementsWithOrderedChildren,
-                            childTypesToExpand)
-                            .setTypefaceForContentType(Category.class, Typeface.BOLD)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                                elements,
+                                childTypesToExpand)
+                                .setTypefaceForContentType(Category.class, Typeface.BOLD)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+                    }
                     break;
-
+                }
                 case MANUFACTURER:
-                    elementsWithOrderedChildren = App.content.getContentOfType(Manufacturer.class);
-                    for(IElement element : elementsWithOrderedChildren)
+                {
+                    elements = App.content.getContentOfType(Manufacturer.class);
+
+                    if(this.viewModel.isSelectionMode)
                     {
-                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                elements,
+                                null,
+                                false)
+                                .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
                     }
+                    else
+                    {
+                        for(IElement element : elements)
+                        {
+                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        }
 
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            elementsWithOrderedChildren,
-                            childTypesToExpand)
-                            .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                                elements,
+                                childTypesToExpand)
+                                .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                    }
                     break;
-
+                }
                 case STATUS:
-                    elementsWithOrderedChildren = App.content.getContentOfType(Status.class);
-                    for(IElement element : elementsWithOrderedChildren)
+                {
+                    elements = App.content.getContentOfType(Status.class);
+
+                    if(this.viewModel.isSelectionMode)
                     {
-                        element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                                elements,
+                                null,
+                                false)
+                                .setTypefaceForContentType(Status.class, Typeface.BOLD);
                     }
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                            elementsWithOrderedChildren,
-                            childTypesToExpand)
-                            .setTypefaceForContentType(Status.class, Typeface.BOLD)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                    else
+                    {
+                        for(IElement element : elements)
+                        {
+                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                        }
+                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                                elements,
+                                childTypesToExpand)
+                                .setTypefaceForContentType(Status.class, Typeface.BOLD)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                    }
                     break;
+                }
             }
             this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
         }
@@ -163,15 +223,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
-        Intent intent = getIntent();
-        String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
-
-        super.createHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
@@ -203,7 +258,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
-                this.lastCreatedProperty = (IProperty) resultElement;
+                this.propertyToReturn = resultElement;
                 updateContentRecyclerView(true);
                 break;
 
@@ -434,7 +489,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 Element element = (Element)view.getTag();
 
-                if(element.isProperty())
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onClick:: %s clicked", element));
+
+                if(element.isProperty() && viewModel.isSelectionMode)
+                {
+                    propertyToReturn = element;
+                    returnResult(Activity.RESULT_OK);
+                }
+                else if(element.hasChildren())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                     if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
@@ -867,10 +929,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            if(this.lastCreatedProperty != null)
+            if(this.propertyToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.lastCreatedProperty));
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedProperty.getUuid().toString());
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.propertyToReturn));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.propertyToReturn.getUuid().toString());
             }
         }
 

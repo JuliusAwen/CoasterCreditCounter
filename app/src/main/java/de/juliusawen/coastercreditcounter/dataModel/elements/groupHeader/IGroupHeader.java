@@ -6,5 +6,4 @@ import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 /**
  * Base interface for GroupHeaders
  */
-public interface IGroupHeader extends IElement, IOrphan
-{}
+public interface IGroupHeader extends IElement, IOrphan {}

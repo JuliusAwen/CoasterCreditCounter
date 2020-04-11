@@ -62,11 +62,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private boolean useDedicatedExpansionOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
+    private final View.OnClickListener selectionOnClickListener;
     private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
-
     private View.OnClickListener increaseRideCountOnClickListener;
     private View.OnClickListener decreaseRideCountOnClickListener;
-    private final View.OnClickListener selectionOnClickListener;
+
 
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
     private final HashSet<IElement> expandedItems = new HashSet<>();
@@ -528,6 +528,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.SELECTABLE)
                 {
                     viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
+                    viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
                 }
                 else if(this.recyclerOnClickListener != null)
                 {

@@ -98,7 +98,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        this.setSelectionModeEnabled(this.viewModel.selectionMode);
+        this.setSelectionModeEnabled(this.viewModel.isSelectionMode);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            if(this.viewModel.selectionMode)
+            if(this.viewModel.isSelectionMode)
             {
                 this.setSelectionModeEnabled(false);
                 return true;
@@ -183,7 +183,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : "");
 
         super.setFloatingActionButtonVisibility(enabled);
-        this.viewModel.selectionMode = enabled;
+        this.viewModel.isSelectionMode = enabled;
     }
 
     @Override
@@ -257,7 +257,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickRecyclerView:: %s clicked", element));
 
-                if(!viewModel.selectionMode)
+                if(!viewModel.isSelectionMode)
                 {
                     if(element.isLocation())
                     {
@@ -285,7 +285,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 viewModel.longClickedElement = (Element) view.getTag();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickRecyclerView:: %s long clicked", viewModel.longClickedElement));
 
-                if(!viewModel.selectionMode)
+                if(!viewModel.isSelectionMode)
                 {
                     boolean isLocation = viewModel.longClickedElement.isLocation();
                     boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Location.class).size() > 1;

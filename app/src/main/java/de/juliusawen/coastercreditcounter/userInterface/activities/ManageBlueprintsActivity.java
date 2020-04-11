@@ -55,7 +55,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 {
     private ManageBlueprintsViewModel viewModel;
     private RecyclerView recyclerView;
-    private Blueprint lastCreatedBlueprint;
+    private IElement blueprintToReturn;
 
     @Override
     protected void setContentView()
@@ -73,30 +73,51 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
+        if(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0) == RequestCode.PICK_BLUEPRINT.ordinal())
+        {
+            this.viewModel.isSelectionMode = true;
+        }
+
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-
-            List<IElement> elementsWithOrderedChildren = App.content.getContentOfType(Blueprint.class);
-
-            for(IElement element : elementsWithOrderedChildren)
+            if(this.viewModel.isSelectionMode)
             {
-                element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(Blueprint.class);
+
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                        App.content.getContentOfType(Blueprint.class),
+                        childTypesToExpand,
+                        false)
+                        .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                        .groupItems(GroupType.CATEGORY);
             }
+            else
+            {
+                List<IElement> elementsWithOrderedChildren = App.content.getContentOfType(Blueprint.class);
+                for(IElement element : elementsWithOrderedChildren)
+                {
+                    element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                }
 
-            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(IAttraction.class);
+                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                childTypesToExpand.add(IAttraction.class);
 
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                    elementsWithOrderedChildren,
-                    childTypesToExpand)
-                    .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.LOCATION, DetailDisplayMode.ABOVE)
-                    .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                    .groupItems(GroupType.CATEGORY);
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                        elementsWithOrderedChildren,
+                        childTypesToExpand)
+                        .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.LOCATION, DetailDisplayMode.ABOVE)
+                        .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(StockAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
+                        .groupItems(GroupType.CATEGORY);
+            }
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -107,15 +128,10 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
             this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
-        Intent intent = getIntent();
-        String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
-
-        super.createHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(toolbarTitle, getString(R.string.subtitle_management));
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
         super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
@@ -144,7 +160,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
         switch(RequestCode.values()[requestCode])
         {
             case CREATE_ATTRACTION_BLUEPRINT:
-                this.lastCreatedBlueprint = (Blueprint) resultElement;
+                this.blueprintToReturn = resultElement;
                 updateContentRecyclerView(true);
                 break;
 
@@ -165,7 +181,6 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
     protected Menu createOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.SORT_BLUEPRINTS)
                 .add(OptionsItem.EXPAND_ALL)
                 .add(OptionsItem.COLLAPSE_ALL)
                 .create(menu);
@@ -175,7 +190,6 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
     protected  Menu prepareOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.SORT_BLUEPRINTS, App.content.getContentOfType(Blueprint.class).size() > 1)
                 .setVisible(OptionsItem.EXPAND_ALL, App.content.getContentOfType(Blueprint.class).size() > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .setVisible(OptionsItem.COLLAPSE_ALL, App.content.getContentOfType(Blueprint.class).size() > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
@@ -186,13 +200,6 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
     {
         switch(item)
         {
-            case SORT_BLUEPRINTS:
-                ActivityDistributor.startActivitySortForResult(
-                        this,
-                        RequestCode.SORT_BLUEPRINTS,
-                        App.content.getContentOfType(Blueprint.class));
-                return true;
-
             case EXPAND_ALL:
                 this.viewModel.contentRecyclerViewAdapter.expandAll();
                 invalidateOptionsMenu();
@@ -228,7 +235,14 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
             {
                 Element element = (Element)view.getTag();
 
-                if(element.isGroupHeader() || element.hasChildren())
+                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.onClick:: %s clicked", element));
+
+                if(viewModel.isSelectionMode && element.isBlueprint())
+                {
+                    blueprintToReturn = element;
+                    returnResult(Activity.RESULT_OK);
+                }
+                else if(element.isGroupHeader() || element.hasChildren())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
                     if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
@@ -243,13 +257,19 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
             {
                 viewModel.longClickedElement = (IElement)view.getTag();
 
+                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
+
                 if(viewModel.longClickedElement.isBlueprint())
                 {
-                    Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
-
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.EDIT_ELEMENT)
                             .add(PopupItem.DELETE_ELEMENT)
+                            .show(ManageBlueprintsActivity.this, view);
+                }
+                if(viewModel.longClickedElement.isGroupHeader() && viewModel.longClickedElement.getChildCount() > 1)
+                {
+                    PopupMenuAgent.getMenu()
+                            .add(PopupItem.SORT)
                             .show(ManageBlueprintsActivity.this, view);
                 }
                 return true;
@@ -284,6 +304,13 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
                 alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
                 break;
             }
+
+            case SORT:
+                ActivityDistributor.startActivitySortForResult(
+                        this,
+                        RequestCode.SORT_BLUEPRINTS,
+                        this.viewModel.longClickedElement.getChildren());
+                break;
         }
     }
 
@@ -380,10 +407,10 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            if(this.lastCreatedBlueprint != null)
+            if(this.blueprintToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.returnResult:: returning last created %s", this.lastCreatedBlueprint));
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.lastCreatedBlueprint.getUuid().toString());
+                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.returnResult:: returning last created %s", this.blueprintToReturn));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.blueprintToReturn.getUuid().toString());
             }
         }
 

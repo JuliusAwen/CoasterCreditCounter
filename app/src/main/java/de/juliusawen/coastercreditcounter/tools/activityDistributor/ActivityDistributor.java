@@ -42,26 +42,24 @@ public abstract class ActivityDistributor
 
     public static void startActivityShow(Context context, RequestCode requestCode, IElement element, boolean flagActivityClearTop)
     {
-        Class activityToStart = null;
-
+        Intent intent = null;
         switch(requestCode)
         {
             case SHOW_LOCATION:
-                activityToStart = ShowLocationsActivity.class;
+                intent = new Intent(context, ShowLocationsActivity.class);
                 break;
 
             case SHOW_PARK:
-                activityToStart = ShowParkActivity.class;
+                intent = new Intent(context, ShowParkActivity.class);
                 break;
 
             case SHOW_VISIT:
-                activityToStart = ShowVisitActivity.class;
+                intent = new Intent(context, ShowVisitActivity.class);
                 break;
         }
 
-        if(activityToStart != null)
+        if(intent != null)
         {
-            Intent intent = new Intent(context, activityToStart);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             if(flagActivityClearTop)
             {
@@ -82,70 +80,63 @@ public abstract class ActivityDistributor
 
     public static  void startActivityManageForResult(Context context, RequestCode requestCode)
     {
-        PropertyType propertyType = null;
-        Class activityToStart = null;
-        String toolbarTitle;
-        String helpTitle;
-        String helpText;
+        Intent intent = null;
+        String toolbarTitle = null;
+        String toolbarSubtitle = null;
+        String helpTitle = null;
+        String helpText = null;
 
         switch(requestCode)
         {
             case MANAGE_BLUEPRINTS:
-                activityToStart = ManageBlueprintsActivity.class;
+                intent = new Intent(context, ManageBlueprintsActivity.class);
                 toolbarTitle = context.getString(R.string.title_manage_blueprints);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_text_manage_blueprints);
                 helpText = context.getString(R.string.help_text_manage_blueprints);
                 break;
 
             case MANAGE_CREDIT_TYPES:
-                activityToStart = ManagePropertiesActivity.class;
-                propertyType = PropertyType.CREDIT_TYPE;
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
                 toolbarTitle = context.getString(R.string.credit_type);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.credit_type);
                 helpText = context.getString(R.string.help_text_manage_credit_types);
                 break;
 
             case MANAGE_CATEGORIES:
-                activityToStart = ManagePropertiesActivity.class;
-                propertyType = PropertyType.CATEGORY;
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
                 toolbarTitle = context.getString(R.string.category);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.category);
                 helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
             case MANAGE_MANUFACTURERS:
-                activityToStart = ManagePropertiesActivity.class;
-                propertyType = PropertyType.MANUFACTURER;
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
                 toolbarTitle = context.getString(R.string.manufacturer);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.manufacturer);
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
             case MANAGE_STATUSES:
-                activityToStart = ManagePropertiesActivity.class;
-                propertyType = PropertyType.STATUS;
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
                 toolbarTitle = context.getString(R.string.status);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.status);
                 helpText = context.getString(R.string.help_text_manage_statuses);
                 break;
-
-            default:
-                toolbarTitle = context.getString(R.string.error_missing_text);
-                helpTitle = context.getString(R.string.error_missing_text);
-                helpText = context.getString(R.string.error_missing_text);
-                break;
         }
 
-        if(activityToStart != null)
+        if(intent != null)
         {
-            Intent intent = new Intent(context, activityToStart);
-
-            if(propertyType != null)
-            {
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, propertyType.ordinal());
-            }
-
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
 
@@ -158,61 +149,60 @@ public abstract class ActivityDistributor
         else
         {
             Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
-                    "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown RequestCode [%s]", requestCode));
+                    "ActivityDistributor.startActivityManageForResult:: unable to start activity: unknown RequestCode [%s] from [%s]", requestCode, context.getClass().getSimpleName()));
         }
     }
 
     public static void startActivityEditForResult(Context context, RequestCode requestCode, IElement element)
     {
-        Class activityToStart = null;
+        Intent intent = null;
         String toolbarTitle = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
             case EDIT_LOCATION:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_location);
                 break;
 
             case EDIT_PARK:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_park);
                 break;
 
             case EDIT_CREDIT_TYPE:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_credit_type);
                 break;
 
             case EDIT_CATEGORY:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_category);
                 break;
 
             case EDIT_MANUFACTURER:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_manufacturer);
                 break;
 
             case EDIT_STATUS:
-                activityToStart = EditSimpleElementActivity.class;
+                intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_status);
                 break;
 
             case EDIT_ATTRACTION_BLUEPRINT:
-                activityToStart = EditAttractionActivity.class;
+                intent = new Intent(context, EditAttractionActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_blueprint);
                 break;
 
             case EDIT_ON_SITE_ATTRACTION:
-                activityToStart = EditAttractionActivity.class;
+                intent = new Intent(context, EditAttractionActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_on_site_attraction);
                 break;
         }
 
-        if(activityToStart != null)
+        if(intent != null)
         {
-            Intent intent = new Intent(context, activityToStart);
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
@@ -237,7 +227,7 @@ public abstract class ActivityDistributor
 
     public static void startActivityCreateForResult(Context context, RequestCode requestCode, IElement parentElement)
     {
-        Class activityToStart;
+        Intent intent;
         String title = null;
         String toolbarSubtitle = null;
         String helpText = null;
@@ -246,19 +236,19 @@ public abstract class ActivityDistributor
         switch(requestCode)
         {
             case CREATE_LOCATION:
-                activityToStart = CreateLocationActivity.class;
+                intent = new Intent(context, CreateLocationActivity.class);
                 break;
 
             case CREATE_PARK:
-                activityToStart = CreateParkActivity.class;
+                intent = new Intent(context, CreateParkActivity.class);
                 break;
 
             case CREATE_VISIT:
-                activityToStart = CreateVisitActivity.class;
+                intent = new Intent(context, CreateVisitActivity.class);
                 break;
 
             case CREATE_ON_SITE_ATTRACTION:
-                activityToStart = CreateAttractionActivity.class;
+                intent = new Intent(context, CreateAttractionActivity.class);
                 title = context.getString(R.string.title_create_attraction);
                 toolbarSubtitle = context.getString(R.string.subtitle_create_attraction, parentElement.getName());
                 helpText = context.getString(R.string.help_text_create_attraction);
@@ -268,63 +258,70 @@ public abstract class ActivityDistributor
 
                 // Create OrphanElement
             case CREATE_ATTRACTION_BLUEPRINT:
-                activityToStart = CreateAttractionActivity.class;
+                intent = new Intent(context, CreateAttractionActivity.class);
                 title = context.getString(R.string.title_create_blueprint);
                 helpText = context.getString(R.string.help_text_create_blueprint);
                 hint = context.getString(R.string.hint_enter_blueprint_name);
                 break;
 
             case CREATE_CREDIT_TYPE:
-                activityToStart = CreateSimpleElementActivity.class;
+                intent = new Intent(context, CreateSimpleElementActivity.class);
                 title = context.getString(R.string.title_create_credit_type);
                 helpText = context.getString(R.string.help_text_create_credit_type);
                 hint = context.getString(R.string.hint_enter_credit_type_name);
                 break;
 
             case CREATE_CATEGORY:
-                activityToStart = CreateSimpleElementActivity.class;
+                intent = new Intent(context, CreateSimpleElementActivity.class);
                 title = context.getString(R.string.title_create_category);
                 helpText = context.getString(R.string.help_text_create_category);
                 hint = context.getString(R.string.hint_enter_category_name);
                 break;
 
             case CREATE_MANUFACTURER:
-                activityToStart = CreateSimpleElementActivity.class;
+                intent = new Intent(context, CreateSimpleElementActivity.class);
                 title = context.getString(R.string.title_create_manufacturer);
                 helpText = context.getString(R.string.help_text_create_manufacturer);
                 hint = context.getString(R.string.hint_enter_manufacturer_name);
                 break;
 
             case CREATE_STATUS:
-                activityToStart = CreateSimpleElementActivity.class;
+                intent = new Intent(context, CreateSimpleElementActivity.class);
                 title = context.getString(R.string.title_create_status);
                 helpText = context.getString(R.string.help_text_create_status);
                 hint = context.getString(R.string.hint_enter_status_name);
                 break;
 
             default:
-                activityToStart = CreateSimpleElementActivity.class;
+                intent = new Intent(context, CreateSimpleElementActivity.class);
                 break;
         }
 
-        Intent intent = new Intent(context, activityToStart);
-        intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, title);
-        intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
-        intent.putExtra(Constants.EXTRA_HELP_TITLE, title);
-        intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
-        intent.putExtra(Constants.EXTRA_HINT, hint);
-        intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
-
-        if(parentElement != null)
+        if(intent != null)
         {
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, title);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
+            intent.putExtra(Constants.EXTRA_HELP_TITLE, title);
+            intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
+            intent.putExtra(Constants.EXTRA_HINT, hint);
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
+
+            if(parentElement != null)
+            {
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
+            }
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
+
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: started [%s] with parent[%S] with RequestCode [%s] from [%s]",
+                    StringTool.parseActivityName(intent.getComponent().getShortClassName()), parentElement != null, requestCode, context.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
         }
-
-        ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
-
-        Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: started [%s] with parent[%S] with RequestCode [%s] from [%s]",
-                StringTool.parseActivityName(intent.getComponent().getShortClassName()), parentElement != null, requestCode, context.getClass().getSimpleName()));
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
+                    "ActivityDistributor.startActivityCreateForResult:: unable to start activity: unknown RequestCode [%s] from [%s]", requestCode, context.getClass().getSimpleName()));
+        }
     }
 
     public static void startActivitySortForResult(Context context, RequestCode requestCode, List<IElement> elementsToSort)
@@ -389,92 +386,113 @@ public abstract class ActivityDistributor
 
     public static void startActivityPickForResult(Context context, RequestCode requestCode, List<IElement> elementsToPickFrom)
     {
+        Intent intent = null;
         String toolbarTitle = null;
         String toolbarSubtitle = null;
-        boolean isSinglePick = false;
-
-        Intent intent = new Intent(context, PickElementsActivity.class);
+        String helpTitle = null;
+        String helpText = null;
 
         switch(requestCode)
         {
             // SINGLE PICK
 
             case PICK_VISIT:
+                intent = new Intent(context, PickElementsActivity.class);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 toolbarTitle = context.getString(R.string.title_pick_visit);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_open);
-                isSinglePick = true;
                 break;
 
             case PICK_BLUEPRINT:
+                intent = new Intent(context, ManageBlueprintsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_blueprint);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                isSinglePick = true;
+                helpTitle = context.getString(R.string.title_pick_blueprint);
+                helpText = context.getString(R.string.help_text_pick_blueprint);
                 break;
 
             case PICK_CREDIT_TYPE:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                isSinglePick = true;
+                helpTitle = context.getString(R.string.title_pick_credit_type);
+                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_CATEGORY:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
                 toolbarTitle = context.getString(R.string.title_pick_category);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                isSinglePick = true;
+                helpTitle = context.getString(R.string.title_pick_category);
+                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_MANUFACTURER:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
                 toolbarTitle = context.getString(R.string.title_pick_manufacturer);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                isSinglePick = true;
+                helpTitle = context.getString(R.string.title_pick_manufacturer);
+                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_STATUS:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
                 toolbarTitle = context.getString(R.string.title_pick_status);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                isSinglePick = true;
+                helpTitle = context.getString(R.string.title_pick_status);
+                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
 
             // MULTIPLE PICK
 
             case PICK_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_attractions_to_add_to_visit);
                 break;
 
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_credit_type_to);
                 break;
 
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_category_to);
                 break;
 
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_manufacturer_to);
                 break;
 
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_status_to_assign_status_to);
                 break;
         }
 
-        if(toolbarTitle != null)
+        if(intent != null)
         {
-            if(isSinglePick)
-            {
-                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
-            }
-
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
+
+            if(helpTitle != null && helpText != null)
+            {
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
+            }
 
             ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 

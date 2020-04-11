@@ -332,29 +332,37 @@
         \n <li><i>add park:</i> add new park on current location level.</li>
     </string>
 
+    <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
+
     <string name="help_text_sort_elements">@string/help_text_not_yet_available</string>
+
     <string name="help_text_pick_elements">@string/help_text_not_yet_available</string>
+    <string name="help_text_pick_element">@string/help_text_not_yet_available</string>
+    <string name="help_text_pick_blueprint">@string/help_text_not_yet_available</string>
+
     <string name="help_text_create_location">@string/help_text_not_yet_available</string>
     <string name="help_text_create_park">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_blueprint">@string/help_text_not_yet_available</string>
     <string name="help_text_create_credit_type">@string/help_text_not_yet_available</string>
     <string name="help_text_create_category">@string/help_text_not_yet_available</string>
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_create_status">@string/help_text_not_yet_available</string>
+
     <string name="help_text_edit">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_blueprint">@string/help_text_not_yet_available</string>
+
     <string name="help_text_show_park_overview">@string/help_text_not_yet_available</string>
     <string name="help_text_show_attractions">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
+
+    <string name="help_text_manage_blueprints">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_credit_types">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_categories">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_manufacturers">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_statuses">@string/help_text_not_yet_available</string>
-    <string name="help_text_navigation_hub">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_attraction">@string/help_text_not_yet_available</string>
-    <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_blueprint">@string/help_text_not_yet_available</string>
-    <string name="help_text_edit_blueprint">@string/help_text_not_yet_available</string>
-    <string name="help_text_manage_blueprints">@string/help_text_not_yet_available</string>
 
 </resources>
 

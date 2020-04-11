@@ -9,9 +9,11 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 public class ShowLocationsActivityViewModel extends ViewModel
 {
     public IElement currentLocation;
+
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     public IElement longClickedElement;
-    public boolean selectionMode;
     public IElement newParent;
     public OptionsMenuAgent optionsMenuAgent;
+
+    public boolean isSelectionMode;
 }

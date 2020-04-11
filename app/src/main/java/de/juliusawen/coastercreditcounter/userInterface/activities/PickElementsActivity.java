@@ -103,7 +103,6 @@ public class PickElementsActivity extends BaseActivity
                             childTypesToExpand,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
-
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
                     break;
                 }
@@ -158,10 +157,14 @@ public class PickElementsActivity extends BaseActivity
                 }
             }
         }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-        this.recyclerView = findViewById(R.id.recyclerViewPickElements);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+
+        if(this.viewModel.contentRecyclerViewAdapter != null)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
+            this.recyclerView = findViewById(R.id.recyclerViewPickElements);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_pick_elements));
         super.createToolbar()

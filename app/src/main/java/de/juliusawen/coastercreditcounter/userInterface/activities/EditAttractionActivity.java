@@ -156,53 +156,7 @@ public class EditAttractionActivity extends BaseActivity
 
         Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode != RESULT_OK) // no Element was picked in PickElementActivity
-        { // as it is possible that former Element was deleted via Pick-->ManageProperty, it's existence has to be validated
-            switch(RequestCode.getValue(requestCode))
-            {
-                case PICK_BLUEPRINT:
-                {
-                    if(!App.content.containsElement(this.viewModel.blueprint))
-                    {
-                        this.updateLayoutBlueprint(null);
-                    }
-                    break;
-                }
-                case PICK_CREDIT_TYPE:
-                {
-                    if(!App.content.containsElement(this.viewModel.creditType))
-                    {
-                        this.updateLayoutCreditType(CreditType.getDefault());
-                    }
-                    break;
-                }
-                case PICK_CATEGORY:
-                {
-                    if(!App.content.containsElement(this.viewModel.category))
-                    {
-                        this.updateLayoutCategory(Category.getDefault());
-                    }
-                    break;
-                }
-                case PICK_MANUFACTURER:
-                {
-                    if(!App.content.containsElement(this.viewModel.manufacturer))
-                    {
-                        this.updateLayoutManufacturer(Manufacturer.getDefault());
-                    }
-                    break;
-                }
-                case PICK_STATUS:
-                {
-                    if(!App.content.containsElement(this.viewModel.status))
-                    {
-                        this.updateLayoutStatus(Status.getDefault());
-                    }
-                    break;
-                }
-            }
-        }
-        else if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
+        if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
         {
             IElement pickedElement = ResultFetcher.fetchResultElement(data);
             if(pickedElement != null)
@@ -240,12 +194,48 @@ public class EditAttractionActivity extends BaseActivity
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("EditAttractionActivity.onActivityResult:: result OK but no picked Element returned for RequestCode [%s]",
-                        RequestCode.getValue(requestCode)));
-
-                if(App.config.isDebugBuild())
+                switch(RequestCode.getValue(requestCode)) //it is possible that element was deleted, so it has to be evaluated if it is still existing
                 {
-                    Toaster.makeLongToast(this, "result OK but no picked Element returned");
+                    case PICK_BLUEPRINT:
+                    {
+                        if(!App.content.containsElement(this.viewModel.blueprint))
+                        {
+                            this.updateLayoutBlueprint(null);
+                        }
+                        break;
+                    }
+                    case PICK_CREDIT_TYPE:
+                    {
+                        if(!App.content.containsElement(this.viewModel.creditType))
+                        {
+                            this.updateLayoutCreditType(CreditType.getDefault());
+                        }
+                        break;
+                    }
+                    case PICK_CATEGORY:
+                    {
+                        if(!App.content.containsElement(this.viewModel.category))
+                        {
+                            this.updateLayoutCategory(Category.getDefault());
+                        }
+                        break;
+                    }
+                    case PICK_MANUFACTURER:
+                    {
+                        if(!App.content.containsElement(this.viewModel.manufacturer))
+                        {
+                            this.updateLayoutManufacturer(Manufacturer.getDefault());
+                        }
+                        break;
+                    }
+                    case PICK_STATUS:
+                    {
+                        if(!App.content.containsElement(this.viewModel.status))
+                        {
+                            this.updateLayoutStatus(Status.getDefault());
+                        }
+                        break;
+                    }
                 }
             }
         }
