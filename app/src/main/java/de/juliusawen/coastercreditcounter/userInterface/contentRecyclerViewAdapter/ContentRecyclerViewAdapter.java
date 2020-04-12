@@ -517,6 +517,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
 
+
+
             //set tag
             viewHolder.itemView.setTag(item);
 
@@ -1082,15 +1084,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     if(selectMultipleItems)
                     {
-                        selectedItemsInOrderOfSelection.add(selectedItem);
-                        notifyItemChanged(items.indexOf(selectedItem));
-                        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
+                        setItemSelected(selectedItem);
 
                         if(!relevantChildTypes.isEmpty())
                         {
-                            List<IElement> relevantChildren = getRelevantChildren(selectedItem);
-
-                            selectAllRelevantChildren(relevantChildren);
+                            setItemsSelected(getRelevantChildren(selectedItem));
                             selectParentIfAllRelevantChildrenAreSelected(getParentOfRelevantChild(selectedItem));
                         }
                     }
@@ -1098,18 +1096,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     {
                         if(!selectedItem.isGroupHeader())
                         {
-                            IElement previouslySelectedItem = getLastSelectedItem();
-
-                            if(previouslySelectedItem != null)
-                            {
-                                selectedItemsInOrderOfSelection.remove(previouslySelectedItem);
-                                notifyItemChanged(items.indexOf(previouslySelectedItem));
-                                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", previouslySelectedItem));
-                            }
-
-                            selectedItemsInOrderOfSelection.add(selectedItem);
-                            notifyItemChanged(items.indexOf(selectedItem));
-                            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s selected", selectedItem));
+                            setItemDeselected(getLastSelectedItem());
+                            setItemSelected(selectedItem);
                         }
                         else
                         {
@@ -1119,16 +1107,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
                 else
                 {
-                    selectedItemsInOrderOfSelection.remove(selectedItem);
-                    notifyItemChanged(items.indexOf(selectedItem));
-                    Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s deselected", selectedItem));
+                    setItemDeselected(selectedItem);
 
                     if(selectMultipleItems)
                     {
                         if(!relevantChildTypes.isEmpty())
                         {
-                            List<IElement> relevantChildren = getRelevantChildren(selectedItem);
-                            deselectAllRelevantChildren(relevantChildren);
+                            setItemsDeselected(getRelevantChildren(selectedItem));
                             deselectParentIfNotAllRelevantChildrenAreSelected(getParentOfRelevantChild(selectedItem));
                         }
                     }
@@ -1142,49 +1127,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         };
     }
 
-    private void selectAllRelevantChildren(List<IElement> relevantChildren)
-    {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllRelevantChildren:: selecting [%d] children", relevantChildren.size()));
-
-        for(IElement child : relevantChildren)
-        {
-            if(!this.selectedItemsInOrderOfSelection.contains(child))
-            {
-                this.selectedItemsInOrderOfSelection.add(child);
-                if(this.items.contains(child))
-                {
-                    Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllRelevantChildren:: child [%s] selected", child));
-                    notifyItemChanged(this.items.indexOf(child));
-                }
-            }
-        }
-    }
-
-    private void deselectAllRelevantChildren(List<IElement> relevantChildren)
-    {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectAllRelevantChildren:: deselecting [%d] children", relevantChildren.size()));
-
-        for(IElement child : relevantChildren)
-        {
-            if(this.selectedItemsInOrderOfSelection.contains(child))
-            {
-                this.selectedItemsInOrderOfSelection.remove(child);
-                if(this.items.contains(child))
-                {
-                    notifyItemChanged(this.items.indexOf(child));
-                    Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectAllRelevantChildren:: child [%s] deselected", child));
-                }
-            }
-        }
-    }
-
     private void selectParentIfAllRelevantChildrenAreSelected(IElement parent)
     {
         if(parent != null && this.allRelevantChildrenAreSelected(parent))
         {
-            this.selectedItemsInOrderOfSelection.add(parent);
-            notifyItemChanged(items.indexOf(parent));
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectParentIfAllRelevantChildrenAreSelected:: parent %s selected", parent));
+            this.setItemSelected(parent);
         }
     }
 
@@ -1192,9 +1139,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(parent != null && !allRelevantChildrenAreSelected(parent))
         {
-            this.selectedItemsInOrderOfSelection.remove(parent);
-            notifyItemChanged(items.indexOf(parent));
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.deselectParentIfNotAllRelevantChildrenAreSelected:: parent %s deselected", parent));
+            this.setItemDeselected(parent);
         }
     }
 
@@ -1202,57 +1147,105 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         boolean allRelevantChildrenAreSelected = false;
         List<IElement> relevantChildren = this.getRelevantChildren(parent);
+
         if(parent != null && !relevantChildren.isEmpty())
         {
             relevantChildren.removeAll(this.selectedItemsInOrderOfSelection);
             allRelevantChildrenAreSelected = relevantChildren.isEmpty();
         }
+
         return allRelevantChildrenAreSelected;
     }
 
-    public boolean isAllSelected()
+    public void setAllItemsSelected()
     {
-        List<IElement> items = new ArrayList<>(this.items);
-        items.removeAll(this.selectedItemsInOrderOfSelection);
-        return items.isEmpty();
-    }
-
-    public void selectAllItems()
-    {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.selectAllItems:: selecting all items...");
+        Log.d(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setAllItemsSelected:: selecting all items...");
 
         this.selectedItemsInOrderOfSelection.clear();
 
         for(IElement item : this.items)
         {
-            this.selectedItemsInOrderOfSelection.add(item);
-            notifyItemChanged(this.items.indexOf(item));
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: %s selected", item));
-
+            this.setItemSelected(item);
 
             if(!this.expandedItems.contains(item))
             {
                 List<IElement> relevantChildren = this.getRelevantChildren(item);
                 if(!relevantChildren.isEmpty())
                 {
-                    this.selectedItemsInOrderOfSelection.addAll(relevantChildren);
-                    Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.selectAllItems:: selected [%d] children for not expanded %s", relevantChildren.size(), item));
+                    this.setItemsSelected(relevantChildren);
                 }
             }
         }
     }
 
-    public void deselectAllItems()
+    private void setItemsSelected(List<IElement> elements)
     {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.deselectAllItems:: deselecting all elements...");
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemsSelected:: selecting [%d] elements", elements.size()));
+
+        for(IElement element : elements)
+        {
+            this.setItemSelected(element);
+        }
+    }
+
+    public void setItemSelected(IElement element)
+    {
+        if(element != null)
+        {
+            if(!this.selectedItemsInOrderOfSelection.contains(element))
+            {
+                this.selectedItemsInOrderOfSelection.add(element);
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemSelected:: %s selected", element));
+            }
+
+            if(this.items.contains(element))
+            {
+                notifyItemChanged(this.items.indexOf(element));
+            }
+        }
+    }
+
+    public void setAllItemsDeselected()
+    {
+        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setAllItemsDeselected:: deselecting all elements...");
 
         LinkedList<IElement> selectedItems = new LinkedList<>(this.selectedItemsInOrderOfSelection);
-        this.selectedItemsInOrderOfSelection.clear();
+        this.setItemsDeselected(selectedItems);
+    }
 
-        for(IElement selectedItem : selectedItems)
+    private void setItemsDeselected(List<IElement> elements)
+    {
+        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemsDeselected:: deselecting [%d] elements", elements.size()));
+
+        for(IElement element : elements)
         {
-            notifyItemChanged(this.items.indexOf(selectedItem));
+            this.setItemDeselected(element);
         }
+    }
+
+    public void setItemDeselected(IElement element)
+    {
+        if(element != null)
+        {
+            if(this.selectedItemsInOrderOfSelection.contains(element))
+            {
+                selectedItemsInOrderOfSelection.remove(element);
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemDeselected:: %s deselected", element));
+            }
+
+            if(this.items.contains(element))
+            {
+                notifyItemChanged(this.items.indexOf(element));
+            }
+        }
+    }
+
+    public boolean isAllSelected()
+    {
+        List<IElement> items = new ArrayList<>(this.items);
+        items.removeAll(this.selectedItemsInOrderOfSelection);
+
+        return items.isEmpty();
     }
 
     public LinkedList<IElement> getSelectedItemsInOrderOfSelection()

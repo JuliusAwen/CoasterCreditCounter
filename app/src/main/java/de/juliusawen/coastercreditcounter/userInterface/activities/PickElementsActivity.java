@@ -522,12 +522,12 @@ public class PickElementsActivity extends BaseActivity
 
                 if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.selectAllItems();
+                    viewModel.contentRecyclerViewAdapter.setAllItemsSelected();
                     changeRadioButtonToDeselectAll();
                 }
                 else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.deselectAllItems();
+                    viewModel.contentRecyclerViewAdapter.setAllItemsDeselected();
                     changeRadioButtonToSelectAll();
                 }
             }
