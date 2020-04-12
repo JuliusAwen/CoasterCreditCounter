@@ -176,14 +176,22 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void setSelectionModeEnabled(boolean enabled)
     {
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", enabled));
+        this.viewModel.isSelectionMode = enabled;
 
-        super.setToolbarTitleAndSubtitle(
-                enabled ? getString(R.string.title_relocate) : getString(R.string.locations),
-                enabled ? getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()) : "");
+        if(enabled)
+        {
+            this.viewModel.contentRecyclerViewAdapter.setItemSelected(this.viewModel.longClickedElement);
+            super.setToolbarTitleAndSubtitle(getString(R.string.title_relocate), getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()));
+        }
+        else
+        {
+            this.viewModel.contentRecyclerViewAdapter.setItemDeselected(this.viewModel.longClickedElement);
+            super.setToolbarTitleAndSubtitle(getString(R.string.locations), "");
+        }
 
         super.setFloatingActionButtonVisibility(enabled);
-        this.viewModel.isSelectionMode = enabled;
+
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", this.viewModel.isSelectionMode));
     }
 
     @Override
@@ -427,12 +435,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     else
                     {
                         Toaster.makeShortToast(this, getString(R.string.error_new_parent_is_own_descendant));
+                        this.setSelectionModeEnabled(false);
                     }
                 }
                 else
                 {
+                    Log.w(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: %s is already located at %s - aborting relocation",
+                            this.viewModel.longClickedElement, this.viewModel.newParent));
                     this.setSelectionModeEnabled(false);
                 }
+            }
+            else
+            {
+                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: cannot relocate %s to itself - aborting relocation",
+                        this.viewModel.longClickedElement));
+                this.setSelectionModeEnabled(false);
             }
         }
         else

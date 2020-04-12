@@ -8,7 +8,7 @@
     <string name="title_relocate">Relocate</string>
     <string name="title_sort">Sort</string>
 
-    <string name="subtitle_relocate_select_new_parent">select new parent location for \'%1$s\'</string>
+    <string name="subtitle_relocate_select_new_parent">select \'%1$s\' new location</string>
     <string name="subtitle_management">management</string>
     <string name="subtitle_to_assign_to_attraction">to assign to attraction</string>
 
@@ -143,9 +143,9 @@
     <string name="item_navigation_drawer_import">Import</string>
     <string name="item_navigation_drawer_export">Export</string>
 
-    <string name="error_export_fail">Export failed!</string>
-    <string name="error_import_fail">Import from %1$s failed!</string>
-    <string name="error_new_parent_is_not_location">New parent must be a location!</string>
+    <string name="error_export_fail">Export failed</string>
+    <string name="error_import_fail">Import from %1$s failed</string>
+    <string name="error_new_parent_is_not_location">Select a location</string>
     <string name="error_new_parent_is_own_descendant">New parent can not be its own descendant!</string>
 
     <string name="alert_dialog_title_overwrite_file">FILE ALREADY EXISTS</string>

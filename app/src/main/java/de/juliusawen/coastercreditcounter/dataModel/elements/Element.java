@@ -277,6 +277,8 @@ public abstract class Element implements IElement
 
     public void relocateElement(IElement newParent)
     {
+        Log.i(Constants.LOG_TAG,  String.format("Element.relocateElement:: %s will be relocated from %s to %s...", this, this.parent, newParent));
+
         if(this.isOrphan())
         {
             Log.e(Constants.LOG_TAG, "relocateElement ORPHAN");
@@ -303,7 +305,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("Element.deleteElement:: %s is an ORPHAN - no need to remove from parent", this));
+            Log.v(Constants.LOG_TAG, String.format("Element.deleteElement:: %s is an ORPHAN - no need to remove it from parent", this));
         }
     }
 
