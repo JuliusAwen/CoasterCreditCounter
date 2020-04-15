@@ -1180,8 +1180,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setItemsSelected(List<IElement> elements)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemsSelected:: selecting [%d] elements", elements.size()));
-
         for(IElement element : elements)
         {
             this.setItemSelected(element);
@@ -1215,8 +1213,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setItemsDeselected(List<IElement> elements)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemsDeselected:: deselecting [%d] elements", elements.size()));
-
         for(IElement element : elements)
         {
             this.setItemDeselected(element);

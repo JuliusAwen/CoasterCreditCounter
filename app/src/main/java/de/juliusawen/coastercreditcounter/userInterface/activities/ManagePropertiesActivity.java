@@ -25,12 +25,11 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -569,66 +568,76 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 {
                     case CREDIT_TYPE:
                     {
-                        List<IElement> categorizedElements = App.content.getContentOfType(IHasCreditTypeProperty.class);
-                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
+                        List<IElement> elementsToAssignTo = new ArrayList<>();
+                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
+                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
 
-                        for(IAttraction attraction : categorizedAttractions)
+                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
+
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
-                                categorizedElements.remove(attraction);
+                                elementsToAssignTo.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManagePropertiesActivity.this,
-                                RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                categorizedElements);
+                                RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS,
+                                elementsToAssignTo);
                         break;
                     }
 
                     case CATEGORY:
                     {
-                        List<IElement> categorizedElements = App.content.getContentOfType(IHasCategoryProperty.class);
-                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
+                        List<IElement> elementsToAssignTo = new ArrayList<>();
+                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
+                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
 
-                        for(IAttraction attraction : categorizedAttractions)
+                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
+
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
-                                categorizedElements.remove(attraction);
+                                elementsToAssignTo.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManagePropertiesActivity.this,
                                 RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                categorizedElements);
+                                elementsToAssignTo);
                         break;
                     }
 
                     case MANUFACTURER:
                     {
-                        List<IElement> categorizedElements = App.content.getContentOfType(IHasManufacturerProperty.class);
-                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
-                        for(IAttraction attraction : categorizedAttractions)
+                        List<IElement> elementsToAssignTo = new ArrayList<>();
+                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
+                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
+
+                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
+
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
-                                categorizedElements.remove(attraction);
+                                elementsToAssignTo.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManagePropertiesActivity.this,
                                 RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
-                                categorizedElements);
+                                elementsToAssignTo);
                         break;
                     }
 
@@ -641,7 +650,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<APPLY_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
                                 categorizedElements.remove(attraction);
                             }
@@ -898,24 +907,33 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.updateContentRecyclerView:: resetting content...");
 
+            List<IElement> elements = new ArrayList<>();
+
             switch(this.viewModel.propertyTypeToManage)
             {
                 case CREDIT_TYPE:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(CreditType.class));
+                    elements = App.content.getContentOfType(CreditType.class);
                     break;
 
                 case CATEGORY:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Category.class));
+                    elements = App.content.getContentOfType(Category.class);
                     break;
 
                 case MANUFACTURER:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Manufacturer.class));
+                    elements = App.content.getContentOfType(Manufacturer.class);
                     break;
 
                 case STATUS:
-                    this.viewModel.contentRecyclerViewAdapter.setItems(App.content.getContentOfType(Status.class));
+                    elements = App.content.getContentOfType(Status.class);
                     break;
             }
+
+            for(IElement element : elements)
+            {
+                element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+            }
+
+            this.viewModel.contentRecyclerViewAdapter.setItems(elements);
         }
         else
         {

@@ -22,6 +22,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
@@ -85,7 +87,8 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(IAttraction.class);
+                    childTypesToExpand.add(CustomAttraction.class);
+                    childTypesToExpand.add(Blueprint.class);
 
                     if(this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS)
                     {
@@ -484,7 +487,7 @@ public class PickElementsActivity extends BaseActivity
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
                     Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: accepted - return code <OK>");
-                    returnResult(RESULT_OK, null);
+                    returnResult(RESULT_OK);
                 }
                 else
                 {
@@ -605,6 +608,11 @@ public class PickElementsActivity extends BaseActivity
         Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToDeselectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
+    private void returnResult(int resultCode)
+    {
+        this.returnResult(resultCode, null);
+    }
+
     private void returnResult(int resultCode, IElement element)
     {
         Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: resultCode[%d]", resultCode));
@@ -615,6 +623,8 @@ public class PickElementsActivity extends BaseActivity
         {
             if(element == null)
             {
+                LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
+
                 switch(this.viewModel.requestCode)
                 {
                     case PICK_VISIT:
@@ -628,10 +638,25 @@ public class PickElementsActivity extends BaseActivity
                         break;
                     }
 
+                    case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+                    case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+                    case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                    {
+                        for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+                        {
+                            if(!selectedElement.isOrphan() || selectedElement.isBlueprint())
+                            {
+                                selectedElementsWithoutOrphanElements.add(selectedElement);
+                            }
+                        }
+
+                        Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                        intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
+                        break;
+                    }
+
                     default:
                     {
-                        LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
-
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                         {
                             if(!selectedElement.isOrphan())
