@@ -11,6 +11,7 @@ public class ManageBlueprintsViewModel extends ViewModel
     public IElement longClickedElement;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     public OptionsMenuAgent optionsMenuAgent;
+    public IElement blueprintToReturn;
 
     public boolean isSelectionMode = false;
 }

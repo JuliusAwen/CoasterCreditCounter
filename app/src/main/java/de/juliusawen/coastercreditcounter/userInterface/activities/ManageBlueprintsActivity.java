@@ -54,7 +54,6 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 {
     private ManageBlueprintsViewModel viewModel;
     private RecyclerView recyclerView;
-    private IElement blueprintToReturn;
 
     @Override
     protected void setContentView()
@@ -159,7 +158,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
         switch(RequestCode.values()[requestCode])
         {
             case CREATE_ATTRACTION_BLUEPRINT:
-                this.blueprintToReturn = resultElement;
+                this.viewModel.blueprintToReturn = resultElement;
                 updateContentRecyclerView(true);
                 break;
 
@@ -238,7 +237,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 
                 if(viewModel.isSelectionMode && element.isBlueprint())
                 {
-                    blueprintToReturn = element;
+                    viewModel.blueprintToReturn = element;
                     returnResult(RESULT_OK);
                 }
                 else if(element.isGroupHeader() || element.hasChildren())
@@ -406,10 +405,10 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            if(this.blueprintToReturn != null)
+            if(this.viewModel.blueprintToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.returnResult:: returning last created %s", this.blueprintToReturn));
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.blueprintToReturn.getUuid().toString());
+                Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.returnResult:: returning last created %s", this.viewModel.blueprintToReturn));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.blueprintToReturn.getUuid().toString());
             }
         }
 

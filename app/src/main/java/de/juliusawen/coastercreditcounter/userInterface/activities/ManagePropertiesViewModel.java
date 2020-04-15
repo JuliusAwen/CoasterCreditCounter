@@ -13,6 +13,7 @@ public class ManagePropertiesViewModel extends ViewModel
     public IElement longClickedElement;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     public OptionsMenuAgent optionsMenuAgent;
+    public IElement propertyToReturn;
 
     public boolean isSelectionMode = false;
 }

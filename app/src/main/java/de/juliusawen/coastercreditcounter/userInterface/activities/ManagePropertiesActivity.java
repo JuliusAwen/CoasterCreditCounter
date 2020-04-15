@@ -62,7 +62,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 {
     private ManagePropertiesViewModel viewModel;
     private RecyclerView recyclerView;
-    private IElement propertyToReturn;
 
     protected void setContentView()
     {
@@ -257,7 +256,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
-                this.propertyToReturn = resultElement;
+                this.viewModel.propertyToReturn = resultElement;
                 updateContentRecyclerView(true);
                 break;
 
@@ -492,7 +491,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 if(element.isProperty() && viewModel.isSelectionMode)
                 {
-                    propertyToReturn = element;
+                    viewModel.propertyToReturn = element;
                     returnResult(RESULT_OK);
                 }
                 else if(element.hasChildren())
@@ -935,10 +934,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(resultCode == RESULT_OK)
         {
-            if(this.propertyToReturn != null)
+            if(this.viewModel.propertyToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.propertyToReturn));
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.propertyToReturn.getUuid().toString());
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.viewModel.propertyToReturn));
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.propertyToReturn.getUuid().toString());
             }
         }
 
