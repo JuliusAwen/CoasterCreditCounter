@@ -25,8 +25,8 @@ public interface IElement
     void addChildrenAtIndexAndSetParent(int index, List<IElement> children);
 
     List<IElement> getChildren();
-    List<IElement> fetchChildrenOfType(Class<? extends IElement> type);
-    <T extends IElement> List<T> fetchChildrenAsType(Class<T> type);
+    List<IElement> getChildrenOfType(Class<? extends IElement> type);
+    <T extends IElement> List<T> getChildrenAsType(Class<T> type);
 
     int getChildCount();
     int getChildCountOfType(Class<? extends IElement> type);
@@ -37,16 +37,16 @@ public interface IElement
     int getIndexOfChild(IElement child);
 
     void deleteElementAndDescendants();
-    void deleteElement();
+    void delete();
     void deleteChild(IElement child);
 
     boolean isDescendantOf(IElement ancestor);
 
-    void removeElement();
+    void remove();
 
     void reorderChildren(List<? extends IElement> children);
 
-    void relocateElement(IElement newParent);
+    void relocate(IElement newParent);
 
     String toString();
 

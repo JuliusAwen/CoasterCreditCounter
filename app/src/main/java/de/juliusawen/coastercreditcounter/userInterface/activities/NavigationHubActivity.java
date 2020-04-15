@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -109,7 +108,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         Log.i(Constants.LOG_TAG, String.format("NavigationHubActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode == Activity.RESULT_OK)
+        if(resultCode == RESULT_OK)
         {
             if(requestCode == RequestCode.PICK_VISIT.ordinal())
             {

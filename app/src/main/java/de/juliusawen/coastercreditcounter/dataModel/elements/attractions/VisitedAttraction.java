@@ -7,11 +7,11 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.application.Constants;
 
 /**
  * Container for Attractions - used in order to be able to sort attractions for every individual visit
@@ -22,7 +22,6 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 public class VisitedAttraction extends Attraction
 {
     private final IOnSiteAttraction onSiteAttraction;
-    private int rideCount;
 
     private VisitedAttraction(IOnSiteAttraction onSiteAttraction, UUID uuid)
     {
@@ -46,31 +45,29 @@ public class VisitedAttraction extends Attraction
     }
 
     @Override
-    public int getTotalRideCount()
+    public int fetchTotalRideCount()
     {
-        return this.rideCount;
+        return this.getTrackedRideCount();
     }
 
     @Override
-    public void increaseTotalRideCount(int increment)
+    public void increaseTrackedRideCount(int increment)
     {
-        this.rideCount += increment;
-        this.getOnSiteAttraction().increaseTotalRideCount(increment);
+        super.increaseTrackedRideCount(increment);
+        this.getOnSiteAttraction().increaseTrackedRideCount(increment);
     }
 
     @Override
-    public void decreaseTotalRideCount(int decrement)
+    public void decreaseTrackedRideCount(int decrement)
     {
-        if(decrement > 0 && this.rideCount - decrement >= 0)
-        {
-            this.rideCount -= decrement;
-            this.getOnSiteAttraction().decreaseTotalRideCount(decrement);
-        }
+        super.decreaseTrackedRideCount(decrement);
+        this.getOnSiteAttraction().decreaseTrackedRideCount(decrement);
     }
 
     @Override
     public int getUntracktedRideCount()
     {
+        Log.e(Constants.LOG_TAG, String.format("VisitedAttraction.setUntracktedRideCount:: %s can not have UntracktedRideCount - returning OnSiteAttraction's UntrackedRideDCount", this));
         return this.getOnSiteAttraction().getUntracktedRideCount();
     }
 
@@ -143,7 +140,7 @@ public class VisitedAttraction extends Attraction
         try
         {
             JSONObject jsonObjectRideCountByAttraction = new JSONObject();
-            jsonObjectRideCountByAttraction.put(this.getOnSiteAttraction().getUuid().toString(), this.getTotalRideCount());
+            jsonObjectRideCountByAttraction.put(this.getOnSiteAttraction().getUuid().toString(), this.fetchTotalRideCount());
 
             Log.v(Constants.LOG_TAG, String.format("VisitedAttraction.toJson:: created JSON for %s [%s]", this, jsonObjectRideCountByAttraction.toString()));
             return jsonObjectRideCountByAttraction;

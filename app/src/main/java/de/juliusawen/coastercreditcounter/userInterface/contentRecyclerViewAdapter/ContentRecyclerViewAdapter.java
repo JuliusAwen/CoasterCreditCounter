@@ -671,7 +671,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
                 case TOTAL_RIDE_COUNT:
                 {
-                    String totalRideCountDetail = App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).getTotalRideCount());
+                    String totalRideCountDetail = App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).fetchTotalRideCount());
                     detailSubStringsByDetailType.put(DetailType.TOTAL_RIDE_COUNT, totalRideCountDetail);
                     typefacesByDetailSubString.put(totalRideCountDetail, this.typefacesByDetailType.containsKey(DetailType.TOTAL_RIDE_COUNT)
                             ? this.typefacesByDetailType.get(DetailType.TOTAL_RIDE_COUNT)
@@ -724,7 +724,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
 
             viewHolder.textViewName.setText(visitedAttraction.getName());
-            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.getTotalRideCount()));
+            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.fetchTotalRideCount()));
 
             viewHolder.imageViewIncrease.setTag(visitedAttraction);
             if(!viewHolder.imageViewIncrease.hasOnClickListeners() && this.increaseRideCountOnClickListener != null)
@@ -742,7 +742,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             viewHolder.linearLayoutEditable.setVisibility(View.GONE);
 
-            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.getTotalRideCount(), visitedAttraction.getName()));
+            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.fetchTotalRideCount(), visitedAttraction.getName()));
             viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
         }
     }
@@ -766,7 +766,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         for(Class<? extends IElement> childType : this.relevantChildTypes)
         {
-            ArrayList<IElement> allRelevantChildren = new ArrayList<>(item.fetchChildrenOfType(childType));
+            ArrayList<IElement> allRelevantChildren = new ArrayList<>(item.getChildrenOfType(childType));
             for(IElement child : allRelevantChildren)
             {
                 if(!distinctRelevantChildren.contains(child))

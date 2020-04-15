@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
@@ -43,6 +44,34 @@ public final class CustomAttraction extends Attraction implements IOnSiteAttract
             Log.v(Constants.LOG_TAG,  String.format("CustomAttraction.create:: %s created", customAttraction.getFullName()));
         }
         return customAttraction;
+    }
+
+    public StockAttraction convertToStockAttraction(Blueprint blueprint)
+    {
+        StockAttraction stockAttraction = StockAttraction.create(this.getName(), blueprint, this.getUntracktedRideCount());
+
+        for(Visit visit : this.getParent().getChildrenAsType(Visit.class))
+        {
+            for(VisitedAttraction originalVisitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
+            {
+                if(originalVisitedAttraction.getOnSiteAttraction().equals(this))
+                {
+                    int trackedRideCount = originalVisitedAttraction.fetchTotalRideCount();
+
+                    visit.deleteChild(originalVisitedAttraction);
+
+                    VisitedAttraction newVisitedAttraction = VisitedAttraction.create(stockAttraction);
+                    newVisitedAttraction.increaseTrackedRideCount(trackedRideCount);
+
+                    visit.addChildAndSetParent(newVisitedAttraction);
+                }
+            }
+        }
+
+        this.delete();
+        this.getParent().addChildAndSetParent(stockAttraction);
+
+        return stockAttraction;
     }
 
     @Override

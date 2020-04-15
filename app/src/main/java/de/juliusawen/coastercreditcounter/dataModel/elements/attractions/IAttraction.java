@@ -19,9 +19,9 @@ public interface IAttraction extends IElement
     void setManufacturer(Manufacturer manufacturer);
     Status getStatus();
     void setStatus(Status status);
-    int getTotalRideCount();
-    void increaseTotalRideCount(int increment);
-    void decreaseTotalRideCount(int decrement);
+    int fetchTotalRideCount();
+    void increaseTrackedRideCount(int increment);
+    void decreaseTrackedRideCount(int decrement);
     int getUntracktedRideCount();
     void setUntracktedRideCount(int untracktedRideCount);
 }

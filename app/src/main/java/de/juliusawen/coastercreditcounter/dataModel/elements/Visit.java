@@ -90,11 +90,11 @@ public final class Visit extends Element implements IPersistable
     @Override
     public void deleteElementAndDescendants()
     {
-        for(VisitedAttraction visitedAttraction : this.fetchChildrenAsType(VisitedAttraction.class))
+        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
         {
             visitedAttraction.deleteElementAndDescendants();
         }
-        super.deleteElement();
+        super.delete();
     }
 
     public static boolean isCurrentVisit(Visit visit)
@@ -173,7 +173,7 @@ public final class Visit extends Element implements IPersistable
 
             boolean hasVisitedAttractions = false;
             JSONArray jsonArrayRideCountsByAttraction = new JSONArray();
-            for(VisitedAttraction visitedAttraction : this.fetchChildrenAsType(VisitedAttraction.class))
+            for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
             {
                 JSONObject jsonObjectRideCountByAttraction = visitedAttraction.toJson();
                 jsonArrayRideCountsByAttraction.put(jsonObjectRideCountByAttraction);

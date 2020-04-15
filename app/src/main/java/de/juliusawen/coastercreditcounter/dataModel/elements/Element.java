@@ -210,7 +210,7 @@ public abstract class Element implements IElement
 
     public boolean hasChildrenOfType(Class<? extends IElement> type)
     {
-        return !this.fetchChildrenOfType(type).isEmpty();
+        return !this.getChildrenOfType(type).isEmpty();
     }
 
     public int getChildCount()
@@ -220,7 +220,7 @@ public abstract class Element implements IElement
 
     public int getChildCountOfType(Class<? extends IElement> type)
     {
-        return this.fetchChildrenOfType(type).size();
+        return this.getChildrenOfType(type).size();
     }
 
     public List<IElement> getChildren()
@@ -228,7 +228,7 @@ public abstract class Element implements IElement
         return this.children;
     }
 
-    public List<IElement> fetchChildrenOfType(Class<? extends IElement> type)
+    public List<IElement> getChildrenOfType(Class<? extends IElement> type)
     {
         List<IElement> children = new ArrayList<>();
         for(IElement element : this.getChildren())
@@ -241,7 +241,7 @@ public abstract class Element implements IElement
         return children;
     }
 
-    public <T extends IElement> List<T> fetchChildrenAsType(Class<T> type)
+    public <T extends IElement> List<T> getChildrenAsType(Class<T> type)
     {
         List<T> children = new ArrayList<>();
         for(IElement element : this.getChildren())
@@ -275,7 +275,7 @@ public abstract class Element implements IElement
         Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
     }
 
-    public void relocateElement(IElement newParent)
+    public void relocate(IElement newParent)
     {
         Log.i(Constants.LOG_TAG,  String.format("Element.relocateElement:: %s will be relocated from %s to %s...", this, this.parent, newParent));
 
@@ -294,10 +294,10 @@ public abstract class Element implements IElement
         {
             child.deleteElementAndDescendants();
         }
-        this.deleteElement();
+        this.delete();
     }
 
-    public void deleteElement()
+    public void delete()
     {
         if(!this.isOrphan())
         {
@@ -324,7 +324,7 @@ public abstract class Element implements IElement
         }
     }
 
-    public void removeElement()
+    public void remove()
     {
         if(this.isOrphan())
         {

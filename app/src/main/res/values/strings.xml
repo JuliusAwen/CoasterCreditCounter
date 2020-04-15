@@ -47,12 +47,12 @@
 
 
     <!--GENERIC ERROR MESSAGES-->
-    <string name="error_name_not_valid">Name is not valid!</string>
-    <string name="error_number_not_valid">Number is not valid!</string>
+    <string name="error_name_invalid">Name is invalid</string>
+    <string name="error_number_invalid">Number is invalid</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
     <string name="error_creation_failed">Creation failed…</string>
-    <string name="error_no_entry_selected">No entry selected!</string>
-    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint!</string>
+    <string name="error_no_entry_selected">No entry selected</string>
+    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint</string>
 
     <string name="error_missing_text">-text is missing-</string>
 
@@ -228,8 +228,7 @@
     <string name="title_edit_blueprint">Edit Blueprint</string>
     <string name="title_pick_blueprint">Pick Blueprint</string>
     <string name="title_manage_blueprints">Manage Blueprints</string>
-    <string name="blueprint_not_available">No blueprint selected</string>
-    <string name="blueprint_not_selected">none</string>
+    <string name="blueprint_not_applicable">n/a</string>
     <string name="header_blueprint">Blueprint:</string>
 
     <string name="alert_dialog_message_confirm_delete_blueprint_has_no_children">Do you really want to delete \'%1$s\'?</string>

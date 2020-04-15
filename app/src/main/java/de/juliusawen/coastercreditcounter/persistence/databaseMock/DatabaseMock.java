@@ -1828,7 +1828,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         for(Map.Entry<IOnSiteAttraction, Integer> entry : rides.entrySet())
         {
             VisitedAttraction visitedAttraction = VisitedAttraction.create(entry.getKey());
-            visitedAttraction.increaseTotalRideCount(entry.getValue());
+            visitedAttraction.increaseTrackedRideCount(entry.getValue());
             visit.addChildAndSetParent(visitedAttraction);
         }
 

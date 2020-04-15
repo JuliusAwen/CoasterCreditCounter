@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -246,7 +245,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode != Activity.RESULT_OK)
+        if(resultCode != RESULT_OK)
         {
             return;
         }
@@ -494,7 +493,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 if(element.isProperty() && viewModel.isSelectionMode)
                 {
                     propertyToReturn = element;
-                    returnResult(Activity.RESULT_OK);
+                    returnResult(RESULT_OK);
                 }
                 else if(element.hasChildren())
                 {
@@ -829,7 +828,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             if(this.viewModel.longClickedElement.hasChildren())
             {
-                List<IAttraction> children = new ArrayList<>(this.viewModel.longClickedElement.fetchChildrenAsType(IAttraction.class));
+                List<IAttraction> children = new ArrayList<>(this.viewModel.longClickedElement.getChildrenAsType(IAttraction.class));
 
                 for(IAttraction child : children)
                 {

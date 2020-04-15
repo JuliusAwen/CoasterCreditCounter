@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -151,7 +150,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 
         Log.i(Constants.LOG_TAG, String.format("ManageBlueprintsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode != Activity.RESULT_OK)
+        if(resultCode != RESULT_OK)
         {
             return;
         }
@@ -240,7 +239,7 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
                 if(viewModel.isSelectionMode && element.isBlueprint())
                 {
                     blueprintToReturn = element;
-                    returnResult(Activity.RESULT_OK);
+                    returnResult(RESULT_OK);
                 }
                 else if(element.isGroupHeader() || element.hasChildren())
                 {
@@ -349,9 +348,9 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
 
             for(IElement child : this.viewModel.longClickedElement.getChildren())
             {
-                for(Visit visit : child.getParent().fetchChildrenAsType(Visit.class))
+                for(Visit visit : child.getParent().getChildrenAsType(Visit.class))
                 {
-                    for(VisitedAttraction visitedAttraction : visit.fetchChildrenAsType(VisitedAttraction.class))
+                    for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
                     {
                         if(visitedAttraction.getOnSiteAttraction().equals(child))
                         {

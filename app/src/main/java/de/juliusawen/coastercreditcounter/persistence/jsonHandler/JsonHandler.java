@@ -649,7 +649,7 @@ public class JsonHandler implements IDatabaseWrapper
             for(Map.Entry<UUID, Integer> rideCountsByAttractionUuid : temporaryVisit.rideCountsByAttraction.entrySet())
             {
                 VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction)content.getContentByUuid(rideCountsByAttractionUuid.getKey()));
-                visitedAttraction.increaseTotalRideCount(rideCountsByAttractionUuid.getValue());
+                visitedAttraction.increaseTrackedRideCount(rideCountsByAttractionUuid.getValue());
 
                 visit.addChildAndSetParent(visitedAttraction);
                 content.addElement(visitedAttraction);
@@ -964,7 +964,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
-            if((attraction).getTotalRideCount() > 0)
+            if((attraction).fetchTotalRideCount() > 0)
             {
                 totalCreditsCount ++;
             }
@@ -984,7 +984,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
-            totalCreditsRideCount += attraction.getTotalRideCount();
+            totalCreditsRideCount += attraction.fetchTotalRideCount();
         }
 
         Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCreditsRideCount:: [%d] rides on creditable attractions found - took [%d]ms", totalCreditsRideCount, stopwatch.stop()));
@@ -1024,9 +1024,9 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                for(IOnSiteAttraction attraction : park.fetchChildrenAsType(IOnSiteAttraction.class))
+                for(IOnSiteAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
                 {
-                    if(attraction.getTotalRideCount() > 0)
+                    if(attraction.fetchTotalRideCount() > 0)
                     {
                         totalVisitedParksCount += 1;
                         break;

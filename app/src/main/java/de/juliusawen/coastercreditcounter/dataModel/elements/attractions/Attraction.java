@@ -22,13 +22,12 @@ public abstract class Attraction extends Element implements IAttraction
     private Category category;
     private Manufacturer manufacturer;
     private Status status;
-    private int untracktedRideCount;
-    private int totalRideCount;
+    private int untracktedRideCount = 0;
+    private int trackedRideCount = 0;
 
     protected Attraction(String name, UUID uuid)
     {
         super(name, uuid);
-        this.untracktedRideCount = 0;
     }
 
     protected Attraction(String name, int untrackedRideCount, UUID uuid)
@@ -38,7 +37,7 @@ public abstract class Attraction extends Element implements IAttraction
     }
 
     @Override
-    public void deleteElement()
+    public void delete()
     {
         if(this.creditType != null)
         {
@@ -60,7 +59,7 @@ public abstract class Attraction extends Element implements IAttraction
             this.status.deleteChild(this);
         }
 
-        super.deleteElement();
+        super.delete();
     }
 
     public CreditType getCreditType()
@@ -162,37 +161,46 @@ public abstract class Attraction extends Element implements IAttraction
             this.untracktedRideCount = untracktedRideCount;
             Log.v(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
         }
-    }
-
-    public int getTotalRideCount()
-    {
-        return this.totalRideCount + this.untracktedRideCount;
-    }
-
-    public void increaseTotalRideCount(int increment)
-    {
-        if(increment > 0)
+        else
         {
-            this.totalRideCount += increment;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTotalRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
-                    this, increment, this.getTotalRideCount(), this.untracktedRideCount));
+            Log.w(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: %s's untracked ride count unchanged at [%d]", this, this.untracktedRideCount));
         }
     }
 
-    public void decreaseTotalRideCount(int decrement)
+    public int getTrackedRideCount()
+    {
+        return this.trackedRideCount;
+    }
+
+    public int fetchTotalRideCount()
+    {
+        return this.trackedRideCount + this.untracktedRideCount;
+    }
+
+    public void increaseTrackedRideCount(int increment)
+    {
+        if(increment > 0)
+        {
+            this.trackedRideCount += increment;
+            Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTrackedRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+                    this, increment, this.fetchTotalRideCount(), this.untracktedRideCount));
+        }
+    }
+
+    public void decreaseTrackedRideCount(int decrement)
     {
         if(decrement > 0)
         {
-            if((this.totalRideCount - decrement) >= 0)
+            if((this.trackedRideCount - decrement) >= 0)
             {
-                this.totalRideCount -= decrement;
-                Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
-                        this, decrement, this.getTotalRideCount(), this.untracktedRideCount));
+                this.trackedRideCount -= decrement;
+                Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTrackedRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+                        this, decrement, this.fetchTotalRideCount(), this.untracktedRideCount));
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Attraction.decreaseTotalRideCount:: %s's total ride count is [%d] ([%d] rides untracked): " +
-                        "decreasing by [%d] would make it negative - not decreasing", this, this.getTotalRideCount(), this.untracktedRideCount, decrement));
+                Log.e(Constants.LOG_TAG, String.format("Attraction.decreaseTrackedRideCount:: %s's total ride count is [%d] ([%d] rides untracked): " +
+                        "decreasing by [%d] would make it negative - not decreasing", this, this.fetchTotalRideCount(), this.untracktedRideCount, decrement));
             }
         }
     }

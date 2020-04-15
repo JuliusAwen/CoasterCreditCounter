@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -81,27 +80,22 @@ public class CreateAttractionActivity extends BaseActivity
         this.editTextAttractionName = findViewById(R.id.editTextCreateOrEditAttractionName);
 
         this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
-        this.layoutBlueprint.setVisibility(View.GONE);
         this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
         this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
 
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
-        this.layoutCreditType.setVisibility(View.GONE);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
         this.imageViewPickCreditType = findViewById(R.id.imageViewCreateOrEditAttraction_PickCreditType);
 
         this.layoutCategory = findViewById(R.id.linearLayoutCreateOrEditAttraction_Category);
-        this.layoutCategory.setVisibility(View.GONE);
         this.textViewCategory = findViewById(R.id.textViewCreateOrEditAttraction_Category);
         this.imageViewPickCategory = findViewById(R.id.imageViewCreateOrEditAttraction_PickCategory);
 
         this.layoutManufacturer = findViewById(R.id.linearLayoutCreateOrEditAttraction_Manufacturer);
-        this.layoutManufacturer.setVisibility(View.GONE);
         this.textViewManufacturer = findViewById(R.id.textViewCreateOrEditAttraction_Manufacturer);
         this.imageViewPickManufacturer = findViewById(R.id.imageViewCreateOrEditAttraction_PickManufacturer);
 
         this.layoutStatus = findViewById(R.id.linearLayoutCreateOrEditAttraction_Status);
-        this.layoutStatus.setVisibility(View.GONE);
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.imageViewPickStatus = findViewById(R.id.imageViewCreateOrEditAttraction_PickStatus);
 
@@ -132,11 +126,7 @@ public class CreateAttractionActivity extends BaseActivity
             this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-
         this.layoutBlueprint.setVisibility(View.GONE);
-        this.layoutCreditType.setVisibility(View.GONE);
-        this.layoutCategory.setVisibility(View.GONE);
-        this.layoutManufacturer.setVisibility(View.GONE);
         this.layoutStatus.setVisibility(View.GONE);
         this.layoutUntrackedRideCount.setVisibility(View.GONE);
 
@@ -262,59 +252,127 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                viewModel.name = editTextAttractionName.getText().toString();
-                Log.v(Constants.LOG_TAG, String.format("CreateAttractionActivity.onClickFab:: attraction name entered [%s]", viewModel.name));
-
-                boolean somethingWentWrong = false;
-                if(viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
-                {
-                    String untrackedRideCountString = editTextUntrackedRideCount.getText().toString();
-                    try
-                    {
-                        if(!untrackedRideCountString.trim().isEmpty())
-                        {
-                            viewModel.untrackedRideCount = Integer.parseInt(untrackedRideCountString);
-                        }
-                        else
-                        {
-                            viewModel.untrackedRideCount = 0;
-                        }
-                        Log.v(Constants.LOG_TAG, String.format("CreateAttractionActivity.onClickFab:: untracked ride count set to [%d]", viewModel.untrackedRideCount));
-                    }
-                    catch(NumberFormatException nfe)
-                    {
-                        Log.w(Constants.LOG_TAG, String.format("CreateAttractionActivity.onClickFab:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
-
-                        somethingWentWrong = true;
-                        Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_number_not_valid));
-                    }
-                }
-
-                if(!somethingWentWrong)
-                {
-                    if(createAttraction())
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.onClickFab:: adding child %s to parent %s", viewModel.attraction, viewModel.parentPark));
-
-                        if(viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
-                        {
-                            viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
-                            CreateAttractionActivity.super.markForUpdate(viewModel.parentPark);
-                        }
-
-                        CreateAttractionActivity.super.markForCreation(viewModel.attraction);
-
-                        returnResult(RESULT_OK);
-                    }
-                    else
-                    {
-                        Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_name_not_valid));
-                    }
-                }
+                handleCreateAttraction();
             }
         });
 
         super.setFloatingActionButtonVisibility(true);
+    }
+
+    private void handleCreateAttraction()
+    {
+        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+        {
+            this.viewModel.untrackedRideCount = -1;
+            String untrackedRideCountString = this.editTextUntrackedRideCount.getText().toString();
+            if(!untrackedRideCountString.trim().isEmpty())
+            {
+                try
+                {
+                    this.viewModel.untrackedRideCount = Integer.parseInt(untrackedRideCountString);
+                }
+                catch(NumberFormatException nfe)
+                {
+                    Log.e(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+                }
+            }
+            else
+            {
+                this.viewModel.untrackedRideCount = 0;
+            }
+
+            if(this.viewModel.untrackedRideCount < 0)
+            {
+                Log.e(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid - aborting");
+                Toaster.makeShortToast(this, getString(R.string.error_number_invalid));
+                return;
+            }
+        }
+
+
+        this.viewModel.name = editTextAttractionName.getText().toString();
+        if(this.tryCreateAttraction())
+        {
+            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
+
+            if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+            {
+                this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
+                super.markForUpdate(viewModel.parentPark);
+            }
+
+            super.markForCreation(this.viewModel.attraction);
+
+            returnResult(RESULT_OK);
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: entered name [%s] is invalid", this.viewModel.name));
+            Toaster.makeShortToast(this, getString(R.string.error_name_invalid));
+        }
+    }
+
+    private boolean tryCreateAttraction()
+    {
+        boolean success = false;
+
+        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+        {
+            if(this.viewModel.blueprint != null)
+            {
+                IAttraction attraction = StockAttraction.create(this.viewModel.name, this.viewModel.blueprint, this.viewModel.untrackedRideCount);
+
+                if(attraction != null)
+                {
+                    attraction.setStatus(this.viewModel.status);
+
+                    this.viewModel.attraction = attraction;
+
+                    success = true;
+                }
+            }
+            else
+            {
+                IAttraction attraction = CustomAttraction.create(this.viewModel.name, this.viewModel.untrackedRideCount);
+                if(attraction != null)
+                {
+                    attraction.setCreditType(this.viewModel.creditType);
+                    attraction.setCategory(this.viewModel.category);
+                    attraction.setManufacturer(this.viewModel.manufacturer);
+                    attraction.setStatus(this.viewModel.status);
+                    attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
+
+                    this.viewModel.attraction = attraction;
+
+                    success = true;
+                }
+            }
+        }
+        else
+        {
+            IAttraction attraction = Blueprint.create(this.viewModel.name);
+            if(attraction != null)
+            {
+                attraction.setCreditType(this.viewModel.creditType);
+                attraction.setCategory(this.viewModel.category);
+                attraction.setManufacturer(this.viewModel.manufacturer);
+
+                this.viewModel.attraction = attraction;
+
+                success = true;
+            }
+        }
+
+        if(success)
+        {
+            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: created %s", this.viewModel.attraction.getFullName()));
+            return true;
+        }
+        else
+        {
+            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation of [%s] failed", this.viewModel.name));
+            return false;
+        }
     }
 
     private void decorateEditTextAttractionName()
@@ -342,8 +400,7 @@ public class CreateAttractionActivity extends BaseActivity
                 }
                 else
                 {
-                    List<IElement> elements = App.content.getContentOfType(Blueprint.class);
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_BLUEPRINT, elements);
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_BLUEPRINT, App.content.getContentOfType(Blueprint.class));
                 }
             }
         });
@@ -378,7 +435,7 @@ public class CreateAttractionActivity extends BaseActivity
         }
         else
         {
-            this.textViewBlueprint.setText(R.string.blueprint_not_selected);
+            this.textViewBlueprint.setText(R.string.blueprint_not_applicable);
             icon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
         }
 
@@ -553,67 +610,6 @@ public class CreateAttractionActivity extends BaseActivity
                 return handled;
             }
         };
-    }
-
-    private boolean createAttraction()
-    {
-        boolean success = false;
-
-        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
-        {
-            if(this.viewModel.blueprint != null)
-            {
-                IAttraction attraction = StockAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.blueprint, this.viewModel.untrackedRideCount);
-
-                if(attraction != null)
-                {
-                    attraction.setStatus(this.viewModel.status);
-
-                    this.viewModel.attraction = attraction;
-
-                    Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.createAttraction:: created %s", this.viewModel.attraction.getFullName()));
-
-                    success = true;
-                }
-            }
-            else
-            {
-                IAttraction attraction = CustomAttraction.create(this.editTextAttractionName.getText().toString(), this.viewModel.untrackedRideCount);
-                if(attraction != null)
-                {
-                    attraction.setCreditType(this.viewModel.creditType);
-                    attraction.setCategory(this.viewModel.category);
-                    attraction.setManufacturer(this.viewModel.manufacturer);
-                    attraction.setStatus(this.viewModel.status);
-                    attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
-
-                    this.viewModel.attraction = attraction;
-
-                    Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.createAttraction:: created %s", attraction.getFullName()));
-
-                    success = true;
-                }
-            }
-        }
-        else
-        {
-            IAttraction attraction = Blueprint.create(this.editTextAttractionName.getText().toString());
-            if(attraction != null)
-            {
-                attraction.setCreditType(this.viewModel.creditType);
-                attraction.setCategory(this.viewModel.category);
-                attraction.setManufacturer(this.viewModel.manufacturer);
-
-                this.viewModel.attraction = attraction;
-
-                Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.createAttraction:: created %s", attraction.getFullName()));
-
-                success = true;
-            }
-        }
-
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.createAttraction:: created successfuly [%S]", success));
-        return success;
     }
 
     private void returnResult(int resultCode)

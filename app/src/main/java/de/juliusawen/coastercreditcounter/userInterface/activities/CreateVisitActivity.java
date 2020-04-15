@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,7 +64,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
         Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode == Activity.RESULT_OK)
+        if(resultCode == RESULT_OK)
         {
             if(requestCode == RequestCode.PICK_ATTRACTIONS.ordinal())
             {
@@ -80,13 +79,13 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 super.markForUpdate(this.viewModel.visit);
 
-                this.returnResult(Activity.RESULT_OK);
+                this.returnResult(RESULT_OK);
             }
 
         }
-        else if(resultCode == Activity.RESULT_CANCELED)
+        else if(resultCode == RESULT_CANCELED)
         {
-            returnResult(Activity.RESULT_OK);
+            returnResult(RESULT_OK);
         }
     }
 
@@ -114,7 +113,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.datePicked = true;
 
 
-                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.fetchChildrenAsType(Visit.class));
+                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
                 viewModel.existingVisit = existingVisits.isEmpty() ? null : existingVisits.get(0);
                 if(viewModel.existingVisit != null)
                 {
@@ -132,7 +131,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     }
                     else
                     {
-                        returnResult(Activity.RESULT_OK);
+                        returnResult(RESULT_OK);
                     }
                 }
             }
@@ -145,7 +144,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.datePickerDialog.dismiss();
                 if (position == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    returnResult(Activity.RESULT_CANCELED);
+                    returnResult(RESULT_CANCELED);
                 }
             }
         });
@@ -227,11 +226,11 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityDistributor.startActivityPickForResult(
                             CreateVisitActivity.this,
                             RequestCode.PICK_ATTRACTIONS,
-                            new ArrayList<IElement>(viewModel.park.fetchChildrenAsType(IOnSiteAttraction.class)));
+                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    returnResult(Activity.RESULT_OK);
+                    returnResult(RESULT_OK);
                 }
                 break;
             }
@@ -248,12 +247,12 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     }
                     else
                     {
-                        returnResult(Activity.RESULT_OK);
+                        returnResult(RESULT_OK);
                     }
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {
-                    returnResult(Activity.RESULT_CANCELED);
+                    returnResult(RESULT_CANCELED);
                 }
                 break;
             }

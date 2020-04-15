@@ -20,4 +20,6 @@ public class EditAttractionActivityViewModel extends ViewModel
     public Manufacturer manufacturer;
     public Status status;
     public int untrackedRideCount;
+
+    public IAttraction convertedAttraction;
 }

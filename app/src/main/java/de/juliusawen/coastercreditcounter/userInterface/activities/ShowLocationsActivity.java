@@ -296,8 +296,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 if(!viewModel.isSelectionMode)
                 {
                     boolean isLocation = viewModel.longClickedElement.isLocation();
-                    boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Location.class).size() > 1;
-                    boolean sortParksEnabled = isLocation && viewModel.longClickedElement.fetchChildrenOfType(Park.class).size() > 1;
+                    boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
+                    boolean sortParksEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
 
                     int locationsCount = App.content.getContentOfType(Location.class).size();
                     boolean relocateEnabled = !viewModel.longClickedElement.isRootLocation() && viewModel.longClickedElement.isLocation()
@@ -344,14 +344,14 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_LOCATIONS,
-                        viewModel.longClickedElement.fetchChildrenOfType(Location.class));
+                        viewModel.longClickedElement.getChildrenOfType(Location.class));
                 break;
 
             case SORT_PARKS:
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_PARKS,
-                        viewModel.longClickedElement.fetchChildrenOfType(Park.class));
+                        viewModel.longClickedElement.getChildrenOfType(Park.class));
                 break;
 
             case ADD_LOCATION:
@@ -485,7 +485,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleAlertDialogClick<RELOCATE>:: relocating %s to %s...",
                             this.viewModel.longClickedElement, this.viewModel.newParent));
 
-                    this.viewModel.longClickedElement.relocateElement(this.viewModel.newParent);
+                    this.viewModel.longClickedElement.relocate(this.viewModel.newParent);
                     this.viewModel.newParent = null;
                     this.updateContentRecyclerView(true);
                     break;
@@ -524,7 +524,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement, false);
                 ShowLocationsActivity.super.markForUpdate(parent);
 
-                this.viewModel.longClickedElement.removeElement();
+                this.viewModel.longClickedElement.remove();
 
                 updateContentRecyclerView(true);
                 invalidateOptionsMenu();

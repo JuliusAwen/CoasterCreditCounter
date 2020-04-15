@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -199,7 +198,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         Log.i(LOG_TAG, String.format("ShowVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
-        if(resultCode == Activity.RESULT_OK)
+        if(resultCode == RESULT_OK)
         {
             List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
@@ -213,7 +212,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class));
+                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
 
                     super.markForUpdate(this.viewModel.visit);
                     break;
@@ -287,7 +286,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
         childTypesToExpand.add(VisitedAttraction.class);
 
-        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class), childTypesToExpand)
+        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), childTypesToExpand)
                 .groupItems(GroupType.CATEGORY);
     }
 
@@ -350,17 +349,17 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 List<IElement> attractions = new ArrayList<>();
                 if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
                 {
-                    attractions = this.viewModel.longClickedElement.fetchChildrenOfType(Attraction.class);
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
                 }
                 else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
                 {
-                    attractions = this.viewModel.longClickedElement.fetchChildrenOfType(VisitedAttraction.class);
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
                 }
                 ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
                 break;
 
             case REMOVE_ELEMENT:
-                if(((VisitedAttraction)this.viewModel.longClickedElement).getTotalRideCount() > 0)
+                if(((VisitedAttraction)this.viewModel.longClickedElement).fetchTotalRideCount() > 0)
                 {
                     AlertDialogFragment alertDialogFragmentRemove =
                             AlertDialogFragment.newInstance(
@@ -437,7 +436,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 Log.v(LOG_TAG, String.format("ShowVisitActivity.getIncreaseRideCountOnClickListener.onClick:: increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
 
-                visitedAttraction.increaseTotalRideCount(App.preferences.getIncrement());
+                visitedAttraction.increaseTrackedRideCount(App.preferences.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
@@ -456,7 +455,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 Log.v(LOG_TAG, String.format("ShowVisitActivity.getDecreaseRideCountOnClickListener.onClick:: decreasing %s's ride count for %s",
                         visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
 
-                visitedAttraction.decreaseTotalRideCount(App.preferences.getIncrement());
+                visitedAttraction.decreaseTrackedRideCount(App.preferences.getIncrement());
                 ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
                 updateContentRecyclerView(false);
             }
@@ -488,12 +487,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     private List<IAttraction> getNotYetAddedAttractionsWithDefaultStatus()
     {
         List<IAttraction> visitedAttractions = new ArrayList<>();
-        for(VisitedAttraction visitedAttraction : viewModel.visit.fetchChildrenAsType(VisitedAttraction.class))
+        for(VisitedAttraction visitedAttraction : viewModel.visit.getChildrenAsType(VisitedAttraction.class))
         {
             visitedAttractions.add(visitedAttraction.getOnSiteAttraction());
         }
 
-        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().fetchChildrenAsType(IOnSiteAttraction.class));
+        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
         allAttractions.removeAll(visitedAttractions);
 
         List<IAttraction> attractionsWithDefaultStatus = new LinkedList<>();
@@ -513,7 +512,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(resetContent)
         {
             Log.d(LOG_TAG, "ShowVisitActivity.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.fetchChildrenOfType(VisitedAttraction.class))
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
                     .expandAll();
 
             if(!this.allAttractionsAdded())

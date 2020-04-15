@@ -102,7 +102,7 @@ public class CreateParkActivity extends BaseActivity
         }
         else
         {
-            Toaster.makeShortToast(this, getString(R.string.error_name_not_valid));
+            Toaster.makeShortToast(this, getString(R.string.error_name_invalid));
         }
     }
 

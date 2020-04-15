@@ -211,7 +211,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         childTypesToExpand.add(Visit.class);
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.park.fetchChildrenOfType(Visit.class),
+                this.viewModel.park.getChildrenOfType(Visit.class),
                 childTypesToExpand)
                 .groupItems(GroupType.YEAR);
     }
@@ -301,7 +301,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
                 if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
                 {
-                    if(!Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.fetchChildrenAsType(Visit.class)).isEmpty())
+                    if(!Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class)).isEmpty())
                     {
                         viewModel.datePickerDialog.dismiss();
                         Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
@@ -376,7 +376,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(Visit.class));
+        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 
     public interface ShowVisitsFragmentInteraction

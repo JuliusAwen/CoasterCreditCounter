@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -29,7 +30,7 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
         super(name, untrackedRideCount, uuid);
         this.blueprint = blueprint;
         this.blueprint.addChild(this);
-        this.blueprint.increaseTotalRideCount(untrackedRideCount);
+        this.blueprint.increaseTrackedRideCount(untrackedRideCount);
     }
 
     public static StockAttraction create(String name, Blueprint blueprint)
@@ -54,6 +55,38 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
         return stockAttraction;
     }
 
+    public CustomAttraction convertToCustomAttraction()
+    {
+        CustomAttraction customAttraction = CustomAttraction.create(this.getName(), this.getUntracktedRideCount());
+        customAttraction.setCreditType(this.getCreditType());
+        customAttraction.setCategory(this.getCategory());
+        customAttraction.setManufacturer(this.getManufacturer());
+        customAttraction.setStatus(this.getStatus());
+
+        for(Visit visit : this.getParent().getChildrenAsType(Visit.class))
+        {
+            for(VisitedAttraction originalVisitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
+            {
+                if(originalVisitedAttraction.getOnSiteAttraction().equals(this))
+                {
+                    int trackedRideCount = originalVisitedAttraction.fetchTotalRideCount();
+
+                    visit.deleteChild(originalVisitedAttraction);
+
+                    VisitedAttraction newVisitedAttraction = VisitedAttraction.create(customAttraction);
+                    newVisitedAttraction.increaseTrackedRideCount(trackedRideCount);
+
+                    visit.addChildAndSetParent(newVisitedAttraction);
+                }
+            }
+        }
+
+        this.delete();
+        this.getParent().addChildAndSetParent(customAttraction);
+
+        return customAttraction;
+    }
+
     public Blueprint getBlueprint()
     {
         return this.blueprint;
@@ -61,20 +94,20 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
 
     public void changeBlueprint(Blueprint newBlueprint)
     {
-        this.blueprint.decreaseTotalRideCount(this.getTotalRideCount());
+        this.blueprint.decreaseTrackedRideCount(this.fetchTotalRideCount());
         this.blueprint.deleteChild(this);
 
-        newBlueprint.increaseTotalRideCount(this.getTotalRideCount());
+        newBlueprint.increaseTrackedRideCount(this.fetchTotalRideCount());
         newBlueprint.addChild(this);
         this.blueprint = newBlueprint;
     }
 
     @Override
-    public void deleteElement()
+    public void delete()
     {
-        this.blueprint.decreaseTotalRideCount(this.getTotalRideCount());
+        this.blueprint.decreaseTrackedRideCount(this.fetchTotalRideCount());
         this.blueprint.deleteChild(this);
-        super.deleteElement();
+        super.delete();
     }
 
     @Override
@@ -114,24 +147,24 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
     }
 
     @Override
-    public void increaseTotalRideCount(int increment)
+    public void increaseTrackedRideCount(int increment)
     {
-        this.blueprint.increaseTotalRideCount(increment);
-        super.increaseTotalRideCount(increment);
+        this.blueprint.increaseTrackedRideCount(increment);
+        super.increaseTrackedRideCount(increment);
     }
 
     @Override
-    public void decreaseTotalRideCount(int decrement)
+    public void decreaseTrackedRideCount(int decrement)
     {
-        if((this.blueprint.getTotalRideCount() - decrement) >= 0 && (super.getTotalRideCount() - decrement) >= 0)
+        if((this.blueprint.fetchTotalRideCount() - decrement) >= 0 && (super.fetchTotalRideCount() - decrement) >= 0)
         {
-            this.blueprint.decreaseTotalRideCount(decrement);
-            super.decreaseTotalRideCount(decrement);
+            this.blueprint.decreaseTrackedRideCount(decrement);
+            super.decreaseTrackedRideCount(decrement);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("StockAttraction.decreaseTotalRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
-                    this, decrement, this.getTotalRideCount()));
+            Log.e(Constants.LOG_TAG, String.format("StockAttraction.decreaseTrackedRideCount:: %s's total ride count is [%d]: decreasing by [%d] would make it negative - not decreasing",
+                    this, decrement, this.fetchTotalRideCount()));
         }
     }
 

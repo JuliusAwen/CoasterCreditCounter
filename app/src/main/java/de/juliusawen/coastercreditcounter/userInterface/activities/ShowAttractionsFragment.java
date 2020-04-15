@@ -159,9 +159,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
 
-                        for(IElement visit : resultElement.getParent().fetchChildrenOfType(Visit.class))
+                        for(IElement visit : resultElement.getParent().getChildrenOfType(Visit.class))
                         {
-                            for(IElement visitedAttraction : visit.fetchChildrenOfType(VisitedAttraction.class))
+                            for(IElement visitedAttraction : visit.getChildrenOfType(VisitedAttraction.class))
                             {
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
@@ -243,7 +243,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         childTypesToExpand.add(Attraction.class);
 
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class),
+                this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
                 childTypesToExpand)
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -308,11 +308,11 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
         {
-            attractions = this.viewModel.longClickedElement.fetchChildrenOfType(Attraction.class);
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
         }
         else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
         {
-            attractions = this.viewModel.longClickedElement.fetchChildrenOfType(VisitedAttraction.class);
+            attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
         }
 
         ActivityDistributor.startActivitySortForResult(getContext(), RequestCode.SORT_ATTRACTIONS, attractions);
@@ -371,9 +371,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             Log.i(LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
-            for(Visit visit : this.viewModel.longClickedElement.getParent().fetchChildrenAsType(Visit.class))
+            for(Visit visit : this.viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
             {
-                for(VisitedAttraction visitedAttraction : visit.fetchChildrenAsType(VisitedAttraction.class))
+                for(VisitedAttraction visitedAttraction : visit.getChildrenAsType(VisitedAttraction.class))
                 {
                     if(visitedAttraction.getOnSiteAttraction().equals(this.viewModel.longClickedElement))
                     {
@@ -393,7 +393,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(resetContent)
         {
             Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.fetchChildrenOfType(IOnSiteAttraction.class));
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
         }
         else
         {
