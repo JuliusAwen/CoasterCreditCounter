@@ -198,6 +198,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
                         }
+
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                                 elements,
                                 childTypesToExpand)
@@ -255,32 +256,39 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
             case CREATE_STATUS:
+            {
                 this.viewModel.propertyToReturn = resultElement;
                 updateContentRecyclerView(true);
                 break;
+            }
 
             case EDIT_CREDIT_TYPE:
             case EDIT_CATEGORY:
             case EDIT_MANUFACTURER:
             case EDIT_STATUS:
+            {
                 updateContentRecyclerView(false);
                 break;
+            }
 
             case SORT_CREDIT_TYPES:
             case SORT_CATEGORIES:
             case SORT_MANUFACTURERS:
             case SORT_STATUSES:
+            {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                 App.content.reorderElements(resultElements);
                 updateContentRecyclerView(true).scrollToItem(resultElement);
                 super.markForUpdate(resultElements);
                 break;
+            }
 
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
-                resultElements = ResultFetcher.fetchResultElements(data);
+            {
+                ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                 switch(this.viewModel.propertyTypeToManage)
                 {
                     case CREDIT_TYPE:
@@ -321,6 +329,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
                         this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
+            }
         }
     }
 

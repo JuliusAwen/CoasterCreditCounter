@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -84,7 +85,6 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(CustomAttraction.class);
@@ -94,6 +94,22 @@ public class PickElementsActivity extends BaseActivity
                     {
                         this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
                     }
+
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.elementsToPickFrom,
+                            childTypesToExpand,
+                            true)
+                            .setUseDedicatedExpansionOnClickListener(true);
+                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
+                    break;
+                }
+
+                case ASSIGN_STATUS_TO_ATTRACTIONS:
+                {
+                    Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
+                    childTypesToExpand.add(IOnSiteAttraction.class);
+
+                    this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
