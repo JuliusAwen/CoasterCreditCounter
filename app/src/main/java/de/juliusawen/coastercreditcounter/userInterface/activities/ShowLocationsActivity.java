@@ -208,10 +208,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case CREATE_LOCATION:
                 case CREATE_PARK:
                 {
-                    IElement resultElement = ResultFetcher.fetchResultElement(data);
-                    super.markForUpdate(resultElement.getParent());
-                    this.updateContentRecyclerView(true);
-                    this.viewModel.contentRecyclerViewAdapter.expandItem(resultElement.getParent());
+                    this.updateContentRecyclerView();
+                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent());
                     invalidateOptionsMenu();
                     break;
                 }
@@ -225,7 +223,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
                     parent.reorderChildren(resultElements);
 
-                    this.updateContentRecyclerView(true);
+                    this.updateContentRecyclerView();
 
                     String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
                     if(selectedElementUuidString != null)
@@ -245,9 +243,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case EDIT_LOCATION:
                 case EDIT_PARK:
                 {
-                    IElement editedElement = ResultFetcher.fetchResultElement(data);
-                    super.markForUpdate(editedElement);
-                    this.updateContentRecyclerView(false);
+                    this.updateContentRecyclerView();
                     break;
                 }
             }
@@ -487,7 +483,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                     this.viewModel.longClickedElement.relocate(this.viewModel.newParent);
                     this.viewModel.newParent = null;
-                    this.updateContentRecyclerView(true);
+                    this.updateContentRecyclerView();
                     break;
             }
         }
@@ -510,7 +506,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ShowLocationsActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
 
                 this.viewModel.longClickedElement.deleteElementAndDescendants();
-                updateContentRecyclerView(true);
+                updateContentRecyclerView();
                 invalidateOptionsMenu();
                 break;
             }
@@ -526,24 +522,16 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 this.viewModel.longClickedElement.remove();
 
-                updateContentRecyclerView(true);
+                updateContentRecyclerView();
                 invalidateOptionsMenu();
                 break;
             }
         }
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
+    private void updateContentRecyclerView()
     {
-        if(resetContent)
-        {
-            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(new ArrayList<>(Collections.singleton(viewModel.currentLocation)));
-        }
-        else
-        {
-            Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: notifying data set changed...");
-            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
-        }
+        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: resetting content...");
+        this.viewModel.contentRecyclerViewAdapter.setItems(new ArrayList<>(Collections.singleton(viewModel.currentLocation)));
     }
 }

@@ -18,8 +18,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateAttractionActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.CreateLocationActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.CreateParkActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.CreateChildForLocationActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditAttractionActivity;
@@ -229,19 +228,28 @@ public abstract class ActivityDistributor
     public static void startActivityCreateForResult(Context context, RequestCode requestCode, IElement parentElement)
     {
         Intent intent;
-        String title = context.getString(R.string.error_missing_text);
+        String toolbarTitle = context.getString(R.string.error_missing_text);
         String toolbarSubtitle = context.getString(R.string.error_missing_text);
+        String helpTitle = context.getString(R.string.error_missing_text);
         String helpText = context.getString(R.string.error_missing_text);
         String hint = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
             case CREATE_LOCATION:
-                intent = new Intent(context, CreateLocationActivity.class);
+                intent = new Intent(context, CreateChildForLocationActivity.class);
+                toolbarSubtitle = context.getString(R.string.subtitle_create_location);
+                helpTitle = context.getString(R.string.subtitle_create_attraction);
+                helpText = context.getString(R.string.help_text_create_location);
+                hint = context.getString(R.string.hint_enter_location_name);
                 break;
 
             case CREATE_PARK:
-                intent = new Intent(context, CreateParkActivity.class);
+                intent = new Intent(context, CreateChildForLocationActivity.class);
+                toolbarSubtitle = context.getString(R.string.subtitle_create_park);
+                helpTitle = context.getString(R.string.subtitle_create_park);
+                helpText = context.getString(R.string.help_text_create_park);
+                hint = context.getString(R.string.hint_enter_park_name);
                 break;
 
             case CREATE_VISIT:
@@ -250,8 +258,9 @@ public abstract class ActivityDistributor
 
             case CREATE_ON_SITE_ATTRACTION:
                 intent = new Intent(context, CreateAttractionActivity.class);
-                title = context.getString(R.string.title_create_attraction);
+                toolbarTitle = context.getString(R.string.title_create_attraction);
                 toolbarSubtitle = context.getString(R.string.subtitle_create_attraction, parentElement.getName());
+                helpTitle = context.getString(R.string.title_create_attraction);
                 helpText = context.getString(R.string.help_text_create_attraction);
                 hint = context.getString(R.string.hint_enter_attraction_name);
 
@@ -260,35 +269,40 @@ public abstract class ActivityDistributor
                 // Create OrphanElement
             case CREATE_ATTRACTION_BLUEPRINT:
                 intent = new Intent(context, CreateAttractionActivity.class);
-                title = context.getString(R.string.title_create_blueprint);
+                toolbarTitle = context.getString(R.string.title_create_blueprint);
+                helpTitle = context.getString(R.string.title_create_blueprint);
                 helpText = context.getString(R.string.help_text_create_blueprint);
                 hint = context.getString(R.string.hint_enter_blueprint_name);
                 break;
 
             case CREATE_CREDIT_TYPE:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
-                title = context.getString(R.string.title_create_credit_type);
+                toolbarTitle = context.getString(R.string.title_create_credit_type);
+                helpTitle = context.getString(R.string.title_create_credit_type);
                 helpText = context.getString(R.string.help_text_create_credit_type);
                 hint = context.getString(R.string.hint_enter_credit_type_name);
                 break;
 
             case CREATE_CATEGORY:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
-                title = context.getString(R.string.title_create_category);
+                toolbarTitle = context.getString(R.string.title_create_category);
+                helpTitle = context.getString(R.string.title_create_category);
                 helpText = context.getString(R.string.help_text_create_category);
                 hint = context.getString(R.string.hint_enter_category_name);
                 break;
 
             case CREATE_MANUFACTURER:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
-                title = context.getString(R.string.title_create_manufacturer);
+                toolbarTitle = context.getString(R.string.title_create_manufacturer);
+                helpTitle = context.getString(R.string.title_create_manufacturer);
                 helpText = context.getString(R.string.help_text_create_manufacturer);
                 hint = context.getString(R.string.hint_enter_manufacturer_name);
                 break;
 
             case CREATE_STATUS:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
-                title = context.getString(R.string.title_create_status);
+                toolbarTitle = context.getString(R.string.title_create_status);
+                helpTitle = context.getString(R.string.title_create_status);
                 helpText = context.getString(R.string.help_text_create_status);
                 hint = context.getString(R.string.hint_enter_status_name);
                 break;
@@ -300,9 +314,9 @@ public abstract class ActivityDistributor
 
         if(intent != null)
         {
-            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, title);
+            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
-            intent.putExtra(Constants.EXTRA_HELP_TITLE, title);
+            intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
             intent.putExtra(Constants.EXTRA_HINT, hint);
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());

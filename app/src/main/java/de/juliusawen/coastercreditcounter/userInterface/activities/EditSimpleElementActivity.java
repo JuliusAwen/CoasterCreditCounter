@@ -137,22 +137,25 @@ public class EditSimpleElementActivity extends BaseActivity
 
     private void handleOnEditorActionDone()
     {
-        String name = this.textInputEditText.getText().toString();
-        if(name.length() <= App.config.maxCharacterCount)
+        if(this.textInputLayout.getError() == null)
         {
-            name = name.trim();
+            String name = this.textInputEditText.getText().toString().trim();
             if(!this.viewModel.elementToEdit.getName().equals(name))
             {
-                Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, name));
-                if(!this.viewModel.elementToEdit.setName(name))
+                if(this.viewModel.elementToEdit.setName(name))
                 {
-                    this.textInputLayout.setError(getString(R.string.error_name_invalid));
+                    Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, name));
+                    returnResult(RESULT_OK);
+                }
+                else
+                {
                     Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name [%s] is invalid", name));
+                    this.textInputLayout.setError(getString(R.string.error_name_invalid));
                 }
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.handleOnEditorActionDone:: name has not changed");
+                Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.handleOnEditorActionDone:: name has not changed - cancel");
                 returnResult(RESULT_CANCELED);
             }
         }
@@ -166,10 +169,10 @@ public class EditSimpleElementActivity extends BaseActivity
 
         if(resultCode == RESULT_OK)
         {
+            super.markForUpdate(this.viewModel.elementToEdit);
+
             Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.elementToEdit.getUuid().toString());
-
-            super.markForUpdate(this.viewModel.elementToEdit);
         }
 
         setResult(resultCode, intent);

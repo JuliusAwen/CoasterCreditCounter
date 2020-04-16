@@ -39,7 +39,7 @@ public abstract class Element implements IElement
 
     protected Element(String name, UUID uuid)
     {
-        this.name = name;
+        this.name = name.trim();
         this.uuid = uuid == null ? UUID.randomUUID() : uuid;
     }
 
@@ -89,14 +89,12 @@ public abstract class Element implements IElement
     {
         if(!name.trim().isEmpty())
         {
-            name = name.trim();
-
             Log.v(Constants.LOG_TAG,  String.format("Element.verifyName:: name [%s] is valid", name));
             return true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Element.verifyName:: name [%s] is invalid", name));
+            Log.w(Constants.LOG_TAG, "Element.verifyName:: name is invalid - empty string");
             return false;
         }
     }

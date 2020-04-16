@@ -148,8 +148,8 @@ public class CreateAttractionActivity extends BaseActivity
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
-        super.createFloatingActionButton();
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
     }
 
@@ -262,62 +262,73 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void handleCreateAttraction()
     {
+        if(this.textInputLayoutAttractionName.getError() != null || this.textInputLayoutUntrackedRideCount.getError() != null)
+        {
+            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: some input is invalid");
+            return;
+        }
+
         if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
         {
-            this.viewModel.untrackedRideCount = -1;
-            String untrackedRideCountString = this.textInputEditTextUntrackedRideCount.getText().toString();
-            if(!untrackedRideCountString.trim().isEmpty())
+            //this has to happen before name is set (otherwise if something is wrong, the name would already be changed)
+            int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
+            if(untrackedRideCount < 0)
             {
-                try
-                {
-                    this.viewModel.untrackedRideCount = Integer.parseInt(untrackedRideCountString);
-                }
-                catch(NumberFormatException nfe)
-                {
-                    Log.e(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
-                }
+                Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
+                this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
+                return;
             }
             else
             {
-                Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: no untracked ride count was entered - setting to 0");
-                this.decorateTextInputUntrackedRideCount();
-                this.viewModel.untrackedRideCount = 0;
-            }
-
-            if(this.viewModel.untrackedRideCount < 0)
-            {
-                Log.e(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
-                return;
+                this.viewModel.untrackedRideCount = untrackedRideCount;
             }
         }
 
 
         this.viewModel.name = this.textInputEditTextAttractionName.getText().toString();
-        if(this.viewModel.name.length() > this.textInputLayoutAttractionName.getCounterMaxLength())
-        {
-            return;
-        }
-
-        this.viewModel.name = this.viewModel.name.trim();
         if(this.tryCreateAttraction())
         {
-            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
-
             if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
             {
+                Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
                 this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
                 super.markForUpdate(viewModel.parentPark);
             }
 
             super.markForCreation(this.viewModel.attraction);
-
             returnResult(RESULT_OK);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: entered name [%s] is invalid", this.viewModel.name));
+            Log.w(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: entered name [%s] is invalid", this.viewModel.name));
             this.textInputLayoutAttractionName.setError(getString(R.string.error_name_invalid));
         }
+    }
+
+    private int fetchUntrackedRideCountFromTextInput()
+    {
+        int untrackedRideCount = -1;
+        String untrackedRideCountString = this.textInputEditTextUntrackedRideCount.getText().toString().trim();
+
+        if(!untrackedRideCountString.isEmpty())
+        {
+            try
+            {
+                untrackedRideCount = Integer.parseInt(untrackedRideCountString);
+            }
+            catch(NumberFormatException nfe)
+            {
+                Log.e(Constants.LOG_TAG, String.format("EditAttractionActivity.fetchUntrackedRideCountFromTextInput:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+            }
+        }
+        else
+        {
+            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: no untracked ride count was entered - setting to 0");
+            this.decorateTextInputUntrackedRideCount();
+            untrackedRideCount = 0;
+        }
+
+        return untrackedRideCount;
     }
 
     private boolean tryCreateAttraction()
@@ -371,16 +382,8 @@ public class CreateAttractionActivity extends BaseActivity
             }
         }
 
-        if(success)
-        {
-            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: created %s", this.viewModel.attraction.getFullName()));
-            return true;
-        }
-        else
-        {
-            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation of [%s] failed", this.viewModel.name));
-            return false;
-        }
+        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation sucessful[%S]", success));
+        return success;
     }
 
     private void createTextInputAttractionName(String hint)
@@ -633,10 +636,6 @@ public class CreateAttractionActivity extends BaseActivity
                 else if (editable.length() == 0)
                 {
                     textInputLayoutUntrackedRideCount.setHint(getString(R.string.hint_enter_untracked_ride_count));
-                }
-                else if (!editable.toString().trim().isEmpty() && Integer.parseInt(editable.toString()) < 0)
-                {
-                    textInputLayoutUntrackedRideCount.setError(CreateAttractionActivity.this.getString(R.string.error_number_invalid));
                 }
                 else
                 {

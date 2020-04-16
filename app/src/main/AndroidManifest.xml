@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity android:name=".userInterface.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,21 +34,16 @@
         <activity android:name=".userInterface.activities.ManageBlueprintsActivity" />
         <activity android:name=".userInterface.activities.EditAttractionActivity" />
         <activity android:name=".userInterface.activities.CreateAttractionActivity" />
-        <activity
-            android:name=".userInterface.activities.CreateLocationActivity"
-            android:launchMode="singleTask"
+
+        <activity android:name=".userInterface.activities.CreateChildForLocationActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity
-            android:name=".userInterface.activities.CreateParkActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity
-            android:name=".userInterface.activities.EditSimpleElementActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+
         <activity
             android:name=".userInterface.activities.CreateSimpleElementActivity"
-            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <activity
+            android:name=".userInterface.activities.EditSimpleElementActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <service

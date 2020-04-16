@@ -19,19 +19,22 @@ import java.util.UUID;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
-public class CreateLocationActivity extends BaseActivity
+public class CreateChildForLocationActivity extends BaseActivity
 {
-    private CreateLocationActivityViewModel viewModel;
+    private CreateChildForLocationViewModel viewModel;
 
     private TextInputLayout textInputLayout;
     private TextInputEditText textInputEditText;
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_create_location);
+        setContentView(R.layout.activity_create_child_for_location);
     }
 
     protected void create()
@@ -39,21 +42,26 @@ public class CreateLocationActivity extends BaseActivity
         this.textInputLayout = findViewById(R.id.textInputLayout);
         this.textInputEditText = findViewById(R.id.textInputEditText);
 
-        this.viewModel = new ViewModelProvider(this).get(CreateLocationActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateChildForLocationViewModel.class);
+
+        if(this.viewModel.requestCode == null)
+        {
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+        }
 
         if(this.viewModel.parentLocation == null)
         {
             this.viewModel.parentLocation = (Location) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        this.createTextInput();
+        this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_create_location)), this.getString(R.string.help_text_create_location));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getString(R.string.subtitle_create_location));
-        super.createFloatingActionButton();
+                .setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
     }
 
@@ -71,9 +79,9 @@ public class CreateLocationActivity extends BaseActivity
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void createTextInput()
+    private void createTextInput(String hint)
     {
-        this.textInputLayout.setHint(getString(R.string.hint_enter_location_name));
+        this.textInputLayout.setHint(hint);
         this.textInputLayout.setError(null);
         this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
 
@@ -83,7 +91,7 @@ public class CreateLocationActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateLocationsActivity.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.onClickEditorAction:: actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -110,7 +118,7 @@ public class CreateLocationActivity extends BaseActivity
             {
                 if (editable.length() > textInputLayout.getCounterMaxLength())
                 {
-                    textInputLayout.setError(CreateLocationActivity.this.getString(R.string.error_character_count_exceeded, textInputLayout.getCounterMaxLength()));
+                    textInputLayout.setError(CreateChildForLocationActivity.this.getString(R.string.error_character_count_exceeded, textInputLayout.getCounterMaxLength()));
                 }
                 else
                 {
@@ -122,52 +130,57 @@ public class CreateLocationActivity extends BaseActivity
 
     private void handleOnEditorActionDone()
     {
-        String name = this.textInputEditText.getText().toString();
-        if(name.length() <= App.config.maxCharacterCount)
+        if(this.textInputLayout.getError() == null)
         {
-            if(this.tryCreateLocation(name.trim()))
+            if(this.tryCreateChild(this.textInputEditText.getText().toString()))
             {
-                Log.d(Constants.LOG_TAG, String.format("CreateLocationsActivity.handleOnEditorActionDone:: adding child %s to parent %s",
-                        this.viewModel.newLocation, this.viewModel.parentLocation));
-
-                this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newLocation);
-
+                this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.createdChild);
                 this.returnResult(RESULT_OK);
             }
             else
             {
-                Log.d(Constants.LOG_TAG, "CreateLocationsActivity.handleOnEditorActionDone:: name is invalid");
+                Log.i(Constants.LOG_TAG, "CreateChildForLocationActivity.handleOnEditorActionDone:: name is invalid");
                 this.textInputLayout.setError(getString(R.string.error_name_invalid));
             }
         }
     }
 
-    private boolean tryCreateLocation(String name)
+    private boolean tryCreateChild(String name)
     {
-        boolean success = false;
+        IElement createdChild = null;
 
-        Location location = Location.create(name.trim());
-
-        if(location != null)
+        switch(this.viewModel.requestCode)
         {
-            this.viewModel.newLocation = location;
-            success = true;
+            case CREATE_LOCATION:
+                createdChild = Location.create(name);
+                break;
+
+            case CREATE_PARK:
+                createdChild = Park.create(name);
+                break;
         }
 
-        return success;
+        if(createdChild != null)
+        {
+            this.viewModel.createdChild = createdChild;
+            return true;
+        }
+        return false;
     }
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.returnResult:: resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateLocationActivity.returnResult:: returning new %s", this.viewModel.newLocation));
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.newLocation.getUuid().toString());
-            super.markForCreation(this.viewModel.newLocation);
+            super.markForCreation(this.viewModel.createdChild);
+            super.markForUpdate(this.viewModel.parentLocation);
+
+            Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.returnResult:: returning new %s for %s", this.viewModel.createdChild, this.viewModel.parentLocation));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.createdChild.getUuid().toString());
         }
 
         setResult(resultCode, intent);

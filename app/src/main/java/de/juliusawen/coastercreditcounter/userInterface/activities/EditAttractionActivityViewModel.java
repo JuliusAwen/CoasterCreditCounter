@@ -13,7 +13,6 @@ public class EditAttractionActivityViewModel extends ViewModel
 {
     public IAttraction attraction;
 
-    public String name;
     public Blueprint blueprint;
     public CreditType creditType;
     public Category category;

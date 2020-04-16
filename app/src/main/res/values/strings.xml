@@ -169,7 +169,7 @@
     <!--LOCATIONS-->
     <string name="locations">Locations</string>
     <string name="title_edit_location">Edit Location</string>
-    <string name="subtitle_create_location">create child location</string>
+    <string name="subtitle_create_location">create location</string>
     <string name="hint_enter_location_name">Enter location name</string>
     <string name="alert_dialog_message_confirm_remove_location">Do you really want to remove \'%1$s\' and attach all of its children to \'%2$s\'?</string>
     <string name="alert_dialog_title_relocate">RELOCATE</string>
