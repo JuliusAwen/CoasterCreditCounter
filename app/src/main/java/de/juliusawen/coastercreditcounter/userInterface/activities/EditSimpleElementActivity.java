@@ -1,14 +1,18 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.UUID;
 
@@ -16,23 +20,23 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 
 public class EditSimpleElementActivity extends BaseActivity
 {
     private EditSimpleElementActivityViewModel viewModel;
-    private EditText editText;
+    private TextInputLayout textInputLayout;
+    private TextInputEditText textInputEditText;
 
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_edit_element);
+        setContentView(R.layout.activity_edit_simple_element);
     }
 
     protected void create()
     {
-        this.editText = findViewById(R.id.editTextEditElement);
-        this.editText.requestFocus();
+        this.textInputLayout = findViewById(R.id.textInputLayout);
+        this.textInputEditText = findViewById(R.id.textInputEditText);
 
         this.viewModel = new ViewModelProvider(this).get(EditSimpleElementActivityViewModel.class);
 
@@ -41,14 +45,80 @@ public class EditSimpleElementActivity extends BaseActivity
             this.viewModel.elementToEdit = App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getText(R.string.help_text_edit));
+        this.createTextInput(getString(R.string.hint_edit_name, this.viewModel.elementToEdit.getName()));
+
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_edit_simple_element));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), this.viewModel.elementToEdit.getName());
-        super.createFloatingActionButton();
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
-        this.createEditText();
+    }
+
+    private void createTextInput(String hint)
+    {
+        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.createTextInput:: edit %s", this.viewModel.elementToEdit));
+
+        this.textInputLayout.setHint(hint);
+        this.textInputLayout.setError(null);
+        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
+
+        this.textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
+            {
+                Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.onEditorAction:: actionId[%d]", actionId));
+
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    if(!textInputEditText.getText().toString().trim().isEmpty())
+                    {
+                        handleOnEditorActionDone();
+                    }
+                    else
+                    {
+                        decorateTextInput();
+                    }
+
+                    handled = true;
+                }
+
+                return handled;
+            }
+        });
+
+        this.textInputEditText.requestFocus();
+        this.textInputEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable.length() > textInputLayout.getCounterMaxLength())
+                {
+                    textInputLayout.setError(EditSimpleElementActivity.this.getString(R.string.error_character_count_exceeded, textInputLayout.getCounterMaxLength()));
+                }
+                else
+                {
+                    textInputLayout.setError(null);
+                }
+            }
+        });
+
+        this.decorateTextInput();
+    }
+
+    private void decorateTextInput()
+    {
+        this.textInputEditText.append(this.viewModel.elementToEdit.getName());
     }
 
     private void decorateFloatingActionButton()
@@ -59,57 +129,33 @@ public class EditSimpleElementActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                if(handleOnEditorActionDone())
-                {
-                    returnResult(RESULT_OK);
-                }
+                handleOnEditorActionDone();
             }
         });
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void createEditText()
+    private void handleOnEditorActionDone()
     {
-        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.createEditText:: edit %s", this.viewModel.elementToEdit));
-        this.editText.append(this.viewModel.elementToEdit.getName());
-
-        this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        String name = this.textInputEditText.getText().toString();
+        if(name.length() <= App.config.maxCharacterCount)
         {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
+            name = name.trim();
+            if(!this.viewModel.elementToEdit.getName().equals(name))
             {
-                if (actionId == EditorInfo.IME_ACTION_DONE)
+                Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, name));
+                if(!this.viewModel.elementToEdit.setName(name))
                 {
-                    Log.d(Constants.LOG_TAG, "EditSimpleElementActivity.onEditorAction<IME_ACTION_DONE>:: ");
-                    if(handleOnEditorActionDone())
-                    {
-                        returnResult(RESULT_OK);
-                    }
+                    this.textInputLayout.setError(getString(R.string.error_name_invalid));
+                    Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name [%s] is invalid", name));
                 }
-
-                return true;
             }
-        });
-    }
-
-    private boolean handleOnEditorActionDone()
-    {
-        String editText = this.editText.getText().toString();
-        if(!this.viewModel.elementToEdit.getName().equals(editText))
-        {
-            Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, editText));
-            if(!this.viewModel.elementToEdit.setName(editText))
+            else
             {
-                Toaster.makeShortToast(this, getString(R.string.error_name_invalid));
-                return false;
+                Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.handleOnEditorActionDone:: name has not changed");
+                returnResult(RESULT_CANCELED);
             }
         }
-        else
-        {
-            Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.createEditText:: name has not changed");
-        }
-
-        return true;
     }
 
     private void returnResult(int resultCode)

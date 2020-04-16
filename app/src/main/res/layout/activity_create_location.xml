@@ -9,22 +9,7 @@
     <include
         layout="@layout/floating_action_button"/>
 
-    <LinearLayout
-        tools:ignore="UselessParent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include
-            layout="@layout/toolbar"/>
-
-        <EditText
-            style="@style/StandardEditText"
-            android:id="@+id/editTextCreateLocation"
-            android:hint="@string/hint_enter_location_name"
-            android:layout_margin="16dp"
-            tools:ignore="Autofill" />
-
-    </LinearLayout>
+    <include
+        layout="@layout/layout_simple_text_input"/>
 
 </FrameLayout>

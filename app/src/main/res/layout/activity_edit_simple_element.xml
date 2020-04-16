@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userInterface.activities.CreateParkActivity">
+    tools:context=".userInterface.activities.EditSimpleElementActivity">
 
     <include
         layout="@layout/floating_action_button"/>

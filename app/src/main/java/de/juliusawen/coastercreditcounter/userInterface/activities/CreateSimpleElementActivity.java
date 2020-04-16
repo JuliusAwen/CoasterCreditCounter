@@ -1,16 +1,21 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
@@ -24,7 +29,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 public class CreateSimpleElementActivity extends BaseActivity
 {
     private CreateSimpleElementActivityViewModel viewModel;
-    private EditText editText;
+    private TextInputLayout textInputLayout;
+    private TextInputEditText textInputEditText;
 
 
     protected void setContentView()
@@ -34,46 +40,29 @@ public class CreateSimpleElementActivity extends BaseActivity
 
     protected void create()
     {
-        this.editText = findViewById(R.id.editTextCreateSimpleElement);
-        this.editText.setOnEditorActionListener(this.getOnEditorActionListener());
-        this.editText.requestFocus();
-
-        Intent intent = getIntent();
-        String toolbarTitle = intent.getStringExtra(Constants.EXTRA_TOOLBAR_TITLE);
-        String helpTitle = intent.getStringExtra(Constants.EXTRA_HELP_TITLE);
-        String helpText = intent.getStringExtra(Constants.EXTRA_HELP_TEXT);
-        String hint = intent.getStringExtra(Constants.EXTRA_HINT);
-
-        this.editText.setHint(hint);
+        this.textInputLayout = findViewById(R.id.textInputLayout);
+        this.textInputEditText = findViewById(R.id.textInputEditText);
 
         this.viewModel = new ViewModelProvider(this).get(CreateSimpleElementActivityViewModel.class);
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, helpTitle), helpText);
+        this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));
+
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(toolbarTitle, null);
-        super.createFloatingActionButton();
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
     }
 
-    private void decorateFloatingActionButton()
+    private void createTextInput(String hint)
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
-        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnEditorActionDone();
-            }
-        });
-        super.setFloatingActionButtonVisibility(true);
-    }
+        this.textInputLayout.setHint(hint);
+        this.textInputLayout.setError(null);
+        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
 
-    private TextView.OnEditorActionListener getOnEditorActionListener()
-    {
-        return new TextView.OnEditorActionListener()
+        this.textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
@@ -90,19 +79,59 @@ public class CreateSimpleElementActivity extends BaseActivity
 
                 return handled;
             }
-        };
+        });
+
+        this.textInputEditText.requestFocus();
+        this.textInputEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable.length() > textInputLayout.getCounterMaxLength())
+                {
+                    textInputLayout.setError(CreateSimpleElementActivity.this.getString(R.string.error_character_count_exceeded, textInputLayout.getCounterMaxLength()));
+                }
+                else
+                {
+                    textInputLayout.setError(null);
+                }
+            }
+        });
+    }
+
+    private void decorateFloatingActionButton()
+    {
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnEditorActionDone();
+            }
+        });
+        super.setFloatingActionButtonVisibility(true);
     }
 
     private void handleOnEditorActionDone()
     {
-        this.viewModel.createdString = this.editText.getText().toString();
+        this.viewModel.createdString = this.textInputEditText.getText().toString();
         if(!this.viewModel.createdString.trim().isEmpty())
         {
-            returnResult(RESULT_OK);
+            if(this.viewModel.createdString.length() <= App.config.maxCharacterCount)
+            {
+                returnResult(RESULT_OK);
+            }
         }
         else
         {
-            returnResult(RESULT_CANCELED);
+            this.textInputLayout.setError(getString(R.string.error_name_invalid));
         }
     }
 

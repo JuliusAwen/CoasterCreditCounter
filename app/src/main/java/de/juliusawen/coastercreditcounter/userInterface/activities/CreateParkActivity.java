@@ -1,14 +1,18 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.UUID;
 
@@ -18,13 +22,13 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 
 public class CreateParkActivity extends BaseActivity
 {
     private CreateParkActivityViewModel viewModel;
-    private EditText editText;
 
+    private TextInputLayout textInputLayout;
+    private TextInputEditText textInputEditText;
 
     protected void setContentView()
     {
@@ -33,7 +37,8 @@ public class CreateParkActivity extends BaseActivity
 
     protected void create()
     {
-        this.editText = findViewById(R.id.editTextCreatePark);
+        this.textInputLayout = findViewById(R.id.textInputLayout);
+        this.textInputEditText = findViewById(R.id.textInputEditText);
 
         this.viewModel = new ViewModelProvider(this).get(CreateParkActivityViewModel.class);
 
@@ -49,7 +54,7 @@ public class CreateParkActivity extends BaseActivity
         super.createFloatingActionButton();
 
         this.decorateFloatingActionButton();
-        this.createEditText();
+        this.createTextInput();
     }
 
     private void decorateFloatingActionButton()
@@ -66,9 +71,14 @@ public class CreateParkActivity extends BaseActivity
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void createEditText()
+    private void createTextInput()
     {
-        this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        this.textInputLayout.setHint(getString(R.string.hint_enter_park_name));
+        this.textInputLayout.setError(null);
+        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
+
+        this.textInputEditText.requestFocus();
+        this.textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
@@ -86,38 +96,64 @@ public class CreateParkActivity extends BaseActivity
                 return handled;
             }
         });
+
+        this.textInputEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable.length() > textInputLayout.getCounterMaxLength())
+                {
+                    textInputLayout.setError(CreateParkActivity.this.getString(R.string.error_character_count_exceeded, textInputLayout.getCounterMaxLength()));
+                }
+                else
+                {
+                    textInputLayout.setError(null);
+                }
+            }
+        });
     }
 
     private void handleOnEditorActionDone()
     {
-        if(this.createPark())
+        String name = this.textInputEditText.getText().toString();
+        if(name.length() <= App.config.maxCharacterCount)
         {
-            Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.handleOnEditorActionDone:: adding child %s to parent %s",
-                    this.viewModel.newPark, this.viewModel.parentLocation));
+            if(this.tryCreatePark(name.trim()))
+            {
+                Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.handleOnEditorActionDone:: adding child %s to parent %s",
+                        this.viewModel.newPark, this.viewModel.parentLocation));
 
-            this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newPark);
+                this.viewModel.parentLocation.addChildAndSetParent(this.viewModel.newPark);
 
-            Log.v(Constants.LOG_TAG, String.format( "CreateParkActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
-            this.returnResult(RESULT_OK);
-        }
-        else
-        {
-            Toaster.makeShortToast(this, getString(R.string.error_name_invalid));
+                Log.v(Constants.LOG_TAG, String.format( "CreateParkActivity.handleOnEditorActionDone:: parent %s has no children<Park> - returning RESULT_OK", this.viewModel.parentLocation));
+                this.returnResult(RESULT_OK);
+            }
+            else
+            {
+                Log.d(Constants.LOG_TAG, "CreateParkActivity.handleOnEditorActionDone:: name is invalid");
+                this.textInputLayout.setError(getString(R.string.error_name_invalid));
+            }
         }
     }
 
-    private boolean createPark()
+    private boolean tryCreatePark(String name)
     {
         boolean success = false;
-        Park park = Park.create(this.editText.getText().toString(), null);
+
+        Park park = Park.create(name);
 
         if(park != null)
         {
             this.viewModel.newPark = park;
             success = true;
         }
-
-        Log.d(Constants.LOG_TAG, String.format("CreateParkActivity.createLocation:: show %s success[%S]", this.viewModel.newPark, success));
 
         return success;
     }

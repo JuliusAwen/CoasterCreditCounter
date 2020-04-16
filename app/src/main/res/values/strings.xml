@@ -47,6 +47,8 @@
 
 
     <!--GENERIC ERROR MESSAGES-->
+    <string name="error_character_count_exceeded">Maximum of %1$d characters exceeded</string>
+    <string name="error_digit_count_exceeded">Maximum of %1$d digits exceeded</string>
     <string name="error_name_invalid">Name is invalid</string>
     <string name="error_number_invalid">Number is invalid</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
@@ -64,9 +66,9 @@
 
 
     <!--GENERIC HINT TEXTS-->
-    <string name="hint_enter_string">Enter string</string>
-    <string name="hint_untracked_ride_count">Enter count</string>
-    <string name="hint_edit_element_name">Edit element name</string>
+    <string name="hint_enter_untracked_ride_count">Enter count</string>
+    <string name="hint_edit_untracked_ride_count">(was %1$d before)</string>
+    <string name="hint_edit_name">Edit name \'%1$s\'</string>
 
 
     <!--GENERIC DESCRIPTIONS-->
@@ -348,7 +350,7 @@
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_create_status">@string/help_text_not_yet_available</string>
 
-    <string name="help_text_edit">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_simple_element">@string/help_text_not_yet_available</string>
     <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
     <string name="help_text_edit_blueprint">@string/help_text_not_yet_available</string>
 

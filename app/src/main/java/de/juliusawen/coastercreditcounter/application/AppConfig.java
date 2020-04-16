@@ -33,6 +33,9 @@ public class AppConfig
     public final String yearFormat = "yyyy";
     public final String timeFormat = "HH:mm:ss";
 
+    public final int maxCharacterCount = 64;
+    public final int maxDigitCount = 9;
+
 
     AppConfig()
     {

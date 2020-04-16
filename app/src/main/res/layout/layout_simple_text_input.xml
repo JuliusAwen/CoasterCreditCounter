@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include
+        layout="@layout/toolbar"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/StandardTextInputLayout"
+        android:id="@+id/textInputLayout"
+        android:layout_margin="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/StandardTextInputEditText"
+            android:id="@+id/textInputEditText"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

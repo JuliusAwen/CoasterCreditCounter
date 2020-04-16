@@ -14,7 +14,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 public class CreateAttractionActivityViewModel extends ViewModel
 {
     public RequestCode requestCode;
-    String hint;
 
     public Park parentPark;
     public IAttraction attraction;

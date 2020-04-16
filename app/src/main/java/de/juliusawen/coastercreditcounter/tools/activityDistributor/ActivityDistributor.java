@@ -81,10 +81,10 @@ public abstract class ActivityDistributor
     public static  void startActivityManageForResult(Context context, RequestCode requestCode)
     {
         Intent intent = null;
-        String toolbarTitle = null;
-        String toolbarSubtitle = null;
-        String helpTitle = null;
-        String helpText = null;
+        String toolbarTitle = context.getString(R.string.error_missing_text);
+        String toolbarSubtitle = context.getString(R.string.error_missing_text);
+        String helpTitle = context.getString(R.string.error_missing_text);
+        String helpText = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -157,6 +157,7 @@ public abstract class ActivityDistributor
     {
         Intent intent = null;
         String toolbarTitle = context.getString(R.string.error_missing_text);
+        String hint = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -228,10 +229,10 @@ public abstract class ActivityDistributor
     public static void startActivityCreateForResult(Context context, RequestCode requestCode, IElement parentElement)
     {
         Intent intent;
-        String title = null;
-        String toolbarSubtitle = null;
-        String helpText = null;
-        String hint = null;
+        String title = context.getString(R.string.error_missing_text);
+        String toolbarSubtitle = context.getString(R.string.error_missing_text);
+        String helpText = context.getString(R.string.error_missing_text);
+        String hint = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -387,10 +388,8 @@ public abstract class ActivityDistributor
     public static void startActivityPickForResult(Context context, RequestCode requestCode, List<IElement> elementsToPickFrom)
     {
         Intent intent = null;
-        String toolbarTitle = null;
-        String toolbarSubtitle = null;
-        String helpTitle = null;
-        String helpText = null;
+        String toolbarTitle = context.getString(R.string.error_missing_text);
+        String toolbarSubtitle = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -405,46 +404,46 @@ public abstract class ActivityDistributor
 
             case PICK_BLUEPRINT:
                 intent = new Intent(context, ManageBlueprintsActivity.class);
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_blueprint));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_blueprint));
                 toolbarTitle = context.getString(R.string.title_pick_blueprint);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                helpTitle = context.getString(R.string.title_pick_blueprint);
-                helpText = context.getString(R.string.help_text_pick_blueprint);
                 break;
 
             case PICK_CREDIT_TYPE:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_credit_type));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                helpTitle = context.getString(R.string.title_pick_credit_type);
-                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_CATEGORY:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_category));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_category);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                helpTitle = context.getString(R.string.title_pick_category);
-                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_MANUFACTURER:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_manufacturer));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_manufacturer);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                helpTitle = context.getString(R.string.title_pick_manufacturer);
-                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
             case PICK_STATUS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_status));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_status);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
-                helpTitle = context.getString(R.string.title_pick_status);
-                helpText = context.getString(R.string.help_text_pick_element);
                 break;
 
 
@@ -487,12 +486,6 @@ public abstract class ActivityDistributor
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToPickFrom));
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
-
-            if(helpTitle != null && helpText != null)
-            {
-                intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
-                intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
-            }
 
             ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 

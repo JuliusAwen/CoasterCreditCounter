@@ -68,10 +68,21 @@
     </style>
 
 
+    <!-- TEXT INPUT LAYOUT -->
 
-    <!--EDIT TEXT-->
+    <style name="StandardTextInputLayout" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="errorEnabled">true</item>
+        <item name="counterEnabled">true</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
-    <style name="StandardEditText" parent="AppTheme">
+
+
+    <!--TEXT INPUT EDIT TEXT-->
+
+    <style name="StandardTextInputEditText" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:inputType">text</item>
