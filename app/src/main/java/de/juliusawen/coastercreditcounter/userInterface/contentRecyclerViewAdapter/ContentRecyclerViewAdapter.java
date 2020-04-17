@@ -76,7 +76,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
     private final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
 
-    private HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
+    private final HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IAttraction>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
     ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
     {

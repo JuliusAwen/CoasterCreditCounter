@@ -299,7 +299,7 @@ public class GroupHeaderProvider
 
         for(Visit visit : visits)
         {
-            String year = String.valueOf(StringTool.fetchSimpleYear(visit.getCalendar()));
+            String year = StringTool.fetchSimpleYear(visit.getCalendar());
 
             IElement existingYearHeader = null;
             for(IElement yearHeader : groupedVisits)

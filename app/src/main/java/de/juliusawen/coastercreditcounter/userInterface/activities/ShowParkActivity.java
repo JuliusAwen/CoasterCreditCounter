@@ -108,39 +108,51 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         switch(this.getCurrentTab())
         {
             case SHOW_ATTRACTIONS:
+            {
                 switch(item)
                 {
                     case EXPAND_ALL:
-                        return this.showAttractionsFragment.expandAll();
+                        this.showAttractionsFragment.expandAll();
+                        break;
 
                     case COLLAPSE_ALL:
-                        return this.showAttractionsFragment.collapseAll();
+                        this.showAttractionsFragment.collapseAll();
+                        break;
                 }
+                break;
+            }
 
             case SHOW_VISITS:
+            {
                 switch(item)
                 {
                     case SORT_ASCENDING:
-                        return this.showVisitsFragment.sortAscending();
+                        this.showVisitsFragment.sortAscending();
+                        break;
 
                     case SORT_DESCENDING:
-                        return this.showVisitsFragment.sortDecending();
-                        
+                        this.showVisitsFragment.sortDecending();
+                        break;
+
                     case EXPAND_ALL:
-                        return this.showVisitsFragment.expandAll();
-                        
+                        this.showVisitsFragment.expandAll();
+                        break;
+
                     case COLLAPSE_ALL:
-                        return this.showVisitsFragment.collapseAll();
+                        this.showVisitsFragment.collapseAll();
+                        break;
 
                     case SORT:
-                        return true;
+                        break;
                 }
+                break;
+            }
 
             default:
-                break;
+                return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override

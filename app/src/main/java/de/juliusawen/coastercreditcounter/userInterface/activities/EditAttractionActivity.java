@@ -77,7 +77,7 @@ public class EditAttractionActivity extends BaseActivity
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_create_attraction);
+        setContentView(R.layout.activity_edit_attraction);
     }
 
     protected void create()
@@ -145,6 +145,7 @@ public class EditAttractionActivity extends BaseActivity
             this.createTextInputUntrackedRideCount();
         }
 
+        super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);

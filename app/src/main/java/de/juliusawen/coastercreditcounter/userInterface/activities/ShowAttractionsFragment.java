@@ -223,18 +223,16 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 .prepare(menu);
     }
 
-    public boolean expandAll()
+    public void expandAll()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
         getActivity().invalidateOptionsMenu();
-        return true;
     }
 
-    public boolean collapseAll()
+    public void collapseAll()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
         getActivity().invalidateOptionsMenu();
-        return true;
     }
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()

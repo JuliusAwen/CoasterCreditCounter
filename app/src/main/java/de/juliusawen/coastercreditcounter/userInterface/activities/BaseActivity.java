@@ -142,7 +142,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void pause() {}
+    protected void pause()
+    {
+        //do stuff onPause
+    }
 
 
     private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()
@@ -259,7 +262,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(item == OptionsItem.HELP)
         {
-            return this.showHelpOverlayFragment();
+            this.showHelpOverlayFragment();
+            return true;
         }
         else
         {
@@ -314,7 +318,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return this;
     }
 
-    private boolean showHelpOverlayFragment()
+    private void showHelpOverlayFragment()
     {
         if(this.helpOverlayFragment == null)
         {
@@ -326,7 +330,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
                 this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage));
 
         this.setHelpOverlayVisibility(true);
-        return true;
     }
 
     private void instantiateHelpOverlayFragment()
@@ -547,22 +550,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .hide(fragment)
-                .commit();
-    }
-
-    protected void showFragment(Fragment fragment)
-    {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .show(fragment)
-                .commit();
-    }
-
-    private void hideFragment(Fragment fragment)
-    {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
                 .hide(fragment)
                 .commit();
     }

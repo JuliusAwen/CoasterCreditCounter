@@ -267,56 +267,77 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             switch(id)
             {
                 case R.id.navigationItem_BrowseLocations:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseLocations> selected");
                     ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
                     break;
+                }
 
                 case R.id.navigationItem_ManageCreditTypes:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCreditTypes> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
                     break;
+                }
 
                 case R.id.navigationItem_ManageCategories:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_CATEGORIES);
                     break;
+                }
 
                 case R.id.navigationItem_ManageManufacturers:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageManufacturers> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_MANUFACTURERS);
                     break;
+                }
 
                 case R.id.navigationItem_ManageBlueprints:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_BLUEPRINTS);
                     break;
+                }
 
                 case R.id.navigationItem_ManageModels:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints/Models> selected");
                     Toaster.notYetImplemented(NavigationHubActivity.this);
                     break;
+                }
 
                 case R.id.navigationItem_ManageStatuses:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageStatuses> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_STATUSES);
                     break;
-
+                }
 
                 case R.id.navigationItem_Import:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");
                     if(this.requestPermissionWriteExternalStorage(item))
                     {
                         this.handleNavigationItemImportSelected();
                     }
                     break;
+                }
 
                 case R.id.navigationItem_Export:
+                {
                     Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Export> selected");
                     if(this.requestPermissionWriteExternalStorage(item))
                     {
                         handleNavigationItemExportSelected();
                     }
                     break;
+                }
+
+                default:
+                    Log.e(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: unknown item selected");
+                    return false;
             }
         }
 

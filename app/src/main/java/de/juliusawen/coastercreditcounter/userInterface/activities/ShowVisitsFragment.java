@@ -162,32 +162,28 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 .prepare(menu);
     }
 
-    public boolean sortAscending()
+    public void sortAscending()
     {
         Visit.setSortOrder(SortOrder.ASCENDING);
         this.updateContentRecyclerView();
-        return true;
     }
 
-    public boolean sortDecending()
+    public void sortDecending()
     {
         Visit.setSortOrder(SortOrder.DESCENDING);
         this.updateContentRecyclerView();
-        return true;
     }
 
-    public boolean expandAll()
+    public void expandAll()
     {
         this.viewModel.contentRecyclerViewAdapter.expandAll();
         getActivity().invalidateOptionsMenu();
-        return true;
     }
 
-    public boolean collapseAll()
+    public void collapseAll()
     {
         this.viewModel.contentRecyclerViewAdapter.collapseAll();
         getActivity().invalidateOptionsMenu();
-        return true;
     }
 
     @Override

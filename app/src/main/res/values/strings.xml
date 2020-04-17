@@ -52,7 +52,6 @@
     <string name="error_name_invalid">Name is invalid</string>
     <string name="error_number_invalid">Number is invalid</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
-    <string name="error_creation_failed">Creation failed…</string>
     <string name="error_no_entry_selected">No entry selected</string>
     <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint</string>
 

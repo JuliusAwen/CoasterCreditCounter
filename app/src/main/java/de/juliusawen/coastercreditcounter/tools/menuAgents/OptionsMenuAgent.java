@@ -32,24 +32,23 @@ public class OptionsMenuAgent
 
     public OptionsMenuAgent addToGroup(OptionsItem item, OptionsItem group)
     {
-        if(this.addItem(item))
+        this.addItem(item);
+
+        if(!this.groupByItem.containsKey(item))
         {
-            if(!this.groupByItem.containsKey(item))
-            {
-                this.groupByItem.put(item, group);
-            }
-            else
-            {
-                Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
-            }
+            this.groupByItem.put(item, group);
         }
+        else
+        {
+            Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
+        }
+
         return this;
     }
 
-    private boolean addItem(OptionsItem item)
+    private void addItem(OptionsItem item)
     {
         this.itemsToAdd.add(item);
-        return true;
     }
 
     public OptionsMenuAgent setEnabled(OptionsItem item, boolean setEnabled)

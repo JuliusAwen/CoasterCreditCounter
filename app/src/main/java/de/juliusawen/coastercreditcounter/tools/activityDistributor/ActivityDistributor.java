@@ -156,7 +156,6 @@ public abstract class ActivityDistributor
     {
         Intent intent = null;
         String toolbarTitle = context.getString(R.string.error_missing_text);
-        String hint = context.getString(R.string.error_missing_text);
 
         switch(requestCode)
         {
@@ -192,11 +191,15 @@ public abstract class ActivityDistributor
 
             case EDIT_ATTRACTION_BLUEPRINT:
                 intent = new Intent(context, EditAttractionActivity.class);
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_edit_blueprint));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_edit_blueprint));
                 toolbarTitle = context.getString(R.string.title_edit_blueprint);
                 break;
 
             case EDIT_ON_SITE_ATTRACTION:
                 intent = new Intent(context, EditAttractionActivity.class);
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_edit_on_site_attraction));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_edit_attraction));
                 toolbarTitle = context.getString(R.string.title_edit_on_site_attraction);
                 break;
         }

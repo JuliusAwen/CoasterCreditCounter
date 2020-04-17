@@ -230,7 +230,7 @@ public class SortElementsActivity extends BaseActivity
                 return false;
             }
 
-            Runnable actionSortDown = new Runnable()
+            final Runnable actionSortDown = new Runnable()
             {
                 @Override public void run()
                 {
@@ -239,7 +239,7 @@ public class SortElementsActivity extends BaseActivity
                 }
             };
 
-            Runnable actionSortUp = new Runnable()
+            final Runnable actionSortUp = new Runnable()
             {
                 @Override public void run()
                 {
