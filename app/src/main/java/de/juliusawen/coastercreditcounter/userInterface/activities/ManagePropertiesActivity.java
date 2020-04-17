@@ -872,7 +872,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
             }
 
-            super.markForDeletion(this.viewModel.longClickedElement, false);
+            super.markForDeletion(this.viewModel.longClickedElement);
             this.updateContentRecyclerView(true);
         }
     }

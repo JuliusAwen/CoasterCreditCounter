@@ -695,6 +695,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
+    protected void markForDeletion(IElement element)
+    {
+        this.markForDeletion(element, false);
+    }
+
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
         if(element.isIPersistable())
@@ -739,7 +744,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
+            Log.i(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
         }
     }
 }

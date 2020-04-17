@@ -517,7 +517,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 IElement parent = this.viewModel.longClickedElement.getParent();
 
-                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement, false);
+                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement);
                 ShowLocationsActivity.super.markForUpdate(parent);
 
                 this.viewModel.longClickedElement.remove();

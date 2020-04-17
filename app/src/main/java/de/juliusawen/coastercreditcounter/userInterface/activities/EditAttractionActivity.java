@@ -390,7 +390,7 @@ public class EditAttractionActivity extends BaseActivity
 
         if(converted)
         {
-            super.markForDeletion(this.viewModel.convertedAttraction, false);
+            super.markForDeletion(this.viewModel.convertedAttraction);
             super.markForCreation(this.viewModel.attraction);
             super.markForUpdate(this.viewModel.attraction.getParent());
 
