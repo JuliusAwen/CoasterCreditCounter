@@ -936,39 +936,38 @@ public class JsonHandler implements IDatabaseWrapper
     {
         Uri importFileUri = null;
 
-        if(!this.hasJsonFileExtension(uri))
+        if(DocumentsContract.isDocumentUri(App.getContext(), uri))
         {
-            if(DocumentFile.fromSingleUri(App.getContext(), uri).isDirectory())
+            if(this.hasJsonFileExtension(uri))
             {
-                if(importFileName != null)
-                {
-                    DocumentFile importFile = DocumentFile.fromTreeUri(App.getContext(), uri).findFile(importFileName);
-
-                    if(importFile != null)
-                    {
-                        Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: fetched ExportFileUri [%s]", importFile.getUri()));
-                        importFileUri = importFile.getUri();
-                    }
-                    else
-                    {
-                        Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: ImportFile [%s] not found in Directory [%s]", importFileName, uri));
-                    }
-                }
-                else
-                {
-                    Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: unable to fetch uri from [%s]- no ExportFileName passed", uri));
-                }
+                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: passed uri [%s] is most likely ImportFileUri", uri));
+                importFileUri = uri;
             }
             else
             {
                 Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: passed uri [%s] is neither Directory nor .json file", uri));
             }
-
         }
         else
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: passed uri [%s] is ImportFileUri", uri));
-            importFileUri = uri;
+            if(importFileName != null)
+            {
+                DocumentFile importFile = DocumentFile.fromTreeUri(App.getContext(), uri).findFile(importFileName);
+
+                if(importFile != null)
+                {
+                    Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: fetched ExportFileUri [%s]", importFile.getUri()));
+                    importFileUri = importFile.getUri();
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: ImportFile [%s] not found in Directory [%s]", importFileName, uri));
+                }
+            }
+            else
+            {
+                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: unable to fetch uri from [%s]- no ExportFileName passed", uri));
+            }
         }
 
         return importFileUri;
