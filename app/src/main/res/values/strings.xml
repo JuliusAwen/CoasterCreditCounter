@@ -145,7 +145,10 @@
     <string name="item_navigation_drawer_export">Export</string>
 
     <string name="error_export_fail">Export failed</string>
-    <string name="error_import_fail">Import from %1$s failed</string>
+    <string name="error_import_fail">Import failed</string>
+
+    <string name="error_import_fail_invalid_uri">Invalid file picked</string>
+
     <string name="error_new_parent_is_not_location">Select a location</string>
     <string name="error_new_parent_is_own_descendant">New parent can not be its own descendant!</string>
 
@@ -154,6 +157,9 @@
 
     <string name="alert_dialog_title_overwrite_content">IMPORT CONTENT</string>
     <string name="alert_dialog_message_confirm_overwrite_content">Do you want to import content? \nThis will permanently overwrite your existing content!</string>
+
+    <string name="alert_dialog_title_export_file_not_found">FILE NOT FOUND</string>
+    <string name="alert_dialog_message_export_file_not_found">File %1$s not found in that location. \nDo you want to pick a file manually?</string>
 
     <string name="information_export_success">Content exported to %1$s</string>
     <string name="information_import_success">Content imported</string>

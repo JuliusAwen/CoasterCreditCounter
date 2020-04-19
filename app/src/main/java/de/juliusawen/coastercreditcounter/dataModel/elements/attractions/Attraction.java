@@ -159,11 +159,11 @@ public abstract class Attraction extends Element implements IAttraction
         if(untracktedRideCount != this.untracktedRideCount)
         {
             this.untracktedRideCount = untracktedRideCount;
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
         }
         else
         {
-            Log.w(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: %s's untracked ride count unchanged at [%d]", this, this.untracktedRideCount));
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: %s's untracked ride count unchanged at [%d]", this, this.untracktedRideCount));
         }
     }
 

@@ -29,7 +29,7 @@ public class Preferences implements IPersistable
 
     private boolean expandLatestYearHeaderByDefault;
 
-
+    private String exportFileName = "CoasterCreditCounterExport.json";
 
     private final Persistence persistence;
     private final String[] dayNames = new DateFormatSymbols().getWeekdays();
@@ -80,7 +80,7 @@ public class Preferences implements IPersistable
 
     public boolean createDefaultPreferences()
     {
-        Log.e(Constants.LOG_TAG, "Preferences.createDefaultPrefernces:: creating default preferences");
+        Log.w(Constants.LOG_TAG, "Preferences.createDefaultPrefernces:: creating default preferences");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -88,7 +88,7 @@ public class Preferences implements IPersistable
 
         if(persistence.savePreferences(this))
         {
-            Log.i(Constants.LOG_TAG, String.format("Preferences.createDefaultPrefernces:: default preferences successfully created - took [%d]ms", stopwatch.stop()));
+            Log.w(Constants.LOG_TAG, String.format("Preferences.createDefaultPrefernces:: default preferences successfully created - took [%d]ms", stopwatch.stop()));
             return true;
         }
         else
@@ -106,11 +106,11 @@ public class Preferences implements IPersistable
         {
             String message = "Preferences validation failed: default sort order is null";
             Log.e(Constants.LOG_TAG, String.format("Preferences.validate:: %s", message));
-            throw  new IllegalStateException(message);
+            throw new IllegalStateException(message);
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("Preferences.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
+            Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
         }
 
         Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: expand latest year in visits list [%S]", this.expandLatestYearHeaderByDefault()));
@@ -201,6 +201,11 @@ public class Preferences implements IPersistable
     {
         this.increment = increment;
         Log.i(Constants.LOG_TAG, String.format("Preferences.setIncrement:: [%d] set as default", increment));
+    }
+
+    public String getExportFileName()
+    {
+        return this.exportFileName;
     }
 
     public JSONObject toJson()

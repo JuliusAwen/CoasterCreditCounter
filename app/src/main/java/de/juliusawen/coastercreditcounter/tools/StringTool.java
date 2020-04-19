@@ -5,8 +5,8 @@ import android.text.style.StyleSpan;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.application.App;
 
@@ -58,7 +58,16 @@ public abstract class StringTool
         return spannableString;
     }
 
-    public static SpannableString buildSpannableString(String originalString, HashMap<String, Integer> typefacesBySubString)
+    public static SpannableString buildSpannableString(String originalString, String substring, int typeface)
+    {
+        SpannableString spannableString = new SpannableString(originalString);
+        int start = originalString.indexOf(substring);
+        int end = start + substring.length();
+        spannableString.setSpan(new StyleSpan(typeface), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+    public static SpannableString buildSpannableString(String originalString, Map<String, Integer> typefacesBySubString)
     {
         SpannableString spannableString = new SpannableString(originalString);
         for(String subString : typefacesBySubString.keySet())

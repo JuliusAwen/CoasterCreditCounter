@@ -15,6 +15,9 @@ public abstract class Constants
     public static final String PERSISTENCY_SERVICE_NAME = "de.juliusawen.coding.persistency_service";
 
 
+    public static final String JSON_STRING_IDENTIFIER = "identifier";
+    public static final String JSON_STRING_ID = "de.juliusawen.coding.exportfile";
+
     public static final String JSON_STRING_LOCATIONS = "locations";
     public static final String JSON_STRING_PARKS = "parks";
     public static final String JSON_STRING_VISITS = "visits";
@@ -80,6 +83,8 @@ public abstract class Constants
     public static final String FRAGMENT_ARG_ALERT_DIALOG_ICON_RESOURCE = "de.juliusawen.coding.fragment_arg_alert_dialog_icon_resource";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_TITLE = "de.juliusawen.coding.fragment_arg_alert_dialog_title";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_MESSAGE = "de.juliusawen.coding.fragment_arg_alert_dialog_message";
+    public static final String FRAGMENT_ARG_ALERT_DIALOG_SUBSTRINGS = "de.juliusawen.coding.fragment_arg_alert_dialog_substrings";
+    public static final String FRAGMENT_ARG_ALERT_DIALOG_TYPEFACES = "de.juliusawen.coding.fragment_arg_alert_dialog_typefaces";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT = "de.juliusawen.coding.fragment_arg_alert_dialog_positive_button_text";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT = "de.juliusawen.coding.fragment_arg_alert_dialog_negative_button_text";
     public static final String FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE = "de.juliusawen.coding.fragment_arg_alert_dialog_negative_request_code";

@@ -10,7 +10,7 @@ public class AppConfig
 
     private final String databaseWrapperToUse = JSON_HANDLER;
 
-    private final String contentExportFileName = "CoasterCreditCounterExport.json";
+    private final String exportFileName = "CoasterCreditCounterExport.json";
     private final String preferencesFileName = "Preferences.json";
 
 
@@ -18,11 +18,10 @@ public class AppConfig
 
     //below is only working when isDebugBuild = true
 
-    private final boolean useExternalStorage = true; // use external file location accessable to user?
-    private final boolean createExportFileWithDefaultsIfNotFound = true; // create export.json file if it does not exist?
-    private final boolean alwaysLoadFromDatabaseMock = false; // always load from database mock instead of export.json file?
-    private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
+    private final boolean resetToDefaultContentOnStartup = true; // // use mocked default content on startup? (OVERRIDES existing content!)
+
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
+    private final boolean alwaysImportFromDatabaseMock = false; // always import from database mock instead of export.json file?
 
     //above is only working when isDebugBuild = true
 
@@ -52,23 +51,19 @@ public class AppConfig
                         "contentExportFileName [%s]\n" +
                         "preferencesFileName [%s]\n" +
                         "isDebugBuild [%S]\n" +
-                        "useExternalStorage [%S]\n" +
-                        "alwaysLoadFromDatabaseMock [%S]\n" +
-                        "createExportFileWithDefaultsIfNonexistent [%S]\n" +
-                        "useDefaultContentFromDatabaseMockOnStartup [%S]\n" +
-                        "useDefaultPreferencesOnStartup [%S]\n" +
+                        "resetToDefaultContentOnStartup [%S]\n" +
+                        "resetToDefaultPreferencesOnStartup [%S]\n" +
+                        "alwaysImportFromDatabaseMock [%S]\n" +
                         "validateContent [%S]\n" +
                         Constants.LOG_DIVIDER,
 
                 this.databaseWrapperToUse(),
-                this.getContentExportFileName(),
+                this.getExportFileName(),
                 this.getPreferencesFileName(),
                 this.isDebugBuild(),
-                this.useExternalStorage(),
-                this.alwaysLoadFromDatabaseMock(),
-                this.createExportFileWithDefaultsIfNotFound(),
                 this.resetToDefaultContentOnStartup(),
                 this.resetToDefaultPreferencesOnStartup(),
+                this.alwaysImportFromDatabaseMock(),
                 this.validateContent()
         );
     }
@@ -78,9 +73,9 @@ public class AppConfig
         return this.databaseWrapperToUse;
     }
 
-    public String getContentExportFileName()
+    public String getExportFileName()
     {
-        return this.contentExportFileName;
+        return this.exportFileName;
     }
 
     public String getPreferencesFileName()
@@ -93,19 +88,9 @@ public class AppConfig
         return this.isDebugBuild;
     }
 
-    public boolean useExternalStorage()
+    public boolean alwaysImportFromDatabaseMock()
     {
-        return this.isDebugBuild && this.useExternalStorage;
-    }
-
-    public boolean createExportFileWithDefaultsIfNotFound()
-    {
-        return this.isDebugBuild && this.createExportFileWithDefaultsIfNotFound;
-    }
-
-    public boolean alwaysLoadFromDatabaseMock()
-    {
-        return this.isDebugBuild && this.alwaysLoadFromDatabaseMock;
+        return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
     }
 
     public boolean resetToDefaultContentOnStartup()

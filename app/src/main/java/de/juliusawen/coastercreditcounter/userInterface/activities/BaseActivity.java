@@ -1,8 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -16,7 +14,6 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,7 +32,6 @@ import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.IOptionsMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
@@ -62,7 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         this.setContentView();
 
-        //ViewModel has to be instantiated before initialization!
         this.viewModel = new ViewModelProvider(this).get(BaseActivityViewModel.class);
 
         if(App.isInitialized)
@@ -71,22 +66,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
             this.toolbar = findViewById(R.id.toolbar);
 
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
             this.create();
             this.viewModel.activityIsCreated = true;
         }
         else
         {
             Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
-
-            if(!App.config.useExternalStorage())
-            {
-                this.startAppInitialization();
-            }
-            else
-            {
-                this.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization();
-            }
+            this.startAppInitialization();
         }
     }
 
@@ -145,22 +132,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     protected void pause()
     {
         //do stuff onPause
-    }
-
-
-    private void requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization()
-    {
-        this.viewModel.writeToExternalStoragePermissionNeededToInitialize = true;
-
-        if(this.requestPermissionWriteExternalStorage())
-        {
-            this.startAppInitialization();
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, "BaseActivity.requestWriteToExternalStoragePermissionForDebugBuildAndStartAppInitialization:: " +
-                    "not able to create app without permission to write to external storage (change configuration <useExternalStorage> to 'false' or grant permission!)");
-        }
     }
 
     private void startAppInitialization()
@@ -292,7 +263,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void createHelpOverlayFragment(String title, CharSequence message)
     {
-        Log.i(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
 
         this.viewModel.isHelpOverlayAdded = true;
         this.viewModel.helpOverlayFragmentTitle = title;
@@ -587,58 +558,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-
-    protected boolean requestPermissionWriteExternalStorage()
-    {
-        if(ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            Log.d(Constants.LOG_TAG, "BaseActivity.requestPermissionWriteExternalStorage:: permission to write to external storage denied - requesting permission");
-
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal());
-            return false;
-        }
-
-        return true;
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if(requestCode == RequestCode.PERMISSION_CODE_WRITE_EXTERNAL_STORAGE.ordinal())
-        {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Log.i(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: permission to write to external storage granted by user");
-
-                if(this.viewModel.writeToExternalStoragePermissionNeededToInitialize)
-                {
-                    this.viewModel.writeToExternalStoragePermissionNeededToInitialize = false;
-                    this.startAppInitialization();
-                }
-
-            }
-            else
-            {
-                if(this.viewModel.writeToExternalStoragePermissionNeededToInitialize)
-                {
-                    Log.e(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: needed permission to write to external storage not granted by user - closing app");
-                    finishAndRemoveTask();
-                }
-                else
-                {
-                    Log.i(Constants.LOG_TAG, "BaseActivity.onRequestPermissionsResult:: permission to write to external storage not granted by user");
-                }
-            }
-        }
-    }
-
-    protected void markForCreation(List<IElement> elements)
-    {
-        for(IElement element : elements)
-        {
-            this.markForCreation(element);
-        }
-    }
-
     protected void markForCreation(IElement element)
     {
         if(element.isIPersistable())
@@ -671,14 +590,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         else
         {
             Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: [%s] is not persistable", element));
-        }
-    }
-
-    protected void markForDeletion(List<IElement> elements, boolean deleteDescendants)
-    {
-        for(IElement element : elements)
-        {
-            this.markForDeletion(element, deleteDescendants);
         }
     }
 
@@ -717,7 +628,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence.");
+            Log.i(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence.");
 
             if(!App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
             {
@@ -731,7 +642,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
+            Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
         }
     }
 }

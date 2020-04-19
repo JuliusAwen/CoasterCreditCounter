@@ -1,15 +1,8 @@
 package de.juliusawen.coastercreditcounter.persistence;
 
-import android.os.Environment;
+import android.net.Uri;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,40 +54,56 @@ public class Persistence
         Log.i(Constants.LOG_TAG, "Persistence.Constructor:: <Persistence> instantiated");
     }
 
-    IDatabaseWrapper getDatabaseWrapper()
+    public IDatabaseWrapper getDatabaseWrapper()
     {
         return this.databaseWrapper;
     }
 
     public boolean loadContent(Content content)
     {
-        Log.d(Constants.LOG_TAG, "Persistence.loadContent:: loading content...");
+        Log.i(Constants.LOG_TAG, "Persistence.loadContent:: loading content...");
         return this.databaseWrapper.loadContent(content);
+    }
+
+    public boolean saveContent(Content content)
+    {
+        Log.i(Constants.LOG_TAG, "Persistence.saveContent:: saving content...");
+        return this.databaseWrapper.saveContent(content);
     }
 
     public boolean loadPreferences(Preferences preferences)
     {
-        Log.d(Constants.LOG_TAG, "Persistence.loadPreferences:: loading preferences...");
+        Log.i(Constants.LOG_TAG, "Persistence.loadPreferences:: loading preferences...");
 
         return this.jsonHandler.loadPreferences(preferences);
     }
 
     public boolean savePreferences(Preferences preferences)
     {
-        Log.e(Constants.LOG_TAG, "Persistence.savePreferences:: saving preferences...");
+        Log.i(Constants.LOG_TAG, "Persistence.savePreferences:: saving preferences...");
         return this.jsonHandler.savePreferences(preferences);
     }
 
-    public boolean importContent()
+    public boolean validateImportFileUri(Uri uri, String importFileName)
     {
-        Log.d(Constants.LOG_TAG, "Persistence.exportContent:: importing content...");
-        return this.jsonHandler.importContent(App.content);
+        return this.jsonHandler.validateImportFileUri(uri, importFileName);
     }
 
-    public boolean exportContent()
+    public boolean importContent(Uri uri, String exportFileName)
     {
-        Log.d(Constants.LOG_TAG, "Persistence.exportContent:: exporting content...");
-        return this.jsonHandler.exportContent(App.content);
+        Log.i(Constants.LOG_TAG, "Persistence.importContent:: importing content via JsonHandler...");
+        return this.jsonHandler.importContent(App.content, uri, exportFileName);
+    }
+
+    public boolean exportFileExists(Uri exportFileDocumentTreeUri, String exportFileName)
+    {
+        return this.jsonHandler.exportFileExists(exportFileDocumentTreeUri, exportFileName);
+    }
+
+    public boolean exportContent(Uri exportFileDocumentTreeUri, String exportFileName)
+    {
+        Log.i(Constants.LOG_TAG, "Persistence.exportContent:: exporting content via JsonHandler...");
+        return this.jsonHandler.exportContent(App.content, exportFileDocumentTreeUri, exportFileName);
     }
 
     public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
@@ -157,189 +166,6 @@ public class Persistence
         }
 
         return this.databaseWrapper.synchronize(elementsToCreate, elementsToUpdate, elementsToDelete);
-    }
-
-
-    public File getExternalStorageDocumentsDirectory()
-    {
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        if(!directory.exists())
-        {
-            if(directory.mkdirs())
-            {
-                Log.d(Constants.LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: created Directory [%s]", directory.getAbsolutePath()));
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.getExternalStorageDocumentsDirectory:: Directory [%s] not created!", directory.getAbsolutePath()));
-            }
-        }
-        return directory;
-    }
-
-    public boolean writeStringToInternalFile(String fileName, String input)
-    {
-        File file = new File(App.getContext().getFilesDir(), fileName);
-
-        FileOutputStream fileOutputStream = null;
-        try
-        {
-            fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(input.getBytes());
-        }
-        catch(FileNotFoundException e)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
-        }
-        catch(IOException e)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: IOException: writing FileOutputStream failed!\n[%s]", e.getMessage()));
-        }
-        finally
-        {
-            try
-            {
-                fileOutputStream.close();
-            }
-            catch(IOException e)
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToInternalFile:: IOException: closing FileOutputStream failed!\n[%s]", e.getMessage()));
-            }
-        }
-
-        return true;
-    }
-
-    public boolean writeStringToExternalFile(File file, String input)
-    {
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-        {
-            try
-            {
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                fileOutputStream.write(input.getBytes());
-                fileOutputStream.close();
-
-                Log.d(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: file written to external storage [%s]", file.getAbsolutePath()));
-
-                return true;
-            }
-            catch(FileNotFoundException e)
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
-            }
-            catch(IOException e)
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: IOException: [%s]: [%s]", file.getAbsolutePath(), e.getMessage()));
-            }
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.writeStringToExternalFile:: External storage is not writeable for [%s]", file.getAbsolutePath()));
-        }
-
-        return false;
-    }
-
-    public String readStringFromInternalFile(String fileName)
-    {
-        String output = "";
-
-        File file = new File(App.getContext().getFilesDir(), fileName);
-
-        if(file.exists())
-        {
-            int length = (int) file.length();
-            byte[] bytes = new byte[length];
-
-            FileInputStream fileInputStream = null;
-            try
-            {
-                fileInputStream = new FileInputStream(file);
-                //noinspection ResultOfMethodCallIgnored
-                fileInputStream.read(bytes);
-            }
-            catch(FileNotFoundException e)
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
-            }
-            catch(IOException e)
-            {
-                Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: IOException: reading FileInputStream failed!\n[%s] ", e.getMessage()));
-            }
-            finally
-            {
-                try
-                {
-                    fileInputStream.close();
-                    output = new String(bytes);
-                }
-                catch(IOException e)
-                {
-                    Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: IOException: closing FileInputStream failed!\n[%s] ", e.getMessage()));
-                }
-            }
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: file [%s] does not exist - returning empty output", fileName));
-        }
-
-        return output;
-    }
-
-    public String readStringFromExternalFile(File file)
-    {
-        Log.d(Constants.LOG_TAG, String.format("Persistence.readStringFromInternalFile:: reading string from external storage [%s]...", file.getAbsolutePath()));
-
-        String output = "";
-
-        try
-        {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            output = this.readStringFromFile(fileInputStream);
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromExternalFile:: FileNotFoundException: file [%s] does not exist: [%s]", file.getAbsolutePath(), e.getMessage()));
-        }
-
-        return output;
-    }
-
-    private String readStringFromFile(FileInputStream fileInputStream)
-    {
-        String output = "";
-
-        try
-        {
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String receiveString;
-            StringBuilder stringBuilder = new StringBuilder();
-
-            while((receiveString = bufferedReader.readLine()) != null)
-            {
-                stringBuilder.append(receiveString);
-            }
-
-            fileInputStream.close();
-            output = stringBuilder.toString();
-
-        }
-        catch (IOException e)
-        {
-            Log.e(Constants.LOG_TAG, String.format("Persistence.readStringFromFile:: IOException: [%s]", e.getMessage()));
-        }
-
-        return output;
-    }
-
-    public boolean fileExists(String absolutePath)
-    {
-        File file = new File(absolutePath);
-        Log.v(Constants.LOG_TAG, String.format("Persistence.fileExists:: file [%s] exists:[%s]", file.getAbsolutePath(), file.exists()));
-        return file.exists();
     }
 
     public int fetchTotalCreditsCount()

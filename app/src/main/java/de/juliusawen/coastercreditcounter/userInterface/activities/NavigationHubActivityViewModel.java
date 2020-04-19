@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.view.MenuItem;
+import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
 
@@ -11,9 +11,7 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class NavigationHubActivityViewModel extends ViewModel
 {
-    public MenuItem selectedMenuItem;
-    public String exportFileAbsolutePath;
-
+    public Uri uri;
     public boolean isImporting = false;
     public boolean isImportSuccessful = false;
 

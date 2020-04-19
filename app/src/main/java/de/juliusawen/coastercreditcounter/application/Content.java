@@ -85,7 +85,7 @@ public class Content
         }
     }
 
-    public boolean restoreBackup()
+    public boolean restoreBackup(boolean saveBackup)
     {
         if(this.isRestoreBackupPossible)
         {
@@ -97,6 +97,12 @@ public class Content
                 this.backupElements = null;
 
                 Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
+
+                if(saveBackup && this.persistence.saveContent(this))
+                {
+                    Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup saved");
+                }
+
                 return true;
             }
             else
@@ -143,11 +149,12 @@ public class Content
         {
             return true;
         }
-        else
+        else if(App.isInitialized)
         {
             Log.w(Constants.LOG_TAG, String.format("Content.containsElement:: Content does not contain %s", element));
-            return false;
         }
+
+        return false;
     }
 
     public <T extends IElement> List<T> getContentAsType(Class<T> type)

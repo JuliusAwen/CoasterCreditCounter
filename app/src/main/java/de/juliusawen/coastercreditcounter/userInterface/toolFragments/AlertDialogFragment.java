@@ -8,7 +8,13 @@ import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class AlertDialogFragment extends DialogFragment
@@ -43,6 +49,40 @@ public class AlertDialogFragment extends DialogFragment
         return alertDialogFragment;
     }
 
+    public static AlertDialogFragment newInstance(
+            int iconResource,
+            String title,
+            String message,
+            LinkedHashMap<String, Integer> substringsByTypefaces,
+            String positiveButtonText,
+            String negativeButtonText,
+            RequestCode requestCode,
+            boolean isChildFragment)
+    {
+        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
+                        "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
+                title, message, positiveButtonText, negativeButtonText));
+
+        AlertDialogFragment alertDialogFragment = new AlertDialogFragment();
+
+        ArrayList<String> substrings = new ArrayList<>(substringsByTypefaces.keySet());
+        ArrayList<Integer> typefaces = new ArrayList<>(substringsByTypefaces.values());
+
+        Bundle args = new Bundle();
+        args.putInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_ICON_RESOURCE, iconResource);
+        args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_TITLE, title);
+        args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_MESSAGE, message);
+        args.putStringArrayList(Constants.FRAGMENT_ARG_ALERT_DIALOG_SUBSTRINGS, substrings);
+        args.putIntegerArrayList(Constants.FRAGMENT_ARG_ALERT_DIALOG_TYPEFACES, typefaces);
+        args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT, positiveButtonText);
+        args.putString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT, negativeButtonText);
+        args.putInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE, requestCode.ordinal());
+        args.putBoolean(Constants.FRAGMENT_ARG_IS_CHILD_FRAGMENT, isChildFragment);
+        alertDialogFragment.setArguments(args);
+
+        return alertDialogFragment;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
@@ -54,6 +94,8 @@ public class AlertDialogFragment extends DialogFragment
         int iconResource = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_ICON_RESOURCE);
         String title = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_TITLE);
         String message = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_MESSAGE);
+        ArrayList<String> substrings = args.getStringArrayList(Constants.FRAGMENT_ARG_ALERT_DIALOG_SUBSTRINGS);
+        ArrayList<Integer> typefaces = args.getIntegerArrayList(Constants.FRAGMENT_ARG_ALERT_DIALOG_TYPEFACES);
         final String positiveButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_POSITIVE_BUTTON_TEXT);
         final String negativeButtonText = args.getString(Constants.FRAGMENT_ARG_ALERT_DIALOG_NEGATIVE_BUTTON_TEXT);
         final int requestCode = args.getInt(Constants.FRAGMENT_ARG_ALERT_DIALOG_REQUEST_CODE);
@@ -67,11 +109,21 @@ public class AlertDialogFragment extends DialogFragment
             this.alertDialogListener = (AlertDialogListener) getActivity();
         }
 
+        CharSequence formattedMessage = "";
+        Map<String, Integer> substringsByTypefaces = new HashMap<>();
+        if(substrings != null && !substrings.isEmpty() && typefaces != null && !typefaces.isEmpty())
+        {
+            for(int i = 0; i < substrings.size(); i++)
+            {
+                substringsByTypefaces.put(substrings.get(i), typefaces.get(i));
+            }
+            formattedMessage = StringTool.buildSpannableString(message, substringsByTypefaces);
+        }
 
         return new AlertDialog.Builder(getActivity())
                 .setIcon(iconResource)
                 .setTitle(title)
-                .setMessage(message)
+                .setMessage(formattedMessage.length() == 0 ? message : formattedMessage)
                 .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener()
                 {
                     @Override
