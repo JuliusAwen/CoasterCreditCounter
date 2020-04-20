@@ -98,7 +98,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        this.setSelectionModeEnabled(this.viewModel.isSelectionMode);
+        this.enableRelocationMode(this.viewModel.relocationModeEnabled);
     }
 
     @Override
@@ -151,9 +151,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            if(this.viewModel.isSelectionMode)
+            if(this.viewModel.relocationModeEnabled)
             {
-                this.setSelectionModeEnabled(false);
+                this.enableRelocationMode(false);
                 return true;
             }
         }
@@ -169,14 +169,14 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             public void onClick(View view)
             {
                 Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
-                setSelectionModeEnabled(false);
+                enableRelocationMode(false);
             }
         });
     }
 
-    private void setSelectionModeEnabled(boolean enabled)
+    private void enableRelocationMode(boolean enabled)
     {
-        this.viewModel.isSelectionMode = enabled;
+        this.viewModel.relocationModeEnabled = enabled;
 
         if(enabled)
         {
@@ -191,7 +191,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         super.setFloatingActionButtonVisibility(enabled);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", this.viewModel.isSelectionMode));
+        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", this.viewModel.relocationModeEnabled));
     }
 
     @Override
@@ -261,7 +261,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickRecyclerView:: %s clicked", element));
 
-                if(!viewModel.isSelectionMode)
+                if(!viewModel.relocationModeEnabled)
                 {
                     if(element.isLocation())
                     {
@@ -289,7 +289,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 viewModel.longClickedElement = (Element) view.getTag();
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickRecyclerView:: %s long clicked", viewModel.longClickedElement));
 
-                if(!viewModel.isSelectionMode)
+                if(!viewModel.relocationModeEnabled)
                 {
                     boolean isLocation = viewModel.longClickedElement.isLocation();
                     boolean sortLocationsEnabled = isLocation && viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
@@ -381,7 +381,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 break;
 
             case RELOCATE_ELEMENT:
-                ShowLocationsActivity.this.setSelectionModeEnabled(true);
+                ShowLocationsActivity.this.enableRelocationMode(true);
                 break;
 
             case DELETE_ELEMENT:
@@ -410,7 +410,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     if(!element.isDescendantOf(this.viewModel.longClickedElement))
                     {
-                        this.setSelectionModeEnabled(false);
+                        this.enableRelocationMode(false);
                         this.viewModel.newParent = element;
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -431,21 +431,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     else
                     {
                         Toaster.makeShortToast(this, getString(R.string.error_new_parent_is_own_descendant));
-                        this.setSelectionModeEnabled(false);
+                        this.enableRelocationMode(false);
                     }
                 }
                 else
                 {
                     Log.w(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: %s is already located at %s - aborting relocation",
                             this.viewModel.longClickedElement, this.viewModel.newParent));
-                    this.setSelectionModeEnabled(false);
+                    this.enableRelocationMode(false);
                 }
             }
             else
             {
                 Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: cannot relocate %s to itself - aborting relocation",
                         this.viewModel.longClickedElement));
-                this.setSelectionModeEnabled(false);
+                this.enableRelocationMode(false);
             }
         }
         else
@@ -493,8 +493,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     public void handleActionConfirmed(RequestCode requestCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
-
-        super.setFloatingActionButtonVisibility(true);
 
         switch(requestCode)
         {

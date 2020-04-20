@@ -15,5 +15,5 @@ public class ShowLocationsActivityViewModel extends ViewModel
     public IElement newParent;
     public OptionsMenuAgent optionsMenuAgent;
 
-    public boolean isSelectionMode;
+    public boolean relocationModeEnabled;
 }
