@@ -181,7 +181,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(enabled)
         {
             this.viewModel.contentRecyclerViewAdapter.setItemSelected(this.viewModel.longClickedElement);
-            super.setToolbarTitleAndSubtitle(getString(R.string.title_relocate), getString(R.string.subtitle_relocate_select_new_parent, this.viewModel.longClickedElement.getName()));
+            super.setToolbarTitleAndSubtitle(getString(R.string.title_relocate), getString(R.string.subtitle_relocate_select_new_parent));
         }
         else
         {

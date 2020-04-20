@@ -8,7 +8,7 @@
     <string name="title_relocate">Relocate</string>
     <string name="title_sort">Sort</string>
 
-    <string name="subtitle_relocate_select_new_parent">select \'%1$s\' new location</string>
+    <string name="subtitle_relocate_select_new_parent">select new parent location</string>
     <string name="subtitle_management">management</string>
     <string name="subtitle_to_assign_to_attraction">to assign to attraction</string>
 

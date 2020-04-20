@@ -267,17 +267,17 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
         switch(tab)
         {
             case SHOW_OVERVIEW:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_overview));
+                super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_overview), this.viewModel.park.getName());
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getString(R.string.help_text_show_park_overview));
                 break;
 
             case SHOW_ATTRACTIONS:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_attractions));
+                super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_attractions), this.viewModel.park.getName());
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getString(R.string.help_text_show_attractions));
                 break;
 
             case SHOW_VISITS:
-                super.setToolbarTitleAndSubtitle(this.viewModel.park.getName(), getString(R.string.subtitle_park_show_tab_visits));
+                super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_visits), this.viewModel.park.getName());
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getString(R.string.help_text_show_visits));
                 break;
         }
