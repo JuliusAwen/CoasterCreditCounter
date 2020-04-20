@@ -29,6 +29,8 @@ public class Preferences implements IPersistable
 
     private boolean expandLatestYearHeaderByDefault;
 
+    private boolean defaultPropertiesAlwaysAtTop = true;
+
     private String exportFileName = "CoasterCreditCounterExport.json";
 
     private final Persistence persistence;
@@ -179,6 +181,11 @@ public class Preferences implements IPersistable
     {
         this.expandLatestYearHeaderByDefault = expandLatestYearHeaderByDefault;
         Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearHeaderByDefault:: set to [%S]", expandLatestYearHeaderByDefault));
+    }
+
+    public boolean defaultPropertiesAlwaysAtTop()
+    {
+        return this.defaultPropertiesAlwaysAtTop;
     }
 
     public int getFirstDayOfTheWeek()

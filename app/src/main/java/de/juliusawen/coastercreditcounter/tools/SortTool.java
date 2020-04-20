@@ -7,9 +7,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 
@@ -215,7 +216,29 @@ public abstract class SortTool
             Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElements:: not sorted: [%d] element(s) passed", elements.size()));
         }
 
+        if(!sortedElements.isEmpty() && sortedElements.get(0).isProperty())
+        {
+            SortTool.putDefaultPropertyOnTop(sortedElements);
+        }
+
         return sortedElements;
+    }
+
+    private static void putDefaultPropertyOnTop(List<IElement> sortedElements)
+    {
+        IElement defaultProperty = null;
+
+        for(IElement element : sortedElements)
+        {
+            if(((IProperty)element).isDefault())
+            {
+                defaultProperty = element;
+                break;
+            }
+        }
+
+        sortedElements.remove(defaultProperty);
+        sortedElements.add(0, defaultProperty);
     }
 
     public static List<IElement> sortElementsBasedOnComparisonList(List<IElement> elementsToSort, List<IElement> comparisonList)

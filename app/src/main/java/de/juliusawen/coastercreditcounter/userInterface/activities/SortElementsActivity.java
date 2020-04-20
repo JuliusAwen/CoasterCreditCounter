@@ -22,6 +22,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -66,7 +67,9 @@ public class SortElementsActivity extends BaseActivity
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false)
                     .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                     .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW);
+                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+
 
             Set<Class<? extends IElement>> types = new HashSet<>();
             for(IElement elementToSort : this.viewModel.elementsToSort)
