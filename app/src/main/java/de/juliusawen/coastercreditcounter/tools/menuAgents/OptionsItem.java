@@ -51,6 +51,8 @@ public enum OptionsItem
     GROUP_BY_MANUFACTURER(R.string.menu_item_group_by_manufacturer, -1),
     GROUP_BY_STATUS(R.string.menu_item_group_by_status, -1),
 
+    OPTIONS(R.string.menu_item_options, -1),
+
 
     //ACTION MENU ITEMS
 

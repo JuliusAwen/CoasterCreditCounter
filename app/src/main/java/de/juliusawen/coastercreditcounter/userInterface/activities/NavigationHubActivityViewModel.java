@@ -18,7 +18,11 @@ public class NavigationHubActivityViewModel extends ViewModel
     public boolean isExporting = false;
     public boolean isExportSuccessful = false;
 
-    long lastBackPressedInMS = 0;
+    long lastBackClickedInMS;
+
+    long lastClickInMs;
+    int clickCount;
+    boolean enabled;
 
     public OptionsMenuAgent optionsMenuAgent;
 

@@ -79,6 +79,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         super.createToolbar()
                 .addToolbarMenuIcon()
                 .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+
+        super.setToolbarOnClickListener(this.getToolbarOnClickListener());
     }
 
     @Override
@@ -162,15 +164,24 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected Menu createOptionsMenu(Menu menu)
     {
-        return this.viewModel.optionsMenuAgent.add(OptionsItem.GO_TO_CURRENT_VISIT).create(menu);
+        return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.GO_TO_CURRENT_VISIT)
+                .add(OptionsItem.OPTIONS)
+                .create(menu);
     }
 
     @Override
     protected Menu prepareOptionsMenu(Menu menu)
     {
-        return this.viewModel.optionsMenuAgent
+        boolean isVisible = this.viewModel.enabled && (this.viewModel.lastClickInMs + Constants.MAX_DELAY > System.currentTimeMillis());
+        this.viewModel.enabled = false;
+
+        this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !this.viewModel.currentVisits.isEmpty())
+                .setVisible(OptionsItem.OPTIONS, isVisible)
                 .prepare(menu);
+
+        return menu;
     }
 
     @Override
@@ -199,28 +210,61 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(item == OptionsItem.GO_TO_CURRENT_VISIT)
+        switch(item)
         {
-            if(this.viewModel.currentVisits.size() > 1)
+            case GO_TO_CURRENT_VISIT:
             {
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
-                        this.viewModel.currentVisits.size()));
+                if(this.viewModel.currentVisits.size() > 1)
+                {
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick",
+                            this.viewModel.currentVisits.size()));
 
-                ActivityDistributor.startActivityPickForResult(
-                        this,
-                        RequestCode.PICK_VISIT,
-                        new ArrayList<IElement>(this.viewModel.currentVisits));
+                    ActivityDistributor.startActivityPickForResult(
+                            this,
+                            RequestCode.PICK_VISIT,
+                            new ArrayList<IElement>(this.viewModel.currentVisits));
+                }
+                else
+                {
+                    Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
+                            this.viewModel.currentVisits.get(0)));
+
+                    ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
+                }
+                return true;
             }
-            else
+
+            case OPTIONS:
             {
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...",
-                        this.viewModel.currentVisits.get(0)));
-
-                ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
+                ActivityDistributor.startActivityViaClass(this, OptionsActivity.class);
+                return true;
             }
-            return true;
+
+            default:
+                return super.handleOptionsItemSelected(item);
         }
-        return super.handleOptionsItemSelected(item);
+    }
+
+    private View.OnClickListener getToolbarOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(viewModel.lastClickInMs + Constants.MAX_DELAY > System.currentTimeMillis())
+                {
+                    viewModel.clickCount++;
+                }
+                else
+                {
+                    viewModel.enabled = false;
+                    viewModel.clickCount = 0;
+                }
+
+                viewModel.lastClickInMs = System.currentTimeMillis();
+            }
+        };
     }
 
     private void setStatistics()
@@ -243,12 +287,22 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 if(this.isNavigationDrawerOpen())
                 {
                     this.closeNavigationDrawer();
-                    return true;
                 }
                 else
                 {
-                    long MAX_DELAY_FOR_DOUBLE_BACK_PRESS_TO_EXIT = 2000;
-                    if(this.viewModel.lastBackPressedInMS + MAX_DELAY_FOR_DOUBLE_BACK_PRESS_TO_EXIT > System.currentTimeMillis())
+                    if(viewModel.clickCount >= Constants.CLICK_COUNT
+                        && this.viewModel.lastClickInMs + Constants.MAX_DELAY > System.currentTimeMillis())
+                    {
+                        this.viewModel.enabled = true;
+                        this.viewModel.lastClickInMs = System.currentTimeMillis();
+                    }
+                    else
+                    {
+                        this.viewModel.clickCount = 0;
+                    }
+
+                    long MAX_DELAY_FOR_BACK_DOUBLE_CLICK_TO_EXIT = 2000;
+                    if(this.viewModel.lastBackClickedInMS + MAX_DELAY_FOR_BACK_DOUBLE_CLICK_TO_EXIT > System.currentTimeMillis())
                     {
                         this.clickBackAgainToExitToast.cancel();
                         finish();
@@ -256,7 +310,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     else
                     {
                         this.clickBackAgainToExitToast = Toaster.makeShortToast(this, "Click BACK again to exit");
-                        this.viewModel.lastBackPressedInMS = System.currentTimeMillis();
+                        this.viewModel.lastBackClickedInMS = System.currentTimeMillis();
                     }
                 }
             }

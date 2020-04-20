@@ -125,6 +125,8 @@
     <string name="menu_item_set_as_default">set as default</string>
     <string name="menu_item_assign_to_attractions">assign to attractions</string>
 
+    <string name="menu_item_options">options</string>
+
 
     <!--NAVIGATION HUB-->
     <string name="subtitle_navigation_hub">Navigation Hub</string>

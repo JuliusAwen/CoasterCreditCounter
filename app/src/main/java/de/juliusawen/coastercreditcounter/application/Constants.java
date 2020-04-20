@@ -8,6 +8,9 @@ public abstract class Constants
     public static final String LOG_DIVIDER_ON_RESUME = "###### ";
     public static final String LOG_DIVIDER_FINISH = "------- finished ";
 
+    public static final int CLICK_COUNT = 7;
+    public static final long MAX_DELAY = 1000;
+
 
     public static final String DATABASE_WRAPPER_DATABASE_MOCK = "de.juliusawen.coding.database_wrapper_database_mock";
     public static final String DATABASE_WRAPPER_JSON_HANDLER = "de.juliusawen.coding.database_wrapper_json_handler";
