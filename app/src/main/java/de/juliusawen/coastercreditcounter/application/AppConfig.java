@@ -2,6 +2,8 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.util.Log;
 
+import de.juliusawen.coastercreditcounter.BuildConfig;
+
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class AppConfig
 {
@@ -12,9 +14,6 @@ public class AppConfig
 
     private final String exportFileName = "CoasterCreditCounterExport.json";
     private final String preferencesFileName = "Preferences.json";
-
-
-    private final boolean isDebugBuild = true;
 
     //below is only working when isDebugBuild = true
 
@@ -85,27 +84,27 @@ public class AppConfig
 
     public boolean isDebugBuild()
     {
-        return this.isDebugBuild;
+        return BuildConfig.DEBUG;
     }
 
     public boolean alwaysImportFromDatabaseMock()
     {
-        return this.isDebugBuild && this.alwaysImportFromDatabaseMock;
+        return BuildConfig.DEBUG && this.alwaysImportFromDatabaseMock;
     }
 
     public boolean resetToDefaultContentOnStartup()
     {
-        return this.isDebugBuild && (this.resetToDefaultContentOnStartup);
+        return BuildConfig.DEBUG && (this.resetToDefaultContentOnStartup);
     }
 
     public boolean resetToDefaultPreferencesOnStartup()
     {
-        return this.isDebugBuild && (this.resetToDefaultPreferencesOnStartup);
+        return BuildConfig.DEBUG && (this.resetToDefaultPreferencesOnStartup);
     }
 
     public boolean validateContent()
     {
-        return this.isDebugBuild && this.validateContent;
+        return BuildConfig.DEBUG && this.validateContent;
     }
 
     public String getDateFormat()
