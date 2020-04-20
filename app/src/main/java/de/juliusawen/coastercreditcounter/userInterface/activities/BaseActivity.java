@@ -45,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonOnClickListener;
 
-    HelpOverlayFragment helpOverlayFragment;
+    private HelpOverlayFragment helpOverlayFragment;
 
     private BaseActivityViewModel viewModel;
 
@@ -54,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: creating activity...");
+        Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
 
         this.setContentView();
 

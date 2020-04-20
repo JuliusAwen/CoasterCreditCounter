@@ -23,8 +23,6 @@ public class BaseActivityViewModel extends ViewModel
     public final Set<IElement> elementsToUpdate = new HashSet<>();
     public final Set<IElement> elementsToDelete = new HashSet<>();
 
-    public boolean writeToExternalStoragePermissionNeededToInitialize;
-
     public boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
 
     public OptionsMenuAgent optionsMenuAgent;
