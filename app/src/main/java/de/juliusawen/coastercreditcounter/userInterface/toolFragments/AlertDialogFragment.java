@@ -117,7 +117,7 @@ public class AlertDialogFragment extends DialogFragment
             {
                 substringsByTypefaces.put(substrings.get(i), typefaces.get(i));
             }
-            formattedMessage = StringTool.buildSpannableString(message, substringsByTypefaces);
+            formattedMessage = StringTool.buildSpannableStringWithTypefaces(message, substringsByTypefaces);
         }
 
         return new AlertDialog.Builder(getActivity())

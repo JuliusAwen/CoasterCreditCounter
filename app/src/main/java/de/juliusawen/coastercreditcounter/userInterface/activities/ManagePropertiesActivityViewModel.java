@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Property
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class ManagePropertiesViewModel extends ViewModel
+public class ManagePropertiesActivityViewModel extends ViewModel
 {
     public PropertyType propertyTypeToManage;
     public IElement longClickedElement;

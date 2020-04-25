@@ -685,7 +685,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        return StringTool.buildSpannableString(this.getOrderedDetailString(detailSubStringsByDetailType), typefacesByDetailSubString);
+        return StringTool.buildSpannableStringWithTypefaces(this.getOrderedDetailString(detailSubStringsByDetailType), typefacesByDetailSubString);
     }
 
     private String getOrderedDetailString(HashMap<DetailType, String> detailSubsStringsByDetailType)

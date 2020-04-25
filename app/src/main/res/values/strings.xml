@@ -128,6 +128,16 @@
     <string name="menu_item_options">options</string>
 
 
+    <string name="menu_item_developer_options_show_build_config">Show BuildConfig</string>
+
+    <string name="menu_item_developer_options_show_log">Show Log</string>
+    <string name="menu_item_developer_options_show_log_verbose">VERBOSE</string>
+    <string name="menu_item_developer_options_show_log_debug">DEBUG</string>
+    <string name="menu_item_developer_options_show_log_info">INFO</string>
+    <string name="menu_item_developer_options_show_log_warning">WARNING</string>
+    <string name="menu_item_developer_options_show_log_error">ERROR</string>
+
+
     <!--NAVIGATION HUB-->
     <string name="subtitle_navigation_hub">Navigation Hub</string>
 

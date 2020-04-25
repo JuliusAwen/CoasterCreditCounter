@@ -26,4 +26,7 @@ public class BaseActivityViewModel extends ViewModel
     public boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
 
     public OptionsMenuAgent optionsMenuAgent;
+
+    long toolbarLastClickInMs;
+    int toolbarClickCount;
 }

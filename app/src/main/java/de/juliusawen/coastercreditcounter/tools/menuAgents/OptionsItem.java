@@ -44,14 +44,22 @@ public enum OptionsItem
     SORT_BY_MANUFACTURER_DESCENDING(R.string.menu_item_sort_descending, -1),
 
 
+    SHOW_BUILD_CONFIG(R.string.menu_item_developer_options_show_build_config, -1),
+
+    SHOW_LOG(R.string.menu_item_developer_options_show_log, -1),
+    SHOW_LOG_VERBOSE(R.string.menu_item_developer_options_show_log_verbose, -1),
+    SHOW_LOG_DEBUG(R.string.menu_item_developer_options_show_log_debug, -1),
+    SHOW_LOG_INFO(R.string.menu_item_developer_options_show_log_info, -1),
+    SHOW_LOG_WARNING(R.string.menu_item_developer_options_show_log_warning, -1),
+    SHOW_LOG_ERROR(R.string.menu_item_developer_options_show_log_error, -1),
+
+
     GROUP_BY(R.string.menu_item_group_by, -1),
     GROUP_BY_LOCATION(R.string.menu_item_group_by_location, -1),
     GROUP_BY_CREDIT_TYPE(R.string.menu_item_group_by_credit_type, -1),
     GROUP_BY_CATEGORY(R.string.menu_item_group_by_category, -1),
     GROUP_BY_MANUFACTURER(R.string.menu_item_group_by_manufacturer, -1),
     GROUP_BY_STATUS(R.string.menu_item_group_by_status, -1),
-
-    OPTIONS(R.string.menu_item_options, -1),
 
 
     //ACTION MENU ITEMS

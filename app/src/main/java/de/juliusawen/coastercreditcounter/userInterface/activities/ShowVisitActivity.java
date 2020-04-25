@@ -77,8 +77,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName())
-                .setToolbarOnClickListener(this.getToolbarOnClickListener());
+                .setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
     }
 
     @Override
@@ -235,18 +234,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 }
             }
         }
-    }
-
-    private View.OnClickListener getToolbarOnClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ActivityDistributor.startActivityShow(ShowVisitActivity.this, RequestCode.SHOW_PARK, viewModel.visit.getParent(), true);
-            }
-        };
     }
 
     private void decorateFloatingActionButton()

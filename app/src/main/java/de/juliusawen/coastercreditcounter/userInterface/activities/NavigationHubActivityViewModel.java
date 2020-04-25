@@ -20,10 +20,6 @@ public class NavigationHubActivityViewModel extends ViewModel
 
     long lastBackClickedInMS;
 
-    long lastClickInMs;
-    int clickCount;
-    boolean enabled;
-
     public OptionsMenuAgent optionsMenuAgent;
 
     public List<Visit> currentVisits;

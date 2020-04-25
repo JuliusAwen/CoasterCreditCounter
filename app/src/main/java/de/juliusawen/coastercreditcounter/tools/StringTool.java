@@ -1,6 +1,7 @@
 package de.juliusawen.coastercreditcounter.tools;
 
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
 import java.text.SimpleDateFormat;
@@ -51,14 +52,21 @@ public abstract class StringTool
         return loremIpsum.substring(0, indexOfSpace);
     }
 
-    public static SpannableString getSpannableString(String string, int typeface)
+    public static SpannableString getSpannableStringWithTypeface(String string, int typeface)
     {
         SpannableString spannableString = new SpannableString(string);
         spannableString.setSpan(new StyleSpan(typeface), 0, spannableString.length(), 0);
         return spannableString;
     }
 
-    public static SpannableString buildSpannableString(String originalString, String substring, int typeface)
+    public static SpannableString getSpannableStringWithColor(String string, int color)
+    {
+        SpannableString spannableString = new SpannableString(string);
+        spannableString.setSpan(new ForegroundColorSpan(color), 0, spannableString.length(), 0);
+        return spannableString;
+    }
+
+    public static SpannableString buildSpannableStringWithTypeface(String originalString, String substring, int typeface)
     {
         SpannableString spannableString = new SpannableString(originalString);
         int start = originalString.indexOf(substring);
@@ -67,7 +75,7 @@ public abstract class StringTool
         return spannableString;
     }
 
-    public static SpannableString buildSpannableString(String originalString, Map<String, Integer> typefacesBySubString)
+    public static SpannableString buildSpannableStringWithTypefaces(String originalString, Map<String, Integer> typefacesBySubString)
     {
         SpannableString spannableString = new SpannableString(originalString);
         for(String subString : typefacesBySubString.keySet())

@@ -59,7 +59,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ManagePropertiesViewModel viewModel;
+    private ManagePropertiesActivityViewModel viewModel;
     private RecyclerView recyclerView;
 
     protected void setContentView()
@@ -69,7 +69,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModel.class);
 
         if(this.viewModel.optionsMenuAgent == null)
         {

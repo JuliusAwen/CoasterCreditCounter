@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".userInterface.activities.DeveloperOptionsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <include
+            layout="@layout/toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutDeveloperOptions_ShowBuildConfig"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/textViewShowDeveloperOptions_ShowBuildConfig_ApplicationId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textViewDeveloperOptions_ShowBuildConfig_VersionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textViewDeveloperOptions_ShowBuildConfig_VersionCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textViewDeveloperOptions_ShowBuildConfig_BuildType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textViewDeveloperOptions_ShowBuildConfig_IsDebug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollViewDeveloperOptions_ShowLog"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <TextView
+                android:id="@+id/textViewDeveloperOptions_ShowLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>

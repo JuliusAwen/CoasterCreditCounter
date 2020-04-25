@@ -420,6 +420,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             {
                 getSupportActionBar().setSubtitle(subtitle.trim());
             }
+
+            this.setToolbarOnClickListeners();
         }
         else
         {
@@ -429,10 +431,39 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return this;
     }
 
-    protected BaseActivity setToolbarOnClickListener(View.OnClickListener onClickListener)
+    private BaseActivity setToolbarOnClickListeners()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.setToolbarOnClickListener:: setting onClickListener");
-        this.toolbar.setOnClickListener(onClickListener);
+        this.toolbar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(viewModel.toolbarLastClickInMs + Constants.TOOLBAR_LAST_CLICK_MAX_DELAY > System.currentTimeMillis())
+                {
+                    viewModel.toolbarClickCount++;
+                }
+                else
+                {
+                    viewModel.toolbarClickCount = 0;
+                }
+
+                viewModel.toolbarLastClickInMs = System.currentTimeMillis();
+            }
+        });
+
+        this.toolbar.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                if(viewModel.toolbarClickCount == Constants.TOOLBAR_CLICK_COUNT)
+                {
+                    ActivityDistributor.startActivityViaClass(BaseActivity.this, DeveloperOptionsActivity.class);
+                }
+
+                return true;
+            }
+        });
 
         return this;
     }
