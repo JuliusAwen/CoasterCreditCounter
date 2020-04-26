@@ -34,20 +34,19 @@ public class DeveloperOptionsActivity extends BaseActivity
         SHOW_LOG
     }
 
-    DeveloperOptionsActivityViewModel viewModel;
+    private DeveloperOptionsActivityViewModel viewModel;
 
-    String toolbarTitle = "DevelopersOptions";
-    String toolbarSubtitleShowBuildConfig = "BuildConfig";
+    private String toolbarTitle = "DevelopersOptions";
 
-    LinearLayout linearLayoutShowBuildConfig;
-    TextView textViewShowBuildConfigApplicationId;
-    TextView textViewShowBuildConfigVersionCode;
-    TextView textViewShowBuildConfigVersionName;
-    TextView textViewShowBuildConfigBuildType;
-    TextView textViewShowBuildConfigIsDebug;
+    private LinearLayout linearLayoutShowBuildConfig;
+    private TextView textViewShowBuildConfigApplicationId;
+    private TextView textViewShowBuildConfigVersionCode;
+    private TextView textViewShowBuildConfigVersionName;
+    private TextView textViewShowBuildConfigBuildType;
+    private TextView textViewShowBuildConfigIsDebug;
 
-    ScrollView scrollViewShowLog;
-    TextView textViewShowLog;
+    private ScrollView scrollViewShowLog;
+    private TextView textViewShowLog;
 
     @Override
     protected void setContentView()
@@ -163,10 +162,9 @@ public class DeveloperOptionsActivity extends BaseActivity
         }
     }
 
-
     private void showBuildConfig()
     {
-        super.setToolbarTitleAndSubtitle(toolbarTitle, toolbarSubtitleShowBuildConfig);
+        super.setToolbarTitleAndSubtitle(toolbarTitle, "BuildConfig");
 
         this.textViewShowBuildConfigApplicationId.setText(BuildConfig.APPLICATION_ID);
         this.textViewShowBuildConfigVersionName.setText(String.format("VersionName = %s", BuildConfig.VERSION_NAME));
