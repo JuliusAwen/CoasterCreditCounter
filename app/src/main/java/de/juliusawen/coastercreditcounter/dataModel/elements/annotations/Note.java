@@ -36,7 +36,7 @@ public class Note extends Element implements IElement, IPersistable
     public static Note create(String text, UUID uuid)
     {
         Note note = null;
-        String name = Note.getShortenedText(text);
+        String name = Note.getShortenedText(text).replaceAll("\\n", " ");
         if(Element.isNameValid(name))
         {
             note = new Note(name, text, uuid == null ? UUID.randomUUID() : uuid);
