@@ -303,6 +303,14 @@
     <string name="subtitle_status_to_assign_status_to">to assign status to</string>
     <string name="header_status">Status:</string>
 
+    <!--NOTES-->
+    <string name="title_create_note">Create Note</string>
+    <string name="subtitle_create_note">for %1$s</string>
+    <string name="title_edit_note">Edit Note</string>
+    <string name="subtitle_edit_note">for %1$s</string>
+    <string name="hint_enter_note">Enter note</string>
+    <string name="hint_edit_note">Edit note</string>
+
 
     <!--GENERERIC PROPERTIES-->
     <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
@@ -366,6 +374,7 @@
     <string name="help_text_create_category">@string/help_text_not_yet_available</string>
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
     <string name="help_text_create_status">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_note">@string/help_text_not_yet_available</string>
 
     <string name="help_text_edit_simple_element">@string/help_text_not_yet_available</string>
     <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>

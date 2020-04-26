@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/toolbar"/>
+            layout="@layout/layout_toolbar"/>
 
         <TextView
             android:id="@+id/textViewNavigationHub_totalVisitedParksCount"
@@ -64,7 +64,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/navigation_drawer_header"
+        app:headerLayout="@layout/layout_navigation_drawer_header"
         app:itemTextAppearance="@style/NavigationDrawerItem"
         app:menu="@menu/menu_navigation_drawer" />
 

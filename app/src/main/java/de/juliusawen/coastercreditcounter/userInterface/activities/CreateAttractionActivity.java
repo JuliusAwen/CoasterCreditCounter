@@ -390,7 +390,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         this.textInputLayoutAttractionName.setHint(hint);
         this.textInputLayoutAttractionName.setError(null);
-        this.textInputLayoutAttractionName.setCounterMaxLength(App.config.maxCharacterCount);
+        this.textInputLayoutAttractionName.setCounterMaxLength(App.config.maxCharacterCountForSimpleElementName);
 
         this.textInputEditTextAttractionName.setOnEditorActionListener(this.getOnEditorActionListener());
         this.textInputEditTextAttractionName.requestFocus();

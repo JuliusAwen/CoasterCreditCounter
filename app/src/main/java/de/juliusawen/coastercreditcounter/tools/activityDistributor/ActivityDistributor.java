@@ -162,31 +162,44 @@ public abstract class ActivityDistributor
             case EDIT_LOCATION:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_location);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
                 break;
 
             case EDIT_PARK:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_park);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
                 break;
 
             case EDIT_CREDIT_TYPE:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_credit_type);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
                 break;
 
             case EDIT_CATEGORY:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_category);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
                 break;
 
             case EDIT_MANUFACTURER:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_manufacturer);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
                 break;
 
             case EDIT_STATUS:
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_status);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_name, element.getName()));
+                break;
+
+            case EDIT_NOTE:
+                intent = new Intent(context, EditSimpleElementActivity.class);
+                toolbarTitle = context.getString(R.string.title_edit_note);
+                intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_note));
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_edit_note, element.getParent().getName()));
                 break;
 
             case EDIT_ATTRACTION_BLUEPRINT:
@@ -232,7 +245,6 @@ public abstract class ActivityDistributor
     {
         Intent intent;
         String toolbarTitle = context.getString(R.string.error_missing_text);
-        String toolbarSubtitle = context.getString(R.string.error_missing_text);
         String helpTitle = context.getString(R.string.error_missing_text);
         String helpText = context.getString(R.string.error_missing_text);
         String hint = context.getString(R.string.error_missing_text);
@@ -241,7 +253,7 @@ public abstract class ActivityDistributor
         {
             case CREATE_LOCATION:
                 intent = new Intent(context, CreateChildForLocationActivity.class);
-                toolbarSubtitle = context.getString(R.string.subtitle_create_location);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_location));
                 helpTitle = context.getString(R.string.subtitle_create_attraction);
                 helpText = context.getString(R.string.help_text_create_location);
                 hint = context.getString(R.string.hint_enter_location_name);
@@ -249,7 +261,7 @@ public abstract class ActivityDistributor
 
             case CREATE_PARK:
                 intent = new Intent(context, CreateChildForLocationActivity.class);
-                toolbarSubtitle = context.getString(R.string.subtitle_create_park);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_park));
                 helpTitle = context.getString(R.string.subtitle_create_park);
                 helpText = context.getString(R.string.help_text_create_park);
                 hint = context.getString(R.string.hint_enter_park_name);
@@ -262,14 +274,13 @@ public abstract class ActivityDistributor
             case CREATE_ON_SITE_ATTRACTION:
                 intent = new Intent(context, CreateAttractionActivity.class);
                 toolbarTitle = context.getString(R.string.title_create_attraction);
-                toolbarSubtitle = context.getString(R.string.subtitle_create_attraction, parentElement.getName());
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_attraction, parentElement.getName()));
                 helpTitle = context.getString(R.string.title_create_attraction);
                 helpText = context.getString(R.string.help_text_create_attraction);
                 hint = context.getString(R.string.hint_enter_attraction_name);
 
                 break;
 
-                // Create OrphanElement
             case CREATE_ATTRACTION_BLUEPRINT:
                 intent = new Intent(context, CreateAttractionActivity.class);
                 toolbarTitle = context.getString(R.string.title_create_blueprint);
@@ -310,6 +321,15 @@ public abstract class ActivityDistributor
                 hint = context.getString(R.string.hint_enter_status_name);
                 break;
 
+            case CREATE_NOTE:
+                intent = new Intent(context, CreateSimpleElementActivity.class);
+                toolbarTitle = context.getString(R.string.title_create_note);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_note, parentElement.getName()));
+                helpTitle = context.getString(R.string.title_create_note);
+                helpText = context.getString(R.string.help_text_create_note);
+                hint = context.getString(R.string.hint_enter_note);
+                break;
+
             default:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
                 break;
@@ -318,7 +338,6 @@ public abstract class ActivityDistributor
         if(intent != null)
         {
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
-            intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
             intent.putExtra(Constants.EXTRA_HINT, hint);

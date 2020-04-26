@@ -36,6 +36,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
@@ -61,6 +62,7 @@ public class JsonHandler implements IDatabaseWrapper
     private LinkedList<TemporaryJsonElement> temporaryBlueprints = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryOnSiteAttractions = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryVisits = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryNotes = new LinkedList<>();
 
     public boolean importContent(Content content, Uri uri, String importFileName)
     {
@@ -265,7 +267,6 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 this.temporaryLocations = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_LOCATIONS));
                 content.addElements(this.createLocations(temporaryLocations));
-
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_PARKS))
@@ -296,6 +297,12 @@ public class JsonHandler implements IDatabaseWrapper
                 this.temporaryVisits = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
+            {
+                this.temporaryNotes = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_NOTES));
+                content.addElements(this.createNotes(this.temporaryNotes));
+            }
         }
         catch(JSONException e)
         {
@@ -317,14 +324,19 @@ public class JsonHandler implements IDatabaseWrapper
 
                 JSONObject jsonObjectItem = jsonArray.getJSONObject(i);
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_UUID))
+                {
+                    temporaryJsonElement.uuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_UUID));
+                }
+
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_NAME))
                 {
                     temporaryJsonElement.name = jsonObjectItem.getString(Constants.JSON_STRING_NAME);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_UUID))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_TEXT))
                 {
-                    temporaryJsonElement.uuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_UUID));
+                    temporaryJsonElement.text = jsonObjectItem.getString(Constants.JSON_STRING_TEXT);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_CHILDREN))
@@ -570,6 +582,17 @@ public class JsonHandler implements IDatabaseWrapper
         return elements;
     }
 
+    private LinkedList<IElement> createNotes(LinkedList<TemporaryJsonElement> temporaryJsonElements)
+    {
+        LinkedList<IElement> elements = new LinkedList<>();
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
+        {
+            Note element = Note.create(temporaryJsonElement.text, temporaryJsonElement.uuid);
+            elements.add(element);
+        }
+        return elements;
+    }
+
 
     private CreditType getCreditTypeFromUuid(UUID uuid, Content content)
     {
@@ -761,6 +784,11 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Status.class)));
+
+
+            jsonObject.put(Constants.JSON_STRING_NOTES, content.getContentOfType(Status.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentAsType(Note.class)));
 
             Log.d(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: success - took [%d]ms", stopwatch.stop()));
             return jsonObject;

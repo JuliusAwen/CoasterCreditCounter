@@ -1,9 +1,9 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
 /**
@@ -12,4 +12,4 @@ import de.juliusawen.coastercreditcounter.persistence.IPersistable;
  * Parent: Park
  * Children: none
  */
-public interface IOnSiteAttraction extends IAttraction, IPersistable, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty, IHasStatusProperty {}
+public interface IOnSiteAttraction extends IAttraction, IPersistable, IHasCreditType, IHasCategory, IHasManufacturer, IHasStatus {}

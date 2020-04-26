@@ -8,14 +8,16 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasEvents;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasNote;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /***
  * Parent: Location
- * Children: CustomAttraction, StockAttraction, Visit
+ * Children: CustomAttractions, StockAttractions, Visits, Events, Note
  */
-public final class Park extends Element implements IPersistable
+public final class Park extends Element implements IHasEvents, IHasNote, IPersistable
 {
     private Park(String name, UUID uuid)
     {

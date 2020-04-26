@@ -7,7 +7,7 @@
     tools:context=".userInterface.activities.CreateSimpleElementActivity">
 
     <include
-        layout="@layout/floating_action_button"/>
+        layout="@layout/layout_floating_action_button"/>
 
     <include
         layout="@layout/layout_simple_text_input"/>

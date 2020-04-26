@@ -13,15 +13,21 @@ public interface IAttraction extends IElement
 {
     CreditType getCreditType();
     void setCreditType(CreditType creditType);
+
     Category getCategory();
     void setCategory(Category category);
+
     Manufacturer getManufacturer();
     void setManufacturer(Manufacturer manufacturer);
+
     Status getStatus();
     void setStatus(Status status);
-    int fetchTotalRideCount();
+
     void increaseTrackedRideCount(int increment);
     void decreaseTrackedRideCount(int decrement);
+
+    int fetchTotalRideCount();
+
     int getUntracktedRideCount();
     void setUntracktedRideCount(int untracktedRideCount);
 }

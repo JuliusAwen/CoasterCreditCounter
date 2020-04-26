@@ -23,15 +23,16 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 
-public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction
+public class ShowParkActivity extends BaseActivity
+        implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
 {
     private enum Tab
     {
@@ -202,10 +203,15 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
     }
 
     @Override
+    public void markForCreation(IElement elementToCreate)
+    {
+        super.markForCreation(elementToCreate);
+    }
+
+    @Override
     public void markForDeletion(IElement elementToDelete)
     {
         super.markForDeletion(elementToDelete, true);
-        super.markForUpdate(elementToDelete.getParent());
     }
 
     @Override
@@ -296,7 +302,14 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
                             @Override
                             public void onClick(View view)
                             {
-                                Toaster.notYetImplemented(ShowParkActivity.this);
+                                if(viewModel.park.hasChildrenOfType(Note.class))
+                                {
+                                    ActivityDistributor.startActivityEditForResult(ShowParkActivity.this, RequestCode.EDIT_NOTE, viewModel.park.getChildrenOfType(Note.class).get(0));
+                                }
+                                else
+                                {
+                                    ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_NOTE, ShowParkActivity.this.viewModel.park);
+                                }
                             }
                         });
                 break;
@@ -416,7 +429,7 @@ public class ShowParkActivity extends BaseActivity implements ShowVisitsFragment
 
         View getTabTitleView(int position)
         {
-            View view = LayoutInflater.from(ShowParkActivity.this).inflate(R.layout.tab_title, null);
+            View view = LayoutInflater.from(ShowParkActivity.this).inflate(R.layout.layout_tab_title, null);
             ImageView imageView = view.findViewById(R.id.imageViewTabTitle);
             imageView.setImageDrawable(tabTitleDrawables[position]);
             return view;

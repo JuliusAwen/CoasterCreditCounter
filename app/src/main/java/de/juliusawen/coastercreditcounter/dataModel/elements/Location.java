@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  * Parent: Location
- * Children: Location, Park
+ * Children: Locations, Parks
  */
 public final class Location extends Element implements IPersistable
 {

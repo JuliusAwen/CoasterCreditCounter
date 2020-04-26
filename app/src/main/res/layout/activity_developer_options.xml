@@ -13,7 +13,7 @@ tools:context=".userInterface.activities.DeveloperOptionsActivity">
         tools:ignore="UselessParent">
 
         <include
-            layout="@layout/toolbar"/>
+            layout="@layout/layout_toolbar"/>
 
         <LinearLayout
             android:id="@+id/linearLayoutDeveloperOptions_ShowBuildConfig"

@@ -83,7 +83,7 @@ public class CreateChildForLocationActivity extends BaseActivity
     {
         this.textInputLayout.setHint(hint);
         this.textInputLayout.setError(null);
-        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
+        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCountForSimpleElementName);
 
         this.textInputEditText.requestFocus();
         this.textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()

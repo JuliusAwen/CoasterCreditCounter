@@ -17,7 +17,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
  */
 public abstract class Attraction extends Element implements IAttraction
 {
-
     private CreditType creditType;
     private Category category;
     private Manufacturer manufacturer;

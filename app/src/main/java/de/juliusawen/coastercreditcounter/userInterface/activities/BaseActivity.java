@@ -575,7 +575,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
         if(progressBar == null)
         {
-            progressBar = getLayoutInflater().inflate(R.layout.progress_bar, (ViewGroup)rootView, false);
+            progressBar = getLayoutInflater().inflate(R.layout.layout_progress_bar, (ViewGroup)rootView, false);
             ((ViewGroup)rootView).addView(progressBar);
         }
 
@@ -591,7 +591,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForCreation(IElement element)
     {
-        if(element.isIPersistable())
+        if(element.isPersistable())
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
             this.viewModel.elementsToCreate.add(element);
@@ -613,7 +613,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForUpdate(IElement element)
     {
-        if(element.isIPersistable())
+        if(element.isPersistable())
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
@@ -631,7 +631,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
-        if(element.isIPersistable())
+        if(element.isPersistable())
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
             this.viewModel.elementsToDelete.add(element);
@@ -640,7 +640,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             {
                 for(IElement child : element.getChildren())
                 {
-                    if(child.isIPersistable())
+                    if(child.isPersistable())
                     {
                         this.markForDeletion(child, true);
                     }

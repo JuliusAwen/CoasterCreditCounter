@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -45,12 +47,18 @@ public class CreateSimpleElementActivity extends BaseActivity
 
         this.viewModel = new ViewModelProvider(this).get(CreateSimpleElementActivityViewModel.class);
 
+        if(this.viewModel.requestCode == null)
+        {
+            this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
+            this.viewModel.maxCharacterCount = this.viewModel.requestCode == RequestCode.CREATE_NOTE ? App.config.maxCharacterCountForNote : App.config.maxCharacterCountForSimpleElementName;
+        }
+
         this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
+                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
@@ -60,7 +68,7 @@ public class CreateSimpleElementActivity extends BaseActivity
     {
         this.textInputLayout.setHint(hint);
         this.textInputLayout.setError(null);
-        this.textInputLayout.setCounterMaxLength(App.config.maxCharacterCount);
+        this.textInputLayout.setCounterMaxLength(this.viewModel.maxCharacterCount);
 
         this.textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -103,6 +111,14 @@ public class CreateSimpleElementActivity extends BaseActivity
                 }
             }
         });
+
+        if(this.viewModel.requestCode == RequestCode.CREATE_NOTE)
+        {
+            this.textInputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            this.textInputEditText.setLines(App.config.minLinesForNote);
+            this.textInputEditText.setMinLines(App.config.minLinesForNote);
+            this.textInputEditText.setMaxLines(App.config.maxLinesForNote);
+        }
     }
 
     private void decorateFloatingActionButton()
@@ -123,43 +139,47 @@ public class CreateSimpleElementActivity extends BaseActivity
     {
         if(this.textInputLayout.getError() == null)
         {
-            if(this.tryCreateElement(this.textInputEditText.getText().toString()))
+            if(this.tryCreateElement(this.textInputEditText.getText().toString().trim()))
             {
                 returnResult(RESULT_OK);
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "CreateSimpleElementActivity.handleOnEditorActionDone:: name is invalid");
+                Log.i(Constants.LOG_TAG, "CreateSimpleElementActivity.handleOnEditorActionDone:: input is invalid");
                 this.textInputLayout.setError(getString(R.string.error_name_invalid));
             }
         }
     }
 
-    private boolean tryCreateElement(String name)
+    private boolean tryCreateElement(String input)
     {
         IElement createdElement = null;
-        RequestCode requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
 
-        switch(requestCode)
+        switch(this.viewModel.requestCode)
         {
             case CREATE_CREDIT_TYPE:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating CreditType [%s]", name));
-                createdElement = CreditType.create(name);
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating CreditType [%s]", input));
+                createdElement = CreditType.create(input);
                 break;
 
             case CREATE_CATEGORY:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Category [%s]", name));
-                createdElement = Category.create(name);
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Category [%s]", input));
+                createdElement = Category.create(input);
                 break;
 
             case CREATE_MANUFACTURER:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Manufacturer [%s]", name));
-                createdElement = Manufacturer.create(name);
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Manufacturer [%s]", input));
+                createdElement = Manufacturer.create(input);
                 break;
 
             case CREATE_STATUS:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Status [%s]", name));
-                createdElement = Status.create(name);
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Status [%s]", input));
+                createdElement = Status.create(input);
+                break;
+
+            case CREATE_NOTE:
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Note [%s]", input));
+                createdElement = Note.create(input);
                 break;
         }
 

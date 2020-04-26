@@ -76,6 +76,22 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+
+        if(context instanceof ShowAttractionsFragment.ShowAttractionsFragmentInteraction)
+        {
+            this.showAttractionsFragmentInteraction = (ShowAttractionsFragment.ShowAttractionsFragmentInteraction) context;
+        }
+        else
+        {
+            throw new RuntimeException(context.toString() + " must implement ShowAttractionsFragmentInteraction");
+        }
+    }
+
+
+    @Override
     public void onCreate (Bundle savedInstanceState)
     {
         Log.v(LOG_TAG, "ShowAttractionsFragment.onCreate:: creating fragment...");
@@ -153,6 +169,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     }
                     break;
                 }
+
                 case EDIT_ON_SITE_ATTRACTION:
                 {
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
@@ -179,6 +196,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             .scrollToItem(resultElement);
                     break;
                 }
+
                 case CREATE_ON_SITE_ATTRACTION:
                 {
                     this.updateContentRecyclerView(true)
@@ -187,21 +205,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     break;
                 }
             }
-        }
-    }
-
-    @Override
-    public void onAttach(Context context)
-    {
-        super.onAttach(context);
-
-        if(context instanceof ShowAttractionsFragment.ShowAttractionsFragmentInteraction)
-        {
-            this.showAttractionsFragmentInteraction = (ShowAttractionsFragment.ShowAttractionsFragmentInteraction) context;
-        }
-        else
-        {
-            throw new RuntimeException(context.toString() + " must implement ShowAttractionsFragmentInteraction");
         }
     }
 

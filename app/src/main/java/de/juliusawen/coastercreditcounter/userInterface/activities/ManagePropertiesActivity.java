@@ -30,7 +30,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomA
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
@@ -652,7 +652,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case STATUS:
                     {
-                        List<IElement> categorizedElements = App.content.getContentOfType(IHasStatusProperty.class);
+                        List<IElement> categorizedElements = App.content.getContentOfType(IHasStatus.class);
                         List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
 
                         for(IAttraction attraction : categorizedAttractions)

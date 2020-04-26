@@ -9,20 +9,20 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Blueprint for attractions from which StockAttraction is created
+ * Blueprint for attraction from which StockAttractions are created
  *
  *  * Parent: none
  *  * Children: none
  */
-public final class Blueprint extends Attraction implements IOrphan, IPersistable, IHasCreditTypeProperty, IHasCategoryProperty, IHasManufacturerProperty
+public final class Blueprint extends Attraction implements IOrphan, IPersistable, IHasCreditType, IHasCategory, IHasManufacturer
 {
     private Blueprint(String name, UUID uuid)
     {

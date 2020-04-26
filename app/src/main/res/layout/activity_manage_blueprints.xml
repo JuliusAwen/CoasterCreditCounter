@@ -8,7 +8,7 @@
     tools:context=".userInterface.activities.ManageBlueprintsActivity">
 
     <include
-        layout="@layout/floating_action_button"/>
+        layout="@layout/layout_floating_action_button"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutManageBlueprints"
@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/toolbar"/>
+            layout="@layout/layout_toolbar"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewManageBlueprints"

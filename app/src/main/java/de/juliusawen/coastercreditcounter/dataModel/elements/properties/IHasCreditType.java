@@ -3,7 +3,7 @@ package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 /**
  * Marks Element as having a CreditType
  */
-public interface IHasCreditTypeProperty extends IHasProperty
+public interface IHasCreditType extends IHasProperty
 {
     CreditType getCreditType();
 }

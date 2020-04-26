@@ -9,16 +9,20 @@ import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Event;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasEvents;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasNote;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategoryProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditTypeProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturerProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatusProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
@@ -382,14 +386,14 @@ public abstract class Element implements IElement
         return this instanceof IAttraction;
     }
 
-    public boolean isBlueprint()
-    {
-        return this instanceof Blueprint;
-    }
-
     public boolean isCustomAttraction()
     {
         return this instanceof CustomAttraction;
+    }
+
+    public boolean isBlueprint()
+    {
+        return this instanceof Blueprint;
     }
 
     public boolean isStockAttraction()
@@ -407,27 +411,17 @@ public abstract class Element implements IElement
         return this instanceof IProperty;
     }
 
-    public boolean hasCreditType()
+    public boolean isEvent()
     {
-        return this instanceof IHasCreditTypeProperty;
+        return this instanceof Event;
     }
 
-    public boolean hasCategory()
+    public boolean isNote()
     {
-        return this instanceof IHasCategoryProperty;
+        return this instanceof Note;
     }
 
-    public boolean hasManufacturer()
-    {
-        return this instanceof IHasManufacturerProperty;
-    }
-
-    public boolean hasStatus()
-    {
-        return this instanceof IHasStatusProperty;
-    }
-
-    public boolean isIPersistable()
+    public boolean isPersistable()
     {
         return this instanceof IPersistable;
     }
@@ -440,5 +434,35 @@ public abstract class Element implements IElement
     public boolean isOrphan()
     {
         return this instanceof IOrphan;
+    }
+
+    public boolean hasCreditType()
+    {
+        return this instanceof IHasCreditType;
+    }
+
+    public boolean hasCategory()
+    {
+        return this instanceof IHasCategory;
+    }
+
+    public boolean hasManufacturer()
+    {
+        return this instanceof IHasManufacturer;
+    }
+
+    public boolean hasStatus()
+    {
+        return this instanceof IHasStatus;
+    }
+
+    public boolean hasEvents()
+    {
+        return this instanceof IHasEvents && this.hasChildrenOfType(Event.class);
+    }
+
+    public boolean hasNote()
+    {
+        return this instanceof IHasNote && this.hasChildrenOfType(Note.class);
     }
 }

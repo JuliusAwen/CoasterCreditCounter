@@ -26,6 +26,7 @@ public abstract class Constants
     public static final String JSON_STRING_VISITS = "visits";
     public static final String JSON_STRING_ATTRACTIONS = "attractions";
     public static final String JSON_STRING_ON_SITE_ATTRACTIONS = "on site attractions";
+    public static final String JSON_STRING_BLUEPRINT = "blueprint";
     public static final String JSON_STRING_BLUEPRINTS = "blueprints";
 
     public static final String JSON_STRING_NAME = "name";
@@ -37,7 +38,6 @@ public abstract class Constants
     public static final String JSON_STRING_YEAR = "year";
 
     public static final String JSON_STRING_RIDE_COUNTS_BY_ATTRACTION = "ride counts by attraction";
-    public static final String JSON_STRING_BLUEPRINT = "blueprint";
 
     public static final String JSON_STRING_UNTRACKED_RIDE_COUNT = "untracked ride count";
 
@@ -49,6 +49,14 @@ public abstract class Constants
     public static final String JSON_STRING_MANUFACTURERS = "manufacturers";
     public static final String JSON_STRING_STATUS = "status";
     public static final String JSON_STRING_STATUSES = "statuses";
+
+    public static final String JSON_STRING_EVENT = "event";
+    public static final String JSON_STRING_EVENTS = "events";
+
+    public static final String JSON_STRING_NOTES = "notes";
+    public static final String JSON_STRING_NOTE = "note";
+    public static final String JSON_STRING_TEXT = "text";
+
 
     public static final String JSON_STRING_DETAIL_ORDER = "detail order";
 

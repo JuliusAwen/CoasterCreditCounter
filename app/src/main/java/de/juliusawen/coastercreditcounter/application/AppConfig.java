@@ -18,7 +18,6 @@ public class AppConfig
     //below is only working when isDebugBuild = true
 
     private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
-
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
     private final boolean alwaysImportFromDatabaseMock = false; // always import from database mock instead of export.json file?
 
@@ -31,8 +30,15 @@ public class AppConfig
     public final String yearFormat = "yyyy";
     public final String timeFormat = "HH:mm:ss";
 
-    public final int maxCharacterCount = 64;
+    public final int maxCharacterCountForSimpleElementName = 64;
     public final int maxDigitCount = 9;
+
+    public final int maxCharacterCountForShortenedText = 29;
+    public final int maxCharacterCountForNote = 512;
+    public final int minLinesForNote = 11;
+    public final int maxLinesForNote = 11;
+
+    public final int maxHeightForNoteInDP = 120;
 
 
     AppConfig()

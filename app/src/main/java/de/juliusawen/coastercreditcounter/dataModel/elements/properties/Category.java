@@ -13,6 +13,10 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
+/**
+ * Parent: none
+ * Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)
+ */
 public final class Category extends Element implements IProperty
 {
     private static Category defaultCategory;

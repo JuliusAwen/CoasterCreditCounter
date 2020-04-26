@@ -52,6 +52,7 @@ public interface IElement
 
     boolean isLocation();
     boolean isRootLocation();
+
     boolean isPark();
     boolean isVisit();
     boolean isAttraction();
@@ -60,11 +61,16 @@ public interface IElement
     boolean isStockAttraction();
     boolean isVisitedAttraction();
     boolean isProperty();
+
+    boolean isPersistable();
+    boolean isGroupHeader();
+    boolean isOrphan();
+
     boolean hasCreditType();
     boolean hasCategory();
     boolean hasManufacturer();
     boolean hasStatus();
-    boolean isIPersistable();
-    boolean isGroupHeader();
-    boolean isOrphan();
+
+    boolean hasEvents();
+    boolean hasNote();
 }

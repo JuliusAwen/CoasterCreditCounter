@@ -9,6 +9,6 @@
     tools:context=".userInterface.activities.MainActivity">
 
     <include
-        layout="@layout/toolbar"/>
+        layout="@layout/layout_toolbar"/>
 
 </FrameLayout>

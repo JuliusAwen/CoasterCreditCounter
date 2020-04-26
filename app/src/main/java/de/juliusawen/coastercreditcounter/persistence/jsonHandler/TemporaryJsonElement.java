@@ -21,5 +21,7 @@ public class TemporaryJsonElement
     public UUID categoryUuid;
     public UUID manufacturerUuid;
     public UUID statusUuid;
+    public UUID noteUuid;
+    public String text;
     public boolean isDefault;
 }

@@ -14,7 +14,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufact
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 
 /**
- * Container for Attractions - used in order to be able to sort attractions for every individual visit
+ * Container for Attractions - used in order to be able to sort attractions for every individual visit without sorting the child attractions for the parent park
  *
  * Parent: Park
  * Children: none

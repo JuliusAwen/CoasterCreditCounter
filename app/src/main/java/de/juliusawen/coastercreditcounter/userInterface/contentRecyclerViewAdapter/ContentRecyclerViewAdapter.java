@@ -311,17 +311,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         switch (viewType)
         {
             case ITEM:
-                view = layoutInflater.inflate(R.layout.recycler_view_item, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item, viewGroup, false);
                 viewHolder = new ViewHolderItem(view);
                 break;
 
             case VISITED_ATTRACTION:
-                view = layoutInflater.inflate(R.layout.recycler_view_item_visited_attraction, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_visited_attraction, viewGroup, false);
                 viewHolder = new ViewHolderVisitedAttraction(view);
                 break;
 
             case BOTTOM_SPACER:
-                view = layoutInflater.inflate(R.layout.bottom_spacer, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_bottom_spacer, viewGroup, false);
                 viewHolder = new ViewHolderBottomSpacer(view);
                 break;
 
