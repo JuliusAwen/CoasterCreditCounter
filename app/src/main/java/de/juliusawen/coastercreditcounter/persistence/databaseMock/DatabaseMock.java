@@ -82,7 +82,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         Log.e(Constants.LOG_TAG, "DatabaseMock.loadContent:: creating node tree");
 
-        content.addElement(locations.Germany); //adding one location is enough - content is searching for root from there
+        content.addElement(locations.Bremen); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
 
         Log.i(Constants.LOG_TAG, "DatabaseMock.loadContent:: adding Properties to content");

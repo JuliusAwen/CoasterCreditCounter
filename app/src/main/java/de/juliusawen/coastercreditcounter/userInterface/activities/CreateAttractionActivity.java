@@ -36,6 +36,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufact
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -492,7 +493,8 @@ public class CreateAttractionActivity extends BaseActivity
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, App.content.getContentOfType(CreditType.class));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE,
+                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(CreditType.class)));
                 }
             }
         });
@@ -528,7 +530,8 @@ public class CreateAttractionActivity extends BaseActivity
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CATEGORY, App.content.getContentOfType(Category.class));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CATEGORY,
+                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Category.class)));
                 }
             }
         });
@@ -564,7 +567,8 @@ public class CreateAttractionActivity extends BaseActivity
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MANUFACTURER,
+                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Manufacturer.class)));
                 }
             }
         }));
@@ -593,7 +597,8 @@ public class CreateAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickStatus> selected");
-                ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_STATUS, App.content.getContentOfType(Status.class));
+                ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_STATUS,
+                        SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Status.class)));
             }
         });
 

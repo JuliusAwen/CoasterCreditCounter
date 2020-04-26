@@ -70,13 +70,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(Location.class);
-            childTypesToExpand.add(Park.class);
+            HashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new HashSet<>();
+            childTypesToExpandInSortOrder.add(Park.class);
+            childTypesToExpandInSortOrder.add(Location.class);
 
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
-                    childTypesToExpand)
+                    childTypesToExpandInSortOrder)
                     .setTypefaceForContentType(Location.class, Typeface.BOLD)
                     .addBottomSpacer();
         }

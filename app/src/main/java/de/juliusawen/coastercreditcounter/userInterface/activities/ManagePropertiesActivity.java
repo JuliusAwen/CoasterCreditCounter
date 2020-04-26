@@ -83,6 +83,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 || requestCode == RequestCode.PICK_STATUS)
         {
             this.viewModel.isSelectionMode = true;
+
+            if(this.viewModel.propertiesToSelectFrom == null)
+            {
+                this.viewModel.propertiesToSelectFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            }
         }
 
         this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
@@ -97,18 +102,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 case CREDIT_TYPE:
                 {
-                    elements = App.content.getContentOfType(CreditType.class);
-
                     if(this.viewModel.isSelectionMode)
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                elements,
+                                this.viewModel.propertiesToSelectFrom,
                                 null,
                                 false)
                                 .setTypefaceForContentType(CreditType.class, Typeface.BOLD);
                     }
                     else
                     {
+                        elements = App.content.getContentOfType(CreditType.class);
+
                         for(IElement element : elements)
                         {
                             element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
@@ -126,18 +131,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 case CATEGORY:
                 {
-                    elements = App.content.getContentOfType(Category.class);
-
                     if(this.viewModel.isSelectionMode)
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                elements,
+                                this.viewModel.propertiesToSelectFrom,
                                 null,
                                 false)
                                 .setTypefaceForContentType(Category.class, Typeface.BOLD);
                     }
                     else
                     {
+                        elements = App.content.getContentOfType(Category.class);
+
                         for(IElement element : elements)
                         {
                             element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
@@ -154,18 +159,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 case MANUFACTURER:
                 {
-                    elements = App.content.getContentOfType(Manufacturer.class);
-
                     if(this.viewModel.isSelectionMode)
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                elements,
+                                this.viewModel.propertiesToSelectFrom,
                                 null,
                                 false)
                                 .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
                     }
                     else
                     {
+                        elements = App.content.getContentOfType(Manufacturer.class);
+
                         for(IElement element : elements)
                         {
                             element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
@@ -182,18 +187,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 case STATUS:
                 {
-                    elements = App.content.getContentOfType(Status.class);
-
                     if(this.viewModel.isSelectionMode)
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                elements,
+                                this.viewModel.propertiesToSelectFrom,
                                 null,
                                 false)
                                 .setTypefaceForContentType(Status.class, Typeface.BOLD);
                     }
                     else
                     {
+                        elements = App.content.getContentOfType(Status.class);
+
                         for(IElement element : elements)
                         {
                             element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));

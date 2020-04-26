@@ -118,17 +118,17 @@ public abstract class Element implements IElement
         return this.uuid;
     }
 
-    public void addChildAndSetParent(IElement child)
-    {
-        this.addChildAtIndexAndSetParent(this.getChildCount(), child);
-    }
-
     public void addChildrenAndSetParent(List<UUID> childUuids)
     {
         for(UUID childUuid : childUuids)
         {
             this.addChildAndSetParent(App.content.getContentByUuid(childUuid));
         }
+    }
+
+    public void addChildAndSetParent(IElement child)
+    {
+        this.addChildAtIndexAndSetParent(this.getChildCount(), child);
     }
 
     public void addChildrenAtIndexAndSetParent(int index, List<IElement> children)

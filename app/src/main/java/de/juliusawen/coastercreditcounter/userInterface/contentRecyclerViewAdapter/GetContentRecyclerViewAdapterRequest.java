@@ -13,7 +13,7 @@ class GetContentRecyclerViewAdapterRequest
 
     List<IElement> elements = new ArrayList<>();
 
-    Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
+    Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new HashSet<>();
 
     boolean selectMultiple = false;
 }

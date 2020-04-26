@@ -58,7 +58,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean formatAsPrettyPrint;
 
     private final boolean selectMultipleItems;
-    private final Set<Class<? extends IElement>> relevantChildTypes = new HashSet<>();
+    private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new HashSet<>();
 
     private boolean useDedicatedExpansionOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
@@ -88,9 +88,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.groupHeaderProvider = new GroupHeaderProvider();
         this.groupType = GroupType.NONE;
 
-        if(request.relevantChildTypes != null)
+        if(request.relevantChildTypesInSortOrder != null)
         {
-            this.relevantChildTypes.addAll(request.relevantChildTypes);
+            this.relevantChildTypesInSortOrder.addAll(request.relevantChildTypesInSortOrder);
         }
 
         this.setItems(request.elements);
@@ -764,17 +764,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
 
-        for(Class<? extends IElement> childType : this.relevantChildTypes)
+        for(IElement child : item.getChildren())
         {
-            ArrayList<IElement> allRelevantChildren = new ArrayList<>(item.getChildrenOfType(childType));
-            for(IElement child : allRelevantChildren)
+            for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
             {
-                if(!distinctRelevantChildren.contains(child))
+                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
                 {
                     distinctRelevantChildren.add(child);
+                    break;
                 }
             }
         }
+
 
         return distinctRelevantChildren;
     }
@@ -832,7 +833,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public ContentRecyclerViewAdapter toggleExpansion(IElement item)
     {
-        if(!this.relevantChildTypes.isEmpty())
+        if(!this.relevantChildTypesInSortOrder.isEmpty())
         {
             if(!this.expandedItems.contains(item))
             {
@@ -1086,7 +1087,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     {
                         setItemSelected(selectedItem);
 
-                        if(!relevantChildTypes.isEmpty())
+                        if(!relevantChildTypesInSortOrder.isEmpty())
                         {
                             setItemsSelected(getRelevantChildren(selectedItem));
                             selectParentIfAllRelevantChildrenAreSelected(getParentOfRelevantChild(selectedItem));
@@ -1111,7 +1112,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                     if(selectMultipleItems)
                     {
-                        if(!relevantChildTypes.isEmpty())
+                        if(!relevantChildTypesInSortOrder.isEmpty())
                         {
                             setItemsDeselected(getRelevantChildren(selectedItem));
                             deselectParentIfNotAllRelevantChildrenAreSelected(getParentOfRelevantChild(selectedItem));

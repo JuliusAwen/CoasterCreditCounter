@@ -14,7 +14,7 @@ public abstract class ContentRecyclerViewAdapterProvider
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.EXPANDABLE;
         request.elements = parentElements;
-        request.relevantChildTypes = childTypesToExpand;
+        request.relevantChildTypesInSortOrder = childTypesToExpand;
 
         return new ContentRecyclerViewAdapter(request);
     }
@@ -27,7 +27,7 @@ public abstract class ContentRecyclerViewAdapterProvider
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.SELECTABLE;
         request.elements = elements;
-        request.relevantChildTypes = childTypesToExpand;
+        request.relevantChildTypesInSortOrder = childTypesToExpand;
         request.selectMultiple = selectMultiple;
 
         return new ContentRecyclerViewAdapter(request);
@@ -40,7 +40,7 @@ public abstract class ContentRecyclerViewAdapterProvider
         GetContentRecyclerViewAdapterRequest request = new GetContentRecyclerViewAdapterRequest();
         request.contentRecyclerViewAdapterType = ContentRecyclerViewAdapterType.COUNTABLE;
         request.elements = parentElements;
-        request.relevantChildTypes = childTypesToExpand;
+        request.relevantChildTypesInSortOrder = childTypesToExpand;
 
         return new ContentRecyclerViewAdapter(request);
     }

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
@@ -216,29 +217,35 @@ public abstract class SortTool
             Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElements:: not sorted: [%d] element(s) passed", elements.size()));
         }
 
-        if(!sortedElements.isEmpty() && sortedElements.get(0).isProperty())
-        {
-            SortTool.putDefaultPropertyOnTop(sortedElements);
-        }
-
         return sortedElements;
     }
 
-    private static void putDefaultPropertyOnTop(List<IElement> sortedElements)
+    public static List<IElement> sortDefaultPropertyToTopAccordingToPreferences(List<IElement> properties)
     {
-        IElement defaultProperty = null;
+        List<IElement> sortedProperties = new ArrayList<>(properties);
 
-        for(IElement element : sortedElements)
+        if(App.preferences.sortDefaultPropertiesToTop())
         {
-            if(((IProperty)element).isDefault())
+            IElement defaultProperty = null;
+
+            for(IElement element : sortedProperties)
             {
-                defaultProperty = element;
-                break;
+                if(element.isProperty() && ((IProperty)element).isDefault())
+                {
+                    Log.d(Constants.LOG_TAG,  String.format("SortTool.sortDefaultPropertyToTopAccordingToPreferences:: sorting [%s] to top of list", element));
+                    defaultProperty = element;
+                    break;
+                }
+            }
+
+            if(defaultProperty != null)
+            {
+                sortedProperties.remove(defaultProperty);
+                sortedProperties.add(0, defaultProperty);
             }
         }
 
-        sortedElements.remove(defaultProperty);
-        sortedElements.add(0, defaultProperty);
+        return sortedProperties;
     }
 
     public static List<IElement> sortElementsBasedOnComparisonList(List<IElement> elementsToSort, List<IElement> comparisonList)

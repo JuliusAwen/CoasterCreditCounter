@@ -29,7 +29,8 @@ public class Preferences implements IPersistable
 
     private boolean expandLatestYearHeaderByDefault;
 
-    private boolean defaultPropertiesAlwaysAtTop = true;
+    private boolean sortDefaultPropertiesToTop = true;
+    private boolean sortParksToTopOfLocationsChildren = true;
 
     private String exportFileName = "CoasterCreditCounterExport.json";
 
@@ -183,9 +184,14 @@ public class Preferences implements IPersistable
         Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearHeaderByDefault:: set to [%S]", expandLatestYearHeaderByDefault));
     }
 
-    public boolean defaultPropertiesAlwaysAtTop()
+    public boolean sortDefaultPropertiesToTop()
     {
-        return this.defaultPropertiesAlwaysAtTop;
+        return this.sortDefaultPropertiesToTop;
+    }
+
+    public boolean sortParksToTopOfLocationsChildren()
+    {
+        return sortParksToTopOfLocationsChildren;
     }
 
     public int getFirstDayOfTheWeek()

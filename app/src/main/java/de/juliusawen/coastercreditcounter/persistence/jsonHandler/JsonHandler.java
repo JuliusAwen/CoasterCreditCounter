@@ -298,7 +298,7 @@ public class JsonHandler implements IDatabaseWrapper
                 content.addElements(this.createVisits(this.temporaryVisits));
             }
 
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_NOTES))
             {
                 this.temporaryNotes = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_NOTES));
                 content.addElements(this.createNotes(this.temporaryNotes));
@@ -786,7 +786,7 @@ public class JsonHandler implements IDatabaseWrapper
                     : this.createJsonArray(content.getContentAsType(Status.class)));
 
 
-            jsonObject.put(Constants.JSON_STRING_NOTES, content.getContentOfType(Status.class).isEmpty()
+            jsonObject.put(Constants.JSON_STRING_NOTES, content.getContentOfType(Note.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Note.class)));
 

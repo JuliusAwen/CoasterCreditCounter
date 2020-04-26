@@ -5,8 +5,11 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
+import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
@@ -54,6 +57,33 @@ public final class Location extends Element implements IPersistable
     public boolean isRootLocation()
     {
         return this.getParent() == null;
+    }
+
+    @Override
+    public void addChildAtIndexAndSetParent(int index, IElement child)
+    {
+        super.addChildAtIndexAndSetParent(index, child);
+        this.sortChildTypes();
+    }
+
+    private void sortChildTypes()
+    {
+        Log.d(Constants.LOG_TAG,  String.format("Location.sortChildTypes:: sorting child types - parks to the top[%S] according to App.Preferences",
+                App.preferences.sortParksToTopOfLocationsChildren()));
+
+        List<IElement> sortedChildren = new LinkedList<>();
+        if(App.preferences.sortParksToTopOfLocationsChildren())
+        {
+            sortedChildren.addAll(this.getChildrenOfType(Park.class));
+            sortedChildren.addAll(this.getChildrenOfType(Location.class));
+        }
+        else
+        {
+            sortedChildren.addAll(this.getChildrenOfType(Location.class));
+            sortedChildren.addAll(this.getChildrenOfType(Park.class));
+        }
+
+        this.reorderChildren(sortedChildren);
     }
 
     public JSONObject toJson() throws JSONException

@@ -2,6 +2,8 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
@@ -16,4 +18,5 @@ public class ManagePropertiesActivityViewModel extends ViewModel
     public IElement propertyToReturn;
 
     public boolean isSelectionMode = false;
+    public List<IElement> propertiesToSelectFrom;
 }
