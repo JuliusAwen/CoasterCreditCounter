@@ -115,13 +115,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     }
 
     @Override
-    public void onDestroyView()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroyView();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
@@ -219,7 +212,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public void onClick(View view)
             {
-                Element element = (Element) view.getTag();
+                Element element = (Element)view.getTag();
                 if(element.isVisit())
                 {
                     ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, element);
@@ -237,10 +230,10 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public boolean onLongClick(final View view)
             {
-                viewModel.longClickedElement = (IElement) view.getTag();
-
-                if(viewModel.longClickedElement.isVisit())
+                IElement longClickedElement = (IElement)view.getTag();
+                if(longClickedElement.isVisit())
                 {
+                    viewModel.longClickedElement = longClickedElement;
 
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.EDIT_ELEMENT)
@@ -275,7 +268,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public void handlePopupItemEditElementClicked()
     {
-        pickDate();
+        this.pickDate();
     }
 
     private void pickDate()
@@ -363,7 +356,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         {
             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
-            ShowVisitsFragment.this.showVisitsFragmentInteraction.markForDeletion(viewModel.longClickedElement);
+            ShowVisitsFragment.this.showVisitsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
             this.viewModel.longClickedElement.deleteElementAndDescendants();
             updateContentRecyclerView();
         }

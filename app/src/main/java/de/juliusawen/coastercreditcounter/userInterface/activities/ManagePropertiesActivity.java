@@ -236,13 +236,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     }
 
     @Override
-    protected void onDestroy()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroy();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);

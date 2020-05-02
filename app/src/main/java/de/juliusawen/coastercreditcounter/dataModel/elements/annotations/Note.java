@@ -36,7 +36,7 @@ public class Note extends Element implements IElement, IPersistable
     public static Note create(String text, UUID uuid)
     {
         Note note = null;
-        String name = Note.getShortenedText(text).replaceAll("\\n", " ");
+        String name = Note.buildName(text);
         if(Element.isNameValid(name))
         {
             note = new Note(name, text, uuid == null ? UUID.randomUUID() : uuid);
@@ -45,22 +45,30 @@ public class Note extends Element implements IElement, IPersistable
         return note;
     }
 
-    private static String getShortenedText(String text)
+    private static String buildName(String text)
     {
-        return text.length() > App.config.maxCharacterCountForShortenedText
-                ? String.format("%s%s", text.substring(0, App.config.maxCharacterCountForShortenedText), "...")
+        String firstRow = text.contains("\n")
+                ? text.substring(0, text.indexOf("\n"))
                 : text;
-    }
 
-    public String getText()
-    {
-        return this.text;
+        String name = firstRow.length() > App.config.maxCharacterCountForShortenedText
+                ? String.format("%s%s", firstRow.substring(0, App.config.maxCharacterCountForShortenedText), "...")
+                : firstRow;
+
+        Log.v(Constants.LOG_TAG,  String.format("Note.buildName:: built name [%s] from text [%s]", name, text));
+
+        return name;
     }
 
     public boolean setTextAndAdjustName(String text)
     {
         this.text = text;
-        return super.setName(Note.getShortenedText(this.text));
+        return super.setName(Note.buildName(this.text));
+    }
+
+    public String getText()
+    {
+        return this.text;
     }
 
     public JSONObject toJson() throws JSONException

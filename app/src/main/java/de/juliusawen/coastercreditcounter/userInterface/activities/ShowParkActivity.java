@@ -162,6 +162,7 @@ public class ShowParkActivity extends BaseActivity
         switch(this.getCurrentTab())
         {
             case SHOW_ATTRACTIONS:
+            {
                 switch(item)
                 {
                     case DELETE_ATTRACTION:
@@ -177,8 +178,10 @@ public class ShowParkActivity extends BaseActivity
                         break;
                 }
                 break;
+            }
 
             case SHOW_VISITS:
+            {
                 switch(item)
                 {
                     case DELETE_ELEMENT:
@@ -190,6 +193,18 @@ public class ShowParkActivity extends BaseActivity
                         break;
                 }
                 break;
+            }
+
+            case SHOW_OVERVIEW:
+            {
+                if(item == PopupItem.DELETE_ELEMENT)
+                {
+                    this.showParkOverviewFragment.handlePopupItemDeleteElementClicked();
+                }
+                break;
+            }
+
+
 
             default:
                 break;
@@ -302,9 +317,10 @@ public class ShowParkActivity extends BaseActivity
                             @Override
                             public void onClick(View view)
                             {
-                                if(viewModel.park.hasChildrenOfType(Note.class))
+                                Note note = viewModel.park.getNote();
+                                if(note != null)
                                 {
-                                    ActivityDistributor.startActivityEditForResult(ShowParkActivity.this, RequestCode.EDIT_NOTE, viewModel.park.getChildrenOfType(Note.class).get(0));
+                                    ActivityDistributor.startActivityEditForResult(ShowParkActivity.this, RequestCode.EDIT_NOTE, note);
                                 }
                                 else
                                 {

@@ -99,13 +99,6 @@ public class SortElementsActivity extends BaseActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroy();
-    }
-
-    @Override
     protected Menu createOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent

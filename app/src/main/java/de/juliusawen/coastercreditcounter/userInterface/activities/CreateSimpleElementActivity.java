@@ -178,7 +178,7 @@ public class CreateSimpleElementActivity extends BaseActivity
                 break;
 
             case CREATE_NOTE:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Note [%s]", input));
+                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Note with text [%s]", input));
                 createdElement = Note.create(input);
                 break;
         }

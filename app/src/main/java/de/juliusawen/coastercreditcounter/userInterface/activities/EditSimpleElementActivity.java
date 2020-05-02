@@ -160,16 +160,19 @@ public class EditSimpleElementActivity extends BaseActivity
 
             if(this.viewModel.requestCode == RequestCode.EDIT_NOTE)
             {
-                if(!((Note)this.viewModel.elementToEdit).getText().equals(input))
+                String text = ((Note)this.viewModel.elementToEdit).getText();
+                if(!text.equals(input))
                 {
+                    Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: %s's text [%s] changed to [%s]",
+                            this.viewModel.elementToEdit, text, input));
+
                     if(((Note)this.viewModel.elementToEdit).setTextAndAdjustName(input))
                     {
-                        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: text of %s changed to [%s]", this.viewModel.elementToEdit, input));
                         returnResult(RESULT_OK);
                     }
                     else
                     {
-                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid", input));
+                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid - text not changed", input));
                         this.textInputLayout.setError(getString(R.string.error_name_invalid));
                     }
                 }
@@ -183,14 +186,15 @@ public class EditSimpleElementActivity extends BaseActivity
             {
                 if(!this.viewModel.elementToEdit.getName().equals(input))
                 {
+                    Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: trying to change name of %s to [%s]", this.viewModel.elementToEdit, input));
+
                     if(this.viewModel.elementToEdit.setName(input))
                     {
-                        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: name of %s changed to [%s]", this.viewModel.elementToEdit, input));
                         returnResult(RESULT_OK);
                     }
                     else
                     {
-                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid", input));
+                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid - name not changed", input));
                         this.textInputLayout.setError(getString(R.string.error_name_invalid));
                     }
                 }

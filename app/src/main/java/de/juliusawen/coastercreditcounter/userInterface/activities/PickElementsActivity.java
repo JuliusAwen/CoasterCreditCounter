@@ -185,13 +185,6 @@ public class PickElementsActivity extends BaseActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroy();
-    }
-
-    @Override
     protected Menu createOptionsMenu(Menu menu)
     {
         switch(this.viewModel.requestCode)

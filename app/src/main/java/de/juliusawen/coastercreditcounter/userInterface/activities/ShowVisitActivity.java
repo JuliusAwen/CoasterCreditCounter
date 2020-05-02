@@ -122,13 +122,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     }
 
     @Override
-    public void onDestroy()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroy();
-    }
-
-    @Override
     protected Menu createOptionsMenu(Menu menu)
     {
         return this.viewModel.optionsMenuAgent

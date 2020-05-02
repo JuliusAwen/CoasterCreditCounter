@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayoutWithMaxHeightNote"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,26 +8,20 @@
     android:layout_margin="10dp"
     android:elevation="4dp">
 
-    <FrameLayout
+    <ScrollView
+        android:id="@+id/scrollViewNote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:background="@color/design_default_color_background"
         android:layout_margin="1dp"
         android:padding="6dp">
 
-        <ScrollView
+        <TextView
+            android:id="@+id/textViewNote"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            tools:ignore="UselessParent">
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/textViewNote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </ScrollView>
-
-    </FrameLayout>
+    </ScrollView>
 
 </de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight>

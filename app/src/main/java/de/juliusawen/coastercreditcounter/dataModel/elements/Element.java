@@ -411,14 +411,14 @@ public abstract class Element implements IElement
         return this instanceof IProperty;
     }
 
-    public boolean isEvent()
-    {
-        return this instanceof Event;
-    }
-
     public boolean isNote()
     {
         return this instanceof Note;
+    }
+
+    public boolean isEvent()
+    {
+        return this instanceof Event;
     }
 
     public boolean isPersistable()

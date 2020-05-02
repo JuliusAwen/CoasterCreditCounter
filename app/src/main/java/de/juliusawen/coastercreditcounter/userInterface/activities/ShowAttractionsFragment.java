@@ -136,13 +136,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     }
 
     @Override
-    public void onDestroyView()
-    {
-        this.recyclerView.setAdapter(null);
-        super.onDestroyView();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));

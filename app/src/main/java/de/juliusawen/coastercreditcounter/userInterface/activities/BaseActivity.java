@@ -599,7 +599,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: [%s] is not persistable", element));
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s is not persistable", element));
         }
     }
 
@@ -620,7 +620,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: [%s] is not persistable", element));
+            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: %s is not persistable", element));
         }
     }
 
