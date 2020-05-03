@@ -4,25 +4,26 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
-public class FrameLayoutWithMaxHeight extends FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+public class CoordinatorLayoutWithMaxHeight extends CoordinatorLayout
 {
     public static int WITHOUT_MAX_HEIGHT_VALUE = -1;
 
     private int maxHeight = WITHOUT_MAX_HEIGHT_VALUE;
 
-    public FrameLayoutWithMaxHeight(Context context)
+    public CoordinatorLayoutWithMaxHeight(Context context)
     {
         super(context);
     }
 
-    public FrameLayoutWithMaxHeight(Context context, AttributeSet attrs)
+    public CoordinatorLayoutWithMaxHeight(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public FrameLayoutWithMaxHeight(Context context, AttributeSet attrs, int defStyle)
+    public CoordinatorLayoutWithMaxHeight(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
     }

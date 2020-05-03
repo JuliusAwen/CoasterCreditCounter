@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
+import de.juliusawen.coastercreditcounter.userInterface.customViews.CoordinatorLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
@@ -43,7 +43,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     private ShowParkOverviewFragmentViewModel viewModel;
     private ShowParkOverviewFragmentInteraction showParkOverviewFragmentInteraction;
 
-    private FrameLayoutWithMaxHeight frameLayoutNote;
+    private CoordinatorLayoutWithMaxHeight coordinatorLayoutNote;
     private TextView textViewNote;
 
     public static ShowParkOverviewFragment newInstance(String parkUuid)
@@ -125,7 +125,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
                     this.viewModel.park.addChildAndSetParent(this.viewModel.note);
                     this.showParkOverviewFragmentInteraction.markForUpdate(this.viewModel.park);
                     this.textViewNote.setText(this.viewModel.note.getText());
-                    this.frameLayoutNote.setVisibility(View.VISIBLE);
+                    this.coordinatorLayoutNote.setVisibility(View.VISIBLE);
                     this.showParkOverviewFragmentInteraction.setFloatingActionButtonVisibility(false);
                     break;
                 }
@@ -135,7 +135,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
                     this.viewModel.note = (Note)resultElement;
                     this.showParkOverviewFragmentInteraction.markForUpdate(this.viewModel.park);
                     this.textViewNote.setText(this.viewModel.note.getText());
-                    this.frameLayoutNote.setVisibility(View.VISIBLE);
+                    this.coordinatorLayoutNote.setVisibility(View.VISIBLE);
                     break;
                 }
             }
@@ -144,8 +144,8 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
 
     private void decorateNote(View view)
     {
-        this.frameLayoutNote = view.findViewById(R.id.frameLayoutWithMaxHeightNote);
-        this.frameLayoutNote.setMaxHeight(ConvertTool.convertDpToPx(App.config.maxHeightForNoteInDP));
+        this.coordinatorLayoutNote = view.findViewById(R.id.frameLayoutWithMaxHeightNote);
+        this.coordinatorLayoutNote.setMaxHeight(ConvertTool.convertDpToPx(App.config.maxHeightForNoteInDP));
 
         this.textViewNote = view.findViewById(R.id.textViewNote);
         this.textViewNote.setOnClickListener(new View.OnClickListener()
@@ -169,13 +169,13 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
         if(this.viewModel.note != null)
         {
             this.textViewNote.setText(this.viewModel.note.getText());
-            this.frameLayoutNote.setVisibility(View.VISIBLE);
+            this.coordinatorLayoutNote.setVisibility(View.VISIBLE);
             this.showParkOverviewFragmentInteraction.setFloatingActionButtonVisibility(false);
         }
         else
         {
             this.showParkOverviewFragmentInteraction.setFloatingActionButtonVisibility(true);
-            this.frameLayoutNote.setVisibility(View.GONE);
+            this.coordinatorLayoutNote.setVisibility(View.GONE);
         }
     }
 
@@ -188,7 +188,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     {
         PopupMenuAgent.getMenu()
                 .add(PopupItem.DELETE_ELEMENT)
-                .show(getContext(), this.frameLayoutNote);
+                .show(getContext(), this.coordinatorLayoutNote);
 
         return true;
     }
@@ -239,7 +239,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
             Log.i(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.handleActionConfirmed:: deleting %s...", this.viewModel.note));
 
             this.textViewNote.setText("");
-            this.frameLayoutNote.setVisibility(View.GONE);
+            this.coordinatorLayoutNote.setVisibility(View.GONE);
             this.showParkOverviewFragmentInteraction.setFloatingActionButtonVisibility(true);
 
             this.viewModel.note.delete();

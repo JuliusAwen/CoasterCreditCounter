@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight
+<de.juliusawen.coastercreditcounter.userInterface.customViews.CoordinatorLayoutWithMaxHeight
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/frameLayoutWithMaxHeightNote"
     android:layout_width="match_parent"
@@ -24,4 +24,4 @@
 
     </ScrollView>
 
-</de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight>
+</de.juliusawen.coastercreditcounter.userInterface.customViews.CoordinatorLayoutWithMaxHeight>

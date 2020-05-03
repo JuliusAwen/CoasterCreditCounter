@@ -43,5 +43,4 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }
