@@ -74,7 +74,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 {
                     VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
-                    App.content.addElement(visitedAttraction);
+                    super.markForCreation(visitedAttraction);
                 }
 
                 super.markForUpdate(this.viewModel.visit);
@@ -192,11 +192,9 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit.getFullName()));
 
-        super.markForDeletion(this.viewModel.existingVisit, true);
-        this.viewModel.existingVisit.deleteElementAndDescendants();
-        this.viewModel.existingVisit = null;
-
         super.markForUpdate(this.viewModel.park);
+        super.markForDeletion(this.viewModel.existingVisit, true);
+        this.viewModel.existingVisit = null;
     }
 
     private void showPickAttractionsDialog()

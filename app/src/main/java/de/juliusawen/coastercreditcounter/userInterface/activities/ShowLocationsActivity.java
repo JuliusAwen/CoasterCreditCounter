@@ -381,7 +381,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
                         getString(R.string.alert_dialog_title_delete),
-                        getString(R.string.alert_dialog_message_confirm_delete, viewModel.longClickedElement.getName()),
+                        getString(R.string.alert_dialog_message_confirm_delete_with_children, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.DELETE,
@@ -493,10 +493,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: deleting %s...", viewModel.longClickedElement));
 
-                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
                 ShowLocationsActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
+                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
 
-                this.viewModel.longClickedElement.deleteElementAndDescendants();
                 updateContentRecyclerView();
                 invalidateOptionsMenu();
                 break;
@@ -508,8 +507,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
                 IElement parent = this.viewModel.longClickedElement.getParent();
 
-                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement);
                 ShowLocationsActivity.super.markForUpdate(parent);
+                ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement);
 
                 this.viewModel.longClickedElement.remove();
 

@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -22,7 +21,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Park
  * Children: none
  */
-public final class StockAttraction extends Attraction implements IOnSiteAttraction, IHasStatus
+public final class StockAttraction extends OnSiteAttraction implements IOnSiteAttraction
 {
     private Blueprint blueprint;
 
@@ -177,6 +176,8 @@ public final class StockAttraction extends Attraction implements IOnSiteAttracti
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
+            JsonTool.putChildren(jsonObject, this);
+
             jsonObject.put(Constants.JSON_STRING_BLUEPRINT, this.blueprint.getUuid());
             jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());

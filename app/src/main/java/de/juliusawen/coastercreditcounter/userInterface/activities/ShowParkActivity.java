@@ -31,6 +31,8 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 
+import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
+
 public class ShowParkActivity extends BaseActivity
         implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
 {
@@ -224,9 +226,9 @@ public class ShowParkActivity extends BaseActivity
     }
 
     @Override
-    public void markForDeletion(IElement elementToDelete)
+    public void markForDeletion(IElement elementToDelete, boolean deleteDescendants)
     {
-        super.markForDeletion(elementToDelete, true);
+        super.markForDeletion(elementToDelete, deleteDescendants);
     }
 
     @Override
@@ -317,6 +319,8 @@ public class ShowParkActivity extends BaseActivity
                             @Override
                             public void onClick(View view)
                             {
+                                Log.i(LOG_TAG, "ShowParkActivity.onClickFloatingActionButton:: FloatingActionButton clicked");
+
                                 Note note = viewModel.park.getNote();
                                 if(note != null)
                                 {

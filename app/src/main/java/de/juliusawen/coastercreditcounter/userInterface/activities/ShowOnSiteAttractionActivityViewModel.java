@@ -2,12 +2,12 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import androidx.lifecycle.ViewModel;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
-public class ShowParkOverviewFragmentViewModel extends ViewModel
+public class ShowOnSiteAttractionActivityViewModel extends ViewModel
 {
-    public Park park;
+    public IOnSiteAttraction onSiteAttraction;
 
     public OptionsMenuAgent optionsMenuAgent;
 }

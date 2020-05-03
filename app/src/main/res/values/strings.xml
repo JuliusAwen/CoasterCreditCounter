@@ -60,7 +60,8 @@
 
     <!--GENERIC DIALOG TEXTS-->
     <string name="alert_dialog_title_delete">DELETE</string>
-    <string name="alert_dialog_message_confirm_delete">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
+    <string name="alert_dialog_message_confirm_delete">Do you really want to delete \'%1$s\' permanently?</string>
+    <string name="alert_dialog_message_confirm_delete_with_children">Do you really want to delete \'%1$s\' and all of its children permanently?</string>
     <string name="alert_dialog_title_remove">REMOVE</string>
 
 
@@ -208,7 +209,6 @@
     <string name="title_show_visit">Visit</string>
     <string name="title_pick_visit">Pick Visit</string>
 
-
     <string name="error_visit_already_exists">Visit for that day already exists…</string>
 
     <string name="alert_dialog_title_visit_already_exists">VISIT ALREADY EXISTS</string>
@@ -224,6 +224,7 @@
 
     <!--ATTRACTIONS-->
     <string name="attractions">Attractions</string>
+    <string name="title_show_on_site_attraction">Attraction</string>
     <string name="title_pick_attractions">Pick Attractions</string>
     <string name="subtitle_attractions_to_add_to_visit">to add to your visit</string>
 
@@ -382,6 +383,7 @@
 
     <string name="help_text_show_park_overview">@string/help_text_not_yet_available</string>
     <string name="help_text_show_attractions">@string/help_text_not_yet_available</string>
+    <string name="help_text_show_on_site_attraction">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
 

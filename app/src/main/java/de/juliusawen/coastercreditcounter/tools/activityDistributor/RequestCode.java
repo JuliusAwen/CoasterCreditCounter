@@ -22,6 +22,7 @@ public enum RequestCode
     SHOW_LOCATION,
     SHOW_PARK,
     SHOW_VISIT,
+    SHOW_ATTRACTION,
 
     MANAGE_BLUEPRINTS,
     MANAGE_CREDIT_TYPES,

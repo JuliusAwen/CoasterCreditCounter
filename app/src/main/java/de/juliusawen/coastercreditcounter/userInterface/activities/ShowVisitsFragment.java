@@ -54,7 +54,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowVisitsFragmentViewModel viewModel;
-    private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
+    private ShowVisitsFragmentInteraction fragmentInteraction;
 
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
@@ -185,7 +185,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         if(context instanceof ShowVisitsFragmentInteraction)
         {
-            this.showVisitsFragmentInteraction = (ShowVisitsFragmentInteraction) context;
+            this.fragmentInteraction = (ShowVisitsFragmentInteraction) context;
         }
         else
         {
@@ -255,7 +255,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 AlertDialogFragment.newInstance(
                         R.drawable.ic_baseline_warning,
                         getString(R.string.alert_dialog_title_delete),
-                        getString(R.string.alert_dialog_message_confirm_delete, viewModel.longClickedElement.getName()),
+                        getString(R.string.alert_dialog_message_confirm_delete_with_children, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
                         getString(R.string.text_cancel),
                         RequestCode.DELETE,
@@ -297,7 +297,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                     else
                     {
                         ((Visit)viewModel.longClickedElement).setDateAndAdjustName(viewModel.calendar);
-                        ShowVisitsFragment.this.showVisitsFragmentInteraction.markForUpdate(viewModel.longClickedElement);
+                        ShowVisitsFragment.this.fragmentInteraction.markForUpdate(viewModel.longClickedElement);
                         updateContentRecyclerView();
                     }
                 }
@@ -331,7 +331,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         {
             if(requestCode == RequestCode.DELETE)
             {
-                this.showVisitsFragmentInteraction.setFloatingActionButtonVisibility(false);
+                this.fragmentInteraction.setFloatingActionButtonVisibility(false);
 
                 ConfirmSnackbar.Show(
                         Snackbar.make(
@@ -349,14 +349,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        this.showVisitsFragmentInteraction.setFloatingActionButtonVisibility(true);
+        this.fragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
             Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
 
-            ShowVisitsFragment.this.showVisitsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
-            this.viewModel.longClickedElement.deleteElementAndDescendants();
+            ShowVisitsFragment.this.fragmentInteraction.markForDeletion(this.viewModel.longClickedElement, true);
             updateContentRecyclerView();
         }
     }
@@ -370,7 +369,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     public interface ShowVisitsFragmentInteraction
     {
         void setFloatingActionButtonVisibility(boolean isVisible);
-        void markForDeletion(IElement elementToDelete);
+        void markForDeletion(IElement elementToDelete, boolean deleteDescendants);
         void markForUpdate(IElement elementToDelete);
     }
 }

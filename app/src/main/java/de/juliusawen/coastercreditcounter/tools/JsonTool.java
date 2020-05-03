@@ -6,8 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
 public abstract class JsonTool
 {
@@ -52,6 +52,13 @@ public abstract class JsonTool
             e.printStackTrace();
 
             Log.e(Constants.LOG_TAG, String.format("JsonTool.putChildren:: creation for %s failed with JSONException [%s]", element, e.getMessage()));
+            throw e;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            Log.e(Constants.LOG_TAG, String.format("JsonTool.putChildren:: creation for %s failed with Exception [%s]", element, e.getMessage()));
             throw e;
         }
     }

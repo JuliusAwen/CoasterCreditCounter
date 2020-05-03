@@ -12,6 +12,9 @@
         <include
             layout="@layout/layout_note"/>
 
+        <include
+            layout="@layout/layout_bottom_spacer"/>
+
     </LinearLayout>
 
 </ScrollView>

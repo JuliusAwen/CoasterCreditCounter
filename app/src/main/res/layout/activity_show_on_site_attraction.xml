@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userInterface.activities.ShowVisitActivity">
+    tools:context=".userInterface.activities.ShowOnSiteAttractionActivity">
 
     <include
         layout="@layout/layout_floating_action_button"/>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,11 +17,11 @@
         <include
             layout="@layout/layout_toolbar"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewShowVisit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+        <include
+            layout="@layout/layout_note"/>
+
+        <include
+            layout="@layout/layout_bottom_spacer"/>
 
     </LinearLayout>
 

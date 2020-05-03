@@ -353,7 +353,6 @@ public class ManageBlueprintsActivity extends BaseActivity implements AlertDialo
             }
 
             super.markForDeletion(this.viewModel.longClickedElement, true);
-            this.viewModel.longClickedElement.deleteElementAndDescendants();
             this.updateContentRecyclerView(true);
         }
     }

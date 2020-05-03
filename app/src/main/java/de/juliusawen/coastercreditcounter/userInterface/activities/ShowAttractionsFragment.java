@@ -38,7 +38,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSite
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
@@ -60,8 +59,7 @@ import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowAttractionsFragmentViewModel viewModel;
-    private ShowAttractionsFragmentInteraction showAttractionsFragmentInteraction;
-    private RecyclerView recyclerView;
+    private ShowAttractionsFragmentInteraction fragmentInteraction;
 
     public static ShowAttractionsFragment newInstance(String uuidString)
     {
@@ -82,7 +80,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
         if(context instanceof ShowAttractionsFragment.ShowAttractionsFragmentInteraction)
         {
-            this.showAttractionsFragmentInteraction = (ShowAttractionsFragment.ShowAttractionsFragmentInteraction) context;
+            this.fragmentInteraction = (ShowAttractionsFragment.ShowAttractionsFragmentInteraction) context;
         }
         else
         {
@@ -130,9 +128,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
     @Override
@@ -154,7 +152,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     {
                         this.viewModel.park.reorderChildren(resultElements);
 
-                        this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
+                        this.fragmentInteraction.markForUpdate(resultElement.getParent());
 
                         this.updateContentRecyclerView(true)
                                 .expandGroupHeaderOfElement(resultElement)
@@ -182,7 +180,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                             }
                         }
 
-                        this.showAttractionsFragmentInteraction.markForUpdate(resultElement.getParent());
+                        this.fragmentInteraction.markForUpdate(resultElement.getParent());
                     }
                     this.viewModel.formerAttractionName = null;
                     this.updateContentRecyclerView(true)
@@ -258,7 +256,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                 if(element.isAttraction())
                 {
-                    Toaster.notYetImplemented(getContext());
+                    ActivityDistributor.startActivityShow(getContext(), RequestCode.SHOW_ATTRACTION, element);
                 }
                 else if(element.isGroupHeader())
                 {
@@ -342,7 +340,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         {
             if(requestCode == RequestCode.DELETE)
             {
-                this.showAttractionsFragmentInteraction.setFloatingActionButtonVisibility(false);
+                this.fragmentInteraction.setFloatingActionButtonVisibility(false);
                 ConfirmSnackbar.Show(
                         Snackbar.make(
                                 getActivity().findViewById(android.R.id.content),
@@ -359,7 +357,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
-        this.showAttractionsFragmentInteraction.setFloatingActionButtonVisibility(true);
+        this.fragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
@@ -376,8 +374,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 }
             }
 
-            this.showAttractionsFragmentInteraction.markForDeletion(this.viewModel.longClickedElement);
-            this.viewModel.longClickedElement.deleteElementAndDescendants();
+            this.fragmentInteraction.markForDeletion(this.viewModel.longClickedElement, true);
             updateContentRecyclerView(true);
         }
     }
@@ -402,6 +399,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         void setFloatingActionButtonVisibility(boolean isVisible);
         void markForUpdate(IElement elementToUpdate);
-        void markForDeletion(IElement elemtToDelete);
+        void markForDeletion(IElement elementToDelete, boolean deleteDescendants);
     }
 }

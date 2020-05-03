@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Parent: Park
  * Children: none
  */
-public final class CustomAttraction extends Attraction implements IOnSiteAttraction
+public final class CustomAttraction extends OnSiteAttraction implements IOnSiteAttraction
 {
     private CustomAttraction(String name, int untrackedRideCount, UUID uuid)
     {
@@ -82,6 +82,8 @@ public final class CustomAttraction extends Attraction implements IOnSiteAttract
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
+            JsonTool.putChildren(jsonObject, this);
+
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());

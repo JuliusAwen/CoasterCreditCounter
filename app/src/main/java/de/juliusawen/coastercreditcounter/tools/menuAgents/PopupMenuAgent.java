@@ -158,6 +158,7 @@ public class PopupMenuAgent
             Log.e(Constants.LOG_TAG, String.format("PopupMenuAgent.show:: [%s] does not implement IPopupMenuAgentClient", context.getClass().getSimpleName()));
         }
     }
+
     private boolean isGroup(PopupItem item)
     {
         return this.groupByItem.containsValue(item);

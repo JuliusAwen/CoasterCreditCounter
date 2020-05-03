@@ -52,8 +52,6 @@ import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowVisitActivityViewModel viewModel;
-    private RecyclerView recyclerView;
-
 
     protected void setContentView()
     {
@@ -78,6 +76,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+
+        super.createFloatingActionButton();
+        this.decorateFloatingActionButton();
     }
 
     @Override
@@ -94,9 +95,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 .addIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener())
                 .addDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
 
-        this.recyclerView = findViewById(R.id.recyclerViewShowVisit);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
         if(Visit.isCurrentVisit(this.viewModel.visit))
         {
@@ -112,13 +113,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
         }
 
-        super.createFloatingActionButton();
-        this.decorateFloatingActionButton();
         this.handleFloatingActionButtonVisibility();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.resume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
 
-        this.decorateFloatingActionButton();
     }
 
     @Override
@@ -237,7 +235,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             @Override
             public void onClick(View view)
             {
-                Log.i(LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i(LOG_TAG, "ShowVisitActivity.onClickFloatingActionButton:: FloatingActionButton clicked");
 
                 ActivityDistributor.startActivityPickForResult(
                         ShowVisitActivity.this,
@@ -400,7 +398,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         Log.i(LOG_TAG, String.format("ShowVisitActivity.removeVisitedAttraction:: removing %s...", viewModel.longClickedElement));
 
         super.markForUpdate(this.viewModel.longClickedElement.getParent());
-        this.viewModel.longClickedElement.deleteElementAndDescendants();
+        super.markForDeletion(this.viewModel.longClickedElement, true);
         updateContentRecyclerView(true);
         this.handleFloatingActionButtonVisibility();
     }

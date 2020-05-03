@@ -468,14 +468,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return this;
     }
 
-    protected void createFloatingActionButton()
+    public void createFloatingActionButton()
     {
         Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
-    protected void setFloatingActionButtonIcon(Drawable icon)
+    public void setFloatingActionButtonIcon(Drawable icon)
     {
         Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonIcon:: setting FloatingActionButton icon...");
         if(this.floatingActionButton != null)
@@ -485,7 +485,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonOnClickListener:: setting FloatingActionButton onClickListener...");
 
@@ -496,7 +496,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void setFloatingActionButtonVisibility(boolean isVisible)
+    public void setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.floatingActionButton != null)
         {
@@ -595,12 +595,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
             this.viewModel.elementsToCreate.add(element);
-            App.content.addElement(element);
         }
         else
         {
             Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s is not persistable", element));
         }
+
+        App.content.addElement(element);
     }
 
     protected void markForUpdate(List<IElement> elements)
@@ -629,8 +630,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         this.markForDeletion(element, false);
     }
 
+    private IElement originToDelete;
     protected void markForDeletion(IElement element, boolean deleteDescendants)
     {
+        if(this.originToDelete == null)
+        {
+            this.originToDelete = element;
+        }
+
         if(element.isPersistable())
         {
             Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
@@ -650,6 +657,19 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         else
         {
             Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s] is not persistable", element));
+        }
+
+        if(deleteDescendants)
+        {
+            if(this.originToDelete != null && this.originToDelete.equals(element))
+            {
+                element.deleteElementAndDescendants();
+                this.originToDelete = null;
+            }
+        }
+        else
+        {
+            element.delete();
         }
 
         App.content.removeElement(element);

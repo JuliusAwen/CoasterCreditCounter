@@ -28,6 +28,7 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropert
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowLocationsActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.ShowOnSiteAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.SortElementsActivity;
@@ -54,6 +55,10 @@ public abstract class ActivityDistributor
 
             case SHOW_VISIT:
                 intent = new Intent(context, ShowVisitActivity.class);
+                break;
+
+            case SHOW_ATTRACTION:
+                intent = new Intent(context, ShowOnSiteAttractionActivity.class);
                 break;
         }
 

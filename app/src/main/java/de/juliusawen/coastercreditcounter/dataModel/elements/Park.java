@@ -20,6 +20,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  */
 public final class Park extends Element implements IHasEvents, IHasNote, IPersistable
 {
+    private Note note;
+
     private Park(String name, UUID uuid)
     {
         super(name, uuid);
@@ -44,7 +46,23 @@ public final class Park extends Element implements IHasEvents, IHasNote, IPersis
     @Override
     public Note getNote()
     {
-        return this.hasChildrenOfType(Note.class) ? this.getChildrenAsType(Note.class).get(0) : null;
+        if(this.note == null && this.hasChildrenOfType(Note.class))
+        {
+            this.note = this.getChildrenAsType(Note.class).get(0);
+        }
+        return this.note;
+    }
+
+    @Override
+    public void deleteChild(IElement child)
+    {
+        if(child.equals(this.note))
+        {
+            Log.v(Constants.LOG_TAG, String.format("Park.deleteChild:: setting private field %s on %s to NULL", this.note, this));
+            this.note = null;
+        }
+
+        super.deleteChild(child);
     }
 
     public JSONObject toJson() throws JSONException

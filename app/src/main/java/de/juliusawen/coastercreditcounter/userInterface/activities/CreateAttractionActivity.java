@@ -289,6 +289,8 @@ public class CreateAttractionActivity extends BaseActivity
         this.viewModel.name = this.textInputEditTextAttractionName.getText().toString();
         if(this.tryCreateAttraction())
         {
+            super.markForCreation(this.viewModel.attraction);
+
             if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
@@ -296,7 +298,6 @@ public class CreateAttractionActivity extends BaseActivity
                 super.markForUpdate(viewModel.parentPark);
             }
 
-            super.markForCreation(this.viewModel.attraction);
             returnResult(RESULT_OK);
         }
         else
