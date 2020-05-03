@@ -186,6 +186,7 @@
 
     <!--LOCATIONS-->
     <string name="locations">Locations</string>
+    <string name="text_browse_locations">Browse Locations</string>
     <string name="title_edit_location">Edit Location</string>
     <string name="subtitle_create_location">create location</string>
     <string name="hint_enter_location_name">Enter location name</string>

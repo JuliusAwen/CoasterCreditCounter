@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private TextView textViewTotalCoasterCreditCount;
     private TextView textViewTotalCoasterRidesCount;
 
-    Toast clickBackAgainToExitToast;
+    private Toast clickBackAgainToExitToast;
 
     protected void setContentView()
     {
@@ -79,6 +80,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         super.createToolbar()
                 .addToolbarMenuIcon()
                 .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+
+        this.decorateButtonBrowseLocations();
     }
 
     @Override
@@ -223,6 +226,26 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return super.handleOptionsItemSelected(item);
     }
 
+    private void decorateButtonBrowseLocations()
+    {
+        Button buttonShowLocations = findViewById(R.id.buttonNavigationHub_BrowseLocations);
+
+        buttonShowLocations.setText(R.string.text_browse_locations);
+        buttonShowLocations.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                onButtonBrowseLocationsClick();
+            }
+        });
+    }
+
+    private void onButtonBrowseLocationsClick()
+    {
+        this.startActivityShowLocations();
+    }
+
     private void setStatistics()
     {
         Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
@@ -290,7 +313,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 case R.id.navigationItem_BrowseLocations:
                 {
                     Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseLocations> selected");
-                    ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
+                    this.startActivityShowLocations();
                     break;
                 }
 
@@ -357,6 +380,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
 
         return true;
+    }
+
+    private void startActivityShowLocations()
+    {
+        ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
     }
 
     private void launchPickImportFileLocationIntent()
