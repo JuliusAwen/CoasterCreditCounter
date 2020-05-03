@@ -55,7 +55,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 {
     private ShowVisitsFragmentViewModel viewModel;
     private ShowVisitsFragmentInteraction showVisitsFragmentInteraction;
-    private RecyclerView recyclerView;
 
     public static ShowVisitsFragment newInstance(String parkUuid)
     {
@@ -109,9 +108,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        this.recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
     }
 
     @Override
@@ -150,8 +149,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         this.viewModel.optionsMenuAgent
                 .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.hasChildren() && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.hasChildren() && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
+                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
     }
 
