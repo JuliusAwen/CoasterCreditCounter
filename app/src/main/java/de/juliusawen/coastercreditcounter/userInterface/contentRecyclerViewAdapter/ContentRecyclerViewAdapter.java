@@ -555,7 +555,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             //indentLayout based on generation
             int padding = ConvertTool.convertDpToPx(
-                    (int)(App.getContext().getResources().getDimension(R.dimen.expand_toggle_padding_factor) / App.getContext().getResources().getDisplayMetrics().density))
+                    (int)(App.getContext().getResources().getDimension(R.dimen.standard_padding) / App.getContext().getResources().getDisplayMetrics().density))
                     * generation;
 
             viewHolder.linearLayoutItem.setPadding(padding, 0, padding, 0);

@@ -7,4 +7,5 @@
     android:layout_gravity="end|bottom"
     android:layout_margin="16dp"
     android:backgroundTint="@color/colorPrimary"
-    android:visibility="invisible"/>
+    android:visibility="invisible"
+    android:elevation="8dp"/>

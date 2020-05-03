@@ -15,7 +15,7 @@
         android:layout_gravity="start"
         android:background="@color/design_default_color_background"
         android:layout_margin="1dp"
-        android:padding="6dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/textViewNote"

@@ -239,6 +239,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 onButtonBrowseLocationsClick();
             }
         });
+
+        buttonShowLocations.setVisibility(View.VISIBLE); //gone until now for clean initialization
     }
 
     private void onButtonBrowseLocationsClick()
