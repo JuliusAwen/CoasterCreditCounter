@@ -46,6 +46,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
@@ -1241,7 +1242,19 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
-    public int fetchTotalCreditsCount()
+    public StatisticsGlobalTotals fetchStatisticsGlobalTotals()
+    {
+        StatisticsGlobalTotals statisticsGlobalTotals = new StatisticsGlobalTotals();
+
+        statisticsGlobalTotals.credits = this.fetchTotalCreditsCount();
+        statisticsGlobalTotals.rides = this.fetchTotalRideCount();
+        statisticsGlobalTotals.visits = this.fetchTotalVisits();
+        statisticsGlobalTotals.parksVisited = this.fetchTotalVisitedParksCount();
+
+        return statisticsGlobalTotals;
+    }
+
+    private int fetchTotalCreditsCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -1260,8 +1273,8 @@ public class JsonHandler implements IDatabaseWrapper
         return totalCreditsCount;
     }
 
-    @Override
-    public int fetchTotalCreditsRideCount()
+
+    private int fetchTotalRideCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -1277,25 +1290,33 @@ public class JsonHandler implements IDatabaseWrapper
         return totalCreditsRideCount;
     }
 
-    @Override
-    public int fetchTotalVisits()
+    private List<IOnSiteAttraction> getAllCreditableAttractions()
+    {
+        List<IOnSiteAttraction> creditableAttractions = new ArrayList<>();
+
+        for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
+        {
+            if(!attraction.getCreditType().isDefault())
+            {
+                creditableAttractions.add(attraction);
+            }
+        }
+
+        return creditableAttractions;
+    }
+
+    private int fetchTotalVisits()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        int totalVisits = 0;
-
-        for(IElement visit : App.content.getContentOfType(Visit.class))
-        {
-            totalVisits += 1;
-        }
+        int totalVisits = App.content.getContentOfType(Visit.class).size();
 
         Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalVisits:: [%d] visits found - took [%d]ms", totalVisits, stopwatch.stop()));
 
         return totalVisits;
     }
 
-    @Override
-    public int fetchTotalVisitedParksCount()
+    private int fetchTotalVisitedParksCount()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -1335,20 +1356,5 @@ public class JsonHandler implements IDatabaseWrapper
         Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisits:: fetching current visits took [%d]ms", stopwatch.stop()));
 
         return currentVisits;
-    }
-
-    private List<IOnSiteAttraction> getAllCreditableAttractions()
-    {
-        List<IOnSiteAttraction> creditableAttractions = new ArrayList<>();
-
-        for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
-        {
-            if(!attraction.getCreditType().isDefault())
-            {
-                creditableAttractions.add(attraction);
-            }
-        }
-
-        return creditableAttractions;
     }
 }

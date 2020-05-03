@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class NavigationHubActivityViewModel extends ViewModel
@@ -23,4 +24,5 @@ public class NavigationHubActivityViewModel extends ViewModel
     public OptionsMenuAgent optionsMenuAgent;
 
     public List<Visit> currentVisits;
+    public StatisticsGlobalTotals statisticsGlobalTotals;
 }

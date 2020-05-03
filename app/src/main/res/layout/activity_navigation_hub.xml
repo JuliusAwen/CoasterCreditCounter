@@ -17,57 +17,25 @@
         <include
             layout="@layout/layout_toolbar"/>
 
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="@dimen/standard_padding"
-            android:paddingEnd="@dimen/standard_padding"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/buttonNavigationHub_BrowseLocations"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="16sp"
-                android:elevation="6dp"
-                android:visibility="gone"/>
+                android:paddingStart="@dimen/standard_padding"
+                android:paddingEnd="@dimen/standard_padding"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewNavigationHub_totalVisitedParksCount"
-                style="@style/StandardTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginStart="12dp"
-                android:gravity="start"
-                android:layout_gravity="start"
-                android:textStyle="bold"/>
+                <include
+                    layout="@layout/layout_statistics_global_totals"/>
 
-            <TextView
-                android:id="@+id/textViewNavigationHub_totalCoasterCreditsCount"
-                style="@style/StandardTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginStart="12dp"
-                android:gravity="start"
-                android:layout_gravity="start"
-                android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/textViewNavigationHub_totalCoasterRidesCount"
-                style="@style/StandardTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginStart="12dp"
-                android:gravity="start"
-                android:layout_gravity="start"
-                android:textStyle="bold"/>
+                
+            </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

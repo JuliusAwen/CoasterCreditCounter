@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.persistence.databaseMock;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
@@ -1890,38 +1892,23 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
-    public int fetchTotalCreditsCount()
+    public StatisticsGlobalTotals fetchStatisticsGlobalTotals()
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalCreditsCount:: empty implementation to satisfy interface");
-        return 0;
-    }
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchStatisticsGlobalTotals:: empty mock implementation to satisfy interface");
 
-    @Override
-    public int fetchTotalCreditsRideCount()
-    {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalCreditsRideCount:: empty implementation to satisfy interface");
-        return 0;
-    }
+        StatisticsGlobalTotals statisticsGlobalTotals = new StatisticsGlobalTotals();
+        statisticsGlobalTotals.visits = -1;
+        statisticsGlobalTotals.credits = -1;
+        statisticsGlobalTotals.rides = -1;
 
-    @Override
-    public int fetchTotalVisitedParksCount()
-    {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalVisitedParksCount:: empty implementation to satisfy interface");
-        return 0;
-    }
-
-    @Override
-    public int fetchTotalVisits()
-    {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchTotalVisits:: empty implementation to satisfy interface");
-        return 0;
+        return statisticsGlobalTotals;
     }
 
     @Override
     public List<Visit> fetchCurrentVisits()
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisits:: empty implementation to satisfy interface");
-        return null;
+        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisits:: empty mock implementation to satisfy interface");
+        return new ArrayList<>();
     }
 }
 

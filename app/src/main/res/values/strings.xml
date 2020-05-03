@@ -33,8 +33,12 @@
 
     <string name="text_blueprint_group_header_name">Blueprints</string>
 
+
+
+    <!--STATISTICS-->
     <string name="text_total_coaster_credits"><b>Total credits: %1$d</b></string>
     <string name="text_total_credit_rides">Total rides: %1$d</string>
+    <string name="text_total_visits">Total visits: %1$d</string>
     <string name="text_total_parks_visited">Total parks visited: %1$d</string>
 
 

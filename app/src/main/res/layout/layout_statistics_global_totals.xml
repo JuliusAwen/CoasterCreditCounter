@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frameLayoutStatisticsGlobalTotals"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@color/grey"
+    android:elevation="4dp"
+    android:visibility="invisible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/design_default_color_background"
+        android:layout_margin="1dp"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/StatsFeedTextView"
+            android:id="@+id/textViewStatisticsGlobalTotals_totalCoasterCreditsCount"/>
+
+        <TextView
+            style="@style/StatsFeedTextView"
+            android:id="@+id/textViewStatisticsGlobalTotals_totalCoasterRidesCount"/>
+
+        <TextView
+            style="@style/StatsFeedTextView"
+            android:id="@+id/textViewStatisticsGlobalTotals_totalVisitsCount"/>
+
+        <TextView
+            style="@style/StatsFeedTextView"
+            android:id="@+id/textViewStatisticsGlobalTotals_totalVisitedParksCount"/>
+
+    </LinearLayout>
+
+</FrameLayout>

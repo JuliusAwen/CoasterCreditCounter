@@ -27,7 +27,6 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 
 public class DeveloperOptionsActivity extends BaseActivity
 {
-
     protected enum Mode
     {
         SHOW_BUILD_CONFIG,

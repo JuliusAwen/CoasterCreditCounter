@@ -10,7 +10,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +30,9 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistics;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -47,9 +50,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private TextView textViewTotalVisitedParksCount;
-    private TextView textViewTotalCoasterCreditCount;
+    private TextView textViewTotalCoasterCreditsCount;
+    private TextView textViewTotalVisitsCount;
     private TextView textViewTotalCoasterRidesCount;
+    private TextView textViewTotalVisitedParksCount;
 
     private Toast clickBackAgainToExitToast;
 
@@ -67,9 +71,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        this.textViewTotalVisitedParksCount = findViewById(R.id.textViewNavigationHub_totalVisitedParksCount);
-        this.textViewTotalCoasterCreditCount = findViewById(R.id.textViewNavigationHub_totalCoasterCreditsCount);
-        this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewNavigationHub_totalCoasterRidesCount);
+        this.textViewTotalCoasterCreditsCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalCoasterCreditsCount);
+        this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalCoasterRidesCount);
+        this.textViewTotalVisitsCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalVisitsCount);
+        this.textViewTotalVisitedParksCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalVisitedParksCount);
 
         this.drawerLayout = findViewById(R.id.navigationDrawer);
         this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
@@ -81,7 +86,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 .addToolbarMenuIcon()
                 .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
 
-        this.decorateButtonBrowseLocations();
+        this.createStatisticsGlobalTotals();
     }
 
     @Override
@@ -97,7 +102,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
         this.closeNavigationDrawer();
 
-        this.setStatistics();
+        this.setStatisticsGlobalTotals();
     }
 
     @Override
@@ -226,35 +231,52 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         return super.handleOptionsItemSelected(item);
     }
 
-    private void decorateButtonBrowseLocations()
+    private void createStatisticsGlobalTotals()
     {
-        Button buttonShowLocations = findViewById(R.id.buttonNavigationHub_BrowseLocations);
+        FrameLayout layoutStatisticsGlobalTotals = findViewById(R.id.frameLayoutStatisticsGlobalTotals);
 
-        buttonShowLocations.setText(R.string.text_browse_locations);
-        buttonShowLocations.setOnClickListener(new View.OnClickListener()
+        layoutStatisticsGlobalTotals.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                onButtonBrowseLocationsClick();
+                onLayoutStatisticsGlobalTotalsClick();
             }
         });
 
-        buttonShowLocations.setVisibility(View.VISIBLE); //gone until now for clean initialization
+        layoutStatisticsGlobalTotals.setVisibility(View.VISIBLE); //gone until now for clean initialization
     }
 
-    private void onButtonBrowseLocationsClick()
+    private void onLayoutStatisticsGlobalTotalsClick()
     {
         this.startActivityShowLocations();
     }
 
-    private void setStatistics()
+    private void setStatisticsGlobalTotals()
     {
-        Log.d(LOG_TAG, "NavigationHubActivity.setStatistics:: setting statistics");
+        super.getStatistics(StatisticType.GLOBAL_TOTALS);
+    }
 
-        this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, App.persistence.fetchTotalVisitedParksCount()));
-        this.textViewTotalCoasterCreditCount.setText(getString(R.string.text_total_coaster_credits, App.persistence.fetchTotalCreditsCount()));
-        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, App.persistence.fetchTotalCreditsRideCount()));
+    @Override
+    protected void decorateStatistics(StatisticType statisticType, IStatistics statistics)
+    {
+        switch(statisticType)
+        {
+            case GLOBAL_TOTALS:
+                this.decorateStatisticsGlobalTotals((StatisticsGlobalTotals)statistics);
+                break;
+        }
+    }
+
+
+    private void decorateStatisticsGlobalTotals(StatisticsGlobalTotals statisticsGlobalTotals)
+    {
+        Log.d(LOG_TAG, "NavigationHubActivity.decorateStatisticsGlobalTotals:: setting global totals");
+
+        this.textViewTotalCoasterCreditsCount.setText(getString(R.string.text_total_coaster_credits, statisticsGlobalTotals.credits));
+        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, statisticsGlobalTotals.rides));
+        this.textViewTotalVisitsCount.setText(getString(R.string.text_total_visits, statisticsGlobalTotals.visits));
+        this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, statisticsGlobalTotals.parksVisited));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -598,7 +620,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     if(App.content.restoreBackup(true))
                     {
                         Toaster.makeShortToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
-                        setStatistics();
+                        setStatisticsGlobalTotals();
                     }
                     else
                     {

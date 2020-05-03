@@ -28,6 +28,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistics;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -566,6 +568,60 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    protected void getStatistics(StatisticType statisticType)
+    {
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: fetching statistics of type [%s]", statisticType));
+
+        this.showProgressBar(true);
+        new StatisticsProvider().execute(this, statisticType);
+    }
+
+    private static class StatisticsProvider extends AsyncTask<Object, Void, BaseActivity>
+    {
+        private StatisticType statisticType;
+        private IStatistics statistics;
+
+        @Override
+        protected BaseActivity doInBackground(Object... params)
+        {
+            BaseActivity baseActivity = (BaseActivity)params[0];
+            this.statisticType = (StatisticType)params[1];
+
+            switch(this.statisticType)
+            {
+                case GLOBAL_TOTALS:
+                    this.statistics = App.persistence.fetchStatisticsGlobalTotals();
+                    break;
+
+                default:
+                    break;
+            }
+
+            return baseActivity;
+        }
+
+        @Override
+        protected void onPostExecute(BaseActivity baseActivity)
+        {
+            super.onPostExecute(baseActivity);
+            baseActivity.provideStatistics(this.statisticType, this.statistics);
+        }
+    }
+
+    private void provideStatistics(StatisticType statisticType, IStatistics statistics)
+    {
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: statistics of type [%s] fetched - calling decorateStatistics(...) in [%s]",
+                statisticType, this.getClass().getSimpleName()));
+
+        this.showProgressBar(false);
+        this.decorateStatistics(statisticType, statistics);
+    }
+
+    protected void decorateStatistics(StatisticType statisticType, IStatistics statistics)
+    {
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.decorateStatistics:: [%s] does not override decorateStatistics(...)", this.getClass().getSimpleName()));
     }
 
     protected void showProgressBar(boolean show)
