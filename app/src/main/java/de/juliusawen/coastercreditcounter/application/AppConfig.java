@@ -17,7 +17,7 @@ public class AppConfig
 
     //below is only working when isDebugBuild = true
 
-    private final boolean resetToDefaultContentOnStartup = true; // // use mocked default content on startup? (OVERRIDES existing content!)
+    private final boolean resetToDefaultContentOnStartup = false; // // use mocked default content on startup? (OVERRIDES existing content!)
     private final boolean resetToDefaultPreferencesOnStartup = false; // use default preferences on startup? (OVERWRITES existing preference file!)
     private final boolean alwaysImportFromDatabaseMock = false; // always import from database mock instead of export.json file?
 
