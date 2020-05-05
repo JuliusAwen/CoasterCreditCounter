@@ -10,8 +10,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasNot
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 
 /**
- * Abstract base class for all OnSiteAttractions containing all base methods.
- * Can be CustomAttraction or StockAttraction
+ * Abstract base class for all OnSiteAttractions containing all base methods.<br>
+ * Can be CustomAttraction<br>
  */
 public abstract class OnSiteAttraction extends Attraction implements IOnSiteAttraction, IHasNote
 {

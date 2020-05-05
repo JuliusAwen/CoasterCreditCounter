@@ -12,10 +12,10 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Individual attraction located at a particular park
- *
- * Parent: Park
- * Children: Note
+ * Individual attraction located at a particular park<br>
+ * <br>
+ * Parent: Park<br>
+ * Children: Note<br>
  */
 public final class CustomAttraction extends OnSiteAttraction implements IOnSiteAttraction
 {
