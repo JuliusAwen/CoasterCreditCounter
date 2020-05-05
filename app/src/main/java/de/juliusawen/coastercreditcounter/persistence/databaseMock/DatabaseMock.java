@@ -2078,6 +2078,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllStatuses.add(ClosedForConversion);
             AllStatuses.add(Defunct);
             AllStatuses.add(Converted);
+            AllStatuses.add(UnderConstruction);
         }
     }
 
