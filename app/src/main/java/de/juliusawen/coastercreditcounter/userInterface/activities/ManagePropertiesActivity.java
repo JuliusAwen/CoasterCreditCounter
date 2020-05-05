@@ -93,9 +93,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             List<IElement> elements;
-            HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-            childTypesToExpand.add(IAttraction.class);
-
             switch(this.viewModel.propertyTypeToManage)
             {
                 case CREDIT_TYPE:
@@ -104,7 +101,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                                 this.viewModel.propertiesToSelectFrom,
-                                null,
+                                new HashSet<Class<? extends IElement>>(),
                                 false)
                                 .setTypefaceForContentType(CreditType.class, Typeface.BOLD);
                     }
@@ -119,7 +116,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                                 elements,
-                                childTypesToExpand)
+                                IAttraction.class)
                                 .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
@@ -133,7 +130,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                                 this.viewModel.propertiesToSelectFrom,
-                                null,
+                                new HashSet<Class<? extends IElement>>(),
                                 false)
                                 .setTypefaceForContentType(Category.class, Typeface.BOLD);
                     }
@@ -148,7 +145,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                                 elements,
-                                childTypesToExpand)
+                                IAttraction.class)
                                 .setTypefaceForContentType(Category.class, Typeface.BOLD)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
@@ -161,7 +158,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                                 this.viewModel.propertiesToSelectFrom,
-                                null,
+                                new HashSet<Class<? extends IElement>>(),
                                 false)
                                 .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
                     }
@@ -176,7 +173,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                                 elements,
-                                childTypesToExpand)
+                                IAttraction.class)
                                 .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
@@ -189,7 +186,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     {
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                                 this.viewModel.propertiesToSelectFrom,
-                                null,
+                                new HashSet<Class<? extends IElement>>(),
                                 false)
                                 .setTypefaceForContentType(Status.class, Typeface.BOLD);
                     }
@@ -204,7 +201,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                         this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                                 elements,
-                                childTypesToExpand)
+                                IAttraction.class)
                                 .setTypefaceForContentType(Status.class, Typeface.BOLD)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)

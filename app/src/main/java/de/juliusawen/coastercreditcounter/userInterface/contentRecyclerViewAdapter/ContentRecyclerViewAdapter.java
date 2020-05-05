@@ -88,10 +88,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.groupHeaderProvider = new GroupHeaderProvider();
         this.groupType = GroupType.NONE;
 
-        if(request.relevantChildTypesInSortOrder != null)
-        {
-            this.relevantChildTypesInSortOrder.addAll(request.relevantChildTypesInSortOrder);
-        }
+        this.relevantChildTypesInSortOrder.addAll(request.relevantChildTypesInSortOrder);
 
         this.setItems(request.elements);
 
@@ -285,6 +282,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         IElement item = this.items.get(position);
 
+        //maybe && item.getParent().isVisit?
         if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.COUNTABLE && (item.isVisitedAttraction()))
         {
             return ViewType.VISITED_ATTRACTION.ordinal();

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -261,10 +260,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     private ContentRecyclerViewAdapter createContentRecyclerView()
     {
-        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-        childTypesToExpand.add(VisitedAttraction.class);
-
-        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), childTypesToExpand)
+        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), VisitedAttraction.class)
                 .groupItems(GroupType.CATEGORY);
     }
 

@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -231,12 +230,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
-        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-        childTypesToExpand.add(Attraction.class);
-
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
-                childTypesToExpand)
+                Attraction.class)
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.ABOVE)
@@ -277,8 +273,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 {
                     PopupMenuAgent.getMenu()
                             .add(PopupItem.SORT_ATTRACTIONS)
-                            .setVisible(PopupItem.SORT_ATTRACTIONS,
-                                    viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1)
+                            .setVisible(PopupItem.SORT_ATTRACTIONS, viewModel.longClickedElement.getChildCountOfType(IAttraction.class) > 1)
                             .show(getContext(), view);
                 }
                 else

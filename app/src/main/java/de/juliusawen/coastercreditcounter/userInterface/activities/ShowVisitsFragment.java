@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -195,12 +194,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-        childTypesToExpand.add(Visit.class);
-
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                 this.viewModel.park.getChildrenOfType(Visit.class),
-                childTypesToExpand)
+                Visit.class)
                 .groupItems(GroupType.YEAR);
     }
 

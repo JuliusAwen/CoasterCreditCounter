@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -84,9 +83,6 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
                 {
-                    Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(CustomAttraction.class);
-
                     if(this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS)
                     {
                         this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
@@ -94,7 +90,7 @@ public class PickElementsActivity extends BaseActivity
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            childTypesToExpand,
+                            CustomAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
@@ -103,14 +99,11 @@ public class PickElementsActivity extends BaseActivity
 
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
-                    Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                    childTypesToExpand.add(IOnSiteAttraction.class);
-
                     this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            childTypesToExpand,
+                            IOnSiteAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
@@ -124,7 +117,7 @@ public class PickElementsActivity extends BaseActivity
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            null,
+                            new HashSet<Class<? extends IElement>>(),
                             false)
                             .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix)
                             .setTypefaceForContentType(IProperty.class, Typeface.BOLD);
@@ -135,7 +128,7 @@ public class PickElementsActivity extends BaseActivity
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            null,
+                            new HashSet<Class<? extends IElement>>(),
                             false)
                             .setTypefaceForContentType(Visit.class, Typeface.BOLD)
                             .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
@@ -146,7 +139,7 @@ public class PickElementsActivity extends BaseActivity
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            null,
+                            new HashSet<Class<? extends IElement>>(),
                             true)
                             .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                     break;

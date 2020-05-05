@@ -60,7 +60,10 @@ public class SortElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false)
+            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                    this.viewModel.elementsToSort,
+                    new HashSet<Class<? extends IElement>>(),
+                    false)
                     .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
 
