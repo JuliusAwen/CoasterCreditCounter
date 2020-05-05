@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -231,8 +231,8 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     private ContentRecyclerViewAdapter createContentRecyclerViewAdapter()
     {
         return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class),
-                Attraction.class)
+                this.viewModel.park.getChildrenOfType(OnSiteAttraction.class),
+                OnSiteAttraction.class)
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.ABOVE)
@@ -279,7 +279,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 else
                 {
                     PopupMenuAgent.getMenu()
-                            .add(PopupItem.EDIT_CUSTOM_ATTRACTION)
+                            .add(PopupItem.EDIT_ATTRACTION)
                             .add(PopupItem.DELETE_ATTRACTION)
                             .show(getContext(), view);
                 }
@@ -379,7 +379,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(resetContent)
         {
             Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(IOnSiteAttraction.class));
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(OnSiteAttraction.class));
         }
         else
         {

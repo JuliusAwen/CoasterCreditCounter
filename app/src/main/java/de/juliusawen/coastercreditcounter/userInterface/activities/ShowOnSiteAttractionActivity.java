@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -53,7 +53,7 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
 
         if(this.viewModel.onSiteAttraction == null)
         {
-            this.viewModel.onSiteAttraction = (IOnSiteAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
+            this.viewModel.onSiteAttraction = (OnSiteAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         if(this.viewModel.optionsMenuAgent == null)

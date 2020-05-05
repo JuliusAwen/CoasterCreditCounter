@@ -26,7 +26,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -197,7 +197,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 {
                     for(IElement element : resultElements)
                     {
-                        VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                        VisitedAttraction visitedAttraction = VisitedAttraction.create((OnSiteAttraction) element);
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
@@ -466,7 +466,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             visitedAttractions.add(visitedAttraction.getOnSiteAttraction());
         }
 
-        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(IOnSiteAttraction.class));
+        List<IAttraction> allAttractions = new LinkedList<IAttraction>(this.viewModel.visit.getParent().getChildrenAsType(OnSiteAttraction.class));
         allAttractions.removeAll(visitedAttractions);
 
         List<IAttraction> attractionsWithDefaultStatus = new LinkedList<>();

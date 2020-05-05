@@ -21,7 +21,7 @@ public enum PopupItem
     EDIT_ELEMENT(R.string.menu_item_edit),
     EDIT_LOCATION(R.string.menu_item_edit),
     EDIT_PARK(R.string.menu_item_edit),
-    EDIT_CUSTOM_ATTRACTION(R.string.menu_item_edit),
+    EDIT_ATTRACTION(R.string.menu_item_edit),
 
     DELETE_ELEMENT(R.string.menu_item_delete),
     DELETE_ATTRACTION(R.string.menu_item_delete),

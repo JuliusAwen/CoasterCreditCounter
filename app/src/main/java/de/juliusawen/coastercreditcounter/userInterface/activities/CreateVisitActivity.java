@@ -20,7 +20,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -72,7 +72,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 for(IElement element : resultElements)
                 {
-                    VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction) element);
+                    VisitedAttraction visitedAttraction = VisitedAttraction.create((OnSiteAttraction) element);
                     this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     super.markForCreation(visitedAttraction);
                 }
@@ -224,7 +224,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                     ActivityDistributor.startActivityPickForResult(
                             CreateVisitActivity.this,
                             RequestCode.PICK_ATTRACTIONS,
-                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(IOnSiteAttraction.class)));
+                            new ArrayList<IElement>(viewModel.park.getChildrenAsType(OnSiteAttraction.class)));
                 }
                 else if(which == DialogInterface.BUTTON_NEGATIVE)
                 {

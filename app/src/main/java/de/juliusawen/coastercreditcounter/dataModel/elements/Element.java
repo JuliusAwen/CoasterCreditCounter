@@ -11,8 +11,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Event;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
@@ -380,7 +380,7 @@ public abstract class Element implements IElement
 
     public boolean isCustomAttraction()
     {
-        return this instanceof CustomAttraction;
+        return this instanceof OnSiteAttraction;
     }
 
     public boolean isVisitedAttraction()

@@ -26,8 +26,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -342,7 +342,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
         {
-            IAttraction attraction = CustomAttraction.create(this.viewModel.name, this.viewModel.untrackedRideCount);
+            IAttraction attraction = OnSiteAttraction.create(this.viewModel.name, this.viewModel.untrackedRideCount);
             if(attraction != null)
             {
                 attraction.setCreditType(this.viewModel.creditType);

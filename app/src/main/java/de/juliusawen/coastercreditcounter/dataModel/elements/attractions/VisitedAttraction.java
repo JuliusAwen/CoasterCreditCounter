@@ -21,15 +21,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
  */
 public class VisitedAttraction extends Attraction
 {
-    private final IOnSiteAttraction onSiteAttraction;
+    private final OnSiteAttraction onSiteAttraction;
 
-    private VisitedAttraction(IOnSiteAttraction onSiteAttraction, UUID uuid)
+    private VisitedAttraction(OnSiteAttraction onSiteAttraction, UUID uuid)
     {
         super(onSiteAttraction.getName(), uuid);
         this.onSiteAttraction = onSiteAttraction;
     }
 
-    public static VisitedAttraction create(IOnSiteAttraction onSiteAttraction)
+    public static VisitedAttraction create(OnSiteAttraction onSiteAttraction)
     {
         VisitedAttraction visitedAttraction;
         visitedAttraction = new VisitedAttraction(onSiteAttraction, UUID.randomUUID());
@@ -39,7 +39,7 @@ public class VisitedAttraction extends Attraction
         return visitedAttraction;
     }
 
-    public IOnSiteAttraction getOnSiteAttraction()
+    public OnSiteAttraction getOnSiteAttraction()
     {
         return this.onSiteAttraction;
     }

@@ -171,7 +171,7 @@ public class ShowParkActivity extends BaseActivity
                         this.showAttractionsFragment.handlePopupItemDeleteAttractionClicked();
                         break;
 
-                    case EDIT_CUSTOM_ATTRACTION:
+                    case EDIT_ATTRACTION:
                         this.showAttractionsFragment.handlePopupItemEditAttractionClicked();
                         break;
 

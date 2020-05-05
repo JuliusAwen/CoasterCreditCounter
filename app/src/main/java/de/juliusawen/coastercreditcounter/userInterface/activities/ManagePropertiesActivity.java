@@ -25,8 +25,8 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
@@ -566,7 +566,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
-                List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(CustomAttraction.class));
+                List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(OnSiteAttraction.class));
                 List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
 
                 switch(viewModel.propertyTypeToManage)

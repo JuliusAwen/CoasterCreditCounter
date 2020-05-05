@@ -37,8 +37,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
@@ -515,7 +514,7 @@ public class JsonHandler implements IDatabaseWrapper
         LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
+            OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
             element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
@@ -621,7 +620,7 @@ public class JsonHandler implements IDatabaseWrapper
             Visit visit = (Visit)content.getContentByUuid(temporaryVisit.uuid);
             for(Map.Entry<UUID, Integer> rideCountsByAttractionUuid : temporaryVisit.rideCountsByAttraction.entrySet())
             {
-                VisitedAttraction visitedAttraction = VisitedAttraction.create((IOnSiteAttraction)content.getContentByUuid(rideCountsByAttractionUuid.getKey()));
+                VisitedAttraction visitedAttraction = VisitedAttraction.create((OnSiteAttraction)content.getContentByUuid(rideCountsByAttractionUuid.getKey()));
                 visitedAttraction.increaseTrackedRideCount(rideCountsByAttractionUuid.getValue());
 
                 visit.addChildAndSetParent(visitedAttraction);
@@ -709,9 +708,9 @@ public class JsonHandler implements IDatabaseWrapper
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Visit.class)));
 
-            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, content.getContentOfType(IOnSiteAttraction.class).isEmpty()
+            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, content.getContentOfType(OnSiteAttraction.class).isEmpty()
                     ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentAsType(IOnSiteAttraction.class)));
+                    : this.createJsonArray(content.getContentAsType(OnSiteAttraction.class)));
 
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPES, content.getContentOfType(CreditType.class).isEmpty()
                     ? JSONObject.NULL
@@ -1202,7 +1201,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         int totalCreditsCount = 0;
 
-        for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
+        for(OnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
             if((attraction).fetchTotalRideCount() > 0)
             {
@@ -1222,7 +1221,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         int totalCreditsRideCount = 0;
 
-        for(IOnSiteAttraction attraction : this.getAllCreditableAttractions())
+        for(OnSiteAttraction attraction : this.getAllCreditableAttractions())
         {
             totalCreditsRideCount += attraction.fetchTotalRideCount();
         }
@@ -1232,11 +1231,11 @@ public class JsonHandler implements IDatabaseWrapper
         return totalCreditsRideCount;
     }
 
-    private List<IOnSiteAttraction> getAllCreditableAttractions()
+    private List<OnSiteAttraction> getAllCreditableAttractions()
     {
-        List<IOnSiteAttraction> creditableAttractions = new ArrayList<>();
+        List<OnSiteAttraction> creditableAttractions = new ArrayList<>();
 
-        for(IOnSiteAttraction attraction : App.content.getContentAsType(IOnSiteAttraction.class))
+        for(OnSiteAttraction attraction : App.content.getContentAsType(OnSiteAttraction.class))
         {
             if(!attraction.getCreditType().isDefault())
             {
@@ -1272,7 +1271,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             else
             {
-                for(IOnSiteAttraction attraction : park.getChildrenAsType(IOnSiteAttraction.class))
+                for(OnSiteAttraction attraction : park.getChildrenAsType(OnSiteAttraction.class))
                 {
                     if(attraction.fetchTotalRideCount() > 0)
                     {

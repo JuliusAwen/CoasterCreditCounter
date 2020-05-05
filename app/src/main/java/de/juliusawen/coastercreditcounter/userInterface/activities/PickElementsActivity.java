@@ -21,9 +21,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -90,7 +89,7 @@ public class PickElementsActivity extends BaseActivity
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            CustomAttraction.class,
+                            OnSiteAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
@@ -103,7 +102,7 @@ public class PickElementsActivity extends BaseActivity
 
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
-                            IOnSiteAttraction.class,
+                            OnSiteAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
