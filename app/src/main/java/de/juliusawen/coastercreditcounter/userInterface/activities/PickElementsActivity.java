@@ -22,7 +22,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
@@ -45,7 +44,6 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 public class PickElementsActivity extends BaseActivity
 {
     private PickElementsActivityViewModel viewModel;
-    private RecyclerView recyclerView;
     private TextView textViewSelectOrDeselectAll;
 
     private LinearLayout linearLayoutSelectAll;
@@ -88,7 +86,6 @@ public class PickElementsActivity extends BaseActivity
                 {
                     Set<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                     childTypesToExpand.add(CustomAttraction.class);
-                    childTypesToExpand.add(Blueprint.class);
 
                     if(this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS)
                     {
@@ -160,9 +157,9 @@ public class PickElementsActivity extends BaseActivity
         if(this.viewModel.contentRecyclerViewAdapter != null)
         {
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-            this.recyclerView = findViewById(R.id.recyclerViewPickElements);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_pick_elements));
@@ -650,20 +647,6 @@ public class PickElementsActivity extends BaseActivity
                     case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                     case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                     case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                    {
-                        for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
-                        {
-                            if(!selectedElement.isOrphan() || selectedElement.isBlueprint())
-                            {
-                                selectedElementsWithoutOrphanElements.add(selectedElement);
-                            }
-                        }
-
-                        Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
-                        intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
-                        break;
-                    }
-
                     default:
                     {
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())

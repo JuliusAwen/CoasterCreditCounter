@@ -260,11 +260,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void decorateStatistics(StatisticType statisticType, IStatistics statistics)
     {
-        switch(statisticType)
+        if(statisticType == StatisticType.GLOBAL_TOTALS)
         {
-            case GLOBAL_TOTALS:
-                this.decorateStatisticsGlobalTotals((StatisticsGlobalTotals)statistics);
-                break;
+            this.decorateStatisticsGlobalTotals((StatisticsGlobalTotals) statistics);
         }
     }
 
@@ -362,16 +360,9 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     break;
                 }
 
-                case R.id.navigationItem_ManageBlueprints:
-                {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints> selected");
-                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_BLUEPRINTS);
-                    break;
-                }
-
                 case R.id.navigationItem_ManageModels:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageBlueprints/Models> selected");
+                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageModels> selected");
                     Toaster.notYetImplemented(NavigationHubActivity.this);
                     break;
                 }

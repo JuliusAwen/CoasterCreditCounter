@@ -37,10 +37,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IOnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
@@ -52,7 +50,6 @@ import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
 import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
-import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
@@ -60,10 +57,8 @@ public class JsonHandler implements IDatabaseWrapper
 {
     private LinkedList<TemporaryJsonElement> temporaryLocations = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryParks = new LinkedList<>();
-    private LinkedList<TemporaryJsonElement> temporaryBlueprints = new LinkedList<>();
-    private LinkedList<TemporaryJsonElement> temporaryOnSiteAttractions = new LinkedList<>();
+    private LinkedList<TemporaryJsonElement> temporaryAttractions = new LinkedList<>();
     private LinkedList<TemporaryJsonElement> temporaryVisits = new LinkedList<>();
-    private LinkedList<TemporaryJsonElement> temporaryNotes = new LinkedList<>();
 
     public boolean importContent(Content content, Uri uri, String importFileName)
     {
@@ -205,8 +200,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 this.buildNodeTree(this.temporaryLocations, content);
                 this.buildNodeTree(this.temporaryParks, content);
-                this.buildNodeTree(this.temporaryBlueprints, content);
-                this.buildNodeTree(this.temporaryOnSiteAttractions, content);
+                this.buildNodeTree(this.temporaryAttractions, content);
 
                 this.createVisitedAttractionsAndAddToVisits(this.temporaryVisits, content);
 
@@ -240,29 +234,37 @@ public class JsonHandler implements IDatabaseWrapper
                 return false;
             }
 
+
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_CREDIT_TYPES))
             {
                 List<TemporaryJsonElement> temporaryCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_CREDIT_TYPES));
-                content.addElements(ConvertTool.convertElementsToType(this.createCreditTypes(temporaryCategories), IElement.class));
+                content.addElements(this.createCreditTypes(temporaryCategories));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_CATEGORIES))
             {
                 List<TemporaryJsonElement> temporaryCategories = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_CATEGORIES));
-                content.addElements(ConvertTool.convertElementsToType(this.createCategories(temporaryCategories), IElement.class));
+                content.addElements(this.createCategories(temporaryCategories));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_MANUFACTURERS))
             {
                 List<TemporaryJsonElement> temporaryManufacturers = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MANUFACTURERS));
-                content.addElements(ConvertTool.convertElementsToType(this.createManufacturers(temporaryManufacturers), IElement.class));
+                content.addElements(this.createManufacturers(temporaryManufacturers));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
             {
                 List<TemporaryJsonElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
-                content.addElements(ConvertTool.convertElementsToType(this.createStatuses(temporaryStatuses), IElement.class));
+                content.addElements(this.createStatuses(temporaryStatuses));
             }
+
+            if(!jsonObjectContent.isNull(Constants.JSON_STRING_NOTES))
+            {
+                LinkedList<TemporaryJsonElement> temporaryNotes = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_NOTES));
+                content.addElements(this.createNotes(temporaryNotes));
+            }
+
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_LOCATIONS))
             {
@@ -278,31 +280,14 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_ATTRACTIONS))
             {
-                JSONObject jsonObjectAttractions = jsonObjectContent.getJSONObject(Constants.JSON_STRING_ATTRACTIONS);
-
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_BLUEPRINTS))
-                {
-                    this.temporaryBlueprints = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_BLUEPRINTS));
-                    content.addElements(this.createBlueprints(this.temporaryBlueprints, content));
-                }
-
-                if(!jsonObjectAttractions.isNull(Constants.JSON_STRING_ON_SITE_ATTRACTIONS))
-                {
-                    this.temporaryOnSiteAttractions = this.createTemporaryElements(jsonObjectAttractions.getJSONArray(Constants.JSON_STRING_ON_SITE_ATTRACTIONS));
-                    content.addElements(this.createOnSiteAttractions(this.temporaryOnSiteAttractions, content));
-                }
+                this.temporaryAttractions = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_ATTRACTIONS));
+                content.addElements(this.createAttractions(this.temporaryAttractions, content));
             }
 
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
             {
                 this.temporaryVisits = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
                 content.addElements(this.createVisits(this.temporaryVisits));
-            }
-
-            if(!jsonObjectContent.isNull(Constants.JSON_STRING_NOTES))
-            {
-                this.temporaryNotes = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_NOTES));
-                content.addElements(this.createNotes(this.temporaryNotes));
             }
         }
         catch(JSONException e)
@@ -335,9 +320,9 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryJsonElement.name = jsonObjectItem.getString(Constants.JSON_STRING_NAME);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_TEXT))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_NOTE_TEXT))
                 {
-                    temporaryJsonElement.text = jsonObjectItem.getString(Constants.JSON_STRING_TEXT);
+                    temporaryJsonElement.noteText = jsonObjectItem.getString(Constants.JSON_STRING_NOTE_TEXT);
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_CHILDREN))
@@ -366,11 +351,6 @@ public class JsonHandler implements IDatabaseWrapper
                         String key = jsonObjectRideCountByAttraction.names().getString(0);
                         temporaryJsonElement.rideCountsByAttraction.put(UUID.fromString(key), jsonObjectRideCountByAttraction.getInt(key));
                     }
-                }
-
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_BLUEPRINT))
-                {
-                    temporaryJsonElement.blueprintUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_BLUEPRINT));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_CREDIT_TYPE))
@@ -416,9 +396,9 @@ public class JsonHandler implements IDatabaseWrapper
         return temporaryJsonElements;
     }
 
-    private List<CreditType> createCreditTypes(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createCreditTypes(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<CreditType> creditTypes = new LinkedList<>();
+        LinkedList<IElement> creditTypes = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             CreditType creditType = CreditType.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -439,9 +419,9 @@ public class JsonHandler implements IDatabaseWrapper
         return creditTypes;
     }
 
-    private List<Category> createCategories(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createCategories(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<Category> categories = new LinkedList<>();
+        LinkedList<IElement> categories = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Category category = Category.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -462,9 +442,9 @@ public class JsonHandler implements IDatabaseWrapper
         return categories;
     }
 
-    private List<Manufacturer> createManufacturers(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createManufacturers(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<Manufacturer> manufacturers = new LinkedList<>();
+        LinkedList<IElement> manufacturers = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Manufacturer manufacturer = Manufacturer.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -485,9 +465,9 @@ public class JsonHandler implements IDatabaseWrapper
         return manufacturers;
     }
 
-    private List<Status> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
+    private LinkedList<IElement> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
     {
-        List<Status> statuses = new LinkedList<>();
+        LinkedList<IElement> statuses = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Status status = Status.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
@@ -529,45 +509,18 @@ public class JsonHandler implements IDatabaseWrapper
         }
         return elements;
     }
-    
-    private LinkedList<IElement> createBlueprints(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
+
+    private LinkedList<IElement> createAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
     {
         LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Blueprint element = Blueprint.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
             element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
-        }
-        return elements;
-    }
-
-    private LinkedList<IElement> createOnSiteAttractions(LinkedList<TemporaryJsonElement> temporaryJsonElements, Content content)
-    {
-        LinkedList<IElement> elements = new LinkedList<>();
-        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
-        {
-            if(temporaryJsonElement.blueprintUuid != null)
-            {
-                StockAttraction element = StockAttraction.create(
-                        temporaryJsonElement.name,
-                        (Blueprint)content.getContentByUuid(temporaryJsonElement.blueprintUuid),
-                        temporaryJsonElement.untrackedRideCount,
-                        temporaryJsonElement.uuid);
-                element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
-                elements.add(element);
-            }
-            else
-            {
-                CustomAttraction element = CustomAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
-                element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
-                element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
-                element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-                element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
-                elements.add(element);
-            }
         }
         return elements;
     }
@@ -588,7 +541,7 @@ public class JsonHandler implements IDatabaseWrapper
         LinkedList<IElement> elements = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Note element = Note.create(temporaryJsonElement.text, temporaryJsonElement.uuid);
+            Note element = Note.create(temporaryJsonElement.noteText, temporaryJsonElement.uuid);
             elements.add(element);
         }
         return elements;
@@ -756,19 +709,9 @@ public class JsonHandler implements IDatabaseWrapper
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Visit.class)));
 
-
-            JSONObject jsonObjectAttractions = new JSONObject();
-
-            jsonObjectAttractions.put(Constants.JSON_STRING_BLUEPRINTS, content.getContentOfType(Blueprint.class).isEmpty()
-                    ? JSONObject.NULL
-                    : this.createJsonArray(content.getContentAsType(Blueprint.class)));
-
-            jsonObjectAttractions.put(Constants.JSON_STRING_ON_SITE_ATTRACTIONS, content.getContentOfType(IOnSiteAttraction.class).isEmpty()
+            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, content.getContentOfType(IOnSiteAttraction.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(IOnSiteAttraction.class)));
-
-            jsonObject.put(Constants.JSON_STRING_ATTRACTIONS, jsonObjectAttractions);
-
 
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPES, content.getContentOfType(CreditType.class).isEmpty()
                     ? JSONObject.NULL
@@ -785,7 +728,6 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Status.class)));
-
 
             jsonObject.put(Constants.JSON_STRING_NOTES, content.getContentOfType(Note.class).isEmpty()
                     ? JSONObject.NULL

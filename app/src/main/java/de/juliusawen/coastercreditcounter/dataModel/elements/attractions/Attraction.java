@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 
 /**
  * Abstract base class for all Attractions containing all base methods.
- * Can be CustomAttraction, Blueprint, StockAttraction or VisitedAttraction
+ * Can be CustomAttraction or VisitedAttraction
  */
 public abstract class Attraction extends Element implements IAttraction
 {

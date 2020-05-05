@@ -587,88 +587,54 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 case LOCATION:
                 {
-                    String locationDetail;
-                    if(item.isBlueprint())
-                    {
-                        // as blueprints are not on site attractions, they have no park and "blueprint" is displayed instead
-                        locationDetail = App.getContext().getString(R.string.substitute_blueprint);
-                        detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
-                        typefacesByDetailSubString.put(locationDetail, Typeface.BOLD_ITALIC);
-                    }
-                    else
-                    {
-                        locationDetail = item.getParent().getName();
-                        detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
-                        typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
-                                ? this.typefacesByDetailType.get(DetailType.LOCATION)
-                                : Typeface.NORMAL);
-                    }
+                    String locationDetail = item.getParent().getName();
+                    detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
+                    typefacesByDetailSubString.put(locationDetail, this.typefacesByDetailType.containsKey(DetailType.LOCATION)
+                            ? this.typefacesByDetailType.get(DetailType.LOCATION)
+                            : Typeface.NORMAL);
                     break;
                 }
+
                 case CREDIT_TYPE:
                 {
-                    if(item.hasCreditType())
-                    {
-                        String creditTypeDetail = ((IAttraction)item).getCreditType().getName();
-                        detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
-                        typefacesByDetailSubString.put(creditTypeDetail, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
-                                ? this.typefacesByDetailType.get(DetailType.CREDIT_TYPE)
-                                : Typeface.NORMAL);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no CreditType", item));
-                    }
+                    String creditTypeDetail = ((IAttraction)item).getCreditType().getName();
+                    detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
+                    typefacesByDetailSubString.put(creditTypeDetail, this.typefacesByDetailType.containsKey(DetailType.CREDIT_TYPE)
+                            ? this.typefacesByDetailType.get(DetailType.CREDIT_TYPE)
+                            : Typeface.NORMAL);
                     break;
                 }
+
                 case CATEGORY:
                 {
-                    if(item.hasCategory())
-                    {
-                        String categoryDetail = ((IAttraction)item).getCategory().getName();
-                        detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
-                        typefacesByDetailSubString.put(categoryDetail, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
-                                ? this.typefacesByDetailType.get(DetailType.CATEGORY)
-                                : Typeface.NORMAL);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Category", item));
-                    }
+                    String categoryDetail = ((IAttraction)item).getCategory().getName();
+                    detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
+                    typefacesByDetailSubString.put(categoryDetail, this.typefacesByDetailType.containsKey(DetailType.CATEGORY)
+                            ? this.typefacesByDetailType.get(DetailType.CATEGORY)
+                            : Typeface.NORMAL);
                     break;
                 }
+
                 case MANUFACTURER:
                 {
-                    if(item.hasManufacturer())
-                    {
-                        String manufacturerDetail = ((IAttraction)item).getManufacturer().getName();
-                        detailSubStringsByDetailType.put(DetailType.MANUFACTURER, manufacturerDetail);
-                        typefacesByDetailSubString.put(manufacturerDetail, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
-                                ? this.typefacesByDetailType.get(DetailType.MANUFACTURER)
-                                : Typeface.NORMAL);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Manufacturer", item));
-                    }
+                    String manufacturerDetail = ((IAttraction)item).getManufacturer().getName();
+                    detailSubStringsByDetailType.put(DetailType.MANUFACTURER, manufacturerDetail);
+                    typefacesByDetailSubString.put(manufacturerDetail, this.typefacesByDetailType.containsKey(DetailType.MANUFACTURER)
+                            ? this.typefacesByDetailType.get(DetailType.MANUFACTURER)
+                            : Typeface.NORMAL);
                     break;
                 }
+
                 case STATUS:
                 {
-                    if(item.hasStatus())
-                    {
-                        String statusDetail = ((IAttraction)item).getStatus().getName();
-                        detailSubStringsByDetailType.put(DetailType.STATUS, statusDetail);
-                        typefacesByDetailSubString.put(statusDetail, this.typefacesByDetailType.containsKey(DetailType.STATUS)
-                                ? this.typefacesByDetailType.get(DetailType.STATUS)
-                                : Typeface.NORMAL);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: %s has no Status", item));
-                    }
+                    String statusDetail = ((IAttraction)item).getStatus().getName();
+                    detailSubStringsByDetailType.put(DetailType.STATUS, statusDetail);
+                    typefacesByDetailSubString.put(statusDetail, this.typefacesByDetailType.containsKey(DetailType.STATUS)
+                            ? this.typefacesByDetailType.get(DetailType.STATUS)
+                            : Typeface.NORMAL);
                     break;
                 }
+
                 case TOTAL_RIDE_COUNT:
                 {
                     String totalRideCountDetail = App.getContext().getString(R.string.text_total_rides, ((IAttraction)item).fetchTotalRideCount());
@@ -678,6 +644,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                             : Typeface.NORMAL);
                     break;
                 }
+
                 default:
                     Log.e(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: DetailType [%s] for %s not found",
                             DetailType.getValue(detailType.ordinal()), item));

@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import androidx.lifecycle.ViewModel;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
@@ -19,7 +18,6 @@ public class CreateAttractionActivityViewModel extends ViewModel
     public IAttraction attraction;
 
     public String name;
-    public Blueprint blueprint;
     public CreditType creditType;
     public Category category;
     public Manufacturer manufacturer;

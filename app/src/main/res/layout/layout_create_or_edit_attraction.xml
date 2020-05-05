@@ -24,29 +24,29 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            style="@style/CreateOrEditAttractionSelectBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint">
+<!--        <LinearLayout-->
+<!--            style="@style/CreateOrEditAttractionSelectBarLayout"-->
+<!--            android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint">-->
 
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:layout_width="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/header_clone"/>
+<!--            <TextView-->
+<!--                style="@style/CreateOrEditAttractionTextView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:textStyle="bold"-->
+<!--                android:text="@string/header_model"/>-->
 
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:id="@+id/textViewCreateOrEditAttraction_Blueprint"
-                android:width="0sp"
-                android:layout_weight="1"
-                android:layout_width="0dp"/>
+<!--            <TextView-->
+<!--                style="@style/CreateOrEditAttractionTextView"-->
+<!--                android:id="@+id/textViewCreateOrEditAttraction_Blueprint"-->
+<!--                android:width="0sp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="0dp"/>-->
 
-            <ImageView
-                style="@style/StandardImageHolder"
-                android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"
-                android:contentDescription="@string/description_image_view" />
+<!--            <ImageView-->
+<!--                style="@style/StandardImageHolder"-->
+<!--                android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"-->
+<!--                android:contentDescription="@string/description_image_view" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <LinearLayout
             style="@style/CreateOrEditAttractionSelectBarLayout"

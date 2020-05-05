@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
@@ -38,8 +37,6 @@ public class GroupHeaderProvider
 
     public LinkedList<IElement> groupElements(ArrayList<IElement> elements, GroupType groupType)
     {
-        LinkedList<IElement> blueprints = new LinkedList<>();
-
         if(groupType == GroupType.NONE)
         {
             return new LinkedList<>(elements);
@@ -48,19 +45,7 @@ public class GroupHeaderProvider
         {
             return this.groupByYear(elements);
         }
-        else if(groupType == GroupType.LOCATION || groupType == GroupType.STATUS)
-        {
-            // bluprints have neither locations nor status - they will be filtered out and added again at the end under a SpecialGroupHeader
-            for(IElement element : elements)
-            {
-                if(element.isBlueprint())
-                {
-                    blueprints.add(element);
-                }
-            }
-            elements.removeAll(blueprints);
-            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.filterOutBlueprints:: filtered out [%d] blueprint(s)", blueprints.size()));
-        }
+
 
         List<IGroupHeader> groupedAttractions = new ArrayList<>();
         if(this.groupHeadersByGroupElementUuid.isEmpty())
@@ -202,19 +187,9 @@ public class GroupHeaderProvider
                 Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s is empty - marked for removal", header));
             }
         }
+
         groupedAttractions.removeAll(emptyHeaders);
-
         groupedAttractions = this.sortGroupHeadersBasedOnGroupElementsOrder(groupedAttractions, groupType);
-
-        if(!blueprints.isEmpty())
-        {
-            String blueprintsGroupHeaderName = App.getContext().getString(R.string.text_blueprint_group_header_name);
-            Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: adding [%d] blueprint(s) under SpecialGroupHeader [%s]", blueprints.size(), blueprintsGroupHeaderName));
-
-            SpecialGroupHeader blueprintGroupHeader = SpecialGroupHeader.create(blueprintsGroupHeaderName);
-            blueprintGroupHeader.addChildren(new ArrayList<>(blueprints));
-            groupedAttractions.add(blueprintGroupHeader);
-        }
 
         return ConvertTool.convertElementsToType(groupedAttractions, IElement.class);
     }

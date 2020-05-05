@@ -161,7 +161,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     break;
                 }
 
-                case EDIT_ON_SITE_ATTRACTION:
+                case EDIT_ATTRACTION:
                 {
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
                     {
@@ -188,7 +188,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     break;
                 }
 
-                case CREATE_ON_SITE_ATTRACTION:
+                case CREATE_ATTRACTION:
                 {
                     this.updateContentRecyclerView(true)
                             .expandGroupHeaderOfElement(resultElement)
@@ -314,7 +314,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         this.viewModel.formerAttractionName = this.viewModel.longClickedElement.getName();
 
-        ActivityDistributor.startActivityEditForResult(getContext(), RequestCode.EDIT_ON_SITE_ATTRACTION, this.viewModel.longClickedElement);
+        ActivityDistributor.startActivityEditForResult(getContext(), RequestCode.EDIT_ATTRACTION, this.viewModel.longClickedElement);
     }
 
     public void handlePopupItemDeleteAttractionClicked()

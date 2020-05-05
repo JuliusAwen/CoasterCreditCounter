@@ -15,13 +15,11 @@ public class TemporaryJsonElement
     public int month;
     public int year;
     public final Map<UUID, Integer> rideCountsByAttraction = new LinkedHashMap<>();
-    public UUID blueprintUuid;
     public int untrackedRideCount;
     public UUID creditTypeUuid;
     public UUID categoryUuid;
     public UUID manufacturerUuid;
     public UUID statusUuid;
-    public UUID noteUuid;
-    public String text;
+    public String noteText;
     public boolean isDefault;
 }

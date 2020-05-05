@@ -31,8 +31,6 @@
 
     <string name="text_total_rides">total rides: %1$d</string>
 
-    <string name="text_clone_group_header_name">Clones</string>
-
 
 
     <!--STATISTICS-->
@@ -57,7 +55,7 @@
     <string name="error_number_invalid">Number is invalid</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
     <string name="error_no_entry_selected">No entry selected</string>
-    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint</string>
+<!--    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint</string>-->
 
     <string name="error_missing_text">-text is missing-</string>
 
@@ -152,7 +150,6 @@
     <string name="item_navigation_drawer_browse_locations">Browse Locations</string>
 
     <string name="item_navigation_drawer_manage_credit_types">Credit Types</string>
-    <string name="item_navigation_drawer_manage_blueprints">Blueprints</string>
     <string name="item_navigation_drawer_manage_categories">Categories</string>
     <string name="item_navigation_drawer_manage_manufacturers">Manufacturers</string>
     <string name="item_navigation_drawer_manage_models">Models</string>
@@ -247,19 +244,16 @@
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
-    <!--CLONES-->
-    <string name="clones">Clones</string>
-    <string name="title_create_clone">Create Clone</string>
-    <string name="title_edit_clone">Edit Clone</string>
-    <string name="title_pick_clone">Pick Clone</string>
-    <string name="title_manage_clones">Manage Clones</string>
-    <string name="clone_not_applicable">n/a</string>
-    <string name="header_clone">Clone:</string>
+    <!--MODELS-->
+    <string name="models">Models</string>
+    <string name="title_create_model">Create Model</string>
+    <string name="title_edit_model">Edit Model</string>
+    <string name="title_pick_model">Pick Model</string>
+    <string name="title_manage_models">Manage Models</string>
+    <string name="model_not_applicable">n/a</string>
+    <string name="header_model">Model:</string>
 
-    <string name="alert_dialog_message_confirm_delete_clone_has_no_children">Do you really want to delete \'%1$s\'?</string>
-    <string name="alert_dialog_message_confirm_delete_blueprint_has_children">Do you really want to delete \'%1$s\'? \n(attractions made from this blueprint are deleted as well, removed from visits, rides are deleted and ride count as well as credit count is adjusted)</string>
-
-    <string name="hint_enter_blueprint_name">Enter blueprint name</string>
+    <string name="hint_enter_model_name">Enter model name</string>
 
 
     <!--CREDIT TYPES-->
@@ -336,7 +330,6 @@
 
     <!--SUBSTITUTES-->
     <string name="substitute_properties_default_postfix">%1$s (default)</string>
-    <string name="substitute_blueprint">Blueprint</string>
 
 
     <!--HELP-->
@@ -370,12 +363,11 @@
 
     <string name="help_text_pick_elements">@string/help_text_not_yet_available</string>
     <string name="help_text_pick_element">@string/help_text_not_yet_available</string>
-    <string name="help_text_pick_blueprint">@string/help_text_not_yet_available</string>
 
     <string name="help_text_create_location">@string/help_text_not_yet_available</string>
     <string name="help_text_create_park">@string/help_text_not_yet_available</string>
     <string name="help_text_create_attraction">@string/help_text_not_yet_available</string>
-    <string name="help_text_create_blueprint">@string/help_text_not_yet_available</string>
+    <string name="help_text_create_model">@string/help_text_not_yet_available</string>
     <string name="help_text_create_credit_type">@string/help_text_not_yet_available</string>
     <string name="help_text_create_category">@string/help_text_not_yet_available</string>
     <string name="help_text_create_manufacturer">@string/help_text_not_yet_available</string>
@@ -384,15 +376,15 @@
 
     <string name="help_text_edit_simple_element">@string/help_text_not_yet_available</string>
     <string name="help_text_edit_attraction">@string/help_text_not_yet_available</string>
-    <string name="help_text_edit_blueprint">@string/help_text_not_yet_available</string>
+    <string name="help_text_edit_model">@string/help_text_not_yet_available</string>
 
     <string name="help_text_show_park_overview">@string/help_text_not_yet_available</string>
     <string name="help_text_show_attractions">@string/help_text_not_yet_available</string>
-    <string name="help_text_show_on_site_attraction">@string/help_text_not_yet_available</string>
+    <string name="help_text_show_attraction">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
 
-    <string name="help_text_manage_blueprints">@string/help_text_not_yet_available</string>
+    <string name="help_text_manage_models">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_credit_types">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_categories">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_manufacturers">@string/help_text_not_yet_available</string>

@@ -78,7 +78,7 @@ public class Note extends Element implements IElement, IPersistable
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_TEXT, this.getText());
+            jsonObject.put(Constants.JSON_STRING_NOTE_TEXT, this.getText());
 
             Log.v(Constants.LOG_TAG, String.format("Note.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

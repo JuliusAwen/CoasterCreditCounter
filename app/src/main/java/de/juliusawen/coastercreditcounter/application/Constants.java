@@ -25,9 +25,6 @@ public abstract class Constants
     public static final String JSON_STRING_PARKS = "parks";
     public static final String JSON_STRING_VISITS = "visits";
     public static final String JSON_STRING_ATTRACTIONS = "attractions";
-    public static final String JSON_STRING_ON_SITE_ATTRACTIONS = "on site attractions";
-    public static final String JSON_STRING_BLUEPRINT = "blueprint";
-    public static final String JSON_STRING_BLUEPRINTS = "blueprints";
 
     public static final String JSON_STRING_NAME = "name";
     public static final String JSON_STRING_UUID = "uuid";
@@ -55,7 +52,7 @@ public abstract class Constants
 
     public static final String JSON_STRING_NOTES = "notes";
     public static final String JSON_STRING_NOTE = "note";
-    public static final String JSON_STRING_TEXT = "text";
+    public static final String JSON_STRING_NOTE_TEXT = "note text";
 
 
     public static final String JSON_STRING_DETAIL_ORDER = "detail order";

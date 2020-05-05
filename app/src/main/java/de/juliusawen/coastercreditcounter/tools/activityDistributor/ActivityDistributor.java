@@ -23,7 +23,6 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleE
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditSimpleElementActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.ManageBlueprintsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropertiesActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
@@ -92,14 +91,6 @@ public abstract class ActivityDistributor
 
         switch(requestCode)
         {
-            case MANAGE_BLUEPRINTS:
-                intent = new Intent(context, ManageBlueprintsActivity.class);
-                toolbarTitle = context.getString(R.string.title_manage_blueprints);
-                toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.help_text_manage_blueprints);
-                helpText = context.getString(R.string.help_text_manage_blueprints);
-                break;
-
             case MANAGE_CREDIT_TYPES:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
@@ -207,14 +198,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_edit_note, element.getParent().getName()));
                 break;
 
-            case EDIT_ATTRACTION_BLUEPRINT:
-                intent = new Intent(context, EditAttractionActivity.class);
-                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_edit_blueprint));
-                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_edit_blueprint));
-                toolbarTitle = context.getString(R.string.title_edit_blueprint);
-                break;
-
-            case EDIT_ON_SITE_ATTRACTION:
+            case EDIT_ATTRACTION:
                 intent = new Intent(context, EditAttractionActivity.class);
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_edit_on_site_attraction));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_edit_attraction));
@@ -276,7 +260,7 @@ public abstract class ActivityDistributor
                 intent = new Intent(context, CreateVisitActivity.class);
                 break;
 
-            case CREATE_ON_SITE_ATTRACTION:
+            case CREATE_ATTRACTION:
                 intent = new Intent(context, CreateAttractionActivity.class);
                 toolbarTitle = context.getString(R.string.title_create_attraction);
                 intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_attraction, parentElement.getName()));
@@ -284,14 +268,6 @@ public abstract class ActivityDistributor
                 helpText = context.getString(R.string.help_text_create_attraction);
                 hint = context.getString(R.string.hint_enter_attraction_name);
 
-                break;
-
-            case CREATE_ATTRACTION_BLUEPRINT:
-                intent = new Intent(context, CreateAttractionActivity.class);
-                toolbarTitle = context.getString(R.string.title_create_blueprint);
-                helpTitle = context.getString(R.string.title_create_blueprint);
-                helpText = context.getString(R.string.help_text_create_blueprint);
-                hint = context.getString(R.string.hint_enter_blueprint_name);
                 break;
 
             case CREATE_CREDIT_TYPE:
@@ -384,10 +360,6 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.attractions);
                 break;
 
-            case SORT_BLUEPRINTS:
-                toolbarSubtitle = context.getString(R.string.blueprints);
-                break;
-
             case SORT_CREDIT_TYPES:
                 toolbarSubtitle = context.getString(R.string.credit_types);
                 break;
@@ -441,14 +413,6 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 toolbarTitle = context.getString(R.string.title_pick_visit);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_open);
-                break;
-
-            case PICK_BLUEPRINT:
-                intent = new Intent(context, ManageBlueprintsActivity.class);
-                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_blueprint));
-                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_blueprint));
-                toolbarTitle = context.getString(R.string.title_pick_blueprint);
-                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 break;
 
             case PICK_CREDIT_TYPE:

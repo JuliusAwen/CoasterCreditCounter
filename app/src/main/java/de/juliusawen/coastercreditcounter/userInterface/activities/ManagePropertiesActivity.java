@@ -25,12 +25,10 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
@@ -571,16 +569,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
+                List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(CustomAttraction.class));
+                List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
+
                 switch(viewModel.propertyTypeToManage)
                 {
                     case CREDIT_TYPE:
                     {
-                        List<IElement> elementsToAssignTo = new ArrayList<>();
-                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
-                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
-
-                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-
                         for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
@@ -600,12 +595,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case CATEGORY:
                     {
-                        List<IElement> elementsToAssignTo = new ArrayList<>();
-                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
-                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
-
-                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-
                         for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
@@ -625,12 +614,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case MANUFACTURER:
                     {
-                        List<IElement> elementsToAssignTo = new ArrayList<>();
-                        elementsToAssignTo.addAll(App.content.getContentAsType(CustomAttraction.class));
-                        elementsToAssignTo.addAll(App.content.getContentAsType(Blueprint.class));
-
-                        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-
                         for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
@@ -650,23 +633,20 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case STATUS:
                     {
-                        List<IElement> categorizedElements = App.content.getContentOfType(IHasStatus.class);
-                        List<IAttraction> categorizedAttractions = new LinkedList<>(ConvertTool.convertElementsToType(categorizedElements, IAttraction.class));
-
-                        for(IAttraction attraction : categorizedAttractions)
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
-                                categorizedElements.remove(attraction);
+                                elementsToAssignTo.remove(attraction);
                             }
                         }
 
                         ActivityDistributor.startActivityPickForResult(
                                 ManagePropertiesActivity.this,
                                 RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS,
-                                categorizedElements);
+                                elementsToAssignTo);
                         break;
                     }
                 }

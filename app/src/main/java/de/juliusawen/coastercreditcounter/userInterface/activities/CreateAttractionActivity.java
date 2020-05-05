@@ -26,10 +26,8 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
@@ -37,7 +35,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
@@ -48,9 +45,9 @@ public class CreateAttractionActivity extends BaseActivity
     private TextInputLayout textInputLayoutAttractionName;
     private TextInputEditText textInputEditTextAttractionName;
 
-    private LinearLayout layoutBlueprint;
-    private TextView textViewBlueprint;
-    private ImageView imageViewPickBlueprint;
+//    private LinearLayout layoutBlueprint;
+//    private TextView textViewBlueprint;
+//    private ImageView imageViewPickBlueprint;
 
     private LinearLayout layoutCreditType;
     private TextView textViewCreditType;
@@ -87,9 +84,9 @@ public class CreateAttractionActivity extends BaseActivity
         this.textInputLayoutAttractionName = findViewById(R.id.textInputLayoutCreateOrEditAttraction_AttractionName);
         this.textInputEditTextAttractionName = findViewById(R.id.textInputEditTextCreateOrEditAttraction_AttractionName);
 
-        this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
-        this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
-        this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
+//        this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
+//        this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
+//        this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
 
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
@@ -123,12 +120,12 @@ public class CreateAttractionActivity extends BaseActivity
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
         }
 
-        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION && this.viewModel.parentPark == null)
+        if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION && this.viewModel.parentPark == null)
         {
             this.viewModel.parentPark = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        this.layoutBlueprint.setVisibility(View.GONE);
+//        this.layoutBlueprint.setVisibility(View.GONE);
         this.layoutStatus.setVisibility(View.GONE);
         this.layoutUntrackedRideCount.setVisibility(View.GONE);
 
@@ -137,9 +134,9 @@ public class CreateAttractionActivity extends BaseActivity
         this.decorateLayoutCategory();
         this.decorateLayoutManufacturer();
 
-        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+        if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
         {
-            this.decorateLayoutBlueprint();
+//            this.decorateLayoutBlueprint();
             this.decorateLayoutStatus();
             this.createTextInputUntrackedRideCount();
         }
@@ -168,26 +165,30 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 switch(RequestCode.getValue(requestCode))
                 {
-                    case PICK_BLUEPRINT:
-                    {
-                        this.updateLayoutBlueprint((Blueprint)pickedElement);
-                        break;
-                    }
+//                    case PICK_BLUEPRINT:
+//                    {
+//                        this.updateLayoutBlueprint((Blueprint)pickedElement);
+//                        break;
+//                    }
+
                     case PICK_CREDIT_TYPE:
                     {
                         this.updateLayoutCreditType((CreditType)pickedElement);
                         break;
                     }
+
                     case PICK_CATEGORY:
                     {
                         this.updateLayoutCategory((Category)pickedElement);
                         break;
                     }
+
                     case PICK_MANUFACTURER:
                     {
                         this.updateLayoutManufacturer((Manufacturer)pickedElement);
                         break;
                     }
+
                     case PICK_STATUS:
                     {
                         this.updateLayoutStatus((Status)pickedElement);
@@ -201,14 +202,15 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 switch(RequestCode.getValue(requestCode)) //it is possible that element was deleted, so it has to be evaluated if it is still existing
                 {
-                    case PICK_BLUEPRINT:
-                    {
-                        if(!App.content.containsElement(this.viewModel.blueprint))
-                        {
-                            this.updateLayoutBlueprint(null);
-                        }
-                        break;
-                    }
+//                    case PICK_BLUEPRINT:
+//                    {
+//                        if(!App.content.containsElement(this.viewModel.blueprint))
+//                        {
+//                            this.updateLayoutBlueprint(null);
+//                        }
+//                        break;
+//                    }
+
                     case PICK_CREDIT_TYPE:
                     {
                         if(!App.content.containsElement(this.viewModel.creditType))
@@ -217,6 +219,7 @@ public class CreateAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_CATEGORY:
                     {
                         if(!App.content.containsElement(this.viewModel.category))
@@ -225,6 +228,7 @@ public class CreateAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_MANUFACTURER:
                     {
                         if(!App.content.containsElement(this.viewModel.manufacturer))
@@ -233,6 +237,7 @@ public class CreateAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_STATUS:
                     {
                         if(!App.content.containsElement(this.viewModel.status))
@@ -269,7 +274,7 @@ public class CreateAttractionActivity extends BaseActivity
             return;
         }
 
-        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+        if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
         {
             //this has to happen before name is set (otherwise if something is wrong, the name would already be changed)
             int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
@@ -291,7 +296,7 @@ public class CreateAttractionActivity extends BaseActivity
         {
             super.markForCreation(this.viewModel.attraction);
 
-            if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+            if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
             {
                 Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
                 this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
@@ -335,57 +340,26 @@ public class CreateAttractionActivity extends BaseActivity
 
     private boolean tryCreateAttraction()
     {
-        boolean success = false;
-
-        if(this.viewModel.requestCode == RequestCode.CREATE_ON_SITE_ATTRACTION)
+        if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
         {
-            if(this.viewModel.blueprint != null)
-            {
-                IAttraction attraction = StockAttraction.create(this.viewModel.name, this.viewModel.blueprint, this.viewModel.untrackedRideCount);
-
-                if(attraction != null)
-                {
-                    attraction.setStatus(this.viewModel.status);
-
-                    this.viewModel.attraction = attraction;
-
-                    success = true;
-                }
-            }
-            else
-            {
-                IAttraction attraction = CustomAttraction.create(this.viewModel.name, this.viewModel.untrackedRideCount);
-                if(attraction != null)
-                {
-                    attraction.setCreditType(this.viewModel.creditType);
-                    attraction.setCategory(this.viewModel.category);
-                    attraction.setManufacturer(this.viewModel.manufacturer);
-                    attraction.setStatus(this.viewModel.status);
-                    attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
-
-                    this.viewModel.attraction = attraction;
-
-                    success = true;
-                }
-            }
-        }
-        else
-        {
-            IAttraction attraction = Blueprint.create(this.viewModel.name);
+            IAttraction attraction = CustomAttraction.create(this.viewModel.name, this.viewModel.untrackedRideCount);
             if(attraction != null)
             {
                 attraction.setCreditType(this.viewModel.creditType);
                 attraction.setCategory(this.viewModel.category);
                 attraction.setManufacturer(this.viewModel.manufacturer);
+                attraction.setStatus(this.viewModel.status);
+                attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
                 this.viewModel.attraction = attraction;
 
-                success = true;
+                Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: sucessfully created %s", this.viewModel.attraction));
+                return true;
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation sucessful[%S]", success));
-        return success;
+        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation of Attraction with name [%s] failed", this.viewModel.name));
+        return false;
     }
 
     private void createTextInputAttractionName(String hint)
@@ -420,64 +394,64 @@ public class CreateAttractionActivity extends BaseActivity
         });
     }
 
-    private void decorateLayoutBlueprint()
-    {
-        this.layoutBlueprint.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickBlueprint> selected");
-
-                if(viewModel.blueprint != null)
-                {
-                    updateLayoutBlueprint(null);
-                    updateLayoutCreditType(viewModel.creditType);
-                    updateLayoutCategory(viewModel.category);
-                    updateLayoutManufacturer(viewModel.manufacturer);
-                }
-                else
-                {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_BLUEPRINT, App.content.getContentOfType(Blueprint.class));
-                }
-            }
-        });
-
-        this.updateLayoutBlueprint(null);
-        this.layoutBlueprint.setVisibility(View.VISIBLE);
-    }
-
-    private void updateLayoutBlueprint(Blueprint blueprint)
-    {
-        this.viewModel.blueprint = blueprint;
-
-        Drawable icon;
-        if(this.viewModel.blueprint != null)
-        {
-            this.textViewBlueprint.setText(blueprint.getName());
-
-            this.textViewCreditType.setText(blueprint.getCreditType().getName());
-            this.textViewCreditType.setTextColor(getColor(R.color.grey));
-            this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
-
-            this.textViewCategory.setText(blueprint.getCategory().getName());
-            this.textViewCategory.setTextColor(getColor(R.color.grey));
-            this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
-
-            this.textViewManufacturer.setText(blueprint.getManufacturer().getName());
-            this.textViewManufacturer.setTextColor(getColor(R.color.grey));
-            this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
-
-            icon = this.closeIcon;
-        }
-        else
-        {
-            this.textViewBlueprint.setText(R.string.blueprint_not_applicable);
-            icon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
-        }
-
-        this.imageViewPickBlueprint.setImageDrawable(icon);
-    }
+//    private void decorateLayoutBlueprint()
+//    {
+//        this.layoutBlueprint.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickBlueprint> selected");
+//
+//                if(viewModel.blueprint != null)
+//                {
+//                    updateLayoutBlueprint(null);
+//                    updateLayoutCreditType(viewModel.creditType);
+//                    updateLayoutCategory(viewModel.category);
+//                    updateLayoutManufacturer(viewModel.manufacturer);
+//                }
+//                else
+//                {
+//                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_BLUEPRINT, App.content.getContentOfType(Blueprint.class));
+//                }
+//            }
+//        });
+//
+//        this.updateLayoutBlueprint(null);
+//        this.layoutBlueprint.setVisibility(View.VISIBLE);
+//    }
+//
+//    private void updateLayoutBlueprint(Blueprint blueprint)
+//    {
+//        this.viewModel.blueprint = blueprint;
+//
+//        Drawable icon;
+//        if(this.viewModel.blueprint != null)
+//        {
+//            this.textViewBlueprint.setText(blueprint.getName());
+//
+//            this.textViewCreditType.setText(blueprint.getCreditType().getName());
+//            this.textViewCreditType.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
+//
+//            this.textViewCategory.setText(blueprint.getCategory().getName());
+//            this.textViewCategory.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
+//
+//            this.textViewManufacturer.setText(blueprint.getManufacturer().getName());
+//            this.textViewManufacturer.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
+//
+//            icon = this.closeIcon;
+//        }
+//        else
+//        {
+//            this.textViewBlueprint.setText(R.string.blueprint_not_applicable);
+//            icon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
+//        }
+//
+//        this.imageViewPickBlueprint.setImageDrawable(icon);
+//    }
 
     private void decorateLayoutCreditType()
     {
@@ -488,11 +462,11 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "CreditType"));
-                }
-                else
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "CreditType"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE,
                             SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(CreditType.class)));
@@ -525,11 +499,11 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCategory> selected");
 
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Category"));
-                }
-                else
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Category"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CATEGORY,
                             SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Category.class)));
@@ -562,11 +536,11 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickManufacturer> selected");
 
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Manufacturer"));
-                }
-                else
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Manufacturer"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MANUFACTURER,
                             SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Manufacturer.class)));

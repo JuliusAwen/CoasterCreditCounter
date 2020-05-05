@@ -343,7 +343,7 @@ public class ShowParkActivity extends BaseActivity
                             @Override
                             public void onClick(View view)
                             {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_ON_SITE_ATTRACTION, viewModel.park);
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_ATTRACTION, viewModel.park);
                             }
                         });
                 break;

@@ -25,17 +25,13 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.CustomAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.StockAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
@@ -46,9 +42,9 @@ public class EditAttractionActivity extends BaseActivity
     private TextInputLayout textInputLayoutAttractionName;
     private TextInputEditText textInputEditTextAttractionName;
 
-    private LinearLayout layoutBlueprint;
-    private TextView textViewBlueprint;
-    private ImageView imageViewPickBlueprint;
+//    private LinearLayout layoutBlueprint;
+//    private TextView textViewBlueprint;
+//    private ImageView imageViewPickBlueprint;
 
     private LinearLayout layoutCreditType;
     private TextView textViewCreditType;
@@ -85,9 +81,9 @@ public class EditAttractionActivity extends BaseActivity
         this.textInputLayoutAttractionName = findViewById(R.id.textInputLayoutCreateOrEditAttraction_AttractionName);
         this.textInputEditTextAttractionName = findViewById(R.id.textInputEditTextCreateOrEditAttraction_AttractionName);
 
-        this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
-        this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
-        this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
+//        this.layoutBlueprint = findViewById(R.id.linearLayoutCreateOrEditAttraction_Blueprint);
+//        this.textViewBlueprint = findViewById(R.id.textViewCreateOrEditAttraction_Blueprint);
+//        this.imageViewPickBlueprint = findViewById(R.id.imageViewCreateOrEditAttraction_PickBlueprint);
 
         this.layoutCreditType = findViewById(R.id.linearLayoutCreateOrEditAttraction_CreditType);
         this.textViewCreditType = findViewById(R.id.textViewCreateOrEditAttraction_CreditType);
@@ -123,27 +119,17 @@ public class EditAttractionActivity extends BaseActivity
             this.viewModel.attraction = (IAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        this.layoutBlueprint.setVisibility(View.GONE);
+//        this.layoutBlueprint.setVisibility(View.GONE);
         this.layoutStatus.setVisibility(View.GONE);
         this.layoutUntrackedRideCount.setVisibility(View.GONE);
-
-        if(this.viewModel.attraction.isStockAttraction())
-        {
-            this.viewModel.blueprint = ((StockAttraction)this.viewModel.attraction).getBlueprint();
-        }
-
 
         this.createTextInputAttractionName(getString(R.string.hint_edit_name, this.viewModel.attraction.getName()));
         this.decorateLayoutCreditType();
         this.decorateLayoutCategory();
         this.decorateLayoutManufacturer();
-
-        if(!this.viewModel.attraction.isBlueprint())
-        {
-            this.decorateLayoutBlueprint();
-            this.decorateLayoutStatus();
-            this.createTextInputUntrackedRideCount();
-        }
+//        this.decorateLayoutBlueprint();
+        this.decorateLayoutStatus();
+        this.createTextInputUntrackedRideCount();
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
@@ -168,26 +154,30 @@ public class EditAttractionActivity extends BaseActivity
             {
                 switch(RequestCode.getValue(requestCode))
                 {
-                    case PICK_BLUEPRINT:
-                    {
-                        this.updateLayoutBlueprint((Blueprint) pickedElement);
-                        break;
-                    }
+//                    case PICK_BLUEPRINT:
+//                    {
+//                        this.updateLayoutBlueprint((Blueprint) pickedElement);
+//                        break;
+//                    }
+
                     case PICK_CREDIT_TYPE:
                     {
                         this.updateLayoutCreditType((CreditType)pickedElement);
                         break;
                     }
+
                     case PICK_CATEGORY:
                     {
                         this.updateLayoutCategory((Category)pickedElement);
                         break;
                     }
+
                     case PICK_MANUFACTURER:
                     {
                         this.updateLayoutManufacturer((Manufacturer)pickedElement);
                         break;
                     }
+
                     case PICK_STATUS:
                     {
                         this.updateLayoutStatus((Status)pickedElement);
@@ -201,14 +191,15 @@ public class EditAttractionActivity extends BaseActivity
             {
                 switch(RequestCode.getValue(requestCode)) //it is possible that element was deleted, so it has to be evaluated if it is still existing
                 {
-                    case PICK_BLUEPRINT:
-                    {
-                        if(!App.content.containsElement(this.viewModel.blueprint))
-                        {
-                            this.updateLayoutBlueprint(null);
-                        }
-                        break;
-                    }
+//                    case PICK_BLUEPRINT:
+//                    {
+//                        if(!App.content.containsElement(this.viewModel.blueprint))
+//                        {
+//                            this.updateLayoutBlueprint(null);
+//                        }
+//                        break;
+//                    }
+
                     case PICK_CREDIT_TYPE:
                     {
                         if(!App.content.containsElement(this.viewModel.creditType))
@@ -217,6 +208,7 @@ public class EditAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_CATEGORY:
                     {
                         if(!App.content.containsElement(this.viewModel.category))
@@ -225,6 +217,7 @@ public class EditAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_MANUFACTURER:
                     {
                         if(!App.content.containsElement(this.viewModel.manufacturer))
@@ -233,6 +226,7 @@ public class EditAttractionActivity extends BaseActivity
                         }
                         break;
                     }
+
                     case PICK_STATUS:
                     {
                         if(!App.content.containsElement(this.viewModel.status))
@@ -284,7 +278,6 @@ public class EditAttractionActivity extends BaseActivity
 
 
         boolean somethingChanged = false;
-        boolean converted = false;
 
         String name = this.textInputEditTextAttractionName.getText().toString();
         Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: attraction name entered [%s]", name));
@@ -312,92 +305,39 @@ public class EditAttractionActivity extends BaseActivity
             somethingChanged = true;
         }
 
-        if(this.viewModel.attraction.isStockAttraction())
+        if(!this.viewModel.attraction.getCreditType().equals(this.viewModel.creditType))
         {
-            if(this.viewModel.blueprint == null)
-            {
-                Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: converting %s to CustomAttraction", this.viewModel.attraction));
-
-                this.viewModel.convertedAttraction = this.viewModel.attraction;
-                this.viewModel.attraction = ((StockAttraction)this.viewModel.attraction).convertToCustomAttraction();
-                converted = true;
-            }
-            else if(!((StockAttraction)this.viewModel.attraction).getBlueprint().equals(this.viewModel.blueprint))
-            {
-                Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changing %s's Blueprint from %s to %s",
-                        this.viewModel.attraction, ((StockAttraction)this.viewModel.attraction).getBlueprint(), this.viewModel.blueprint));
-
-                super.markForUpdate(((StockAttraction)this.viewModel.attraction).getBlueprint());
-                ((StockAttraction)this.viewModel.attraction).changeBlueprint(this.viewModel.blueprint);
-                somethingChanged = true;
-            }
+            this.viewModel.attraction.setCreditType(this.viewModel.creditType);
+            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's CreditType to %s",
+                    this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
+            somethingChanged = true;
         }
 
-        if(this.viewModel.attraction.isCustomAttraction())
+        if(!this.viewModel.attraction.getCategory().equals(this.viewModel.category))
         {
-            if(this.viewModel.blueprint != null)
-            {
-                Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: converting %s to StockAttraction", this.viewModel.attraction));
-
-                this.viewModel.convertedAttraction = this.viewModel.attraction;
-                this.viewModel.attraction = ((CustomAttraction)this.viewModel.attraction).convertToStockAttraction(this.viewModel.blueprint);
-                converted = true;
-            }
+            this.viewModel.attraction.setCategory(this.viewModel.category);
+            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Category to %s",
+                    this.viewModel.attraction, this.viewModel.attraction.getCategory()));
+            somethingChanged = true;
         }
 
-        if(this.viewModel.attraction.hasCreditType())
+        if(!this.viewModel.attraction.getManufacturer().equals(this.viewModel.manufacturer))
         {
-            if(!this.viewModel.attraction.getCreditType().equals(this.viewModel.creditType))
-            {
-                this.viewModel.attraction.setCreditType(this.viewModel.creditType);
-                Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's CreditType to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
-                somethingChanged = true;
-            }
+            this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
+            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Manufacturer to %s",
+                    this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
+            somethingChanged = true;
         }
 
-        if(this.viewModel.attraction.hasCategory())
+        if(!this.viewModel.attraction.getStatus().equals(this.viewModel.status))
         {
-            if(!this.viewModel.attraction.getCategory().equals(this.viewModel.category))
-            {
-                this.viewModel.attraction.setCategory(this.viewModel.category);
-                Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Category to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getCategory()));
-                somethingChanged = true;
-            }
+            this.viewModel.attraction.setStatus(this.viewModel.status);
+            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Status to %s",
+                    this.viewModel.attraction, this.viewModel.attraction.getStatus()));
+            somethingChanged = true;
         }
 
-        if(this.viewModel.attraction.hasManufacturer())
-        {
-            if(!this.viewModel.attraction.getManufacturer().equals(this.viewModel.manufacturer))
-            {
-                this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
-                Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Manufacturer to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
-                somethingChanged = true;
-            }
-        }
-
-        if(this.viewModel.attraction.hasStatus())
-        {
-            if(!this.viewModel.attraction.getStatus().equals(this.viewModel.status))
-            {
-                this.viewModel.attraction.setStatus(this.viewModel.status);
-                Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Status to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getStatus()));
-                somethingChanged = true;
-            }
-        }
-
-        if(converted)
-        {
-            super.markForCreation(this.viewModel.attraction);
-            super.markForUpdate(this.viewModel.attraction.getParent());
-            super.markForDeletion(this.viewModel.convertedAttraction);
-
-            this.returnResult(RESULT_OK);
-        }
-        else if(somethingChanged)
+        if(somethingChanged)
         {
             super.markForUpdate(this.viewModel.attraction);
             this.returnResult(RESULT_OK);
@@ -484,64 +424,64 @@ public class EditAttractionActivity extends BaseActivity
         this.textInputEditTextAttractionName.setSelection(this.viewModel.attraction.getName().length());
     }
 
-    private void decorateLayoutBlueprint()
-    {
-        this.layoutBlueprint.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickBlueprint> selected");
-
-                if(viewModel.blueprint != null)
-                {
-                    updateLayoutBlueprint(null);
-                    updateLayoutCreditType(viewModel.creditType);
-                    updateLayoutCategory(viewModel.category);
-                    updateLayoutManufacturer(viewModel.manufacturer);
-                }
-                else
-                {
-                    ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_BLUEPRINT, App.content.getContentOfType(Blueprint.class));
-                }
-            }
-        });
-
-        this.updateLayoutBlueprint(this.viewModel.blueprint);
-        this.layoutBlueprint.setVisibility(View.VISIBLE);
-    }
-
-    private void updateLayoutBlueprint(Blueprint blueprint)
-    {
-        this.viewModel.blueprint = blueprint;
-
-        Drawable icon;
-        if(this.viewModel.blueprint != null)
-        {
-            this.textViewBlueprint.setText(blueprint.getName());
-
-            this.textViewCreditType.setText(blueprint.getCreditType().getName());
-            this.textViewCreditType.setTextColor(getColor(R.color.grey));
-            this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
-
-            this.textViewCategory.setText(blueprint.getCategory().getName());
-            this.textViewCategory.setTextColor(getColor(R.color.grey));
-            this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
-
-            this.textViewManufacturer.setText(blueprint.getManufacturer().getName());
-            this.textViewManufacturer.setTextColor(getColor(R.color.grey));
-            this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
-
-            icon = this.closeIcon;
-        }
-        else
-        {
-            this.textViewBlueprint.setText(R.string.blueprint_not_applicable);
-            icon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
-        }
-
-        this.imageViewPickBlueprint.setImageDrawable(icon);
-    }
+//    private void decorateLayoutBlueprint()
+//    {
+//        this.layoutBlueprint.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickBlueprint> selected");
+//
+//                if(viewModel.blueprint != null)
+//                {
+//                    updateLayoutBlueprint(null);
+//                    updateLayoutCreditType(viewModel.creditType);
+//                    updateLayoutCategory(viewModel.category);
+//                    updateLayoutManufacturer(viewModel.manufacturer);
+//                }
+//                else
+//                {
+//                    ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_BLUEPRINT, App.content.getContentOfType(Blueprint.class));
+//                }
+//            }
+//        });
+//
+//        this.updateLayoutBlueprint(this.viewModel.blueprint);
+//        this.layoutBlueprint.setVisibility(View.VISIBLE);
+//    }
+//
+//    private void updateLayoutBlueprint(Blueprint blueprint)
+//    {
+//        this.viewModel.blueprint = blueprint;
+//
+//        Drawable icon;
+//        if(this.viewModel.blueprint != null)
+//        {
+//            this.textViewBlueprint.setText(blueprint.getName());
+//
+//            this.textViewCreditType.setText(blueprint.getCreditType().getName());
+//            this.textViewCreditType.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
+//
+//            this.textViewCategory.setText(blueprint.getCategory().getName());
+//            this.textViewCategory.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
+//
+//            this.textViewManufacturer.setText(blueprint.getManufacturer().getName());
+//            this.textViewManufacturer.setTextColor(getColor(R.color.grey));
+//            this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
+//
+//            icon = this.closeIcon;
+//        }
+//        else
+//        {
+//            this.textViewBlueprint.setText(R.string.blueprint_not_applicable);
+//            icon = !App.content.getContentOfType(Blueprint.class).isEmpty() ? this.pickIconBlack : this.pickIconGrey;
+//        }
+//
+//        this.imageViewPickBlueprint.setImageDrawable(icon);
+//    }
 
     private void decorateLayoutCreditType()
     {
@@ -552,11 +492,11 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "CreditType"));
-                }
-                else
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "CreditType"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, App.content.getContentOfType(CreditType.class));
                 }
@@ -584,11 +524,12 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCategory> selected");
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Category"));
-                }
-                else
+
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Category"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_CATEGORY, App.content.getContentOfType(Category.class));
                 }
@@ -616,11 +557,12 @@ public class EditAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickManufacturer> selected");
-                if(viewModel.blueprint != null)
-                {
-                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Manufacturer"));
-                }
-                else
+//
+//                if(viewModel.blueprint != null)
+//                {
+//                    Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_blueprint, "Manufacturer"));
+//                }
+//                else
                 {
                     ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
                 }

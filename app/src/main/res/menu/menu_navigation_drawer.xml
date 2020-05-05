@@ -12,10 +12,6 @@
         <item android:title="@string/group_title_navigation_drawer_manage">
             <menu>
                 <item
-                    android:id="@+id/navigationItem_ManageBlueprints"
-                    android:title="@string/item_navigation_drawer_manage_blueprints"
-                    android:icon="@drawable/ic_baseline_build"/>
-                <item
                     android:id="@+id/navigationItem_ManageCreditTypes"
                     android:title="@string/item_navigation_drawer_manage_credit_types"
                     android:icon="@drawable/ic_baseline_build"/>

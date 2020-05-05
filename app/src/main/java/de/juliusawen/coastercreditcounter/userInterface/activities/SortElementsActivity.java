@@ -21,7 +21,6 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Blueprint;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -31,13 +30,10 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class SortElementsActivity extends BaseActivity
 {
     private SortElementsActivityViewModel viewModel;
-    private RecyclerView recyclerView;
 
     private View frameLayoutDialogDown;
     private View frameLayoutDialogUp;
@@ -65,9 +61,6 @@ public class SortElementsActivity extends BaseActivity
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(this.viewModel.elementsToSort, null, false)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(Blueprint.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                     .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
 
@@ -82,10 +75,10 @@ public class SortElementsActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(type, Typeface.BOLD);
             }
         }
-        this.recyclerView = findViewById(R.id.recyclerViewSortElements);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setHasFixedSize(true);
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_sort_elements));
         super.createToolbar()

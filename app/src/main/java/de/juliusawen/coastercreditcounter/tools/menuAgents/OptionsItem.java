@@ -15,7 +15,6 @@ public enum OptionsItem
     SORT_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_DESCENDING(R.string.menu_item_sort_descending, -1),
 
-    SORT_BLUEPRINTS(R.string.menu_item_sort, -1),
     SORT_CREDIT_TYPES(R.string.menu_item_sort, -1),
     SORT_CATEGORIES(R.string.menu_item_sort, -1),
     SORT_MANUFACTURERS(R.string.menu_item_sort, -1),

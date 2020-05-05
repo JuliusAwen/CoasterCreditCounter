@@ -61,7 +61,7 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_on_site_attraction)), getString(R.string.help_text_show_on_site_attraction));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_on_site_attraction)), getString(R.string.help_text_show_attraction));
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(this.viewModel.onSiteAttraction.getName(), this.viewModel.onSiteAttraction.getParent().getName());

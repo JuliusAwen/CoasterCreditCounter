@@ -57,8 +57,6 @@ public interface IElement
     boolean isVisit();
     boolean isAttraction();
     boolean isCustomAttraction();
-    boolean isBlueprint();
-    boolean isStockAttraction();
     boolean isVisitedAttraction();
     boolean isProperty();
     boolean isNote();
@@ -67,9 +65,4 @@ public interface IElement
     boolean isPersistable();
     boolean isGroupHeader();
     boolean isOrphan();
-
-    boolean hasCreditType();
-    boolean hasCategory();
-    boolean hasManufacturer();
-    boolean hasStatus();
 }
