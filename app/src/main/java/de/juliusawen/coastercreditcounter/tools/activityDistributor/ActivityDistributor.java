@@ -68,11 +68,12 @@ public abstract class ActivityDistributor
             {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
-            context.startActivity(intent);
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityShow:: started [%s] for %s from [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityShow:: starting [%s] for %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), element, context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            context.startActivity(intent);
         }
         else
         {
@@ -135,11 +136,11 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
 
-            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
-
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityManageForResult:: started [%s] from [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityManageForResult:: starting [%s] from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
         }
         else
         {
@@ -211,11 +212,12 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
-            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityEditForResult:: started [%s] for %s from [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityEditForResult:: starting [%s] for %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), element, context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
         }
         else
         {
@@ -329,11 +331,12 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
             }
 
-            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
-
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: started [%s] with parent[%S] with RequestCode [%s] from [%s]",
-                    StringTool.parseActivityName(intent.getComponent().getShortClassName()), parentElement != null, requestCode, context.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityCreateForResult:: starting [%s] with parent %s with RequestCode [%s] from [%s]",
+                    StringTool.parseActivityName(intent.getComponent().getShortClassName()), parentElement != null ? parentElement : "false",
+                    requestCode, context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
         }
         else
         {
@@ -386,11 +389,12 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.title_sort));
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
-            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
 
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivitySortForResult:: started [%s] for [%d] elements with RequestCode [%s] from [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivitySortForResult:: starting [%s] for [%d] elements with RequestCode [%s] from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), elementsToSort.size(), requestCode, context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
         }
         else
         {
@@ -492,11 +496,11 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
 
-            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
-
-            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityPickForResult:: started [%s] for [%d] elements with RequestCode [%s] from [%s]",
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityPickForResult:: starting [%s] for [%d] elements with RequestCode [%s] from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), elementsToPickFrom.size(), requestCode, context.getClass().getSimpleName()));
             Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
         }
         else
         {

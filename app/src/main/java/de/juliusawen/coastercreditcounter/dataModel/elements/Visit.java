@@ -20,8 +20,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 
 /**
- * Parent: Park
- * Children: VisitedAttractions
+ * Parent: Park<br>
+ * Children: VisitedAttractions<br>
  */
 public final class Visit extends Element implements IPersistable
 {
@@ -155,8 +155,7 @@ public final class Visit extends Element implements IPersistable
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Visit.toString:: Apparently %s has no parent...!?", this.getFullName()));
-            return super.toString();
+            return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
         }
     }
 
