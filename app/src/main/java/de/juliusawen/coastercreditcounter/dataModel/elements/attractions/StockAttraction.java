@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Concrete physical entity created from blueprint
  *
  * Parent: Park
- * Children: none
+ * Children: Note
  */
 public final class StockAttraction extends OnSiteAttraction implements IOnSiteAttraction
 {

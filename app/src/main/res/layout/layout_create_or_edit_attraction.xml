@@ -32,7 +32,7 @@
                 style="@style/CreateOrEditAttractionTextView"
                 android:layout_width="wrap_content"
                 android:textStyle="bold"
-                android:text="@string/header_blueprint"/>
+                android:text="@string/header_clone"/>
 
             <TextView
                 style="@style/CreateOrEditAttractionTextView"

@@ -16,7 +16,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  * Individual attraction located at a particular park
  *
  * Parent: Park
- * Children: none
+ * Children: Note
  */
 public final class CustomAttraction extends OnSiteAttraction implements IOnSiteAttraction
 {

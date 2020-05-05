@@ -31,7 +31,7 @@
 
     <string name="text_total_rides">total rides: %1$d</string>
 
-    <string name="text_blueprint_group_header_name">Blueprints</string>
+    <string name="text_clone_group_header_name">Clones</string>
 
 
 
@@ -247,16 +247,16 @@
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
-    <!--BLUEPRINTS-->
-    <string name="blueprints">Blueprints</string>
-    <string name="title_create_blueprint">Create Blueprint</string>
-    <string name="title_edit_blueprint">Edit Blueprint</string>
-    <string name="title_pick_blueprint">Pick Blueprint</string>
-    <string name="title_manage_blueprints">Manage Blueprints</string>
-    <string name="blueprint_not_applicable">n/a</string>
-    <string name="header_blueprint">Blueprint:</string>
+    <!--CLONES-->
+    <string name="clones">Clones</string>
+    <string name="title_create_clone">Create Clone</string>
+    <string name="title_edit_clone">Edit Clone</string>
+    <string name="title_pick_clone">Pick Clone</string>
+    <string name="title_manage_clones">Manage Clones</string>
+    <string name="clone_not_applicable">n/a</string>
+    <string name="header_clone">Clone:</string>
 
-    <string name="alert_dialog_message_confirm_delete_blueprint_has_no_children">Do you really want to delete \'%1$s\'?</string>
+    <string name="alert_dialog_message_confirm_delete_clone_has_no_children">Do you really want to delete \'%1$s\'?</string>
     <string name="alert_dialog_message_confirm_delete_blueprint_has_children">Do you really want to delete \'%1$s\'? \n(attractions made from this blueprint are deleted as well, removed from visits, rides are deleted and ride count as well as credit count is adjusted)</string>
 
     <string name="hint_enter_blueprint_name">Enter blueprint name</string>
