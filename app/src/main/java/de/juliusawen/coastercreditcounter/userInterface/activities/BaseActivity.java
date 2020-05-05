@@ -131,10 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    protected void pause()
-    {
-        //do stuff onPause
-    }
+    protected void pause() {}
 
     private void startAppInitialization()
     {
@@ -589,14 +586,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             BaseActivity baseActivity = (BaseActivity)params[0];
             this.statisticType = (StatisticType)params[1];
 
-            switch(this.statisticType)
+            if(this.statisticType == StatisticType.GLOBAL_TOTALS)
             {
-                case GLOBAL_TOTALS:
-                    this.statistics = App.persistence.fetchStatisticsGlobalTotals();
-                    break;
-
-                default:
-                    break;
+                this.statistics = App.persistence.fetchStatisticsGlobalTotals();
             }
 
             return baseActivity;
