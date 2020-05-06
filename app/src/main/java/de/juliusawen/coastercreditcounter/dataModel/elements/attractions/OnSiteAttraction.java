@@ -37,7 +37,7 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
 
     public static OnSiteAttraction create(String name, int untrackedRideCount)
     {
-        return OnSiteAttraction.create(name, untrackedRideCount, UUID.randomUUID());
+        return OnSiteAttraction.create(name, untrackedRideCount, null);
     }
 
     public static OnSiteAttraction create(String name, int untrackedRideCount, UUID uuid)
@@ -45,9 +45,10 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
         OnSiteAttraction onSiteAttraction = null;
         if(Element.isNameValid(name))
         {
-            onSiteAttraction = new OnSiteAttraction(name, untrackedRideCount, uuid == null ? UUID.randomUUID() : uuid);
+            onSiteAttraction = new OnSiteAttraction(name, untrackedRideCount, uuid);
             Log.v(Constants.LOG_TAG,  String.format("OnSiteAttraction.create:: %s created", onSiteAttraction.getFullName()));
         }
+
         return onSiteAttraction;
     }
 
@@ -86,6 +87,7 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+            jsonObject.put(Constants.JSON_STRING_MODEL, this.getModel().getUuid());
             jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 

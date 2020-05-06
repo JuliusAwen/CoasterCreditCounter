@@ -28,7 +28,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistics;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -578,7 +578,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     private static class StatisticsProvider extends AsyncTask<Object, Void, BaseActivity>
     {
         private StatisticType statisticType;
-        private IStatistics statistics;
+        private IStatistic statistics;
 
         @Override
         protected BaseActivity doInBackground(Object... params)
@@ -602,7 +602,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
-    private void provideStatistics(StatisticType statisticType, IStatistics statistics)
+    private void provideStatistics(StatisticType statisticType, IStatistic statistics)
     {
         Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: statistics of type [%s] fetched - calling decorateStatistics(...) in [%s]",
                 statisticType, this.getClass().getSimpleName()));
@@ -611,7 +611,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         this.decorateStatistics(statisticType, statistics);
     }
 
-    protected void decorateStatistics(StatisticType statisticType, IStatistics statistics)
+    protected void decorateStatistics(StatisticType statisticType, IStatistic statistics)
     {
         Log.e(Constants.LOG_TAG, String.format("BaseActivity.decorateStatistics:: [%s] does not override decorateStatistics(...)", this.getClass().getSimpleName()));
     }

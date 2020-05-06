@@ -38,27 +38,44 @@ public final class Visit extends Element implements IPersistable
 
     public static Visit create(int year, int month, int day)
     {
-        return Visit.create(year, month, day, UUID.randomUUID());
+        return Visit.create(year, month, day, null);
     }
 
     public static Visit create(int year, int month, int day, UUID uuid)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
+
         return Visit.create(calendar, uuid);
     }
 
     public static Visit create(Calendar calendar)
     {
-        return Visit.create(calendar, UUID.randomUUID());
+        return Visit.create(calendar, null);
     }
 
     public static Visit create(Calendar calendar, UUID uuid)
     {
-        Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid == null ? UUID.randomUUID() : uuid, calendar);
-
+        Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid, calendar);
         Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
+
         return visit;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent() != null ? this.getParent().getName() : "no parent");
+    }
+
+    @Override
+    public void deleteElementAndDescendants()
+    {
+        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
+        {
+            visitedAttraction.deleteElementAndDescendants();
+        }
+        super.delete();
     }
 
     public Calendar getCalendar()
@@ -85,16 +102,6 @@ public final class Visit extends Element implements IPersistable
         Log.d(Constants.LOG_TAG, String.format("Visit.setName:: set date for %s to [%s] - changing name...", this, date));
 
         super.setName(date);
-    }
-
-    @Override
-    public void deleteElementAndDescendants()
-    {
-        for(VisitedAttraction visitedAttraction : this.getChildrenAsType(VisitedAttraction.class))
-        {
-            visitedAttraction.deleteElementAndDescendants();
-        }
-        super.delete();
     }
 
     public static boolean isCurrentVisit(Visit visit)
@@ -144,19 +151,6 @@ public final class Visit extends Element implements IPersistable
     public boolean isEditingEnabled()
     {
         return this.isEditingEnabled;
-    }
-
-    @Override
-    public String toString()
-    {
-        if(this.getParent() != null)
-        {
-            return String.format(Locale.getDefault(), "[%s \"%s\" @ %s]", this.getClass().getSimpleName(), this.getName(), this.getParent().getName());
-        }
-        else
-        {
-            return String.format(Locale.getDefault(), "[%s \"%s\"]", this.getClass().getSimpleName(), this.getName());
-        }
     }
 
     public JSONObject toJson() throws JSONException

@@ -30,7 +30,7 @@ public class Note extends Element implements IElement, IPersistable
 
     public static Note create(String text)
     {
-        return Note.create(text, UUID.randomUUID());
+        return Note.create(text, null);
     }
 
     public static Note create(String text, UUID uuid)
@@ -39,8 +39,8 @@ public class Note extends Element implements IElement, IPersistable
         String name = Note.buildName(text);
         if(Element.isNameValid(name))
         {
-            note = new Note(name, text, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Note.create:: %s created", note));
+            note = new Note(name, text, uuid);
+            Log.v(Constants.LOG_TAG,  String.format("Note.create:: %s created", note.getFullName()));
         }
         return note;
     }

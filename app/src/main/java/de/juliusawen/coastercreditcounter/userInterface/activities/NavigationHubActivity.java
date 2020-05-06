@@ -30,7 +30,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistics;
+import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -258,7 +258,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    protected void decorateStatistics(StatisticType statisticType, IStatistics statistics)
+    protected void decorateStatistics(StatisticType statisticType, IStatistic statistics)
     {
         if(statisticType == StatisticType.GLOBAL_TOTALS)
         {

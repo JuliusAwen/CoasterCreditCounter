@@ -32,7 +32,7 @@ public class Event extends Element implements IElement, IPersistable, IHasNote
 
     public static Event create(int year, int month, int day, Note note)
     {
-        return Event.create(year, month, day, note, UUID.randomUUID());
+        return Event.create(year, month, day, note, null);
     }
 
     public static Event create(int year, int month, int day, Note note, UUID uuid)
@@ -44,17 +44,16 @@ public class Event extends Element implements IElement, IPersistable, IHasNote
 
     public static Event create(Calendar calendar, Note note)
     {
-        return Event.create(calendar, note, UUID.randomUUID());
+        return Event.create(calendar, note, null);
     }
 
     public static Event create(Calendar calendar, Note note, UUID uuid)
     {
-        Event event = new Event(StringTool.fetchSimpleDate(calendar), calendar, note, uuid == null ? UUID.randomUUID() : uuid);
+        Event event = new Event(StringTool.fetchSimpleDate(calendar), calendar, note, uuid);
 
         Log.v(Constants.LOG_TAG,  String.format("Event.create:: %s created.", event.getFullName()));
         return event;
     }
-
 
     @Override
     public String getFullName()

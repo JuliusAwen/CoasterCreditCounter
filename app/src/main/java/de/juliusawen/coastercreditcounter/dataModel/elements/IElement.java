@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Base interface for all Elements
+ *      Base interface for all Elements<br>
  */
 public interface IElement
 {
@@ -56,13 +56,13 @@ public interface IElement
     boolean isPark();
     boolean isVisit();
     boolean isAttraction();
-    boolean isCustomAttraction();
+    boolean isOnSiteAttraction();
     boolean isVisitedAttraction();
     boolean isProperty();
     boolean isNote();
     boolean isEvent();
 
-    boolean isPersistable();
     boolean isGroupHeader();
     boolean isOrphan();
+    boolean isPersistable();
 }

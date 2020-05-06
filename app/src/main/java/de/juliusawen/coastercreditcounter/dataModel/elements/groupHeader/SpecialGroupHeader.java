@@ -19,9 +19,10 @@ public class SpecialGroupHeader extends Element implements IGroupHeader
         SpecialGroupHeader specialGroupHeader = null;
         if(Element.isNameValid(name))
         {
-            specialGroupHeader = new SpecialGroupHeader(name, UUID.randomUUID());
+            specialGroupHeader = new SpecialGroupHeader(name, null);
             Log.v(Constants.LOG_TAG,  String.format("SpecialGroupHeader.create:: %s created", specialGroupHeader.getFullName()));
         }
+
         return specialGroupHeader;
     }
 }

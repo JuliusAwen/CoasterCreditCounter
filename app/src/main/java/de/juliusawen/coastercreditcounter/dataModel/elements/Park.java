@@ -28,7 +28,7 @@ public final class Park extends Element implements IHasNote, IPersistable
 
     public static Park create(String name)
     {
-        return Park.create(name, UUID.randomUUID());
+        return Park.create(name, null);
     }
 
     public static Park create(String name, UUID uuid)
@@ -36,9 +36,10 @@ public final class Park extends Element implements IHasNote, IPersistable
         Park park = null;
         if(Element.isNameValid(name))
         {
-            park = new Park(name, uuid == null ? UUID.randomUUID() : uuid);
+            park = new Park(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Park.create:: %s created", park.getFullName()));
         }
+
         return park;
     }
 
@@ -49,6 +50,7 @@ public final class Park extends Element implements IHasNote, IPersistable
         {
             this.note = this.getChildrenAsType(Note.class).get(0);
         }
+
         return this.note;
     }
 

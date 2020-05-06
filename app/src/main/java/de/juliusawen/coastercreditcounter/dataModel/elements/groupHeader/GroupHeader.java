@@ -12,7 +12,7 @@ public class GroupHeader extends Element implements IGroupHeader
 {
     private final IElement groupElement; // eg. [Category "XYZ] - needed to find GroupHeader for Element when sorting
 
-    private GroupHeader(String name, UUID uuid, IElement groupElement)
+    private GroupHeader(String name, IElement groupElement, UUID uuid)
     {
         super(name, uuid);
         this.groupElement = groupElement;
@@ -21,7 +21,7 @@ public class GroupHeader extends Element implements IGroupHeader
     public static GroupHeader create(IElement groupItem)
     {
         GroupHeader groupHeader;
-        groupHeader = new GroupHeader(groupItem.getName(), UUID.randomUUID(), groupItem);
+        groupHeader = new GroupHeader(groupItem.getName(), groupItem, null);
 
         Log.v(Constants.LOG_TAG,  String.format("GroupHeader.create:: %s created", groupHeader.getFullName()));
 

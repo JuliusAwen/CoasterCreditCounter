@@ -28,7 +28,7 @@ public final class Category extends Element implements IProperty
 
     public static Category create(String name)
     {
-        return Category.create(name, UUID.randomUUID());
+        return Category.create(name, null);
     }
 
     public static Category create(String name, UUID uuid)
@@ -36,9 +36,10 @@ public final class Category extends Element implements IProperty
         Category category = null;
         if(Element.isNameValid(name))
         {
-            category = new Category(name, uuid == null ? UUID.randomUUID() : uuid);
+            category = new Category(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Category.create:: %s created.", category));
         }
+
         return category;
     }
 
@@ -49,15 +50,17 @@ public final class Category extends Element implements IProperty
             Log.w(Constants.LOG_TAG, "Category.getDefault:: no default set - creating default");
             Category.setDefault(Category.create((App.getContext().getString(R.string.default_category_name))));
         }
+
         return Category.defaultCategory;
     }
 
     public static void setDefault(Category defaultCategory)
     {
         Category.defaultCategory = defaultCategory;
-        Log.i(Constants.LOG_TAG, String.format("Category.setDefault:: %s set as default", defaultCategory));
+        Log.i(Constants.LOG_TAG, String.format("Category.setDefault:: %s set as default", Category.defaultCategory));
     }
 
+    @Override
     public boolean isDefault()
     {
         return Category.getDefault().equals(this);

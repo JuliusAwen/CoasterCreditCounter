@@ -32,7 +32,7 @@ public class VisitedAttraction extends Attraction
     public static VisitedAttraction create(OnSiteAttraction onSiteAttraction)
     {
         VisitedAttraction visitedAttraction;
-        visitedAttraction = new VisitedAttraction(onSiteAttraction, UUID.randomUUID());
+        visitedAttraction = new VisitedAttraction(onSiteAttraction, null);
 
         Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
 
@@ -105,7 +105,6 @@ public class VisitedAttraction extends Attraction
         Log.e(Constants.LOG_TAG, errorMessage);
         throw new IllegalStateException(errorMessage);
     }
-
 
     @Override
     public Manufacturer getManufacturer()

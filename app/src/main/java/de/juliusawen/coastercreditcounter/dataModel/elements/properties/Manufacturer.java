@@ -28,7 +28,7 @@ public final class Manufacturer extends Element implements IProperty
 
     public static Manufacturer create(String name)
     {
-        return Manufacturer.create(name, UUID.randomUUID());
+        return Manufacturer.create(name, null);
     }
 
     public static Manufacturer create(String name, UUID uuid)
@@ -36,9 +36,10 @@ public final class Manufacturer extends Element implements IProperty
         Manufacturer manufacturer = null;
         if(Element.isNameValid(name))
         {
-            manufacturer = new Manufacturer(name, uuid == null ? UUID.randomUUID() : uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer));
+            manufacturer = new Manufacturer(name, uuid);
+            Log.v(Constants.LOG_TAG,  String.format("Manufacturer.create:: %s created", manufacturer.getFullName()));
         }
+
         return manufacturer;
     }
 
@@ -49,15 +50,17 @@ public final class Manufacturer extends Element implements IProperty
             Log.w(Constants.LOG_TAG, "Manufacturer.getDefault:: no default set - creating default");
             Manufacturer.setDefault(Manufacturer.create((App.getContext().getString(R.string.default_manufacturer_name))));
         }
+
         return Manufacturer.defaultManufacturer;
     }
 
     public static void setDefault(Manufacturer defaultManufacturer)
     {
         Manufacturer.defaultManufacturer = defaultManufacturer;
-        Log.i(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: %s set as default", defaultManufacturer));
+        Log.i(Constants.LOG_TAG, String.format("Manufacturer.setDefault:: %s set as default", Manufacturer.defaultManufacturer));
     }
 
+    @Override
     public boolean isDefault()
     {
         return Manufacturer.getDefault().equals(this);

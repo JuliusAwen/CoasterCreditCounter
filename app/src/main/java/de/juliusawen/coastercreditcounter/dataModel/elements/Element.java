@@ -98,9 +98,8 @@ public abstract class Element implements IElement
     public String getFullName()
     {
         return String.format(Locale.getDefault(),
-                "[%s \"%s\" (%s)]",
-                this.getClass().getSimpleName(),
-                this.getName(),
+                "[%s (%s)]",
+                this.toString(),
                 this.getUuid()
         );
     }
@@ -378,7 +377,7 @@ public abstract class Element implements IElement
         return this instanceof IAttraction;
     }
 
-    public boolean isCustomAttraction()
+    public boolean isOnSiteAttraction()
     {
         return this instanceof OnSiteAttraction;
     }
@@ -403,11 +402,6 @@ public abstract class Element implements IElement
         return this instanceof Event;
     }
 
-    public boolean isPersistable()
-    {
-        return this instanceof IPersistable;
-    }
-
     public boolean isGroupHeader()
     {
         return this instanceof IGroupHeader;
@@ -416,5 +410,10 @@ public abstract class Element implements IElement
     public boolean isOrphan()
     {
         return this instanceof IOrphan;
+    }
+
+    public boolean isPersistable()
+    {
+        return this instanceof IPersistable;
     }
 }

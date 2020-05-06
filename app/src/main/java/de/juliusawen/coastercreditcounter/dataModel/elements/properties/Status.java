@@ -28,7 +28,7 @@ public final class Status extends Element implements IProperty
 
     public static Status create(String name)
     {
-        return Status.create(name, UUID.randomUUID());
+        return Status.create(name, null);
     }
 
     public static Status create(String name, UUID uuid)
@@ -36,9 +36,10 @@ public final class Status extends Element implements IProperty
         Status status = null;
         if(Element.isNameValid(name))
         {
-            status = new Status(name, uuid == null ? UUID.randomUUID() : uuid);
+            status = new Status(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Status.create:: %s created", status));
         }
+
         return status;
     }
 
@@ -49,15 +50,17 @@ public final class Status extends Element implements IProperty
             Log.w(Constants.LOG_TAG, "Status.getDefault:: no default set - creating default");
             Status.setDefault(Status.create((App.getContext().getString(R.string.default_status_name))));
         }
+
         return Status.defaultStatus;
     }
 
     public static void setDefault(Status defaultStatus)
     {
         Status.defaultStatus = defaultStatus;
-        Log.i(Constants.LOG_TAG, String.format("Status.setDefault:: %s set as default", defaultStatus));
+        Log.i(Constants.LOG_TAG, String.format("Status.setDefault:: %s set as default", Status.defaultStatus));
     }
 
+    @Override
     public boolean isDefault()
     {
         return Status.getDefault().equals(this);

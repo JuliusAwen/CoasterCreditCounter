@@ -9,6 +9,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 
 /**
@@ -20,7 +21,9 @@ public abstract class Attraction extends Element implements IAttraction
     private CreditType creditType;
     private Category category;
     private Manufacturer manufacturer;
+    private Model model;
     private Status status;
+
     private int untracktedRideCount = 0;
     private int trackedRideCount = 0;
 
@@ -53,6 +56,11 @@ public abstract class Attraction extends Element implements IAttraction
             this.manufacturer.deleteChild(this);
         }
 
+        if(this.model != null)
+        {
+            this.model.deleteChild(this);
+        }
+
         if(this.status != null)
         {
             this.status.deleteChild(this);
@@ -63,7 +71,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public CreditType getCreditType()
     {
-        return this.creditType == null ? CreditType.getDefault() : this.creditType;
+        return this.creditType != null ? this.creditType : CreditType.getDefault();
     }
 
     public void setCreditType(CreditType creditType)
@@ -79,13 +87,12 @@ public abstract class Attraction extends Element implements IAttraction
         }
 
         this.creditType = creditType;
-
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, creditType));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
     {
-        return this.category == null ? Category.getDefault() : this.category;
+        return this.category != null ? this.category : Category.getDefault();
     }
 
     public void setCategory(Category category)
@@ -101,13 +108,12 @@ public abstract class Attraction extends Element implements IAttraction
         }
 
         this.category = category;
-
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, category));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
     {
-        return this.manufacturer == null ? Manufacturer.getDefault() : this.manufacturer;
+        return this.manufacturer != null ? this.manufacturer : Manufacturer.getDefault();
     }
 
     public void setManufacturer(Manufacturer manufacturer)
@@ -123,13 +129,37 @@ public abstract class Attraction extends Element implements IAttraction
         }
 
         this.manufacturer = manufacturer;
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
+    }
 
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, manufacturer));
+    public Model getModel()
+    {
+        return this.model != null ? this.model : Model.getDefault();
+    }
+
+    public void setModel(Model model)
+    {
+        if(this.manufacturer != null)
+        {
+            this.model.deleteChild(this);
+        }
+
+        if(!model.containsChild(this))
+        {
+            model.addChild(this);
+        }
+
+        this.model = model;
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setModel:: set %s's Model to %s", this, this.model));
+
+        this.creditType = model.getCreditType();
+        this.category = model.getCategory();
+        this.manufacturer = model.getManufacturer();
     }
 
     public Status getStatus()
     {
-        return this.status == null ? Status.getDefault() : this.status;
+        return this.status != null ? this.status : Status.getDefault();
     }
 
     public void setStatus(Status status)
@@ -145,7 +175,7 @@ public abstract class Attraction extends Element implements IAttraction
         }
 
         this.status = status;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's Status to %s", this, status));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's Status to %s", this, this.status));
     }
 
     public int getUntracktedRideCount()

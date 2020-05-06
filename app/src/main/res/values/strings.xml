@@ -244,17 +244,6 @@
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
 
-    <!--MODELS-->
-    <string name="models">Models</string>
-    <string name="title_create_model">Create Model</string>
-    <string name="title_edit_model">Edit Model</string>
-    <string name="title_pick_model">Pick Model</string>
-    <string name="title_manage_models">Manage Models</string>
-    <string name="model_not_applicable">n/a</string>
-    <string name="header_model">Model:</string>
-
-    <string name="hint_enter_model_name">Enter model name</string>
-
 
     <!--CREDIT TYPES-->
     <string name="default_credit_type_name">no credit</string>
@@ -290,6 +279,17 @@
     <string name="subtitle_to_assign_manufacturer_to">to assign manufacturer to</string>
     <string name="hint_enter_manufacturer_name">Enter manufacturer name</string>
     <string name="header_manufacturer">Manufacturer:</string>
+
+
+    <!--MODELS-->
+    <string name="default_model_name">none</string>
+    <string name="models">Models</string>
+    <string name="title_create_model">Create Model</string>
+    <string name="title_edit_model">Edit Model</string>
+    <string name="title_pick_model">Pick Model</string>
+    <string name="subtitle_to_assign_model_to">to assign model to</string>
+    <string name="hint_enter_model_name">Enter model name</string>
+    <string name="header_model">Model:</string>
 
 
     <!--STATUS-->

@@ -27,7 +27,7 @@ public final class CreditType extends Element implements IProperty
 
     public static CreditType create(String name)
     {
-        return CreditType.create(name, UUID.randomUUID());
+        return CreditType.create(name, null);
     }
 
     public static CreditType create(String name, UUID uuid)
@@ -35,9 +35,10 @@ public final class CreditType extends Element implements IProperty
         CreditType creditType = null;
         if(Element.isNameValid(name))
         {
-            creditType = new CreditType(name, uuid == null ? UUID.randomUUID() : uuid);
+            creditType = new CreditType(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("CreditType.create:: %s created.", creditType));
         }
+
         return creditType;
     }
 
@@ -48,15 +49,17 @@ public final class CreditType extends Element implements IProperty
             Log.w(Constants.LOG_TAG, "CreditType.getDefault:: no default set - creating default");
             CreditType.setDefault(CreditType.create(App.getContext().getString(R.string.default_credit_type_name)));
         }
+
         return CreditType.defaultCreditType;
     }
 
     public static void setDefault(CreditType defaultCreditType)
     {
         CreditType.defaultCreditType = defaultCreditType;
-        Log.i(Constants.LOG_TAG, String.format("CreditType.setDefault:: %s set as default", defaultCreditType));
+        Log.i(Constants.LOG_TAG, String.format("CreditType.setDefault:: %s set as default", CreditType.defaultCreditType));
     }
 
+    @Override
     public boolean isDefault()
     {
         return CreditType.getDefault().equals(this);

@@ -5,8 +5,8 @@ import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
 /**
- * Marks Element as being a Property.
- * Can be CreditType, Category, Manufacturer or Status
+ *      Marks Element as being a Property.<br>
+ *      Can be CreditType, Category, Manufacturer, Model or Status<br>
  */
 public interface IProperty extends IElement, IOrphan, IPersistable
 {

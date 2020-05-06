@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.dataModel.statistics;
 
-public class StatisticsGlobalTotals implements IStatistics
+public class StatisticsGlobalTotals implements IStatistic
 {
     public int credits;
     public int rides;

@@ -27,7 +27,7 @@ public final class Location extends Element implements IPersistable
 
     public static Location create(String name)
     {
-        return Location.create(name, UUID.randomUUID());
+        return Location.create(name, null);
     }
 
     public static Location create(String name, UUID uuid)
@@ -38,6 +38,7 @@ public final class Location extends Element implements IPersistable
             location = new Location(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
         }
+
         return location;
     }
 
