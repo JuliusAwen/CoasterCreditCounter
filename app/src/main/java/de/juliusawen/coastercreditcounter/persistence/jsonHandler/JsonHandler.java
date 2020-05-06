@@ -558,15 +558,15 @@ public class JsonHandler implements IDatabaseWrapper
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
 
             Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
-            if(model.isDefault())
+            if(!model.isDefault())
+            {
+                element.setModel(model);
+            }
+            else
             {
                 element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            }
-            else
-            {
-                element.setModel(model);
             }
 
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
