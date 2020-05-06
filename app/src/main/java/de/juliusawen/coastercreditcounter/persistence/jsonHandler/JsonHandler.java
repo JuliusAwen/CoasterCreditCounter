@@ -534,6 +534,7 @@ public class JsonHandler implements IDatabaseWrapper
             Location element = Location.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
             elements.add(element);
         }
+
         return elements;
     }
 
@@ -545,6 +546,7 @@ public class JsonHandler implements IDatabaseWrapper
             Park element  = Park.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
             elements.add(element);
         }
+
         return elements;
     }
 
@@ -565,9 +567,11 @@ public class JsonHandler implements IDatabaseWrapper
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
             }
+
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
         }
+
         return elements;
     }
 
@@ -579,6 +583,7 @@ public class JsonHandler implements IDatabaseWrapper
             Visit element = Visit.create(temporaryJsonElement.year, temporaryJsonElement.month, temporaryJsonElement.day, temporaryJsonElement.uuid);
             elements.add(element);
         }
+
         return elements;
     }
 

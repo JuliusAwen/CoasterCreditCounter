@@ -206,8 +206,6 @@ public class ShowParkActivity extends BaseActivity
                 break;
             }
 
-
-
             default:
                 break;
         }
@@ -315,23 +313,23 @@ public class ShowParkActivity extends BaseActivity
             {
                 super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
                         {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                Log.i(LOG_TAG, "ShowParkActivity.onClickFloatingActionButton:: FloatingActionButton clicked");
+                            Log.i(LOG_TAG, "ShowParkActivity.onClickFloatingActionButton:: FloatingActionButton clicked");
 
-                                Note note = viewModel.park.getNote();
-                                if(note != null)
-                                {
-                                    ActivityDistributor.startActivityEditForResult(ShowParkActivity.this, RequestCode.EDIT_NOTE, note);
-                                }
-                                else
-                                {
-                                    ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_NOTE, ShowParkActivity.this.viewModel.park);
-                                }
+                            Note note = viewModel.park.getNote();
+                            if(note != null)
+                            {
+                                ActivityDistributor.startActivityEditForResult(ShowParkActivity.this, RequestCode.EDIT_NOTE, note);
                             }
-                        });
+                            else
+                            {
+                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_NOTE, ShowParkActivity.this.viewModel.park);
+                            }
+                        }
+                    });
                 break;
             }
 
@@ -339,13 +337,13 @@ public class ShowParkActivity extends BaseActivity
             {
                 super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
                         {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_ATTRACTION, viewModel.park);
-                            }
-                        });
+                            ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_ATTRACTION, viewModel.park);
+                        }
+                    });
                 break;
             }
 
@@ -353,13 +351,13 @@ public class ShowParkActivity extends BaseActivity
             {
                 super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
                         {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_VISIT, viewModel.park);
-                            }
-                        });
+                            ActivityDistributor.startActivityCreateForResult(ShowParkActivity.this, RequestCode.CREATE_VISIT, viewModel.park);
+                        }
+                    });
                 break;
             }
         }
@@ -371,11 +369,11 @@ public class ShowParkActivity extends BaseActivity
         private final String parkUuid;
 
         private final Drawable[] tabTitleDrawables = new Drawable[]
-                {
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
-                };
+            {
+                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
+                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
+                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
+            };
 
         TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
         {
@@ -395,14 +393,17 @@ public class ShowParkActivity extends BaseActivity
                 {
                     return ShowParkOverviewFragment.newInstance(this.parkUuid);
                 }
+
                 case SHOW_ATTRACTIONS:
                 {
                     return ShowAttractionsFragment.newInstance(this.parkUuid);
                 }
+
                 case SHOW_VISITS:
                 {
                     return ShowVisitsFragment.newInstance(this.parkUuid);
                 }
+
                 default:
                     Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
                     return null;
@@ -421,11 +422,13 @@ public class ShowParkActivity extends BaseActivity
                     showParkOverviewFragment = (ShowParkOverviewFragment)instantiatedFragment;
                     break;
                 }
+
                 case SHOW_ATTRACTIONS:
                 {
                     showAttractionsFragment = (ShowAttractionsFragment)instantiatedFragment;
                     break;
                 }
+
                 case SHOW_VISITS:
                 {
                     showVisitsFragment = (ShowVisitsFragment)instantiatedFragment;

@@ -12,11 +12,12 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  *      Parent: none<br>
- *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
+ *      Children: Attractions<br>
  */
 public class Model extends Element implements IProperty
 {
@@ -90,6 +91,12 @@ public class Model extends Element implements IProperty
     public void setCreditType(CreditType creditType)
     {
         this.creditType = creditType;
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s - setting in Attractions...", this, this.creditType));
+
+        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
+        {
+            attraction.setCreditType(creditType);
+        }
     }
 
     public Category getCategory()
@@ -100,6 +107,12 @@ public class Model extends Element implements IProperty
     public void setCategory(Category category)
     {
         this.category = category;
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s - setting in Attractions...", this, this.category));
+
+        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
+        {
+            attraction.setCategory(category);
+        }
     }
 
     public Manufacturer getManufacturer()
@@ -110,6 +123,12 @@ public class Model extends Element implements IProperty
     public void setManufacturer(Manufacturer manufacturer)
     {
         this.manufacturer = manufacturer;
+        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s - setting in Attractions...", this, this.manufacturer));
+
+        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
+        {
+            attraction.setManufacturer(manufacturer);
+        }
     }
 
     @Override
