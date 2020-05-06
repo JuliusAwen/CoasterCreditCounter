@@ -44,8 +44,8 @@ public abstract class Constants
     public static final String JSON_STRING_CATEGORIES = "categories";
     public static final String JSON_STRING_MANUFACTURER = "manufacturer";
     public static final String JSON_STRING_MANUFACTURERS = "manufacturers";
-    public static final String JSON_STRING_MODEL = "manufacturer";
-    public static final String JSON_STRING_MODELS = "manufacturers";
+    public static final String JSON_STRING_MODEL = "model";
+    public static final String JSON_STRING_MODELS = "models";
     public static final String JSON_STRING_STATUS = "status";
     public static final String JSON_STRING_STATUSES = "statuses";
 

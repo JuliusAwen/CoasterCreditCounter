@@ -19,6 +19,7 @@ public class TemporaryJsonElement
     public UUID creditTypeUuid;
     public UUID categoryUuid;
     public UUID manufacturerUuid;
+    public UUID modelUuid;
     public UUID statusUuid;
     public String noteText;
     public boolean isDefault;

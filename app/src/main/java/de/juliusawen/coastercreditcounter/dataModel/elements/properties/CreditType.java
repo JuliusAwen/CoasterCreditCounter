@@ -14,8 +14,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Parent: none
- * Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)
+ *      Parent: none<br>
+ *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
  */
 public final class CreditType extends Element implements IProperty
 {
@@ -42,6 +42,12 @@ public final class CreditType extends Element implements IProperty
         return creditType;
     }
 
+    @Override
+    public boolean isDefault()
+    {
+        return CreditType.getDefault().equals(this);
+    }
+
     public static CreditType getDefault()
     {
         if(CreditType.defaultCreditType == null)
@@ -60,12 +66,6 @@ public final class CreditType extends Element implements IProperty
     }
 
     @Override
-    public boolean isDefault()
-    {
-        return CreditType.getDefault().equals(this);
-    }
-
-    @Override
     public JSONObject toJson() throws JSONException
     {
         try
@@ -73,7 +73,7 @@ public final class CreditType extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(CreditType.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
             Log.v(Constants.LOG_TAG, String.format("CreditType.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

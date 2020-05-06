@@ -21,6 +21,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Visited
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
@@ -32,6 +33,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     private final CreditTypes creditTypes;
     private final Categories categories;
     private final Manufacturers manufacturers;
+    private final Models models;
     private final Statuses statuses;
     private final Locations locations;
 
@@ -54,7 +56,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.creditTypes = new CreditTypes();
         this.categories = new Categories();
         this.manufacturers = new Manufacturers();
+        this.models = new Models(this.creditTypes, this.categories, this.manufacturers);
         this.statuses = new Statuses();
+
         this.locations = new Locations();
     }
 
@@ -90,6 +94,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         content.addElements(ConvertTool.convertElementsToType(creditTypes.AllCreditTypes, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(categories.AllCategories, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(manufacturers.AllManufacturers, IElement.class));
+        content.addElements(ConvertTool.convertElementsToType(models.AllModels, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(statuses.AllStatuses, IElement.class));
 
         Log.e(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: mock data successfully created - took [%d]ms", stopwatch.stop()));
@@ -301,9 +306,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         heidePark.addChildAndSetParent(grottenblitz);
 
         OnSiteAttraction limit = OnSiteAttraction.create("Limit", 1);
-        limit.setCreditType(creditTypes.RollerCoaster);
-        limit.setCategory(categories.RollerCoasters);
-        limit.setManufacturer(manufacturers.Vekoma);
+        limit.setModel(models.SuspendedLoopingCoaster);
         heidePark.addChildAndSetParent(limit);
 
         OnSiteAttraction indyBlitz = OnSiteAttraction.create("Indy-Blitz", 1);
@@ -474,9 +477,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(speedOfSound);
 
         OnSiteAttraction elCondor = OnSiteAttraction.create("El Condor", 1);
-        elCondor.setCreditType(creditTypes.RollerCoaster);
-        elCondor.setCategory(categories.RollerCoasters);
-        elCondor.setManufacturer(manufacturers.Vekoma);
+        elCondor.setModel(models.SuspendedLoopingCoaster);
         walibiHolland.addChildAndSetParent(elCondor);
 
         OnSiteAttraction drako = OnSiteAttraction.create("Drako", 2);
@@ -1067,9 +1068,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         movieParkGermany.addChildAndSetParent(jimmyNeutronsAtomicFlyer);
 
         OnSiteAttraction mpXpress = OnSiteAttraction.create("MP Xpress");
-        mpXpress.setCreditType(creditTypes.RollerCoaster);
-        mpXpress.setCategory(categories.RollerCoasters);
-        mpXpress.setManufacturer(manufacturers.Vekoma);
+        mpXpress.setModel(models.SuspendedLoopingCoaster);
         movieParkGermany.addChildAndSetParent(mpXpress);
 
         OnSiteAttraction backyardigans = OnSiteAttraction.create("The Backyardigans: Mission to Mars");
@@ -1760,9 +1759,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         energylandia.addChildAndSetParent(formula);
 
         OnSiteAttraction mayan = OnSiteAttraction.create("Mayan");
-        mayan.setCreditType(creditTypes.RollerCoaster);
-        mayan.setCategory(categories.RollerCoasters);
-        mayan.setManufacturer(manufacturers.Vekoma);
+        mayan.setModel(models.SuspendedLoopingCoaster);
         energylandia.addChildAndSetParent(mayan);
 
         OnSiteAttraction dragon = OnSiteAttraction.create("Dragon");
@@ -1966,7 +1963,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final List<CreditType> AllCreditTypes = new LinkedList<>();
 
-        CreditTypes()
+        private CreditTypes()
         {
             AllCreditTypes.add(CreditType.getDefault());
 
@@ -1985,7 +1982,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final List<Category> AllCategories = new LinkedList<>();
 
-        Categories()
+        private Categories()
         {
             AllCategories.add(Category.getDefault());
 
@@ -2028,7 +2025,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final List<Manufacturer> AllManufacturers = new LinkedList<>();
 
-        Manufacturers()
+        private Manufacturers()
         {
             AllManufacturers.add(Manufacturer.getDefault());
 
@@ -2060,6 +2057,24 @@ public final class DatabaseMock implements IDatabaseWrapper
         }
     }
 
+    static private class Models
+    {
+        final Model SuspendedLoopingCoaster = Model.create("Suspended Looping Coaster");
+
+        final List<Model> AllModels = new LinkedList<>();
+
+        private Models(CreditTypes creditTypes, Categories categories, Manufacturers manufacturers)
+        {
+            AllModels.add(Model.getDefault());
+
+            SuspendedLoopingCoaster.setCreditType(creditTypes.RollerCoaster);
+            SuspendedLoopingCoaster.setCategory(categories.RollerCoasters);
+            SuspendedLoopingCoaster.setManufacturer(manufacturers.Vekoma);
+
+            AllModels.add(SuspendedLoopingCoaster);
+        }
+    }
+
     static private class Statuses
     {
         final Status ClosedForRefurbishment = Status.create("closed for refurbishment");
@@ -2070,7 +2085,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final List<Status> AllStatuses = new LinkedList<>();
 
-        Statuses()
+        private Statuses()
         {
             AllStatuses.add(Status.getDefault());
 
@@ -2093,7 +2108,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Location Spain = Location.create("Spain");
         final Location Poland = Location.create("Poland");
 
-        Locations()
+        private Locations()
         {
             Germany.addChildAndSetParent(Bremen);
 

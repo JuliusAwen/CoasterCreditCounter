@@ -139,7 +139,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setModel(Model model)
     {
-        if(this.manufacturer != null)
+        if(this.model != null)
         {
             this.model.deleteChild(this);
         }
@@ -152,9 +152,9 @@ public abstract class Attraction extends Element implements IAttraction
         this.model = model;
         Log.d(Constants.LOG_TAG,  String.format("Attraction.setModel:: set %s's Model to %s", this, this.model));
 
-        this.creditType = model.getCreditType();
-        this.category = model.getCategory();
-        this.manufacturer = model.getManufacturer();
+        this.setCreditType(model.getCreditType());
+        this.setCategory(model.getCategory());
+        this.setManufacturer(model.getManufacturer());
     }
 
     public Status getStatus()

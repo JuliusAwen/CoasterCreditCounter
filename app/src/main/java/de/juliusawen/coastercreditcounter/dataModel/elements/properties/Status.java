@@ -14,8 +14,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Parent: none
- * Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)
+ *      Parent: none<br>
+ *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
  */
 public final class Status extends Element implements IProperty
 {
@@ -43,6 +43,12 @@ public final class Status extends Element implements IProperty
         return status;
     }
 
+    @Override
+    public boolean isDefault()
+    {
+        return Status.getDefault().equals(this);
+    }
+
     public static Status getDefault()
     {
         if(Status.defaultStatus == null)
@@ -61,12 +67,6 @@ public final class Status extends Element implements IProperty
     }
 
     @Override
-    public boolean isDefault()
-    {
-        return Status.getDefault().equals(this);
-    }
-
-    @Override
     public JSONObject toJson() throws JSONException
     {
         try
@@ -74,7 +74,7 @@ public final class Status extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.equals(Status.getDefault()));
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
             Log.v(Constants.LOG_TAG, String.format("Status.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

@@ -42,6 +42,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Visited
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -184,6 +185,7 @@ public class JsonHandler implements IDatabaseWrapper
         content.addElement(CreditType.getDefault());
         content.addElement(Category.getDefault());
         content.addElement(Manufacturer.getDefault());
+        content.addElement(Model.getDefault());
         content.addElement(Status.getDefault());
         return this.saveContent(content);
     }
@@ -252,6 +254,12 @@ public class JsonHandler implements IDatabaseWrapper
                 content.addElements(this.createManufacturers(temporaryManufacturers));
             }
 
+            if(!jsonObjectContent.isNull((Constants.JSON_STRING_MODELS)))
+            {
+                List<TemporaryJsonElement> temporaryModels = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_MODELS));
+                content.addElements(this.createModels(temporaryModels, content)); // create CreditTypes, Categories and Manufacturers first!
+            }
+
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_STATUSES))
             {
                 List<TemporaryJsonElement> temporaryStatuses = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_STATUSES));
@@ -286,7 +294,7 @@ public class JsonHandler implements IDatabaseWrapper
             if(!jsonObjectContent.isNull(Constants.JSON_STRING_VISITS))
             {
                 this.temporaryVisits = this.createTemporaryElements(jsonObjectContent.getJSONArray(Constants.JSON_STRING_VISITS));
-                content.addElements(this.createVisits(this.temporaryVisits));
+                content.addElements(this.createVisits(this.temporaryVisits)); //create all IProperty first!
             }
         }
         catch(JSONException e)
@@ -357,14 +365,19 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryJsonElement.creditTypeUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_CREDIT_TYPE));
                 }
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_CATEGORY))
+                {
+                    temporaryJsonElement.categoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_CATEGORY));
+                }
+
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_MANUFACTURER))
                 {
                     temporaryJsonElement.manufacturerUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_MANUFACTURER));
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_CATEGORY))
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_MODEL))
                 {
-                    temporaryJsonElement.categoryUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_CATEGORY));
+                    temporaryJsonElement.modelUuid = UUID.fromString(jsonObjectItem.getString(Constants.JSON_STRING_MODEL));
                 }
 
                 if(!jsonObjectItem.isNull(Constants.JSON_STRING_STATUS))
@@ -411,7 +424,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!creditTypes.contains(CreditType.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - creating default as fallback");
             creditTypes.add(CreditType.getDefault());
         }
 
@@ -434,7 +447,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!categories.contains(Category.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - creating default as fallback");
             categories.add(Category.getDefault());
         }
 
@@ -457,11 +470,37 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!manufacturers.contains(Manufacturer.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - creating default as fallback");
             manufacturers.add(Manufacturer.getDefault());
         }
 
         return manufacturers;
+    }
+
+    private LinkedList<IElement> createModels(List<TemporaryJsonElement> temporaryJsonElements, Content content)
+    {
+        LinkedList<IElement> models = new LinkedList<>();
+        for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
+        {
+            Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
+            model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+
+            if(temporaryJsonElement.isDefault)
+            {
+                Model.setDefault(model);
+            }
+            models.add(model);
+        }
+
+        if(!models.contains(Model.getDefault()))
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.createModels:: no default Model found - creating default as fallback");
+            models.add(Model.getDefault());
+        }
+
+        return models;
     }
 
     private LinkedList<IElement> createStatuses(List<TemporaryJsonElement> temporaryJsonElements)
@@ -515,9 +554,17 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
-            element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
-            element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
-            element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+
+            if(temporaryJsonElement.modelUuid != null)
+            {
+                element.setModel(this.getModelFromUuid(temporaryJsonElement.modelUuid, content));
+            }
+            else
+            {
+                element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+                element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
+                element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            }
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
             elements.add(element);
         }
@@ -586,6 +633,20 @@ public class JsonHandler implements IDatabaseWrapper
         {
             Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - using default", uuid));
             return Manufacturer.getDefault();
+        }
+    }
+
+    private Model getModelFromUuid(UUID uuid, Content content)
+    {
+        IElement element = content.getContentByUuid(uuid);
+        if(element instanceof Model)
+        {
+            return (Model) element;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getModelFromUuid:: fetched Element for UUID [%s] is not a Model - using default", uuid));
+            return Model.getDefault();
         }
     }
 
@@ -723,6 +784,10 @@ public class JsonHandler implements IDatabaseWrapper
             jsonObject.put(Constants.JSON_STRING_MANUFACTURERS, content.getContentOfType(Manufacturer.class).isEmpty()
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Manufacturer.class)));
+
+            jsonObject.put(Constants.JSON_STRING_MODELS, content.getContentOfType(Model.class).isEmpty()
+                    ? JSONObject.NULL
+                    : this.createJsonArray(content.getContentAsType(Model.class)));
 
             jsonObject.put(Constants.JSON_STRING_STATUSES, content.getContentOfType(Status.class).isEmpty()
                     ? JSONObject.NULL

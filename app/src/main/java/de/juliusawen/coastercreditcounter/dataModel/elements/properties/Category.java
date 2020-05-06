@@ -14,8 +14,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
- * Parent: none
- * Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)
+ *      Parent: none<br>
+ *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
  */
 public final class Category extends Element implements IProperty
 {
@@ -43,6 +43,12 @@ public final class Category extends Element implements IProperty
         return category;
     }
 
+    @Override
+    public boolean isDefault()
+    {
+        return Category.getDefault().equals(this);
+    }
+
     public static Category getDefault()
     {
         if(Category.defaultCategory == null)
@@ -58,12 +64,6 @@ public final class Category extends Element implements IProperty
     {
         Category.defaultCategory = defaultCategory;
         Log.i(Constants.LOG_TAG, String.format("Category.setDefault:: %s set as default", Category.defaultCategory));
-    }
-
-    @Override
-    public boolean isDefault()
-    {
-        return Category.getDefault().equals(this);
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
@@ -11,7 +12,12 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
+/**
+ *      Parent: none<br>
+ *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
+ */
 public class Model extends Element implements IProperty
 {
     private static Model defaultModel;
@@ -20,27 +26,25 @@ public class Model extends Element implements IProperty
     private Category category;
     private Manufacturer manufacturer;
 
-    private Model(String name, CreditType creditType, Category category, Manufacturer manufacturer, UUID uuid)
+    private Model(String name, UUID uuid)
     {
         super(name, uuid);
-        this.creditType = creditType;
-        this.category = category;
-        this.manufacturer = manufacturer;
     }
 
-    public static Model create(String name, CreditType creditType, Category category, Manufacturer manufacturer)
+    public static Model create(String name)
     {
-        return create(name, creditType, category, manufacturer, null);
+        return create(name, null);
     }
 
-    public static Model create(String name, CreditType creditType, Category category, Manufacturer manufacturer, UUID uuid)
+    public static Model create(String name, UUID uuid)
     {
         Model model = null;
         if(Element.isNameValid(name))
         {
-            model = new Model(name, creditType, category, manufacturer, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Model.create:: %s created", manufacturer));
+            model = new Model(name, uuid);
+            Log.v(Constants.LOG_TAG,  String.format("Model.create:: %s created", model));
         }
+
         return model;
     }
 
@@ -58,7 +62,7 @@ public class Model extends Element implements IProperty
     @Override
     public boolean isDefault()
     {
-        return false;
+        return Model.getDefault().equals(this);
     }
 
     public static Model getDefault()
@@ -66,7 +70,7 @@ public class Model extends Element implements IProperty
         if(Model.defaultModel == null)
         {
             Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
-            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name)), null, null, null));
+            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name))));
         }
 
         return Model.defaultModel;
@@ -109,8 +113,27 @@ public class Model extends Element implements IProperty
     }
 
     @Override
-    public JSONObject toJson() //throws JSONException
+    public JSONObject toJson() throws JSONException
     {
-        return null;
+        try
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            JsonTool.putNameAndUuid(jsonObject, this);
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
+
+            Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            return jsonObject;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, String.format("Model.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            throw e;
+        }
     }
 }
