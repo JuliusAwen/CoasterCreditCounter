@@ -102,7 +102,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
         this.closeNavigationDrawer();
 
-        this.setStatisticsGlobalTotals();
+        this.setStatistics();
     }
 
     @Override
@@ -252,7 +252,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.startActivityShowLocations();
     }
 
-    private void setStatisticsGlobalTotals()
+    private void setStatistics()
     {
         super.getStatistics(StatisticType.GLOBAL_TOTALS);
     }
@@ -611,7 +611,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     if(App.content.restoreBackup(true))
                     {
                         Toaster.makeShortToast(NavigationHubActivity.this, getString(R.string.information_restore_content_backup_success));
-                        setStatisticsGlobalTotals();
+                        setStatistics();
                     }
                     else
                     {
