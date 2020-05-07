@@ -658,8 +658,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         locations.Bremen.addChildAndSetParent(freimarkt2019);
 
         OnSiteAttraction rockAndRollerCoaster = OnSiteAttraction.create("Rock & Roller Coaster");
-        rockAndRollerCoaster.setCreditType(creditTypes.RollerCoaster);
-        rockAndRollerCoaster.setCategory(categories.RollerCoasters);
+        rockAndRollerCoaster.setModel(models.Schwarzkopf_Wildcat);
         freimarkt2019.addChildAndSetParent(rockAndRollerCoaster);
 
         OnSiteAttraction wildeMausXXL = OnSiteAttraction.create("Wilde Maus XXL");
@@ -1945,6 +1944,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model RMC_IBoxTrack = Model.create("IBox Track");
 
         final Model Schwarzkopf_Stahlachterbahn = Model.create("Stahlachterbahn");
+        final Model Schwarzkopf_Wildcat = Model.create("Wildcat");
 
         final Model Maurer_WildeMausClassic = Model.create("Wilde Maus Classic");
         final Model Maurer_SpinningCoaster = Model.create("Spinning Coaster");
@@ -2034,6 +2034,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.RMC, RMC_IBoxTrack);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Schwarzkopf, Schwarzkopf_Stahlachterbahn);
+            this.decorateRollerCoasterAndAddToList(manufacturers.Schwarzkopf, Schwarzkopf_Wildcat);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.MaurerRides, Maurer_WildeMausClassic);
             this.decorateRollerCoasterAndAddToList(manufacturers.MaurerRides, Maurer_SpinningCoaster);
