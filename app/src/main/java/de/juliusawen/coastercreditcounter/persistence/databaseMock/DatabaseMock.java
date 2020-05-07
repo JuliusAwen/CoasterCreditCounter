@@ -439,7 +439,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(elCondor);
 
         OnSiteAttraction drako = OnSiteAttraction.create("Drako", 2);
-        drako.setModel(models.Zierer_Tivoli);
+        drako.setModel(models.Zierer_Tivoli_Medium);
         walibiHolland.addChildAndSetParent(drako);
 
         OnSiteAttraction robinHood = OnSiteAttraction.create("Robin Hood", 2);
@@ -1286,7 +1286,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         hansaPark.addChildAndSetParent(schwurDesKaernan);
 
         OnSiteAttraction nessie = OnSiteAttraction.create("Nessie", 3);
-        nessie.setModel(models.Schwarzkopf_Stahlachterbahn);
+        nessie.setCreditType(creditTypes.RollerCoaster);
+        nessie.setCategory(categories.RollerCoasters);
+        nessie.setManufacturer(manufacturers.Schwarzkopf);
         hansaPark.addChildAndSetParent(nessie);
 
         OnSiteAttraction crazyMine = OnSiteAttraction.create("Crazy-Mine", 3);
@@ -1389,9 +1391,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         Park magicParkVerden = Park.create("Magic Park Verden");
         locations.Germany.addChildAndSetParent(magicParkVerden);
 
-        OnSiteAttraction achterbahn = OnSiteAttraction.create("Magic Park Achterbahn");
-        achterbahn.setCreditType(creditTypes.RollerCoaster);
-        achterbahn.setCategory(categories.RollerCoasters);
+        OnSiteAttraction achterbahn = OnSiteAttraction.create("Die Eiserne Schlange");
+        achterbahn.setModel(models.Zierer_Tivoli_Large);
         magicParkVerden.addChildAndSetParent(achterbahn);
 
         OnSiteAttraction wildwasserbahn = OnSiteAttraction.create("Wildwasserbahn");
@@ -1453,6 +1454,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction pegasus = OnSiteAttraction.create("Pegasus", 1);
         pegasus.setModel(models.Mack_YoungstarCoaster);
+        europaPark.addChildAndSetParent(pegasus);
 
         OnSiteAttraction alpenexpressEnzian = OnSiteAttraction.create("Alpenexpress Enzian", 1);
         alpenexpressEnzian.setModel(models.Mack_PoweredCoaster);
@@ -1923,7 +1925,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Mack_SuperSplash = Model.create("SuperSplash");
         final Model Mack_WaterCoaster = Model.create("Water Coaster");
         final Model Mack_SpinningCoaster = Model.create("Spinning Coaster");
-        final Model Mack_ChildrensCoaster = Model.create("Children's Coaster");
         final Model Mack_Bobsled = Model.create("Bobsled");
         final Model Mack_WildeMaus = Model.create("Wilde Maus");
         final Model Mack_YoungstarCoaster = Model.create("Youngstar Coaster");
@@ -1943,7 +1944,6 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final Model RMC_IBoxTrack = Model.create("IBox Track");
 
-        final Model Schwarzkopf_Stahlachterbahn = Model.create("Stahlachterbahn");
         final Model Schwarzkopf_Wildcat = Model.create("Wildcat");
 
         final Model Maurer_WildeMausClassic = Model.create("Wilde Maus Classic");
@@ -1971,7 +1971,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         final Model Zierer_ForceOne = Model.create("Force One");
         final Model Zierer_ForceTwo = Model.create("Force Two");
-        final Model Zierer_Tivoli = Model.create("Tivoli");
+        final Model Zierer_Tivoli_Medium = Model.create("Tivoli (medium)");
+        final Model Zierer_Tivoli_Large = Model.create("Tivoli (large)");
 
         final Model Arrow_MineTrain = Model.create("Mine Train");
 
@@ -2008,10 +2009,9 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_SuperSplash);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_WaterCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_SpinningCoaster);
-            this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_ChildrensCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_Bobsled);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_WildeMaus);
-
+            this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_YoungstarCoaster);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_InfinityCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_EuroFighter);
@@ -2033,7 +2033,6 @@ public final class DatabaseMock implements IDatabaseWrapper
 
             this.decorateRollerCoasterAndAddToList(manufacturers.RMC, RMC_IBoxTrack);
 
-            this.decorateRollerCoasterAndAddToList(manufacturers.Schwarzkopf, Schwarzkopf_Stahlachterbahn);
             this.decorateRollerCoasterAndAddToList(manufacturers.Schwarzkopf, Schwarzkopf_Wildcat);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.MaurerRides, Maurer_WildeMausClassic);
@@ -2061,7 +2060,8 @@ public final class DatabaseMock implements IDatabaseWrapper
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_ForceOne);
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_ForceTwo);
-            this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_Tivoli);
+            this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_Tivoli_Medium);
+            this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_Tivoli_Large);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.ArrowDynamics, Arrow_MineTrain);
 
