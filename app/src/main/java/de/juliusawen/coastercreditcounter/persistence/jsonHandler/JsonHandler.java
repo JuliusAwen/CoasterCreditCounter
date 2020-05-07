@@ -185,7 +185,6 @@ public class JsonHandler implements IDatabaseWrapper
         content.addElement(CreditType.getDefault());
         content.addElement(Category.getDefault());
         content.addElement(Manufacturer.getDefault());
-        content.addElement(Model.getDefault());
         content.addElement(Status.getDefault());
         return this.saveContent(content);
     }
@@ -419,6 +418,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 CreditType.setDefault(creditType);
             }
+
             creditTypes.add(creditType);
         }
 
@@ -442,6 +442,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Category.setDefault(category);
             }
+
             categories.add(category);
         }
 
@@ -465,6 +466,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Manufacturer.setDefault(manufacturer);
             }
+
             manufacturers.add(manufacturer);
         }
 
@@ -486,18 +488,7 @@ public class JsonHandler implements IDatabaseWrapper
             model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-
-            if(temporaryJsonElement.isDefault)
-            {
-                Model.setDefault(model);
-            }
             models.add(model);
-        }
-
-        if(!models.contains(Model.getDefault()))
-        {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createModels:: no default Model found - creating default as fallback");
-            models.add(Model.getDefault());
         }
 
         return models;
@@ -514,6 +505,7 @@ public class JsonHandler implements IDatabaseWrapper
             {
                 Status.setDefault(status);
             }
+
             statuses.add(status);
         }
 
@@ -557,10 +549,9 @@ public class JsonHandler implements IDatabaseWrapper
         {
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
 
-            Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
-            if(!model.isDefault())
+            if(temporaryJsonElement.modelUuid != null)
             {
-                element.setModel(model);
+                element.setModel(this.getModelFromUuid(temporaryJsonElement.modelUuid, content));
             }
             else
             {
@@ -645,15 +636,7 @@ public class JsonHandler implements IDatabaseWrapper
     private Model getModelFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
-        if(element instanceof Model)
-        {
-            return (Model) element;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getModelFromUuid:: fetched Element for UUID [%s] is not a Model - using default", uuid));
-            return Model.getDefault();
-        }
+        return element instanceof Model ? (Model)element : null;
     }
 
     private Status getStatusFromUuid(UUID uuid, Content content)

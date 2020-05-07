@@ -84,10 +84,23 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            jsonObject.put(Constants.JSON_STRING_MODEL, this.getModel().getUuid());
+            if(this.getModel() != null)
+            {
+                jsonObject.put(Constants.JSON_STRING_MODEL, this.getModel().getUuid());
+
+                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, JSONObject.NULL);
+                jsonObject.put(Constants.JSON_STRING_CATEGORY, JSONObject.NULL);
+                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, JSONObject.NULL);
+            }
+            else
+            {
+                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
+                jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
+                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+
+                jsonObject.put(Constants.JSON_STRING_MODEL, JSONObject.NULL);
+            }
+
             jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 

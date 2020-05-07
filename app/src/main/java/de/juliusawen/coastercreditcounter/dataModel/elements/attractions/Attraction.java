@@ -71,6 +71,12 @@ public abstract class Attraction extends Element implements IAttraction
 
     public CreditType getCreditType()
     {
+        if(this.model != null)
+        {
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.model));
+            return this.model.getCreditType();
+        }
+
         return this.creditType != null ? this.creditType : CreditType.getDefault();
     }
 
@@ -81,17 +87,23 @@ public abstract class Attraction extends Element implements IAttraction
             this.creditType.deleteChild(this);
         }
 
-        if(!creditType.containsChild(this))
+        if(creditType != null && !creditType.containsChild(this))
         {
             creditType.addChild(this);
         }
 
         this.creditType = creditType;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
+        Log.v(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
     {
+        if(this.model != null)
+        {
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.model));
+            return this.model.getCategory();
+        }
+
         return this.category != null ? this.category : Category.getDefault();
     }
 
@@ -102,17 +114,23 @@ public abstract class Attraction extends Element implements IAttraction
             this.category.deleteChild(this);
         }
 
-        if(!category.containsChild(this))
+        if(category != null && !category.containsChild(this))
         {
             category.addChild(this);
         }
 
         this.category = category;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
+        Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
     {
+        if(this.model != null)
+        {
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.model));
+            return this.model.getManufacturer();
+        }
+
         return this.manufacturer != null ? this.manufacturer : Manufacturer.getDefault();
     }
 
@@ -123,7 +141,7 @@ public abstract class Attraction extends Element implements IAttraction
             this.manufacturer.deleteChild(this);
         }
 
-        if(!manufacturer.containsChild(this))
+        if(manufacturer != null && !manufacturer.containsChild(this))
         {
             manufacturer.addChild(this);
         }
@@ -134,7 +152,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Model getModel()
     {
-        return this.model != null ? this.model : Model.getDefault();
+        return this.model;
     }
 
     public void setModel(Model model)
@@ -150,11 +168,11 @@ public abstract class Attraction extends Element implements IAttraction
         }
 
         this.model = model;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setModel:: set %s's Model to %s", this, this.model));
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setModel:: set %s's Model to %s - clearing properties...", this, this.model));
 
-        this.setCreditType(model.getCreditType());
-        this.setCategory(model.getCategory());
-        this.setManufacturer(model.getManufacturer());
+        this.setCreditType(null);
+        this.setCategory(null);
+        this.setManufacturer(null);
     }
 
     public Status getStatus()

@@ -8,21 +8,19 @@ import org.json.JSONObject;
 import java.util.Locale;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
+import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  *      Parent: none<br>
  *      Children: Attractions<br>
  */
-public class Model extends Element implements IProperty
+public class Model extends Element implements IElement, IOrphan, IPersistable
 {
-    private static Model defaultModel;
-
     private CreditType creditType;
     private Category category;
     private Manufacturer manufacturer;
@@ -52,35 +50,12 @@ public class Model extends Element implements IProperty
     @Override
     public String getFullName()
     {
-        return String.format(Locale.getDefault(), "[%s CreditType=%s - Category=%s - Manufacturer=%s (%s)]",
+        return String.format(Locale.getDefault(), "[%s - properties: %s %s %s (%s)]",
                 this.toString(),
                 this.getCreditType(),
                 this.getCategory(),
                 this.getManufacturer(),
                 this.getUuid());
-    }
-
-    @Override
-    public boolean isDefault()
-    {
-        return Model.getDefault().equals(this);
-    }
-
-    public static Model getDefault()
-    {
-        if(Model.defaultModel == null)
-        {
-            Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
-            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name))));
-        }
-
-        return Model.defaultModel;
-    }
-
-    public static void setDefault(Model defaultModel)
-    {
-        Model.defaultModel = defaultModel;
-        Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel));
     }
 
     public CreditType getCreditType()
@@ -91,12 +66,7 @@ public class Model extends Element implements IProperty
     public void setCreditType(CreditType creditType)
     {
         this.creditType = creditType;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s - setting in Attractions...", this, this.creditType));
-
-        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
-        {
-            attraction.setCreditType(creditType);
-        }
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
@@ -107,12 +77,7 @@ public class Model extends Element implements IProperty
     public void setCategory(Category category)
     {
         this.category = category;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s - setting in Attractions...", this, this.category));
-
-        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
-        {
-            attraction.setCategory(category);
-        }
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
@@ -123,12 +88,7 @@ public class Model extends Element implements IProperty
     public void setManufacturer(Manufacturer manufacturer)
     {
         this.manufacturer = manufacturer;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s - setting in Attractions...", this, this.manufacturer));
-
-        for(OnSiteAttraction attraction : this.getChildrenAsType(OnSiteAttraction.class))
-        {
-            attraction.setManufacturer(manufacturer);
-        }
+        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
     }
 
     @Override
@@ -142,8 +102,6 @@ public class Model extends Element implements IProperty
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

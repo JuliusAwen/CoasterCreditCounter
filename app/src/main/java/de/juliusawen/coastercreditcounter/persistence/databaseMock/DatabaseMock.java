@@ -2065,8 +2065,6 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         private Models(CreditTypes creditTypes, Categories categories, Manufacturers manufacturers)
         {
-            AllModels.add(Model.getDefault());
-
             SuspendedLoopingCoaster.setCreditType(creditTypes.RollerCoaster);
             SuspendedLoopingCoaster.setCategory(categories.RollerCoasters);
             SuspendedLoopingCoaster.setManufacturer(manufacturers.Vekoma);

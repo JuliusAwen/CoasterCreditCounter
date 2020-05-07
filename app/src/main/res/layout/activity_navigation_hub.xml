@@ -31,8 +31,6 @@
                 <include
                     layout="@layout/layout_statistics_global_totals"/>
 
-
-                
             </LinearLayout>
 
         </ScrollView>
