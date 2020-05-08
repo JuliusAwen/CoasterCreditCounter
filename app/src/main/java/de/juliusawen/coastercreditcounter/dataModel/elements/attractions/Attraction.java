@@ -71,10 +71,10 @@ public abstract class Attraction extends Element implements IAttraction
 
     public CreditType getCreditType()
     {
-        if(this.model != null)
+        if(!this.getModel().isDefault())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.model));
-            return this.model.getCreditType();
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.getModel()));
+            return this.getModel().getCreditType();
         }
 
         return this.creditType != null ? this.creditType : CreditType.getDefault();
@@ -98,10 +98,10 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Category getCategory()
     {
-        if(this.model != null)
+        if(!this.getModel().isDefault())
         {
-            Log.d(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.model));
-            return this.model.getCategory();
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.getModel()));
+            return this.getModel().getCategory();
         }
 
         return this.category != null ? this.category : Category.getDefault();
@@ -125,10 +125,10 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Manufacturer getManufacturer()
     {
-        if(this.model != null)
+        if(!this.getModel().isDefault())
         {
-            Log.d(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.model));
-            return this.model.getManufacturer();
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.getModel()));
+            return this.getModel().getManufacturer();
         }
 
         return this.manufacturer != null ? this.manufacturer : Manufacturer.getDefault();
@@ -152,7 +152,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Model getModel()
     {
-        return this.model;
+        return this.model != null ? this.model : Model.getDefault();
     }
 
     public void setModel(Model model)

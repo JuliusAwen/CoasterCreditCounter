@@ -1988,6 +1988,8 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.creditTypes = creditTypes;
             this.categories = categories;
 
+            AllModels.add(Model.getDefault());
+
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_HyperCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_InvertedCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_DiveCoaster);

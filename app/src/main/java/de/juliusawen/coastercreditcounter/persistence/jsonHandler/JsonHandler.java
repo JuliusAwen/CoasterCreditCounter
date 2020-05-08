@@ -185,6 +185,7 @@ public class JsonHandler implements IDatabaseWrapper
         content.addElement(CreditType.getDefault());
         content.addElement(Category.getDefault());
         content.addElement(Manufacturer.getDefault());
+        content.addElement(Model.getDefault());
         content.addElement(Status.getDefault());
         return this.saveContent(content);
     }
@@ -424,7 +425,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!creditTypes.contains(CreditType.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default CreditType found - creating default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default fetched from json - adding created default");
             creditTypes.add(CreditType.getDefault());
         }
 
@@ -448,7 +449,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!categories.contains(Category.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default Category found - creating default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default fetched from json - adding created default");
             categories.add(Category.getDefault());
         }
 
@@ -472,7 +473,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!manufacturers.contains(Manufacturer.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default Manufacturer found - creating default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default fetched from json - adding created default");
             manufacturers.add(Manufacturer.getDefault());
         }
 
@@ -488,7 +489,19 @@ public class JsonHandler implements IDatabaseWrapper
             model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+
+            if(temporaryJsonElement.isDefault)
+            {
+                Model.setDefault(model);
+            }
+
             models.add(model);
+        }
+
+        if(!models.contains(Model.getDefault()))
+        {
+            Log.e(Constants.LOG_TAG, "JsonHandler.createModels:: no default fetched from json - adding created default");
+            models.add(Model.getDefault());
         }
 
         return models;
@@ -511,7 +524,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!statuses.contains(Status.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default Status found - using default as fallback");
+            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default fetched from json - adding created default");
             statuses.add(Status.getDefault());
         }
 
@@ -549,18 +562,20 @@ public class JsonHandler implements IDatabaseWrapper
         {
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
 
-            if(temporaryJsonElement.modelUuid != null)
-            {
-                element.setModel(this.getModelFromUuid(temporaryJsonElement.modelUuid, content));
-            }
-            else
+            Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
+            if(model.isDefault())
             {
                 element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
             }
+            else
+            {
+                element.setModel(model);
+            }
 
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
+
             elements.add(element);
         }
 
@@ -596,11 +611,11 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof CreditType)
         {
-            return (CreditType)element;
+            return (CreditType) element;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - using default", uuid));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - returning default", uuid));
             return CreditType.getDefault();
         }
     }
@@ -610,11 +625,11 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof Category)
         {
-            return (Category)element;
+            return (Category) element;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - using default", uuid));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - returning default", uuid));
             return Category.getDefault();
         }
     }
@@ -624,11 +639,11 @@ public class JsonHandler implements IDatabaseWrapper
         IElement element = content.getContentByUuid(uuid);
         if(element instanceof Manufacturer)
         {
-            return (Manufacturer)element;
+            return (Manufacturer) element;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - using default", uuid));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - returning default", uuid));
             return Manufacturer.getDefault();
         }
     }
@@ -636,7 +651,15 @@ public class JsonHandler implements IDatabaseWrapper
     private Model getModelFromUuid(UUID uuid, Content content)
     {
         IElement element = content.getContentByUuid(uuid);
-        return element instanceof Model ? (Model)element : null;
+        if(element instanceof Model)
+        {
+            return (Model) element;
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getModelsFromUuid:: fetched Element for UUID [%s] is not a Model - returning default", uuid));
+            return Model.getDefault();
+        }
     }
 
     private Status getStatusFromUuid(UUID uuid, Content content)
@@ -648,7 +671,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - using default", uuid));
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - returning default", uuid));
             return Status.getDefault();
         }
     }

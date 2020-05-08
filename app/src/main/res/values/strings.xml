@@ -283,7 +283,7 @@
 
 
     <!--MODELS-->
-    <string name="default_model_name">none</string>
+    <string name="default_model_name">unknown</string>
     <string name="models">Models</string>
     <string name="title_create_model">Create Model</string>
     <string name="title_edit_model">Edit Model</string>
