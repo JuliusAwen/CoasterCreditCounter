@@ -2068,9 +2068,11 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.ArrowDynamics, Arrow_MineTrain);
 
 
+            Huss_TopSpin.setOverrideProperties(true);
             Huss_TopSpin.setCategory(categories.ThrillRides);
             Huss_TopSpin.setManufacturer(manufacturers.Huss);
 
+            Gerstlauer_SkyFly.setOverrideProperties(true);
             Gerstlauer_SkyFly.setCategory(categories.FamilyRides);
             Gerstlauer_SkyFly.setManufacturer(manufacturers.Gerstlauer);
 
@@ -2080,6 +2082,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         private void decorateRollerCoasterAndAddToList(Manufacturer manufacturer, Model model)
         {
+            model.setOverrideProperties(true);
             model.setCreditType(this.creditTypes.RollerCoaster);
             model.setCategory(categories.RollerCoasters);
             model.setManufacturer(manufacturer);

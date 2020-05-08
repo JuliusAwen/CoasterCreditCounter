@@ -44,10 +44,15 @@ public abstract class Constants
     public static final String JSON_STRING_CATEGORIES = "categories";
     public static final String JSON_STRING_MANUFACTURER = "manufacturer";
     public static final String JSON_STRING_MANUFACTURERS = "manufacturers";
-    public static final String JSON_STRING_MODEL = "model";
-    public static final String JSON_STRING_MODELS = "models";
+
     public static final String JSON_STRING_STATUS = "status";
     public static final String JSON_STRING_STATUSES = "statuses";
+
+    public static final String JSON_STRING_MODEL = "model";
+    public static final String JSON_STRING_MODELS = "models";
+    public static final String JSON_STRING_OVERRIDE_PROPERTIES = "override properties";
+
+    public static final String JSON_STRING_IS_DEFAULT = "is default";
 
     public static final String JSON_STRING_EVENT = "event";
     public static final String JSON_STRING_EVENTS = "events";
@@ -56,10 +61,8 @@ public abstract class Constants
     public static final String JSON_STRING_NOTE = "note";
     public static final String JSON_STRING_NOTE_TEXT = "note text";
 
-
     public static final String JSON_STRING_DETAIL_ORDER = "detail order";
 
-    public static final String JSON_STRING_IS_DEFAULT = "is default";
 
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
     public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";

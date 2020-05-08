@@ -5,7 +5,6 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -21,6 +20,8 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 public final class Model extends Element implements IProperty
 {
     private static Model defaultModel;
+
+    private boolean overrideProperties = true;
 
     private CreditType creditType;
     private Category category;
@@ -51,12 +52,9 @@ public final class Model extends Element implements IProperty
     @Override
     public String getFullName()
     {
-        return String.format(Locale.getDefault(), "[%s - properties: %s %s %s (%s)]",
-                this.toString(),
-                this.getCreditType(),
-                this.getCategory(),
-                this.getManufacturer(),
-                this.getUuid());
+        String base = String.format("%s (%s) overrideProperties[%S]", this.toString(), this.getUuid(), this.overrideProperties());
+        String properties = String.format("%s %s %s", this.getCreditType(), this.getCategory(), this.getManufacturer());
+        return this.overrideProperties() ? String.format("[%s - %s]", base, properties) : String.format("[%s]", base);
     }
 
     @Override
@@ -70,7 +68,9 @@ public final class Model extends Element implements IProperty
         if(Model.defaultModel == null)
         {
             Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
-            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name))));
+            Model defaultModel = Model.create((App.getContext().getString(R.string.default_model_name)));
+            defaultModel.setOverrideProperties(false);
+            Model.setDefault(defaultModel);
         }
 
         return Model.defaultModel;
@@ -79,7 +79,18 @@ public final class Model extends Element implements IProperty
     public static void setDefault(Model defaultModel)
     {
         Model.defaultModel = defaultModel;
-        Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel));
+        Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel.getFullName()));
+    }
+
+    public boolean overrideProperties()
+    {
+        return this.overrideProperties;
+    }
+
+    public void setOverrideProperties(boolean overrideProperties)
+    {
+        this.overrideProperties = overrideProperties;
+        Log.d(Constants.LOG_TAG, String.format("Model.setOverrideProperties:: set %s overrideProperties [%S] ", this, overrideProperties));
     }
 
     public CreditType getCreditType()
@@ -123,10 +134,14 @@ public final class Model extends Element implements IProperty
             JSONObject jsonObject = new JSONObject();
 
             JsonTool.putNameAndUuid(jsonObject, this);
+
+            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
+            jsonObject.put(Constants.JSON_STRING_OVERRIDE_PROPERTIES, this.overrideProperties);
+
             jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
+
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

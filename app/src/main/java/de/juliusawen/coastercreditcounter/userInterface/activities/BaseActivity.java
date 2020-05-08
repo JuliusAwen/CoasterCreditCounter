@@ -604,7 +604,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     private void provideStatistics(StatisticType statisticType, IStatistic statistics)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: statistics of type [%s] fetched - calling decorateStatistics(...) in [%s]",
+        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: statistics of type [%s] fetched - calling [%s].decorateStatistics(...)",
                 statisticType, this.getClass().getSimpleName()));
 
         this.showProgressBar(false);
@@ -613,7 +613,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
 
     protected void decorateStatistics(StatisticType statisticType, IStatistic statistics)
     {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.decorateStatistics:: [%s] does not override decorateStatistics(...)", this.getClass().getSimpleName()));
+        Log.e(Constants.LOG_TAG, String.format("BaseActivity.decorateStatistics:: [%s] does not override decorateStatistics()", this.getClass().getSimpleName()));
     }
 
     protected void showProgressBar(boolean show)

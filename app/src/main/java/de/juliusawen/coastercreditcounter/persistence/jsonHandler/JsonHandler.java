@@ -395,6 +395,11 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryJsonElement.isDefault = jsonObjectItem.getBoolean(Constants.JSON_STRING_IS_DEFAULT);
                 }
 
+                if(!jsonObjectItem.isNull(Constants.JSON_STRING_OVERRIDE_PROPERTIES))
+                {
+                    temporaryJsonElement.overrideProperties = jsonObjectItem.getBoolean(Constants.JSON_STRING_OVERRIDE_PROPERTIES);
+                }
+
                 temporaryJsonElements.add(temporaryJsonElement);
             }
         }
@@ -486,6 +491,8 @@ public class JsonHandler implements IDatabaseWrapper
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
             Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+
+            model.setOverrideProperties(temporaryJsonElement.overrideProperties);
             model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
@@ -562,16 +569,12 @@ public class JsonHandler implements IDatabaseWrapper
         {
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
 
-            Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
-            if(model.isDefault())
+            element.setModel(this.getModelFromUuid(temporaryJsonElement.modelUuid, content));
+            if(!element.getModel().overrideProperties())
             {
                 element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
-            }
-            else
-            {
-                element.setModel(model);
             }
 
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
