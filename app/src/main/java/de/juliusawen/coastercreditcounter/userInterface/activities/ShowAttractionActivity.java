@@ -71,7 +71,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_attraction)), getString(R.string.help_text_show_attraction));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.help_title_show_attraction)), getString(R.string.help_text_show_attraction));
         super.createToolbar()
                 .addToolbarHomeButton();
 
