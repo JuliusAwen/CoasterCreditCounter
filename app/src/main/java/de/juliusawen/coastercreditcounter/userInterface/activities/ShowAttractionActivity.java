@@ -3,6 +3,7 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -21,6 +23,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteA
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
@@ -28,27 +31,41 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.customViews.CoordinatorLayoutWithMaxHeight;
+import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
-public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
+public class ShowAttractionActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowOnSiteAttractionActivityViewModel viewModel;
 
-    private CoordinatorLayoutWithMaxHeight layoutNote;
+    private TextView textViewAttractionDetailCreditType;
+    private TextView textViewAttractionDetailCategory;
+    private TextView textViewAttractionDetailManufacturer;
+    private TextView textViewAttractionDetailModel;
+    private TextView textViewAttractionDetailStatus;
+    private TextView textViewAttractionDetailTotalRideCount;
+
+    private FrameLayoutWithMaxHeight layoutNote;
     private TextView textViewNote;
 
     @Override
     protected void setContentView()
     {
-        setContentView(R.layout.activity_show_on_site_attraction);
+        setContentView(R.layout.activity_show_attraction);
     }
 
     @Override
     protected void create()
     {
+        this.textViewAttractionDetailCreditType = findViewById(R.id.textViewAttractionDetails_CreditType);
+        this.textViewAttractionDetailCategory = findViewById(R.id.textViewAttractionDetails_Category);
+        this.textViewAttractionDetailManufacturer = findViewById(R.id.textViewAttractionDetails_Manufacturer);
+        this.textViewAttractionDetailModel = findViewById(R.id.textViewAttractionDetails_Model);
+        this.textViewAttractionDetailStatus = findViewById(R.id.textViewAttractionDetails_Status);
+        this.textViewAttractionDetailTotalRideCount = findViewById(R.id.textViewAttractionDetails_TotalRideCount);
+
         this.viewModel = new ViewModelProvider(this).get(ShowOnSiteAttractionActivityViewModel.class);
 
         if(this.viewModel.onSiteAttraction == null)
@@ -77,7 +94,7 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(LOG_TAG, String.format("ShowInSiteAttraction.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(LOG_TAG, String.format("ShowAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -105,6 +122,8 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
     protected void resume()
     {
         invalidateOptionsMenu();
+
+        this.decorateDetailsLayout();
         this.handleNoteRelatedViews();
     }
 
@@ -116,59 +135,18 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
             @Override
             public void onClick(View view)
             {
-                Log.i(LOG_TAG, "ShowOnSiteAttractionActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i(LOG_TAG, "ShowAttractionActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
                 if(viewModel.onSiteAttraction.getNote() != null)
                 {
-                    ActivityDistributor.startActivityEditForResult(ShowOnSiteAttractionActivity.this, RequestCode.EDIT_NOTE, viewModel.onSiteAttraction.getNote());
+                    ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_NOTE, viewModel.onSiteAttraction.getNote());
                 }
                 else
                 {
-                    ActivityDistributor.startActivityCreateForResult(ShowOnSiteAttractionActivity.this, RequestCode.CREATE_NOTE, ShowOnSiteAttractionActivity.this.viewModel.onSiteAttraction);
+                    ActivityDistributor.startActivityCreateForResult(ShowAttractionActivity.this, RequestCode.CREATE_NOTE, ShowAttractionActivity.this.viewModel.onSiteAttraction);
                 }
             }
         });
-    }
-
-    private void createNoteLayout()
-    {
-        this.layoutNote = findViewById(R.id.frameLayoutWithMaxHeightNote);
-        this.layoutNote.setMaxHeight(ConvertTool.convertDpToPx(App.config.maxHeightForNoteInDP));
-
-        this.textViewNote = findViewById(R.id.textViewNote);
-        this.textViewNote.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                onNoteClick();
-            }
-        });
-
-        this.textViewNote.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                return onNoteLongClick();
-            }
-        });
-
-        this.handleNoteRelatedViews();
-    }
-
-    private void onNoteClick()
-    {
-        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_NOTE, this.viewModel.onSiteAttraction.getNote());
-    }
-
-    private boolean onNoteLongClick()
-    {
-        PopupMenuAgent.getMenu()
-                .add(PopupItem.DELETE_ELEMENT)
-                .show(this, this.layoutNote);
-
-        return true;
     }
 
     @Override
@@ -214,17 +192,92 @@ public class ShowOnSiteAttractionActivity extends BaseActivity implements AlertD
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.handleActionConfirmed:: deleting %s...", this.viewModel.onSiteAttraction.getNote()));
+            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: deleting %s...", this.viewModel.onSiteAttraction.getNote()));
 
             super.markForUpdate(this.viewModel.onSiteAttraction);
             super.markForDeletion(this.viewModel.onSiteAttraction.getNote(), false);
 
             this.handleNoteRelatedViews();
         }
+    }
+
+    private void decorateDetailsLayout()
+    {
+        this.textViewAttractionDetailCreditType.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format("%s %s", getString(R.string.header_credit_type), this.viewModel.onSiteAttraction.getCreditType().getName()),
+                getString(R.string.header_credit_type),
+                Typeface.BOLD));
+
+
+        this.textViewAttractionDetailCategory.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format("%s %s", getString(R.string.header_category), this.viewModel.onSiteAttraction.getCategory().getName()),
+                getString(R.string.header_category),
+                Typeface.BOLD));
+
+        this.textViewAttractionDetailManufacturer.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format("%s %s", getString(R.string.header_manufacturer), this.viewModel.onSiteAttraction.getManufacturer().getName()),
+                getString(R.string.header_manufacturer),
+                Typeface.BOLD));
+
+        this.textViewAttractionDetailModel.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format("%s %s", getString(R.string.header_model), this.viewModel.onSiteAttraction.getModel().getName()),
+                getString(R.string.header_model),
+                Typeface.BOLD));
+
+        this.textViewAttractionDetailStatus.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format("%s %s", getString(R.string.header_status), this.viewModel.onSiteAttraction.getStatus().getName()),
+                getString(R.string.header_status),
+                Typeface.BOLD));
+
+        this.textViewAttractionDetailTotalRideCount.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.header_total_ride_count), this.viewModel.onSiteAttraction.fetchTotalRideCount()),
+                getString(R.string.header_total_ride_count),
+                Typeface.BOLD));
+    }
+
+    private void createNoteLayout()
+    {
+        this.layoutNote = findViewById(R.id.frameLayoutWithMaxHeightNote);
+        this.layoutNote.setMaxHeight(ConvertTool.convertDpToPx(App.config.maxHeightForNoteInDP));
+
+        this.textViewNote = findViewById(R.id.textViewNote);
+        this.textViewNote.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                onNoteClick();
+            }
+        });
+
+        this.textViewNote.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return onNoteLongClick();
+            }
+        });
+
+        this.handleNoteRelatedViews();
+    }
+
+    private void onNoteClick()
+    {
+        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_NOTE, this.viewModel.onSiteAttraction.getNote());
+    }
+
+    private boolean onNoteLongClick()
+    {
+        PopupMenuAgent.getMenu()
+                .add(PopupItem.DELETE_ELEMENT)
+                .show(this, this.layoutNote);
+
+        return true;
     }
 
     private void handleNoteRelatedViews()

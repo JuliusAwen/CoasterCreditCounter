@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frameLayoutStatisticsGlobalTotals"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:elevation="4dp"
-    android:background="@color/grey"
-    android:visibility="invisible">
+    android:background="@color/grey">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,24 +14,32 @@
         android:layout_gravity="start"
         android:layout_margin="1dp"
         android:padding="8dp"
-        android:background="@color/design_default_color_background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/design_default_color_background">
 
         <TextView
             style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewStatisticsGlobalTotals_totalCoasterCreditsCount"/>
+            android:id="@+id/textViewAttractionDetails_CreditType"/>
 
         <TextView
             style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewStatisticsGlobalTotals_totalCoasterRidesCount"/>
+            android:id="@+id/textViewAttractionDetails_Category"/>
 
         <TextView
             style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewStatisticsGlobalTotals_totalVisitsCount"/>
+            android:id="@+id/textViewAttractionDetails_Manufacturer"/>
 
         <TextView
             style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewStatisticsGlobalTotals_totalVisitedParksCount"/>
+            android:id="@+id/textViewAttractionDetails_Model"/>
+
+        <TextView
+            style="@style/StatisticFeedTextView"
+            android:id="@+id/textViewAttractionDetails_Status"/>
+
+        <TextView
+            style="@style/StatisticFeedTextView"
+            android:id="@+id/textViewAttractionDetails_TotalRideCount"/>
 
     </LinearLayout>
 

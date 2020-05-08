@@ -69,21 +69,30 @@ public abstract class StringTool
     public static SpannableString buildSpannableStringWithTypeface(String originalString, String substring, int typeface)
     {
         SpannableString spannableString = new SpannableString(originalString);
-        int start = originalString.indexOf(substring);
-        int end = start + substring.length();
-        spannableString.setSpan(new StyleSpan(typeface), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        if(originalString.contains(substring))
+        {
+            int start = originalString.indexOf(substring);
+            int end = start + substring.length();
+            spannableString.setSpan(new StyleSpan(typeface), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         return spannableString;
     }
 
-    public static SpannableString buildSpannableStringWithTypefaces(String originalString, Map<String, Integer> typefacesBySubString)
+    public static SpannableString buildSpannableStringWithTypefaces(String originalString, Map<String, Integer> typefacesBySubstring)
     {
         SpannableString spannableString = new SpannableString(originalString);
-        for(String subString : typefacesBySubString.keySet())
+        for(String substring : typefacesBySubstring.keySet())
         {
-            int start = originalString.indexOf(subString);
-            int end = start + subString.length();
-            spannableString.setSpan(new StyleSpan(typefacesBySubString.get(subString)), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if(originalString.contains(substring))
+            {
+                int start = originalString.indexOf(substring);
+                int end = start + substring.length();
+                spannableString.setSpan(new StyleSpan(typefacesBySubstring.get(substring)), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
+
         return spannableString;
     }
 

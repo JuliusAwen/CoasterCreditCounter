@@ -26,8 +26,8 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.EditSimpleEle
 import de.juliusawen.coastercreditcounter.userInterface.activities.ManagePropertiesActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.NavigationHubActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.ShowAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowLocationsActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.ShowOnSiteAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowParkActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.SortElementsActivity;
@@ -57,7 +57,7 @@ public abstract class ActivityDistributor
                 break;
 
             case SHOW_ATTRACTION:
-                intent = new Intent(context, ShowOnSiteAttractionActivity.class);
+                intent = new Intent(context, ShowAttractionActivity.class);
                 break;
         }
 
@@ -196,7 +196,7 @@ public abstract class ActivityDistributor
                 intent = new Intent(context, EditSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_edit_note);
                 intent.putExtra(Constants.EXTRA_HINT, context.getString(R.string.hint_edit_note));
-                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_edit_note, element.getParent().getName()));
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_note, element.getParent().getName()));
                 break;
 
             case EDIT_ATTRACTION:
@@ -307,7 +307,7 @@ public abstract class ActivityDistributor
             case CREATE_NOTE:
                 intent = new Intent(context, CreateSimpleElementActivity.class);
                 toolbarTitle = context.getString(R.string.title_create_note);
-                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_create_note, parentElement.getName()));
+                intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, context.getString(R.string.subtitle_note, parentElement.getName()));
                 helpTitle = context.getString(R.string.title_create_note);
                 helpText = context.getString(R.string.help_text_create_note);
                 hint = context.getString(R.string.hint_enter_note);

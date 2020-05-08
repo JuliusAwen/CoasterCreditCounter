@@ -2,8 +2,8 @@ package de.juliusawen.coastercreditcounter.dataModel.statistics;
 
 public class StatisticsGlobalTotals implements IStatistic
 {
-    public int credits;
-    public int rides;
-    public int visits;
-    public int parksVisited;
+    public int totalCredits;
+    public int totalRides;
+    public int totalVisits;
+    public int totalParksVisited;
 }

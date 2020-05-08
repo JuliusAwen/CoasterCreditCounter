@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.customViews.CoordinatorLayoutWithMaxHeight;
+import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
@@ -42,7 +42,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     private ShowParkOverviewFragmentViewModel viewModel;
     private ShowParkOverviewFragmentInteraction fragmentInteraction;
 
-    private CoordinatorLayoutWithMaxHeight layoutNote;
+    private FrameLayoutWithMaxHeight layoutNote;
     private TextView textViewNote;
 
     public static ShowParkOverviewFragment newInstance(String parkUuid)

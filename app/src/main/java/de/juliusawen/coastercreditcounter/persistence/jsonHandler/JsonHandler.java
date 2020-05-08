@@ -1241,10 +1241,10 @@ public class JsonHandler implements IDatabaseWrapper
     {
         StatisticsGlobalTotals statisticsGlobalTotals = new StatisticsGlobalTotals();
 
-        statisticsGlobalTotals.credits = this.fetchTotalCreditsCount();
-        statisticsGlobalTotals.rides = this.fetchTotalRideCount();
-        statisticsGlobalTotals.visits = this.fetchTotalVisits();
-        statisticsGlobalTotals.parksVisited = this.fetchTotalVisitedParksCount();
+        statisticsGlobalTotals.totalCredits = this.fetchTotalCreditsCount();
+        statisticsGlobalTotals.totalRides = this.fetchTotalRideCount();
+        statisticsGlobalTotals.totalVisits = this.fetchTotalVisits();
+        statisticsGlobalTotals.totalParksVisited = this.fetchTotalVisitedParksCount();
 
         return statisticsGlobalTotals;
     }

@@ -1774,9 +1774,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchStatisticsGlobalTotals:: empty mock implementation to satisfy interface");
 
         StatisticsGlobalTotals statisticsGlobalTotals = new StatisticsGlobalTotals();
-        statisticsGlobalTotals.visits = -1;
-        statisticsGlobalTotals.credits = -1;
-        statisticsGlobalTotals.rides = -1;
+        statisticsGlobalTotals.totalVisits = -1;
+        statisticsGlobalTotals.totalCredits = -1;
+        statisticsGlobalTotals.totalRides = -1;
 
         return statisticsGlobalTotals;
     }

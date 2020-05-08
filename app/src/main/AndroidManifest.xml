@@ -30,7 +30,7 @@
 <!--        <activity android:name=".userInterface.activities.ManageBlueprintsActivity" />-->
         <activity android:name=".userInterface.activities.EditAttractionActivity" />
         <activity android:name=".userInterface.activities.CreateAttractionActivity" />
-        <activity android:name=".userInterface.activities.ShowOnSiteAttractionActivity"/>
+        <activity android:name=".userInterface.activities.ShowAttractionActivity"/>
         <activity android:name=".userInterface.activities.DeveloperOptionsActivity" />
         <activity
             android:name=".userInterface.activities.CreateChildForLocationActivity"

@@ -34,10 +34,10 @@
 
 
     <!--STATISTICS-->
-    <string name="text_total_coaster_credits"><b>Total credits: %1$d</b></string>
-    <string name="text_total_credit_rides">Total rides: %1$d</string>
-    <string name="text_total_visits">Total visits: %1$d</string>
-    <string name="text_total_parks_visited">Total parks visited: %1$d</string>
+    <string name="statistic_total_coaster_credits"><b>Total credits:</b></string>
+    <string name="statistic_total_credit_rides">Total rides:</string>
+    <string name="statistic_total_visits">Total visits:</string>
+    <string name="statistic_total_parks_visited">Total parks visited:</string>
 
 
     <!--GENERIC ACTION TEXTS-->
@@ -55,7 +55,6 @@
     <string name="error_number_invalid">Number is invalid</string>
     <string name="error_undo_not_possible">UNDO is not possible…</string>
     <string name="error_no_entry_selected">No entry selected</string>
-<!--    <string name="error_property_is_tied_to_blueprint"> %1$s is tied to Blueprint</string>-->
 
     <string name="error_missing_text">-text is missing-</string>
 
@@ -243,6 +242,8 @@
 
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
+    <string name="header_total_ride_count">Total rides:</string>
+
 
 
     <!--CREDIT TYPES-->
@@ -305,11 +306,11 @@
 
     <!--NOTES-->
     <string name="title_create_note">Create Note</string>
-    <string name="subtitle_create_note">for %1$s</string>
     <string name="title_edit_note">Edit Note</string>
-    <string name="subtitle_edit_note">for %1$s</string>
+    <string name="subtitle_note">for %1$s</string>
     <string name="hint_enter_note">Enter note</string>
     <string name="hint_edit_note">Edit note</string>
+    <string name="header_note">Note:</string>
 
 
     <!--GENERERIC PROPERTIES-->

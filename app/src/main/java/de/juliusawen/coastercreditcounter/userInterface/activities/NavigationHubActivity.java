@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -34,6 +35,7 @@ import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -271,10 +273,25 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         Log.d(LOG_TAG, "NavigationHubActivity.decorateStatisticsGlobalTotals:: setting global totals");
 
-        this.textViewTotalCoasterCreditsCount.setText(getString(R.string.text_total_coaster_credits, statisticsGlobalTotals.credits));
-        this.textViewTotalCoasterRidesCount.setText(getString(R.string.text_total_credit_rides, statisticsGlobalTotals.rides));
-        this.textViewTotalVisitsCount.setText(getString(R.string.text_total_visits, statisticsGlobalTotals.visits));
-        this.textViewTotalVisitedParksCount.setText(getString(R.string.text_total_parks_visited, statisticsGlobalTotals.parksVisited));
+        this.textViewTotalCoasterCreditsCount.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.statistic_total_coaster_credits), statisticsGlobalTotals.totalCredits),
+                getString(R.string.statistic_total_coaster_credits),
+                Typeface.BOLD));
+
+        this.textViewTotalCoasterRidesCount.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.statistic_total_credit_rides), statisticsGlobalTotals.totalRides),
+                getString(R.string.statistic_total_credit_rides),
+                Typeface.BOLD));
+
+        this.textViewTotalVisitsCount.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.statistic_total_visits), statisticsGlobalTotals.totalVisits),
+                getString(R.string.statistic_total_visits),
+                Typeface.BOLD));
+
+        this.textViewTotalVisitedParksCount.setText(StringTool.buildSpannableStringWithTypeface(
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.statistic_total_parks_visited), statisticsGlobalTotals.totalParksVisited),
+                getString(R.string.statistic_total_parks_visited),
+                Typeface.BOLD));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
