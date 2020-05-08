@@ -225,7 +225,7 @@
 
     <!--ATTRACTIONS-->
     <string name="attractions">Attractions</string>
-    <string name="title_show_on_site_attraction">Attraction</string>
+    <string name="title_show_attraction">Attraction Details</string>
     <string name="title_pick_attractions">Pick Attractions</string>
     <string name="subtitle_attractions_to_add_to_visit">to add to your visit</string>
 

@@ -10,7 +10,6 @@
     android:background="@color/grey">
 
     <ScrollView
-        android:id="@+id/scrollViewNote"
         android:fadeScrollbars="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -58,7 +58,6 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ManagePropertiesActivityViewModel viewModel;
-    private RecyclerView recyclerView;
 
     protected void setContentView()
     {
@@ -216,9 +215,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.contentRecyclerViewAdapter != null)
         {
             this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
-            this.recyclerView = findViewById(R.id.recyclerViewManageProperties);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -502,6 +501,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     {
                         invalidateOptionsMenu();
                     }
+                }
+                else if(element.isAttraction())
+                {
+                    ActivityDistributor.startActivityShow(ManagePropertiesActivity.this, RequestCode.SHOW_ATTRACTION, element);
                 }
             }
 

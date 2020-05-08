@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_margin="1dp"
         android:padding="8dp"
@@ -18,29 +18,38 @@
         android:background="@color/design_default_color_background">
 
         <TextView
-            style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewAttractionDetails_CreditType"/>
-
-        <TextView
-            style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewAttractionDetails_Category"/>
-
-        <TextView
-            style="@style/StatisticFeedTextView"
+            style="@style/AttractionDetailTextView"
             android:id="@+id/textViewAttractionDetails_Manufacturer"/>
 
         <TextView
-            style="@style/StatisticFeedTextView"
+            style="@style/AttractionDetailTextView"
             android:id="@+id/textViewAttractionDetails_Model"/>
 
         <TextView
-            style="@style/StatisticFeedTextView"
-            android:id="@+id/textViewAttractionDetails_Status"/>
-
-        <TextView
-            style="@style/StatisticFeedTextView"
+            style="@style/AttractionDetailTextView"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:id="@+id/textViewAttractionDetails_TotalRideCount"/>
 
+        <TextView
+            style="@style/AttractionDetailTextView"
+            android:layout_marginTop="4dp"
+            android:id="@+id/textViewAttractionDetails_Category"/>
+
+        <TextView
+            style="@style/AttractionDetailTextView"
+            android:layout_marginBottom="4dp"
+            android:id="@+id/textViewAttractionDetails_CreditType"/>
+
+        <TextView
+            style="@style/AttractionDetailTextView"
+            android:id="@+id/textViewAttractionDetails_Status"/>
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/onClickViewAttractionDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

@@ -82,18 +82,25 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setCreditType(CreditType creditType)
     {
-        if(this.creditType != null)
+        if(creditType != null)
         {
-            this.creditType.deleteChild(this);
-        }
+            if(this.creditType != null)
+            {
+                this.creditType.deleteChild(this);
+            }
 
-        if(creditType != null && !creditType.containsChild(this))
+            if(creditType != null && !creditType.containsChild(this))
+            {
+                creditType.addChild(this);
+            }
+
+            this.creditType = creditType;
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, creditType));
+        }
+        else
         {
-            creditType.addChild(this);
+            Log.e(Constants.LOG_TAG, String.format("Attraction.setCreditType:: %s's CreditType cannot be null", this));
         }
-
-        this.creditType = creditType;
-        Log.v(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
@@ -109,18 +116,25 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setCategory(Category category)
     {
-        if(this.category != null)
+        if(category != null)
         {
-            this.category.deleteChild(this);
-        }
+            if(this.category != null)
+            {
+                this.category.deleteChild(this);
+            }
 
-        if(category != null && !category.containsChild(this))
+            if(category != null && !category.containsChild(this))
+            {
+                category.addChild(this);
+            }
+
+            this.category = category;
+            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, category));
+        }
+        else
         {
-            category.addChild(this);
+            Log.e(Constants.LOG_TAG, String.format("Attraction.setCategory:: %s's Category cannot be null", this));
         }
-
-        this.category = category;
-        Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
@@ -136,18 +150,25 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setManufacturer(Manufacturer manufacturer)
     {
-        if(this.manufacturer != null)
+        if(manufacturer != null)
         {
-            this.manufacturer.deleteChild(this);
-        }
+            if(this.manufacturer != null)
+            {
+                this.manufacturer.deleteChild(this);
+            }
 
-        if(manufacturer != null && !manufacturer.containsChild(this))
+            if(manufacturer != null && !manufacturer.containsChild(this))
+            {
+                manufacturer.addChild(this);
+            }
+
+            this.manufacturer = manufacturer;
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, manufacturer));
+        }
+        else
         {
-            manufacturer.addChild(this);
+            Log.e(Constants.LOG_TAG, String.format("Attraction.setManufacturer:: %s's Manufacturer cannot be null", this));
         }
-
-        this.manufacturer = manufacturer;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
     }
 
     public Model getModel()
@@ -157,22 +178,30 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setModel(Model model)
     {
-        if(this.model != null)
+        if(model != null)
         {
-            this.model.deleteChild(this);
+            if(this.model != null)
+            {
+                this.model.deleteChild(this);
+            }
+
+            if(!model.containsChild(this))
+            {
+                model.addChild(this);
+            }
+
+            this.model = model;
+            Log.d(Constants.LOG_TAG, String.format("Attraction.setModel:: set %s's Model to %s - setting properties...", this, model));
+
+            this.setCreditType(model.getCreditType());
+            this.setCategory(model.getCategory());
+            this.setManufacturer(model.getManufacturer());
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("Attraction.setModel:: %s's Model cannot be null", this));
         }
 
-        if(!model.containsChild(this))
-        {
-            model.addChild(this);
-        }
-
-        this.model = model;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setModel:: set %s's Model to %s - clearing properties...", this, this.model));
-
-        this.setCreditType(null);
-        this.setCategory(null);
-        this.setManufacturer(null);
     }
 
     public Status getStatus()
@@ -182,18 +211,25 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setStatus(Status status)
     {
-        if(this.status != null)
+        if(status != null)
         {
-            this.status.deleteChild(this);
-        }
+            if(this.status != null)
+            {
+                this.status.deleteChild(this);
+            }
 
-        if(!status.containsChild(this))
+            if(!status.containsChild(this))
+            {
+                status.addChild(this);
+            }
+
+            this.status = status;
+            Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's Status to %s", this, status));
+        }
+        else
         {
-            status.addChild(this);
+            Log.e(Constants.LOG_TAG, String.format("Attraction.setStaus:: %s's Status cannot be null", this));
         }
-
-        this.status = status;
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's Status to %s", this, this.status));
     }
 
     public int getUntracktedRideCount()

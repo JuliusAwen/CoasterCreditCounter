@@ -59,13 +59,6 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     protected void create()
     {
-        this.textViewAttractionDetailCreditType = findViewById(R.id.textViewAttractionDetails_CreditType);
-        this.textViewAttractionDetailCategory = findViewById(R.id.textViewAttractionDetails_Category);
-        this.textViewAttractionDetailManufacturer = findViewById(R.id.textViewAttractionDetails_Manufacturer);
-        this.textViewAttractionDetailModel = findViewById(R.id.textViewAttractionDetails_Model);
-        this.textViewAttractionDetailStatus = findViewById(R.id.textViewAttractionDetails_Status);
-        this.textViewAttractionDetailTotalRideCount = findViewById(R.id.textViewAttractionDetails_TotalRideCount);
-
         this.viewModel = new ViewModelProvider(this).get(ShowOnSiteAttractionActivityViewModel.class);
 
         if(this.viewModel.onSiteAttraction == null)
@@ -78,14 +71,14 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
-        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_on_site_attraction)), getString(R.string.help_text_show_attraction));
+        super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_attraction)), getString(R.string.help_text_show_attraction));
         super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(this.viewModel.onSiteAttraction.getName(), this.viewModel.onSiteAttraction.getParent().getName());
+                .addToolbarHomeButton();
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
+        this.createAttractionDetailsLayout();
         this.createNoteLayout();
     }
 
@@ -121,9 +114,11 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     protected void resume()
     {
+        super.setToolbarTitleAndSubtitle(this.viewModel.onSiteAttraction.getName(), this.viewModel.onSiteAttraction.getParent().getName());
+
         invalidateOptionsMenu();
 
-        this.decorateDetailsLayout();
+        this.decorateAttractionDetailsLayout();
         this.handleNoteRelatedViews();
     }
 
@@ -205,13 +200,31 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
         }
     }
 
-    private void decorateDetailsLayout()
+    private void createAttractionDetailsLayout()
+    {
+        this.textViewAttractionDetailCreditType = findViewById(R.id.textViewAttractionDetails_CreditType);
+        this.textViewAttractionDetailCategory = findViewById(R.id.textViewAttractionDetails_Category);
+        this.textViewAttractionDetailManufacturer = findViewById(R.id.textViewAttractionDetails_Manufacturer);
+        this.textViewAttractionDetailModel = findViewById(R.id.textViewAttractionDetails_Model);
+        this.textViewAttractionDetailStatus = findViewById(R.id.textViewAttractionDetails_Status);
+        this.textViewAttractionDetailTotalRideCount = findViewById(R.id.textViewAttractionDetails_TotalRideCount);
+
+        findViewById(R.id.onClickViewAttractionDetail).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_ATTRACTION, viewModel.onSiteAttraction);
+            }
+        });
+    }
+
+    private void decorateAttractionDetailsLayout()
     {
         this.textViewAttractionDetailCreditType.setText(StringTool.buildSpannableStringWithTypeface(
                 String.format("%s %s", getString(R.string.header_credit_type), this.viewModel.onSiteAttraction.getCreditType().getName()),
                 getString(R.string.header_credit_type),
                 Typeface.BOLD));
-
 
         this.textViewAttractionDetailCategory.setText(StringTool.buildSpannableStringWithTypeface(
                 String.format("%s %s", getString(R.string.header_category), this.viewModel.onSiteAttraction.getCategory().getName()),
