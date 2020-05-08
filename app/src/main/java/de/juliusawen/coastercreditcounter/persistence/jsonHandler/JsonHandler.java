@@ -490,9 +490,8 @@ public class JsonHandler implements IDatabaseWrapper
         LinkedList<IElement> models = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
+            Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.overrideProperties, temporaryJsonElement.uuid);
 
-            model.setOverrideProperties(temporaryJsonElement.overrideProperties);
             model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));

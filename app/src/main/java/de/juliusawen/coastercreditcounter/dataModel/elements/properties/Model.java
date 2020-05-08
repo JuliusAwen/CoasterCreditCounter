@@ -27,22 +27,23 @@ public final class Model extends Element implements IProperty
     private Category category;
     private Manufacturer manufacturer;
 
-    private Model(String name, UUID uuid)
+    private Model(String name, boolean overrideProperties, UUID uuid)
     {
         super(name, uuid);
+        this.setOverrideProperties(overrideProperties);
     }
 
-    public static Model create(String name)
+    public static Model create(String name, boolean overrideProperties)
     {
-        return create(name, null);
+        return create(name, overrideProperties, null);
     }
 
-    public static Model create(String name, UUID uuid)
+    public static Model create(String name, boolean overrideProperties, UUID uuid)
     {
         Model model = null;
         if(Element.isNameValid(name))
         {
-            model = new Model(name, uuid);
+            model = new Model(name, overrideProperties, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Model.create:: %s created", model));
         }
 
@@ -68,9 +69,7 @@ public final class Model extends Element implements IProperty
         if(Model.defaultModel == null)
         {
             Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
-            Model defaultModel = Model.create((App.getContext().getString(R.string.default_model_name)));
-            defaultModel.setOverrideProperties(false);
-            Model.setDefault(defaultModel);
+            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name)), false));
         }
 
         return Model.defaultModel;
@@ -138,10 +137,18 @@ public final class Model extends Element implements IProperty
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
             jsonObject.put(Constants.JSON_STRING_OVERRIDE_PROPERTIES, this.overrideProperties);
 
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-
+            if(this.overrideProperties())
+            {
+                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
+                jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
+                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
+            }
+            else
+            {
+                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, JSONObject.NULL);
+                jsonObject.put(Constants.JSON_STRING_CATEGORY, JSONObject.NULL);
+                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, JSONObject.NULL);
+            }
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
