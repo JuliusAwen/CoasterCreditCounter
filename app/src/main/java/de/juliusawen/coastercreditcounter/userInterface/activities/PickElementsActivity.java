@@ -192,9 +192,7 @@ public class PickElementsActivity extends BaseActivity
                             .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY)
-                        .add(OptionsItem.EXPAND_ALL)
-                        .add(OptionsItem.COLLAPSE_ALL);
+                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
                 break;
             }
 
@@ -212,7 +210,10 @@ public class PickElementsActivity extends BaseActivity
             }
         }
 
-        return this.viewModel.optionsMenuAgent.create(menu);
+        return this.viewModel.optionsMenuAgent
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
+                .create(menu);
     }
 
     @Override
@@ -231,6 +232,24 @@ public class PickElementsActivity extends BaseActivity
         boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
         boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
+
+        boolean expandAllVisible = (((this.viewModel.requestCode.equals(RequestCode.PICK_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS))
+                    && this.viewModel.elementsToPickFrom.size() > 1) || this.anyElementHasChildren())
+                        && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
+
+        boolean collapseVisible = (((this.viewModel.requestCode.equals(RequestCode.PICK_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS)
+                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS))
+                    && this.viewModel.elementsToPickFrom.size() > 1) || this.anyElementHasChildren())
+                        && this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
 
         switch(this.viewModel.requestCode)
         {
@@ -252,15 +271,15 @@ public class PickElementsActivity extends BaseActivity
                             .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled)
-                        .setVisible(OptionsItem.EXPAND_ALL, this.anyElementHasChildren() && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                        .setVisible(OptionsItem.COLLAPSE_ALL, this.anyElementHasChildren() && this.viewModel.contentRecyclerViewAdapter.isAllExpanded());
+                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
                 break;
             }
         }
 
         return this.viewModel.optionsMenuAgent
                 .setEnabled(OptionsItem.SORT, this.viewModel.elementsToPickFrom.size() > 1)
+                .setVisible(OptionsItem.EXPAND_ALL, expandAllVisible)
+                .setVisible(OptionsItem.COLLAPSE_ALL, collapseVisible)
                 .prepare(menu);
     }
 
