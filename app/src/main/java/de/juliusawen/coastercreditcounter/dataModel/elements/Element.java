@@ -21,6 +21,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManu
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasModel;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 
@@ -405,6 +406,11 @@ public abstract class Element implements IElement
     public boolean isEvent()
     {
         return this instanceof Event;
+    }
+
+    public boolean isModel()
+    {
+        return this instanceof Model;
     }
 
     public boolean isGroupHeader()

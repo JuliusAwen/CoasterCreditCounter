@@ -47,12 +47,14 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
@@ -69,23 +71,23 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModel.class);
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.requestCode == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
         }
 
-        RequestCode requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
-        if(requestCode == RequestCode.PICK_CREDIT_TYPE
-                || requestCode == RequestCode.PICK_CATEGORY
-                || requestCode == RequestCode.PICK_MANUFACTURER
-                || requestCode == RequestCode.PICK_MODEL
-                || requestCode == RequestCode.PICK_STATUS)
+        if(this.viewModel.requestCode == RequestCode.PICK_CREDIT_TYPE
+                || this.viewModel.requestCode == RequestCode.PICK_CATEGORY
+                || this.viewModel.requestCode == RequestCode.PICK_MANUFACTURER
+                || this.viewModel.requestCode == RequestCode.PICK_MODEL
+                || this.viewModel.requestCode == RequestCode.PICK_STATUS)
         {
             this.viewModel.isSelectionMode = true;
 
             if(this.viewModel.propertiesToSelectFrom == null)
             {
                 this.viewModel.propertiesToSelectFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+                this.viewModel.propertiesToSelectFrom = SortTool.sortElements(this.viewModel.propertiesToSelectFrom, SortType.BY_NAME, SortOrder.ASCENDING);
             }
         }
 
@@ -94,16 +96,26 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
         }
 
+        List<IElement> elements = new ArrayList<>();
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
-            List<IElement> elements;
             if(this.viewModel.isSelectionMode)
             {
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.propertiesToSelectFrom,
-                        new HashSet<Class<? extends IElement>>(),
-                        false)
-                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+                if(this.viewModel.requestCode.equals(RequestCode.PICK_MODEL))
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.propertiesToSelectFrom,
+                            Model.class,
+                            false);
+                }
+                else
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                            this.viewModel.propertiesToSelectFrom,
+                            new HashSet<Class<? extends IElement>>(),
+                            false)
+                            .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+                }
             }
             else
             {
@@ -112,10 +124,23 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 {
                     element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
                 }
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                        elements,
-                        IAttraction.class)
-                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+
+                if(this.viewModel.requestCode.equals(RequestCode.MANAGE_MODELS))
+                {
+                    HashSet<Class<? extends IElement>> childrenToExpand = new HashSet<>();
+                    childrenToExpand.add(Model.class);
+                    childrenToExpand.add(Attraction.class);
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            elements,
+                            childrenToExpand);
+                }
+                else
+                {
+                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                            elements,
+                            IAttraction.class)
+                            .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+                }
 
                 switch(this.viewModel.propertyTypeToManage)
                 {
@@ -151,15 +176,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
 
             this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
-
-            if(this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL))
-            {
-                this.viewModel.contentRecyclerViewAdapter
-                        .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                        .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
-            }
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -168,6 +184,23 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        }
+
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        if(this.viewModel.optionsMenuButler == null && (this.viewModel.requestCode.equals(RequestCode.PICK_MODEL) || this.viewModel.requestCode.equals(RequestCode.MANAGE_MODELS)))
+        {
+            this.viewModel.optionsMenuButler = new OptionsMenuButler(
+                    this.viewModel.optionsMenuAgent,
+                    this.viewModel.contentRecyclerViewAdapter,
+                    this.viewModel.requestCode,
+                    this.viewModel.requestCode.equals(RequestCode.PICK_MODEL) ? this.viewModel.propertiesToSelectFrom : elements,
+                    this);
+
+            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.CATEGORY);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -276,6 +309,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     protected Menu createOptionsMenu(Menu menu)
     {
+        if(this.viewModel.optionsMenuButler != null)
+        {
+            return this.viewModel.optionsMenuButler.createOptionsMenu(menu);
+        }
+
         return this.viewModel.optionsMenuAgent
                 .add(OptionsItem.SORT_CREDIT_TYPES)
                 .add(OptionsItem.SORT_CATEGORIES)
@@ -290,6 +328,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     protected  Menu prepareOptionsMenu(Menu menu)
     {
+        if(this.viewModel.optionsMenuButler != null)
+        {
+            return viewModel.optionsMenuButler.prepareOptionsMenu(menu);
+        }
+
         this.viewModel.optionsMenuAgent
                 .setVisible(OptionsItem.SORT_CREDIT_TYPES, false)
                 .setVisible(OptionsItem.SORT_CATEGORIES, false)
@@ -365,6 +408,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
+        if(this.viewModel.optionsMenuButler != null && this.viewModel.optionsMenuButler.handleOptionsItemSelected(item))
+        {
+            return true;
+        }
+
         switch(item)
         {
             case SORT_CREDIT_TYPES:

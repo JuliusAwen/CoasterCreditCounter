@@ -132,8 +132,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 groupedItems = new LinkedList<>(this.originalItems);
                 break;
 
-            case LOCATION:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.LOCATION);
+            case PARK:
+                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.PARK);
                 break;
 
             case CREDIT_TYPE:
@@ -146,6 +146,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             case MANUFACTURER:
                 groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.MANUFACTURER);
+                break;
+
+            case MODEL:
+                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.MODEL);
                 break;
 
             case STATUS:
@@ -992,7 +996,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                     }
                 }
-                else if(relevantChild.isAttraction() || relevantChild.isVisitedAttraction() || relevantChild.isVisit())
+                else if(relevantChild.isAttraction() || relevantChild.isVisit() || relevantChild.isModel())
                 {
                     if(!this.expandedItems.contains(item))
                     {

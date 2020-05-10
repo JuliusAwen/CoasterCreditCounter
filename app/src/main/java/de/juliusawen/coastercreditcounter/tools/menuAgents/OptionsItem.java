@@ -27,9 +27,9 @@ public enum OptionsItem
     SORT_BY_NAME_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_BY_NAME_DESCENDING(R.string.menu_item_sort_descending, -1),
 
-    SORT_BY_LOCATION(R.string.menu_item_sort_by_location, -1),
-    SORT_BY_LOCATION_ASCENDING(R.string.menu_item_sort_ascending, -1),
-    SORT_BY_LOCATION_DESCENDING(R.string.menu_item_sort_descending, -1),
+    SORT_BY_PARK(R.string.menu_item_sort_by_location, -1),
+    SORT_BY_PARK_ASCENDING(R.string.menu_item_sort_ascending, -1),
+    SORT_BY_PARK_DESCENDING(R.string.menu_item_sort_descending, -1),
 
     SORT_BY_CREDIT_TYPE(R.string.menu_item_sort_by_credit_type, -1),
     SORT_BY_CREDIT_TYPE_ASCENDING(R.string.menu_item_sort_ascending, -1),
@@ -42,6 +42,10 @@ public enum OptionsItem
     SORT_BY_MANUFACTURER(R.string.menu_item_sort_by_manufacturer, -1),
     SORT_BY_MANUFACTURER_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_BY_MANUFACTURER_DESCENDING(R.string.menu_item_sort_descending, -1),
+
+    SORT_BY_MODEL(R.string.menu_item_sort_by_model, -1),
+    SORT_BY_MODEL_ASCENDING(R.string.menu_item_sort_ascending, -1),
+    SORT_BY_MODEL_DESCENDING(R.string.menu_item_sort_descending, -1),
 
 
     SHOW_BUILD_CONFIG(R.string.menu_item_developer_options_show_build_config, -1),
@@ -59,6 +63,7 @@ public enum OptionsItem
     GROUP_BY_CREDIT_TYPE(R.string.menu_item_group_by_credit_type, -1),
     GROUP_BY_CATEGORY(R.string.menu_item_group_by_category, -1),
     GROUP_BY_MANUFACTURER(R.string.menu_item_group_by_manufacturer, -1),
+    GROUP_BY_MODEL(R.string.menu_item_group_by_model, -1),
     GROUP_BY_STATUS(R.string.menu_item_group_by_status, -1),
 
 

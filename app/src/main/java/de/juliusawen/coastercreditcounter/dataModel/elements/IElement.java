@@ -61,6 +61,7 @@ public interface IElement
     boolean isProperty();
     boolean isNote();
     boolean isEvent();
+    boolean isModel();
 
     boolean isGroupHeader();
     boolean isOrphan();

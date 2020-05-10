@@ -18,13 +18,18 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasModel;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
@@ -54,41 +59,17 @@ public class GroupHeaderProvider
             {
                 Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: initalizing GroupHeaders for [%d] attractions...", elements.size()));
 
-                LinkedList<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
-
-                for(IAttraction attraction : attractions)
+                for(IElement element : elements)
                 {
-                    IElement groupElement = null;
-                    switch(groupType)
-                    {
-                        case LOCATION:
-                            groupElement = attraction.getParent();
-                            break;
-
-                        case CREDIT_TYPE:
-                            groupElement = attraction.getCreditType();
-                            break;
-
-                        case CATEGORY:
-                            groupElement = attraction.getCategory();
-                            break;
-
-                        case MANUFACTURER:
-                            groupElement = attraction.getManufacturer();
-                            break;
-
-                        case STATUS:
-                            groupElement = attraction.getStatus();
-                            break;
-                    }
+                    IElement groupElement = this.getGroupElement(element, groupType);
                     UUID groupElementUuid = groupElement.getUuid();
 
                     IGroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
                     if(groupHeader != null)
                     {
-                        groupHeader.addChild(attraction);
+                        groupHeader.addChild(element);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to %s", attraction, groupHeader));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to %s", element, groupHeader));
 
                         if(!groupedAttractions.contains(groupHeader))
                         {
@@ -101,9 +82,9 @@ public class GroupHeaderProvider
                         groupHeader = GroupHeader.create(groupElement);
                         this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
                         groupedAttractions.add(groupHeader);
-                        groupHeader.addChild(attraction);
+                        groupHeader.addChild(element);
 
-                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, attraction));
+                        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, element));
                     }
                 }
                 Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created [%d] GroupHeaders", groupedAttractions.size()));
@@ -120,32 +101,9 @@ public class GroupHeaderProvider
                 groupHeader.getChildren().clear();
             }
 
-            List<IAttraction> attractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
-            for(IAttraction attraction : attractions)
+            for(IElement element : elements)
             {
-                IElement groupElement = null;
-                switch(groupType)
-                {
-                    case LOCATION:
-                        groupElement = attraction.getParent();
-                        break;
-
-                    case CREDIT_TYPE:
-                        groupElement = attraction.getCreditType();
-                        break;
-
-                    case CATEGORY:
-                        groupElement = attraction.getCategory();
-                        break;
-
-                    case MANUFACTURER:
-                        groupElement = attraction.getManufacturer();
-                        break;
-
-                    case STATUS:
-                        groupElement = attraction.getStatus();
-                        break;
-                }
+                IElement groupElement = this.getGroupElement(element, groupType);
                 UUID groupElementUuid = groupElement.getUuid();
 
                 IGroupHeader groupHeader = this.groupHeadersByGroupElementUuid.get(groupElementUuid);
@@ -164,7 +122,7 @@ public class GroupHeaderProvider
                         Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: added %s to GroupedAttractions", groupHeader));
                     }
 
-                    groupHeader.addChild(attraction);
+                    groupHeader.addChild(element);
                 }
                 else
                 {
@@ -172,8 +130,8 @@ public class GroupHeaderProvider
                     this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
                     groupedAttractions.add(groupHeader);
 
-                    groupHeader.addChild(attraction);
-                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, attraction));
+                    groupHeader.addChild(element);
+                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: created new %s and added %s", groupHeader, element));
                 }
             }
         }
@@ -194,6 +152,109 @@ public class GroupHeaderProvider
         return ConvertTool.convertElementsToType(groupedAttractions, IElement.class);
     }
 
+    private IElement getGroupElement(IElement element, GroupType groupType)
+    {
+        IElement groupElement = null;
+        switch(groupType)
+        {
+            case PARK:
+                if(element.isAttraction())
+                {
+                    groupElement = element.getParent();
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s is no Attraction", element));
+                }
+
+                break;
+
+            case CREDIT_TYPE:
+                if(element.hasCreditType())
+                {
+                    groupElement = ((IHasCreditType) element).getCreditType();
+
+                    if(groupElement == null)
+                    {
+                        groupElement = CreditType.getDefault();
+                    }
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no CreditType", element));
+                }
+                break;
+
+            case CATEGORY:
+                if(element.hasCategory())
+                {
+                    groupElement = ((IHasCategory) element).getCategory();
+
+                    if(groupElement == null)
+                    {
+                        groupElement = Category.getDefault();
+                    }
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Category", element));
+                }
+                break;
+
+            case MANUFACTURER:
+                if(element.hasManufacturer())
+                {
+                    groupElement = ((IHasManufacturer) element).getManufacturer();
+
+                    if(groupElement == null)
+                    {
+                        groupElement = Manufacturer.getDefault();
+                    }
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Manufacturer", element));
+                }
+
+                break;
+
+            case MODEL:
+                if(element.hasModel())
+                {
+                    groupElement = ((IHasModel) element).getModel();
+
+                    if(groupElement == null)
+                    {
+                        groupElement = Model.getDefault();
+                    }
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Model", element));
+                }
+                break;
+
+            case STATUS:
+                if(element.hasStatus())
+                {
+                    groupElement = ((IHasStatus) element).getStatus();
+
+                    if(groupElement == null)
+                    {
+                        groupElement = Status.getDefault();
+                    }
+                }
+                else
+                {
+                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Status", element));
+                }
+
+                break;
+        }
+
+        return groupElement;
+    }
+
     private List<IGroupHeader> sortGroupHeadersBasedOnGroupElementsOrder(List<IGroupHeader> groupHeaders, GroupType groupType)
     {
         if(groupHeaders.size() > 1)
@@ -206,7 +267,7 @@ public class GroupHeaderProvider
                 case YEAR:
                     return groupHeaders;
 
-                case LOCATION:
+                case PARK:
                     groupElements = App.content.getContentOfType(Park.class);
                     break;
 
@@ -220,6 +281,10 @@ public class GroupHeaderProvider
 
                 case MANUFACTURER:
                     groupElements = App.content.getContentOfType(Manufacturer.class);
+                    break;
+
+                case MODEL:
+                    groupElements = App.content.getContentOfType(Model.class);
                     break;
 
                 case STATUS:

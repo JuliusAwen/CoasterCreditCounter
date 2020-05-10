@@ -165,6 +165,7 @@ public abstract class ActivityDistributor
 
         if(intent != null)
         {
+            intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);

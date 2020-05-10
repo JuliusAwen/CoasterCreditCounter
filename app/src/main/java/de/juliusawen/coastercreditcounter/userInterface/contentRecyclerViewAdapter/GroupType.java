@@ -3,10 +3,10 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 public enum GroupType
 {
     NONE,
-    YEAR,
-    LOCATION,
+    YEAR, PARK,
     CREDIT_TYPE,
     CATEGORY,
     MANUFACTURER,
+    MODEL,
     STATUS
 }

@@ -21,10 +21,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -33,9 +30,8 @@ import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
 
@@ -68,11 +64,7 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-        }
-
+        boolean groupByCategory = false;
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             switch(this.viewModel.requestCode)
@@ -92,23 +84,7 @@ public class PickElementsActivity extends BaseActivity
                             OnSiteAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
-
-                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
-
-                    break;
-                }
-
-                case PICK_CREDIT_TYPE:
-                case PICK_CATEGORY:
-                case PICK_MANUFACTURER:
-                case PICK_STATUS:
-                {
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            new HashSet<Class<? extends IElement>>(),
-                            false)
-                            .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix)
-                            .setTypefaceForContentType(IProperty.class, Typeface.BOLD);
+                    groupByCategory = true;
                     break;
                 }
 
@@ -143,6 +119,26 @@ public class PickElementsActivity extends BaseActivity
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
+        if(this.viewModel.optionsMenuAgent == null)
+        {
+            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        if(this.viewModel.optionsMenuButler == null)
+        {
+            this.viewModel.optionsMenuButler = new OptionsMenuButler(
+                    this.viewModel.optionsMenuAgent,
+                    this.viewModel.contentRecyclerViewAdapter,
+                    this.viewModel.requestCode,
+                    this.viewModel.elementsToPickFrom,
+                    this);
+
+            if(groupByCategory)
+            {
+                this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.CATEGORY);
+            }
+        }
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_pick_elements));
         super.createToolbar()
                 .addToolbarHomeButton()
@@ -165,320 +161,19 @@ public class PickElementsActivity extends BaseActivity
     @Override
     protected Menu createOptionsMenu(Menu menu)
     {
-        switch(this.viewModel.requestCode)
-        {
-            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
-            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
-            case ASSIGN_STATUS_TO_ATTRACTIONS:
-            {
-                this.viewModel.optionsMenuAgent
-                        .add(OptionsItem.SORT_BY)
-                            .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
-                                .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME)
-                            .addToGroup(OptionsItem.SORT_BY_LOCATION, OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_LOCATION_ASCENDING, OptionsItem.SORT_BY_LOCATION)
-                                .addToGroup(OptionsItem.SORT_BY_LOCATION_DESCENDING, OptionsItem.SORT_BY_LOCATION)
-                            .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
-                                .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
-                            .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
-                                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                        .add(OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
-                break;
-            }
-
-            case PICK_ATTRACTIONS:
-            case PICK_CREDIT_TYPE:
-            case PICK_CATEGORY:
-            case PICK_MANUFACTURER:
-            case PICK_STATUS:
-            {
-                this.viewModel.optionsMenuAgent
-                        .add(OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                            .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
-                break;
-            }
-        }
-
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-                .create(menu);
+        return this.viewModel.optionsMenuButler.createOptionsMenu(menu);
     }
 
     @Override
     protected Menu prepareOptionsMenu(Menu menu)
     {
-        boolean sortByLocationVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
-
-        boolean sortByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-        boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
-        boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
-
-        boolean groupByParkVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
-
-        boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
-        boolean groupByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
-        boolean groupByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
-        boolean groupByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
-        boolean groupByStatusEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
-
-        boolean expandAllVisible = (((this.viewModel.requestCode.equals(RequestCode.PICK_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS))
-                    && this.viewModel.elementsToPickFrom.size() > 1) || this.anyElementHasChildren())
-                        && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
-
-        boolean collapseVisible = (((this.viewModel.requestCode.equals(RequestCode.PICK_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS)
-                || this.viewModel.requestCode.equals(RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS))
-                    && this.viewModel.elementsToPickFrom.size() > 1) || this.anyElementHasChildren())
-                        && this.viewModel.contentRecyclerViewAdapter.isAllExpanded();
-
-        switch(this.viewModel.requestCode)
-        {
-            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
-            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
-            case ASSIGN_STATUS_TO_ATTRACTIONS:
-            {
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_BY, sortByLocationEnabled || sortByCategoryEnabled || sortByManufacturerEnabled)
-                            .setVisible(OptionsItem.SORT_BY_LOCATION, sortByLocationVisible)
-                            .setEnabled(OptionsItem.SORT_BY_LOCATION, sortByLocationEnabled)
-                            .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
-                            .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
-                        .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
-                            .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
-                            .setEnabled(OptionsItem.GROUP_BY_PARK, groupByLocationEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
-                            .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
-                break;
-            }
-        }
-
-        return this.viewModel.optionsMenuAgent
-                .setEnabled(OptionsItem.SORT, this.viewModel.elementsToPickFrom.size() > 1)
-                .setVisible(OptionsItem.EXPAND_ALL, expandAllVisible)
-                .setVisible(OptionsItem.COLLAPSE_ALL, collapseVisible)
-                .prepare(menu);
-    }
-
-    private boolean anyElementHasChildren()
-    {
-        for(IElement element : this.viewModel.elementsToPickFrom)
-        {
-            if(element.hasChildren())
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return this.viewModel.optionsMenuButler.prepareOptionsMenu(menu);
     }
 
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        switch(item)
-        {
-            case SORT_BY:
-            case GROUP_BY:
-                return true;
-
-            case SORT_ASCENDING:
-            case SORT_BY_NAME_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_DESCENDING:
-            case SORT_BY_NAME_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.DESCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_LOCATION_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_LOCATION, SortOrder.ASCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_LOCATION_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_LOCATION, SortOrder.DESCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_CATEGORY_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_CATEGORY, SortOrder.ASCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_CATEGORY_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_CATEGORY, SortOrder.DESCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_MANUFACTURER_ASCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_MANUFACTURER, SortOrder.ASCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case SORT_BY_MANUFACTURER_DESCENDING:
-                this.viewModel.elementsToPickFrom = SortTool.sortElements(viewModel.elementsToPickFrom, SortType.BY_MANUFACTURER, SortOrder.DESCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
-                return true;
-
-            case GROUP_BY_PARK:
-                this.setDetailModesAndGroupElements(GroupType.LOCATION);
-                return true;
-
-            case GROUP_BY_CREDIT_TYPE:
-                this.setDetailModesAndGroupElements(GroupType.CREDIT_TYPE);
-                return true;
-
-            case GROUP_BY_CATEGORY:
-                this.setDetailModesAndGroupElements(GroupType.CATEGORY);
-                return true;
-
-            case GROUP_BY_MANUFACTURER:
-                this.setDetailModesAndGroupElements(GroupType.MANUFACTURER);
-                return true;
-
-            case GROUP_BY_STATUS:
-                this.setDetailModesAndGroupElements(GroupType.STATUS);
-                return true;
-
-            case EXPAND_ALL:
-                this.viewModel.contentRecyclerViewAdapter.expandAll();
-                invalidateOptionsMenu();
-                return true;
-
-            case COLLAPSE_ALL:
-                this.viewModel.contentRecyclerViewAdapter.collapseAll();
-                invalidateOptionsMenu();
-                return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
-        }
-    }
-
-    private void setDetailModesAndGroupElements(GroupType groupType)
-    {
-        this.viewModel.contentRecyclerViewAdapter
-                .clearTypefacesForContentType()
-                .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
-                .clearTypefacesForDetailType()
-                .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
-                .clearDetailTypesAndModeForContentType();
-
-        if(this.viewModel.requestCode == RequestCode.PICK_ATTRACTIONS)
-        {
-            switch(groupType)
-            {
-                case CREDIT_TYPE:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .groupItems(GroupType.CREDIT_TYPE);
-                    break;
-
-                case CATEGORY:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .groupItems(GroupType.CATEGORY);
-                    break;
-
-                case MANUFACTURER:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                            .groupItems(GroupType.MANUFACTURER);
-                    break;
-
-                case STATUS:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .groupItems(GroupType.STATUS);
-                    break;
-            }
-            this.viewModel.contentRecyclerViewAdapter
-                    .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW);
-        }
-        else
-        {
-            this.viewModel.contentRecyclerViewAdapter
-                    .setTypefaceForContentType(IProperty.class, Typeface.BOLD);
-
-            switch(groupType)
-            {
-                case LOCATION:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .groupItems(GroupType.LOCATION);
-                    break;
-
-                case CREDIT_TYPE:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER ,DetailDisplayMode.ABOVE)
-                            .groupItems(GroupType.CREDIT_TYPE);
-                    break;
-
-                case CATEGORY:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .groupItems(GroupType.CATEGORY);
-                    break;
-
-                case MANUFACTURER:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                            .groupItems(GroupType.MANUFACTURER);
-                    break;
-
-                case STATUS:
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .groupItems(GroupType.STATUS);
-                    break;
-            }
-        }
+        return this.viewModel.optionsMenuButler.handleOptionsItemSelected(item) ? true : super.handleOptionsItemSelected(item);
     }
 
     private void decorateFloatingActionButtonCheck()
@@ -632,38 +327,25 @@ public class PickElementsActivity extends BaseActivity
         {
             if(element == null)
             {
-                LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
-
-                switch(this.viewModel.requestCode)
+                if(this.viewModel.requestCode == RequestCode.PICK_VISIT)
                 {
-                    case PICK_VISIT:
-                    case PICK_CREDIT_TYPE:
-                    case PICK_CATEGORY:
-                    case PICK_MANUFACTURER:
-                    case PICK_STATUS:
-                    {
-                        Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
-                        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
-                        break;
-                    }
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                }
+                else
+                {
+                    LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
 
-                    case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
-                    case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                    case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-                    default:
+                    for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                     {
-                        for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+                        if(!selectedElement.isOrphan())
                         {
-                            if(!selectedElement.isOrphan())
-                            {
-                                selectedElementsWithoutOrphanElements.add(selectedElement);
-                            }
+                            selectedElementsWithoutOrphanElements.add(selectedElement);
                         }
-
-                        Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
-                        intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
-                        break;
                     }
+
+                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                    intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
                 }
             }
             else

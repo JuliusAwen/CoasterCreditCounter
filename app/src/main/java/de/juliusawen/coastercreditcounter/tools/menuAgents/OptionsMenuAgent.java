@@ -210,13 +210,18 @@ public class OptionsMenuAgent
     public boolean handleOptionsItemSelected(MenuItem menuItem, IOptionsMenuAgentClient client)
     {
         OptionsItem optionsItem = OptionsItem.getValue(menuItem.getItemId());
-        Log.i(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] selected", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
+        Log.i(Constants.LOG_TAG,
+                String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] selected",
+                        optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
 
         if(optionsItem == OptionsItem.NO_FUNCTION)
         {
-            Log.v(Constants.LOG_TAG, String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] has no function", optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
+            Log.v(Constants.LOG_TAG,
+                    String.format("OptionsMenuAgent.handleOptionsItemSelected:: Item [#%d - %s] in [%s] has no function",
+                            optionsItem.ordinal(), optionsItem, client.getClass().getSimpleName()));
             return true;
         }
+
         return client.handleOptionsItemSelected(optionsItem);
     }
 
@@ -229,6 +234,3 @@ public class OptionsMenuAgent
         Log.i(Constants.LOG_TAG, "OptionsMenuAgent.clear:: OptionsMenuAgent cleared");
     }
 }
-
-
-

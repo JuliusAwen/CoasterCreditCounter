@@ -99,12 +99,14 @@
     <string name="menu_item_sort_by_location">location</string>
     <string name="menu_item_sort_by_category">category</string>
     <string name="menu_item_sort_by_manufacturer">manufacturer</string>
+    <string name="menu_item_sort_by_model">model</string>
 
     <string name="menu_item_group_by">group by</string>
     <string name="menu_item_group_by_park">park</string>
     <string name="menu_item_group_by_credit_type">credit type</string>
     <string name="menu_item_group_by_category">category</string>
     <string name="menu_item_group_by_manufacturer">manufacturer</string>
+    <string name="menu_item_group_by_model">model</string>
     <string name="menu_item_group_by_status">status</string>
 
     <string name="menu_item_add">add</string>
@@ -199,7 +201,7 @@
     <!--PARKS-->
     <string name="parks">Parks</string>
     <string name="title_edit_park">Edit Park</string>
-    <string name="subtitle_create_park">create park</string>
+    <string name="subtitle_create_park">Create park</string>
     <string name="subtitle_park_show_tab_overview">Overview</string>
     <string name="subtitle_park_show_tab_attractions">Attractions</string>
     <string name="subtitle_park_show_tab_visits">Visits</string>
