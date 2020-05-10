@@ -147,21 +147,19 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                         break;
                     }
-
-                    case MODEL:
-                    {
-                        this.viewModel.contentRecyclerViewAdapter
-                                .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
-
-                        break;
-                    }
                 }
             }
 
             this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+
+            if(this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL))
+            {
+                this.viewModel.contentRecyclerViewAdapter
+                        .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                        .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+            }
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)

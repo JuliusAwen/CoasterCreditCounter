@@ -55,7 +55,7 @@ public enum OptionsItem
 
 
     GROUP_BY(R.string.menu_item_group_by, -1),
-    GROUP_BY_LOCATION(R.string.menu_item_group_by_location, -1),
+    GROUP_BY_PARK(R.string.menu_item_group_by_park, -1),
     GROUP_BY_CREDIT_TYPE(R.string.menu_item_group_by_credit_type, -1),
     GROUP_BY_CATEGORY(R.string.menu_item_group_by_category, -1),
     GROUP_BY_MANUFACTURER(R.string.menu_item_group_by_manufacturer, -1),

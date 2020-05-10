@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
+@SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class Preferences implements IPersistable
 {
     private int firstDayOfTheWeek;

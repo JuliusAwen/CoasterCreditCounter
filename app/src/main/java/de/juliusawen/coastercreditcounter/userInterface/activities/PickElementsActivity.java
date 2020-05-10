@@ -80,6 +80,7 @@ public class PickElementsActivity extends BaseActivity
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+                case ASSIGN_MODEL_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
@@ -166,9 +167,10 @@ public class PickElementsActivity extends BaseActivity
     {
         switch(this.viewModel.requestCode)
         {
-            case PICK_ATTRACTIONS:
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 this.viewModel.optionsMenuAgent
@@ -186,7 +188,7 @@ public class PickElementsActivity extends BaseActivity
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                                 .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
                         .add(OptionsItem.GROUP_BY)
-                            .addToGroup(OptionsItem.GROUP_BY_LOCATION, OptionsItem.GROUP_BY)
+                            .addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                             .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
@@ -196,6 +198,7 @@ public class PickElementsActivity extends BaseActivity
                 break;
             }
 
+            case PICK_ATTRACTIONS:
             case PICK_CREDIT_TYPE:
             case PICK_CATEGORY:
             case PICK_MANUFACTURER:
@@ -221,7 +224,7 @@ public class PickElementsActivity extends BaseActivity
         boolean sortByCategoryEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY;
         boolean sortByManufacturerEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER;
 
-        boolean groupByLocationVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
+        boolean groupByParkVisible = this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS;
 
         boolean groupByLocationEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.LOCATION;
         boolean groupByCreditTypeEnabled = this.viewModel.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE;
@@ -231,9 +234,10 @@ public class PickElementsActivity extends BaseActivity
 
         switch(this.viewModel.requestCode)
         {
-            case PICK_ATTRACTIONS:
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 this.viewModel.optionsMenuAgent
@@ -243,8 +247,8 @@ public class PickElementsActivity extends BaseActivity
                             .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled)
                             .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled)
                         .setEnabled(OptionsItem.GROUP_BY, groupByLocationEnabled || groupByCategoryEnabled || groupByManufacturerEnabled || groupByStatusEnabled)
-                            .setVisible(OptionsItem.GROUP_BY_LOCATION, groupByLocationVisible)
-                            .setEnabled(OptionsItem.GROUP_BY_LOCATION, groupByLocationEnabled)
+                            .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
+                            .setEnabled(OptionsItem.GROUP_BY_PARK, groupByLocationEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled)
                             .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled)
@@ -324,7 +328,7 @@ public class PickElementsActivity extends BaseActivity
                 this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToPickFrom);
                 return true;
 
-            case GROUP_BY_LOCATION:
+            case GROUP_BY_PARK:
                 this.setDetailModesAndGroupElements(GroupType.LOCATION);
                 return true;
 

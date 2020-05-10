@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.BuildConfig;
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class AppConfig
 {
-//    private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
+    private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
     private final String JSON_HANDLER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
 
     private final String databaseWrapperToUse = JSON_HANDLER;

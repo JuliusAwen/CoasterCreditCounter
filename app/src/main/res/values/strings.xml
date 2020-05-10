@@ -101,7 +101,7 @@
     <string name="menu_item_sort_by_manufacturer">manufacturer</string>
 
     <string name="menu_item_group_by">group by</string>
-    <string name="menu_item_group_by_location">location</string>
+    <string name="menu_item_group_by_park">park</string>
     <string name="menu_item_group_by_credit_type">credit type</string>
     <string name="menu_item_group_by_category">category</string>
     <string name="menu_item_group_by_manufacturer">manufacturer</string>
