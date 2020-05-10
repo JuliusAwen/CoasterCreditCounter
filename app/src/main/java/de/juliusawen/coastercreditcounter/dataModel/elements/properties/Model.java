@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
  *      Parent: none<br>
  *      Children: Attractions<br>
  */
-public final class Model extends Element implements IProperty
+public final class Model extends Element implements IProperty, IHasCreditType, IHasCategory, IHasManufacturer
 {
     private static Model defaultModel;
 
@@ -46,6 +46,16 @@ public final class Model extends Element implements IProperty
         }
 
         return model;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("[%s - %s %s %s]",
+                this.getName(),
+                this.getCreditType() != null ? this.getCreditType() : "[no CreditType]",
+                this.getCategory() != null ? this.getCategory() : "[no Category]",
+                this.getManufacturer() != null ? this.getManufacturer() : "[no Manufacturer]");
     }
 
     @Override
@@ -82,7 +92,7 @@ public final class Model extends Element implements IProperty
         Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel.getFullName()));
     }
 
-    public boolean hasCreditType()
+    public boolean creditTypeIsSet()
     {
         return this.getCreditType() != null;
     }
@@ -103,7 +113,7 @@ public final class Model extends Element implements IProperty
         }
     }
 
-    public boolean hasCategory()
+    public boolean categoryIsSet()
     {
         return this.getCategory() != null;
     }
@@ -124,7 +134,7 @@ public final class Model extends Element implements IProperty
         }
     }
 
-    public boolean hasManufacturer()
+    public boolean manufacturerIsSet()
     {
         return this.manufacturer != null;
     }
@@ -156,9 +166,9 @@ public final class Model extends Element implements IProperty
 
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.hasCreditType() ? this.getCreditType().getUuid() : JSONObject.NULL);
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.hasCategory() ? this.getCategory().getUuid() : JSONObject.NULL);
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.hasManufacturer() ? this.getManufacturer().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.creditTypeIsSet() ? this.getCreditType().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.categoryIsSet() ? this.getCategory().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.manufacturerIsSet() ? this.getManufacturer().getUuid() : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;

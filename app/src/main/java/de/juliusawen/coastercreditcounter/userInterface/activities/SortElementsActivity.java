@@ -22,6 +22,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -30,6 +31,8 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -37,7 +40,6 @@ public class SortElementsActivity extends BaseActivity
 
     private View frameLayoutDialogDown;
     private View frameLayoutDialogUp;
-
 
     protected void setContentView()
     {
@@ -64,8 +66,10 @@ public class SortElementsActivity extends BaseActivity
                     this.viewModel.elementsToSort,
                     new HashSet<Class<? extends IElement>>(),
                     false)
-                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
-
+                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix)
+                    .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW);
 
             Set<Class<? extends IElement>> types = new HashSet<>();
             for(IElement elementToSort : this.viewModel.elementsToSort)

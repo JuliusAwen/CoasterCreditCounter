@@ -82,6 +82,31 @@ public abstract class ActivityDistributor
         }
     }
 
+    public static void startActivityShowForResult(Context context, RequestCode requestCode, IElement element)
+    {
+        Intent intent = null;
+        if(requestCode == RequestCode.SHOW_ATTRACTION)
+        {
+            intent = new Intent(context, ShowAttractionActivity.class);
+        }
+
+        if(intent != null)
+        {
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
+
+            Log.i(Constants.LOG_TAG, String.format("ActivityDistributor.startActivityShowForResult:: starting [%s] from [%s]",
+                    StringTool.parseActivityName(intent.getComponent().getShortClassName()), context.getClass().getSimpleName()));
+            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + context.getClass().getSimpleName());
+
+            ((Activity)context).startActivityForResult(intent, requestCode.ordinal());
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format(Locale.getDefault(),
+                    "ActivityDistributor.startActivityShowForResult:: unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
+        }
+    }
+
     public static  void startActivityManageForResult(Context context, RequestCode requestCode)
     {
         Intent intent = null;
@@ -117,6 +142,15 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.manufacturer);
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
+                break;
+
+            case MANAGE_MODELS:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MODEL.ordinal());
+                toolbarTitle = context.getString(R.string.model);
+                toolbarSubtitle = context.getString(R.string.subtitle_management);
+                helpTitle = context.getString(R.string.model);
+                helpText = context.getString(R.string.help_text_manage_models);
                 break;
 
             case MANAGE_STATUSES:
@@ -373,6 +407,10 @@ public abstract class ActivityDistributor
 
             case SORT_MANUFACTURERS:
                 toolbarSubtitle = context.getString(R.string.manufacturers);
+                break;
+
+            case SORT_MODELS:
+                toolbarSubtitle = context.getString(R.string.models);
                 break;
 
             case SORT_STATUSES:

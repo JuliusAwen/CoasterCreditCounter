@@ -73,29 +73,6 @@
 
         <LinearLayout
             style="@style/CreateOrEditAttractionSelectBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Status">
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:layout_width="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/header_status"/>
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:id="@+id/textViewCreateOrEditAttraction_Status"
-                android:layout_width="0sp"
-                android:layout_weight="1"/>
-
-            <ImageView
-                style="@style/StandardImageHolder"
-                android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
-                android:contentDescription="@string/description_image_view" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/CreateOrEditAttractionSelectBarLayout"
             android:id="@+id/linearLayoutCreateOrEditAttraction_CreditType">
 
             <TextView
@@ -136,6 +113,29 @@
             <ImageView
                 style="@style/StandardImageHolder"
                 android:id="@+id/imageViewCreateOrEditAttraction_PickCategory"
+                android:contentDescription="@string/description_image_view" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Status">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_status"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Status"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                style="@style/StandardImageHolder"
+                android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
                 android:contentDescription="@string/description_image_view" />
 
         </LinearLayout>

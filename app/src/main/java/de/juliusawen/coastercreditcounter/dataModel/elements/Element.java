@@ -15,6 +15,11 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttrac
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasModel;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
@@ -415,5 +420,30 @@ public abstract class Element implements IElement
     public boolean isPersistable()
     {
         return this instanceof IPersistable;
+    }
+
+    public boolean hasCreditType()
+    {
+        return this instanceof IHasCreditType;
+    }
+
+    public boolean hasCategory()
+    {
+        return this instanceof IHasCategory;
+    }
+
+    public boolean hasManufacturer()
+    {
+        return this instanceof IHasManufacturer;
+    }
+
+    public boolean hasModel()
+    {
+        return this instanceof IHasModel;
+    }
+
+    public boolean hasStatus()
+    {
+        return this instanceof IHasStatus;
     }
 }

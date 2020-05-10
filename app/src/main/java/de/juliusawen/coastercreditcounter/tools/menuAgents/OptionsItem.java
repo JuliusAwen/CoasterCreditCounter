@@ -18,6 +18,7 @@ public enum OptionsItem
     SORT_CREDIT_TYPES(R.string.menu_item_sort, -1),
     SORT_CATEGORIES(R.string.menu_item_sort, -1),
     SORT_MANUFACTURERS(R.string.menu_item_sort, -1),
+    SORT_MODELS(R.string.menu_item_sort, -1),
     SORT_STATUSES(R.string.menu_item_sort, -1),
 
     SORT_BY(R.string.menu_item_sort_by, -1),

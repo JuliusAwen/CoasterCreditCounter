@@ -27,23 +27,22 @@
 
         <TextView
             style="@style/AttractionDetailTextView"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:id="@+id/textViewAttractionDetails_TotalRideCount"/>
-
-        <TextView
-            style="@style/AttractionDetailTextView"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/standard_padding"
             android:id="@+id/textViewAttractionDetails_Category"/>
 
         <TextView
             style="@style/AttractionDetailTextView"
-            android:layout_marginBottom="4dp"
             android:id="@+id/textViewAttractionDetails_CreditType"/>
 
         <TextView
             style="@style/AttractionDetailTextView"
+            android:layout_marginTop="@dimen/standard_padding"
             android:id="@+id/textViewAttractionDetails_Status"/>
+
+        <TextView
+            style="@style/AttractionDetailTextView"
+            android:layout_marginTop="4dp"
+            android:id="@+id/textViewAttractionDetails_TotalRideCount"/>
 
     </LinearLayout>
 

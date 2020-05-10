@@ -31,6 +31,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -77,6 +78,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(requestCode == RequestCode.PICK_CREDIT_TYPE
                 || requestCode == RequestCode.PICK_CATEGORY
                 || requestCode == RequestCode.PICK_MANUFACTURER
+                || requestCode == RequestCode.PICK_MODEL
                 || requestCode == RequestCode.PICK_STATUS)
         {
             this.viewModel.isSelectionMode = true;
@@ -87,129 +89,85 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
         }
 
-        this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
+        if(this.viewModel.propertyTypeToManage == null)
+        {
+            this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
+        }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             List<IElement> elements;
-            switch(this.viewModel.propertyTypeToManage)
+            if(this.viewModel.isSelectionMode)
             {
-                case CREDIT_TYPE:
-                {
-                    if(this.viewModel.isSelectionMode)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.propertiesToSelectFrom,
-                                new HashSet<Class<? extends IElement>>(),
-                                false)
-                                .setTypefaceForContentType(CreditType.class, Typeface.BOLD);
-                    }
-                    else
-                    {
-                        elements = App.content.getContentOfType(CreditType.class);
-
-                        for(IElement element : elements)
-                        {
-                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-                        }
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                elements,
-                                IAttraction.class)
-                                .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                    }
-                    break;
-                }
-                case CATEGORY:
-                {
-                    if(this.viewModel.isSelectionMode)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.propertiesToSelectFrom,
-                                new HashSet<Class<? extends IElement>>(),
-                                false)
-                                .setTypefaceForContentType(Category.class, Typeface.BOLD);
-                    }
-                    else
-                    {
-                        elements = App.content.getContentOfType(Category.class);
-
-                        for(IElement element : elements)
-                        {
-                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-                        }
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                elements,
-                                IAttraction.class)
-                                .setTypefaceForContentType(Category.class, Typeface.BOLD)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
-                    }
-                    break;
-                }
-                case MANUFACTURER:
-                {
-                    if(this.viewModel.isSelectionMode)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.propertiesToSelectFrom,
-                                new HashSet<Class<? extends IElement>>(),
-                                false)
-                                .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
-                    }
-                    else
-                    {
-                        elements = App.content.getContentOfType(Manufacturer.class);
-
-                        for(IElement element : elements)
-                        {
-                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-                        }
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                elements,
-                                IAttraction.class)
-                                .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                    }
-                    break;
-                }
-                case STATUS:
-                {
-                    if(this.viewModel.isSelectionMode)
-                    {
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                                this.viewModel.propertiesToSelectFrom,
-                                new HashSet<Class<? extends IElement>>(),
-                                false)
-                                .setTypefaceForContentType(Status.class, Typeface.BOLD);
-                    }
-                    else
-                    {
-                        elements = App.content.getContentOfType(Status.class);
-
-                        for(IElement element : elements)
-                        {
-                            element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-                        }
-
-                        this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                                elements,
-                                IAttraction.class)
-                                .setTypefaceForContentType(Status.class, Typeface.BOLD)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                    }
-                    break;
-                }
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                        this.viewModel.propertiesToSelectFrom,
+                        new HashSet<Class<? extends IElement>>(),
+                        false)
+                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
             }
-            this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+            else
+            {
+                elements = App.content.getContentOfType(this.getPropertyType());
+                for(IElement element : elements)
+                {
+                    element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                }
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+                        elements,
+                        IAttraction.class)
+                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+
+                switch(this.viewModel.propertyTypeToManage)
+                {
+                    case CREDIT_TYPE:
+                    case STATUS:
+                    {
+                        this.viewModel.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        break;
+                    }
+
+                    case CATEGORY:
+                    {
+                        this.viewModel.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+                        break;
+                    }
+
+                    case MANUFACTURER:
+                    {
+                        this.viewModel.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        break;
+                    }
+
+                    case MODEL:
+                    {
+                        this.viewModel.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        break;
+                    }
+                }
+
+                if(this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL))
+                {
+                    this.viewModel.contentRecyclerViewAdapter
+                            .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                }
+
+                this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+            }
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -247,6 +205,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_CREDIT_TYPE:
             case CREATE_CATEGORY:
             case CREATE_MANUFACTURER:
+            case CREATE_MODEL:
             case CREATE_STATUS:
             {
                 this.viewModel.propertyToReturn = resultElement;
@@ -257,6 +216,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case EDIT_CREDIT_TYPE:
             case EDIT_CATEGORY:
             case EDIT_MANUFACTURER:
+            case EDIT_MODEL:
             case EDIT_STATUS:
             {
                 updateContentRecyclerView(false);
@@ -266,6 +226,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case SORT_CREDIT_TYPES:
             case SORT_CATEGORIES:
             case SORT_MANUFACTURERS:
+            case SORT_MODELS:
             case SORT_STATUSES:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
@@ -278,47 +239,42 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_MODELS_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
-                switch(this.viewModel.propertyTypeToManage)
+
+                for(IElement element : resultElements)
                 {
-                    case CREDIT_TYPE:
-                        for(IElement element : resultElements)
-                        {
-                            ((Attraction)element).setCreditType((CreditType) this.viewModel.longClickedElement);
-                            super.markForUpdate(element);
-                        }
-                        break;
+                    switch(this.viewModel.propertyTypeToManage)
+                    {
+                        case CREDIT_TYPE:
+                            ((Attraction) element).setCreditType((CreditType) this.viewModel.longClickedElement);
+                            break;
 
-                    case CATEGORY:
-                        for(IElement element : resultElements)
-                        {
-                            ((Attraction)element).setCategory((Category)this.viewModel.longClickedElement);
-                            super.markForUpdate(element);
-                        }
-                        break;
+                        case CATEGORY:
+                            ((Attraction) element).setCategory((Category) this.viewModel.longClickedElement);
+                            break;
 
-                    case MANUFACTURER:
-                        for(IElement element : resultElements)
-                        {
-                            ((Attraction)element).setManufacturer((Manufacturer)this.viewModel.longClickedElement);
-                            super.markForUpdate(element);
-                        }
-                        break;
+                        case MANUFACTURER:
+                            ((Attraction) element).setManufacturer((Manufacturer) this.viewModel.longClickedElement);
+                            break;
 
-                    case STATUS:
-                        for(IElement element : resultElements)
-                        {
-                            ((Attraction)element).setStatus((Status) this.viewModel.longClickedElement);
-                            super.markForUpdate(element);
-                        }
-                        break;
+                        case MODEL:
+                            ((Attraction) element).setModel((Model) this.viewModel.longClickedElement);
+                            break;
+
+                        case STATUS:
+                            ((Attraction) element).setStatus((Status) this.viewModel.longClickedElement);
+                            break;
+                    }
+                    super.markForUpdate(element);
                 }
 
                 updateContentRecyclerView(false);
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
-                Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
+                Log.d(Constants.LOG_TAG,
+                        String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
                         this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
             }
@@ -332,6 +288,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 .add(OptionsItem.SORT_CREDIT_TYPES)
                 .add(OptionsItem.SORT_CATEGORIES)
                 .add(OptionsItem.SORT_MANUFACTURERS)
+                .add(OptionsItem.SORT_MODELS)
                 .add(OptionsItem.SORT_STATUSES)
                 .add(OptionsItem.EXPAND_ALL)
                 .add(OptionsItem.COLLAPSE_ALL)
@@ -345,6 +302,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 .setVisible(OptionsItem.SORT_CREDIT_TYPES, false)
                 .setVisible(OptionsItem.SORT_CATEGORIES, false)
                 .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
+                .setVisible(OptionsItem.SORT_MODELS, false)
                 .setVisible(OptionsItem.SORT_STATUSES, false);
 
         switch(this.viewModel.propertyTypeToManage)
@@ -367,6 +325,12 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
                 break;
 
+            case MODEL:
+                this.viewModel.optionsMenuAgent
+                        .setEnabled(OptionsItem.SORT_MODELS, App.content.getContentOfType(Model.class).size() > 1)
+                        .setVisible(OptionsItem.SORT_MODELS, true);
+                break;
+
             case STATUS:
                 this.viewModel.optionsMenuAgent
                         .setEnabled(OptionsItem.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
@@ -383,33 +347,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private boolean anyPropertyHasChildren()
     {
-        Class<? extends IProperty> type;
-
-        switch(this.viewModel.propertyTypeToManage)
-        {
-            case CREDIT_TYPE:
-                type = CreditType.class;
-                break;
-
-            case CATEGORY:
-                type = Category.class;
-                break;
-
-            case MANUFACTURER:
-                type = Manufacturer.class;
-                break;
-
-            case STATUS:
-                type = Status.class;
-                break;
-
-            default:
-                String message = String.format("Could not assign property - unexpected type [%s]", this.viewModel.propertyTypeToManage);
-                Log.e(Constants.LOG_TAG, "ManagePropertiesActivity.propertyIsAssigned:: " + message);
-                throw new IllegalStateException(message);
-        }
-
-        for(IProperty property : App.content.getContentAsType(type))
+        for(IProperty property : App.content.getContentAsType(this.getPropertyType()))
         {
             if(property.hasChildren())
             {
@@ -425,31 +363,23 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         switch(item)
         {
             case SORT_CREDIT_TYPES:
-                ActivityDistributor.startActivitySortForResult(
-                        this,
-                        RequestCode.SORT_CREDIT_TYPES,
-                        App.content.getContentOfType(CreditType.class));
+                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CREDIT_TYPES, App.content.getContentOfType(CreditType.class));
                 return true;
 
             case SORT_CATEGORIES:
-                ActivityDistributor.startActivitySortForResult(
-                        this,
-                        RequestCode.SORT_CATEGORIES,
-                        App.content.getContentOfType(Category.class));
+                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CATEGORIES, App.content.getContentOfType(Category.class));
                 return true;
 
             case SORT_MANUFACTURERS:
-                ActivityDistributor.startActivitySortForResult(
-                        this,
-                        RequestCode.SORT_MANUFACTURERS,
-                        App.content.getContentOfType(Manufacturer.class));
+                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class));
+                return true;
+
+            case SORT_MODELS:
+                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MODELS, App.content.getContentOfType(Model.class));
                 return true;
 
             case SORT_STATUSES:
-                ActivityDistributor.startActivitySortForResult(
-                        this,
-                        RequestCode.SORT_STATUSES,
-                        App.content.getContentOfType(Status.class));
+                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_STATUSES, App.content.getContentOfType(Status.class));
                 return true;
 
             case EXPAND_ALL:
@@ -489,7 +419,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onClick:: %s clicked", element));
 
-                if(element.isProperty() && viewModel.isSelectionMode)
+                if(viewModel.isSelectionMode && element.isProperty())
                 {
                     viewModel.propertyToReturn = element;
                     returnResult(RESULT_OK);
@@ -515,24 +445,28 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 if(viewModel.longClickedElement.isProperty())
                 {
-                    boolean isDefault = false;
+                    boolean longClickedPropertyIsDefault = false;
 
                     switch(viewModel.propertyTypeToManage)
                     {
                         case CREDIT_TYPE:
-                            isDefault = ((CreditType)viewModel.longClickedElement).isDefault();
+                            longClickedPropertyIsDefault = ((CreditType) viewModel.longClickedElement).isDefault();
                             break;
 
                         case CATEGORY:
-                            isDefault = ((Category)viewModel.longClickedElement).isDefault();
+                            longClickedPropertyIsDefault = ((Category) viewModel.longClickedElement).isDefault();
                             break;
 
                         case MANUFACTURER:
-                            isDefault = ((Manufacturer)viewModel.longClickedElement).isDefault();
+                            longClickedPropertyIsDefault = ((Manufacturer) viewModel.longClickedElement).isDefault();
+                            break;
+
+                        case MODEL:
+                            longClickedPropertyIsDefault = ((Model) viewModel.longClickedElement).isDefault();
                             break;
 
                         case STATUS:
-                            isDefault = ((Status)viewModel.longClickedElement).isDefault();
+                            longClickedPropertyIsDefault = ((Status) viewModel.longClickedElement).isDefault();
                             break;
                     }
 
@@ -548,13 +482,15 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                                 .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty());
                     }
 
+                    boolean isSetAsDefaultVisible = !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE) && !viewModel.propertyTypeToManage.equals(PropertyType.MODEL);
+
                     popupMenuAgent
                             .add(PopupItem.EDIT_ELEMENT)
                             .add(PopupItem.DELETE_ELEMENT)
                             .add(PopupItem.SET_AS_DEFAULT)
-                            .setEnabled(PopupItem.DELETE_ELEMENT, !isDefault)
-                            .setEnabled(PopupItem.SET_AS_DEFAULT, !isDefault)
-                            .setVisible(PopupItem.SET_AS_DEFAULT, !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE)) // no option to change CreditTypes' default value --> is always "no credit"
+                            .setEnabled(PopupItem.DELETE_ELEMENT, !longClickedPropertyIsDefault)
+                            .setEnabled(PopupItem.SET_AS_DEFAULT, !longClickedPropertyIsDefault)
+                            .setVisible(PopupItem.SET_AS_DEFAULT, isSetAsDefaultVisible)
                             .show(ManagePropertiesActivity.this, view);
                 }
                 return true;
@@ -571,85 +507,73 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(OnSiteAttraction.class));
                 List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-
-                switch(viewModel.propertyTypeToManage)
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
                 {
-                    case CREDIT_TYPE:
+                    switch(viewModel.propertyTypeToManage)
                     {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
+                        case CREDIT_TYPE:
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG,
+                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
                                 elementsToAssignTo.remove(attraction);
                             }
+                            break;
                         }
 
-                        ActivityDistributor.startActivityPickForResult(
-                                ManagePropertiesActivity.this,
-                                RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS,
-                                elementsToAssignTo);
-                        break;
-                    }
-
-                    case CATEGORY:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
+                        case CATEGORY:
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG,
+                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
                                 elementsToAssignTo.remove(attraction);
                             }
+                            break;
                         }
 
-                        ActivityDistributor.startActivityPickForResult(
-                                ManagePropertiesActivity.this,
-                                RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS,
-                                elementsToAssignTo);
-                        break;
-                    }
-
-                    case MANUFACTURER:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
+                        case MANUFACTURER:
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG,
+                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
                                 elementsToAssignTo.remove(attraction);
                             }
+                            break;
                         }
 
-                        ActivityDistributor.startActivityPickForResult(
-                                ManagePropertiesActivity.this,
-                                RequestCode.ASSIGN_MANUFACTURERS_TO_ATTRACTIONS,
-                                elementsToAssignTo);
-                        break;
-                    }
+                        case MODEL:
+                        {
+                            if(attraction.getModel().equals(viewModel.longClickedElement))
+                            {
+                                Log.v(Constants.LOG_TAG,
+                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                        attraction, viewModel.longClickedElement));
+                                elementsToAssignTo.remove(attraction);
+                            }
+                            break;
+                        }
 
-                    case STATUS:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
+                        case STATUS:
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
+                                Log.v(Constants.LOG_TAG,
+                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
                                         attraction, viewModel.longClickedElement));
                                 elementsToAssignTo.remove(attraction);
                             }
+                            break;
                         }
-
-                        ActivityDistributor.startActivityPickForResult(
-                                ManagePropertiesActivity.this,
-                                RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS,
-                                elementsToAssignTo);
-                        break;
                     }
                 }
+
+                ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS, elementsToAssignTo);
                 break;
             }
 
@@ -658,19 +582,38 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 switch(viewModel.propertyTypeToManage)
                 {
                     case CREDIT_TYPE:
-                        ActivityDistributor.startActivityEditForResult(ManagePropertiesActivity.this, RequestCode.EDIT_CREDIT_TYPE, viewModel.longClickedElement);
+                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_CREDIT_TYPE, viewModel.longClickedElement);
                         break;
 
                     case CATEGORY:
-                        ActivityDistributor.startActivityEditForResult(ManagePropertiesActivity.this, RequestCode.EDIT_CATEGORY, viewModel.longClickedElement);
+                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_CATEGORY, viewModel.longClickedElement);
                         break;
 
                     case MANUFACTURER:
-                        ActivityDistributor.startActivityEditForResult(ManagePropertiesActivity.this, RequestCode.EDIT_MANUFACTURER, viewModel.longClickedElement);
+                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_MANUFACTURER, viewModel.longClickedElement);
                         break;
 
+                    case MODEL:
+                    {
+                        // for Model's default only name may be changed
+                        if(((Model) viewModel.longClickedElement).isDefault())
+                        {
+                            Intent intent = new Intent(this, EditSimpleElementActivity.class);
+                            intent.putExtra(Constants.EXTRA_HINT, getString(R.string.hint_edit_name, viewModel.longClickedElement.getName()));
+                            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_edit_model));
+                            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, viewModel.longClickedElement.getUuid().toString());
+                            intent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.EDIT_MODEL.ordinal());
+                            ActivityDistributor.startActivityViaIntent(this, intent);
+                        }
+                        else
+                        {
+                            ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_MODEL, viewModel.longClickedElement);
+                        }
+                        break;
+                    }
+
                     case STATUS:
-                        ActivityDistributor.startActivityEditForResult(ManagePropertiesActivity.this, RequestCode.EDIT_STATUS, viewModel.longClickedElement);
+                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_STATUS, viewModel.longClickedElement);
                         break;
                 }
                 break;
@@ -697,6 +640,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             defaultName = Manufacturer.getDefault().getName();
                             break;
 
+                        case MODEL:
+                            defaultName = Manufacturer.getDefault().getName();
+                            break;
+
                         case STATUS:
                             defaultName = Status.getDefault().getName();
                             break;
@@ -713,8 +660,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 else
                 {
-                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_no_children,
-                            viewModel.longClickedElement.getName());
+                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_no_children, viewModel.longClickedElement.getName());
                 }
 
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
@@ -777,7 +723,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     switch(this.viewModel.propertyTypeToManage)
                     {
                         case CREDIT_TYPE:
-                            // no option to change CreditTypes' default value --> default is always "no credit"
+                        case MODEL:
+                            // no option to change default value
                             break;
 
                         case CATEGORY:
@@ -801,11 +748,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                             break;
                     }
+
                     Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleAlertDialogClick[%s]:: setting %s as default [%s]",
                             requestCode, this.viewModel.longClickedElement, this.viewModel.propertyTypeToManage));
                     break;
                 }
             }
+
             this.updateContentRecyclerView(false);
         }
     }
@@ -840,6 +789,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         case MANUFACTURER:
                             child.setManufacturer(Manufacturer.getDefault());
                             break;
+
+                        case MODEL:
+                            child.setModel(Model.getDefault());
 
                         case STATUS:
                             child.setStatus(Status.getDefault());
@@ -879,12 +831,17 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MANUFACTURER);
                         break;
 
+                    case MODEL:
+                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MODEL);
+                        break;
+
                     case STATUS:
                         ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_STATUS);
                         break;
                 }
             }
         });
+
         super.setFloatingActionButtonVisibility(true);
     }
 
@@ -894,26 +851,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.updateContentRecyclerView:: resetting content...");
 
-            List<IElement> elements = new ArrayList<>();
-
-            switch(this.viewModel.propertyTypeToManage)
-            {
-                case CREDIT_TYPE:
-                    elements = App.content.getContentOfType(CreditType.class);
-                    break;
-
-                case CATEGORY:
-                    elements = App.content.getContentOfType(Category.class);
-                    break;
-
-                case MANUFACTURER:
-                    elements = App.content.getContentOfType(Manufacturer.class);
-                    break;
-
-                case STATUS:
-                    elements = App.content.getContentOfType(Status.class);
-                    break;
-            }
+            List<IElement> elements = App.content.getContentOfType(this.getPropertyType());
 
             for(IElement element : elements)
             {
@@ -931,6 +869,30 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         return this.viewModel.contentRecyclerViewAdapter;
     }
 
+    private Class<? extends IProperty> getPropertyType()
+    {
+        switch(this.viewModel.propertyTypeToManage)
+        {
+            case CREDIT_TYPE:
+                return CreditType.class;
+
+            case CATEGORY:
+                return Category.class;
+
+            case MANUFACTURER:
+                return Manufacturer.class;
+
+            case MODEL:
+                return Model.class;
+
+            case STATUS:
+                return Status.class;
+
+            default:
+                return null;
+        }
+    }
+
     private void returnResult(int resultCode)
     {
         Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: resultCode[%d]", resultCode));
@@ -941,7 +903,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             if(this.viewModel.propertyToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning last created %s", this.viewModel.propertyToReturn));
+                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning %s", this.viewModel.propertyToReturn));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.propertyToReturn.getUuid().toString());
             }
         }

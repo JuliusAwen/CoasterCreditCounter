@@ -11,6 +11,7 @@ public enum DetailType
     CREDIT_TYPE,
     CATEGORY,
     MANUFACTURER,
+    MODEL,
     STATUS,
     TOTAL_RIDE_COUNT;
 

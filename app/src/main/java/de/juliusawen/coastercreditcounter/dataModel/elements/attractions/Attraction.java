@@ -73,7 +73,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public CreditType getCreditType()
     {
-        if(this.getModel().hasCreditType())
+        if(this.getModel().creditTypeIsSet())
         {
             Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.getModel()));
             return this.getModel().getCreditType();
@@ -101,7 +101,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Category getCategory()
     {
-        if(this.getModel().hasCategory())
+        if(this.getModel().categoryIsSet())
         {
             Log.d(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.getModel()));
             return this.getModel().getCategory();
@@ -129,7 +129,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public Manufacturer getManufacturer()
     {
-        if(this.getModel().hasManufacturer())
+        if(this.getModel().manufacturerIsSet())
         {
             Log.d(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.getModel()));
             return this.getModel().getManufacturer();
@@ -177,17 +177,17 @@ public abstract class Attraction extends Element implements IAttraction
             this.model = model;
             Log.d(Constants.LOG_TAG, String.format("Attraction.setModel:: set %s's Model to %s - setting Properties...", this, model.getFullName()));
 
-            if(this.model.hasCreditType())
+            if(this.model.creditTypeIsSet())
             {
                 this.setCreditType(model.getCreditType());
             }
 
-            if(this.model.hasCategory())
+            if(this.model.categoryIsSet())
             {
                 this.setCategory(model.getCategory());
             }
 
-            if(this.model.hasManufacturer())
+            if(this.model.manufacturerIsSet())
             {
                 this.setManufacturer(model.getManufacturer());
             }

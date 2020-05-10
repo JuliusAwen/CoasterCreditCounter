@@ -160,30 +160,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                     break;
                 }
 
-                case EDIT_ATTRACTION:
+                case SHOW_ATTRACTION:
                 {
-                    if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
-                    {
-                        Log.d(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
-
-                        for(IElement visit : resultElement.getParent().getChildrenOfType(Visit.class))
-                        {
-                            for(IElement visitedAttraction : visit.getChildrenOfType(VisitedAttraction.class))
-                            {
-                                if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
-                                {
-                                    visitedAttraction.setName(resultElement.getName());
-                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult<EditAttraction>:: renamed VisitedAttraction %s to %s",
-                                            this.viewModel.formerAttractionName, visitedAttraction));
-                                }
-                            }
-                        }
-
-                        this.fragmentInteraction.markForUpdate(resultElement.getParent());
-                    }
-                    this.viewModel.formerAttractionName = null;
-                    this.updateContentRecyclerView(true)
-                            .scrollToItem(resultElement);
+                    this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
                     break;
                 }
 
@@ -235,9 +214,10 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 OnSiteAttraction.class)
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.ABOVE)
+                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
                 .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
                 .groupItems(GroupType.CATEGORY);
     }
 
@@ -252,7 +232,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                 if(element.isAttraction())
                 {
-                    ActivityDistributor.startActivityShow(getContext(), RequestCode.SHOW_ATTRACTION, element);
+                    ActivityDistributor.startActivityShowForResult(getContext(), RequestCode.SHOW_ATTRACTION, element);
                 }
                 else if(element.isGroupHeader())
                 {
@@ -279,7 +259,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 else
                 {
                     PopupMenuAgent.getMenu()
-                            .add(PopupItem.EDIT_ATTRACTION)
                             .add(PopupItem.DELETE_ATTRACTION)
                             .show(getContext(), view);
                 }
@@ -303,13 +282,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         }
 
         ActivityDistributor.startActivitySortForResult(getContext(), RequestCode.SORT_ATTRACTIONS, attractions);
-    }
-
-    public void handlePopupItemEditAttractionClicked()
-    {
-        this.viewModel.formerAttractionName = this.viewModel.longClickedElement.getName();
-
-        ActivityDistributor.startActivityEditForResult(getContext(), RequestCode.EDIT_ATTRACTION, this.viewModel.longClickedElement);
     }
 
     public void handlePopupItemDeleteAttractionClicked()

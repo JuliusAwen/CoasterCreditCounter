@@ -144,7 +144,7 @@ public class Preferences implements IPersistable
         defaultDetailsOrder.add(DetailType.LOCATION);
         defaultDetailsOrder.add(DetailType.CATEGORY);
         defaultDetailsOrder.add(DetailType.MANUFACTURER);
-        // defaultDetailsOrder.add(DetailType.Model); //Todo: comment in as soon as models exist
+        defaultDetailsOrder.add(DetailType.MODEL);
         defaultDetailsOrder.add(DetailType.CREDIT_TYPE);
         defaultDetailsOrder.add(DetailType.STATUS);
         defaultDetailsOrder.add(DetailType.TOTAL_RIDE_COUNT);

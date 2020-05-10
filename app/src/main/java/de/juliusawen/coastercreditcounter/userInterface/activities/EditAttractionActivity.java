@@ -150,19 +150,19 @@ public class EditAttractionActivity extends BaseActivity
                 {
                     case PICK_CREDIT_TYPE:
                     {
-                        this.updateLayoutCreditType((CreditType)pickedElement);
+                        this.updateLayoutCreditType((CreditType) pickedElement);
                         break;
                     }
 
                     case PICK_CATEGORY:
                     {
-                        this.updateLayoutCategory((Category)pickedElement);
+                        this.updateLayoutCategory((Category) pickedElement);
                         break;
                     }
 
                     case PICK_MANUFACTURER:
                     {
-                        this.updateLayoutManufacturer((Manufacturer)pickedElement);
+                        this.updateLayoutManufacturer((Manufacturer) pickedElement);
                         break;
                     }
 
@@ -299,27 +299,36 @@ public class EditAttractionActivity extends BaseActivity
             somethingChanged = true;
         }
 
-        if(!this.viewModel.attraction.getCreditType().equals(this.viewModel.creditType))
+        if(this.viewModel.creditType != null)
         {
-            this.viewModel.attraction.setCreditType(this.viewModel.creditType);
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's CreditType to %s",
-                    this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
-            somethingChanged = true;
+            if(this.trySetCreditType(this.viewModel.creditType))
+            {
+                somethingChanged = true;
+            }
         }
 
-        if(!this.viewModel.attraction.getCategory().equals(this.viewModel.category))
+        if(this.viewModel.category != null)
         {
-            this.viewModel.attraction.setCategory(this.viewModel.category);
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Category to %s",
-                    this.viewModel.attraction, this.viewModel.attraction.getCategory()));
-            somethingChanged = true;
+            if(this.trySetCategory(this.viewModel.category))
+            {
+                somethingChanged = true;
+            }
         }
 
-        if(!this.viewModel.attraction.getManufacturer().equals(this.viewModel.manufacturer))
+        if(this.viewModel.manufacturer != null)
         {
-            this.viewModel.attraction.setManufacturer(this.viewModel.manufacturer);
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Manufacturer to %s",
-                    this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
+            if(this.trySetManufacturer(this.viewModel.manufacturer))
+            {
+                somethingChanged = true;
+            }
+        }
+
+        if(!this.viewModel.attraction.getModel().equals(this.viewModel.model))
+        {
+            this.viewModel.attraction.setModel(this.viewModel.model);
+            Log.d(Constants.LOG_TAG,
+                    String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Model to %s",
+                    this.viewModel.attraction, this.viewModel.attraction.getModel()));
             somethingChanged = true;
         }
 
@@ -412,6 +421,51 @@ public class EditAttractionActivity extends BaseActivity
         this.decorateTextInputAttractionName();
     }
 
+    private boolean trySetCreditType(CreditType creditType)
+    {
+        if(this.viewModel.attraction.getCreditType().equals(creditType))
+        {
+            return false;
+        }
+
+        this.viewModel.attraction.setCreditType(creditType);
+        Log.d(Constants.LOG_TAG,
+                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's CreditType to %s",
+                        this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
+
+        return true;
+    }
+
+    private boolean trySetCategory(Category category)
+    {
+        if(this.viewModel.attraction.getCategory().equals(category))
+        {
+            return false;
+        }
+
+        this.viewModel.attraction.setCategory(category);
+        Log.d(Constants.LOG_TAG,
+                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Category to %s",
+                        this.viewModel.attraction, this.viewModel.attraction.getCategory()));
+
+        return true;
+    }
+
+    private boolean trySetManufacturer(Manufacturer manufacturer)
+    {
+        if(this.viewModel.attraction.getManufacturer().equals(manufacturer))
+        {
+            return false;
+        }
+
+        this.viewModel.attraction.setManufacturer(manufacturer);
+        Log.d(Constants.LOG_TAG,
+                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Manufacturer to %s",
+                        this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
+
+        return true;
+    }
+
     private void decorateTextInputAttractionName()
     {
         this.textInputEditTextAttractionName.setText(this.viewModel.attraction.getName());
@@ -427,7 +481,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.model.hasCreditType())
+                if(viewModel.model.creditTypeIsSet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.credit_type)));
                 }
@@ -443,11 +497,17 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutCreditType(CreditType creditType)
     {
+        if(creditType == null)
+        {
+            creditType = CreditType.getDefault();
+        }
+
         Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutCreditType:: setting CreditType %s...", creditType));
 
-        this.textViewCreditType.setText(creditType.getName());
-        this.textViewCreditType.setTextColor(getColor(R.color.black));
         this.viewModel.creditType = creditType;
+
+        this.textViewCreditType.setText(this.viewModel.creditType.getName());
+        this.textViewCreditType.setTextColor(getColor(R.color.black));
         this.imageViewPickCreditType.setImageDrawable(App.content.getContentOfType(CreditType.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey);
     }
 
@@ -460,7 +520,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCategory> selected");
 
-                if(viewModel.model.hasCategory())
+                if(viewModel.model.categoryIsSet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.category)));
                 }
@@ -476,11 +536,17 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutCategory(Category category)
     {
+        if(category == null)
+        {
+            category = Category.getDefault();
+        }
+
         Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutCategory:: setting Category %s", category));
 
-        this.textViewCategory.setText(category.getName());
-        this.textViewCategory.setTextColor(getColor(R.color.black));
         this.viewModel.category = category;
+
+        this.textViewCategory.setText(this.viewModel.category.getName());
+        this.textViewCategory.setTextColor(getColor(R.color.black));
         this.imageViewPickCategory.setImageDrawable(App.content.getContentOfType(Category.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey);
     }
 
@@ -493,7 +559,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickManufacturer> selected");
 
-                if(viewModel.model.hasManufacturer())
+                if(viewModel.model.manufacturerIsSet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.manufacturer)));
                 }
@@ -509,11 +575,17 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutManufacturer(Manufacturer manufacturer)
     {
+        if(manufacturer == null)
+        {
+            manufacturer = Manufacturer.getDefault();
+        }
+
         Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutManufacturer:: setting Manufacturer %s", manufacturer));
 
-        this.textViewManufacturer.setText(manufacturer.getName());
-        this.textViewManufacturer.setTextColor(getColor(R.color.black));
         this.viewModel.manufacturer = manufacturer;
+
+        this.textViewManufacturer.setText(this.viewModel.manufacturer.getName());
+        this.textViewManufacturer.setTextColor(getColor(R.color.black));
         this.imageViewPickManufacturer.setImageDrawable(App.content.getContentOfType(Manufacturer.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey);
     }
 
@@ -534,29 +606,46 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutModel(Model model)
     {
+        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutModel:: setting Model %s", model));
+
         this.viewModel.model = model;
 
         this.textViewBlueprint.setText(model.getName());
 
-        if(this.viewModel.model.hasCreditType())
+        if(this.viewModel.model.creditTypeIsSet())
         {
+            this.viewModel.creditType = null;
             this.textViewCreditType.setText(model.getCreditType().getName());
             this.textViewCreditType.setTextColor(getColor(R.color.grey));
             this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
         }
-
-        if(this.viewModel.model.hasCategory())
+        else
         {
+            this.updateLayoutCreditType(this.viewModel.creditType);
+        }
+
+        if(this.viewModel.model.categoryIsSet())
+        {
+            this.viewModel.category = null;
             this.textViewCategory.setText(model.getCategory().getName());
             this.textViewCategory.setTextColor(getColor(R.color.grey));
             this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
         }
-
-        if(this.viewModel.model.hasManufacturer())
+        else
         {
+            this.updateLayoutCategory(this.viewModel.category);
+        }
+
+        if(this.viewModel.model.manufacturerIsSet())
+        {
+            this.viewModel.manufacturer = null;
             this.textViewManufacturer.setText(model.getManufacturer().getName());
             this.textViewManufacturer.setTextColor(getColor(R.color.grey));
             this.imageViewPickManufacturer.setImageDrawable(this.pickIconGrey);
+        }
+        else
+        {
+            this.updateLayoutManufacturer(this.viewModel.manufacturer);
         }
 
         this.imageViewPickBlueprint.setImageDrawable(App.content.getContentOfType(Model.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey);

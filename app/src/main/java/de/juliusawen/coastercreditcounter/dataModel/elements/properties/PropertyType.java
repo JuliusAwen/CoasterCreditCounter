@@ -4,7 +4,7 @@ public enum PropertyType
 {
     CREDIT_TYPE,
     CATEGORY,
-    MODEL,
     MANUFACTURER,
+    MODEL,
     STATUS
 }

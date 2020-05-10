@@ -65,4 +65,10 @@ public interface IElement
     boolean isGroupHeader();
     boolean isOrphan();
     boolean isPersistable();
+
+    boolean hasCreditType();
+    boolean hasCategory();
+    boolean hasManufacturer();
+    boolean hasModel();
+    boolean hasStatus();
 }

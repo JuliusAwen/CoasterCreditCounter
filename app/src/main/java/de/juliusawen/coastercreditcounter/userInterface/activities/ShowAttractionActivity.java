@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +20,9 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
@@ -28,7 +31,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
@@ -38,7 +40,7 @@ import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowAttractionActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowOnSiteAttractionActivityViewModel viewModel;
+    private ShowAttractionActivityViewModel viewModel;
 
     private TextView textViewAttractionDetailCreditType;
     private TextView textViewAttractionDetailCategory;
@@ -59,16 +61,11 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowOnSiteAttractionActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowAttractionActivityViewModel.class);
 
-        if(this.viewModel.onSiteAttraction == null)
+        if(this.viewModel.attraction == null)
         {
-            this.viewModel.onSiteAttraction = (OnSiteAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
-        }
-
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.attraction = (OnSiteAttraction) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.help_title_show_attraction)), getString(R.string.help_text_show_attraction));
@@ -95,18 +92,42 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
             switch(RequestCode.values()[requestCode])
             {
-                case CREATE_NOTE:
+                case EDIT_ATTRACTION:
                 {
-                    this.viewModel.onSiteAttraction.addChildAndSetParent((resultElement));
-                    super.markForUpdate(this.viewModel.onSiteAttraction);
+                    if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
+                    {
+                        Log.d(LOG_TAG, String.format("ShowAttractionActivity.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
+
+                        for(IElement visit : resultElement.getParent().getChildrenOfType(Visit.class))
+                        {
+                            for(IElement visitedAttraction : visit.getChildrenOfType(VisitedAttraction.class))
+                            {
+                                if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
+                                {
+                                    visitedAttraction.setName(resultElement.getName());
+                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.onActivityResult<EditAttraction>:: renamed VisitedAttraction %s to %s",
+                                            this.viewModel.formerAttractionName, visitedAttraction));
+                                }
+                            }
+                        }
+
+                        super.markForUpdate(resultElement.getParent());
+                    }
+                    this.viewModel.formerAttractionName = null;
+                    this.decorateAttractionDetailsLayout();
+
                     break;
                 }
 
-                case EDIT_NOTE:
-                {
-                    super.markForUpdate(this.viewModel.onSiteAttraction);
+
+                case CREATE_NOTE:
+                    this.viewModel.attraction.addChildAndSetParent((resultElement));
+                    super.markForUpdate(this.viewModel.attraction);
                     break;
-                }
+
+                case EDIT_NOTE:
+                    super.markForUpdate(this.viewModel.attraction);
+                    break;
             }
         }
     }
@@ -114,12 +135,23 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     protected void resume()
     {
-        super.setToolbarTitleAndSubtitle(this.viewModel.onSiteAttraction.getName(), this.viewModel.onSiteAttraction.getParent().getName());
+        super.setToolbarTitleAndSubtitle(this.viewModel.attraction.getName(), this.viewModel.attraction.getParent().getName());
 
         invalidateOptionsMenu();
 
         this.decorateAttractionDetailsLayout();
         this.handleNoteRelatedViews();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            this.returnResult(RESULT_OK);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void decorateFloatingActionButton()
@@ -132,13 +164,13 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             {
                 Log.i(LOG_TAG, "ShowAttractionActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
 
-                if(viewModel.onSiteAttraction.getNote() != null)
+                if(viewModel.attraction.getNote() != null)
                 {
-                    ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_NOTE, viewModel.onSiteAttraction.getNote());
+                    ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_NOTE, viewModel.attraction.getNote());
                 }
                 else
                 {
-                    ActivityDistributor.startActivityCreateForResult(ShowAttractionActivity.this, RequestCode.CREATE_NOTE, ShowAttractionActivity.this.viewModel.onSiteAttraction);
+                    ActivityDistributor.startActivityCreateForResult(ShowAttractionActivity.this, RequestCode.CREATE_NOTE, ShowAttractionActivity.this.viewModel.attraction);
                 }
             }
         });
@@ -153,7 +185,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
                     AlertDialogFragment.newInstance(
                             R.drawable.ic_baseline_warning,
                             getString(R.string.alert_dialog_title_delete),
-                            getString(R.string.alert_dialog_message_confirm_delete, this.viewModel.onSiteAttraction.getNote().getName()),
+                            getString(R.string.alert_dialog_message_confirm_delete, this.viewModel.attraction.getNote().getName()),
                             getString(R.string.text_accept),
                             getString(R.string.text_cancel),
                             RequestCode.DELETE,
@@ -176,7 +208,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
                 ConfirmSnackbar.Show(
                         Snackbar.make(
                                 findViewById(android.R.id.content),
-                                getString(R.string.action_confirm_delete_text, this.viewModel.onSiteAttraction.getNote().getName()),
+                                getString(R.string.action_confirm_delete_text, this.viewModel.attraction.getNote().getName()),
                                 Snackbar.LENGTH_LONG),
                         requestCode,
                         this);
@@ -191,10 +223,10 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: deleting %s...", this.viewModel.onSiteAttraction.getNote()));
+            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: deleting %s...", this.viewModel.attraction.getNote()));
 
-            super.markForUpdate(this.viewModel.onSiteAttraction);
-            super.markForDeletion(this.viewModel.onSiteAttraction.getNote(), false);
+            super.markForUpdate(this.viewModel.attraction);
+            super.markForDeletion(this.viewModel.attraction.getNote(), false);
 
             this.handleNoteRelatedViews();
         }
@@ -214,7 +246,8 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             @Override
             public void onClick(View view)
             {
-                ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_ATTRACTION, viewModel.onSiteAttraction);
+                viewModel.formerAttractionName = viewModel.attraction.getName();
+                ActivityDistributor.startActivityEditForResult(ShowAttractionActivity.this, RequestCode.EDIT_ATTRACTION, viewModel.attraction);
             }
         });
     }
@@ -222,32 +255,32 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     private void decorateAttractionDetailsLayout()
     {
         this.textViewAttractionDetailCreditType.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format("%s %s", getString(R.string.header_credit_type), this.viewModel.onSiteAttraction.getCreditType().getName()),
+                String.format("%s %s", getString(R.string.header_credit_type), this.viewModel.attraction.getCreditType().getName()),
                 getString(R.string.header_credit_type),
                 Typeface.BOLD));
 
         this.textViewAttractionDetailCategory.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format("%s %s", getString(R.string.header_category), this.viewModel.onSiteAttraction.getCategory().getName()),
+                String.format("%s %s", getString(R.string.header_category), this.viewModel.attraction.getCategory().getName()),
                 getString(R.string.header_category),
                 Typeface.BOLD));
 
         this.textViewAttractionDetailManufacturer.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format("%s %s", getString(R.string.header_manufacturer), this.viewModel.onSiteAttraction.getManufacturer().getName()),
+                String.format("%s %s", getString(R.string.header_manufacturer), this.viewModel.attraction.getManufacturer().getName()),
                 getString(R.string.header_manufacturer),
                 Typeface.BOLD));
 
         this.textViewAttractionDetailModel.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format("%s %s", getString(R.string.header_model), this.viewModel.onSiteAttraction.getModel().getName()),
+                String.format("%s %s", getString(R.string.header_model), this.viewModel.attraction.getModel().getName()),
                 getString(R.string.header_model),
                 Typeface.BOLD));
 
         this.textViewAttractionDetailStatus.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format("%s %s", getString(R.string.header_status), this.viewModel.onSiteAttraction.getStatus().getName()),
+                String.format("%s %s", getString(R.string.header_status), this.viewModel.attraction.getStatus().getName()),
                 getString(R.string.header_status),
                 Typeface.BOLD));
 
         this.textViewAttractionDetailTotalRideCount.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format(Locale.getDefault(), "%s %d", getString(R.string.header_total_ride_count), this.viewModel.onSiteAttraction.fetchTotalRideCount()),
+                String.format(Locale.getDefault(), "%s %d", getString(R.string.header_total_ride_count), this.viewModel.attraction.fetchTotalRideCount()),
                 getString(R.string.header_total_ride_count),
                 Typeface.BOLD));
     }
@@ -281,7 +314,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void onNoteClick()
     {
-        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_NOTE, this.viewModel.onSiteAttraction.getNote());
+        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_NOTE, this.viewModel.attraction.getNote());
     }
 
     private boolean onNoteLongClick()
@@ -295,9 +328,9 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void handleNoteRelatedViews()
     {
-        if(this.viewModel.onSiteAttraction.getNote() != null)
+        if(this.viewModel.attraction.getNote() != null)
         {
-            this.textViewNote.setText(this.viewModel.onSiteAttraction.getNote().getText());
+            this.textViewNote.setText(this.viewModel.attraction.getNote().getText());
             super.setFloatingActionButtonVisibility(false);
             this.layoutNote.setVisibility(View.VISIBLE);
         }
@@ -307,5 +340,26 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             super.setFloatingActionButtonVisibility(true);
             this.layoutNote.setVisibility(View.GONE);
         }
+    }
+
+    private void returnResult(int resultCode)
+    {
+        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: resultCode[%d]", resultCode));
+
+        Intent intent = new Intent();
+
+        if(resultCode == RESULT_OK)
+        {
+            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
+            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
+        }
+        else
+        {
+            Log.i(Constants.LOG_TAG, "ShowAttractionActivity.returnResult:: no changes - returning no element");
+        }
+
+        setResult(resultCode, intent);
+        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        finish();
     }
 }

@@ -380,7 +380,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 case R.id.navigationItem_ManageModels:
                 {
                     Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageModels> selected");
-                    Toaster.notYetImplemented(NavigationHubActivity.this);
+                    ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_MODELS);
                     break;
                 }
 

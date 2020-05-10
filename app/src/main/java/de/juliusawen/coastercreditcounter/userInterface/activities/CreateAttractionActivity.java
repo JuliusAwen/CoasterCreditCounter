@@ -292,20 +292,17 @@ public class CreateAttractionActivity extends BaseActivity
             return;
         }
 
-        if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
+        //this has to happen before name is set (otherwise if something is wrong, the name would already be changed)
+        int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
+        if(untrackedRideCount < 0)
         {
-            //this has to happen before name is set (otherwise if something is wrong, the name would already be changed)
-            int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
-            if(untrackedRideCount < 0)
-            {
-                Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
-                this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
-                return;
-            }
-            else
-            {
-                this.viewModel.untrackedRideCount = untrackedRideCount;
-            }
+            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
+            this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
+            return;
+        }
+        else
+        {
+            this.viewModel.untrackedRideCount = untrackedRideCount;
         }
 
 
@@ -314,12 +311,9 @@ public class CreateAttractionActivity extends BaseActivity
         {
             super.markForCreation(this.viewModel.attraction);
 
-            if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION)
-            {
-                Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
-                this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
-                super.markForUpdate(viewModel.parentPark);
-            }
+            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
+            this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
+            super.markForUpdate(viewModel.parentPark);
 
             returnResult(RESULT_OK);
         }
@@ -366,6 +360,7 @@ public class CreateAttractionActivity extends BaseActivity
                 attraction.setCreditType(this.viewModel.creditType);
                 attraction.setCategory(this.viewModel.category);
                 attraction.setManufacturer(this.viewModel.manufacturer);
+                attraction.setModel(this.viewModel.model);
                 attraction.setStatus(this.viewModel.status);
                 attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
@@ -421,7 +416,7 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.model.hasCreditType())
+                if(viewModel.model.creditTypeIsSet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.credit_type)));
                 }
@@ -457,7 +452,7 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCategory> selected");
 
-                if(viewModel.model.hasCategory())
+                if(viewModel.model.categoryIsSet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.category)));
                 }
@@ -493,7 +488,7 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickManufacturer> selected");
 
-                if(viewModel.model.hasManufacturer())
+                if(viewModel.model.manufacturerIsSet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.manufacturer)));
                 }
@@ -541,21 +536,21 @@ public class CreateAttractionActivity extends BaseActivity
 
             this.textViewModel.setText(model.getName());
 
-            if(model.hasCreditType())
+            if(model.creditTypeIsSet())
             {
                 this.textViewCreditType.setText(model.getCreditType().getName());
                 this.textViewCreditType.setTextColor(getColor(R.color.grey));
                 this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
             }
 
-            if(model.hasCategory())
+            if(model.categoryIsSet())
             {
                 this.textViewCategory.setText(model.getCategory().getName());
                 this.textViewCategory.setTextColor(getColor(R.color.grey));
                 this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
             }
 
-            if(model.hasManufacturer())
+            if(model.manufacturerIsSet())
             {
                 this.textViewManufacturer.setText(model.getManufacturer().getName());
                 this.textViewManufacturer.setTextColor(getColor(R.color.grey));
