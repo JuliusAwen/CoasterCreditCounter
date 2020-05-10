@@ -55,6 +55,7 @@ public enum RequestCode
     PICK_CREDIT_TYPE,
     PICK_CATEGORY,
     PICK_MANUFACTURER,
+    PICK_MODEL,
     PICK_STATUS,
 
     DELETE,

@@ -22,6 +22,5 @@ public class TemporaryJsonElement
     public UUID modelUuid;
     public UUID statusUuid;
     public String noteText;
-    public boolean overrideProperties;
     public boolean isDefault;
 }

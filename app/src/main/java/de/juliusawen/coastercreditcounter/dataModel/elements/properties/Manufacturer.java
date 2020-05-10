@@ -15,7 +15,7 @@ import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
  *      Parent: none<br>
- *      Children: Attractions (just for convenience: children are shown in ManageProperty - but are not really used otherwise)<br>
+ *      Children: Attractions<br>
  */
 public final class Manufacturer extends Element implements IProperty
 {

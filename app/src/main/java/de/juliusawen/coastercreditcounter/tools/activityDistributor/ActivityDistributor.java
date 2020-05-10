@@ -446,6 +446,15 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
                 break;
 
+            case PICK_MODEL:
+                intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MODEL.ordinal());
+                intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_model));
+                intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
+                toolbarTitle = context.getString(R.string.title_pick_model);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_to_attraction);
+                break;
+
             case PICK_STATUS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());

@@ -12,6 +12,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasNote;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
@@ -84,19 +87,23 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            if(this.getModel().overrideProperties())
-            {
-                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, JSONObject.NULL);
-                jsonObject.put(Constants.JSON_STRING_CATEGORY, JSONObject.NULL);
-                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, JSONObject.NULL);
-            }
-            else
-            {
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getModel().hasCreditType()
+                    ? JSONObject.NULL
+                    : this.creditType != null
+                            ? this.creditType.getUuid()
+                            : CreditType.getDefault().getUuid());
 
-                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
-                jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
-                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            }
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getModel().hasCategory()
+                    ? JSONObject.NULL
+                    : this.category != null
+                            ? this.category.getUuid()
+                            : Category.getDefault().getUuid());
+
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getModel().hasManufacturer()
+                    ? JSONObject.NULL
+                    : this.manufacturer != null
+                            ? this.manufacturer.getUuid()
+                            : Manufacturer.getDefault().getUuid());
 
             jsonObject.put(Constants.JSON_STRING_MODEL, this.getModel().getUuid());
             jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());

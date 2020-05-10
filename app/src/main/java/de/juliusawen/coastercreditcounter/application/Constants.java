@@ -50,7 +50,6 @@ public abstract class Constants
 
     public static final String JSON_STRING_MODEL = "model";
     public static final String JSON_STRING_MODELS = "models";
-    public static final String JSON_STRING_OVERRIDE_PROPERTIES = "override properties";
 
     public static final String JSON_STRING_IS_DEFAULT = "is default";
 

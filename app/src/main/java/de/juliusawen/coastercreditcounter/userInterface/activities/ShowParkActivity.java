@@ -76,6 +76,7 @@ public class ShowParkActivity extends BaseActivity
                 .createFloatingActionButton();
 
         this.createTabPagerAdapter();
+        this.viewPager.setCurrentItem(1);
     }
 
     @Override

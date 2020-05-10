@@ -395,11 +395,6 @@ public class JsonHandler implements IDatabaseWrapper
                     temporaryJsonElement.isDefault = jsonObjectItem.getBoolean(Constants.JSON_STRING_IS_DEFAULT);
                 }
 
-                if(!jsonObjectItem.isNull(Constants.JSON_STRING_OVERRIDE_PROPERTIES))
-                {
-                    temporaryJsonElement.overrideProperties = jsonObjectItem.getBoolean(Constants.JSON_STRING_OVERRIDE_PROPERTIES);
-                }
-
                 temporaryJsonElements.add(temporaryJsonElement);
             }
         }
@@ -490,11 +485,22 @@ public class JsonHandler implements IDatabaseWrapper
         LinkedList<IElement> models = new LinkedList<>();
         for(TemporaryJsonElement temporaryJsonElement : temporaryJsonElements)
         {
-            Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.overrideProperties, temporaryJsonElement.uuid);
+            Model model = Model.create(temporaryJsonElement.name, temporaryJsonElement.uuid);
 
-            model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
-            model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
-            model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            if(temporaryJsonElement.creditTypeUuid != null)
+            {
+                model.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            }
+
+            if(temporaryJsonElement.categoryUuid != null)
+            {
+                model.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
+            }
+
+            if(temporaryJsonElement.manufacturerUuid != null)
+            {
+                model.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
+            }
 
             if(temporaryJsonElement.isDefault)
             {
@@ -568,14 +574,24 @@ public class JsonHandler implements IDatabaseWrapper
         {
             OnSiteAttraction element = OnSiteAttraction.create(temporaryJsonElement.name, temporaryJsonElement.untrackedRideCount, temporaryJsonElement.uuid);
 
-            element.setModel(this.getModelFromUuid(temporaryJsonElement.modelUuid, content));
-            if(!element.getModel().overrideProperties())
+            Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
+
+            if(!model.hasCreditType())
             {
                 element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
+            }
+
+            if(!model.hasCategory())
+            {
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
+            }
+
+            if(!model.hasManufacturer())
+            {
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
             }
 
+            element.setModel(model);
             element.setStatus(this.getStatusFromUuid(temporaryJsonElement.statusUuid, content));
 
             elements.add(element);

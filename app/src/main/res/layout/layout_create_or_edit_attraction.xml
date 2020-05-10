@@ -24,29 +24,75 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        <LinearLayout-->
-<!--            style="@style/CreateOrEditAttractionSelectBarLayout"-->
-<!--            android:id="@+id/linearLayoutCreateOrEditAttraction_Blueprint">-->
+        <LinearLayout
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer">
 
-<!--            <TextView-->
-<!--                style="@style/CreateOrEditAttractionTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="@string/header_model"/>-->
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_manufacturer"/>
 
-<!--            <TextView-->
-<!--                style="@style/CreateOrEditAttractionTextView"-->
-<!--                android:id="@+id/textViewCreateOrEditAttraction_Blueprint"-->
-<!--                android:width="0sp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:layout_width="0dp"/>-->
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
 
-<!--            <ImageView-->
-<!--                style="@style/StandardImageHolder"-->
-<!--                android:id="@+id/imageViewCreateOrEditAttraction_PickBlueprint"-->
-<!--                android:contentDescription="@string/description_image_view" />-->
+            <ImageView
+                style="@style/StandardImageHolder"
+                android:id="@+id/imageViewCreateOrEditAttraction_PickManufacturer"
+                android:contentDescription="@string/description_image_view" />
 
-<!--        </LinearLayout>-->
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Model">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_model"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Model"
+                android:width="0sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"/>
+
+            <ImageView
+                style="@style/StandardImageHolder"
+                android:id="@+id/imageViewCreateOrEditAttraction_PickModel"
+                android:contentDescription="@string/description_image_view" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CreateOrEditAttractionSelectBarLayout"
+            android:id="@+id/linearLayoutCreateOrEditAttraction_Status">
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/header_status"/>
+
+            <TextView
+                style="@style/CreateOrEditAttractionTextView"
+                android:id="@+id/textViewCreateOrEditAttraction_Status"
+                android:layout_width="0sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                style="@style/StandardImageHolder"
+                android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
+                android:contentDescription="@string/description_image_view" />
+
+        </LinearLayout>
 
         <LinearLayout
             style="@style/CreateOrEditAttractionSelectBarLayout"
@@ -90,52 +136,6 @@
             <ImageView
                 style="@style/StandardImageHolder"
                 android:id="@+id/imageViewCreateOrEditAttraction_PickCategory"
-                android:contentDescription="@string/description_image_view" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/CreateOrEditAttractionSelectBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Manufacturer">
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:layout_width="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/header_manufacturer"/>
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:id="@+id/textViewCreateOrEditAttraction_Manufacturer"
-                android:layout_width="0sp"
-                android:layout_weight="1"/>
-
-            <ImageView
-                style="@style/StandardImageHolder"
-                android:id="@+id/imageViewCreateOrEditAttraction_PickManufacturer"
-                android:contentDescription="@string/description_image_view" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/CreateOrEditAttractionSelectBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_Status">
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:layout_width="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/header_status"/>
-
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:id="@+id/textViewCreateOrEditAttraction_Status"
-                android:layout_width="0sp"
-                android:layout_weight="1"/>
-
-            <ImageView
-                style="@style/StandardImageHolder"
-                android:id="@+id/imageViewCreateOrEditAttraction_PickStatus"
                 android:contentDescription="@string/description_image_view" />
 
         </LinearLayout>

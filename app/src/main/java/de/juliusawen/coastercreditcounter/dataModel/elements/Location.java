@@ -69,8 +69,8 @@ public final class Location extends Element implements IPersistable
 
     private void sortChildTypes()
     {
-        Log.d(Constants.LOG_TAG,  String.format("Location.sortChildTypes:: sorting child types - parks to the top[%S] according to App.Preferences",
-                App.preferences.sortParksToTopOfLocationsChildren()));
+        Log.d(Constants.LOG_TAG,  String.format("Location.sortChildTypes:: sorting %s's child types - parks to the top[%S] according to App.Preferences",
+                this, App.preferences.sortParksToTopOfLocationsChildren()));
 
         List<IElement> sortedChildren = new LinkedList<>();
         if(App.preferences.sortParksToTopOfLocationsChildren())

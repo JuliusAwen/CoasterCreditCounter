@@ -18,9 +18,11 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
  */
 public abstract class Attraction extends Element implements IAttraction
 {
-    private CreditType creditType;
-    private Category category;
-    private Manufacturer manufacturer;
+    //must be protected in order to allow OnSiteAttraction to use correct Properties in toJson()
+    protected CreditType creditType;
+    protected Category category;
+    protected Manufacturer manufacturer;
+
     private Model model;
     private Status status;
 
@@ -71,7 +73,7 @@ public abstract class Attraction extends Element implements IAttraction
 
     public CreditType getCreditType()
     {
-        if(this.getModel().overrideProperties())
+        if(this.getModel().hasCreditType())
         {
             Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.getModel()));
             return this.getModel().getCreditType();
@@ -82,30 +84,24 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setCreditType(CreditType creditType)
     {
-        if(creditType != null)
+        if(this.creditType != null)
         {
-            if(this.creditType != null)
-            {
-                this.creditType.deleteChild(this);
-            }
-
-            if(creditType != null && !creditType.containsChild(this))
-            {
-                creditType.addChild(this);
-            }
-
-            this.creditType = creditType;
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, creditType));
+            this.creditType.deleteChild(this);
         }
-        else
+
+        this.creditType = creditType;
+
+        if(!this.creditType.containsChild(this))
         {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.setCreditType:: %s's CreditType cannot be null", this));
+            this.creditType.addChild(this);
         }
+
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
     {
-        if(this.getModel().overrideProperties())
+        if(this.getModel().hasCategory())
         {
             Log.d(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.getModel()));
             return this.getModel().getCategory();
@@ -116,30 +112,24 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setCategory(Category category)
     {
-        if(category != null)
+        if(this.category != null)
         {
-            if(this.category != null)
-            {
-                this.category.deleteChild(this);
-            }
-
-            if(category != null && !category.containsChild(this))
-            {
-                category.addChild(this);
-            }
-
-            this.category = category;
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, category));
+            this.category.deleteChild(this);
         }
-        else
+
+        this.category = category;
+
+        if(!this.category.containsChild(this))
         {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.setCategory:: %s's Category cannot be null", this));
+            this.category.addChild(this);
         }
+
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
     {
-        if(this.getModel().overrideProperties())
+        if(this.getModel().hasManufacturer())
         {
             Log.d(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.getModel()));
             return this.getModel().getManufacturer();
@@ -150,25 +140,19 @@ public abstract class Attraction extends Element implements IAttraction
 
     public void setManufacturer(Manufacturer manufacturer)
     {
-        if(manufacturer != null)
+        if(this.manufacturer != null)
         {
-            if(this.manufacturer != null)
-            {
-                this.manufacturer.deleteChild(this);
-            }
-
-            if(manufacturer != null && !manufacturer.containsChild(this))
-            {
-                manufacturer.addChild(this);
-            }
-
-            this.manufacturer = manufacturer;
-            Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, manufacturer));
+            this.manufacturer.deleteChild(this);
         }
-        else
+
+        this.manufacturer = manufacturer;
+
+        if(!this.manufacturer.containsChild(this))
         {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.setManufacturer:: %s's Manufacturer cannot be null", this));
+            this.manufacturer.addChild(this);
         }
+
+        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
     }
 
     public Model getModel()
@@ -191,13 +175,20 @@ public abstract class Attraction extends Element implements IAttraction
             }
 
             this.model = model;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.setModel:: set %s's Model to %s - overriding properties [%S]...", this, model, model.overrideProperties()));
+            Log.d(Constants.LOG_TAG, String.format("Attraction.setModel:: set %s's Model to %s - setting Properties...", this, model.getFullName()));
 
-            if(model.overrideProperties())
+            if(this.model.hasCreditType())
             {
-                // it is necessary to setProperties in order to add/delete Properties children
                 this.setCreditType(model.getCreditType());
+            }
+
+            if(this.model.hasCategory())
+            {
                 this.setCategory(model.getCategory());
+            }
+
+            if(this.model.hasManufacturer())
+            {
                 this.setManufacturer(model.getManufacturer());
             }
         }

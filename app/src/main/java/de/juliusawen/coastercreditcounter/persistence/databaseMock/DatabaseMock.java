@@ -142,28 +142,27 @@ public final class DatabaseMock implements IDatabaseWrapper
         phantasialand.addChildAndSetParent(templeOfTheNightHawk);
 
         OnSiteAttraction mysteryCastle = OnSiteAttraction.create("Mystery Castle");
-        mysteryCastle.setCategory(categories.ThrillRides);
         mysteryCastle.setManufacturer(manufacturers.Intamin);
+        mysteryCastle.setModel(models.EnclosedDropTower);
         phantasialand.addChildAndSetParent(mysteryCastle);
 
         OnSiteAttraction hollywoodTour = OnSiteAttraction.create("Hollywood Tour");
         hollywoodTour.setCategory(categories.DarkRides);
         hollywoodTour.setManufacturer(manufacturers.Intamin);
+        hollywoodTour.setModel(models.BoatRide);
         phantasialand.addChildAndSetParent(hollywoodTour);
 
         OnSiteAttraction chiapas = OnSiteAttraction.create("Chiapas", 10);
-        chiapas.setCategory(categories.WaterRides);
         chiapas.setManufacturer(manufacturers.Intamin);
+        chiapas.setModel(models.LogFlume);
         phantasialand.addChildAndSetParent(chiapas);
 
         OnSiteAttraction talocan = OnSiteAttraction.create("Talocan");
-        talocan.setCategory(categories.ThrillRides);
-        talocan.setManufacturer(manufacturers.Huss);
+        talocan.setModel(models.Huss_SuspendedTopSpin);
         phantasialand.addChildAndSetParent(talocan);
 
         OnSiteAttraction fengJuPalace = OnSiteAttraction.create("Feng Ju Palace");
-        fengJuPalace.setCategory(categories.FamilyRides);
-        fengJuPalace.setManufacturer(manufacturers.Vekoma);
+        fengJuPalace.setModel(models.Vekoma_MadHouse);
         phantasialand.addChildAndSetParent(fengJuPalace);
 
         OnSiteAttraction geisterRiksha = OnSiteAttraction.create("Geister Rikscha");
@@ -172,33 +171,32 @@ public final class DatabaseMock implements IDatabaseWrapper
         phantasialand.addChildAndSetParent(geisterRiksha);
 
         OnSiteAttraction mausAuChocolat = OnSiteAttraction.create("Maus-Au-Chocolat", 1);
-        mausAuChocolat.setCategory(categories.DarkRides);
         mausAuChocolat.setManufacturer(manufacturers.EtfRideSystems);
+        mausAuChocolat.setModel(models.InteractiveDarkRide);
         phantasialand.addChildAndSetParent(mausAuChocolat);
 
         OnSiteAttraction wellenflug = OnSiteAttraction.create("Wellenflug");
-        wellenflug.setCategory(categories.FamilyRides);
         wellenflug.setManufacturer(manufacturers.Zierer);
+        wellenflug.setModel(models.ChairSwing);
         phantasialand.addChildAndSetParent(wellenflug);
 
         OnSiteAttraction tikal = OnSiteAttraction.create("Tikal", 1);
-        tikal.setCategory(categories.FamilyRides);
-        tikal.setManufacturer(manufacturers.Zierer);
+        tikal.setModel(models.Zierer_DoubleFamilyTower);
         phantasialand.addChildAndSetParent(tikal);
 
         OnSiteAttraction verruecktesHotelTartueff = OnSiteAttraction.create("Verrücktes Hotel Tartüff");
-        verruecktesHotelTartueff.setCategory(categories.FamilyRides);
         verruecktesHotelTartueff.setManufacturer(manufacturers.Hofmann);
+        verruecktesHotelTartueff.setModel(models.FunHouse);
         phantasialand.addChildAndSetParent(verruecktesHotelTartueff);
 
         OnSiteAttraction riverQuest = OnSiteAttraction.create("River Quest");
-        riverQuest.setCategory(categories.WaterRides);
         riverQuest.setManufacturer(manufacturers.Hafema);
+        riverQuest.setModel(models.RiverRapids);
         phantasialand.addChildAndSetParent(riverQuest);
 
         OnSiteAttraction pferdekarusell = OnSiteAttraction.create("Pferdekarusell");
-        pferdekarusell.setCategory(categories.FamilyRides);
         pferdekarusell.setManufacturer(manufacturers.PrestonAndBarbieri);
+        pferdekarusell.setModel(models.Carousel);
         phantasialand.addChildAndSetParent(pferdekarusell);
 
         OnSiteAttraction wuermlingExpress = OnSiteAttraction.create("Würmling Express");
@@ -290,67 +288,70 @@ public final class DatabaseMock implements IDatabaseWrapper
         heidePark.addChildAndSetParent(bobbahn);
 
         OnSiteAttraction scream = OnSiteAttraction.create("Scream");
-        scream.setCategory(categories.ThrillRides);
         scream.setManufacturer(manufacturers.Intamin);
+        scream.setModel(models.GyroDropTower);
         heidePark.addChildAndSetParent(scream);
 
         OnSiteAttraction mountainRafting = OnSiteAttraction.create("Mountain Rafting");
-        mountainRafting.setCategory(categories.WaterRides);
         mountainRafting.setManufacturer(manufacturers.Intamin);
+        mountainRafting.setModel(models.RiverRapids);
         heidePark.addChildAndSetParent(mountainRafting);
 
         OnSiteAttraction wildwasserbahn = OnSiteAttraction.create("Wildwasserbahn");
-        wildwasserbahn.setCategory(categories.WaterRides);
         wildwasserbahn.setManufacturer(manufacturers.Mack);
+        wildwasserbahn.setModel(models.LogFlume);
         heidePark.addChildAndSetParent(wildwasserbahn);
 
         OnSiteAttraction ghostbusters5D = OnSiteAttraction.create("Ghostbusters 5D", 1);
-        ghostbusters5D.setCategory(categories.DarkRides);
         ghostbusters5D.setManufacturer(manufacturers.Triotech);
+        ghostbusters5D.setModel(models.InteractiveDarkRide);
         heidePark.addChildAndSetParent(ghostbusters5D);
 
         OnSiteAttraction monorail = OnSiteAttraction.create("Monorail");
-        monorail.setCategory(categories.TransportRides);
         monorail.setManufacturer(manufacturers.Mack);
+        monorail.setModel(models.Monorail);
         heidePark.addChildAndSetParent(monorail);
 
         OnSiteAttraction screamie = OnSiteAttraction.create("Screamie");
-        screamie.setCategory(categories.FamilyRides);
         screamie.setManufacturer(manufacturers.Zierer);
+        screamie.setModel(models.MiniDropTower);
         heidePark.addChildAndSetParent(screamie);
 
         OnSiteAttraction bounty = OnSiteAttraction.create("Bounty");
-        bounty.setCategory(categories.FamilyRides);
         bounty.setManufacturer(manufacturers.Intamin);
+        bounty.setModel(models.PirateShip);
         heidePark.addChildAndSetParent(bounty);
 
         OnSiteAttraction drachengrotte = OnSiteAttraction.create("Drachengrotte");
         drachengrotte.setCategory(categories.WaterRides);
         drachengrotte.setManufacturer(manufacturers.Zierer);
+        drachengrotte.setModel(models.BoatRide);
         heidePark.addChildAndSetParent(drachengrotte);
 
         OnSiteAttraction laola = OnSiteAttraction.create("La Ola");
-        laola.setCategory(categories.FamilyRides);
         laola.setManufacturer(manufacturers.Zierer);
+        laola.setModel(models.ChairSwing);
         heidePark.addChildAndSetParent(laola);
 
         OnSiteAttraction panoramabahn = OnSiteAttraction.create("Panoramabahn");
-        panoramabahn.setCategory(categories.TransportRides);
         panoramabahn.setManufacturer(manufacturers.Mack);
+        panoramabahn.setModel(models.Monorail);
         heidePark.addChildAndSetParent(panoramabahn);
 
         OnSiteAttraction hickshimmelsstuermer = OnSiteAttraction.create("Hick's Himmelsstürmer");
         hickshimmelsstuermer.setCategory(categories.FamilyRides);
         hickshimmelsstuermer.setManufacturer(manufacturers.Zamperla);
+        hickshimmelsstuermer.setModel(models.FlatRide);
         heidePark.addChildAndSetParent(hickshimmelsstuermer);
 
         OnSiteAttraction kaeptnsToern = OnSiteAttraction.create("Käpt'ns Törn");
         kaeptnsToern.setCategory(categories.WaterRides);
         kaeptnsToern.setManufacturer(manufacturers.Mack);
+        kaeptnsToern.setModel(models.BoatRide);
         heidePark.addChildAndSetParent(kaeptnsToern);
 
         OnSiteAttraction nostalgiekarusell = OnSiteAttraction.create("Nostalgiekarussell");
-        nostalgiekarusell.setCategory(categories.FamilyRides);
+        nostalgiekarusell.setModel(models.Carousel);
         heidePark.addChildAndSetParent(nostalgiekarusell);
 
 
@@ -443,9 +444,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(drako);
 
         OnSiteAttraction robinHood = OnSiteAttraction.create("Robin Hood", 2);
-        robinHood.setCreditType(creditTypes.RollerCoaster);
-        robinHood.setCategory(categories.RollerCoasters);
         robinHood.setManufacturer(manufacturers.Vekoma);
+        robinHood.setModel(models.WoodenCoaster);
         robinHood.setStatus(statuses.Converted);
         walibiHolland.addChildAndSetParent(robinHood);
 
@@ -454,18 +454,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(excalibur);
 
         OnSiteAttraction gForce = OnSiteAttraction.create("G-Force");
-        gForce.setCategory(categories.ThrillRides);
         gForce.setManufacturer(manufacturers.Huss);
+        gForce.setModel(models.Enterprise);
         walibiHolland.addChildAndSetParent(gForce);
 
         OnSiteAttraction spaceShot = OnSiteAttraction.create("Space Shot");
-        spaceShot.setCategory(categories.ThrillRides);
         spaceShot.setManufacturer(manufacturers.SAndS);
+        spaceShot.setModel(models.ShotTower);
         walibiHolland.addChildAndSetParent(spaceShot);
 
         OnSiteAttraction spinningVibe = OnSiteAttraction.create("Spinning Vibe");
-        spinningVibe.setCategory(categories.ThrillRides);
-        spinningVibe.setManufacturer(manufacturers.Huss);
+        spinningVibe.setModel(models.Huss_Magic);
         walibiHolland.addChildAndSetParent(spinningVibe);
 
         OnSiteAttraction skydiver = OnSiteAttraction.create("Skydiver");
@@ -473,101 +472,57 @@ public final class DatabaseMock implements IDatabaseWrapper
         walibiHolland.addChildAndSetParent(skydiver);
 
         OnSiteAttraction tomahawk = OnSiteAttraction.create("Tomahawk");
-        tomahawk.setCategory(categories.ThrillRides);
         tomahawk.setManufacturer(manufacturers.SbfVisa);
+        tomahawk.setModel(models.Frisbee);
         walibiHolland.addChildAndSetParent(tomahawk);
 
-        OnSiteAttraction fibisBubbleSwirl = OnSiteAttraction.create("Fibi's Bubble Swirl");
-        fibisBubbleSwirl.setCategory(categories.FamilyRides);
-        fibisBubbleSwirl.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(fibisBubbleSwirl);
-
-        OnSiteAttraction haazGarage = OnSiteAttraction.create("Haaz Garage");
-        haazGarage.setCategory(categories.FamilyRides);
-        haazGarage.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(haazGarage);
-
         OnSiteAttraction laGrandeRoue = OnSiteAttraction.create("La Grande Roue");
-        laGrandeRoue.setCategory(categories.FamilyRides);
         laGrandeRoue.setManufacturer(manufacturers.Vekoma);
+        laGrandeRoue.setModel(models.FerrisWheel);
         walibiHolland.addChildAndSetParent(laGrandeRoue);
 
         OnSiteAttraction leTourDesJardins = OnSiteAttraction.create("Le Tour Des Jardins");
-        leTourDesJardins.setCategory(categories.FamilyRides);
+        leTourDesJardins.setManufacturer(manufacturers.ChanceRides);
+        leTourDesJardins.setModel(models.AntiqueCars);
         walibiHolland.addChildAndSetParent(leTourDesJardins);
 
         OnSiteAttraction losSombreros = OnSiteAttraction.create("Los Sombreros");
         losSombreros.setCategory(categories.FamilyRides);
+        losSombreros.setModel(models.FlatRide);
         walibiHolland.addChildAndSetParent(losSombreros);
 
         OnSiteAttraction merlinsMagicCastle = OnSiteAttraction.create("Merlin's Magic Castle", 1);
-        merlinsMagicCastle.setCategory(categories.FamilyRides);
-        merlinsMagicCastle.setManufacturer(manufacturers.Vekoma);
-        merlinsMagicCastle.setManufacturer(manufacturers.Vekoma);
+        merlinsMagicCastle.setModel(models.Vekoma_MadHouse);
         walibiHolland.addChildAndSetParent(merlinsMagicCastle);
 
         OnSiteAttraction merrieGoround = OnSiteAttraction.create("Merrie Go'round");
-        merrieGoround.setCategory(categories.FamilyRides);
         merrieGoround.setManufacturer(manufacturers.SbfVisa);
+        merrieGoround.setModel(models.Carousel);
         walibiHolland.addChildAndSetParent(merrieGoround);
 
         OnSiteAttraction pavillonDeThe = OnSiteAttraction.create("Pavillon de Thè");
-        pavillonDeThe.setCategory(categories.FamilyRides);
+        pavillonDeThe.setManufacturer(manufacturers.ChanceRides);
+        pavillonDeThe.setModel(models.Teacups);
         walibiHolland.addChildAndSetParent(pavillonDeThe);
 
-        OnSiteAttraction spaceKidz = OnSiteAttraction.create("Space Kidz");
-        spaceKidz.setCategory(categories.FamilyRides);
-        spaceKidz.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(spaceKidz);
-
         OnSiteAttraction superSwing = OnSiteAttraction.create("Super Swing");
-        superSwing.setCategory(categories.FamilyRides);
         superSwing.setManufacturer(manufacturers.Zierer);
+        superSwing.setModel(models.ChairSwing);
         walibiHolland.addChildAndSetParent(superSwing);
-
-        OnSiteAttraction squadsStuntFlight = OnSiteAttraction.create("Squad's Stunt Flight");
-        squadsStuntFlight.setCategory(categories.FamilyRides);
-        squadsStuntFlight.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(squadsStuntFlight);
-
-        OnSiteAttraction tequillaTaxis = OnSiteAttraction.create("Tequilla Taxi's");
-        tequillaTaxis.setCategory(categories.FamilyRides);
-        tequillaTaxis.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(tequillaTaxis);
-
-        OnSiteAttraction wabWorldTour = OnSiteAttraction.create("WAB World Tour");
-        wabWorldTour.setCategory(categories.FamilyRides);
-        wabWorldTour.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(wabWorldTour);
 
         OnSiteAttraction walibiExpress = OnSiteAttraction.create("Walibi Express");
         walibiExpress.setCategory(categories.TransportRides);
         walibiHolland.addChildAndSetParent(walibiExpress);
 
-        OnSiteAttraction walibisFunRecorder = OnSiteAttraction.create("Walibi's Fun Recorder");
-        walibisFunRecorder.setCategory(categories.FamilyRides);
-        walibisFunRecorder.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(walibisFunRecorder);
-
-        OnSiteAttraction zensGraffityShuttle = OnSiteAttraction.create("Zen's Graffity Shuttle");
-        zensGraffityShuttle.setCategory(categories.FamilyRides);
-        zensGraffityShuttle.setManufacturer(manufacturers.SbfVisa);
-        walibiHolland.addChildAndSetParent(zensGraffityShuttle);
-
         OnSiteAttraction crazyRiver = OnSiteAttraction.create("Crazy River", 2);
-        crazyRiver.setCategory(categories.WaterRides);
         crazyRiver.setManufacturer(manufacturers.Mack);
+        crazyRiver.setModel(models.LogFlume);
         walibiHolland.addChildAndSetParent(crazyRiver);
 
         OnSiteAttraction elRioGrande = OnSiteAttraction.create("El Rio Grande", 2);
-        elRioGrande.setCategory(categories.WaterRides);
         elRioGrande.setManufacturer(manufacturers.Vekoma);
+        elRioGrande.setModel(models.RiverRapids);
         walibiHolland.addChildAndSetParent(elRioGrande);
-
-        OnSiteAttraction splashBattle = OnSiteAttraction.create("SplashBattle");
-        splashBattle.setCategory(categories.WaterRides);
-        splashBattle.setManufacturer(manufacturers.PrestonAndBarbieri);
-        walibiHolland.addChildAndSetParent(splashBattle);
 
 
         // 2019
@@ -608,8 +563,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         locations.Bremen.addChildAndSetParent(osterwiese2019);
 
         OnSiteAttraction crazyMouse = OnSiteAttraction.create("Crazy Mouse");
-        crazyMouse.setCreditType(creditTypes.RollerCoaster);
-        crazyMouse.setCategory(categories.RollerCoasters);
+        crazyMouse.setModel(models.WildMouse);
+
         osterwiese2019.addChildAndSetParent(crazyMouse);
 
         OnSiteAttraction tomDerTiger = OnSiteAttraction.create("Tom der Tiger");
@@ -631,19 +586,16 @@ public final class DatabaseMock implements IDatabaseWrapper
         locations.Bremen.addChildAndSetParent(freimarkt2018);
 
         OnSiteAttraction alpinaBahn = OnSiteAttraction.create("Alpina Bahn", 2);
-        alpinaBahn.setCreditType(creditTypes.RollerCoaster);
-        alpinaBahn.setCategory(categories.RollerCoasters);
         alpinaBahn.setManufacturer(manufacturers.Schwarzkopf);
+        alpinaBahn.setModel(models.SteelCoaster);
         freimarkt2018.addChildAndSetParent(alpinaBahn);
 
         OnSiteAttraction wildeMaus = OnSiteAttraction.create("Wilde Maus", 1);
-        wildeMaus.setCreditType(creditTypes.RollerCoaster);
-        wildeMaus.setCategory(categories.RollerCoasters);
+        wildeMaus.setModel(models.WildMouse);
         freimarkt2018.addChildAndSetParent(wildeMaus);
 
         OnSiteAttraction euroCoaster = OnSiteAttraction.create("Euro Coaster", 1);
-        euroCoaster.setCreditType(creditTypes.RollerCoaster);
-        euroCoaster.setCategory(categories.RollerCoasters);
+        euroCoaster.setModel(models.InvertedCoaster);
         freimarkt2018.addChildAndSetParent(euroCoaster);
 
         LinkedHashMap<OnSiteAttraction, Integer> rides20102018 = new LinkedHashMap<>();
@@ -662,8 +614,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         freimarkt2019.addChildAndSetParent(rockAndRollerCoaster);
 
         OnSiteAttraction wildeMausXXL = OnSiteAttraction.create("Wilde Maus XXL");
-        wildeMausXXL.setCreditType(creditTypes.RollerCoaster);
-        wildeMausXXL.setCategory(categories.RollerCoasters);
+        wildeMausXXL.setModel(models.WildMouse);
         freimarkt2019.addChildAndSetParent(wildeMausXXL);
 
         OnSiteAttraction kuddelDerHai = OnSiteAttraction.create("Kuddel der Hai");
@@ -697,15 +648,18 @@ public final class DatabaseMock implements IDatabaseWrapper
         portAventura.addChildAndSetParent(furiusBaco);
 
         OnSiteAttraction stampidaRoja = OnSiteAttraction.create("Stampida (Roja)");
-        stampidaRoja.setModel(models.CCI_WoodenCoaster);
+        stampidaRoja.setManufacturer(manufacturers.CCI);
+        stampidaRoja.setModel(models.WoodenCoaster);
         portAventura.addChildAndSetParent(stampidaRoja);
 
         OnSiteAttraction stampidaAzul = OnSiteAttraction.create("Stampida (Azul)");
-        stampidaAzul.setModel(models.CCI_WoodenCoaster);
+        stampidaAzul.setManufacturer(manufacturers.CCI);
+        stampidaAzul.setModel(models.WoodenCoaster);
         portAventura.addChildAndSetParent(stampidaAzul);
 
         OnSiteAttraction tomahawk = OnSiteAttraction.create("Tomahawk");
-        tomahawk.setModel(models.CCI_JuniorWoodenCoaster);
+        tomahawk.setManufacturer(manufacturers.CCI);
+        tomahawk.setModel(models.JuniorWoodenCoaster);
         portAventura.addChildAndSetParent(tomahawk);
 
         OnSiteAttraction elDiablo = OnSiteAttraction.create("El Diablo");
@@ -717,28 +671,29 @@ public final class DatabaseMock implements IDatabaseWrapper
         portAventura.addChildAndSetParent(tamitami);
 
         OnSiteAttraction hurakanCondor = OnSiteAttraction.create("Hurakan Condor");
-        hurakanCondor.setCategory(categories.ThrillRides);
         hurakanCondor.setManufacturer(manufacturers.Intamin);
+        hurakanCondor.setModel(models.DropTower);
         portAventura.addChildAndSetParent(hurakanCondor);
 
         OnSiteAttraction serpienteEmplumada = OnSiteAttraction.create("Serpiente Emplumada");
         serpienteEmplumada.setCategory(categories.FamilyRides);
         serpienteEmplumada.setManufacturer(manufacturers.Schwarzkopf);
+        serpienteEmplumada.setModel(models.FlatRide);
         portAventura.addChildAndSetParent(serpienteEmplumada);
 
         OnSiteAttraction tutukiSplash = OnSiteAttraction.create("Tutuki Splash");
-        tutukiSplash.setCategory(categories.WaterRides);
         tutukiSplash.setManufacturer(manufacturers.Intamin);
+        tutukiSplash.setModel(models.ShootTheChute);
         portAventura.addChildAndSetParent(tutukiSplash);
 
         OnSiteAttraction silverRiverFlumes = OnSiteAttraction.create("Silver River Flumes");
-        silverRiverFlumes.setCategory(categories.WaterRides);
         silverRiverFlumes.setManufacturer(manufacturers.Mack);
+        silverRiverFlumes.setModel(models.LogFlume);
         portAventura.addChildAndSetParent(silverRiverFlumes);
 
         OnSiteAttraction grandCanyonRapids = OnSiteAttraction.create("Grand Canyon Rapids");
-        grandCanyonRapids.setCategory(categories.WaterRides);
         grandCanyonRapids.setManufacturer(manufacturers.Intamin);
+        grandCanyonRapids.setModel(models.RiverRapids);
         portAventura.addChildAndSetParent(grandCanyonRapids);
 
 
@@ -799,19 +754,20 @@ public final class DatabaseMock implements IDatabaseWrapper
         juniorRedForce.setModel(models.SbfVisa_RaceCoaster);
         ferrariLand.addChildAndSetParent(juniorRedForce);
 
-        OnSiteAttraction thrillTowers1 = OnSiteAttraction.create("Thrill Tower I");
-        thrillTowers1.setCategory(categories.ThrillRides);
+        OnSiteAttraction thrillTowers1 = OnSiteAttraction.create("Thrill Towers: Torre de Rebote");
         thrillTowers1.setManufacturer(manufacturers.SAndS);
+        thrillTowers1.setModel(models.ShotTower);
         ferrariLand.addChildAndSetParent(thrillTowers1);
 
-        OnSiteAttraction thrillTowers2 = OnSiteAttraction.create("Thrill Towers II");
-        thrillTowers2.setCategory(categories.ThrillRides);
+        OnSiteAttraction thrillTowers2 = OnSiteAttraction.create("Thrill Towers: Torre de Caída Libre");
         thrillTowers2.setManufacturer(manufacturers.SAndS);
+        thrillTowers2.setModel(models.DropTower);
         ferrariLand.addChildAndSetParent(thrillTowers2);
 
         OnSiteAttraction racingLegends = OnSiteAttraction.create("Racing Legends");
-        racingLegends.setCategory(categories.DarkRides);
+        racingLegends.setCategory(categories.FamilyRides);
         racingLegends.setManufacturer(manufacturers.Simworx);
+        racingLegends.setModel(models.Simulator);
         ferrariLand.addChildAndSetParent(racingLegends);
 
 
@@ -847,26 +803,26 @@ public final class DatabaseMock implements IDatabaseWrapper
         slagharen.addChildAndSetParent(minetrain);
 
         OnSiteAttraction ripsawFalls = OnSiteAttraction.create("Ripsaw Falls");
-        ripsawFalls.setCategory(categories.WaterRides);
+        ripsawFalls.setModel(models.LogFlume);
         slagharen.addChildAndSetParent(ripsawFalls);
 
         OnSiteAttraction enterprise = OnSiteAttraction.create("Enterprise");
-        enterprise.setCategory(categories.ThrillRides);
         enterprise.setManufacturer(manufacturers.Schwarzkopf);
+        enterprise.setModel(models.Enterprise);
         slagharen.addChildAndSetParent(enterprise);
 
         OnSiteAttraction apollo = OnSiteAttraction.create("Apollo");
-        apollo.setCategory(categories.FamilyRides);
         apollo.setManufacturer(manufacturers.Schwarzkopf);
+        apollo.setModel(models.ChairSwing);
         slagharen.addChildAndSetParent(apollo);
 
         OnSiteAttraction freeFall = OnSiteAttraction.create("Free Fall");
-        freeFall.setCategory(categories.ThrillRides);
+        freeFall.setModel(models.DropTower);
         slagharen.addChildAndSetParent(freeFall);
 
         OnSiteAttraction pirate = OnSiteAttraction.create("Pirate");
-        pirate.setCategory(categories.FamilyRides);
         pirate.setManufacturer(manufacturers.Huss);
+        pirate.setModel(models.PirateShip);
         slagharen.addChildAndSetParent(pirate);
 
         OnSiteAttraction galoppers = OnSiteAttraction.create("Galoppers");
@@ -877,30 +833,33 @@ public final class DatabaseMock implements IDatabaseWrapper
         OnSiteAttraction eagle = OnSiteAttraction.create("Eagle");
         eagle.setCategory(categories.FamilyRides);
         eagle.setManufacturer(manufacturers.Huss);
+        eagle.setModel(models.FlatRide);
         slagharen.addChildAndSetParent(eagle);
 
         OnSiteAttraction tomahawk = OnSiteAttraction.create("Tomahawk");
         tomahawk.setCategory(categories.FamilyRides);
         tomahawk.setManufacturer(manufacturers.Huss);
+        tomahawk.setModel(models.FlatRide);
         slagharen.addChildAndSetParent(tomahawk);
 
         OnSiteAttraction wildWestAdventure = OnSiteAttraction.create("Wild West Adventure");
         wildWestAdventure.setCategory(categories.DarkRides);
         wildWestAdventure.setManufacturer(manufacturers.Mack);
+        wildWestAdventure.setModel(models.BoatRide);
         slagharen.addChildAndSetParent(wildWestAdventure);
 
         OnSiteAttraction bigWheel = OnSiteAttraction.create("Big Wheel");
-        bigWheel.setCategory(categories.FamilyRides);
         bigWheel.setManufacturer(manufacturers.Schwarzkopf);
+        bigWheel.setModel(models.FerrisWheel);
         slagharen.addChildAndSetParent(bigWheel);
 
         OnSiteAttraction kabelbaan = OnSiteAttraction.create("Kabelbaan");
-        kabelbaan.setCategory(categories.TransportRides);
+        kabelbaan.setModel(models.ChairLift);
         slagharen.addChildAndSetParent(kabelbaan);
 
         OnSiteAttraction monorail = OnSiteAttraction.create("Monorail");
-        monorail.setCategory(categories.TransportRides);
         monorail.setManufacturer(manufacturers.Schwarzkopf);
+        monorail.setModel(models.Monorail);
         slagharen.addChildAndSetParent(monorail);
 
 
@@ -948,8 +907,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         holidayPark.addChildAndSetParent(burgFalkenstein);
 
         OnSiteAttraction anubis = OnSiteAttraction.create("Anubis Free Fall Tower");
-        anubis.setCategory(categories.ThrillRides);
         anubis.setManufacturer(manufacturers.Intamin);
+        anubis.setModel(models.DropTower);
         holidayPark.addChildAndSetParent(anubis);
 
 
@@ -994,44 +953,44 @@ public final class DatabaseMock implements IDatabaseWrapper
         movieParkGermany.addChildAndSetParent(backyardigans);
 
         OnSiteAttraction bandit = OnSiteAttraction.create("The Bandit");
-        bandit.setCreditType(creditTypes.RollerCoaster);
-        bandit.setCategory(categories.RollerCoasters);
         bandit.setManufacturer(manufacturers.RollerCoasterCorporationOfAmerica);
+        bandit.setModel(models.WoodenCoaster);
         movieParkGermany.addChildAndSetParent(bandit);
 
         OnSiteAttraction dorasBigRiverAdventuer = OnSiteAttraction.create("Dora's Big River Adventure");
-        dorasBigRiverAdventuer.setCategory(categories.WaterRides);
         dorasBigRiverAdventuer.setManufacturer(manufacturers.Zamperla);
+        dorasBigRiverAdventuer.setModel(models.LogFlume);
         movieParkGermany.addChildAndSetParent(dorasBigRiverAdventuer);
 
         OnSiteAttraction area51TopSecret = OnSiteAttraction.create("Area 51 - Top Secret");
         area51TopSecret.setCategory(categories.DarkRides);
         area51TopSecret.setManufacturer(manufacturers.Intamin);
+        area51TopSecret.setModel(models.BoatRide);
         area51TopSecret.setStatus(statuses.Converted);
         movieParkGermany.addChildAndSetParent(area51TopSecret);
 
         OnSiteAttraction highFall = OnSiteAttraction.create("The High Fall");
-        highFall.setCategory(categories.ThrillRides);
         highFall.setManufacturer(manufacturers.Intamin);
+        highFall.setModel(models.DropTower);
         movieParkGermany.addChildAndSetParent(highFall);
 
         OnSiteAttraction crazySurfer = OnSiteAttraction.create("Crazy Surfer");
-        crazySurfer.setCategory(categories.FamilyRides);
-        crazySurfer.setManufacturer(manufacturers.Zamperla);
+        crazySurfer.setModel(models.Zamperla_DiskO);
         movieParkGermany.addChildAndSetParent(crazySurfer);
 
         OnSiteAttraction santaMonicaWheel = OnSiteAttraction.create("Santa Monica Wheel");
-        santaMonicaWheel.setCategory(categories.FamilyRides);
         santaMonicaWheel.setManufacturer(manufacturers.SbfVisa);
+        santaMonicaWheel.setModel(models.FerrisWheel);
         movieParkGermany.addChildAndSetParent(santaMonicaWheel);
 
         OnSiteAttraction excalibur = OnSiteAttraction.create("Excalibur - Secrets of the Dark Forest");
-        excalibur.setCategory(categories.WaterRides);
         excalibur.setManufacturer(manufacturers.Intamin);
+        excalibur.setModel(models.RiverRapids);
         movieParkGermany.addChildAndSetParent(excalibur);
 
         OnSiteAttraction timeRiders = OnSiteAttraction.create("Time Riders");
         timeRiders.setCategory(categories.FamilyRides);
+        timeRiders.setModel(models.Simulator);
         movieParkGermany.addChildAndSetParent(timeRiders);
 
         OnSiteAttraction NycTransformer = OnSiteAttraction.create("NYC Transformer");
@@ -1039,23 +998,24 @@ public final class DatabaseMock implements IDatabaseWrapper
         movieParkGermany.addChildAndSetParent(NycTransformer);
 
         OnSiteAttraction pierPatrolJetSki = OnSiteAttraction.create("Pier Patrol Jet Ski");
-        pierPatrolJetSki.setCategory(categories.FamilyRides);
-        pierPatrolJetSki.setManufacturer(manufacturers.Zierer);
+        pierPatrolJetSki.setModel(models.Zierer_WildWaterRondell);
         movieParkGermany.addChildAndSetParent(pierPatrolJetSki);
 
         OnSiteAttraction fairyWorldSpin = OnSiteAttraction.create("Fairy World Spin");
-        fairyWorldSpin.setCategory(categories.FamilyRides);
         fairyWorldSpin.setManufacturer(manufacturers.Mack);
+        fairyWorldSpin.setModel(models.Teacups);
         movieParkGermany.addChildAndSetParent(fairyWorldSpin);
 
         OnSiteAttraction splatOSphere = OnSiteAttraction.create("Splat-O-Sphere");
         splatOSphere.setCategory(categories.FamilyRides);
         splatOSphere.setManufacturer(manufacturers.ChanceRides);
+        splatOSphere.setModel(models.FlatRide);
         movieParkGermany.addChildAndSetParent(splatOSphere);
 
         OnSiteAttraction lostTemple = OnSiteAttraction.create("The Lost Temple");
         lostTemple.setCategory(categories.DarkRides);
         lostTemple.setManufacturer(manufacturers.Simworx);
+        lostTemple.setModel(models.Simulator);
         movieParkGermany.addChildAndSetParent(lostTemple);
 
 
@@ -1105,7 +1065,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.locations.Netherlands.addChildAndSetParent(toverland);
 
         OnSiteAttraction troy = OnSiteAttraction.create("Troy");
-        troy.setModel(models.GCI_WoodenCoaster);
+        troy.setManufacturer(manufacturers.GCI);
+        troy.setModel(models.WoodenCoaster);
         toverland.addChildAndSetParent(troy);
 
         OnSiteAttraction fenix = OnSiteAttraction.create("Fēnix");
@@ -1125,8 +1086,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         toverland.addChildAndSetParent(toosExpress);
 
         OnSiteAttraction expeditionZork = OnSiteAttraction.create("Expedition Zork");
-        expeditionZork.setCategory(categories.WaterRides);
         expeditionZork.setManufacturer(manufacturers.Mack);
+        expeditionZork.setModel(models.LogFlume);
         toverland.addChildAndSetParent(expeditionZork);
 
         OnSiteAttraction maximusBlitzbahn = OnSiteAttraction.create("Maximus' Blitz Bahn");
@@ -1134,25 +1095,26 @@ public final class DatabaseMock implements IDatabaseWrapper
         toverland.addChildAndSetParent(maximusBlitzbahn);
 
         OnSiteAttraction scorpios = OnSiteAttraction.create("Scorpios");
-        scorpios.setCategory(categories.FamilyRides);
+        scorpios.setModel(models.PirateShip);
         toverland.addChildAndSetParent(scorpios);
 
         OnSiteAttraction djenguRiver = OnSiteAttraction.create("Djengu River");
-        djenguRiver.setCategory(categories.WaterRides);
         djenguRiver.setManufacturer(manufacturers.Hafema);
+        djenguRiver.setModel(models.RiverRapids);
         toverland.addChildAndSetParent(djenguRiver);
 
         OnSiteAttraction merlinsQuest = OnSiteAttraction.create("Merlin's Quest");
         merlinsQuest.setCategory(categories.DarkRides);
         merlinsQuest.setManufacturer(manufacturers.Mack);
+        merlinsQuest.setModel(models.BoatRide);
         toverland.addChildAndSetParent(merlinsQuest);
 
         OnSiteAttraction villaFiasco = OnSiteAttraction.create("Villa Fiasco");
-        villaFiasco.setCategory(categories.FamilyRides);
+        villaFiasco.setModel(models.FunHouse);
         toverland.addChildAndSetParent(villaFiasco);
 
         OnSiteAttraction toverhuis = OnSiteAttraction.create("Toverhuis");
-        toverhuis.setCategory(categories.FamilyRides);
+        toverhuis.setModel(models.WalkThroughAttraction);
         toverland.addChildAndSetParent(toverhuis);
 
 
@@ -1201,11 +1163,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         efteling.addChildAndSetParent(deVliegendeHollander);
 
         OnSiteAttraction jorisEnDeDraakWater = OnSiteAttraction.create("Joris en de Draak (Water)", 2);
-        jorisEnDeDraakWater.setModel(models.GCI_WoodenCoaster);
+        jorisEnDeDraakWater.setManufacturer(manufacturers.GCI);
+        jorisEnDeDraakWater.setModel(models.WoodenCoaster);
         efteling.addChildAndSetParent(jorisEnDeDraakWater);
 
         OnSiteAttraction jorisEnDeDraakVuur = OnSiteAttraction.create("Joris en de Draak (Vuur)", 1);
-        jorisEnDeDraakVuur.setModel(models.GCI_WoodenCoaster);
+        jorisEnDeDraakVuur.setManufacturer(manufacturers.GCI);
+        jorisEnDeDraakVuur.setModel(models.WoodenCoaster);
         efteling.addChildAndSetParent(jorisEnDeDraakVuur);
 
         OnSiteAttraction vogelRok = OnSiteAttraction.create("Vogel Rok", 1);
@@ -1224,6 +1188,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         OnSiteAttraction fataMorgana = OnSiteAttraction.create("Fata Morgana", 2);
         fataMorgana.setCategory(categories.DarkRides);
         fataMorgana.setManufacturer(manufacturers.Intamin);
+        fataMorgana.setModel(models.BoatRide);
         efteling.addChildAndSetParent(fataMorgana);
 
         OnSiteAttraction carnevalFestival = OnSiteAttraction.create("CarnevalFestival", 2);
@@ -1237,36 +1202,36 @@ public final class DatabaseMock implements IDatabaseWrapper
         efteling.addChildAndSetParent(droomvlucht);
 
         OnSiteAttraction symbolica = OnSiteAttraction.create("Symbolica", 4);
-        symbolica.setCategory(categories.DarkRides);
         symbolica.setManufacturer(manufacturers.EtfRideSystems);
+        symbolica.setModel(models.TracklessDarkRide);
         efteling.addChildAndSetParent(symbolica);
 
         OnSiteAttraction pirana = OnSiteAttraction.create("Piraña", 2);
-        pirana.setCategory(categories.WaterRides);
         pirana.setManufacturer(manufacturers.Intamin);
+        pirana.setModel(models.RiverRapids);
         efteling.addChildAndSetParent(pirana);
 
         OnSiteAttraction stoomtrein = OnSiteAttraction.create("Efteling Stoomtrein", 1);
-        stoomtrein.setCategory(categories.TransportRides);
+        stoomtrein.setModel(models.TrainRide);
         efteling.addChildAndSetParent(stoomtrein);
 
         OnSiteAttraction halveMaen = OnSiteAttraction.create("Halve Maen", 2);
-        halveMaen.setCategory(categories.FamilyRides);
         halveMaen.setManufacturer(manufacturers.Intamin);
+        halveMaen.setModel(models.PirateShip);
         efteling.addChildAndSetParent(halveMaen);
 
         OnSiteAttraction polkaMarina = OnSiteAttraction.create("Polka Marina", 1);
         polkaMarina.setCategory(categories.FamilyRides);
         polkaMarina.setManufacturer(manufacturers.Vekoma);
+        polkaMarina.setModel(models.FlatRide);
         efteling.addChildAndSetParent(polkaMarina);
 
         OnSiteAttraction spookslot = OnSiteAttraction.create("Spookslot", 1);
-        spookslot.setCategory(categories.FamilyRides);
+        spookslot.setModel(models.WalkThroughAttraction);
         efteling.addChildAndSetParent(spookslot);
 
         OnSiteAttraction villaVolta = OnSiteAttraction.create("Villa Volta", 2);
-        villaVolta.setCategory(categories.FamilyRides);
-        villaVolta.setManufacturer(manufacturers.Vekoma);
+        villaVolta.setModel(models.Vekoma_MadHouse);
         efteling.addChildAndSetParent(villaVolta);
     }
 
@@ -1286,9 +1251,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         hansaPark.addChildAndSetParent(schwurDesKaernan);
 
         OnSiteAttraction nessie = OnSiteAttraction.create("Nessie", 3);
-        nessie.setCreditType(creditTypes.RollerCoaster);
-        nessie.setCategory(categories.RollerCoasters);
         nessie.setManufacturer(manufacturers.Schwarzkopf);
+        nessie.setModel(models.SteelCoaster);
         hansaPark.addChildAndSetParent(nessie);
 
         OnSiteAttraction crazyMine = OnSiteAttraction.create("Crazy-Mine", 3);
@@ -1308,13 +1272,13 @@ public final class DatabaseMock implements IDatabaseWrapper
         hansaPark.addChildAndSetParent(derKleineZar);
 
         OnSiteAttraction wasserwolfAmIlmensee = OnSiteAttraction.create("Der Wasserwolf am Ilmensee", 2);
-        wasserwolfAmIlmensee.setCategory(categories.WaterRides);
         wasserwolfAmIlmensee.setManufacturer(manufacturers.Mack);
+        wasserwolfAmIlmensee.setModel(models.LogFlume);
         hansaPark.addChildAndSetParent(wasserwolfAmIlmensee);
 
         OnSiteAttraction superSplash = OnSiteAttraction.create("Super Splash", 2);
-        superSplash.setCategory(categories.WaterRides);
         superSplash.setManufacturer(manufacturers.Intamin);
+        superSplash.setModel(models.ShootTheChute);
         hansaPark.addChildAndSetParent(superSplash);
 
         OnSiteAttraction stoertebekersKaperfahrt = OnSiteAttraction.create("Störtebeker's Kaperfahrt", 1);
@@ -1322,40 +1286,40 @@ public final class DatabaseMock implements IDatabaseWrapper
         hansaPark.addChildAndSetParent(stoertebekersKaperfahrt);
 
         OnSiteAttraction sturmfahrtDerDrachenboote = OnSiteAttraction.create("Sturmfahrt der Drachenboote", 1);
-        sturmfahrtDerDrachenboote.setCategory(categories.WaterRides);
+        sturmfahrtDerDrachenboote.setModel(models.LogFlume);
         hansaPark.addChildAndSetParent(sturmfahrtDerDrachenboote);
 
         OnSiteAttraction fliegenderHollaender = OnSiteAttraction.create("Fliegender Holländer", 1);
-        fliegenderHollaender.setCategory(categories.FamilyRides);
         fliegenderHollaender.setManufacturer(manufacturers.Huss);
+        fliegenderHollaender.setModel(models.PirateShip);
         hansaPark.addChildAndSetParent(fliegenderHollaender);
 
         OnSiteAttraction holsteinturm = OnSiteAttraction.create("Holsteinturm", 1);
-        holsteinturm.setCategory(categories.FamilyRides);
         holsteinturm.setManufacturer(manufacturers.Huss);
+        holsteinturm.setModel(models.ObservationTower);
         hansaPark.addChildAndSetParent(holsteinturm);
 
         OnSiteAttraction kaernapulten = OnSiteAttraction.create("Kärnapulten", 1);
-        kaernapulten.setCategory(categories.FamilyRides);
-        kaernapulten.setManufacturer(manufacturers.Gerstlauer);
+        kaernapulten.setModel(models.Gerstlauer_SkyFly);
         hansaPark.addChildAndSetParent(kaernapulten);
 
         OnSiteAttraction hanseflieger = OnSiteAttraction.create("Hanse Flieger", 1);
-        hanseflieger.setCategory(categories.FamilyRides);
+        hanseflieger.setModel(models.ChairSwing);
         hansaPark.addChildAndSetParent(hanseflieger);
 
         OnSiteAttraction fliegenderHai = OnSiteAttraction.create("Fliegender Hai", 2);
         fliegenderHai.setCategory(categories.ThrillRides);
         fliegenderHai.setManufacturer(manufacturers.Huss);
+        fliegenderHai.setModel(models.FlatRide);
         fliegenderHai.setStatus(statuses.Defunct);
         hansaPark.addChildAndSetParent(fliegenderHai);
 
         OnSiteAttraction hansaParkExpress = OnSiteAttraction.create("Hansa Park Express");
-        hansaParkExpress.setCategory(categories.TransportRides);
+        hansaParkExpress.setModel(models.TrainRide);
         hansaPark.addChildAndSetParent(hansaParkExpress);
 
         OnSiteAttraction highlander = OnSiteAttraction.create("Highlander");
-        highlander.setCategory(categories.ThrillRides);
+        highlander.setModel(models.GyroDropTower);
         hansaPark.addChildAndSetParent(highlander);
 
         OnSiteAttraction barracudaSlide = OnSiteAttraction.create("Barracuda Slide");
@@ -1364,6 +1328,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction blumenmeerbootsfahrt = OnSiteAttraction.create("Blumenmeerbootsfahrt");
         blumenmeerbootsfahrt.setCategory(categories.WaterRides);
+        blumenmeerbootsfahrt.setModel(models.BoatRide);
         hansaPark.addChildAndSetParent(blumenmeerbootsfahrt);
 
         LinkedHashMap<OnSiteAttraction, Integer> rides08092019 = new LinkedHashMap<>();
@@ -1396,7 +1361,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         magicParkVerden.addChildAndSetParent(achterbahn);
 
         OnSiteAttraction wildwasserbahn = OnSiteAttraction.create("Wildwasserbahn");
-        wildwasserbahn.setCategory(categories.WaterRides);
+        wildwasserbahn.setModel(models.LogFlume);
         magicParkVerden.addChildAndSetParent(wildwasserbahn);
 
 
@@ -1419,7 +1384,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         europaPark.addChildAndSetParent(silverStar);
 
         OnSiteAttraction wodan = OnSiteAttraction.create("Wodan - Timburcoaster", 4);
-        wodan.setModel(models.GCI_WoodenCoaster);
+        wodan.setManufacturer(manufacturers.GCI);
+        wodan.setModel(models.WoodenCoaster);
         europaPark.addChildAndSetParent(wodan);
 
         OnSiteAttraction blueFireMegacoaster = OnSiteAttraction.create("Blue Fire Megacoaster", 4);
@@ -1469,27 +1435,26 @@ public final class DatabaseMock implements IDatabaseWrapper
         europaPark.addChildAndSetParent(baaaExpress);
 
         OnSiteAttraction abenteuerAtlantis = OnSiteAttraction.create("Abenteuer Atlantis", 1);
-        abenteuerAtlantis.setCategory(categories.DarkRides);
         abenteuerAtlantis.setManufacturer(manufacturers.Mack);
+        abenteuerAtlantis.setModel(models.InteractiveDarkRide);
         europaPark.addChildAndSetParent(abenteuerAtlantis);
 
         OnSiteAttraction epExpress = OnSiteAttraction.create("EP-Express", 1);
-        epExpress.setCategory(categories.TransportRides);
+        epExpress.setModel(models.Monorail);
         europaPark.addChildAndSetParent(epExpress);
 
         OnSiteAttraction euroTower = OnSiteAttraction.create("Euro-Tower", 1);
-        euroTower.setCategory(categories.FamilyRides);
         euroTower.setManufacturer(manufacturers.Intamin);
+        euroTower.setModel(models.ObservationTower);
         europaPark.addChildAndSetParent(euroTower);
 
         OnSiteAttraction fjordRafting = OnSiteAttraction.create("Fjord Rafting", 2);
-        fjordRafting.setCategory(categories.WaterRides);
         fjordRafting.setManufacturer(manufacturers.Intamin);
+        fjordRafting.setModel(models.RiverRapids);
         europaPark.addChildAndSetParent(fjordRafting);
 
         OnSiteAttraction fluchDerKassandra = OnSiteAttraction.create("Fluch der Kassandra", 1);
-        fluchDerKassandra.setCategory(categories.FamilyRides);
-        fluchDerKassandra.setManufacturer(manufacturers.Mack);
+        fluchDerKassandra.setModel(models.Mack_MadHouse);
         europaPark.addChildAndSetParent(fluchDerKassandra);
 
         OnSiteAttraction geisterschloss = OnSiteAttraction.create("Geisterschloss", 1);
@@ -1508,37 +1473,38 @@ public final class DatabaseMock implements IDatabaseWrapper
         europaPark.addChildAndSetParent(schlittenfahrtSchneefloeckchen);
 
         OnSiteAttraction tirolerWildwasserbahn = OnSiteAttraction.create("Tiroler Wildwasserbahn", 2);
-        tirolerWildwasserbahn.setCategory(categories.WaterRides);
         tirolerWildwasserbahn.setManufacturer(manufacturers.Mack);
+        tirolerWildwasserbahn.setModel(models.LogFlume);
         europaPark.addChildAndSetParent(tirolerWildwasserbahn);
 
         OnSiteAttraction vindjammer = OnSiteAttraction.create("Vindjammer", 2);
-        vindjammer.setCategory(categories.FamilyRides);
         vindjammer.setManufacturer(manufacturers.Huss);
+        vindjammer.setModel(models.PirateShip);
         europaPark.addChildAndSetParent(vindjammer);
 
         OnSiteAttraction voletarium = OnSiteAttraction.create("Voletarium", 2);
-        voletarium.setCategory(categories.FamilyRides);
+        voletarium.setModel(models.FlyingTheatre);
         europaPark.addChildAndSetParent(voletarium);
 
         OnSiteAttraction wienerWellenflieger = OnSiteAttraction.create("Wiener Wellenflieger", 1);
-        wienerWellenflieger.setCategory(categories.FamilyRides);
         wienerWellenflieger.setManufacturer(manufacturers.Zierer);
+        wienerWellenflieger.setModel(models.ChairSwing);
         europaPark.addChildAndSetParent(wienerWellenflieger);
 
         OnSiteAttraction kolumbusjolle = OnSiteAttraction.create("Kolumbusjolle", 1);
         kolumbusjolle.setCategory(categories.FamilyRides);
         kolumbusjolle.setManufacturer(manufacturers.Mack);
+        kolumbusjolle.setModel(models.FlatRide);
         europaPark.addChildAndSetParent(kolumbusjolle);
 
         OnSiteAttraction feriaSwing = OnSiteAttraction.create("Feria Swing");
         feriaSwing.setCategory(categories.FamilyRides);
         feriaSwing.setManufacturer(manufacturers.Mack);
+        feriaSwing.setModel(models.FlatRide);
         europaPark.addChildAndSetParent(feriaSwing);
 
         OnSiteAttraction poppyTowers = OnSiteAttraction.create("Poppy Towers");
-        poppyTowers.setCategory(categories.FamilyRides);
-        poppyTowers.setManufacturer(manufacturers.Zierer);
+        poppyTowers.setModel(models.Zierer_DoubleFamilyTower);
         europaPark.addChildAndSetParent(poppyTowers);
 
         OnSiteAttraction madameFreudenreichsCuriosites = OnSiteAttraction.create("Madame Freudenreichs Curiosités");
@@ -1547,8 +1513,8 @@ public final class DatabaseMock implements IDatabaseWrapper
         europaPark.addChildAndSetParent(madameFreudenreichsCuriosites);
 
         OnSiteAttraction panoramabahn = OnSiteAttraction.create("Panoramabahn");
-        panoramabahn.setCategory(categories.TransportRides);
         panoramabahn.setManufacturer(manufacturers.ChanceRides);
+        panoramabahn.setModel(models.TrainRide);
         europaPark.addChildAndSetParent(panoramabahn);
 
 
@@ -1660,18 +1626,19 @@ public final class DatabaseMock implements IDatabaseWrapper
         energylandia.addChildAndSetParent(circusCoaster);
 
         OnSiteAttraction monsterAttack = OnSiteAttraction.create("Monster Attack");
-        monsterAttack.setCategory(categories.DarkRides);
         monsterAttack.setManufacturer(manufacturers.SbfVisa);
+        monsterAttack.setModel(models.InteractiveDarkRide);
         energylandia.addChildAndSetParent(monsterAttack);
 
         OnSiteAttraction aztecSwing = OnSiteAttraction.create("Aztec Swing");
-        aztecSwing.setCategory(categories.ThrillRides);
         aztecSwing.setManufacturer(manufacturers.SbfVisa);
+        aztecSwing.setModel(models.Frisbee);
         energylandia.addChildAndSetParent(aztecSwing);
 
         OnSiteAttraction spaceGun = OnSiteAttraction.create("Space Gun");
         spaceGun.setCategory(categories.ThrillRides);
         spaceGun.setManufacturer(manufacturers.SbfVisa);
+        spaceGun.setModel(models.FlatRide);
         energylandia.addChildAndSetParent(spaceGun);
 
 
@@ -1831,9 +1798,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Manufacturer BolligerAndMabillard = Manufacturer.create("Bolliger & Mabillard");
         final Manufacturer Intamin = Manufacturer.create("Intamin");
         final Manufacturer Vekoma = Manufacturer.create("Vekoma");
-        final Manufacturer Huss = Manufacturer.create("HUSS");
+        final Manufacturer Huss = Manufacturer.create("Huss");
         final Manufacturer Pinfari = Manufacturer.create("Pinfari");
-        final Manufacturer MaurerRides = Manufacturer.create("Mauerer Rides");
+        final Manufacturer MaurerRides = Manufacturer.create("Mauerer");
         final Manufacturer EtfRideSystems = Manufacturer.create("ETF Ride Systems");
         final Manufacturer Zierer = Manufacturer.create("Zierer");
         final Manufacturer Hofmann = Manufacturer.create("Hofmann");
@@ -1849,7 +1816,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Manufacturer Simworx = Manufacturer.create("Simworx");
         final Manufacturer CCI = Manufacturer.create("Custom Coasters International");
         final Manufacturer RMC = Manufacturer.create("Rocky Mountain Construction");
-        final Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer Amusement Rides");
+        final Manufacturer Gerstlauer = Manufacturer.create("Gerstlauer");
         final Manufacturer PremierRides = Manufacturer.create("Premier Rides");
         final Manufacturer GCI = Manufacturer.create("Great Coasters International");
         final Manufacturer ChanceRides = Manufacturer.create("Chance Rides");
@@ -1899,6 +1866,9 @@ public final class DatabaseMock implements IDatabaseWrapper
         CreditTypes creditTypes;
         Categories categories;
 
+
+//        MANUFACTURERS
+
         final Model BollingerAndMabillard_HyperCoaster = Model.create("Hyper Coaster");
         final Model BollingerAndMabillard_InvertedCoaster = Model.create("Inverted Coaster");
         final Model BollingerAndMabillard_DiveCoaster = Model.create("Dive Coaster");
@@ -1917,6 +1887,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Gerstlauer_EuroFighter = Model.create("Euro-Fighter");
         final Model Gerstlauer_FamilyCoaster = Model.create("Family Coaster");
         final Model Gerstlauer_BobsledCoaster = Model.create("Bobsled Coaster");
+        final Model Gerstlauer_SkyFly = Model.create("Sky Fly");
 
         final Model Mack_LaunchedCoaster = Model.create("Launched Coaster");
         final Model Mack_PoweredCoaster = Model.create("Powered Coaster");
@@ -1928,6 +1899,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Mack_Bobsled = Model.create("Bobsled");
         final Model Mack_WildeMaus = Model.create("Wilde Maus");
         final Model Mack_YoungstarCoaster = Model.create("Youngstar Coaster");
+        final Model Mack_MadHouse = Model.create("Mad House");
 
         final Model Vekoma_SuspendedLoopingCoaster = Model.create("Suspended Looping Coaster");
         final Model Vekoma_Boomerang = Model.create("Boomerang");
@@ -1941,6 +1913,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Vekoma_MK900 = Model.create("MK-900");
         final Model Vekoma_MK1200 = Model.create("MK-1200");
         final Model Vekoma_LsmCoaster = Model.create("LSM Coaster");
+        final Model Vekoma_MadHouse = Model.create("Mad House");
 
         final Model RMC_IBoxTrack = Model.create("IBox Track");
 
@@ -1960,11 +1933,6 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model PrestonAndBarbieri_FamilyCoaster = Model.create("Family Coaster");
         final Model PrestonAndBarbieri_MiniCoaster = Model.create("Mini Coaster");
 
-        final Model GCI_WoodenCoaster = Model.create("Wooden Coaster");
-
-        final Model CCI_WoodenCoaster = Model.create("Wooden Coaster");
-        final Model CCI_JuniorWoodenCoaster = Model.create("Junior Wooden Coaster");
-
         final Model Art_ChildrensRollerCoaster = Model.create("Children's Roller Coaster");
 
         final Model Premier_SkyRocketII = Model.create("Sky Rocket II");
@@ -1973,12 +1941,67 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Zierer_ForceTwo = Model.create("Force Two");
         final Model Zierer_Tivoli_Medium = Model.create("Tivoli (medium)");
         final Model Zierer_Tivoli_Large = Model.create("Tivoli (large)");
+        final Model Zierer_DoubleFamilyTower = Model.create("Double Family Tower");
+        final Model Zierer_WildWaterRondell = Model.create("Wild Water Rondell");
 
         final Model Arrow_MineTrain = Model.create("Mine Train");
 
+        final Model Zamperla_DiskO = Model.create("Disk'O");
 
-        final Model Huss_TopSpin = Model.create("TopSpin");
-        final Model Gerstlauer_SkyFly = Model.create("Sky Fly");
+
+        final Model Huss_TopSpin = Model.create("Top Spin");
+        final Model Huss_SuspendedTopSpin = Model.create("Suspended Top Spin");
+        final Model Huss_Magic = Model.create("Magic");
+        final Model Huss_BreakDance = Model.create("Break Dance");
+
+
+//        ROLLER COASTERS
+        final Model WoodenCoaster = Model.create("Wooden Coaster");
+        final Model JuniorWoodenCoaster = Model.create("Junior Wooden Coaster");
+        final Model SteelCoaster = Model.create("Steel Coaster");
+        final Model WildMouse = Model.create("Wild Mouse");
+        final Model InvertedCoaster = Model.create("Inverted Coaster");
+
+
+//        MIXED
+        final Model FlatRide = Model.create("Flat Ride");
+        final Model BoatRide = Model.create("Boat Ride");
+        final Model Simulator = Model.create("Simulator");
+
+//        WATER RIDES
+        final Model LogFlume = Model.create("Log Flume");
+        final Model RiverRapids = Model.create("River Rapids");
+        final Model ShootTheChute = Model.create("Shoot the Chute");
+
+//        FAMILY RIDES
+        final Model FunHouse = Model.create("Fun House");
+        final Model ChairSwing = Model.create("Chair Swing");
+        final Model Carousel = Model.create("Carousel");
+        final Model PirateShip = Model.create("Pirate Ship");
+        final Model MiniDropTower = Model.create("Mini Drop Tower");
+        final Model FerrisWheel = Model.create("Ferris Wheel");
+        final Model Teacups = Model.create("Teacups");
+        final Model AntiqueCars = Model.create("Antique Cars");
+        final Model ObservationTower = Model.create("Observation Tower");
+        final Model FlyingTheatre = Model.create("Flying Theatre");
+        final Model WalkThroughAttraction = Model.create("Walk Through Attraction");
+
+//        THRILL RIDES
+        final Model DropTower = Model.create("Drop Tower");
+        final Model GyroDropTower = Model.create("Gyro Drop Tower");
+        final Model EnclosedDropTower = Model.create("Enclosed Drop Tower");
+        final Model ShotTower = Model.create("Shot Tower");
+        final Model Enterprise = Model.create("Enterprise");
+        final Model Frisbee = Model.create("Frisbee");
+
+//        DARK RIDES
+        final Model InteractiveDarkRide = Model.create("Interactive Dark Ride");
+        final Model TracklessDarkRide = Model.create("Trackless Dark Ride");
+
+//        TRANSPORT RIDES
+        final Model Monorail = Model.create("Monorail");
+        final Model TrainRide = Model.create("Train Ride");
+        final Model ChairLift = Model.create("Chair Lift");
 
 
         final List<Model> AllModels = new LinkedList<>();
@@ -1990,11 +2013,104 @@ public final class DatabaseMock implements IDatabaseWrapper
 
             AllModels.add(Model.getDefault());
 
+
+//            ROLLER COASTERS
+            WoodenCoaster.setCreditType(creditTypes.RollerCoaster);
+            WoodenCoaster.setCategory(categories.RollerCoasters);
+            AllModels.add(WoodenCoaster);
+
+            JuniorWoodenCoaster.setCreditType(creditTypes.RollerCoaster);
+            JuniorWoodenCoaster.setCategory(categories.RollerCoasters);
+            AllModels.add(JuniorWoodenCoaster);
+
+            SteelCoaster.setCreditType(creditTypes.RollerCoaster);
+            SteelCoaster.setCategory(categories.RollerCoasters);
+            AllModels.add(SteelCoaster);
+
+            WildMouse.setCreditType(creditTypes.RollerCoaster);
+            WildMouse.setCategory(categories.RollerCoasters);
+            AllModels.add(WildMouse);
+
+            InvertedCoaster.setCreditType(creditTypes.RollerCoaster);
+            InvertedCoaster.setCategory(categories.RollerCoasters);
+            AllModels.add(InvertedCoaster);
+
+
+//            MIXED
+            AllModels.add(FlatRide);
+            AllModels.add(BoatRide);
+            AllModels.add(Simulator);
+
+//            WATER RIDES
+            LogFlume.setCategory(categories.WaterRides);
+            AllModels.add(LogFlume);
+            RiverRapids.setCategory(categories.WaterRides);
+            AllModels.add(RiverRapids);
+            ShootTheChute.setCategory(categories.WaterRides);
+            AllModels.add(ShootTheChute);
+
+
+//            FAMILY RIDES
+            FunHouse.setCategory(categories.FamilyRides);
+            AllModels.add(FunHouse);
+            ChairSwing.setCategory(categories.FamilyRides);
+            AllModels.add(ChairSwing);
+            Carousel.setCategory(categories.FamilyRides);
+            AllModels.add(Carousel);
+            PirateShip.setCategory(categories.FamilyRides);
+            AllModels.add(PirateShip);
+            MiniDropTower.setCategory(categories.FamilyRides);
+            AllModels.add(MiniDropTower);
+            FerrisWheel.setCategory(categories.FamilyRides);
+            AllModels.add(FerrisWheel);
+            Teacups.setCategory(categories.FamilyRides);
+            AllModels.add(Teacups);
+            AntiqueCars.setCategory(categories.FamilyRides);
+            AllModels.add(AntiqueCars);
+            ObservationTower.setCategory(categories.FamilyRides);
+            AllModels.add(ObservationTower);
+            FlyingTheatre.setCategory(categories.FamilyRides);
+            AllModels.add(FlyingTheatre);
+            WalkThroughAttraction.setCategory(categories.FamilyRides);
+            AllModels.add(WalkThroughAttraction);
+
+
+//            THRILL RIDES
+            DropTower.setCategory(categories.ThrillRides);
+            AllModels.add(DropTower);
+            GyroDropTower.setCategory(categories.ThrillRides);
+            AllModels.add(GyroDropTower);
+            EnclosedDropTower.setCategory(categories.ThrillRides);
+            AllModels.add(EnclosedDropTower);
+            ShotTower.setCategory(categories.ThrillRides);
+            AllModels.add(ShotTower);
+            Enterprise.setCategory(categories.ThrillRides);
+            AllModels.add(Enterprise);
+            Frisbee.setCategory(categories.ThrillRides);
+            AllModels.add(Frisbee);
+
+//            DARK RIDES
+            InteractiveDarkRide.setCategory(categories.DarkRides);
+            AllModels.add(InteractiveDarkRide);
+            TracklessDarkRide.setCategory(categories.DarkRides);
+            AllModels.add(TracklessDarkRide);
+
+//            TRANSPORT RIDES
+            Monorail.setCategory(categories.TransportRides);
+            AllModels.add(Monorail);
+            TrainRide.setCategory(categories.TransportRides);
+            AllModels.add(TrainRide);
+            ChairLift.setCategory(categories.TransportRides);
+            AllModels.add(ChairLift);
+
+
+//            MANUFACTURERS
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_HyperCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_InvertedCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_DiveCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_WingCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_SittingCoaster);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Intamin, Intamin_MegaCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Intamin, Intamin_BlitzCoaster);
@@ -2003,6 +2119,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.Intamin, Intamin_WaterCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Intamin, Intamin_SwissBob);
             this.decorateRollerCoasterAndAddToList(manufacturers.Intamin, Intamin_WingRiderCoaster);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_LaunchedCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_PoweredCoaster);
@@ -2015,10 +2132,20 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_WildeMaus);
             this.decorateRollerCoasterAndAddToList(manufacturers.Mack, Mack_YoungstarCoaster);
 
+            Mack_MadHouse.setCategory(categories.FamilyRides);
+            Mack_MadHouse.setManufacturer(manufacturers.Mack);
+            AllModels.add(Mack_MadHouse);
+
+
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_InfinityCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_EuroFighter);
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_FamilyCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Gerstlauer, Gerstlauer_BobsledCoaster);
+
+            Gerstlauer_SkyFly.setCategory(categories.FamilyRides);
+            Gerstlauer_SkyFly.setManufacturer(manufacturers.Gerstlauer);
+            AllModels.add(Gerstlauer_SkyFly);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Vekoma, Vekoma_SuspendedLoopingCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.Vekoma, Vekoma_Boomerang);
@@ -2033,12 +2160,20 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.Vekoma, Vekoma_MK1200);
             this.decorateRollerCoasterAndAddToList(manufacturers.Vekoma, Vekoma_LsmCoaster);
 
+            Vekoma_MadHouse.setCategory(categories.FamilyRides);
+            Vekoma_MadHouse.setManufacturer(manufacturers.Vekoma);
+            AllModels.add(Vekoma_MadHouse);
+
+
             this.decorateRollerCoasterAndAddToList(manufacturers.RMC, RMC_IBoxTrack);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Schwarzkopf, Schwarzkopf_Wildcat);
 
+
             this.decorateRollerCoasterAndAddToList(manufacturers.MaurerRides, Maurer_WildeMausClassic);
             this.decorateRollerCoasterAndAddToList(manufacturers.MaurerRides, Maurer_SpinningCoaster);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.SbfVisa, SbfVisa_DragoonCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.SbfVisa, SbfVisa_CompactSpinningCoaster);
@@ -2046,43 +2181,61 @@ public final class DatabaseMock implements IDatabaseWrapper
             this.decorateRollerCoasterAndAddToList(manufacturers.SbfVisa, SbfVisa_FamilyCoasterBigApple);
             this.decorateRollerCoasterAndAddToList(manufacturers.SbfVisa, SbfVisa_RaceCoaster);
 
+
             this.decorateRollerCoasterAndAddToList(manufacturers.Pinfari, Pinfari_BigApple);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.PrestonAndBarbieri, PrestonAndBarbieri_FamilyCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.PrestonAndBarbieri, PrestonAndBarbieri_MiniCoaster);
 
-            this.decorateRollerCoasterAndAddToList(manufacturers.GCI, GCI_WoodenCoaster);
-
-            this.decorateRollerCoasterAndAddToList(manufacturers.CCI, CCI_WoodenCoaster);
-            this.decorateRollerCoasterAndAddToList(manufacturers.CCI, CCI_JuniorWoodenCoaster);
 
             this.decorateRollerCoasterAndAddToList(manufacturers.ArtEngineering, Art_ChildrensRollerCoaster);
 
+
             this.decorateRollerCoasterAndAddToList(manufacturers.PremierRides, Premier_SkyRocketII);
+
+
+            this.decorateRollerCoasterAndAddToList(manufacturers.ArrowDynamics, Arrow_MineTrain);
+
 
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_ForceOne);
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_ForceTwo);
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_Tivoli_Medium);
             this.decorateRollerCoasterAndAddToList(manufacturers.Zierer, Zierer_Tivoli_Large);
 
-            this.decorateRollerCoasterAndAddToList(manufacturers.ArrowDynamics, Arrow_MineTrain);
+            Zierer_DoubleFamilyTower.setCategory(categories.FamilyRides);
+            Zierer_DoubleFamilyTower.setManufacturer(manufacturers.Zierer);
+            AllModels.add(Zierer_DoubleFamilyTower);
+
+            Zierer_WildWaterRondell.setCategory(categories.FamilyRides);
+            Zierer_WildWaterRondell.setManufacturer(manufacturers.Zierer);
+            AllModels.add(Zierer_WildWaterRondell);
 
 
-            Huss_TopSpin.setOverrideProperties(true);
+            Zamperla_DiskO.setCategory(categories.FamilyRides);
+            Zamperla_DiskO.setManufacturer(manufacturers.Zamperla);
+            AllModels.add(Zamperla_DiskO);
+
+
             Huss_TopSpin.setCategory(categories.ThrillRides);
             Huss_TopSpin.setManufacturer(manufacturers.Huss);
-
-            Gerstlauer_SkyFly.setOverrideProperties(true);
-            Gerstlauer_SkyFly.setCategory(categories.FamilyRides);
-            Gerstlauer_SkyFly.setManufacturer(manufacturers.Gerstlauer);
-
             AllModels.add(Huss_TopSpin);
-            AllModels.add(Gerstlauer_SkyFly);
+
+            Huss_SuspendedTopSpin.setCategory(categories.ThrillRides);
+            Huss_SuspendedTopSpin.setManufacturer(manufacturers.Huss);
+            AllModels.add(Huss_SuspendedTopSpin);
+
+            Huss_Magic.setCategory(categories.ThrillRides);
+            Huss_Magic.setManufacturer(manufacturers.Huss);
+            AllModels.add(Huss_Magic);
+
+            Huss_BreakDance.setCategory(categories.ThrillRides);
+            Huss_BreakDance.setManufacturer(manufacturers.Huss);
+            AllModels.add(Huss_BreakDance);
         }
 
         private void decorateRollerCoasterAndAddToList(Manufacturer manufacturer, Model model)
         {
-            model.setOverrideProperties(true);
             model.setCreditType(this.creditTypes.RollerCoaster);
             model.setCategory(categories.RollerCoasters);
             model.setManufacturer(manufacturer);

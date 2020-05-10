@@ -4,6 +4,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 
 /**
@@ -19,6 +20,9 @@ public interface IAttraction extends IElement
 
     Manufacturer getManufacturer();
     void setManufacturer(Manufacturer manufacturer);
+
+    Model getModel();
+    void setModel(Model model);
 
     Status getStatus();
     void setStatus(Status status);

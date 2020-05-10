@@ -11,6 +11,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 
 /**
@@ -21,29 +22,26 @@ public final class Model extends Element implements IProperty
 {
     private static Model defaultModel;
 
-    private boolean overrideProperties = true;
-
     private CreditType creditType;
     private Category category;
     private Manufacturer manufacturer;
 
-    private Model(String name, boolean overrideProperties, UUID uuid)
+    private Model(String name, UUID uuid)
     {
         super(name, uuid);
-        this.setOverrideProperties(overrideProperties);
     }
 
-    public static Model create(String name, boolean overrideProperties)
+    public static Model create(String name)
     {
-        return create(name, overrideProperties, null);
+        return create(name, null);
     }
 
-    public static Model create(String name, boolean overrideProperties, UUID uuid)
+    public static Model create(String name, UUID uuid)
     {
         Model model = null;
         if(Element.isNameValid(name))
         {
-            model = new Model(name, overrideProperties, uuid);
+            model = new Model(name, uuid);
             Log.v(Constants.LOG_TAG,  String.format("Model.create:: %s created", model));
         }
 
@@ -53,9 +51,12 @@ public final class Model extends Element implements IProperty
     @Override
     public String getFullName()
     {
-        String base = String.format("%s (%s) overrideProperties[%S]", this.toString(), this.getUuid(), this.overrideProperties());
-        String properties = String.format("%s %s %s", this.getCreditType(), this.getCategory(), this.getManufacturer());
-        return this.overrideProperties() ? String.format("[%s - %s]", base, properties) : String.format("[%s]", base);
+        return String.format("[%s - %s %s %s (%s)]",
+                this.getName(),
+                this.getCreditType() != null ? this.getCreditType() : "[no CreditType]",
+                this.getCategory() != null ? this.getCategory() : "[no Category]",
+                this.getManufacturer() != null ? this.getManufacturer() : "[no Manufacturer]",
+                this.getUuid());
     }
 
     @Override
@@ -69,7 +70,7 @@ public final class Model extends Element implements IProperty
         if(Model.defaultModel == null)
         {
             Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
-            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name)), false));
+            Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name))));
         }
 
         return Model.defaultModel;
@@ -81,48 +82,67 @@ public final class Model extends Element implements IProperty
         Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel.getFullName()));
     }
 
-    public boolean overrideProperties()
+    public boolean hasCreditType()
     {
-        return this.overrideProperties;
-    }
-
-    public void setOverrideProperties(boolean overrideProperties)
-    {
-        this.overrideProperties = overrideProperties;
-        Log.d(Constants.LOG_TAG, String.format("Model.setOverrideProperties:: set %s overrideProperties [%S] ", this, overrideProperties));
+        return this.getCreditType() != null;
     }
 
     public CreditType getCreditType()
     {
-        return this.creditType != null ? this.creditType : CreditType.getDefault();
+        return this.creditType;
     }
 
     public void setCreditType(CreditType creditType)
     {
         this.creditType = creditType;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s", this, this.creditType));
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s - setting children...", this, this.creditType));
+
+        for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
+        {
+            attraction.setCreditType(this.creditType);
+        }
+    }
+
+    public boolean hasCategory()
+    {
+        return this.getCategory() != null;
     }
 
     public Category getCategory()
     {
-        return this.category != null ? this.category : Category.getDefault();
+        return this.category;
     }
 
     public void setCategory(Category category)
     {
         this.category = category;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s", this, this.category));
+        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s - setting children...", this, this.category));
+
+        for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
+        {
+            attraction.setCategory(this.category);
+        }
+    }
+
+    public boolean hasManufacturer()
+    {
+        return this.manufacturer != null;
     }
 
     public Manufacturer getManufacturer()
     {
-        return this.manufacturer != null ? this.manufacturer : Manufacturer.getDefault();
+        return this.manufacturer;
     }
 
     public void setManufacturer(Manufacturer manufacturer)
     {
         this.manufacturer = manufacturer;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
+        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s - setting in children...", this, this.manufacturer));
+
+        for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
+        {
+            attraction.setManufacturer(this.manufacturer);
+        }
     }
 
     @Override
@@ -135,20 +155,10 @@ public final class Model extends Element implements IProperty
             JsonTool.putNameAndUuid(jsonObject, this);
 
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
-            jsonObject.put(Constants.JSON_STRING_OVERRIDE_PROPERTIES, this.overrideProperties);
 
-            if(this.overrideProperties())
-            {
-                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getCreditType().getUuid());
-                jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getCategory().getUuid());
-                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getManufacturer().getUuid());
-            }
-            else
-            {
-                jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, JSONObject.NULL);
-                jsonObject.put(Constants.JSON_STRING_CATEGORY, JSONObject.NULL);
-                jsonObject.put(Constants.JSON_STRING_MANUFACTURER, JSONObject.NULL);
-            }
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.hasCreditType() ? this.getCreditType().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.hasCategory() ? this.getCategory().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.hasManufacturer() ? this.getManufacturer().getUuid() : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
