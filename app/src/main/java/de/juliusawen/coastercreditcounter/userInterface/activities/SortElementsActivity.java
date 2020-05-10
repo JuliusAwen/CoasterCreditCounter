@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -62,26 +61,31 @@ public class SortElementsActivity extends BaseActivity
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
         {
+            if(App.preferences.defaultPropertiesAlwaysAtTop() && this.viewModel.elementsToSort.get(0).isProperty())
+            {
+                for(IElement element : this.viewModel.elementsToSort)
+                {
+                    if(((IProperty) element).isDefault())
+                    {
+                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.create:: removing %s - App.preferences.defaultPropertiesAlwaysAtTop = TRUE", element));
+                        this.viewModel.defaultProperty = element;
+                        this.viewModel.elementsToSort.remove(element);
+                        break;
+                    }
+                }
+            }
+
             this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                     this.viewModel.elementsToSort,
                     new HashSet<Class<? extends IElement>>(),
                     false)
-                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix)
+                    .setTypefaceForContentType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD)
                     .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                     .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW);
-
-            Set<Class<? extends IElement>> types = new HashSet<>();
-            for(IElement elementToSort : this.viewModel.elementsToSort)
-            {
-                types.add(elementToSort.getClass());
-            }
-
-            for(Class<? extends IElement> type : types)
-            {
-                this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(type, Typeface.BOLD);
-            }
+                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
         }
+
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -167,6 +171,8 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
+                viewModel.selectedElement = viewModel.contentRecyclerViewAdapter.getLastSelectedItem();
+
                 if(view.equals(frameLayoutDialogDown))
                 {
                     Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonClicked:: button<DOWN> clicked");
@@ -248,9 +254,9 @@ public class SortElementsActivity extends BaseActivity
 
     private void sortDown()
     {
-        if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+        if(this.viewModel.selectedElement != null)
         {
-            int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
+            int position = viewModel.elementsToSort.indexOf(viewModel.selectedElement);
 
             if(position < viewModel.elementsToSort.size() - 1)
             {
@@ -271,9 +277,9 @@ public class SortElementsActivity extends BaseActivity
 
     private void sortUp()
     {
-        if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+        if(viewModel.selectedElement != null)
         {
-            int position = viewModel.elementsToSort.indexOf(viewModel.contentRecyclerViewAdapter.getLastSelectedItem());
+            int position = viewModel.elementsToSort.indexOf(viewModel.selectedElement);
 
             if(position > 0)
             {
@@ -299,6 +305,15 @@ public class SortElementsActivity extends BaseActivity
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
         {
+            if(this.viewModel.defaultProperty != null)
+            {
+                Log.i(Constants.LOG_TAG,
+                        String.format("SortElementsActivity.returnResult:: adding %s at index 0 - App.prefereneces.defaultPropertiesAlwaysAtTop = TRUE",
+                                this.viewModel.defaultProperty));
+
+                this.viewModel.elementsToSort.add(0, this.viewModel.defaultProperty);
+            }
+
             Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning [%d] elements as result", this.viewModel.elementsToSort.size()));
 
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.viewModel.elementsToSort));

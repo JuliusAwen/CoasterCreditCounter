@@ -481,7 +481,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.model.creditTypeIsSet())
+                if(viewModel.model.isCreditTypeSet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.credit_type)));
                 }
@@ -520,7 +520,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCategory> selected");
 
-                if(viewModel.model.categoryIsSet())
+                if(viewModel.model.isCategorySet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.category)));
                 }
@@ -559,7 +559,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickManufacturer> selected");
 
-                if(viewModel.model.manufacturerIsSet())
+                if(viewModel.model.isManufacturerSet())
                 {
                     Toaster.makeShortToast(EditAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.manufacturer)));
                 }
@@ -612,7 +612,7 @@ public class EditAttractionActivity extends BaseActivity
 
         this.textViewBlueprint.setText(model.getName());
 
-        if(this.viewModel.model.creditTypeIsSet())
+        if(this.viewModel.model.isCreditTypeSet())
         {
             this.viewModel.creditType = null;
             this.textViewCreditType.setText(model.getCreditType().getName());
@@ -624,7 +624,7 @@ public class EditAttractionActivity extends BaseActivity
             this.updateLayoutCreditType(this.viewModel.creditType);
         }
 
-        if(this.viewModel.model.categoryIsSet())
+        if(this.viewModel.model.isCategorySet())
         {
             this.viewModel.category = null;
             this.textViewCategory.setText(model.getCategory().getName());
@@ -636,7 +636,7 @@ public class EditAttractionActivity extends BaseActivity
             this.updateLayoutCategory(this.viewModel.category);
         }
 
-        if(this.viewModel.model.manufacturerIsSet())
+        if(this.viewModel.model.isManufacturerSet())
         {
             this.viewModel.manufacturer = null;
             this.textViewManufacturer.setText(model.getManufacturer().getName());

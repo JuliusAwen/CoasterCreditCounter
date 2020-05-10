@@ -77,35 +77,23 @@ public class PickElementsActivity extends BaseActivity
         {
             switch(this.viewModel.requestCode)
             {
-                case PICK_ATTRACTIONS:
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-                {
-                    if(this.viewModel.requestCode != RequestCode.PICK_ATTRACTIONS)
-                    {
-                        this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
-                    }
-
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            OnSiteAttraction.class,
-                            true)
-                            .setUseDedicatedExpansionOnClickListener(true);
-                    this.setDetailModesAndGroupElements(GroupType.CATEGORY);
-                    break;
-                }
-
+                case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
-
+                }
+                case PICK_ATTRACTIONS:
+                {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             OnSiteAttraction.class,
                             true)
                             .setUseDedicatedExpansionOnClickListener(true);
+
                     this.setDetailModesAndGroupElements(GroupType.CATEGORY);
+
                     break;
                 }
 
@@ -180,7 +168,7 @@ public class PickElementsActivity extends BaseActivity
         {
             case PICK_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 this.viewModel.optionsMenuAgent
@@ -245,7 +233,7 @@ public class PickElementsActivity extends BaseActivity
         {
             case PICK_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 this.viewModel.optionsMenuAgent
@@ -638,7 +626,7 @@ public class PickElementsActivity extends BaseActivity
 
                     case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                     case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-                    case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+                    case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
                     default:
                     {
                         for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())

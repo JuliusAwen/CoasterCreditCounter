@@ -35,7 +35,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
-import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -416,14 +415,13 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCreditType> selected");
 
-                if(viewModel.model.creditTypeIsSet())
+                if(viewModel.model.isCreditTypeSet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.credit_type)));
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE,
-                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(CreditType.class)));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CREDIT_TYPE, App.content.getContentOfType(CreditType.class));
                 }
             }
         });
@@ -452,14 +450,13 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCategory> selected");
 
-                if(viewModel.model.categoryIsSet())
+                if(viewModel.model.isCategorySet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.category)));
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CATEGORY,
-                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Category.class)));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_CATEGORY, App.content.getContentOfType(Category.class));
                 }
             }
         });
@@ -488,14 +485,13 @@ public class CreateAttractionActivity extends BaseActivity
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickManufacturer> selected");
 
-                if(viewModel.model.manufacturerIsSet())
+                if(viewModel.model.isManufacturerSet())
                 {
                     Toaster.makeShortToast(CreateAttractionActivity.this, getString(R.string.error_property_is_tied_to_model, getString(R.string.manufacturer)));
                 }
                 else
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MANUFACTURER,
-                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Manufacturer.class)));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MANUFACTURER, App.content.getContentOfType(Manufacturer.class));
                 }
             }
         }));
@@ -522,8 +518,7 @@ public class CreateAttractionActivity extends BaseActivity
                 @Override
                 public void onClick(View view)
                 {
-                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MODEL,
-                            SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Model.class)));
+                    ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_MODEL, App.content.getContentOfType(Model.class));
                 }
             });
 
@@ -536,21 +531,21 @@ public class CreateAttractionActivity extends BaseActivity
 
             this.textViewModel.setText(model.getName());
 
-            if(model.creditTypeIsSet())
+            if(model.isCreditTypeSet())
             {
                 this.textViewCreditType.setText(model.getCreditType().getName());
                 this.textViewCreditType.setTextColor(getColor(R.color.grey));
                 this.imageViewPickCreditType.setImageDrawable(this.pickIconGrey);
             }
 
-            if(model.categoryIsSet())
+            if(model.isCategorySet())
             {
                 this.textViewCategory.setText(model.getCategory().getName());
                 this.textViewCategory.setTextColor(getColor(R.color.grey));
                 this.imageViewPickCategory.setImageDrawable(this.pickIconGrey);
             }
 
-            if(model.manufacturerIsSet())
+            if(model.isManufacturerSet())
             {
                 this.textViewManufacturer.setText(model.getManufacturer().getName());
                 this.textViewManufacturer.setTextColor(getColor(R.color.grey));
@@ -570,8 +565,7 @@ public class CreateAttractionActivity extends BaseActivity
             public void onClick(View v)
             {
                 Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickStatus> selected");
-                ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_STATUS,
-                        SortTool.sortDefaultPropertyToTopAccordingToPreferences(App.content.getContentOfType(Status.class)));
+                ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_STATUS, App.content.getContentOfType(Status.class));
             }
         });
 

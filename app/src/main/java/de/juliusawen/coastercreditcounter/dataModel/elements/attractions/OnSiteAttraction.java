@@ -87,19 +87,19 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getModel().creditTypeIsSet()
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.getModel().isCreditTypeSet()
                     ? JSONObject.NULL
                     : this.creditType != null
                             ? this.creditType.getUuid()
                             : CreditType.getDefault().getUuid());
 
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getModel().categoryIsSet()
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.getModel().isCategorySet()
                     ? JSONObject.NULL
                     : this.category != null
                             ? this.category.getUuid()
                             : Category.getDefault().getUuid());
 
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getModel().manufacturerIsSet()
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.getModel().isManufacturerSet()
                     ? JSONObject.NULL
                     : this.manufacturer != null
                             ? this.manufacturer.getUuid()

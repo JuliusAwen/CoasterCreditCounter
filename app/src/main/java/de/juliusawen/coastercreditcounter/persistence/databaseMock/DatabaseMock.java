@@ -354,7 +354,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         nostalgiekarusell.setModel(models.Carousel);
         heidePark.addChildAndSetParent(nostalgiekarusell);
 
-
+        this.setDefaults(heidePark);
 
         // 2018
         LinkedHashMap<OnSiteAttraction, Integer> rides12102018 = new LinkedHashMap<>();
@@ -1663,6 +1663,37 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides02102019.put(spaceGun, 1);
         rides02102019.put(monsterAttack, 1);
         energylandia.addChildAndSetParent(this.createVisit(2, 10, 2019, rides02102019));
+    }
+
+    private void setDefaults(Park park)
+    {
+        for(OnSiteAttraction attraction : park.getChildrenAsType(OnSiteAttraction.class))
+        {
+            if(!attraction.getModel().isCreditTypeSet() && attraction.getCreditType().isDefault())
+            {
+                attraction.setCreditType(CreditType.getDefault());
+            }
+
+            if(!attraction.getModel().isCategorySet() && attraction.getCategory().isDefault())
+            {
+                attraction.setCategory(Category.getDefault());
+            }
+
+            if(!attraction.getModel().isManufacturerSet() && attraction.getManufacturer().isDefault())
+            {
+                attraction.setManufacturer(Manufacturer.getDefault());
+            }
+
+            if(attraction.getModel().isDefault())
+            {
+                attraction.setModel(Model.getDefault());
+            }
+
+            if(attraction.getStatus().isDefault())
+            {
+                attraction.setStatus(Status.getDefault());
+            }
+        }
     }
 
     private Visit createVisit(int day, int month, int year, LinkedHashMap<OnSiteAttraction, Integer> rides)

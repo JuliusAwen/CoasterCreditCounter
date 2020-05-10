@@ -151,23 +151,17 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     case MODEL:
                     {
                         this.viewModel.contentRecyclerViewAdapter
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+
                         break;
                     }
                 }
-
-                if(this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL))
-                {
-                    this.viewModel.contentRecyclerViewAdapter
-                            .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                            .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                }
-
-                this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
             }
+
+            this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
         }
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
@@ -238,8 +232,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
-            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
-            case ASSIGN_MODELS_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
@@ -305,35 +299,48 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 .setVisible(OptionsItem.SORT_MODELS, false)
                 .setVisible(OptionsItem.SORT_STATUSES, false);
 
+        int propertyCount;
+        boolean sortEnabled;
+
         switch(this.viewModel.propertyTypeToManage)
         {
             case CREDIT_TYPE:
+                propertyCount = App.content.getContentOfType(CreditType.class).size();
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_CREDIT_TYPES, App.content.getContentOfType(CreditType.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_CREDIT_TYPES, sortEnabled)
                         .setVisible(OptionsItem.SORT_CREDIT_TYPES, true);
                 break;
 
             case CATEGORY:
+                propertyCount = App.content.getContentOfType(Category.class).size();
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_CATEGORIES, App.content.getContentOfType(Category.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_CATEGORIES, sortEnabled)
                         .setVisible(OptionsItem.SORT_CATEGORIES, true);
                 break;
 
             case MANUFACTURER:
+                propertyCount = App.content.getContentOfType(Manufacturer.class).size();
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_MANUFACTURERS, sortEnabled)
                         .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
                 break;
 
             case MODEL:
+                propertyCount = App.content.getContentOfType(Model.class).size();
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_MODELS, App.content.getContentOfType(Model.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_MODELS, sortEnabled)
                         .setVisible(OptionsItem.SORT_MODELS, true);
                 break;
 
             case STATUS:
+                propertyCount = App.content.getContentOfType(Status.class).size();
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
                 this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_STATUSES, App.content.getContentOfType(Status.class).size() > 1)
+                        .setEnabled(OptionsItem.SORT_STATUSES, sortEnabled)
                         .setVisible(OptionsItem.SORT_STATUSES, true);
                 break;
         }
@@ -507,73 +514,100 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(OnSiteAttraction.class));
                 List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-                for(IAttraction attraction : possibleAttractionsToAssignTo)
+
+                switch(viewModel.propertyTypeToManage)
                 {
-                    switch(viewModel.propertyTypeToManage)
+                    case CREDIT_TYPE:
                     {
-                        case CREDIT_TYPE:
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG,
                                         String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                        attraction, viewModel.longClickedElement));
+                                                attraction, viewModel.longClickedElement));
+
                                 elementsToAssignTo.remove(attraction);
                             }
-                            break;
                         }
 
-                        case CATEGORY:
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS, elementsToAssignTo);
+                        break;
+                    }
+
+                    case CATEGORY:
+                    {
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG,
                                         String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                        attraction, viewModel.longClickedElement));
+                                                attraction, viewModel.longClickedElement));
+
                                 elementsToAssignTo.remove(attraction);
                             }
-                            break;
                         }
 
-                        case MANUFACTURER:
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS, elementsToAssignTo);
+                        break;
+                    }
+
+                    case MANUFACTURER:
+                    {
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG,
                                         String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                        attraction, viewModel.longClickedElement));
+                                                attraction, viewModel.longClickedElement));
+
                                 elementsToAssignTo.remove(attraction);
                             }
-                            break;
                         }
 
-                        case MODEL:
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS, elementsToAssignTo);
+                        break;
+                    }
+
+                    case MODEL:
+                    {
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getModel().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG,
                                         String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                        attraction, viewModel.longClickedElement));
+                                                attraction, viewModel.longClickedElement));
+
                                 elementsToAssignTo.remove(attraction);
                             }
-                            break;
                         }
 
-                        case STATUS:
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS, elementsToAssignTo);
+                        break;
+                    }
+
+                    case STATUS:
+                    {
+                        for(IAttraction attraction : possibleAttractionsToAssignTo)
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
                                 Log.v(Constants.LOG_TAG,
                                         String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                        attraction, viewModel.longClickedElement));
+                                                attraction, viewModel.longClickedElement));
+
                                 elementsToAssignTo.remove(attraction);
                             }
-                            break;
                         }
+
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS, elementsToAssignTo);
+                        break;
                     }
                 }
 
-                ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS, elementsToAssignTo);
                 break;
             }
 

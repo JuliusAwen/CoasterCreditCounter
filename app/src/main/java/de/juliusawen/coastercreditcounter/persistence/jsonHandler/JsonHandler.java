@@ -576,17 +576,17 @@ public class JsonHandler implements IDatabaseWrapper
 
             Model model = this.getModelFromUuid(temporaryJsonElement.modelUuid, content);
 
-            if(!model.creditTypeIsSet())
+            if(!model.isCreditTypeSet())
             {
                 element.setCreditType(this.getCreditTypeFromUuid(temporaryJsonElement.creditTypeUuid, content));
             }
 
-            if(!model.categoryIsSet())
+            if(!model.isCategorySet())
             {
                 element.setCategory(this.getCategoryFromUuid(temporaryJsonElement.categoryUuid, content));
             }
 
-            if(!model.manufacturerIsSet())
+            if(!model.isManufacturerSet())
             {
                 element.setManufacturer(this.getManufacturerFromUuid(temporaryJsonElement.manufacturerUuid, content));
             }

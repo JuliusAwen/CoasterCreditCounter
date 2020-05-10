@@ -12,5 +12,8 @@ public class SortElementsActivityViewModel extends ViewModel
 {
     public List<IElement> elementsToSort;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public IElement selectedElement;
+    public IElement defaultProperty;
+
     public OptionsMenuAgent optionsMenuAgent;
 }

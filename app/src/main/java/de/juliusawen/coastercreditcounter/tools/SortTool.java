@@ -62,27 +62,7 @@ public abstract class SortTool
                             @Override
                             public int compare(IAttraction attraction1, IAttraction attraction2)
                             {
-                                IElement parent1 = attraction1.getParent();
-                                IElement parent2 = attraction2.getParent();
-
-                                // sort Blueprints to bottom of list
-                                if(parent1 == null && parent2 == null)
-                                {
-                                    return 0;
-                                }
-                                else if(parent1 == null)
-                                {
-                                    return 1;
-                                }
-                                else if(parent2 == null)
-                                {
-                                    return -1;
-                                }
-                                else
-                                {
-                                    return parent1.getName().compareToIgnoreCase(parent2.getName());
-                                }
-
+                                return attraction1.getParent().getName().compareToIgnoreCase(attraction2.getParent().getName());
                             }
                         });
                     }
@@ -93,26 +73,7 @@ public abstract class SortTool
                             @Override
                             public int compare(IAttraction attraction1, IAttraction attraction2)
                             {
-                                IElement parent1 = attraction1.getParent();
-                                IElement parent2 = attraction2.getParent();
-
-                                // sort Blueprints to top of list
-                                if(parent1 == null && parent2 == null)
-                                {
-                                    return 0;
-                                }
-                                else if(parent2 == null)
-                                {
-                                    return 1;
-                                }
-                                else if(parent1 == null)
-                                {
-                                    return -1;
-                                }
-                                else
-                                {
-                                    return parent2.getName().compareToIgnoreCase(parent1.getName());
-                                }
+                                return attraction2.getParent().getName().compareToIgnoreCase(attraction1.getParent().getName());
                             }
                         });
                     }
@@ -224,7 +185,7 @@ public abstract class SortTool
     {
         List<IElement> sortedProperties = new ArrayList<>(properties);
 
-        if(App.preferences.sortDefaultPropertiesToTop())
+        if(App.preferences.defaultPropertiesAlwaysAtTop())
         {
             IElement defaultProperty = null;
 

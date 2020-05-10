@@ -523,7 +523,13 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_category_to);
                 break;
 
-            case ASSIGN_MANUFACTURERS_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+                intent = new Intent(context, PickElementsActivity.class);
+                toolbarTitle = context.getString(R.string.title_pick_attractions);
+                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_model_to);
+                break;
+
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
                 intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_manufacturer_to);

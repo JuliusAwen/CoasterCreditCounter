@@ -596,6 +596,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         HashMap<String, Integer> typefacesByDetailSubString = new HashMap<>();
         HashMap<DetailType, String> detailSubStringsByDetailType = new HashMap<>();
+        IElement parent = item.getParent();
 
         for(DetailType detailType : detailTypes)
         {
@@ -603,8 +604,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             {
                 case LOCATION:
                 {
-                    IElement parent = item.getParent();
-                    if(parent != null && parent.isLocation())
+                    if(parent != null && (parent.isLocation() || parent.isPark()))
                     {
                         String locationDetail = parent.getName();
                         detailSubStringsByDetailType.put(DetailType.LOCATION, locationDetail);
@@ -620,7 +620,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     if(item.hasCreditType())
                     {
                         CreditType creditType = ((IHasCreditType)item).getCreditType();
-                        if(creditType != null)
+                        if(creditType != null && !creditType.isDefault())
                         {
                             String creditTypeDetail = creditType.getName();
                             detailSubStringsByDetailType.put(DetailType.CREDIT_TYPE, creditTypeDetail);
@@ -637,7 +637,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     if(item.hasCategory())
                     {
                         Category category = ((IHasCategory) item).getCategory();
-                        if(category != null && category.isDefault())
+                        if(category != null && !category.isDefault())
                         {
                             String categoryDetail = category.getName();
                             detailSubStringsByDetailType.put(DetailType.CATEGORY, categoryDetail);
@@ -1291,6 +1291,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 selectedItems.add(item);
             }
         }
+
         return selectedItems;
     }
 
@@ -1300,6 +1301,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             return this.selectedItemsInOrderOfSelection.get(0);
         }
+
         return null;
     }
 

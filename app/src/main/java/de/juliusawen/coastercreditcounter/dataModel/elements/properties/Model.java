@@ -92,7 +92,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
         Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel.getFullName()));
     }
 
-    public boolean creditTypeIsSet()
+    public boolean isCreditTypeSet()
     {
         return this.getCreditType() != null;
     }
@@ -113,7 +113,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
         }
     }
 
-    public boolean categoryIsSet()
+    public boolean isCategorySet()
     {
         return this.getCategory() != null;
     }
@@ -134,7 +134,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
         }
     }
 
-    public boolean manufacturerIsSet()
+    public boolean isManufacturerSet()
     {
         return this.manufacturer != null;
     }
@@ -166,9 +166,9 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
 
             jsonObject.put(Constants.JSON_STRING_IS_DEFAULT, this.isDefault());
 
-            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.creditTypeIsSet() ? this.getCreditType().getUuid() : JSONObject.NULL);
-            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.categoryIsSet() ? this.getCategory().getUuid() : JSONObject.NULL);
-            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.manufacturerIsSet() ? this.getManufacturer().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_CREDIT_TYPE, this.isCreditTypeSet() ? this.getCreditType().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_CATEGORY, this.isCategorySet() ? this.getCategory().getUuid() : JSONObject.NULL);
+            jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.isManufacturerSet() ? this.getManufacturer().getUuid() : JSONObject.NULL);
 
             Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
