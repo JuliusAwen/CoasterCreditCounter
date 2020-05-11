@@ -15,6 +15,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCate
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasModel;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -58,7 +59,6 @@ public abstract class SortTool
                 case BY_PARK:
                 {
                     List<IAttraction> sortedAttractions = ConvertTool.convertElementsToType(elements, IAttraction.class);
-
                     if(sortOrder == SortOrder.ASCENDING)
                     {
                         Collections.sort(sortedAttractions, new Comparator<IAttraction>()
@@ -83,7 +83,7 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element1.getParent().getName().compareToIgnoreCase(element2.getParent().getName());
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
                                 }
                             }
                         });
@@ -112,7 +112,7 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element2.getParent().getName().compareToIgnoreCase(element1.getParent().getName());
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
                                 }
                             }
                         });
@@ -123,11 +123,10 @@ public abstract class SortTool
 
                 case BY_CREDIT_TYPE:
                 {
-                    List<IHasCreditType> sortedAttractions = ConvertTool.convertElementsToType(elements, IHasCreditType.class);
-
+                    List<IHasCreditType> sortedElementsWithCreditType = ConvertTool.convertElementsToType(elements, IHasCreditType.class);
                     if(sortOrder == SortOrder.ASCENDING)
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasCreditType>()
+                        Collections.sort(sortedElementsWithCreditType, new Comparator<IHasCreditType>()
                         {
                             @Override
                             public int compare(IHasCreditType element1, IHasCreditType element2)
@@ -149,14 +148,14 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element1.getCreditType().getName().compareToIgnoreCase(element2.getCreditType().getName());
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
                                 }
                             }
                         });
                     }
                     else
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasCreditType>()
+                        Collections.sort(sortedElementsWithCreditType, new Comparator<IHasCreditType>()
                         {
                             @Override
                             public int compare(IHasCreditType element1, IHasCreditType element2)
@@ -178,22 +177,21 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element2.getCreditType().getName().compareToIgnoreCase(element1.getCreditType().getName());
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
                                 }
                             }
                         });
                     }
-                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    sortedElements = ConvertTool.convertElementsToType(sortedElementsWithCreditType, IElement.class);
                     break;
                 }
 
                 case BY_CATEGORY:
                 {
-                    List<IHasCategory> sortedAttractions = ConvertTool.convertElementsToType(elements, IHasCategory.class);
-
+                    List<IHasCategory> sortedElementsWithCategory = ConvertTool.convertElementsToType(elements, IHasCategory.class);
                     if(sortOrder == SortOrder.ASCENDING)
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasCategory>()
+                        Collections.sort(sortedElementsWithCategory, new Comparator<IHasCategory>()
                         {
                             @Override
                             public int compare(IHasCategory element1, IHasCategory element2)
@@ -215,14 +213,14 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element1.getCategory().getName().compareToIgnoreCase(element2.getCategory().getName());
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
                                 }
                             }
                         });
                     }
                     else
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasCategory>()
+                        Collections.sort(sortedElementsWithCategory, new Comparator<IHasCategory>()
                         {
                             @Override
                             public int compare(IHasCategory element1, IHasCategory element2)
@@ -244,22 +242,21 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element2.getCategory().getName().compareToIgnoreCase(element1.getCategory().getName());
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
                                 }
                             }
                         });
                     }
-                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    sortedElements = ConvertTool.convertElementsToType(sortedElementsWithCategory, IElement.class);
                     break;
                 }
 
                 case BY_MANUFACTURER:
                 {
-                    List<IHasManufacturer> sortedAttractions = ConvertTool.convertElementsToType(elements, IHasManufacturer.class);
-
+                    List<IHasManufacturer> sortedElementsWithManufacturer = ConvertTool.convertElementsToType(elements, IHasManufacturer.class);
                     if(sortOrder == SortOrder.ASCENDING)
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasManufacturer>()
+                        Collections.sort(sortedElementsWithManufacturer, new Comparator<IHasManufacturer>()
                         {
                             @Override
                             public int compare(IHasManufacturer element1, IHasManufacturer element2)
@@ -281,14 +278,14 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element1.getManufacturer().getName().compareToIgnoreCase(element2.getManufacturer().getName());
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
                                 }
                             }
                         });
                     }
                     else
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasManufacturer>()
+                        Collections.sort(sortedElementsWithManufacturer, new Comparator<IHasManufacturer>()
                         {
                             @Override
                             public int compare(IHasManufacturer element1, IHasManufacturer element2)
@@ -310,22 +307,21 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element2.getManufacturer().getName().compareToIgnoreCase(element1.getManufacturer().getName());
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
                                 }
                             }
                         });
                     }
-                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    sortedElements = ConvertTool.convertElementsToType(sortedElementsWithManufacturer, IElement.class);
                     break;
                 }
 
                 case BY_MODEL:
                 {
-                    List<IHasModel> sortedAttractions = ConvertTool.convertElementsToType(elements, IHasModel.class);
-
+                    List<IHasModel> sortedElementsWithModel = ConvertTool.convertElementsToType(elements, IHasModel.class);
                     if(sortOrder == SortOrder.ASCENDING)
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasModel>()
+                        Collections.sort(sortedElementsWithModel, new Comparator<IHasModel>()
                         {
                             @Override
                             public int compare(IHasModel element1, IHasModel element2)
@@ -347,14 +343,14 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element1.getModel().getName().compareToIgnoreCase(element2.getModel().getName());
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
                                 }
                             }
                         });
                     }
                     else
                     {
-                        Collections.sort(sortedAttractions, new Comparator<IHasModel>()
+                        Collections.sort(sortedElementsWithModel, new Comparator<IHasModel>()
                         {
                             @Override
                             public int compare(IHasModel element1, IHasModel element2)
@@ -376,12 +372,77 @@ public abstract class SortTool
                                 }
                                 else
                                 {
-                                    return element2.getModel().getName().compareToIgnoreCase(element1.getModel().getName());
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
                                 }
                             }
                         });
                     }
-                    sortedElements = ConvertTool.convertElementsToType(sortedAttractions, IElement.class);
+                    sortedElements = ConvertTool.convertElementsToType(sortedElementsWithModel, IElement.class);
+                    break;
+                }
+
+                case BY_STATUS:
+                {
+                    List<IHasStatus> sortedElementsWithStatus = ConvertTool.convertElementsToType(elements, IHasStatus.class);
+                    if(sortOrder == SortOrder.ASCENDING)
+                    {
+                        Collections.sort(sortedElementsWithStatus, new Comparator<IHasStatus>()
+                        {
+                            @Override
+                            public int compare(IHasStatus element1, IHasStatus element2)
+                            {
+                                IElement compareElement1 = element1.getStatus();
+                                IElement compareElement2 = element2.getStatus();
+
+                                if(compareElement1 == null && compareElement2 == null)
+                                {
+                                    return 0;
+                                }
+                                else if(compareElement1 == null)
+                                {
+                                    return 1;
+                                }
+                                else if(compareElement2 == null)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return compareElement1.getName().compareToIgnoreCase(compareElement2.getName());
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Collections.sort(sortedElementsWithStatus, new Comparator<IHasStatus>()
+                        {
+                            @Override
+                            public int compare(IHasStatus element1, IHasStatus element2)
+                            {
+                                IElement compareElement1 = element1.getStatus();
+                                IElement compareElement2 = element2.getStatus();
+
+                                if(compareElement1 == null && compareElement2 == null)
+                                {
+                                    return 0;
+                                }
+                                else if(compareElement2 == null)
+                                {
+                                    return 1;
+                                }
+                                else if(compareElement1 == null)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return compareElement2.getName().compareToIgnoreCase(compareElement1.getName());
+                                }
+                            }
+                        });
+                    }
+                    sortedElements = ConvertTool.convertElementsToType(sortedElementsWithStatus, IElement.class);
                     break;
                 }
             }

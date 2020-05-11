@@ -169,6 +169,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.items = this.initializeItems(groupedItems, 0);
         notifyDataSetChanged();
+        this.scrollToItem(items.get(0));
 
         return this;
     }

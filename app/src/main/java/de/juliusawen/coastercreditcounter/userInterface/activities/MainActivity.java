@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.tools.ExceptionHandler;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 
 public class MainActivity extends AppCompatActivity
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this, MainActivity.class));
         ActivityDistributor.startActivityViaClass(this, NavigationHubActivity.class);
         finish();
     }

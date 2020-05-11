@@ -6,5 +6,6 @@ public enum SortType
     BY_CREDIT_TYPE,
     BY_CATEGORY,
     BY_MANUFACTURER,
-    BY_MODEL
+    BY_MODEL,
+    BY_STATUS
 }

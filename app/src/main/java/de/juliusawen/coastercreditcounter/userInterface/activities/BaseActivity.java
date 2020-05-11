@@ -175,7 +175,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(this.viewModel.isAppProperlyInitialized)
         {
             Intent intent = getIntent();
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
+            Log.i(Constants.LOG_TAG,
+                    String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared",
+                            StringTool.parseActivityName(intent.getComponent().getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //this clears the stacktrace
             ActivityDistributor.startActivityViaIntent(this, intent);

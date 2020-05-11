@@ -47,9 +47,13 @@ public enum OptionsItem
     SORT_BY_MODEL_ASCENDING(R.string.menu_item_sort_ascending, -1),
     SORT_BY_MODEL_DESCENDING(R.string.menu_item_sort_descending, -1),
 
+    SORT_BY_STATUS(R.string.menu_item_sort_by_status, -1),
+    SORT_BY_STATUS_ASCENDING(R.string.menu_item_sort_ascending, -1),
+    SORT_BY_STATUS_DESCENDING(R.string.menu_item_sort_descending, -1),
+
 
     GROUP_BY(R.string.menu_item_group_by, -1),
-    GROUP_BY_DO_NOT_GROUP(R.string.menu_item_group_by_do_not_group, -1),
+    GROUP_BY_NONE(R.string.menu_item_group_by_none, -1),
     GROUP_BY_PARK(R.string.menu_item_group_by_park, -1),
     GROUP_BY_CREDIT_TYPE(R.string.menu_item_group_by_credit_type, -1),
     GROUP_BY_CATEGORY(R.string.menu_item_group_by_category, -1),

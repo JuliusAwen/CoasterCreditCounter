@@ -21,16 +21,25 @@ public abstract class ConvertTool
 
             for(IElement element : elementsToConvert)
             {
-                try
+                if(type.isInstance(element))
                 {
                     convertedElements.add(type.cast(element));
                 }
-                catch(ClassCastException e)
+                else
                 {
-                    String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
-                    Log.v(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: " + errorMessage);
-                    throw new IllegalStateException(errorMessage + "\n" + e);
+                    Log.e(Constants.LOG_TAG, String.format("ConvertTool.convertElementsToType:: %s is not of type <%s>", element, type.getSimpleName()));
                 }
+
+//                try
+//                {
+//                    convertedElements.add(type.cast(element));
+//                }
+//                catch(ClassCastException e)
+//                {
+//                    String errorMessage = String.format("%s is not of type <%s>", element, type.getSimpleName());
+//                    Log.e(Constants.LOG_TAG, "ConvertTool.convertElementsToType:: " + errorMessage);
+//                    throw new IllegalStateException(errorMessage + "\n" + e);
+//                }
             }
         }
         else
