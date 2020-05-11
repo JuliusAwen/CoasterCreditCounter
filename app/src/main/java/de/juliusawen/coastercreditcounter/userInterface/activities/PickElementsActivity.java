@@ -26,7 +26,6 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
-import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
@@ -190,16 +189,17 @@ public class PickElementsActivity extends BaseActivity
 
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: accepted - return code <OK>");
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: accepted - returning <RESULT_OK>");
                     returnResult(RESULT_OK);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: no element selected");
-                    Toaster.makeShortToast(PickElementsActivity.this, getString(R.string.error_no_entry_selected));
+                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: no element selected - returning <RESULT_CANCELED>");
+                    returnResult(RESULT_CANCELED);
                 }
             }
         });
+
         super.setFloatingActionButtonVisibility(true);
     }
 
