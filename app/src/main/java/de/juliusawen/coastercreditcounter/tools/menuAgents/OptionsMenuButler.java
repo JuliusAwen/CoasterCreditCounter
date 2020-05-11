@@ -85,9 +85,7 @@ public class OptionsMenuButler
                         .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
                         .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
                         .addToGroup(OptionsItem.GROUP_BY_MODEL, OptionsItem.GROUP_BY)
-                        .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY)
-                        .add(OptionsItem.EXPAND_ALL)
-                        .add(OptionsItem.COLLAPSE_ALL);
+                        .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
                 break;
             }
 
@@ -105,7 +103,10 @@ public class OptionsMenuButler
             }
         }
 
-        return this.optionsMenuAgent.create(menu);
+        return this.optionsMenuAgent
+                .add(OptionsItem.EXPAND_ALL)
+                .add(OptionsItem.COLLAPSE_ALL)
+                .create(menu);
     }
 
     public Menu prepareOptionsMenu(Menu menu)
@@ -189,9 +190,7 @@ public class OptionsMenuButler
                         .setVisible(OptionsItem.GROUP_BY_MODEL, groupByModelVisible)
                         .setEnabled(OptionsItem.GROUP_BY_MODEL, groupByModelEnabled)
                         .setVisible(OptionsItem.GROUP_BY_STATUS, groupByStatusVisible)
-                        .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled)
-                        .setVisible(OptionsItem.EXPAND_ALL, expandAllVisible)
-                        .setVisible(OptionsItem.COLLAPSE_ALL, collapseVisible);
+                        .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled);
                 break;
             }
 
@@ -200,7 +199,10 @@ public class OptionsMenuButler
                 break;
         }
 
-        return this.optionsMenuAgent.prepare(menu);
+        return this.optionsMenuAgent
+                .setVisible(OptionsItem.EXPAND_ALL, expandAllVisible)
+                .setVisible(OptionsItem.COLLAPSE_ALL, collapseVisible)
+                .prepare(menu);
     }
 
     private boolean anyElementHasChildren()

@@ -200,7 +200,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     this.viewModel.requestCode.equals(RequestCode.PICK_MODEL) ? this.viewModel.propertiesToSelectFrom : elements,
                     this);
 
-            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.CATEGORY);
+            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.MANUFACTURER);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
