@@ -80,6 +80,7 @@ public class OptionsMenuButler
                         .addToGroup(OptionsItem.SORT_BY_MODEL_ASCENDING, OptionsItem.SORT_BY_MODEL)
                         .addToGroup(OptionsItem.SORT_BY_MODEL_DESCENDING, OptionsItem.SORT_BY_MODEL)
                         .add(OptionsItem.GROUP_BY)
+                        .addToGroup(OptionsItem.GROUP_BY_DO_NOT_GROUP, OptionsItem.GROUP_BY)
                         .addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY)
                         .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
                         .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
@@ -125,6 +126,9 @@ public class OptionsMenuButler
 
         boolean sortByEnabled = sortByParkEnabled || sortByCreditTypeEnabled || sortByCategoryEnabled || sortByManufacturerEnabled || sortByModelEnabled;
 
+
+        boolean groupByDoNotGroupEnabled = this.contentRecyclerViewAdapter.getGroupType() != GroupType.NONE;
+
         boolean groupByParkVisible = this.requestCode != RequestCode.PICK_ATTRACTIONS
                 && this.requestCode != RequestCode.PICK_MODEL
                 && this.requestCode != RequestCode.MANAGE_MODELS;
@@ -141,6 +145,7 @@ public class OptionsMenuButler
         boolean groupByStatusEnabled = this.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS;
 
         boolean groupByEnabled = groupByParkEnabled || groupByCreditTypeEnabled ||groupByCategoryEnabled || groupByManufacturerEnabled || groupByModelEnabled || groupByStatusEnabled;
+
 
         boolean expandAllVisible = (((this.requestCode == RequestCode.PICK_ATTRACTIONS
                 || this.requestCode == RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS
@@ -182,6 +187,7 @@ public class OptionsMenuButler
                         .setVisible(OptionsItem.SORT_BY_MODEL, sortByModelVisible)
                         .setEnabled(OptionsItem.SORT_BY_MODEL, sortByModelEnabled)
                         .setEnabled(OptionsItem.GROUP_BY, groupByEnabled)
+                        .setEnabled(OptionsItem.GROUP_BY_DO_NOT_GROUP, groupByDoNotGroupEnabled)
                         .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
                         .setEnabled(OptionsItem.GROUP_BY_PARK, groupByParkEnabled)
                         .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled)
@@ -291,6 +297,11 @@ public class OptionsMenuButler
                 this.contentRecyclerViewAdapter.setItems(this.elements);
                 return true;
 
+            case GROUP_BY_DO_NOT_GROUP:
+                this.setDetailModesAndGroupElements(GroupType.NONE);
+                this.master.invalidateOptionsMenu();
+                return true;
+
             case GROUP_BY_PARK:
                 this.setDetailModesAndGroupElements(GroupType.PARK);
                 this.master.invalidateOptionsMenu();
@@ -351,6 +362,16 @@ public class OptionsMenuButler
             {
                 switch(groupType)
                 {
+                    case NONE:
+                        this.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .groupItems(GroupType.NONE);
+                        break;
+
                     case CREDIT_TYPE:
                         this.contentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
@@ -407,6 +428,14 @@ public class OptionsMenuButler
             {
                 switch(groupType)
                 {
+                    case NONE:
+                        this.contentRecyclerViewAdapter
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .groupItems(GroupType.NONE);
+                        break;
+
                     case CREDIT_TYPE:
                         this.contentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
