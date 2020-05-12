@@ -122,7 +122,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
                 toolbarTitle = context.getString(R.string.credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.credit_type);
+                helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.credit_types));
                 helpText = context.getString(R.string.help_text_manage_credit_types);
                 break;
 
@@ -131,7 +131,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
                 toolbarTitle = context.getString(R.string.category);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.category);
+                helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.categories));
                 helpText = context.getString(R.string.help_text_manage_categories);
                 break;
 
@@ -140,7 +140,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
                 toolbarTitle = context.getString(R.string.manufacturer);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.manufacturer);
+                helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.manufacturers));
                 helpText = context.getString(R.string.help_text_manage_manufacturers);
                 break;
 
@@ -149,7 +149,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MODEL.ordinal());
                 toolbarTitle = context.getString(R.string.model);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.model);
+                helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.models));
                 helpText = context.getString(R.string.help_text_manage_models);
                 break;
 
@@ -158,7 +158,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
                 toolbarTitle = context.getString(R.string.status);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
-                helpTitle = context.getString(R.string.status);
+                helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.statuses));
                 helpText = context.getString(R.string.help_text_manage_statuses);
                 break;
         }

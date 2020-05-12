@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -38,6 +37,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.GroupButler;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
@@ -46,8 +46,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
@@ -74,11 +72,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
-        }
-
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
         }
 
         if(this.viewModel.propertyTypeToManage == null)
@@ -166,22 +159,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
-
-        if(this.viewModel.optionsMenuButler == null)
-        {
-            this.viewModel.optionsMenuButler = new OptionsMenuButler(
-                    this.viewModel.optionsMenuAgent,
-                    this.viewModel.contentRecyclerViewAdapter,
-                    this.viewModel.requestCode,
-                    this.viewModel.elements,
-                    this);
-        }
-
-        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
-        {
-            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.MANUFACTURER);
-        }
-
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
@@ -189,6 +166,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
+
+        super.getOptionsMenuButler().initialize(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, this.viewModel.elements);
+
+        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
+        {
+            GroupButler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
+        }
     }
 
     @Override
@@ -286,112 +270,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     }
 
     @Override
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        if(this.viewModel.optionsMenuButler != null)
-        {
-            return this.viewModel.optionsMenuButler.createOptionsMenu(menu);
-        }
-
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.SORT_CREDIT_TYPES)
-                .add(OptionsItem.SORT_CATEGORIES)
-                .add(OptionsItem.SORT_MANUFACTURERS)
-                .add(OptionsItem.SORT_MODELS)
-                .add(OptionsItem.SORT_STATUSES)
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-                .create(menu);
-    }
-
-    @Override
-    protected  Menu prepareOptionsMenu(Menu menu)
-    {
-        if(this.viewModel.optionsMenuButler != null)
-        {
-            return viewModel.optionsMenuButler.prepareOptionsMenu(menu);
-        }
-
-        this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.SORT_CREDIT_TYPES, false)
-                .setVisible(OptionsItem.SORT_CATEGORIES, false)
-                .setVisible(OptionsItem.SORT_MANUFACTURERS, false)
-                .setVisible(OptionsItem.SORT_MODELS, false)
-                .setVisible(OptionsItem.SORT_STATUSES, false);
-
-        int propertyCount;
-        boolean sortEnabled;
-
-        switch(this.viewModel.propertyTypeToManage)
-        {
-            case CREDIT_TYPE:
-                propertyCount = App.content.getContentOfType(CreditType.class).size();
-                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_CREDIT_TYPES, sortEnabled)
-                        .setVisible(OptionsItem.SORT_CREDIT_TYPES, true);
-                break;
-
-            case CATEGORY:
-                propertyCount = App.content.getContentOfType(Category.class).size();
-                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_CATEGORIES, sortEnabled)
-                        .setVisible(OptionsItem.SORT_CATEGORIES, true);
-                break;
-
-            case MANUFACTURER:
-                propertyCount = App.content.getContentOfType(Manufacturer.class).size();
-                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_MANUFACTURERS, sortEnabled)
-                        .setVisible(OptionsItem.SORT_MANUFACTURERS, true);
-                break;
-
-            case MODEL:
-                propertyCount = App.content.getContentOfType(Model.class).size();
-                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_MODELS, sortEnabled)
-                        .setVisible(OptionsItem.SORT_MODELS, true);
-                break;
-
-            case STATUS:
-                propertyCount = App.content.getContentOfType(Status.class).size();
-                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? propertyCount > 2 : propertyCount > 1;
-                this.viewModel.optionsMenuAgent
-                        .setEnabled(OptionsItem.SORT_STATUSES, sortEnabled)
-                        .setVisible(OptionsItem.SORT_STATUSES, true);
-                break;
-        }
-
-        boolean anyPropertyHasChildren = this.anyPropertyHasChildren();
-        return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, !this.viewModel.isSelectionMode && anyPropertyHasChildren && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, !this.viewModel.isSelectionMode && anyPropertyHasChildren && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .prepare(menu);
-    }
-
-    private boolean anyPropertyHasChildren()
-    {
-        for(IProperty property : App.content.getContentAsType(this.getPropertyType()))
-        {
-            if(property.hasChildren())
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(this.viewModel.optionsMenuButler.handleOptionsItemSelected(item))
-        {
-            return true;
-        }
-
         if(item == OptionsItem.SORT)
         {
             switch(this.viewModel.requestCode)
@@ -906,9 +786,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
 
             this.viewModel.contentRecyclerViewAdapter.setItems(elements);
-
-            invalidateOptionsMenu();
-            this.viewModel.optionsMenuButler.setElements(elements);
+            super.getOptionsMenuButler().setElements(elements);
         }
         else
         {

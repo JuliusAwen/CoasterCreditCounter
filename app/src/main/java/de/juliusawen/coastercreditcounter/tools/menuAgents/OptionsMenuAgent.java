@@ -24,8 +24,10 @@ public class OptionsMenuAgent
     private final Map<OptionsItem, Boolean> setEnabledByItem = new HashMap<>();
     private final Map<OptionsItem, Boolean> setVisibleByItem = new HashMap<>();
 
-    public OptionsMenuAgent() {}
-
+    public OptionsItem getOptionsItem(MenuItem menuItem)
+    {
+         return OptionsItem.getValue(menuItem.getItemId());
+    }
 
     public OptionsMenuAgent add(OptionsItem item)
     {
@@ -43,7 +45,7 @@ public class OptionsMenuAgent
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
+            Log.e(Constants.LOG_TAG, String.format("OptionsMenuAgent.addToGroup:: Group [#%d - %s] for Item [#%d - %s] already added", group.ordinal(), group, item.ordinal(), item));
         }
 
         return this;
@@ -208,7 +210,7 @@ public class OptionsMenuAgent
         return !this.groupByItem.containsKey(item);
     }
 
-
+    @Deprecated
     public boolean handleOptionsItemSelected(MenuItem menuItem, IOptionsMenuAgentClient client)
     {
         OptionsItem optionsItem = OptionsItem.getValue(menuItem.getItemId());

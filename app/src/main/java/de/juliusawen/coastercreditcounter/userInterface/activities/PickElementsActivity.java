@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -25,11 +24,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteA
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.GroupButler;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
@@ -37,8 +34,8 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 public class PickElementsActivity extends BaseActivity
 {
     private PickElementsActivityViewModel viewModel;
-    private TextView textViewSelectOrDeselectAll;
 
+    private TextView textViewSelectOrDeselectAll;
     private LinearLayout linearLayoutSelectAll;
     private RadioButton radioButtonSelectOrDeselectAll;
 
@@ -49,6 +46,13 @@ public class PickElementsActivity extends BaseActivity
 
     protected void create()
     {
+        this.textViewSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
+
+        this.linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
+        this.linearLayoutSelectAll.setVisibility(View.GONE);
+
+        this.radioButtonSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
+
         this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
@@ -76,6 +80,7 @@ public class PickElementsActivity extends BaseActivity
                 {
                     this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
                 }
+
                 case PICK_ATTRACTIONS:
                 {
                     this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
@@ -118,33 +123,17 @@ public class PickElementsActivity extends BaseActivity
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-        }
-
-        if(this.viewModel.optionsMenuButler == null)
-        {
-            this.viewModel.optionsMenuButler = new OptionsMenuButler(
-                    this.viewModel.optionsMenuAgent,
-                    this.viewModel.contentRecyclerViewAdapter,
-                    this.viewModel.requestCode,
-                    this.viewModel.elementsToPickFrom,
-                    this);
-
-            if(groupByCategory)
-            {
-                this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.CATEGORY);
-            }
-        }
-
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_pick_elements));
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
-        this.linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
-        this.linearLayoutSelectAll.setVisibility(View.GONE);
+        super.getOptionsMenuButler().initialize(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, this.viewModel.elementsToPickFrom);
+
+        if(groupByCategory)
+        {
+            GroupButler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.CATEGORY);
+        }
 
         if(!this.viewModel.isSinglePick)
         {
@@ -155,24 +144,6 @@ public class PickElementsActivity extends BaseActivity
         }
 
         Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.create:: requestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
-    }
-
-    @Override
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuButler.createOptionsMenu(menu);
-    }
-
-    @Override
-    protected Menu prepareOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuButler.prepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        return this.viewModel.optionsMenuButler.handleOptionsItemSelected(item) ? true : super.handleOptionsItemSelected(item);
     }
 
     private void decorateFloatingActionButtonCheck()
@@ -208,8 +179,6 @@ public class PickElementsActivity extends BaseActivity
     {
         this.linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
-        this.textViewSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
-
         if(this.viewModel.contentRecyclerViewAdapter.isAllSelected())
         {
             this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
@@ -219,7 +188,6 @@ public class PickElementsActivity extends BaseActivity
             this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
         }
 
-        this.radioButtonSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
         this.radioButtonSelectOrDeselectAll.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -284,7 +252,6 @@ public class PickElementsActivity extends BaseActivity
                     {
                         invalidateOptionsMenu();
                     }
-
                 }
             }
 

@@ -38,6 +38,7 @@ import de.juliusawen.coastercreditcounter.tools.menuAgents.IOptionsMenuAgentClie
 import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
 
@@ -65,8 +66,17 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(App.isInitialized)
         {
             this.viewModel.isInitializingApp = false;
-
             this.toolbar = findViewById(R.id.toolbar);
+
+            if(this.viewModel.optionsMenuAgent == null)
+            {
+                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            }
+
+            if(this.viewModel.optionsMenuButler == null)
+            {
+                this.viewModel.optionsMenuButler = new OptionsMenuButler(this.viewModel.optionsMenuAgent, this);
+            }
 
             Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
             this.create();
@@ -91,16 +101,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         {
             if(!this.viewModel.activityIsCreated)
             {
-                Log.w(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME +
+                Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME +
                         String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
                 this.create();
             }
-
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
 
             if(this.viewModel.isHelpOverlayAdded)
             {
@@ -189,18 +193,23 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         }
     }
 
+    protected OptionsMenuButler getOptionsMenuButler()
+    {
+        return this.viewModel.optionsMenuButler;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
-            this.viewModel.optionsMenuAgent.add(OptionsItem.HELP).create(menu);
-            menu = this.createOptionsMenu(menu);
+            this.viewModel.optionsMenuButler.createOptionsMenu(menu);
+//            menu = this.createOptionsMenu(menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Deprecated
     protected Menu createOptionsMenu(Menu menu)
     {
         Log.v(Constants.LOG_TAG, String.format("BaseActivity.createOptionsMenu:: [%s] does not override createOptionsMenu()", this.getClass().getSimpleName()));
@@ -212,11 +221,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     {
         if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
-            menu = this.prepareOptionsMenu(menu);
+            this.viewModel.optionsMenuButler.prepareOptionsMenu(menu);
+//            menu = this.prepareOptionsMenu(menu);
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Deprecated
     protected Menu prepareOptionsMenu(Menu menu)
     {
         Log.v(Constants.LOG_TAG, String.format("BaseActivity.prepareOptionsMenu:: [%s] does not override prepareOptionsMenu()", this.getClass().getSimpleName()));
@@ -226,22 +237,22 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this);
+        return this.viewModel.optionsMenuButler.handleMenuItemSelected(item);
     }
 
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(item == OptionsItem.HELP)
-        {
-            this.showHelpOverlayFragment();
-            return true;
-        }
-        else
-        {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] unhandled", item));
-            return false;
-        }
+        return false;
+//        if(this.viewModel.optionsMenuButler.handleMenuItemSelected(item))
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] unhandled", item));
+//            return false;
+//        }
     }
 
     @Override
@@ -290,7 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         return this;
     }
 
-    private void showHelpOverlayFragment()
+    public void showHelpOverlayFragment()
     {
         if(this.helpOverlayFragment == null)
         {

@@ -320,6 +320,7 @@
 
 
     <!--GENERERIC PROPERTIES-->
+    <string name="help_title_manage_property">Manage %1$s</string>
     <string name="alert_dialog_title_set_as_default">SET AS DEFAULT</string>
     <string name="alert_dialog_message_confirm_set_as_default">Do you really want to set \'%1$s\' as default?</string>
 
