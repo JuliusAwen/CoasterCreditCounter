@@ -69,22 +69,27 @@ public final class Location extends Element implements IPersistable
 
     private void sortChildTypes()
     {
-        Log.d(Constants.LOG_TAG,  String.format("Location.sortChildTypes:: sorting %s's child types - parks to the top[%S] according to App.Preferences",
-                this, App.preferences.sortParksToTopOfLocationsChildren()));
-
-        List<IElement> sortedChildren = new LinkedList<>();
-        if(App.preferences.sortParksToTopOfLocationsChildren())
+        if((this.hasChildrenOfType(Location.class) && this.hasChildrenOfType(Park.class)))
         {
-            sortedChildren.addAll(this.getChildrenOfType(Park.class));
-            sortedChildren.addAll(this.getChildrenOfType(Location.class));
-        }
-        else
-        {
-            sortedChildren.addAll(this.getChildrenOfType(Location.class));
-            sortedChildren.addAll(this.getChildrenOfType(Park.class));
-        }
+            Log.d(Constants.LOG_TAG,
+                    String.format("Location.sortChildTypes:: sorting %s's child types - parksToTheTop[%S] according to App.Preferences",
+                            this, App.preferences.sortParksToTopOfLocationsChildren()));
 
-        this.reorderChildren(sortedChildren);
+            List<IElement> sortedChildren = new LinkedList<>();
+
+            if(App.preferences.sortParksToTopOfLocationsChildren())
+            {
+                sortedChildren.addAll(this.getChildrenOfType(Park.class));
+                sortedChildren.addAll(this.getChildrenOfType(Location.class));
+            }
+            else
+            {
+                sortedChildren.addAll(this.getChildrenOfType(Location.class));
+                sortedChildren.addAll(this.getChildrenOfType(Park.class));
+            }
+
+            this.reorderChildren(sortedChildren);
+        }
     }
 
     public JSONObject toJson() throws JSONException

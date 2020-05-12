@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
@@ -816,7 +817,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-
         return distinctRelevantChildren;
     }
 
@@ -828,8 +828,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         else if(!item.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]",
-                    item.getClass().getSimpleName()));
+            String message =
+                    String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]",
+                            item.getClass().getSimpleName());
+            Log.e(Constants.LOG_TAG, message);
+
+            if(BuildConfig.DEBUG)
+            {
+                throw new IllegalStateException(message);
+            }
+
             return this.items.get(this.items.indexOf(item.getParent()));
         }
         else
@@ -877,7 +885,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if(!this.expandedItems.contains(item))
             {
-                this.expandItem(item);
+                this.expandItem(item, true);
             }
             else
             {
@@ -902,10 +910,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 for(IElement item : itemsList)
                 {
-                    if(!this.expandedItems.contains(item))
-                    {
-                        this.expandItem(item);
-                    }
+                    this.expandItem(item, false);
                 }
             }
             while(itemsCount != this.items.size());
@@ -928,7 +933,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if(item.isGroupHeader() && item.getChildren().contains(element))
             {
-                this.expandItem(item);
+                this.expandItem(item, true);
                 break;
             }
         }
@@ -936,16 +941,15 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-
-    public ContentRecyclerViewAdapter expandItem(IElement item)
+    public ContentRecyclerViewAdapter expandItem(IElement item, boolean scrollToItem)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
-
         if(!this.expandedItems.contains(item))
         {
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
+
                 this.expandedItems.add(item);
                 notifyItemChanged(this.items.indexOf(item));
 
@@ -962,19 +966,17 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: added child %s at index [%d] - generation [%d]", child, index, generation));
                 }
 
-
-                //scroll to item above expanded item (if any)
-                index = this.items.indexOf(item);
-                if(index > 0)
+                if(scrollToItem)
                 {
-                    index--;
+                    //scroll to item above expanded item (if any)
+                    index = this.items.indexOf(item);
+                    if(index > 0)
+                    {
+                        index--;
+                    }
+                    ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
                 }
-                ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
             }
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: %s already expanded", item));
         }
 
         return this;
@@ -1017,11 +1019,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             for(IElement item : itemsList)
             {
-                if(this.expandedItems.contains(item))
-                {
-                    this.collapseItem(item, false);
-                }
+                this.collapseItem(item, false);
             }
+
             Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: all items collapsed");
         }
         else
@@ -1034,13 +1034,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void collapseItem(IElement item, boolean scrollToItem)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
-
         if(this.expandedItems.contains(item))
         {
             List<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
+                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
+
                 this.expandedItems.remove(item);
                 notifyItemChanged(items.indexOf(item));
 
@@ -1064,13 +1064,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 {
                     this.scrollToItem(item);
                 }
-
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsed item %s", item));
             }
-        }
-        else
-        {
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: %s not expanded", item));
         }
     }
 
@@ -1102,7 +1096,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 if(!expandedItems.contains(item))
                 {
-                    expandItem(item);
+                    expandItem(item, true);
                 }
                 else
                 {

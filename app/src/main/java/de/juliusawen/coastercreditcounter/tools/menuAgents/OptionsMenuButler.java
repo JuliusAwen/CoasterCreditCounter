@@ -6,6 +6,7 @@ import android.view.Menu;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
@@ -35,6 +36,8 @@ public class OptionsMenuButler
     private RequestCode requestCode;
     private List<IElement> elements;
 
+    private boolean menuCreated;
+
     // find boolean spam at the end of the class
 
     public OptionsMenuButler(
@@ -49,6 +52,364 @@ public class OptionsMenuButler
         this.requestCode = requestCode;
         this.elements = elements;
         this.master = master;
+    }
+
+    public void setElements(List<IElement> elements)
+    {
+        this.elements = elements;
+    }
+
+    private boolean addSort()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_ATTRACTIONS:
+            case PICK_CREDIT_TYPE:
+            case PICK_CATEGORY:
+            case PICK_MANUFACTURER:
+            case PICK_STATUS:
+
+            case MANAGE_CREDIT_TYPES:
+            case MANAGE_CATEGORIES:
+            case MANAGE_MANUFACTURERS:
+            case MANAGE_STATUSES:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortAscendingAndDescending()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_ATTRACTIONS:
+            case PICK_CREDIT_TYPE:
+            case PICK_CATEGORY:
+            case PICK_MANUFACTURER:
+            case PICK_STATUS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortBy()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByName()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByPark()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByCreditType()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByCategory()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByManufacturer()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByModel()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addSortByStatus()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupBy()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByNone()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByPark()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByCreditType()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByCategory()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByManufacturer()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByModel()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addGroupByStatus()
+    {
+        switch(this.requestCode)
+        {
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private boolean addExpandAndCollapseAll()
+    {
+        switch(this.requestCode)
+        {
+            case PICK_ATTRACTIONS:
+            case PICK_CREDIT_TYPE:
+            case PICK_CATEGORY:
+            case PICK_MANUFACTURER:
+            case PICK_STATUS:
+
+            case PICK_MODEL:
+            case MANAGE_MODELS:
+
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_MODEL_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case MANAGE_CREDIT_TYPES:
+            case MANAGE_CATEGORIES:
+            case MANAGE_MANUFACTURERS:
+            case MANAGE_STATUSES:
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     private void setVisibleAndEnabled()
@@ -118,6 +479,18 @@ public class OptionsMenuButler
                 expandAndCollapseAllVisible = this.anyElementHasChildren();
                 break;
             }
+
+            case MANAGE_CREDIT_TYPES:
+            case MANAGE_CATEGORIES:
+            case MANAGE_MANUFACTURERS:
+            case MANAGE_STATUSES:
+            {
+                sortVisible = true;
+                sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? this.elements.size() > 2 : this.elements.size() > 1;
+
+                expandAndCollapseAllVisible = this.anyElementHasChildren();
+                break;
+            }
         }
     }
 
@@ -134,13 +507,143 @@ public class OptionsMenuButler
         return false;
     }
 
+    public Menu createOptionsMenu(Menu menu)
+    {
+        if(!this.menuCreated)
+        {
+            if(this.addSort())
+            {
+                this.optionsMenuAgent.add(OptionsItem.SORT);
+            }
+
+            if(this.addSortAscendingAndDescending())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
+                        .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
+            }
+
+            if(this.addSortBy())
+            {
+                this.optionsMenuAgent.add(OptionsItem.SORT_BY);
+            }
+
+            if(this.addSortByName())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
+                        .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME);
+            }
+
+            if(this.addSortByPark())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_PARK, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_PARK_ASCENDING, OptionsItem.SORT_BY_PARK)
+                        .addToGroup(OptionsItem.SORT_BY_PARK_DESCENDING, OptionsItem.SORT_BY_PARK);
+            }
+
+            if(this.addSortByCreditType())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
+                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, OptionsItem.SORT_BY_CREDIT_TYPE);
+            }
+
+            if(this.addSortByCategory())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
+                        .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY);
+            }
+
+            if(this.addSortByManufacturer())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
+                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER);
+            }
+
+            if(this.addSortByModel())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_MODEL, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_MODEL_ASCENDING, OptionsItem.SORT_BY_MODEL)
+                        .addToGroup(OptionsItem.SORT_BY_MODEL_DESCENDING, OptionsItem.SORT_BY_MODEL);
+            }
+
+            if(this.addSortByStatus())
+            {
+                this.optionsMenuAgent
+                        .addToGroup(OptionsItem.SORT_BY_STATUS, OptionsItem.SORT_BY)
+                        .addToGroup(OptionsItem.SORT_BY_STATUS_ASCENDING, OptionsItem.SORT_BY_STATUS)
+                        .addToGroup(OptionsItem.SORT_BY_STATUS_DESCENDING, OptionsItem.SORT_BY_STATUS);
+            }
+
+            if(this.addGroupBy())
+            {
+                this.optionsMenuAgent.add(OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByNone())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_NONE, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByPark())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByCreditType())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByCategory())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByManufacturer())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByModel())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_MODEL, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addGroupByStatus())
+            {
+                this.optionsMenuAgent.addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
+            }
+
+            if(this.addExpandAndCollapseAll())
+            {
+                this.optionsMenuAgent
+                        .add(OptionsItem.EXPAND_ALL)
+                        .add(OptionsItem.COLLAPSE_ALL);
+            }
+
+            this.menuCreated = true;
+        }
+
+        return this.optionsMenuAgent.create(menu);
+    }
+
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
         switch(item)
         {
-            case SORT:
             case SORT_BY:
             case GROUP_BY:
+            case SORT_BY_NAME:
             case SORT_BY_PARK:
             case SORT_BY_CREDIT_TYPE:
             case SORT_BY_CATEGORY:
@@ -414,62 +917,6 @@ public class OptionsMenuButler
         }
     }
 
-    public Menu createOptionsMenu(Menu menu)
-    {
-        return this.optionsMenuAgent
-
-                .add(OptionsItem.SORT)
-                .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-
-
-                .add(OptionsItem.SORT_BY)
-
-                .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
-                .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME)
-
-                .addToGroup(OptionsItem.SORT_BY_PARK, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_PARK_ASCENDING, OptionsItem.SORT_BY_PARK)
-                .addToGroup(OptionsItem.SORT_BY_PARK_DESCENDING, OptionsItem.SORT_BY_PARK)
-
-                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
-                .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
-
-                .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
-                .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY)
-
-                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-
-                .addToGroup(OptionsItem.SORT_BY_MODEL, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_MODEL_ASCENDING, OptionsItem.SORT_BY_MODEL)
-                .addToGroup(OptionsItem.SORT_BY_MODEL_DESCENDING, OptionsItem.SORT_BY_MODEL)
-
-                .addToGroup(OptionsItem.SORT_BY_STATUS, OptionsItem.SORT_BY)
-                .addToGroup(OptionsItem.SORT_BY_STATUS_ASCENDING, OptionsItem.SORT_BY_STATUS)
-                .addToGroup(OptionsItem.SORT_BY_STATUS_DESCENDING, OptionsItem.SORT_BY_STATUS)
-
-
-                .add(OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_NONE, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_MODEL, OptionsItem.GROUP_BY)
-                .addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY)
-
-
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-
-                .create(menu);
-    }
-
     public Menu prepareOptionsMenu(Menu menu)
     {
         this.setVisibleAndEnabled();
@@ -574,9 +1021,9 @@ public class OptionsMenuButler
 
     private boolean sortVisible = false;
     private boolean sortEnabled = true;
-    private boolean sortAscendingVisible = true;
+    private boolean sortAscendingVisible = false;
     private boolean sortAscendingEnabled = true;
-    private boolean sortDescendingVisible = true;
+    private boolean sortDescendingVisible = false;
     private boolean sortDescendingEnabled = true;
 
 

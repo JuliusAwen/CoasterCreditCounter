@@ -161,15 +161,11 @@ public abstract class Element implements IElement
 
     public void reorderChildren(List<? extends IElement> children)
     {
-        if(!children.isEmpty())
+        if(!children.isEmpty() && children.size() > 1)
         {
             this.getChildren().removeAll(children);
             this.getChildren().addAll(children);
             Log.v(Constants.LOG_TAG, String.format("Element.reorderChildren:: %s -> [%d] children removed and then added again in given order", this, children.size()));
-        }
-        else
-        {
-            Log.w(Constants.LOG_TAG, String.format("Element.reorderChildren:: %s -> given list of children is empty", this));
         }
     }
 

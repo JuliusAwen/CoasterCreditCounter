@@ -86,7 +86,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(success)
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: success, took [%d]ms - saving content", stopwatch.stop()));
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: success, took [%d]ms - saving content...", stopwatch.stop()));
             this.saveContent(content);
         }
         else
@@ -141,38 +141,38 @@ public class JsonHandler implements IDatabaseWrapper
     public boolean loadContent(Content content)
     {
         Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: loading content..."));
+        Stopwatch stopwatchLoad = new Stopwatch(true);
 
         boolean success;
         String jsonString;
         if(!App.isInitialized && App.config.resetToDefaultContentOnStartup())
         {
-            success = this.tryPopulateDefaultContentFromDatabaseMock(content) && this.saveContent(content);
+            this.tryPopulateDefaultContentFromDatabaseMock(content);
+            this.saveContent(content);
+
+            Log.e(Constants.LOG_TAG, ("JsonHandler.loadContent:: reloading content in order to get all defaults..."));
+        }
+
+        Stopwatch stopwatchRead = new Stopwatch(true);
+        jsonString = this.readStringFromInternalStorageFile(App.config.getExportFileName());
+        Log.d(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading json string took [%d]ms", stopwatchRead.stop()));
+
+        if(!jsonString.isEmpty())
+        {
+            success = this.tryFetchContentFromJsonString(jsonString, content);
         }
         else
         {
-            Stopwatch stopwatchLoad = new Stopwatch(true);
+            success = this.initializeForFirstUse(content);
+        }
 
-            Stopwatch stopwatchRead = new Stopwatch(true);
-            jsonString = this.readStringFromInternalStorageFile(App.config.getExportFileName());
-            Log.d(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading json string took [%d]ms", stopwatchRead.stop()));
-
-            if(!jsonString.isEmpty())
-            {
-                success = this.tryFetchContentFromJsonString(jsonString, content);
-            }
-            else
-            {
-                success = this.initializeForFirstUse(content);
-            }
-
-            if(success)
-            {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: success - took [%d]ms", stopwatchLoad.stop()));
-            }
-            else
-            {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: failed - took [%d]ms", stopwatchLoad.stop()));
-            }
+        if(success)
+        {
+            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: success - took [%d]ms", stopwatchLoad.stop()));
+        }
+        else
+        {
+            Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: failed - took [%d]ms", stopwatchLoad.stop()));
         }
 
         return success;

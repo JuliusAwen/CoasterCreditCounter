@@ -24,6 +24,9 @@ public class OptionsMenuAgent
     private final Map<OptionsItem, Boolean> setEnabledByItem = new HashMap<>();
     private final Map<OptionsItem, Boolean> setVisibleByItem = new HashMap<>();
 
+    public OptionsMenuAgent() {}
+
+
     public OptionsMenuAgent add(OptionsItem item)
     {
         this.addItem(item);
@@ -120,7 +123,6 @@ public class OptionsMenuAgent
             }
         }
 
-        this.itemsToAdd.clear();
         return menu;
     }
 

@@ -88,7 +88,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(this.viewModel.currentLocation.isRootLocation())
         {
-            this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation);
+            this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation, true);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
@@ -202,7 +202,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case CREATE_PARK:
                 {
                     this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent());
+                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
                     invalidateOptionsMenu();
                     break;
                 }

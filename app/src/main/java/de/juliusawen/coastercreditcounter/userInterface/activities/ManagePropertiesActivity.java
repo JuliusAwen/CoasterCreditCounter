@@ -76,14 +76,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
         }
 
-        if(this.viewModel.propertyTypeToManage == null)
-        {
-            this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
-        }
-
         if(this.viewModel.optionsMenuAgent == null)
         {
             this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+        }
+
+        if(this.viewModel.propertyTypeToManage == null)
+        {
+            this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
         }
 
         this.viewModel.isSelectionMode = this.viewModel.requestCode == RequestCode.PICK_CREDIT_TYPE
@@ -92,16 +92,16 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 || this.viewModel.requestCode == RequestCode.PICK_MODEL
                 || this.viewModel.requestCode == RequestCode.PICK_STATUS;
 
-        List<IElement> elements = new ArrayList<>();
+
         if(this.viewModel.isSelectionMode)
         {
-            elements = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-            elements = SortTool.sortElements(elements, SortType.BY_NAME, SortOrder.ASCENDING);
+            this.viewModel.elements = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+            this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        elements,
+                        this.viewModel.elements,
                         this.getPropertyType(),
                         false)
                         .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
@@ -111,17 +111,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             if(this.viewModel.contentRecyclerViewAdapter == null)
             {
-                elements = App.content.getContentOfType(this.getPropertyType());
-                for(IElement element : elements)
+                this.viewModel.elements = App.content.getContentOfType(this.getPropertyType());
+                for(IElement element : this.viewModel.elements)
                 {
-                    element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+                    SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING);
                 }
 
                 HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                 childTypesToExpand.add(Model.class); // Models can be grouped - so the GroupHeaders containing Models must be expandable
                 childTypesToExpand.add(Attraction.class);
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(elements, childTypesToExpand)
-                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
+                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.elements, childTypesToExpand)
+                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD)
+                        .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
                 switch(this.viewModel.propertyTypeToManage)
                 {
@@ -154,11 +155,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         break;
                     }
                 }
-
-                this.viewModel.contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
             }
         }
-
 
         if(this.viewModel.contentRecyclerViewAdapter != null)
         {
@@ -168,16 +166,20 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
-        if(this.viewModel.optionsMenuButler == null && (this.viewModel.requestCode.equals(RequestCode.PICK_MODEL) || this.viewModel.requestCode.equals(RequestCode.MANAGE_MODELS)))
+
+        if(this.viewModel.optionsMenuButler == null)
         {
             this.viewModel.optionsMenuButler = new OptionsMenuButler(
                     this.viewModel.optionsMenuAgent,
                     this.viewModel.contentRecyclerViewAdapter,
                     this.viewModel.requestCode,
-                    elements,
+                    this.viewModel.elements,
                     this);
+        }
 
-            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.NONE);
+        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
+        {
+            this.viewModel.optionsMenuButler.setDetailModesAndGroupElements(GroupType.MANUFACTURER);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -270,14 +272,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             ((Attraction) element).setStatus((Status) this.viewModel.longClickedElement);
                             break;
                     }
+
                     super.markForUpdate(element);
                 }
 
-                updateContentRecyclerView(false);
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
                 Log.d(Constants.LOG_TAG,
                         String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
-                        this.viewModel.longClickedElement, resultElements.size()));
+                                this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
             }
         }
@@ -385,46 +387,38 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public boolean handleOptionsItemSelected(OptionsItem item)
     {
-        if(this.viewModel.optionsMenuButler != null && this.viewModel.optionsMenuButler.handleOptionsItemSelected(item))
+        if(this.viewModel.optionsMenuButler.handleOptionsItemSelected(item))
         {
             return true;
         }
 
-        switch(item)
+        if(item == OptionsItem.SORT)
         {
-            case SORT_CREDIT_TYPES:
-                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CREDIT_TYPES, App.content.getContentOfType(CreditType.class));
-                return true;
+            switch(this.viewModel.requestCode)
+            {
+                case MANAGE_CREDIT_TYPES:
+                    ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CREDIT_TYPES, App.content.getContentOfType(CreditType.class));
+                    return true;
 
-            case SORT_CATEGORIES:
-                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CATEGORIES, App.content.getContentOfType(Category.class));
-                return true;
+                case MANAGE_CATEGORIES:
+                    ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_CATEGORIES, App.content.getContentOfType(Category.class));
+                    return true;
 
-            case SORT_MANUFACTURERS:
-                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class));
-                return true;
+                case MANAGE_MANUFACTURERS:
+                    ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MANUFACTURERS, App.content.getContentOfType(Manufacturer.class));
+                    return true;
 
-            case SORT_MODELS:
-                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MODELS, App.content.getContentOfType(Model.class));
-                return true;
+                case MANAGE_MODELS:
+                    ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_MODELS, App.content.getContentOfType(Model.class));
+                    return true;
 
-            case SORT_STATUSES:
-                ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_STATUSES, App.content.getContentOfType(Status.class));
-                return true;
-
-            case EXPAND_ALL:
-                this.viewModel.contentRecyclerViewAdapter.expandAll();
-                invalidateOptionsMenu();
-                return true;
-
-            case COLLAPSE_ALL:
-                this.viewModel.contentRecyclerViewAdapter.collapseAll();
-                invalidateOptionsMenu();
-                return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
+                case MANAGE_STATUSES:
+                    ActivityDistributor.startActivitySortForResult(this, RequestCode.SORT_STATUSES, App.content.getContentOfType(Status.class));
+                    return true;
+            }
         }
+
+        return super.handleOptionsItemSelected(item);
     }
 
     @Override
@@ -457,10 +451,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 else if(element.hasChildren())
                 {
                     viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
-                    {
-                        invalidateOptionsMenu();
-                    }
                 }
                 else if(element.isAttraction())
                 {
@@ -698,7 +688,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
 
                         case MODEL:
-                            defaultName = Manufacturer.getDefault().getName();
+                            defaultName = Model.getDefault().getName();
                             break;
 
                         case STATUS:
@@ -916,6 +906,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
 
             this.viewModel.contentRecyclerViewAdapter.setItems(elements);
+
+            invalidateOptionsMenu();
+            this.viewModel.optionsMenuButler.setElements(elements);
         }
         else
         {

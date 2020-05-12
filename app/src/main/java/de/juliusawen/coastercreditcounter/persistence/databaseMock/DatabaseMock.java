@@ -1897,9 +1897,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         CreditTypes creditTypes;
         Categories categories;
 
-
-//        MANUFACTURERS
-
+        // MANUFACTURERS
         final Model BollingerAndMabillard_HyperCoaster = Model.create("Hyper Coaster");
         final Model BollingerAndMabillard_InvertedCoaster = Model.create("Inverted Coaster");
         final Model BollingerAndMabillard_DiveCoaster = Model.create("Dive Coaster");
@@ -1986,7 +1984,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Huss_BreakDance = Model.create("Break Dance");
 
 
-//        ROLLER COASTERS
+        // ROLLER COASTERS
         final Model WoodenCoaster = Model.create("Wooden Coaster");
         final Model JuniorWoodenCoaster = Model.create("Junior Wooden Coaster");
         final Model SteelCoaster = Model.create("Steel Coaster");
@@ -1994,17 +1992,17 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model InvertedCoaster = Model.create("Inverted Coaster");
 
 
-//        MIXED
+        // MIXED
         final Model FlatRide = Model.create("Flat Ride");
         final Model BoatRide = Model.create("Boat Ride");
         final Model Simulator = Model.create("Simulator");
 
-//        WATER RIDES
+        // WATER RIDES
         final Model LogFlume = Model.create("Log Flume");
         final Model RiverRapids = Model.create("River Rapids");
         final Model ShootTheChute = Model.create("Shoot the Chute");
 
-//        FAMILY RIDES
+        // FAMILY RIDES
         final Model FunHouse = Model.create("Fun House");
         final Model ChairSwing = Model.create("Chair Swing");
         final Model Carousel = Model.create("Carousel");
@@ -2017,7 +2015,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model FlyingTheatre = Model.create("Flying Theatre");
         final Model WalkThroughAttraction = Model.create("Walk Through Attraction");
 
-//        THRILL RIDES
+        // THRILL RIDES
         final Model DropTower = Model.create("Drop Tower");
         final Model GyroDropTower = Model.create("Gyro Drop Tower");
         final Model EnclosedDropTower = Model.create("Enclosed Drop Tower");
@@ -2025,11 +2023,11 @@ public final class DatabaseMock implements IDatabaseWrapper
         final Model Enterprise = Model.create("Enterprise");
         final Model Frisbee = Model.create("Frisbee");
 
-//        DARK RIDES
+        // DARK RIDES
         final Model InteractiveDarkRide = Model.create("Interactive Dark Ride");
         final Model TracklessDarkRide = Model.create("Trackless Dark Ride");
 
-//        TRANSPORT RIDES
+        // TRANSPORT RIDES
         final Model Monorail = Model.create("Monorail");
         final Model TrainRide = Model.create("Train Ride");
         final Model ChairLift = Model.create("Chair Lift");
@@ -2045,7 +2043,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllModels.add(Model.getDefault());
 
 
-//            ROLLER COASTERS
+            // ROLLER COASTERS
             WoodenCoaster.setCreditType(creditTypes.RollerCoaster);
             WoodenCoaster.setCategory(categories.RollerCoasters);
             AllModels.add(WoodenCoaster);
@@ -2067,12 +2065,12 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllModels.add(InvertedCoaster);
 
 
-//            MIXED
+            // MIXED
             AllModels.add(FlatRide);
             AllModels.add(BoatRide);
             AllModels.add(Simulator);
 
-//            WATER RIDES
+            // WATER RIDES
             LogFlume.setCategory(categories.WaterRides);
             AllModels.add(LogFlume);
             RiverRapids.setCategory(categories.WaterRides);
@@ -2081,7 +2079,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllModels.add(ShootTheChute);
 
 
-//            FAMILY RIDES
+            // FAMILY RIDES
             FunHouse.setCategory(categories.FamilyRides);
             AllModels.add(FunHouse);
             ChairSwing.setCategory(categories.FamilyRides);
@@ -2106,7 +2104,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllModels.add(WalkThroughAttraction);
 
 
-//            THRILL RIDES
+            // THRILL RIDES
             DropTower.setCategory(categories.ThrillRides);
             AllModels.add(DropTower);
             GyroDropTower.setCategory(categories.ThrillRides);
@@ -2120,13 +2118,13 @@ public final class DatabaseMock implements IDatabaseWrapper
             Frisbee.setCategory(categories.ThrillRides);
             AllModels.add(Frisbee);
 
-//            DARK RIDES
+            // DARK RIDES
             InteractiveDarkRide.setCategory(categories.DarkRides);
             AllModels.add(InteractiveDarkRide);
             TracklessDarkRide.setCategory(categories.DarkRides);
             AllModels.add(TracklessDarkRide);
 
-//            TRANSPORT RIDES
+            // TRANSPORT RIDES
             Monorail.setCategory(categories.TransportRides);
             AllModels.add(Monorail);
             TrainRide.setCategory(categories.TransportRides);
@@ -2135,7 +2133,7 @@ public final class DatabaseMock implements IDatabaseWrapper
             AllModels.add(ChairLift);
 
 
-//            MANUFACTURERS
+            // MANUFACTURERS
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_HyperCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_InvertedCoaster);
             this.decorateRollerCoasterAndAddToList(manufacturers.BolligerAndMabillard, BollingerAndMabillard_DiveCoaster);
