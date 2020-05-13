@@ -599,6 +599,18 @@ public class OptionsMenuButler
                 this.optionsMenuProvider
                         .add(OptionsItem.GO_TO_CURRENT_VISIT);
             }
+
+            if(this.addDeveloperOptions())
+            {
+                this.optionsMenuProvider
+                        .add(OptionsItem.SHOW_BUILD_CONFIG)
+                        .add(OptionsItem.SHOW_LOG)
+                        .addToGroup(OptionsItem.SHOW_LOG_VERBOSE, OptionsItem.SHOW_LOG)
+                        .addToGroup(OptionsItem.SHOW_LOG_DEBUG, OptionsItem.SHOW_LOG)
+                        .addToGroup(OptionsItem.SHOW_LOG_INFO, OptionsItem.SHOW_LOG)
+                        .addToGroup(OptionsItem.SHOW_LOG_WARNING, OptionsItem.SHOW_LOG)
+                        .addToGroup(OptionsItem.SHOW_LOG_ERROR, OptionsItem.SHOW_LOG);
+            }
         }
 
         return this.optionsMenuProvider
@@ -988,6 +1000,11 @@ public class OptionsMenuButler
     private boolean addGoToCurrentVisit()
     {
         return this.requestCode == RequestCode.NAVIGATE;
+    }
+
+    private boolean addDeveloperOptions()
+    {
+        return this.requestCode == RequestCode.DEVELOPER_OPTIONS;
     }
 
     private boolean sortVisible = false;

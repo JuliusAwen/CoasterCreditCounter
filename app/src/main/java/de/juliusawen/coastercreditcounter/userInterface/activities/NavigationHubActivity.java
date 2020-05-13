@@ -72,11 +72,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModelButler.class);
 
-        if(this.viewModel.requestCode == null)
-        {
-            this.viewModel.requestCode = RequestCode.NAVIGATE;
-        }
-
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
 

@@ -117,6 +117,7 @@ public class OptionsMenuProvider
             }
         }
 
+        this.itemsToAdd.clear();
         return menu;
     }
 

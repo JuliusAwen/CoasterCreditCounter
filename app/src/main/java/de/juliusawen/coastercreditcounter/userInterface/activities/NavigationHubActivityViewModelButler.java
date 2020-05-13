@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class NavigationHubActivityViewModelButler extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
-    public RequestCode requestCode;
+    public RequestCode requestCode = RequestCode.NAVIGATE;
     public List<IElement> currentVisits;
 
     public Uri uri;

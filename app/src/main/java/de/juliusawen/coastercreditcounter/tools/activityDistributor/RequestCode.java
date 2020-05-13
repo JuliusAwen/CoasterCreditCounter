@@ -77,7 +77,9 @@ public enum RequestCode
 
     SET_AS_DEFAULT,
 
-    HANDLE_EXISTING_VISIT;
+    HANDLE_EXISTING_VISIT,
+
+    DEVELOPER_OPTIONS;
 
     public static RequestCode getValue(int ordinal)
     {
