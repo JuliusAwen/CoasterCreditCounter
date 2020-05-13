@@ -118,6 +118,9 @@ public class OptionsMenuProvider
         }
 
         this.itemsToAdd.clear();
+        this.groupByItem.clear();
+        this.subMenuByGroup.clear();
+
         return menu;
     }
 
