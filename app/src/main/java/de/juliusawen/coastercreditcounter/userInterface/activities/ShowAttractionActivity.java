@@ -31,8 +31,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 

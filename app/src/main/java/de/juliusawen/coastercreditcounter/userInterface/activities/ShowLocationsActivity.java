@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
@@ -35,18 +34,15 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowLocationsActivityViewModel viewModel;
-    private RecyclerView recyclerView;
+    private ShowLocationsActivityViewModelButler viewModel;
 
     protected void setContentView()
     {
@@ -55,11 +51,11 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     public void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowLocationsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowLocationsActivityViewModelButler.class);
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.requestCode == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
         }
 
         if(this.viewModel.currentLocation == null)
@@ -82,61 +78,26 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
-        this.recyclerView = findViewById(R.id.recyclerViewShowLocations);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
         if(this.viewModel.currentLocation.isRootLocation())
         {
             this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation, true);
         }
 
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
-        super.createToolbar()
-                .addToolbarHomeButton();
+        super.createToolbar().addToolbarHomeButton();
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
+
+
         this.enableRelocationMode(this.viewModel.relocationModeEnabled);
-    }
-
-    @Override
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-                .create(menu);
-    }
-
-    @Override
-    protected Menu prepareOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.currentLocation.hasChildren() && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.currentLocation.hasChildren() && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .prepare(menu);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        switch(item)
-        {
-            case EXPAND_ALL:
-                this.viewModel.contentRecyclerViewAdapter.expandAll();
-                invalidateOptionsMenu();
-                return true;
-
-            case COLLAPSE_ALL:
-                this.viewModel.contentRecyclerViewAdapter.collapseAll();
-                invalidateOptionsMenu();
-                return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -196,7 +157,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(resultCode == RESULT_OK)
         {
-            switch(RequestCode.values()[requestCode])
+            switch(RequestCode.getValue(requestCode))
             {
                 case CREATE_LOCATION:
                 case CREATE_PARK:

@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -36,10 +36,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -50,7 +48,7 @@ import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowVisitActivityViewModel viewModel;
+    private ShowVisitActivityViewModelButler viewModel;
 
     protected void setContentView()
     {
@@ -59,17 +57,13 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowVisitActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowVisitActivityViewModelButler.class);
 
         if(this.viewModel.visit == null)
         {
             this.viewModel.visit = (Visit)App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-        }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
         super.createToolbar()
@@ -78,6 +72,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
+
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
     }
 
     @Override
@@ -90,6 +86,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView()
                     .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
+
         this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
                 .addIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener())
                 .addDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
@@ -115,50 +112,13 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         this.handleFloatingActionButtonVisibility();
 
         Log.d(LOG_TAG, String.format("ShowVisitActivity.resume:: %s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
-
     }
 
     @Override
-    protected Menu createOptionsMenu(Menu menu)
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.DISABLE_EDITING)
-                .add(OptionsItem.ENABLE_EDITING)
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-                .create(menu);
-    }
-
-    @Override
-    protected Menu prepareOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.DISABLE_EDITING, this.viewModel.visit.isEditingEnabled())
-                .setVisible(OptionsItem.ENABLE_EDITING, !this.viewModel.visit.isEditingEnabled())
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.visit.isEditingEnabled()
-                        && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class)
-                        && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.visit.isEditingEnabled()
-                        && this.viewModel.visit.hasChildrenOfType(VisitedAttraction.class)
-                        && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .prepare(menu);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        switch(item)
+        switch(super.getOptionsMenuButler().getOptionsItem(item))
         {
-            case EXPAND_ALL:
-                this.viewModel.contentRecyclerViewAdapter.expandAll();
-                invalidateOptionsMenu();
-                return true;
-
-            case COLLAPSE_ALL:
-                this.viewModel.contentRecyclerViewAdapter.collapseAll();
-                invalidateOptionsMenu();
-                return true;
-
             case ENABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(true);
                 invalidateOptionsMenu();
@@ -174,10 +134,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.handleFloatingActionButtonVisibility();
                 Log.d(LOG_TAG, String.format("ShowVisitActivity.onOptionsItemSelected<DISABLE_EDITING>:: disabled editing %s", this.viewModel.visit));
                 return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

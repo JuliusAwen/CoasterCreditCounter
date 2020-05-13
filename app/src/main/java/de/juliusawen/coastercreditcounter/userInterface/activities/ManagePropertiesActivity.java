@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -45,9 +46,9 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -58,7 +59,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ManagePropertiesActivityViewModel viewModel;
+    private ManagePropertiesActivityViewModelButler viewModel;
 
     protected void setContentView()
     {
@@ -67,7 +68,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModelButler.class);
 
         if(this.viewModel.requestCode == null)
         {
@@ -111,7 +112,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                childTypesToExpand.add(Model.class); // Models can be grouped - so the GroupHeaders containing Models must be expandable
+                childTypesToExpand.add(Model.class); // Models can be grouped - so the GroupHeaders<Model> must be expandable
                 childTypesToExpand.add(Attraction.class);
                 this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.elements, childTypesToExpand)
                         .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD)
@@ -159,6 +160,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
+        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
+        {
+            GroupButler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
+        }
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar()
                 .addToolbarHomeButton()
@@ -167,12 +173,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.getOptionsMenuButler().initialize(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, this.viewModel.elements);
-
-        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
-        {
-            GroupButler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
-        }
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
     }
 
     @Override
@@ -231,7 +232,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
-
                 for(IElement element : resultElements)
                 {
                     switch(this.viewModel.propertyTypeToManage)
@@ -270,9 +270,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     }
 
     @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item == OptionsItem.SORT)
+        if(super.getOptionsMenuButler().getOptionsItem(item) == OptionsItem.SORT)
         {
             switch(this.viewModel.requestCode)
             {
@@ -298,7 +298,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
         }
 
-        return super.handleOptionsItemSelected(item);
+        return super.getOptionsMenuButler().handleMenuItemSelected(item);
     }
 
     @Override
@@ -784,9 +784,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
             }
-
-            this.viewModel.contentRecyclerViewAdapter.setItems(elements);
-            super.getOptionsMenuButler().setElements(elements);
+            this.viewModel.elements = elements;
+            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elements);
+            invalidateOptionsMenu();
         }
         else
         {

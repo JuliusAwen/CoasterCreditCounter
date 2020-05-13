@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -40,10 +41,10 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -83,9 +84,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             }
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.optionsMenuProvider == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -132,7 +133,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
-        this.viewModel.optionsMenuAgent
+        this.viewModel.optionsMenuProvider
                 .add(OptionsItem.SORT)
                     .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
                     .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
@@ -146,11 +147,17 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
+        this.viewModel.optionsMenuProvider
                 .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
                 .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        return false;
     }
 
     public void sortAscending()

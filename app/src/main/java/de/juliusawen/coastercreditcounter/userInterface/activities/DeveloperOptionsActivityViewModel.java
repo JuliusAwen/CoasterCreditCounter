@@ -2,11 +2,11 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import androidx.lifecycle.ViewModel;
 
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
 
 public class DeveloperOptionsActivityViewModel extends ViewModel
 {
-    public OptionsMenuAgent optionsMenuAgent;
+    public OptionsMenuProvider optionsMenuProvider;
 
     public DeveloperOptionsActivity.Mode mode;
 }

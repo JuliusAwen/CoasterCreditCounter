@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
 public class ShowVisitsFragmentViewModel extends ViewModel
@@ -18,5 +18,5 @@ public class ShowVisitsFragmentViewModel extends ViewModel
     public IElement longClickedElement;
     public Calendar calendar;
     public DatePickerDialog datePickerDialog;
-    public OptionsMenuAgent optionsMenuAgent;
+    public OptionsMenuProvider optionsMenuProvider;
 }

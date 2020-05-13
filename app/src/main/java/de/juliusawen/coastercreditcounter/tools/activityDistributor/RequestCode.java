@@ -8,6 +8,8 @@ public enum RequestCode
 {
     INVALID,
 
+    NAVIGATE,
+
     CREATE_LOCATION,
     CREATE_PARK,
     CREATE_VISIT,
@@ -19,7 +21,7 @@ public enum RequestCode
     CREATE_ATTRACTION,
     CREATE_NOTE,
 
-    SHOW_LOCATION,
+    SHOW_LOCATIONS,
     SHOW_PARK,
     SHOW_VISIT,
     SHOW_ATTRACTION,

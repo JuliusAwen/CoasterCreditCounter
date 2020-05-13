@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,14 +21,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
@@ -39,15 +36,14 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private NavigationHubActivityViewModel viewModel;
+    private NavigationHubActivityViewModelButler viewModel;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -66,13 +62,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModel.class);
-
-        if(this.viewModel.optionsMenuAgent == null)
-        {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-        }
-
         this.textViewTotalCoasterCreditsCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalCoasterCreditsCount);
         this.textViewTotalCoasterRidesCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalCoasterRidesCount);
         this.textViewTotalVisitsCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalVisitsCount);
@@ -81,12 +70,23 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.drawerLayout = findViewById(R.id.navigationDrawer);
         this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
 
+        this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModelButler.class);
+
+        if(this.viewModel.requestCode == null)
+        {
+            this.viewModel.requestCode = RequestCode.NAVIGATE;
+        }
+
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
+
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
         super.createToolbar()
                 .addToolbarMenuIcon()
                 .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
+
 
         this.createStatisticsGlobalTotals();
     }
@@ -95,8 +95,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     protected void resume()
     {
         this.viewModel.currentVisits = App.persistence.fetchCurrentVisits();
-
-        invalidateOptionsMenu();
 
         for (int i = 0; i < this.navigationView.getMenu().size(); i++)
         {
@@ -170,24 +168,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.GO_TO_CURRENT_VISIT)
-                .create(menu);
-    }
-
-    @Override
-    protected Menu prepareOptionsMenu(Menu menu)
-    {
-        this.viewModel.optionsMenuAgent
-                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, !this.viewModel.currentVisits.isEmpty())
-                .prepare(menu);
-
-        return menu;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(!this.viewModel.isExporting && !this.viewModel.isImporting)
@@ -200,37 +180,24 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             else
             {
-                if(this.viewModel.optionsMenuAgent.handleOptionsItemSelected(item, this))
+                if(super.getOptionsMenuButler().getOptionsItem(item) == OptionsItem.GO_TO_CURRENT_VISIT)
                 {
+                    if(this.viewModel.currentVisits.size() > 1)
+                    {
+                        Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick", this.viewModel.currentVisits.size()));
+                        ActivityDistributor.startActivityPickForResult(this, RequestCode.PICK_VISIT, this.viewModel.currentVisits);
+                    }
+                    else
+                    {
+                        Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...", this.viewModel.currentVisits.get(0)));
+                        ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
+                    }
                     return true;
                 }
             }
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        if(item == OptionsItem.GO_TO_CURRENT_VISIT)
-        {
-            if(this.viewModel.currentVisits.size() > 1)
-            {
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick", this.viewModel.currentVisits.size()));
-
-                ActivityDistributor.startActivityPickForResult(this, RequestCode.PICK_VISIT, new ArrayList<IElement>(this.viewModel.currentVisits));
-            }
-            else
-            {
-                Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...", this.viewModel.currentVisits.get(0)));
-
-                ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
-            }
-            return true;
-        }
-
-        return super.handleOptionsItemSelected(item);
     }
 
     private void createStatisticsGlobalTotals()
@@ -416,7 +383,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void startActivityShowLocations()
     {
-        ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATION, App.content.getRootLocation());
+        ActivityDistributor.startActivityShow(NavigationHubActivity.this, RequestCode.SHOW_LOCATIONS, App.content.getRootLocation());
     }
 
     private void launchPickImportFileLocationIntent()

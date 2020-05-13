@@ -1383,11 +1383,11 @@ public class JsonHandler implements IDatabaseWrapper
     }
 
     @Override
-    public List<Visit> fetchCurrentVisits()
+    public List<IElement> fetchCurrentVisits()
     {
         Stopwatch stopwatch = new Stopwatch(true);
 
-        List<Visit> currentVisits = Visit.fetchVisitsForYearAndDay(Calendar.getInstance(), App.content.getContentAsType(Visit.class));
+        List<IElement> currentVisits = Visit.fetchVisitsForYearAndDay(Calendar.getInstance(), App.content.getContentAsType(Visit.class));
 
         Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisits:: fetching current visits took [%d]ms", stopwatch.stop()));
 

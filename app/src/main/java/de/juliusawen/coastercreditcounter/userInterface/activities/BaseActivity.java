@@ -34,15 +34,12 @@ import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.IOptionsMenuAgentClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.IPopupMenuAgentClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
 
-public abstract class BaseActivity extends AppCompatActivity  implements IOptionsMenuAgentClient, IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
+public abstract class BaseActivity extends AppCompatActivity  implements IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
 {
     private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
@@ -68,14 +65,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
             this.viewModel.isInitializingApp = false;
             this.toolbar = findViewById(R.id.toolbar);
 
-            if(this.viewModel.optionsMenuAgent == null)
-            {
-                this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
-            }
-
             if(this.viewModel.optionsMenuButler == null)
             {
-                this.viewModel.optionsMenuButler = new OptionsMenuButler(this.viewModel.optionsMenuAgent, this);
+                this.viewModel.optionsMenuButler = new OptionsMenuButler(this);
             }
 
             Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
@@ -204,16 +196,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             this.viewModel.optionsMenuButler.createOptionsMenu(menu);
-//            menu = this.createOptionsMenu(menu);
         }
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    @Deprecated
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("BaseActivity.createOptionsMenu:: [%s] does not override createOptionsMenu()", this.getClass().getSimpleName()));
-        return menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -222,37 +207,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IOption
         if(App.isInitialized && !this.viewModel.isInitializingApp)
         {
             this.viewModel.optionsMenuButler.prepareOptionsMenu(menu);
-//            menu = this.prepareOptionsMenu(menu);
         }
-        return super.onPrepareOptionsMenu(menu);
-    }
 
-    @Deprecated
-    protected Menu prepareOptionsMenu(Menu menu)
-    {
-        Log.v(Constants.LOG_TAG, String.format("BaseActivity.prepareOptionsMenu:: [%s] does not override prepareOptionsMenu()", this.getClass().getSimpleName()));
-        return menu;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         return this.viewModel.optionsMenuButler.handleMenuItemSelected(item);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        return false;
-//        if(this.viewModel.optionsMenuButler.handleMenuItemSelected(item))
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: OptionsMenuItem [%s] unhandled", item));
-//            return false;
-//        }
     }
 
     @Override

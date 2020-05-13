@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -41,10 +42,10 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
@@ -104,9 +105,9 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             }
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.optionsMenuProvider == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
         }
 
         if(this.viewModel.contentRecyclerViewAdapter == null)
@@ -180,7 +181,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
     {
-        this.viewModel.optionsMenuAgent
+        this.viewModel.optionsMenuProvider
                 .add(OptionsItem.EXPAND_ALL)
                 .add(OptionsItem.COLLAPSE_ALL)
                 .create(menu);
@@ -189,10 +190,16 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-        this.viewModel.optionsMenuAgent
+        this.viewModel.optionsMenuProvider
                 .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.getChildCountOfType(Attraction.class) > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.getChildCountOfType(Attraction.class) > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
                 .prepare(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        return false;
     }
 
     public void expandAll()

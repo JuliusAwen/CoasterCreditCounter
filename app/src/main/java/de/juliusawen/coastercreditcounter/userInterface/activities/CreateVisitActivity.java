@@ -113,8 +113,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 viewModel.datePicked = true;
 
 
-                List<Visit> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
-                viewModel.existingVisit = existingVisits.isEmpty() ? null : existingVisits.get(0);
+                List<IElement> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
+                viewModel.existingVisit = existingVisits.isEmpty() ? null : (Visit) existingVisits.get(0);
                 if(viewModel.existingVisit != null)
                 {
                     viewModel.datePickerDialog.dismiss();

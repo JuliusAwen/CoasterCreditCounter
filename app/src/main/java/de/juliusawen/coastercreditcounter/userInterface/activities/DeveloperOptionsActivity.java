@@ -22,8 +22,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
 
 public class DeveloperOptionsActivity extends BaseActivity
 {
@@ -68,9 +68,9 @@ public class DeveloperOptionsActivity extends BaseActivity
         this.scrollViewShowLog = findViewById(R.id.scrollViewDeveloperOptions_ShowLog);
         this.textViewShowLog = findViewById(R.id.textViewDeveloperOptions_ShowLog);
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.optionsMenuProvider == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, "DeveloperOptions"), "You are a developer - you can do it on your own...!");
@@ -82,9 +82,9 @@ public class DeveloperOptionsActivity extends BaseActivity
     }
 
     @Override
-    protected Menu createOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        return this.viewModel.optionsMenuAgent
+        this.viewModel.optionsMenuProvider
                 .add(OptionsItem.SHOW_BUILD_CONFIG)
                 .add(OptionsItem.SHOW_LOG)
                 .addToGroup(OptionsItem.SHOW_LOG_VERBOSE, OptionsItem.SHOW_LOG)
@@ -93,50 +93,66 @@ public class DeveloperOptionsActivity extends BaseActivity
                 .addToGroup(OptionsItem.SHOW_LOG_WARNING, OptionsItem.SHOW_LOG)
                 .addToGroup(OptionsItem.SHOW_LOG_ERROR, OptionsItem.SHOW_LOG)
                 .create(menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        switch(item)
-        {
-            case SHOW_BUILD_CONFIG:
-                this.changeViewMode(Mode.SHOW_BUILD_CONFIG);
-                this.showBuildConfig();
-                return true;
+//    @Override
+//    protected Menu createOptionsMenu(Menu menu)
+//    {
+//        return this.viewModel.optionsMenuAgent
+//                .add(OptionsItem.SHOW_BUILD_CONFIG)
+//                .add(OptionsItem.SHOW_LOG)
+//                .addToGroup(OptionsItem.SHOW_LOG_VERBOSE, OptionsItem.SHOW_LOG)
+//                .addToGroup(OptionsItem.SHOW_LOG_DEBUG, OptionsItem.SHOW_LOG)
+//                .addToGroup(OptionsItem.SHOW_LOG_INFO, OptionsItem.SHOW_LOG)
+//                .addToGroup(OptionsItem.SHOW_LOG_WARNING, OptionsItem.SHOW_LOG)
+//                .addToGroup(OptionsItem.SHOW_LOG_ERROR, OptionsItem.SHOW_LOG)
+//                .create(menu);
+//    }
 
-            case SHOW_LOG_VERBOSE:
-                this.changeViewMode(Mode.SHOW_LOG);
-                this.showLog(LogLevel.VERBOSE);
-                return true;
-
-            case SHOW_LOG_DEBUG:
-                this.changeViewMode(Mode.SHOW_LOG);
-                this.showLog(LogLevel.DEBUG);
-                return true;
-
-            case SHOW_LOG_INFO:
-                this.changeViewMode(Mode.SHOW_LOG);
-                this.showLog(LogLevel.INFO);
-                return true;
-
-            case SHOW_LOG_WARNING:
-                this.changeViewMode(Mode.SHOW_LOG);
-                this.showLog(LogLevel.WARNING);
-                return true;
-
-            case SHOW_LOG_ERROR:
-                this.changeViewMode(Mode.SHOW_LOG);
-                this.showLog(LogLevel.ERROR);
-                return true;
-
-            case SHOW_LOG:
-                return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean handleOptionsItemSelected(OptionsItem item)
+//    {
+//        switch(item)
+//        {
+//            case SHOW_BUILD_CONFIG:
+//                this.changeViewMode(Mode.SHOW_BUILD_CONFIG);
+//                this.showBuildConfig();
+//                return true;
+//
+//            case SHOW_LOG_VERBOSE:
+//                this.changeViewMode(Mode.SHOW_LOG);
+//                this.showLog(LogLevel.VERBOSE);
+//                return true;
+//
+//            case SHOW_LOG_DEBUG:
+//                this.changeViewMode(Mode.SHOW_LOG);
+//                this.showLog(LogLevel.DEBUG);
+//                return true;
+//
+//            case SHOW_LOG_INFO:
+//                this.changeViewMode(Mode.SHOW_LOG);
+//                this.showLog(LogLevel.INFO);
+//                return true;
+//
+//            case SHOW_LOG_WARNING:
+//                this.changeViewMode(Mode.SHOW_LOG);
+//                this.showLog(LogLevel.WARNING);
+//                return true;
+//
+//            case SHOW_LOG_ERROR:
+//                this.changeViewMode(Mode.SHOW_LOG);
+//                this.showLog(LogLevel.ERROR);
+//                return true;
+//
+//            case SHOW_LOG:
+//                return true;
+//
+//            default:
+//                return super.handleOptionsItemSelected(item);
+//        }
+//    }
 
     private void changeViewMode(Mode mode)
     {

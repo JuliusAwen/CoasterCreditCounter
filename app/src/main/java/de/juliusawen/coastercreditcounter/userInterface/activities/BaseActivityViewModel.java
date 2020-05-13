@@ -6,8 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuButler;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
 
 public class BaseActivityViewModel extends ViewModel
 {
@@ -26,7 +25,6 @@ public class BaseActivityViewModel extends ViewModel
 
     public boolean wasFloatingActionButtonVisibleBeforeShowingHelpOverlay = false;
 
-    public OptionsMenuAgent optionsMenuAgent;
     public OptionsMenuButler optionsMenuButler;
 
     long toolbarLastClickInMs;

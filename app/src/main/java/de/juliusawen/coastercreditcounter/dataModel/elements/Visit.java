@@ -125,9 +125,9 @@ public final class Visit extends Element implements IPersistable
         Visit.sortOrder = sortOrder;
     }
 
-    public static List<Visit> fetchVisitsForYearAndDay(Calendar calendar, List<Visit> visits)
+    public static List<IElement> fetchVisitsForYearAndDay(Calendar calendar, List<Visit> visits)
     {
-        List<Visit> foundVisits = new ArrayList<>();
+        List<IElement> foundVisits = new ArrayList<>();
 
         for(Visit visit : visits)
         {

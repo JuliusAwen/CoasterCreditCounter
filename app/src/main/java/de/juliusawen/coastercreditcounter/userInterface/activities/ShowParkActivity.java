@@ -27,9 +27,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.PopupItem;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
+import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
@@ -65,9 +64,9 @@ public class ShowParkActivity extends BaseActivity
             this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.optionsMenuProvider == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
         }
 
         super.createHelpOverlayFragment(null, null);
@@ -101,63 +100,63 @@ public class ShowParkActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        if(super.handleOptionsItemSelected(item))
-        {
-            return true;
-        }
-
-        switch(this.getCurrentTab())
-        {
-            case SHOW_ATTRACTIONS:
-            {
-                switch(item)
-                {
-                    case EXPAND_ALL:
-                        this.showAttractionsFragment.expandAll();
-                        break;
-
-                    case COLLAPSE_ALL:
-                        this.showAttractionsFragment.collapseAll();
-                        break;
-                }
-                break;
-            }
-
-            case SHOW_VISITS:
-            {
-                switch(item)
-                {
-                    case SORT_ASCENDING:
-                        this.showVisitsFragment.sortAscending();
-                        break;
-
-                    case SORT_DESCENDING:
-                        this.showVisitsFragment.sortDecending();
-                        break;
-
-                    case EXPAND_ALL:
-                        this.showVisitsFragment.expandAll();
-                        break;
-
-                    case COLLAPSE_ALL:
-                        this.showVisitsFragment.collapseAll();
-                        break;
-
-                    case SORT:
-                        break;
-                }
-                break;
-            }
-
-            default:
-                return false;
-        }
-
-        return true;
-    }
+//    @Override
+//    public boolean handleOptionsItemSelected(OptionsItem item)
+//    {
+//        if(super.handleOptionsItemSelected(item))
+//        {
+//            return true;
+//        }
+//
+//        switch(this.getCurrentTab())
+//        {
+//            case SHOW_ATTRACTIONS:
+//            {
+//                switch(item)
+//                {
+//                    case EXPAND_ALL:
+//                        this.showAttractionsFragment.expandAll();
+//                        break;
+//
+//                    case COLLAPSE_ALL:
+//                        this.showAttractionsFragment.collapseAll();
+//                        break;
+//                }
+//                break;
+//            }
+//
+//            case SHOW_VISITS:
+//            {
+//                switch(item)
+//                {
+//                    case SORT_ASCENDING:
+//                        this.showVisitsFragment.sortAscending();
+//                        break;
+//
+//                    case SORT_DESCENDING:
+//                        this.showVisitsFragment.sortDecending();
+//                        break;
+//
+//                    case EXPAND_ALL:
+//                        this.showVisitsFragment.expandAll();
+//                        break;
+//
+//                    case COLLAPSE_ALL:
+//                        this.showVisitsFragment.collapseAll();
+//                        break;
+//
+//                    case SORT:
+//                        break;
+//                }
+//                break;
+//            }
+//
+//            default:
+//                return false;
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public void handlePopupItemClicked(PopupItem item)

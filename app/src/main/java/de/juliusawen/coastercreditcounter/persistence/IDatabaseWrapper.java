@@ -5,7 +5,6 @@ import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 
 public interface IDatabaseWrapper
@@ -21,5 +20,5 @@ public interface IDatabaseWrapper
 
     StatisticsGlobalTotals fetchStatisticsGlobalTotals();
 
-    List<Visit> fetchCurrentVisits();
+    List<IElement> fetchCurrentVisits();
 }

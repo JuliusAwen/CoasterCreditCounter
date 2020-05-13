@@ -33,10 +33,10 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class PickElementsActivity extends BaseActivity
 {
-    private PickElementsActivityViewModel viewModel;
+    private PickElementsActivityViewModelButler viewModel;
 
-    private TextView textViewSelectOrDeselectAll;
     private LinearLayout linearLayoutSelectAll;
+    private TextView textViewSelectOrDeselectAll;
     private RadioButton radioButtonSelectOrDeselectAll;
 
     protected void setContentView()
@@ -46,14 +46,13 @@ public class PickElementsActivity extends BaseActivity
 
     protected void create()
     {
-        this.textViewSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
-
         this.linearLayoutSelectAll = this.findViewById(android.R.id.content).findViewById(R.id.linearLayoutPickElements_SelectAll);
         this.linearLayoutSelectAll.setVisibility(View.GONE);
 
+        this.textViewSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
         this.radioButtonSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
 
-        this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModelButler.class);
 
         if(this.viewModel.requestCode == null)
         {
@@ -123,12 +122,14 @@ public class PickElementsActivity extends BaseActivity
             recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
         }
 
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_pick_elements));
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
-        super.getOptionsMenuButler().initialize(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, this.viewModel.elementsToPickFrom);
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
+
 
         if(groupByCategory)
         {

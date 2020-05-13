@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,19 +22,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
-import de.juliusawen.coastercreditcounter.enums.SortOrder;
-import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
-import de.juliusawen.coastercreditcounter.tools.SortTool;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuAgents.OptionsMenuAgent;
+import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class SortElementsActivity extends BaseActivity
 {
-    private SortElementsActivityViewModel viewModel;
+    private SortElementsActivityViewModelButler viewModel;
 
     private View frameLayoutDialogDown;
     private View frameLayoutDialogUp;
@@ -47,11 +42,11 @@ public class SortElementsActivity extends BaseActivity
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(SortElementsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(SortElementsActivityViewModelButler.class);
 
-        if(this.viewModel.optionsMenuAgent == null)
+        if(this.viewModel.requestCode == null)
         {
-            this.viewModel.optionsMenuAgent = new OptionsMenuAgent();
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
         }
 
         if(this.viewModel.elementsToSort == null)
@@ -91,50 +86,25 @@ public class SortElementsActivity extends BaseActivity
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
 
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_sort_elements));
         super.createToolbar()
                 .addToolbarHomeButton()
                 .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
-        super.createFloatingActionButton();
 
+        super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
+
+
         this.createActionDialog();
-    }
-
-    @Override
-    protected Menu createOptionsMenu(Menu menu)
-    {
-        return this.viewModel.optionsMenuAgent
-                .add(OptionsItem.SORT)
-                .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-                .create(menu);
-    }
-
-    @Override
-    public boolean handleOptionsItemSelected(OptionsItem item)
-    {
-        switch(item)
-        {
-            case SORT_ASCENDING:
-                this.viewModel.elementsToSort = SortTool.sortElements(this.viewModel.elementsToSort, SortType.BY_NAME, SortOrder.ASCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-                return true;
-
-            case SORT_DESCENDING:
-                this.viewModel.elementsToSort = SortTool.sortElements(this.viewModel.elementsToSort, SortType.BY_NAME, SortOrder.DESCENDING);
-                this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elementsToSort);
-                return true;
-
-            default:
-                return super.handleOptionsItemSelected(item);
-        }
     }
 
     private void decorateFloatingActionButton()
     {
         super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -144,6 +114,7 @@ public class SortElementsActivity extends BaseActivity
                 returnResult(RESULT_OK);
             }
         });
+
         super.setFloatingActionButtonVisibility(true);
     }
 

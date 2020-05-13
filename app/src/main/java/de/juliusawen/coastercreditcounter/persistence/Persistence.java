@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.application.Preferences;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
 import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
 import de.juliusawen.coastercreditcounter.persistence.jsonHandler.JsonHandler;
@@ -174,7 +173,7 @@ public class Persistence
         return this.databaseWrapper.fetchStatisticsGlobalTotals();
     }
 
-    public List<Visit> fetchCurrentVisits()
+    public List<IElement> fetchCurrentVisits()
     {
         return this.databaseWrapper.fetchCurrentVisits();
     }
