@@ -35,11 +35,10 @@ public class OptionsMenuProvider
         return this;
     }
 
-    public OptionsMenuProvider addToGroup(OptionsItem item, OptionsItem group)
+    public OptionsMenuProvider addToGroup(OptionsItem group, OptionsItem item)
     {
         this.addItem(item);
         this.groupByItem.put(item, group);
-
         return this;
     }
 

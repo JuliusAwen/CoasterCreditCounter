@@ -900,6 +900,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(!this.items.isEmpty() && !this.isAllExpanded())
         {
+            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding all items");
+
             int itemsCount;
             do
             {
@@ -917,7 +919,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             scrollToItem(this.items.get(0));
 
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: all items expanded");
+            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandAll:: all [%d] items expanded", itemsCount));
         }
         else
         {
@@ -948,7 +950,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
 
                 this.expandedItems.add(item);
                 notifyItemChanged(this.items.indexOf(item));
@@ -1008,6 +1010,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         }
+
         return true;
     }
 
@@ -1016,6 +1019,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(!this.items.isEmpty() && !this.isAllCollapsed())
         {
             List<IElement> itemsList = new ArrayList<>(this.expandedItems);
+
+            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandAll:: collapsing all [%d] items", itemsList.size()));
 
             for(IElement item : itemsList)
             {
@@ -1039,7 +1044,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             List<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
+                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
 
                 this.expandedItems.remove(item);
                 notifyItemChanged(items.indexOf(item));

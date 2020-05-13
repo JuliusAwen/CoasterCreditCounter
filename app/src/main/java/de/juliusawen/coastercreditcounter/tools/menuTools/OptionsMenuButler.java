@@ -251,7 +251,7 @@ public class OptionsMenuButler
                     .setEnabled(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingEnabled)
 
 
-                    .setVisible(OptionsItem.GROUP_BY, groupByVisible&& (groupByNoneVisible || groupByParkVisible || groupByCreditTypeVisible || groupByCategoryVisible
+                    .setVisible(OptionsItem.GROUP_BY, groupByVisible && (groupByNoneVisible || groupByParkVisible || groupByCreditTypeVisible || groupByCategoryVisible
                             || groupByManufacturerVisible || groupByModelVisible || groupByStatusVisible))
                     .setEnabled(OptionsItem.GROUP_BY, groupByEnabled && (groupByNoneEnabled || groupByParkEnabled || groupByCreditTypeEnabled || groupByCategoryEnabled
                             || groupByManufacturerEnabled || groupByModelEnabled || groupByStatusEnabled))
@@ -307,6 +307,7 @@ public class OptionsMenuButler
         switch(optionsItem)
         {
             case NO_FUNCTION:
+            case SORT:
             case SORT_BY:
             case GROUP_BY:
             case SORT_BY_NAME:
@@ -326,6 +327,8 @@ public class OptionsMenuButler
 
         if(this.contentRecyclerViewAdapter != null && this.getElements() != null)
         {
+            master.invalidateOptionsMenu();
+
             switch(optionsItem)
             {
                 case SORT_ASCENDING:
@@ -404,57 +407,52 @@ public class OptionsMenuButler
 
         if(this.contentRecyclerViewAdapter != null && this.requestCode != null && this.getElements() != null)
         {
+            this.master.invalidateOptionsMenu();
+
             switch(optionsItem)
             {
                 case GROUP_BY_NONE:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.NONE);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_PARK:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.PARK);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_CREDIT_TYPE:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.CREDIT_TYPE);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_CATEGORY:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.CATEGORY);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_MANUFACTURER:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.MANUFACTURER);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_MODEL:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.MODEL);
-                    this.master.invalidateOptionsMenu();
                     return true;
 
                 case GROUP_BY_STATUS:
                     GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.STATUS);
-                    this.master.invalidateOptionsMenu();
                     return true;
             }
         }
 
         if(this.contentRecyclerViewAdapter != null)
         {
+            master.invalidateOptionsMenu();
+
             switch(optionsItem)
             {
                 case EXPAND_ALL:
                     this.contentRecyclerViewAdapter.expandAll();
-                    master.invalidateOptionsMenu();
                     return true;
 
                 case COLLAPSE_ALL:
                     this.contentRecyclerViewAdapter.collapseAll();
-                    master.invalidateOptionsMenu();
                     return true;
             }
         }
@@ -475,8 +473,8 @@ public class OptionsMenuButler
             if(this.addSortAscendingAndDescending())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                        .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT);
+                        .addToGroup(OptionsItem.SORT, OptionsItem.SORT_ASCENDING)
+                        .addToGroup(OptionsItem.SORT, OptionsItem.SORT_DESCENDING);
             }
 
             if(this.addSortBy())
@@ -487,57 +485,57 @@ public class OptionsMenuButler
             if(this.addSortByName())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_NAME_ASCENDING, OptionsItem.SORT_BY_NAME)
-                        .addToGroup(OptionsItem.SORT_BY_NAME_DESCENDING, OptionsItem.SORT_BY_NAME);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_NAME)
+                        .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY_NAME_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_NAME, OptionsItem.SORT_BY_NAME_DESCENDING);
             }
 
             if(this.addSortByPark())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_PARK, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_PARK_ASCENDING, OptionsItem.SORT_BY_PARK)
-                        .addToGroup(OptionsItem.SORT_BY_PARK_DESCENDING, OptionsItem.SORT_BY_PARK);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_PARK)
+                        .addToGroup(OptionsItem.SORT_BY_PARK, OptionsItem.SORT_BY_PARK_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_PARK, OptionsItem.SORT_BY_PARK_DESCENDING);
             }
 
             if(this.addSortByCreditType())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, OptionsItem.SORT_BY_CREDIT_TYPE)
-                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, OptionsItem.SORT_BY_CREDIT_TYPE);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_CREDIT_TYPE)
+                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_CREDIT_TYPE, OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING);
             }
 
             if(this.addSortByCategory())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_CATEGORY_ASCENDING, OptionsItem.SORT_BY_CATEGORY)
-                        .addToGroup(OptionsItem.SORT_BY_CATEGORY_DESCENDING, OptionsItem.SORT_BY_CATEGORY);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_CATEGORY)
+                        .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY_CATEGORY_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_CATEGORY, OptionsItem.SORT_BY_CATEGORY_DESCENDING);
             }
 
             if(this.addSortByManufacturer())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, OptionsItem.SORT_BY_MANUFACTURER)
-                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, OptionsItem.SORT_BY_MANUFACTURER);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_MANUFACTURER)
+                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY_MANUFACTURER_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_MANUFACTURER, OptionsItem.SORT_BY_MANUFACTURER_DESCENDING);
             }
 
             if(this.addSortByModel())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_MODEL, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_MODEL_ASCENDING, OptionsItem.SORT_BY_MODEL)
-                        .addToGroup(OptionsItem.SORT_BY_MODEL_DESCENDING, OptionsItem.SORT_BY_MODEL);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_MODEL)
+                        .addToGroup(OptionsItem.SORT_BY_MODEL, OptionsItem.SORT_BY_MODEL_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_MODEL, OptionsItem.SORT_BY_MODEL_DESCENDING);
             }
 
             if(this.addSortByStatus())
             {
                 this.optionsMenuProvider
-                        .addToGroup(OptionsItem.SORT_BY_STATUS, OptionsItem.SORT_BY)
-                        .addToGroup(OptionsItem.SORT_BY_STATUS_ASCENDING, OptionsItem.SORT_BY_STATUS)
-                        .addToGroup(OptionsItem.SORT_BY_STATUS_DESCENDING, OptionsItem.SORT_BY_STATUS);
+                        .addToGroup(OptionsItem.SORT_BY, OptionsItem.SORT_BY_STATUS)
+                        .addToGroup(OptionsItem.SORT_BY_STATUS, OptionsItem.SORT_BY_STATUS_ASCENDING)
+                        .addToGroup(OptionsItem.SORT_BY_STATUS, OptionsItem.SORT_BY_STATUS_DESCENDING);
             }
 
             if(this.addGroupBy())
@@ -547,37 +545,37 @@ public class OptionsMenuButler
 
             if(this.addGroupByNone())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_NONE, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_NONE);
             }
 
             if(this.addGroupByPark())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_PARK, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_PARK);
             }
 
             if(this.addGroupByCreditType())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_CREDIT_TYPE, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_CREDIT_TYPE);
             }
 
             if(this.addGroupByCategory())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_CATEGORY, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_CATEGORY);
             }
 
             if(this.addGroupByManufacturer())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_MANUFACTURER, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_MANUFACTURER);
             }
 
             if(this.addGroupByModel())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_MODEL, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_MODEL);
             }
 
             if(this.addGroupByStatus())
             {
-                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY_STATUS, OptionsItem.GROUP_BY);
+                this.optionsMenuProvider.addToGroup(OptionsItem.GROUP_BY, OptionsItem.GROUP_BY_STATUS);
             }
 
             if(this.addExpandAndCollapseAll())
@@ -605,11 +603,11 @@ public class OptionsMenuButler
                 this.optionsMenuProvider
                         .add(OptionsItem.SHOW_BUILD_CONFIG)
                         .add(OptionsItem.SHOW_LOG)
-                        .addToGroup(OptionsItem.SHOW_LOG_VERBOSE, OptionsItem.SHOW_LOG)
-                        .addToGroup(OptionsItem.SHOW_LOG_DEBUG, OptionsItem.SHOW_LOG)
-                        .addToGroup(OptionsItem.SHOW_LOG_INFO, OptionsItem.SHOW_LOG)
-                        .addToGroup(OptionsItem.SHOW_LOG_WARNING, OptionsItem.SHOW_LOG)
-                        .addToGroup(OptionsItem.SHOW_LOG_ERROR, OptionsItem.SHOW_LOG);
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_VERBOSE)
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_DEBUG)
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_INFO)
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_WARNING)
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_ERROR);
             }
         }
 
@@ -1101,8 +1099,6 @@ public class OptionsMenuButler
 
     private void setElements(List<IElement> elements)
     {
-        master.invalidateOptionsMenu();
-
         if(this.viewModel != null)
         {
             this.viewModel.setElements(elements);

@@ -298,7 +298,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
         }
 
-        return super.getOptionsMenuButler().handleMenuItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
