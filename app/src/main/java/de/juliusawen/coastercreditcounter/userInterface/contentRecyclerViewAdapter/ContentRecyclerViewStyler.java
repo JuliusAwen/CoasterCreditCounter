@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.tools;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.graphics.Typeface;
 
@@ -13,12 +13,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufact
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 
-public abstract class GroupButler
+public abstract class ContentRecyclerViewStyler
 {
     public static void groupElementsAndSetDetailModes(ContentRecyclerViewAdapter contentRecyclerViewAdapter, RequestCode requestCode, GroupType groupType)
     {

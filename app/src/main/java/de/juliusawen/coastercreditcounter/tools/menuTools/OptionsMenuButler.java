@@ -14,11 +14,11 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attract
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
-import de.juliusawen.coastercreditcounter.tools.GroupButler;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -435,31 +435,31 @@ public class OptionsMenuButler
             switch(optionsItem)
             {
                 case GROUP_BY_NONE:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.NONE);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.NONE);
                     return true;
 
                 case GROUP_BY_PARK:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.PARK);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.PARK);
                     return true;
 
                 case GROUP_BY_CREDIT_TYPE:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CREDIT_TYPE);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CREDIT_TYPE);
                     return true;
 
                 case GROUP_BY_CATEGORY:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CATEGORY);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CATEGORY);
                     return true;
 
                 case GROUP_BY_MANUFACTURER:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MANUFACTURER);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MANUFACTURER);
                     return true;
 
                 case GROUP_BY_MODEL:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MODEL);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MODEL);
                     return true;
 
                 case GROUP_BY_STATUS:
-                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.STATUS);
+                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.STATUS);
                     return true;
             }
         }
