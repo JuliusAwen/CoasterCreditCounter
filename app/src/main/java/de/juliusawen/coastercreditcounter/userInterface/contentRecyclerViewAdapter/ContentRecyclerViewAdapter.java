@@ -72,9 +72,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new HashSet<>();
 
     private boolean useDedicatedExpansionOnClickListener;
+
+    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
-    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
     private View.OnClickListener increaseRideCountOnClickListener;
     private View.OnClickListener decreaseRideCountOnClickListener;
 
@@ -490,8 +491,6 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 viewHolder.textViewName.setText(item.getName());
             }
 
-
-
             viewHolder.textViewDetailAbove.setVisibility(View.GONE);
             viewHolder.textViewDetailBelow.setVisibility(View.GONE);
 
@@ -552,7 +551,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.SELECTABLE)
                 {
                     viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
-                    viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                    if(this.recyclerOnClickListener != null)
+                    {
+                        viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                    }
                 }
                 else if(this.recyclerOnClickListener != null)
                 {
