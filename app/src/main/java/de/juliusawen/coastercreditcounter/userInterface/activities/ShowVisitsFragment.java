@@ -102,8 +102,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 this.updateContentRecyclerView();
 
-                IElement visit = ResultFetcher.fetchResultElement(data);
-                ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, visit);
+                IElement resultElement = ResultFetcher.fetchResultElement(data);
+                ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, resultElement);
             }
         }
     }

@@ -152,7 +152,6 @@ public class OptionsMenuButler
                 case SHOW_VISIT:
                 {
                     boolean isEditingEnabled = ((Visit) this.getElement()).isEditingEnabled();
-
                     enableEditingVisible = !isEditingEnabled;
                     disableEditingVisible = isEditingEnabled;
 

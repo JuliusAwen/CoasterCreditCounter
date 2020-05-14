@@ -64,6 +64,10 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.visit = (Visit)App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
+        if(this.viewModel.requestCode == null)
+        {
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+        }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
         super.createToolbar()
