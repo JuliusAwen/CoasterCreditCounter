@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
 public abstract class ResultFetcher
 {
@@ -19,11 +19,11 @@ public abstract class ResultFetcher
         if(resultElementUuidString != null)
         {
             resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
-            Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElement:: selected element %s fetched", resultElement));
+            Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElement:: result element %s fetched", resultElement));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ResultFetcher.fetchResultElement:: no selected element fetched");
+            Log.d(Constants.LOG_TAG, "ResultFetcher.fetchResultElement:: no result element fetched");
         }
 
         return resultElement;

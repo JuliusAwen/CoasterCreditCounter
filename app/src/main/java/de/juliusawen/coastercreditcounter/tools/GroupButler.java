@@ -76,6 +76,22 @@ public abstract class GroupButler
                 break;
             }
 
+            case SHOW_ATTRACTIONS:
+            {
+                if(groupType == GroupType.CATEGORY)
+                {
+                    contentRecyclerViewAdapter
+                            .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                            .setTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
+                            .groupItems(GroupType.CATEGORY);
+                }
+                break;
+            }
+
             default:
             {
                 switch(groupType)

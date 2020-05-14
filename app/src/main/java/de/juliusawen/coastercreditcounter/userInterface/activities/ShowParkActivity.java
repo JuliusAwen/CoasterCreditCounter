@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,22 +28,22 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 
 import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
-public class ShowParkActivity extends BaseActivity
-        implements ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
+public class ShowParkActivity extends BaseActivity implements
+        ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
 {
     private enum Tab
     {
-        SHOW_OVERVIEW,
+        SHOW_PARK_OVERVIEW,
         SHOW_ATTRACTIONS,
         SHOW_VISITS
     }
 
-    private ShowParkActivityViewModel viewModel;
+    private ShowParkSharedViewModel viewModel;
     private ViewPager viewPager;
 
     private ShowParkOverviewFragment showParkOverviewFragment;
@@ -57,22 +58,19 @@ public class ShowParkActivity extends BaseActivity
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowParkActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowParkSharedViewModel.class);
 
         if(this.viewModel.park == null)
         {
             this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        if(this.viewModel.optionsMenuProvider == null)
-        {
-            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
-        }
-
         super.createHelpOverlayFragment(null, null);
         super.createToolbar()
                 .addToolbarHomeButton()
                 .createFloatingActionButton();
+
+        super.getOptionsMenuButler().setViewModel(this.viewModel);
 
         this.createTabPagerAdapter();
         this.viewPager.setCurrentItem(1);
@@ -100,63 +98,27 @@ public class ShowParkActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    @Override
-//    public boolean handleOptionsItemSelected(OptionsItem item)
-//    {
-//        if(super.handleOptionsItemSelected(item))
-//        {
-//            return true;
-//        }
-//
-//        switch(this.getCurrentTab())
-//        {
-//            case SHOW_ATTRACTIONS:
-//            {
-//                switch(item)
-//                {
-//                    case EXPAND_ALL:
-//                        this.showAttractionsFragment.expandAll();
-//                        break;
-//
-//                    case COLLAPSE_ALL:
-//                        this.showAttractionsFragment.collapseAll();
-//                        break;
-//                }
-//                break;
-//            }
-//
-//            case SHOW_VISITS:
-//            {
-//                switch(item)
-//                {
-//                    case SORT_ASCENDING:
-//                        this.showVisitsFragment.sortAscending();
-//                        break;
-//
-//                    case SORT_DESCENDING:
-//                        this.showVisitsFragment.sortDecending();
-//                        break;
-//
-//                    case EXPAND_ALL:
-//                        this.showVisitsFragment.expandAll();
-//                        break;
-//
-//                    case COLLAPSE_ALL:
-//                        this.showVisitsFragment.collapseAll();
-//                        break;
-//
-//                    case SORT:
-//                        break;
-//                }
-//                break;
-//            }
-//
-//            default:
-//                return false;
-//        }
-//
-//        return true;
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        OptionsItem optionsItem = super.getOptionsMenuButler().getOptionsItem(item);
+
+        if(this.getCurrentTab() == Tab.SHOW_VISITS)
+        {
+            switch(optionsItem)
+            {
+                case SORT_ASCENDING:
+                    this.showVisitsFragment.sortAscending();
+                    return true;
+
+                case SORT_DESCENDING:
+                    this.showVisitsFragment.sortDecending();
+                    return true;
+            }
+        }
+
+        return super.getOptionsMenuButler().handleMenuItemSelected(item);
+    }
 
     @Override
     public void handlePopupItemClicked(PopupItem item)
@@ -193,7 +155,7 @@ public class ShowParkActivity extends BaseActivity
                 break;
             }
 
-            case SHOW_OVERVIEW:
+            case SHOW_PARK_OVERVIEW:
             {
                 if(item == PopupItem.DELETE_ELEMENT)
                 {
@@ -238,7 +200,7 @@ public class ShowParkActivity extends BaseActivity
 
     private void createTabPagerAdapter()
     {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this.getSupportFragmentManager(), this.viewModel.park.getUuid().toString());
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this.getSupportFragmentManager());
 
         this.viewPager = findViewById(R.id.viewPagerShowPark);
         this.viewPager.setAdapter(tabPagerAdapter);
@@ -283,7 +245,7 @@ public class ShowParkActivity extends BaseActivity
 
         switch(tab)
         {
-            case SHOW_OVERVIEW:
+            case SHOW_PARK_OVERVIEW:
                 super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_overview), this.viewModel.park.getName());
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getString(R.string.help_text_show_park_overview));
                 break;
@@ -298,6 +260,7 @@ public class ShowParkActivity extends BaseActivity
                 super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getString(R.string.help_text_show_visits));
                 break;
         }
+
         this.decorateFloatingActionButton(tab);
     }
 
@@ -305,7 +268,7 @@ public class ShowParkActivity extends BaseActivity
     {
         switch(tab)
         {
-            case SHOW_OVERVIEW:
+            case SHOW_PARK_OVERVIEW:
             {
                 super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
@@ -362,20 +325,17 @@ public class ShowParkActivity extends BaseActivity
 
     public class TabPagerAdapter extends FragmentPagerAdapter
     {
-        private final String parkUuid;
-
         private final Drawable[] tabTitleDrawables = new Drawable[]
-            {
-                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
-                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
-                DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
-            };
+                {
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
+                };
 
-        TabPagerAdapter(FragmentManager fragmentManager, String parkUuid)
+        TabPagerAdapter(FragmentManager fragmentManager)
         {
             super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             Log.d(Constants.LOG_TAG, "ShowParkActivity.TabPagerAdapter.Constructor:: instantiating adapter...");
-            this.parkUuid = parkUuid;
         }
 
         @Override
@@ -385,19 +345,19 @@ public class ShowParkActivity extends BaseActivity
 
             switch(Tab.values()[position])
             {
-                case SHOW_OVERVIEW:
+                case SHOW_PARK_OVERVIEW:
                 {
-                    return ShowParkOverviewFragment.newInstance(this.parkUuid);
+                    return ShowParkOverviewFragment.newInstance();
                 }
 
                 case SHOW_ATTRACTIONS:
                 {
-                    return ShowAttractionsFragment.newInstance(this.parkUuid);
+                    return ShowAttractionsFragment.newInstance();
                 }
 
                 case SHOW_VISITS:
                 {
-                    return ShowVisitsFragment.newInstance(this.parkUuid);
+                    return ShowVisitsFragment.newInstance();
                 }
 
                 default:
@@ -413,21 +373,21 @@ public class ShowParkActivity extends BaseActivity
 
             switch(Tab.values()[position])
             {
-                case SHOW_OVERVIEW:
+                case SHOW_PARK_OVERVIEW:
                 {
-                    showParkOverviewFragment = (ShowParkOverviewFragment)instantiatedFragment;
+                    showParkOverviewFragment = (ShowParkOverviewFragment) instantiatedFragment;
                     break;
                 }
 
                 case SHOW_ATTRACTIONS:
                 {
-                    showAttractionsFragment = (ShowAttractionsFragment)instantiatedFragment;
+                    showAttractionsFragment = (ShowAttractionsFragment) instantiatedFragment;
                     break;
                 }
 
                 case SHOW_VISITS:
                 {
-                    showVisitsFragment = (ShowVisitsFragment)instantiatedFragment;
+                    showVisitsFragment = (ShowVisitsFragment) instantiatedFragment;
                     break;
                 }
             }
@@ -451,6 +411,7 @@ public class ShowParkActivity extends BaseActivity
             View view = LayoutInflater.from(ShowParkActivity.this).inflate(R.layout.layout_tab_title, null);
             ImageView imageView = view.findViewById(R.id.imageViewTabTitle);
             imageView.setImageDrawable(tabTitleDrawables[position]);
+
             return view;
         }
     }

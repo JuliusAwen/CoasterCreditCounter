@@ -9,9 +9,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -24,14 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
-import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
@@ -41,8 +36,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
@@ -53,19 +46,14 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowVisitsFragmentViewModel viewModel;
+    private ShowParkSharedViewModel viewModel;
+    private ContentRecyclerViewAdapter contentRecyclerViewAdapter;
     private ShowVisitsFragmentInteraction fragmentInteraction;
 
-    public static ShowVisitsFragment newInstance(String parkUuid)
+    public static ShowVisitsFragment newInstance()
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitsFragment.newInstance:: instantiating fragment...");
-
-        ShowVisitsFragment showVisitsFragment = new ShowVisitsFragment();
-        Bundle args = new Bundle();
-        args.putString(Constants.FRAGMENT_ARG_PARK_UUID, parkUuid);
-        showVisitsFragment.setArguments(args);
-
-        return showVisitsFragment;
+        return new ShowVisitsFragment();
     }
 
     @Override
@@ -74,27 +62,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreate:: creating fragment...");
         super.onCreate(savedInstanceState);
 
-        this.viewModel = new ViewModelProvider(this).get(ShowVisitsFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
 
-        if(this.viewModel.park == null)
-        {
-            if (getArguments() != null)
-            {
-                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
-            }
-        }
-
-        if(this.viewModel.optionsMenuProvider == null)
-        {
-            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
-        }
-
-        if(this.viewModel.contentRecyclerViewAdapter == null)
-        {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
-            this.viewModel.contentRecyclerViewAdapter.setTypefaceForContentType(SpecialGroupHeader.class, Typeface.BOLD);
-        }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
+        this.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
 
         this.setHasOptionsMenu(true);
     }
@@ -110,7 +80,15 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.contentRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.viewModel.requestCode = RequestCode.SHOW_VISITS;
+        this.viewModel.contentRecyclerViewAdapter = this.contentRecyclerViewAdapter;
     }
 
     @Override
@@ -130,36 +108,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater)
-    {
-        this.viewModel.optionsMenuProvider
-                .add(OptionsItem.SORT)
-                    .addToGroup(OptionsItem.SORT_ASCENDING, OptionsItem.SORT)
-                    .addToGroup(OptionsItem.SORT_DESCENDING, OptionsItem.SORT)
-                .add(OptionsItem.EXPAND_ALL)
-                .add(OptionsItem.COLLAPSE_ALL)
-                .create(menu);
-
-        super.onCreateOptionsMenu(menu, menuInflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        this.viewModel.optionsMenuProvider
-                .setEnabled(OptionsItem.SORT, this.viewModel.park.getChildCountOfType(Visit.class) > 1)
-                .setVisible(OptionsItem.EXPAND_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && !this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .setVisible(OptionsItem.COLLAPSE_ALL, this.viewModel.park.getChildCountOfType(Visit.class) > 1 && this.viewModel.contentRecyclerViewAdapter.isAllExpanded())
-                .prepare(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        return false;
-    }
-
     public void sortAscending()
     {
         Visit.setSortOrder(SortOrder.ASCENDING);
@@ -170,18 +118,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         Visit.setSortOrder(SortOrder.DESCENDING);
         this.updateContentRecyclerView();
-    }
-
-    public void expandAll()
-    {
-        this.viewModel.contentRecyclerViewAdapter.expandAll();
-        getActivity().invalidateOptionsMenu();
-    }
-
-    public void collapseAll()
-    {
-        this.viewModel.contentRecyclerViewAdapter.collapseAll();
-        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -201,10 +137,10 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     private ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
-                this.viewModel.park.getChildrenOfType(Visit.class),
-                Visit.class)
-                .groupItems(GroupType.YEAR);
+        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.park.getChildrenOfType(Visit.class), Visit.class)
+                .setTypefaceForContentType(SpecialGroupHeader.class, Typeface.BOLD)
+                .groupItems(GroupType.YEAR)
+                .setOnClickListener(this.getContentRecyclerViewOnClickListener());
     }
 
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
@@ -221,8 +157,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 }
                 else if(element.isGroupHeader())
                 {
-                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    contentRecyclerViewAdapter.toggleExpansion(element);
+                    if(contentRecyclerViewAdapter.isAllExpanded() || contentRecyclerViewAdapter.isAllCollapsed())
                     {
                         getActivity().invalidateOptionsMenu();
                     }
@@ -366,7 +302,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void updateContentRecyclerView()
     {
         Log.i(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: updating RecyclerView...");
-        this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
+        this.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 
     public interface ShowVisitsFragmentInteraction

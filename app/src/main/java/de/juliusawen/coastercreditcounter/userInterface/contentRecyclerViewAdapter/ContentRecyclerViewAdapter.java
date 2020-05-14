@@ -1423,4 +1423,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setUseDedicatedExpansionOnClickListener:: set to [%S]", useDedicatedExpansionOnClickListener));
         return this;
     }
+
+    public void notifyItemChanged(IElement element)
+    {
+        notifyItemChanged(this.items.indexOf(element));
+    }
 }

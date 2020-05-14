@@ -10,6 +10,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -26,9 +27,6 @@ public class OptionsMenuButler
     private BaseActivity master;
     private OptionsMenuProvider optionsMenuProvider;
 
-    private RequestCode requestCode;
-    private ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-
     // find boolean spam at the end of the class
 
     IOptionsMenuButlerCompatibleViewModel viewModel;
@@ -42,21 +40,18 @@ public class OptionsMenuButler
     public void setViewModel(IOptionsMenuButlerCompatibleViewModel viewModel)
     {
         this.viewModel = viewModel;
-
-        this.requestCode = viewModel.getRequestCode();
-        this.contentRecyclerViewAdapter = viewModel.getContentRecyclerViewAdapter();
     }
 
     public OptionsItem getOptionsItem(MenuItem item)
     {
-        return this.optionsMenuProvider.getOptionsItem(item);
+        return OptionsItem.getValue(item.getItemId());
     }
 
     public Menu prepareOptionsMenu(Menu menu)
     {
-        if(this.requestCode != null)
+        if(this.getRequestCode() != null)
         {
-            switch(this.requestCode)
+            switch(this.getRequestCode())
             {
                 case PICK_ATTRACTIONS:
                 case PICK_CREDIT_TYPE:
@@ -165,6 +160,34 @@ public class OptionsMenuButler
                     break;
                 }
 
+                case SHOW_PARK_OVERVIEW:
+                {
+                    sortVisible = false;
+
+                    expandAndCollapseAllVisible = false;
+                    break;
+                }
+
+                case SHOW_ATTRACTIONS:
+                {
+                    sortVisible = false;
+
+                    expandAndCollapseAllVisible = this.getElement().getChildCountOfType(Attraction.class) > 1;
+                    break;
+                }
+
+                case SHOW_VISITS:
+                {
+                    boolean childCountLargerThanOne = this.getElement().getChildCountOfType(Visit.class) > 1;
+
+                    sortVisible = true;
+                    sortEnabled = childCountLargerThanOne;
+                    sortAscendingVisible = true;
+                    sortDescendingVisible = true;
+
+                    expandAndCollapseAllVisible = childCountLargerThanOne;
+                    break;
+                }
 
                 case NAVIGATE:
                 {
@@ -204,47 +227,47 @@ public class OptionsMenuButler
                 .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, goToCurrentVisitVisible);
 
 
-        if(this.contentRecyclerViewAdapter != null)
+        if(this.getContentRecyclerViewAdapter() != null)
         {
             this.optionsMenuProvider
 
                     .setVisible(OptionsItem.SORT_BY_PARK, sortByParkVisible)
-                    .setEnabled(OptionsItem.SORT_BY_PARK, sortByParkEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.PARK)
+                    .setEnabled(OptionsItem.SORT_BY_PARK, sortByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
                     .setVisible(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingEnabled)
 
                     .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE)
+                    .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
                     .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingEnabled)
 
                     .setVisible(OptionsItem.SORT_BY_CATEGORY, sortByCategoryVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY)
+                    .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
                     .setVisible(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingEnabled)
 
                     .setVisible(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                    .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
                     .setVisible(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingEnabled)
 
                     .setVisible(OptionsItem.SORT_BY_MODEL, sortByModelVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MODEL, sortByModelEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.MODEL)
+                    .setEnabled(OptionsItem.SORT_BY_MODEL, sortByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
                     .setVisible(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingEnabled)
 
                     .setVisible(OptionsItem.SORT_BY_STATUS, sortByStatusVisible)
-                    .setEnabled(OptionsItem.SORT_BY_STATUS, sortByStatusEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
+                    .setEnabled(OptionsItem.SORT_BY_STATUS, sortByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
                     .setVisible(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingVisible)
                     .setEnabled(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingEnabled)
                     .setVisible(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingVisible)
@@ -257,29 +280,29 @@ public class OptionsMenuButler
                             || groupByManufacturerEnabled || groupByModelEnabled || groupByStatusEnabled))
 
                     .setVisible(OptionsItem.GROUP_BY_NONE, groupByNoneVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_NONE, groupByNoneEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.NONE)
+                    .setEnabled(OptionsItem.GROUP_BY_NONE, groupByNoneEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.NONE)
 
                     .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_PARK, groupByParkEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.PARK)
+                    .setEnabled(OptionsItem.GROUP_BY_PARK, groupByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
 
                     .setVisible(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.CREDIT_TYPE)
+                    .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
 
                     .setVisible(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.CATEGORY)
+                    .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
 
                     .setVisible(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.MANUFACTURER)
+                    .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
 
                     .setVisible(OptionsItem.GROUP_BY_MODEL, groupByModelVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_MODEL, groupByModelEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.MODEL)
+                    .setEnabled(OptionsItem.GROUP_BY_MODEL, groupByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
 
                     .setVisible(OptionsItem.GROUP_BY_STATUS, groupByStatusVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled && this.contentRecyclerViewAdapter.getGroupType() != GroupType.STATUS)
+                    .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
 
 
-                    .setVisible(OptionsItem.EXPAND_ALL, expandAndCollapseAllVisible && !this.contentRecyclerViewAdapter.isAllExpanded())
-                    .setVisible(OptionsItem.COLLAPSE_ALL, expandAndCollapseAllVisible && this.contentRecyclerViewAdapter.isAllExpanded());
+                    .setVisible(OptionsItem.EXPAND_ALL, expandAndCollapseAllVisible && !this.getContentRecyclerViewAdapter().isAllExpanded())
+                    .setVisible(OptionsItem.COLLAPSE_ALL, expandAndCollapseAllVisible && this.getContentRecyclerViewAdapter().isAllExpanded());
         }
 
 
@@ -325,7 +348,7 @@ public class OptionsMenuButler
                 return true;
         }
 
-        if(this.contentRecyclerViewAdapter != null && this.getElements() != null)
+        if(this.getContentRecyclerViewAdapter() != null && this.getElements() != null)
         {
             master.invalidateOptionsMenu();
 
@@ -334,125 +357,125 @@ public class OptionsMenuButler
                 case SORT_ASCENDING:
                 case SORT_BY_NAME_ASCENDING:
                     this.viewModel.setElements(SortTool.sortElements(this.getElements(), SortType.BY_NAME, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_DESCENDING:
                 case SORT_BY_NAME_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_NAME, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_PARK_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_PARK, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_PARK_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_PARK, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_CREDIT_TYPE_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CREDIT_TYPE, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_CREDIT_TYPE_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CREDIT_TYPE, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_CATEGORY_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CATEGORY, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_CATEGORY_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CATEGORY, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_MANUFACTURER_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MANUFACTURER, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_MANUFACTURER_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MANUFACTURER, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_MODEL_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MODEL, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_MODEL_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MODEL, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_STATUS_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_STATUS, SortOrder.ASCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
 
                 case SORT_BY_STATUS_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_STATUS, SortOrder.DESCENDING));
-                    this.contentRecyclerViewAdapter.setItems(this.getElements());
+                    this.getContentRecyclerViewAdapter().setItems(this.getElements());
                     return true;
             }
         }
 
-        if(this.contentRecyclerViewAdapter != null && this.requestCode != null && this.getElements() != null)
+        if(this.getContentRecyclerViewAdapter() != null && this.getRequestCode() != null && this.getElements() != null)
         {
             this.master.invalidateOptionsMenu();
 
             switch(optionsItem)
             {
                 case GROUP_BY_NONE:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.NONE);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.NONE);
                     return true;
 
                 case GROUP_BY_PARK:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.PARK);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.PARK);
                     return true;
 
                 case GROUP_BY_CREDIT_TYPE:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.CREDIT_TYPE);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CREDIT_TYPE);
                     return true;
 
                 case GROUP_BY_CATEGORY:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.CATEGORY);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CATEGORY);
                     return true;
 
                 case GROUP_BY_MANUFACTURER:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.MANUFACTURER);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MANUFACTURER);
                     return true;
 
                 case GROUP_BY_MODEL:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.MODEL);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MODEL);
                     return true;
 
                 case GROUP_BY_STATUS:
-                    GroupButler.groupElementsAndSetDetailModes(this.contentRecyclerViewAdapter, this.requestCode, GroupType.STATUS);
+                    GroupButler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.STATUS);
                     return true;
             }
         }
 
-        if(this.contentRecyclerViewAdapter != null)
+        if(this.getContentRecyclerViewAdapter() != null)
         {
             master.invalidateOptionsMenu();
 
             switch(optionsItem)
             {
                 case EXPAND_ALL:
-                    this.contentRecyclerViewAdapter.expandAll();
+                    this.getContentRecyclerViewAdapter().expandAll();
                     return true;
 
                 case COLLAPSE_ALL:
-                    this.contentRecyclerViewAdapter.collapseAll();
+                    this.getContentRecyclerViewAdapter().collapseAll();
                     return true;
             }
         }
@@ -463,7 +486,7 @@ public class OptionsMenuButler
 
     public Menu createOptionsMenu(Menu menu)
     {
-        if(this.requestCode != null)
+        if(this.getRequestCode() != null)
         {
             if(this.addSort())
             {
@@ -618,7 +641,7 @@ public class OptionsMenuButler
 
     private boolean addSort()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_ATTRACTIONS:
             case PICK_CREDIT_TYPE:
@@ -639,6 +662,10 @@ public class OptionsMenuButler
             case MANAGE_CATEGORIES:
             case MANAGE_MANUFACTURERS:
             case MANAGE_STATUSES:
+
+            case SHOW_ATTRACTIONS:
+            case SHOW_VISITS:
+            case SHOW_PARK_OVERVIEW:
                 return true;
 
             default:
@@ -648,7 +675,7 @@ public class OptionsMenuButler
 
     private boolean addSortAscendingAndDescending()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_ATTRACTIONS:
             case PICK_CREDIT_TYPE:
@@ -664,6 +691,10 @@ public class OptionsMenuButler
             case SORT_MANUFACTURERS:
             case SORT_MODELS:
             case SORT_STATUSES:
+
+            case SHOW_ATTRACTIONS:
+            case SHOW_VISITS:
+            case SHOW_PARK_OVERVIEW:
                 return true;
 
             default:
@@ -673,7 +704,7 @@ public class OptionsMenuButler
 
     private boolean addSortBy()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -692,7 +723,7 @@ public class OptionsMenuButler
 
     private boolean addSortByName()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -711,7 +742,7 @@ public class OptionsMenuButler
 
     private boolean addSortByPark()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -727,7 +758,7 @@ public class OptionsMenuButler
 
     private boolean addSortByCreditType()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -746,7 +777,7 @@ public class OptionsMenuButler
 
     private boolean addSortByCategory()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -765,7 +796,7 @@ public class OptionsMenuButler
 
     private boolean addSortByManufacturer()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -784,7 +815,7 @@ public class OptionsMenuButler
 
     private boolean addSortByModel()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -800,7 +831,7 @@ public class OptionsMenuButler
 
     private boolean addSortByStatus()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -816,7 +847,7 @@ public class OptionsMenuButler
 
     private boolean addGroupBy()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -835,7 +866,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByNone()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -854,7 +885,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByPark()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -870,7 +901,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByCreditType()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -889,7 +920,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByCategory()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -908,7 +939,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByManufacturer()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_MODEL:
             case MANAGE_MODELS:
@@ -927,7 +958,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByModel()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -943,7 +974,7 @@ public class OptionsMenuButler
 
     private boolean addGroupByStatus()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
@@ -959,7 +990,7 @@ public class OptionsMenuButler
 
     private boolean addExpandAndCollapseAll()
     {
-        switch(this.requestCode)
+        switch(this.getRequestCode())
         {
             case PICK_ATTRACTIONS:
             case PICK_CREDIT_TYPE:
@@ -983,6 +1014,9 @@ public class OptionsMenuButler
 
             case SHOW_LOCATIONS:
             case SHOW_VISIT:
+            case SHOW_ATTRACTIONS:
+            case SHOW_VISITS:
+            case SHOW_PARK_OVERVIEW:
                 return true;
 
             default:
@@ -992,17 +1026,17 @@ public class OptionsMenuButler
 
     private boolean addEnableAndDisableEditing()
     {
-        return this.requestCode == RequestCode.SHOW_VISIT;
+        return this.getRequestCode() == RequestCode.SHOW_VISIT;
     }
 
     private boolean addGoToCurrentVisit()
     {
-        return this.requestCode == RequestCode.NAVIGATE;
+        return this.getRequestCode() == RequestCode.NAVIGATE;
     }
 
     private boolean addDeveloperOptions()
     {
-        return this.requestCode == RequestCode.DEVELOPER_OPTIONS;
+        return this.getRequestCode() == RequestCode.DEVELOPER_OPTIONS;
     }
 
     private boolean sortVisible = false;
@@ -1103,6 +1137,20 @@ public class OptionsMenuButler
         {
             this.viewModel.setElements(elements);
         }
+    }
+
+    private RequestCode getRequestCode()
+    {
+        return this.viewModel != null
+                ? this.viewModel.getRequestCode()
+                : null;
+    }
+
+    private ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    {
+        return this.viewModel != null
+                ? this.viewModel.getContentRecyclerViewAdapter()
+                : null;
     }
 
     private List<IElement> getElements()

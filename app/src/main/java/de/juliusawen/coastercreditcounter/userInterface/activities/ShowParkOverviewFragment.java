@@ -16,20 +16,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.UUID;
-
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuProvider;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
@@ -39,22 +35,16 @@ import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowParkOverviewFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowParkOverviewFragmentViewModel viewModel;
+    private ShowParkSharedViewModel viewModel;
     private ShowParkOverviewFragmentInteraction fragmentInteraction;
 
     private FrameLayoutWithMaxHeight layoutNote;
     private TextView textViewNote;
 
-    public static ShowParkOverviewFragment newInstance(String parkUuid)
+    public static ShowParkOverviewFragment newInstance()
     {
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowParkOverviewFragment.newInstance:: instantiating fragment...");
-
-        ShowParkOverviewFragment showParkOverviewFragment = new ShowParkOverviewFragment();
-        Bundle args = new Bundle();
-        args.putString(Constants.FRAGMENT_ARG_PARK_UUID, parkUuid);
-        showParkOverviewFragment.setArguments(args);
-
-        return showParkOverviewFragment;
+        return new ShowParkOverviewFragment();
     }
 
     @Override
@@ -76,22 +66,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     public void onCreate (Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        this.viewModel = new ViewModelProvider(this).get(ShowParkOverviewFragmentViewModel.class);
-
-        if(this.viewModel.park == null)
-        {
-            if(getArguments() != null)
-            {
-                this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getArguments().getString(Constants.FRAGMENT_ARG_PARK_UUID)));
-            }
-        }
-
-        if(this.viewModel.optionsMenuProvider == null)
-        {
-            this.viewModel.optionsMenuProvider = new OptionsMenuProvider();
-        }
-
+        this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
         this.setHasOptionsMenu(true);
     }
 
@@ -104,6 +79,14 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         this.createNoteLayout(view);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.viewModel.requestCode = RequestCode.SHOW_PARK_OVERVIEW;
+        this.viewModel.contentRecyclerViewAdapter = null;
     }
 
     @Override

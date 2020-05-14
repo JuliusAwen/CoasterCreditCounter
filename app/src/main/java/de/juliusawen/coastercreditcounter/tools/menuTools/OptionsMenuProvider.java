@@ -24,11 +24,6 @@ public class OptionsMenuProvider
     private final Map<OptionsItem, Boolean> setEnabledByItem = new HashMap<>();
     private final Map<OptionsItem, Boolean> setVisibleByItem = new HashMap<>();
 
-    public OptionsItem getOptionsItem(MenuItem menuItem)
-    {
-         return OptionsItem.getValue(menuItem.getItemId());
-    }
-
     public OptionsMenuProvider add(OptionsItem item)
     {
         this.addItem(item);

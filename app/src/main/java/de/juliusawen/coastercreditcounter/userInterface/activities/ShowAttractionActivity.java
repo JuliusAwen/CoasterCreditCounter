@@ -344,19 +344,10 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: returning %s with ResultCode[%d]", this.viewModel.attraction, resultCode));
 
         Intent intent = new Intent();
-
-        if(resultCode == RESULT_OK)
-        {
-            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
-            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
-        }
-        else
-        {
-            Log.i(Constants.LOG_TAG, "ShowAttractionActivity.returnResult:: no changes - returning no element");
-        }
+        intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
 
         setResult(resultCode, intent);
         Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
