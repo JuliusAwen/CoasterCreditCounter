@@ -1,18 +1,18 @@
 package de.juliusawen.coastercreditcounter.tools.menuTools;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class OptionsMenuProvider
 {
@@ -56,13 +56,13 @@ public class OptionsMenuProvider
 
     public Menu create(Menu menu)
     {
-        Log.d(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding [%s] Item(s) to OptionsMenu", this.itemsToAdd.size()));
+        Log.d(String.format("adding [%s] Item(s) to OptionsMenu", this.itemsToAdd.size()));
 
         for(OptionsItem item : this.itemsToAdd)
         {
             if(this.isActionItem(item))
             {
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding Item [#%d - %s] as ACTION_IF_ROOM to ROOT", item.ordinal(), item));
+                Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] as ACTION_IF_ROOM to ROOT", item.ordinal(), item));
 
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource)
                         .setIcon(DrawableProvider.getColoredDrawable(item.drawableResource, R.color.white))
@@ -72,7 +72,7 @@ public class OptionsMenuProvider
             {
                 if(this.isGroupInRootMenu(item))
                 {
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding Group [#%d - %s] to ROOT", item.ordinal(), item));
+                    Log.v(String.format(Locale.getDefault(), "adding Group [#%d - %s] to ROOT", item.ordinal(), item));
                     this.subMenuByGroup.put(item, menu.addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                 }
                 else //isGroupInSubMenu
@@ -80,19 +80,19 @@ public class OptionsMenuProvider
                     if(this.subMenuByGroup.containsKey(this.groupByItem.get(item)))
                     {
                         OptionsItem group = this.groupByItem.get(item);
-                        Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding Group [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                        Log.v(String.format(Locale.getDefault(), "adding Subgroup [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
                         this.subMenuByGroup.put(item, this.subMenuByGroup.get(group).addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                     }
                     else
                     {
-                        Log.e(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: Group for Group [#%d - %s] not found", item.ordinal(), item));
+                        Log.e(String.format(Locale.getDefault(), "Subgroup for Group [#%d - %s] not found", item.ordinal(), item));
                         break;
                     }
                 }
             }
             else if(this.isItemInRootMenu(item))
             {
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding Item [#%d - %s] to ROOT", item.ordinal(), item));
+                Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] to ROOT", item.ordinal(), item));
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
             }
             else //IsItemInGroup
@@ -100,12 +100,12 @@ public class OptionsMenuProvider
                 if((this.subMenuByGroup.containsKey(this.groupByItem.get(item))))
                 {
                     OptionsItem group = this.groupByItem.get(item);
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.create:: adding Item [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                    Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
                     this.subMenuByGroup.get(group).add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("OptionsMenuProvider.add:: Group for Item [#%d - %s] not found", item.ordinal(), item));
+                    Log.e(String.format(Locale.getDefault(), "Group for Item [#%d - %s] not found", item.ordinal(), item));
                     break;
                 }
             }
@@ -137,11 +137,11 @@ public class OptionsMenuProvider
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupEnabled(optionsItem.ordinal(), isEnabled);
                     }
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.prepare:: Group [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
+                    Log.v(String.format(Locale.getDefault(), "Group [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.prepare:: Item [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
+                    Log.v(String.format(Locale.getDefault(), "Item [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
                     menuItem.setEnabled(isEnabled);
                 }
             }
@@ -164,12 +164,12 @@ public class OptionsMenuProvider
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupVisible(optionsItem.ordinal(), isVisible);
                     }
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.prepare:: Group [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
+                    Log.v(String.format(Locale.getDefault(), "Group [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
                 }
                 else
                 {
                     menuItem.setVisible(isVisible);
-                    Log.v(Constants.LOG_TAG, String.format("OptionsMenuProvider.prepare:: Item [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
+                    Log.v(String.format(Locale.getDefault(), "Item [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
                 }
             }
         }
@@ -206,6 +206,6 @@ public class OptionsMenuProvider
         this.groupByItem.clear();
         this.subMenuByGroup.clear();
 
-        Log.i(Constants.LOG_TAG, "OptionsMenuProvider.clear:: OptionsMenuProvider cleared");
+        Log.i("cleared");
     }
 }

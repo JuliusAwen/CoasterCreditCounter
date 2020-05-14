@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -45,6 +45,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
@@ -59,7 +61,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ManagePropertiesActivityViewModelButler viewModel;
+    private ManagePropertiesActivityViewModel viewModel;
 
     protected void setContentView()
     {
@@ -68,7 +70,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModelButler.class);
+        this.viewModel = new ViewModelProvider(this).get(ManagePropertiesActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {
@@ -181,7 +183,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode != RESULT_OK)
         {
@@ -261,9 +263,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
-                Log.d(Constants.LOG_TAG,
-                        String.format("ManagePropertiesActivity.onActivityResult<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions",
-                                this.viewModel.longClickedElement, resultElements.size()));
+                Log.d(String.format(Locale.getDefault(), "<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions", this.viewModel.longClickedElement, resultElements.size()));
                 updateContentRecyclerView(true);
             }
         }
@@ -321,7 +321,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 Element element = (Element)view.getTag();
 
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onClick:: %s clicked", element));
+                Log.i(String.format("%s clicked", element));
 
                 if(viewModel.isSelectionMode && element.isProperty())
                 {
@@ -370,7 +370,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.onLongClick:: %s long clicked", viewModel.longClickedElement));
+                    Log.i(String.format("%s long clicked", viewModel.longClickedElement));
 
 
                     PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
@@ -416,9 +416,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getCreditType().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG,
-                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                                attraction, viewModel.longClickedElement));
+                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
 
                                 elementsToAssignTo.remove(attraction);
                             }
@@ -434,9 +432,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getCategory().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG,
-                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                                attraction, viewModel.longClickedElement));
+                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
 
                                 elementsToAssignTo.remove(attraction);
                             }
@@ -452,9 +448,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getManufacturer().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG,
-                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                                attraction, viewModel.longClickedElement));
+                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
 
                                 elementsToAssignTo.remove(attraction);
                             }
@@ -470,9 +464,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getModel().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG,
-                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                                attraction, viewModel.longClickedElement));
+                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
 
                                 elementsToAssignTo.remove(attraction);
                             }
@@ -488,9 +480,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         {
                             if(attraction.getStatus().equals(viewModel.longClickedElement))
                             {
-                                Log.v(Constants.LOG_TAG,
-                                        String.format("ManagePropertiesActivity.onMenuItemClick<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned",
-                                                attraction, viewModel.longClickedElement));
+                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
 
                                 elementsToAssignTo.remove(attraction);
                             }
@@ -676,8 +666,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    Log.d(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleAlertDialogClick[%s]:: setting %s as default [%s]",
-                            requestCode, this.viewModel.longClickedElement, this.viewModel.propertyTypeToManage));
+                    Log.d(String.format("[%s]:: setting %s as default [%s]", requestCode, this.viewModel.longClickedElement, this.viewModel.propertyTypeToManage));
                     break;
                 }
             }
@@ -689,13 +678,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         super.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
+            Log.i(String.format("deleting %s...", this.viewModel.longClickedElement));
 
             if(this.viewModel.longClickedElement.hasChildren())
             {
@@ -742,7 +731,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ManagePropertiesActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i("FloatingActionButton pressed");
 
                 switch(viewModel.propertyTypeToManage)
                 {
@@ -776,7 +765,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         if(resetContent)
         {
-            Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.updateContentRecyclerView:: resetting content...");
+            Log.d("resetting content...");
 
             List<IElement> elements = App.content.getContentOfType(this.getPropertyType());
 
@@ -790,7 +779,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ManagePropertiesActivity.updateContentRecyclerView:: notifying data set changes...");
+            Log.d("notifying data set changes...");
             this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
 
@@ -823,7 +812,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
@@ -831,13 +820,13 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             if(this.viewModel.propertyToReturn != null)
             {
-                Log.i(Constants.LOG_TAG, String.format("ManagePropertiesActivity.returnResult:: returning %s", this.viewModel.propertyToReturn));
+                Log.i(String.format("returning %s", this.viewModel.propertyToReturn));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.propertyToReturn.getUuid().toString());
             }
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

@@ -1,14 +1,12 @@
 package de.juliusawen.coastercreditcounter.tools;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
@@ -19,6 +17,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStat
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public abstract class SortTool
 {
@@ -26,7 +25,7 @@ public abstract class SortTool
     {
         if(elements.size() <= 1)
         {
-            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElements:: not sorted: [%d] element(s) passed", elements.size()));
+            Log.v(String.format(Locale.getDefault(), "not sorted: [%d] element(s) passed", elements.size()));
             return elements;
         }
 
@@ -451,9 +450,7 @@ public abstract class SortTool
             }
         }
 
-        Log.d(Constants.LOG_TAG,
-                String.format("SortTool.sortElements:: sorted [%s] elements [%s] of type [%s] [%s]",
-                        elements.size(), sortType, elements.get(0).getClass().getSimpleName(), sortOrder));
+        Log.d(String.format("sorted [%s] elements [%s] of type [%s] [%s]", elements.size(), sortType, elements.get(0).getClass().getSimpleName(), sortOrder));
         return SortTool.sortDefaultPropertyToTopAccordingToPreferences(sortedElements);
     }
 
@@ -461,7 +458,7 @@ public abstract class SortTool
     {
         if(!elements.get(0).isProperty())
         {
-            Log.v(Constants.LOG_TAG,  "SortTool.sortDefaultPropertyToTopAccordingToPreferences:: no Property in list");
+            Log.v("no Property in list");
             return elements;
         }
 
@@ -474,7 +471,7 @@ public abstract class SortTool
             {
                 if(element.isProperty() && ((IProperty)element).isDefault())
                 {
-                    Log.d(Constants.LOG_TAG,  String.format("SortTool.sortDefaultPropertyToTopAccordingToPreferences:: sorting [%s] to top of list", element));
+                    Log.d( String.format("SortTool.sortDefaultPropertyToTopAccordingToPreferences:: sorting [%s] to top of list", element));
                     defaultProperty = element;
                     break;
                 }
@@ -494,8 +491,7 @@ public abstract class SortTool
     {
         if(elementsToSort.size() > 1)
         {
-            Log.v(Constants.LOG_TAG,  String.format("SortTool.sortElementsBasedOnComparisonList:: sorted [%d] elements based on comparison list containing [%d] elements",
-                    elementsToSort.size(), comparisonList.size()));
+            Log.v(String.format(Locale.getDefault(), "sorted [%d] elements based on comparison list containing [%d] elements", elementsToSort.size(), comparisonList.size()));
             List<IElement> sortedElements = new ArrayList<>();
             for(IElement element : comparisonList)
             {
@@ -508,7 +504,7 @@ public abstract class SortTool
         }
         else
         {
-            Log.v(Constants.LOG_TAG,"SortTool.sortElementsBasedOnComparisonList:: not sorted - list contains only one element");
+            Log.v("not sorted - list contains only one element");
             return elementsToSort;
         }
     }

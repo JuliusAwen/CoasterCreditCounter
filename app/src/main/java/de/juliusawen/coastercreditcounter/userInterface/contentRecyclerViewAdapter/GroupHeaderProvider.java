@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
@@ -34,6 +31,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class GroupHeaderProvider
 {
@@ -44,12 +42,12 @@ public class GroupHeaderProvider
     {
         if(elements.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElements:: no elements to group - returning ungrouped elements");
+            Log.v("no elements to group - returning ungrouped elements");
             return new LinkedList<>(elements);
         }
         else if(groupType == GroupType.NONE)
         {
-            Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupElements:: GroupType is <NONE> - returning ungrouped elements");
+            Log.v("GroupType is <NONE> - returning ungrouped elements");
             return new LinkedList<>(elements);
         }
         else if(groupType == GroupType.YEAR)
@@ -67,7 +65,7 @@ public class GroupHeaderProvider
             if(!header.hasChildren())
             {
                 emptyHeaders.add(header);
-                Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s is empty - marked for removal", header));
+                Log.e(String.format("%s is empty - marked for removal", header));
             }
         }
         groupedElements.removeAll(emptyHeaders);
@@ -79,7 +77,7 @@ public class GroupHeaderProvider
 
     private List<IGroupHeader> createGroupHeaders(List<IElement> elements, GroupType groupType)
     {
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.createGroupHeaders:: initalizing GroupHeaders for [%d] elements...", elements.size()));
+        Log.d(String.format(Locale.getDefault(), "initalizing GroupHeaders for [%d] elements...", elements.size()));
 
         List<IGroupHeader> groupedElements = new ArrayList<>();
         for(IElement element : elements)
@@ -92,12 +90,12 @@ public class GroupHeaderProvider
             {
                 groupHeader.addChild(element);
 
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.createGroupHeaders:: added %s to %s", element, groupHeader));
+                Log.v(String.format("added %s to %s", element, groupHeader));
 
                 if(!groupedElements.contains(groupHeader))
                 {
                     groupedElements.add(groupHeader);
-                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.createGroupHeaders:: added %s to GroupedElements", groupHeader));
+                    Log.v(String.format("added %s to GroupedElements", groupHeader));
                 }
             }
             else
@@ -107,10 +105,10 @@ public class GroupHeaderProvider
                 groupedElements.add(groupHeader);
                 groupHeader.addChild(element);
 
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.createGroupHeaders:: created new %s and added %s", groupHeader, element));
+                Log.v(String.format("created new %s and added %s", groupHeader, element));
             }
         }
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.createGroupHeaders:: created [%d] GroupHeaders", groupedElements.size()));
+        Log.d(String.format(Locale.getDefault(), "created [%d] GroupHeaders", groupedElements.size()));
 
         return groupedElements;
     }
@@ -134,7 +132,7 @@ public class GroupHeaderProvider
             {
                 if(!groupHeader.getName().equals(groupElement.getName()))
                 {
-                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.updateGroupHeaders:: changing name for %s to [%s]...", groupHeader, groupElement.getName()));
+                    Log.v(String.format("changing name for %s to [%s]...", groupHeader, groupElement.getName()));
 
                     groupHeader.setName(groupElement.getName());
                 }
@@ -142,7 +140,7 @@ public class GroupHeaderProvider
                 if(!groupedElements.contains(groupHeader))
                 {
                     groupedElements.add(groupHeader);
-                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.updateGroupHeaders:: added %s to GroupedAttractions", groupHeader));
+                    Log.v(String.format("added %s to GroupedAttractions", groupHeader));
                 }
 
                 groupHeader.addChild(element);
@@ -154,7 +152,7 @@ public class GroupHeaderProvider
                 groupedElements.add(groupHeader);
 
                 groupHeader.addChild(element);
-                Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.updateGroupHeaders:: created new %s and added %s", groupHeader, element));
+                Log.v(String.format("created new %s and added %s", groupHeader, element));
             }
         }
 
@@ -173,7 +171,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s is no Attraction", element));
+                    Log.e(String.format("%s is no Attraction", element));
                 }
 
                 break;
@@ -190,7 +188,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no CreditType", element));
+                    Log.e(String.format("%s has no CreditType", element));
                 }
                 break;
 
@@ -206,7 +204,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Category", element));
+                    Log.e(String.format("%s has no Category", element));
                 }
                 break;
 
@@ -222,7 +220,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Manufacturer", element));
+                    Log.e(String.format("%s has no Manufacturer", element));
                 }
 
                 break;
@@ -239,7 +237,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Model", element));
+                    Log.e(String.format("%s has no Model", element));
                 }
                 break;
 
@@ -255,7 +253,7 @@ public class GroupHeaderProvider
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupElements:: %s has no Status", element));
+                    Log.e(String.format("%s has no Status", element));
                 }
 
                 break;
@@ -301,8 +299,7 @@ public class GroupHeaderProvider
                     break;
             }
 
-            Log.v(Constants.LOG_TAG,  String.format("GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder:: sorting [%d] GroupHeaders based on [%d] GroupElements",
-                    groupHeaders.size(), groupElements.size()));
+            Log.v( String.format(Locale.getDefault(), "sorting [%d] GroupHeaders based on [%d] GroupElements", groupHeaders.size(), groupElements.size()));
 
             for(IElement groupElement : groupElements)
             {
@@ -320,7 +317,7 @@ public class GroupHeaderProvider
         }
         else
         {
-            Log.v(Constants.LOG_TAG,"GroupHeaderProvider.sortGroupHeadersBasedOnGroupElementsOrder:: not sorted - list contains less than two elements");
+            Log.v("not sorted - list contains less than two elements");
             return groupHeaders;
         }
     }
@@ -331,11 +328,11 @@ public class GroupHeaderProvider
 
         if(visits.isEmpty())
         {
-            Log.v(Constants.LOG_TAG, "GroupHeaderProvider.groupByYear:: no elements to group");
+            Log.v("no elements to group");
             return new LinkedList<IElement>(visits);
         }
 
-        Log.d(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: adding SpecialGroupHeaders to [%d] elements...", visits.size()));
+        Log.d(String.format(Locale.getDefault(), "adding SpecialGroupHeaders to [%d] elements...", visits.size()));
 
         for(SpecialGroupHeader specialGroupHeader : this.specialGroupHeaders)
         {
@@ -380,7 +377,7 @@ public class GroupHeaderProvider
                 {
                     specialGroupHeader = SpecialGroupHeader.create(year);
                     this.specialGroupHeaders.add(specialGroupHeader);
-                    Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: created new %s", specialGroupHeader));
+                    Log.v(String.format("created new %s", specialGroupHeader));
                 }
 
                 specialGroupHeader.addChild(visit);
@@ -388,7 +385,7 @@ public class GroupHeaderProvider
             }
         }
 
-        Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.groupByYear:: [%d] SpecialGroupHeaders added", groupedVisits.size()));
+        Log.v(String.format(Locale.getDefault(), "[%d] SpecialGroupHeaders added", groupedVisits.size()));
         return groupedVisits;
     }
 
@@ -401,7 +398,7 @@ public class GroupHeaderProvider
         {
             String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
             visitsByDateString.put(dateString, visit);
-            Log.v(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: parsed date [%s] from name %s", dateString, visit));
+            Log.v(String.format("parsed date [%s] from name %s", dateString, visit));
         }
 
         ArrayList<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
@@ -424,7 +421,7 @@ public class GroupHeaderProvider
             }
         }
 
-        Log.i(Constants.LOG_TAG, String.format("GroupHeaderProvider.sortVisitsByDateAccordingToSortOrder:: sorted [%d] visits [%s]", visits.size(), Visit.getSortOrder()));
+        Log.i(String.format(Locale.getDefault(), "sorted [%d] visits [%s]", visits.size(), Visit.getSortOrder()));
         return sortedVisits;
     }
 
@@ -446,9 +443,7 @@ public class GroupHeaderProvider
                 }
             }
 
-            Log.v(Constants.LOG_TAG,
-                    String.format("GroupHeaderProvider.getSpecialGroupHeaderForLatestYear:: %s found as latest SpecialGroupHeader in a list of [%d]",
-                            latestSpecialGroupHeader, yearHeaders.size()));
+            Log.v(String.format(Locale.getDefault(), "%s found as latest SpecialGroupHeader in a list of [%d]", latestSpecialGroupHeader, yearHeaders.size()));
         }
 
         return latestSpecialGroupHeader;

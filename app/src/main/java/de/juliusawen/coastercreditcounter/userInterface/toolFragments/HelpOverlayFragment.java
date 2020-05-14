@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.toolFragments;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,8 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivityViewModel;
 
 public class HelpOverlayFragment extends Fragment
@@ -33,7 +34,7 @@ public class HelpOverlayFragment extends Fragment
 
     public static HelpOverlayFragment newInstance(String helpTitle, CharSequence helpMessage)
     {
-        Log.d(Constants.LOG_TAG, "HelpOverlayFragment.newInstance:: instantiating fragment...");
+        Log.frame(LogLevel.VERBOSE, "instantiating...", '#', true);
 
         HelpOverlayFragment helpOverlayFragment = new HelpOverlayFragment();
         Bundle args = new Bundle();
@@ -46,7 +47,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onCreate:: creating fragment...");
+        Log.frame(LogLevel.INFO, "creating...", '#', true);
 
         super.onCreate(savedInstanceState);
 
@@ -71,7 +72,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onCreateView:: creating view...");
+        Log.v("creating view...");
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_help_overlay, container, false);
         this.textViewTitle = linearLayout.findViewById(R.id.textViewHelp_Title);
@@ -82,7 +83,7 @@ public class HelpOverlayFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "HelpOverlayFragment.onViewCreated:: decorating view...");
+        Log.v("decorating view...");
 
         super.onViewCreated(view, savedInstanceState);
 
@@ -144,7 +145,7 @@ public class HelpOverlayFragment extends Fragment
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "HelpOverlayFragment.setTitleAndMessage:: TextViewTitle and TextViewMessage not available.");
+            Log.e("TextViewTitle and TextViewMessage not available.");
         }
 
         this.viewModel.helpOverlayFragmentTitle = title;

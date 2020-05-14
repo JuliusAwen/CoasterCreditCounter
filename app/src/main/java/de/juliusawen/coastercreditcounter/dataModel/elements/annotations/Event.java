@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.annotations;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +13,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  *  Parent: Park, Visit or Attraction
@@ -51,7 +50,7 @@ public class Event extends Element implements IElement, IPersistable, IHasNote
     {
         Event event = new Event(StringTool.fetchSimpleDate(calendar), calendar, note, uuid);
 
-        Log.v(Constants.LOG_TAG,  String.format("Event.create:: %s created.", event.getFullName()));
+        Log.d(String.format("%s created", event.getFullName()));
         return event;
     }
 
@@ -91,13 +90,13 @@ public class Event extends Element implements IElement, IPersistable, IHasNote
 
             jsonObject.put(Constants.JSON_STRING_NOTE, this.getNote().toJson());
 
-            Log.v(Constants.LOG_TAG, String.format("Event.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Event.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

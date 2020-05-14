@@ -1,16 +1,15 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
-import android.util.Log;
-
+import java.util.Locale;
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Abstract base class for all Attractions containing all base methods.<br>
@@ -75,7 +74,7 @@ public abstract class Attraction extends Element implements IAttraction
     {
         if(this.getModel().isCreditTypeSet())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.getCreditType:: getting %s's CreditType from %s", this, this.getModel()));
+            Log.v(String.format("getting %s's CreditType from %s", this, this.getModel()));
             return this.getModel().getCreditType();
         }
 
@@ -96,14 +95,14 @@ public abstract class Attraction extends Element implements IAttraction
             this.creditType.addChild(this);
         }
 
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCreditType:: set %s's CreditType to %s", this, this.creditType));
+        Log.d( String.format("set %s's CreditType to %s", this, this.creditType));
     }
 
     public Category getCategory()
     {
         if(this.getModel().isCategorySet())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.getCategory:: getting %s's Category from %s", this, this.getModel()));
+            Log.v( String.format("getting %s's Category from %s", this, this.getModel()));
             return this.getModel().getCategory();
         }
 
@@ -124,14 +123,14 @@ public abstract class Attraction extends Element implements IAttraction
             this.category.addChild(this);
         }
 
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setCategory:: set %s's Category to %s", this, this.category));
+        Log.d( String.format("set %s's Category to %s", this, this.category));
     }
 
     public Manufacturer getManufacturer()
     {
         if(this.getModel().isManufacturerSet())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.getManufacturer:: getting %s's Manufacturer from %s", this, this.getModel()));
+            Log.v( String.format("getting %s's Manufacturer from %s", this, this.getModel()));
             return this.getModel().getManufacturer();
         }
 
@@ -152,7 +151,7 @@ public abstract class Attraction extends Element implements IAttraction
             this.manufacturer.addChild(this);
         }
 
-        Log.d(Constants.LOG_TAG,  String.format("Attraction.setManufacturer:: set %s's Manufacturer to %s", this, this.manufacturer));
+        Log.d( String.format("set %s's Manufacturer to %s", this, this.manufacturer));
     }
 
     public Model getModel()
@@ -175,7 +174,7 @@ public abstract class Attraction extends Element implements IAttraction
             }
 
             this.model = model;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.setModel:: set %s's Model to %s - setting Properties...", this, model.getFullName()));
+            Log.d(String.format("set %s's Model to %s - setting Properties...", this, model.getFullName()));
 
             if(this.model.isCreditTypeSet())
             {
@@ -194,7 +193,7 @@ public abstract class Attraction extends Element implements IAttraction
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.setModel:: %s's Model cannot be null", this));
+            Log.e(String.format("%s's Model cannot be null", this));
         }
 
     }
@@ -219,11 +218,11 @@ public abstract class Attraction extends Element implements IAttraction
             }
 
             this.status = status;
-            Log.d(Constants.LOG_TAG,  String.format("Attraction.setStatus:: set %s's Status to %s", this, status));
+            Log.d( String.format("(set %s's Status to %s", this, status));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Attraction.setStaus:: %s's Status cannot be null", this));
+            Log.e(String.format("Attraction.setStaus:: %s's Status cannot be null", this));
         }
     }
 
@@ -237,11 +236,11 @@ public abstract class Attraction extends Element implements IAttraction
         if(untracktedRideCount != this.untracktedRideCount)
         {
             this.untracktedRideCount = untracktedRideCount;
-            Log.d(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
+            Log.d( String.format(Locale.getDefault(), "set %s's untracked ride count to [%d]", this, this.untracktedRideCount));
         }
         else
         {
-            Log.v(Constants.LOG_TAG,  String.format("Attraction.setUntracktedRideCount:: %s's untracked ride count unchanged at [%d]", this, this.untracktedRideCount));
+            Log.v( String.format(Locale.getDefault(), "%s's untracked ride count unchanged at [%d]", this, this.untracktedRideCount));
         }
     }
 
@@ -260,7 +259,7 @@ public abstract class Attraction extends Element implements IAttraction
         if(increment > 0)
         {
             this.trackedRideCount += increment;
-            Log.d(Constants.LOG_TAG, String.format("Attraction.increaseTrackedRideCount:: increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+            Log.d(String.format(Locale.getDefault(), "(increased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
                     this, increment, this.fetchTotalRideCount(), this.untracktedRideCount));
         }
     }
@@ -272,13 +271,13 @@ public abstract class Attraction extends Element implements IAttraction
             if((this.trackedRideCount - decrement) >= 0)
             {
                 this.trackedRideCount -= decrement;
-                Log.d(Constants.LOG_TAG, String.format("Attraction.decreaseTrackedRideCount:: decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
+                Log.d(String.format(Locale.getDefault(), "(decreased %s's total ride count by [%d] to [%d] ([%d] rides untracked)",
                         this, decrement, this.fetchTotalRideCount(), this.untracktedRideCount));
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Attraction.decreaseTrackedRideCount:: %s's total ride count is [%d] ([%d] rides untracked): " +
-                        "decreasing by [%d] would make it negative - not decreasing", this, this.fetchTotalRideCount(), this.untracktedRideCount, decrement));
+                Log.e(String.format(Locale.getDefault(), "(%s's total ride count is [%d] ([%d] rides untracked): decreasing by [%d] would make it negative - not decreasing",
+                        this, this.fetchTotalRideCount(), this.untracktedRideCount, decrement));
             }
         }
     }

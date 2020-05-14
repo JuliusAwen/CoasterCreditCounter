@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +11,7 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  *      Parent: none<br>
@@ -42,26 +41,17 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
         if(Element.isNameValid(name))
         {
             model = new Model(name, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Model.create:: %s created", model));
+            Log.d(String.format("%s created", model));
         }
 
         return model;
     }
 
     @Override
-    public String toString()
-    {
-        return String.format("[%s - %s %s %s]",
-                this.getName(),
-                this.getCreditType() != null ? this.getCreditType() : "[no CreditType]",
-                this.getCategory() != null ? this.getCategory() : "[no Category]",
-                this.getManufacturer() != null ? this.getManufacturer() : "[no Manufacturer]");
-    }
-
-    @Override
     public String getFullName()
     {
-        return String.format("[%s - %s %s %s (%s)]",
+        return String.format("[%s %s - %s %s %s (%s)]",
+                this.getClass().getSimpleName(),
                 this.getName(),
                 this.getCreditType() != null ? this.getCreditType() : "[no CreditType]",
                 this.getCategory() != null ? this.getCategory() : "[no Category]",
@@ -79,7 +69,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     {
         if(Model.defaultModel == null)
         {
-            Log.w(Constants.LOG_TAG, "Model.getDefault:: no default set - creating default");
+            Log.w("no default set - creating default");
             Model.setDefault(Model.create((App.getContext().getString(R.string.default_model_name))));
         }
 
@@ -89,12 +79,12 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     public static void setDefault(Model defaultModel)
     {
         Model.defaultModel = defaultModel;
-        Log.i(Constants.LOG_TAG, String.format("Model.setDefault:: %s set as default", Model.defaultModel.getFullName()));
+        Log.i(String.format("%s set as default", Model.defaultModel.getFullName()));
     }
 
     public boolean isCreditTypeSet()
     {
-        return this.getCreditType() != null;
+        return this.creditType != null;
     }
 
     public CreditType getCreditType()
@@ -105,7 +95,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     public void setCreditType(CreditType creditType)
     {
         this.creditType = creditType;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCreditType:: set %s's CreditType to %s - setting children...", this, this.creditType));
+        Log.d(String.format("set %s's CreditType to %s - setting children...", this, this.creditType));
 
         for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
         {
@@ -115,7 +105,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
 
     public boolean isCategorySet()
     {
-        return this.getCategory() != null;
+        return this.category != null;
     }
 
     public Category getCategory()
@@ -126,7 +116,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     public void setCategory(Category category)
     {
         this.category = category;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setCategory:: set %s's Category to %s - setting children...", this, this.category));
+        Log.d(String.format("set %s's Category to %s - setting children...", this, this.category));
 
         for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
         {
@@ -147,7 +137,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     public void setManufacturer(Manufacturer manufacturer)
     {
         this.manufacturer = manufacturer;
-        Log.d(Constants.LOG_TAG,  String.format("Model.setManufacturer:: set %s's Manufacturer to %s - setting in children...", this, this.manufacturer));
+        Log.d(String.format("set %s's Manufacturer to %s - setting in children...", this, this.manufacturer));
 
         for(IAttraction attraction : this.getChildrenAsType(IAttraction.class))
         {
@@ -170,13 +160,13 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
             jsonObject.put(Constants.JSON_STRING_CATEGORY, this.isCategorySet() ? this.getCategory().getUuid() : JSONObject.NULL);
             jsonObject.put(Constants.JSON_STRING_MANUFACTURER, this.isManufacturerSet() ? this.getManufacturer().getUuid() : JSONObject.NULL);
 
-            Log.v(Constants.LOG_TAG, String.format("Model.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Model.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

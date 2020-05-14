@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +15,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditTy
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Individual attraction located at a particular park<br>
@@ -49,7 +48,7 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
         if(Element.isNameValid(name))
         {
             onSiteAttraction = new OnSiteAttraction(name, untrackedRideCount, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("OnSiteAttraction.create:: %s created", onSiteAttraction.getFullName()));
+            Log.d(String.format("%s created", onSiteAttraction.getFullName()));
         }
 
         return onSiteAttraction;
@@ -70,7 +69,7 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
     {
         if(child.equals(this.note))
         {
-            Log.v(Constants.LOG_TAG, String.format("OnSiteAttraction.deleteChild:: setting private field %s on %s to NULL", this.note, this));
+            Log.v(String.format("setting private field %s on %s to NULL", this.note, this));
             this.note = null;
         }
 
@@ -109,13 +108,13 @@ public final class OnSiteAttraction extends Attraction implements IAttraction, I
             jsonObject.put(Constants.JSON_STRING_STATUS, this.getStatus().getUuid());
             jsonObject.put(Constants.JSON_STRING_UNTRACKED_RIDE_COUNT, this.getUntracktedRideCount());
 
-            Log.v(Constants.LOG_TAG, String.format("Attraction.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Attraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

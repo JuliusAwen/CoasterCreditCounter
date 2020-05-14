@@ -1,17 +1,15 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.attractions;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Container for Attractions - used in order to be able to sort attractions for every individual visit without sorting the child attractions for the parent park<br>
@@ -34,7 +32,7 @@ public class VisitedAttraction extends Attraction
         VisitedAttraction visitedAttraction;
         visitedAttraction = new VisitedAttraction(onSiteAttraction, null);
 
-        Log.v(Constants.LOG_TAG,  String.format("VisitedAttraction.create:: %s created", visitedAttraction.getFullName()));
+        Log.d(String.format("%s created", visitedAttraction.getFullName()));
 
         return visitedAttraction;
     }
@@ -67,14 +65,14 @@ public class VisitedAttraction extends Attraction
     @Override
     public int getUntracktedRideCount()
     {
-        Log.e(Constants.LOG_TAG, String.format("VisitedAttraction.setUntracktedRideCount:: %s can not have UntracktedRideCount - returning OnSiteAttraction's UntrackedRideDCount", this));
+        Log.e(String.format("%s can not have UntracktedRideCount - returning OnSiteAttraction's UntrackedRideDCount", this));
         return this.getOnSiteAttraction().getUntracktedRideCount();
     }
 
     public void setUntracktedRideCount(int untracktedRideCount)
     {
-        String errorMessage = String.format("VisitedAttraction.setUntracktedRideCount:: %s not able to set UntracktedRideCount on VisitedAttractions", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
+        String errorMessage = String.format("%s not able to set UntracktedRideCount on VisitedAttractions", this);
+        Log.e(errorMessage);
         throw new IllegalStateException(errorMessage);
     }
 
@@ -87,8 +85,8 @@ public class VisitedAttraction extends Attraction
     @Override
     public void setCreditType(CreditType creditType)
     {
-        String errorMessage = String.format("VisitedAttraction.setCreditType:: %s not able to set CreditType on VisitedAttractions", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
+        String errorMessage = String.format("%s not able to set CreditType on VisitedAttractions", this);
+        Log.e(errorMessage);
         throw new IllegalStateException(errorMessage);
     }
 
@@ -101,8 +99,8 @@ public class VisitedAttraction extends Attraction
     @Override
     public void setCategory(Category category)
     {
-        String errorMessage = String.format("VisitedAttraction.setCategory:: %s not able to set Category on VisitedAttractions", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
+        String errorMessage = String.format("%s not able to set Category on VisitedAttractions", this);
+        Log.e(errorMessage);
         throw new IllegalStateException(errorMessage);
     }
 
@@ -115,8 +113,8 @@ public class VisitedAttraction extends Attraction
     @Override
     public void setManufacturer(Manufacturer manufacturer)
     {
-        String errorMessage = String.format("VisitedAttraction.setManufacturer:: %s not able to set Manufacturer on VisitedAttractions", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
+        String errorMessage = String.format("%s not able to set Manufacturer on VisitedAttractions", this);
+        Log.e(errorMessage);
         throw new IllegalStateException(errorMessage);
     }
 
@@ -129,8 +127,8 @@ public class VisitedAttraction extends Attraction
     @Override
     public void setStatus(Status status)
     {
-        String errorMessage = String.format("VisitedAttraction.setStatus:: %s not able to set Status on VisitedAttractions", this);
-        Log.e(Constants.LOG_TAG, errorMessage);
+        String errorMessage = String.format("%s not able to set Status on VisitedAttractions", this);
+        Log.e(errorMessage);
         throw new IllegalStateException(errorMessage);
     }
 
@@ -141,13 +139,13 @@ public class VisitedAttraction extends Attraction
             JSONObject jsonObjectRideCountByAttraction = new JSONObject();
             jsonObjectRideCountByAttraction.put(this.getOnSiteAttraction().getUuid().toString(), this.fetchTotalRideCount());
 
-            Log.v(Constants.LOG_TAG, String.format("VisitedAttraction.toJson:: created JSON for %s [%s]", this, jsonObjectRideCountByAttraction.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObjectRideCountByAttraction.toString()));
             return jsonObjectRideCountByAttraction;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("VisitedAttraction.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -24,6 +24,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
@@ -62,7 +64,7 @@ public class SortElementsActivity extends BaseActivity
                 {
                     if(((IProperty) element).isDefault())
                     {
-                        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.create:: removing %s - App.preferences.defaultPropertiesAlwaysAtTop = TRUE", element));
+                        Log.i(String.format("removing %s - App.preferences.defaultPropertiesAlwaysAtTop = TRUE", element));
                         this.viewModel.defaultProperty = element;
                         this.viewModel.elementsToSort.remove(element);
                         break;
@@ -110,7 +112,7 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: accepted - return code <OK>...");
+                Log.d("accepted - return code <OK>...");
                 returnResult(RESULT_OK);
             }
         });
@@ -146,11 +148,11 @@ public class SortElementsActivity extends BaseActivity
 
                 if(view.equals(frameLayoutDialogDown))
                 {
-                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonClicked:: button<DOWN> clicked");
+                    Log.v("button<DOWN> clicked");
                 }
                 else if(view.equals(frameLayoutDialogUp))
                 {
-                    Log.v(Constants.LOG_TAG, "SortElementsActivity.onClickActionDialogButtonClicked:: button<UP> clicked");
+                    Log.v("button<UP> clicked");
                 }
             }
         };
@@ -231,18 +233,18 @@ public class SortElementsActivity extends BaseActivity
 
             if(position < viewModel.elementsToSort.size() - 1)
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: swapping elements");
+                Log.v("swapping elements");
                 viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
                 Collections.swap(viewModel.elementsToSort, position, position + 1);
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: end of list - not swapping elements");
+                Log.v("end of list - not swapping elements");
             }
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "SortElementsActivity.sortDown:: no element selected");
+            Log.v("no element selected");
         }
     }
 
@@ -254,38 +256,36 @@ public class SortElementsActivity extends BaseActivity
 
             if(position > 0)
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: swapping elements");
+                Log.v("swapping elements");
 
                 viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
                 Collections.swap(viewModel.elementsToSort, position, position - 1);
             }
             else
             {
-                Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: end of list - not swapping elements");
+                Log.v("end of list - not swapping elements");
             }
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "SortElementsActivity.sortUp:: no element selected");
+            Log.v("no element selected");
         }
     }
 
     private void returnResult(int resultCode)
     {
-        Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.d(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
         {
             if(this.viewModel.defaultProperty != null)
             {
-                Log.i(Constants.LOG_TAG,
-                        String.format("SortElementsActivity.returnResult:: adding %s at index 0 - App.prefereneces.defaultPropertiesAlwaysAtTop = TRUE",
-                                this.viewModel.defaultProperty));
+                Log.i(String.format("adding %s at index 0 - App.prefereneces.defaultPropertiesAlwaysAtTop = TRUE", this.viewModel.defaultProperty));
 
                 this.viewModel.elementsToSort.add(0, this.viewModel.defaultProperty);
             }
 
-            Log.d(Constants.LOG_TAG, String.format("SortElementsActivity.returnResult:: returning [%d] elements as result", this.viewModel.elementsToSort.size()));
+            Log.d(String.format(Locale.getDefault(), "returning [%d] elements as result", this.viewModel.elementsToSort.size()));
 
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.viewModel.elementsToSort));
 
@@ -296,7 +296,7 @@ public class SortElementsActivity extends BaseActivity
             }
         }
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

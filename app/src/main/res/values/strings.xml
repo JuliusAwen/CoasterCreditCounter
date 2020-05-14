@@ -32,7 +32,6 @@
     <string name="text_total_rides">total rides: %1$d</string>
 
 
-
     <!--STATISTICS-->
     <string name="statistic_total_coaster_credits"><b>Total credits:</b></string>
     <string name="statistic_total_credit_rides">Total rides:</string>
@@ -183,6 +182,10 @@
     <string name="information_import_success">Content imported</string>
 
     <string name="information_restore_content_backup_success">Content restored</string>
+
+    <string name="text_click_back_again_to_exit">Click BACK again to exit</string>
+
+
 
 
     <!--SEARCH-->

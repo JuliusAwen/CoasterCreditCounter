@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -24,6 +24,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class CreateChildForLocationActivity extends BaseActivity
 {
@@ -91,7 +93,7 @@ public class CreateChildForLocationActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(String.format(Locale.getDefault(), "actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -139,7 +141,7 @@ public class CreateChildForLocationActivity extends BaseActivity
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "CreateChildForLocationActivity.handleOnEditorActionDone:: name is invalid");
+                Log.i("name is invalid");
                 this.textInputLayout.setError(getString(R.string.error_name_invalid));
             }
         }
@@ -170,7 +172,7 @@ public class CreateChildForLocationActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
 
         Intent intent = new Intent();
 
@@ -179,12 +181,12 @@ public class CreateChildForLocationActivity extends BaseActivity
             super.markForCreation(this.viewModel.createdChild);
             super.markForUpdate(this.viewModel.parentLocation);
 
-            Log.i(Constants.LOG_TAG, String.format("CreateChildForLocationActivity.returnResult:: returning new %s for %s", this.viewModel.createdChild, this.viewModel.parentLocation));
+            Log.i(String.format("returning new %s for %s", this.viewModel.createdChild, this.viewModel.parentLocation));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.createdChild.getUuid().toString());
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

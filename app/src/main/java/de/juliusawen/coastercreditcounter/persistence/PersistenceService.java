@@ -2,14 +2,15 @@ package de.juliusawen.coastercreditcounter.persistence;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class PersistenceService extends IntentService
 {
@@ -28,7 +29,7 @@ public class PersistenceService extends IntentService
 
         if(action != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("PersistenceService.onHandleIntent:: action is [%s]", action));
+            Log.v(String.format("action is [%s]", action));
 
             switch(action)
             {
@@ -55,7 +56,7 @@ public class PersistenceService extends IntentService
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.onHandleIntent:: DataString is empty");
+            Log.e("DataString is empty");
             throw new IllegalStateException();
         }
     }
@@ -63,60 +64,59 @@ public class PersistenceService extends IntentService
     private void create(Intent intent)
     {
         Set<IElement> elementsToCreate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_CREATE_UUIDS)));
-        Log.v(Constants.LOG_TAG, String.format("PersistenceService.create:: creating [%d] elements...", elementsToCreate.size()));
+        Log.d(String.format(Locale.getDefault(), "creating [%d] elements...", elementsToCreate.size()));
 
         if(this.databaseWrapper.create(elementsToCreate))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.create:: elements created successfully");
+            Log.i("success");
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.create:: create elements failed");
+            Log.e("failed");
         }
     }
 
     private void delete(Intent intent)
     {
         Set<IElement> elementsToDelete = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_DELETE_UUIDS)));
-
-        Log.v(Constants.LOG_TAG, String.format("PersistenceService.delete:: deleting [%d] elements...", elementsToDelete.size()));
+        Log.d(String.format(Locale.getDefault(), "deleting [%d] elements...", elementsToDelete.size()));
 
         if(databaseWrapper.delete(elementsToDelete))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.delete:: elements deleted successfully");
+            Log.i("success");
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.delete:: deleting elements failed");
+            Log.e("failed");
         }
     }
 
     private void update(Intent intent)
     {
         Set<IElement> elementsToUpdate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_UPDATE_UUIDS)));
-        Log.v(Constants.LOG_TAG, String.format("PersistenceService.update:: updating [%d] elements...", elementsToUpdate.size()));
+        Log.d(String.format(Locale.getDefault(), "updating [%d] elements...", elementsToUpdate.size()));
 
         if(databaseWrapper.update(elementsToUpdate))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.update:: elements updated successfully");
+            Log.i("success");
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.update:: updating elements failed");
+            Log.e("failed");
         }
     }
 
     private void save()
     {
-        Log.v(Constants.LOG_TAG, "PersistenceService.save:: saving content...");
+        Log.d("saving content...");
 
         if(databaseWrapper.saveContent(App.content))
         {
-            Log.d(Constants.LOG_TAG, "PersistenceService.save:: elements saved successfully");
+            Log.i("success");
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "PersistenceService.save:: saving elements failed");
+            Log.e("failed");
         }
     }
 }

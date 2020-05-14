@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.application;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,12 +8,15 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
@@ -46,45 +47,68 @@ public class Preferences implements IPersistable
         {
             Preferences.instance = new Preferences(persistence);
         }
+
         return instance;
     }
 
     private Preferences(Persistence persistence)
     {
         this.persistence = persistence;
-        Log.i(Constants.LOG_TAG,"Preferences.Constructor:: <Preferences> instantiated");
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.getDefault(),
+                "App Preferences:\n" +
+                        "Default SortOrder is [%s]\n" +
+                        "Expand latest year in visits list [%S]\n" +
+                        "First day of the week is [%s]\n" +
+                        "Default increment is [%d]",
+
+                this.getDefaultSortOrder(),
+                this.expandLatestYearHeaderByDefault,
+                this.getFirstDayOfTheWeek(),
+                this.getIncrement()
+        );
     }
 
     public boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "Preferences.initialize:: initializing preferences...");
+        Log.i("initializing...");
         Stopwatch stopwatch = new Stopwatch(true);
 
+        boolean success = false;
         if(persistence.loadPreferences(this))
         {
             if(this.validate())
             {
                 Visit.setSortOrder(this.getDefaultSortOrder());
-                Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization successful - took [%d]ms", stopwatch.stop()));
-                return true;
+                Log.i(String.format(Locale.getDefault(), "successful - took [%d]ms", stopwatch.stop()));
+                success = true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization failed - took [%d]ms", stopwatch.stop()));
-                return false;
+                Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatch.stop()));
+                success = false;
             }
         }
-        else
+
+        if(!success)
         {
             this.createDefaultPreferences();
-            Log.i(Constants.LOG_TAG, String.format("Preferences.initialize:: initialization successful - took [%d]ms", stopwatch.stop()));
-            return true;
+            Log.i(String.format(Locale.getDefault(), "using defaults - took [%d]ms", stopwatch.stop()));
+            success = true;
         }
+
+        Log.wrap(LogLevel.INFO, this.toString(), '-', false);
+        return success;
     }
 
     public boolean createDefaultPreferences()
     {
-        Log.w(Constants.LOG_TAG, "Preferences.createDefaultPrefernces:: creating default preferences");
+        Log.w("creating default preferences");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -92,45 +116,33 @@ public class Preferences implements IPersistable
 
         if(persistence.savePreferences(this))
         {
-            Log.w(Constants.LOG_TAG, String.format("Preferences.createDefaultPrefernces:: default preferences successfully created - took [%d]ms", stopwatch.stop()));
+            Log.w(String.format(Locale.getDefault(), "default preferences successfully created - took [%d]ms", stopwatch.stop()));
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Preferences.initialize:: initializing preferences failed - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "initializing preferences failed - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
 
     private boolean validate()
     {
-        Log.i(Constants.LOG_TAG, "Preferences.validate:: validating preferences...");
+        Log.i("validating preferences...");
 
         if(this.getDefaultSortOrder() == null)
         {
-            String message = "Preferences validation failed: default sort order is null";
-            Log.e(Constants.LOG_TAG, String.format("Preferences.validate:: %s", message));
-            throw new IllegalStateException(message);
-        }
-        else
-        {
-            Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: default sort order is [%s]", this.getDefaultSortOrder()));
+            Log.e("validation failed: default SortOrder is null");
+            return false;
         }
 
-        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: expand latest year in visits list [%S]", this.expandLatestYearHeaderByDefault()));
-
-        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: first day of the week is [%s]", this.dayNames[this.getFirstDayOfTheWeek()]));
-
-        Log.i(Constants.LOG_TAG, String.format("Preferences.validate:: default increment is [%d]", this.getIncrement()));
-
-
-        Log.i(Constants.LOG_TAG, "Preferences.validate:: validation successful");
+        Log.d("validation successful");
         return true;
     }
 
     public void setDefaults()
     {
-        Log.i(Constants.LOG_TAG, "Preferences.useDefaults:: setting defaults...");
+        Log.d("setting defaults...");
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearHeaderByDefault(true);
@@ -160,18 +172,18 @@ public class Preferences implements IPersistable
     public void setDetailsOrder(ArrayList<DetailType> detailsOrder)
     {
         this.detailsOrder = detailsOrder;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setDetailsOrder:: [%d] details set in order", detailsOrder.size()));
+        Log.d(String.format(Locale.getDefault(), "[%d] details set in order", detailsOrder.size()));
     }
 
     public SortOrder getDefaultSortOrder()
     {
-        return defaultSortOrder;
+        return this.defaultSortOrder;
     }
 
     public void setDefaultSortOrder(SortOrder defaultSortOrder)
     {
         this.defaultSortOrder = defaultSortOrder;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setDefaultSortOrder:: [%s] set as default", defaultSortOrder));
+        Log.d(String.format("[%s] set as default", defaultSortOrder));
     }
 
     public boolean expandLatestYearHeaderByDefault()
@@ -182,7 +194,7 @@ public class Preferences implements IPersistable
     public void setExpandLatestYearHeaderByDefault(boolean expandLatestYearHeaderByDefault)
     {
         this.expandLatestYearHeaderByDefault = expandLatestYearHeaderByDefault;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setExpandLatestYearHeaderByDefault:: set to [%S]", expandLatestYearHeaderByDefault));
+        Log.d(String.format("set to [%S]", expandLatestYearHeaderByDefault));
     }
 
     public boolean defaultPropertiesAlwaysAtTop()
@@ -203,7 +215,7 @@ public class Preferences implements IPersistable
     public void setFirstDayOfTheWeek(int firstDayOfTheWeek)
     {
         this.firstDayOfTheWeek = firstDayOfTheWeek;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setFirstDayOfTheWeek:: set to [%s]", this.dayNames[firstDayOfTheWeek]));
+        Log.d(String.format("set to [%s]", this.dayNames[firstDayOfTheWeek]));
     }
 
     public int getIncrement()
@@ -214,7 +226,7 @@ public class Preferences implements IPersistable
     public void setIncrement(int increment)
     {
         this.increment = increment;
-        Log.i(Constants.LOG_TAG, String.format("Preferences.setIncrement:: [%d] set as default", increment));
+        Log.d(String.format(Locale.getDefault(), "[%d] set as default", increment));
     }
 
     public String getExportFileName()
@@ -224,7 +236,7 @@ public class Preferences implements IPersistable
 
     public JSONObject toJson()
     {
-        Log.d(Constants.LOG_TAG, ("Preferences.toJson:: creating json object from preferences..."));
+        Log.v("creating json object from preferences...");
 
         try
         {
@@ -248,7 +260,7 @@ public class Preferences implements IPersistable
         {
             e.printStackTrace();
 
-            Log.e(Constants.LOG_TAG, String.format("Preferences.toJson:: failed with JSONException [%s]", e.getMessage()));
+            Log.e(String.format("failed with JSONException [%s]", e.getMessage()));
             return null;
         }
     }

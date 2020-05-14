@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -23,6 +23,8 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class EditSimpleElementActivity extends BaseActivity
 {
@@ -67,7 +69,7 @@ public class EditSimpleElementActivity extends BaseActivity
 
     private void createTextInput(String hint)
     {
-        Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.createTextInput:: edit %s", this.viewModel.elementToEdit));
+        Log.d(String.format("edit %s", this.viewModel.elementToEdit));
 
         this.textInputLayout.setHint(hint);
         this.textInputLayout.setError(null);
@@ -78,7 +80,7 @@ public class EditSimpleElementActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.onEditorAction:: actionId[%d]", actionId));
+                Log.i(String.format(Locale.getDefault(), "actionId[%d]", actionId));
 
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE)
@@ -163,8 +165,7 @@ public class EditSimpleElementActivity extends BaseActivity
                 String text = ((Note)this.viewModel.elementToEdit).getText();
                 if(!text.equals(input))
                 {
-                    Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: %s's text [%s] changed to [%s]",
-                            this.viewModel.elementToEdit, text, input));
+                    Log.d(String.format("%s's text [%s] changed to [%s]", this.viewModel.elementToEdit, text, input));
 
                     if(((Note)this.viewModel.elementToEdit).setTextAndAdjustName(input))
                     {
@@ -172,13 +173,13 @@ public class EditSimpleElementActivity extends BaseActivity
                     }
                     else
                     {
-                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid - text not changed", input));
+                        Log.w(String.format("input [%s] is invalid - text not changed", input));
                         this.textInputLayout.setError(getString(R.string.error_name_invalid));
                     }
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "EditSimpleElementActivity.handleOnEditorActionDone:: text has not changed - cancel");
+                    Log.d("text has not changed - cancel");
                     returnResult(RESULT_CANCELED);
                 }
             }
@@ -186,7 +187,7 @@ public class EditSimpleElementActivity extends BaseActivity
             {
                 if(!this.viewModel.elementToEdit.getName().equals(input))
                 {
-                    Log.d(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: trying to change name of %s to [%s]", this.viewModel.elementToEdit, input));
+                    Log.d(String.format("trying to change name of %s to [%s]", this.viewModel.elementToEdit, input));
 
                     if(this.viewModel.elementToEdit.setName(input))
                     {
@@ -194,13 +195,13 @@ public class EditSimpleElementActivity extends BaseActivity
                     }
                     else
                     {
-                        Log.w(Constants.LOG_TAG, String.format("EditSimpleElementActivity.handleOnEditorActionDone:: input [%s] is invalid - name not changed", input));
+                        Log.w(String.format("input [%s] is invalid - name not changed", input));
                         this.textInputLayout.setError(getString(R.string.error_name_invalid));
                     }
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, "EditSimpleElementActivity.handleOnEditorActionDone:: name has not changed - cancel");
+                    Log.v("name has not changed - cancel");
                     returnResult(RESULT_CANCELED);
                 }
             }
@@ -209,7 +210,7 @@ public class EditSimpleElementActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
@@ -217,12 +218,12 @@ public class EditSimpleElementActivity extends BaseActivity
         {
             super.markForUpdate(this.viewModel.elementToEdit);
 
-            Log.i(Constants.LOG_TAG, String.format("EditSimpleElementActivity.returnResult:: returning edited %s", this.viewModel.elementToEdit));
+            Log.i(String.format("returning edited %s", this.viewModel.elementToEdit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.elementToEdit.getUuid().toString());
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

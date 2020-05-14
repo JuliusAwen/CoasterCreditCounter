@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -26,6 +26,8 @@ import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -144,12 +146,12 @@ public class PickElementsActivity extends BaseActivity
             this.decorateFloatingActionButtonCheck();
         }
 
-        Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.create:: requestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
+        Log.d(String.format("requestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
     }
 
     private void decorateFloatingActionButtonCheck()
     {
-        Log.d(Constants.LOG_TAG, "PickElementsActivity.decorateFloatingActionButtonCheck:: decorating FloatingActionButton <CHECK>...");
+        Log.d("decorating FloatingActionButton <CHECK>...");
 
         super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
@@ -157,16 +159,16 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: clicked");
+                Log.i("<CHECK> clicked");
 
                 if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: accepted - returning <RESULT_OK>");
+                    Log.d("<CHECK> accepted - returning <RESULT_OK>");
                     returnResult(RESULT_OK);
                 }
                 else
                 {
-                    Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickFloatingActionButton<CHECK>:: no element selected - returning <RESULT_CANCELED>");
+                    Log.d("<CHECK> no element selected - returning <RESULT_CANCELED>");
                     returnResult(RESULT_CANCELED);
                 }
             }
@@ -194,7 +196,7 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickSelectOrDeselectAllBar:: RadioButton clicked");
+                Log.d("RadioButton clicked");
 
                 if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
@@ -231,7 +233,7 @@ public class PickElementsActivity extends BaseActivity
                     }
                     else
                     {
-                        Log.d(Constants.LOG_TAG, "PickElementsActivity.onClickItem:: single pick - return code <OK>");
+                        Log.d("single pick - return code <OK>");
                         returnResult(RESULT_OK, element);
                     }
                 }
@@ -269,7 +271,7 @@ public class PickElementsActivity extends BaseActivity
         this.textViewSelectOrDeselectAll.setText(R.string.text_select_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);
 
-        Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToSelectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
+        Log.v(String.format("changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
     private void changeRadioButtonToDeselectAll()
@@ -277,7 +279,7 @@ public class PickElementsActivity extends BaseActivity
         this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         this.radioButtonSelectOrDeselectAll.setChecked(false);
 
-        Log.v(Constants.LOG_TAG, String.format("PickElementsActivity.changeRadioButtonToDeselectAll:: changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
+        Log.v(String.format("changed RadioButtonText to [%s]", this.textViewSelectOrDeselectAll.getText()));
     }
 
     private void returnResult(int resultCode)
@@ -287,7 +289,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode, IElement element)
     {
-        Log.i(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
@@ -297,7 +299,7 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(this.viewModel.requestCode == RequestCode.PICK_VISIT)
                 {
-                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
+                    Log.d(String.format("returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
                     intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
                 }
                 else
@@ -312,19 +314,19 @@ public class PickElementsActivity extends BaseActivity
                         }
                     }
 
-                    Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                    Log.d(String.format(Locale.getDefault(), "returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
                     intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
                 }
             }
             else
             {
-                Log.d(Constants.LOG_TAG, String.format("PickElementsActivity.returnResult:: returning picked %s", element));
+                Log.d(String.format("returning picked %s", element));
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
             }
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

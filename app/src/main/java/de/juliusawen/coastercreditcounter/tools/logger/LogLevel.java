@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.enums;
+package de.juliusawen.coastercreditcounter.tools.logger;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 
 public enum LogLevel
 {
+    NONE,
     VERBOSE,
     DEBUG,
     INFO,

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
-import android.util.Log;
 
 import androidx.documentfile.provider.DocumentFile;
 
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -51,6 +51,7 @@ import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
 import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class JsonHandler implements IDatabaseWrapper
@@ -62,7 +63,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean importContent(Content content, Uri uri, String importFileName)
     {
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: importing content from uri [%s] and file name [%s]", uri, importFileName));
+        Log.i(String.format("importing content from uri [%s] and file name [%s]", uri, importFileName));
 
         content.clear();
 
@@ -78,7 +79,7 @@ public class JsonHandler implements IDatabaseWrapper
             Uri exportFileUri = this.fetchImportFileUri(uri, importFileName);
             if(exportFileUri == null)
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.importContent:: not able to fetch ExportFileUri");
+                Log.e("not able to fetch ExportFileUri");
                 return false;
             }
             success = this.tryPopulateContentFromExportFile(content, exportFileUri);
@@ -86,12 +87,12 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(success)
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.importContent:: success, took [%d]ms - saving content...", stopwatch.stop()));
+            Log.d(String.format(Locale.getDefault(), "success, took [%d]ms - saving content...", stopwatch.stop()));
             this.saveContent(content);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.importContent:: failed, took [%d]ms - restoring backup.", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed, took [%d]ms - restoring backup.", stopwatch.stop()));
             content.restoreBackup(false);
         }
 
@@ -100,39 +101,39 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean tryPopulateDefaultContentFromDatabaseMock(Content content)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.tryPopulateDefaultContentFromDatabaseMock:: App.config.alwaysLoadFromDatabaseMock = true --> loading default content from DatabaseMock");
+        Log.w("App.config.alwaysLoadFromDatabaseMock = true --> trying to load default content from DatabaseMock");
 
         DatabaseMock databaseMock = DatabaseMock.getInstance();
         if(databaseMock.loadContent(content))
         {
-            Log.i(Constants.LOG_TAG, "JsonHandler.tryPopulateDefaultContentFromDatabaseMock:: success");
+            Log.d("success");
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.tryPopulateDefaultContentFromDatabaseMock:: failed");
+            Log.e("failed");
             return false;
         }
     }
 
     private boolean tryPopulateContentFromExportFile(Content content, Uri exportFileUri)
     {
-        Log.d(Constants.LOG_TAG, ("JsonHandler.tryPopulateContentFromExportFile:: reading json string from export file..."));
+        Log.d("reading json string from export file...");
 
         Stopwatch stopwatchFetch = new Stopwatch(true);
         Stopwatch stopwatchRead = new Stopwatch(true);
         String jsonString = this.readStringFromUri(exportFileUri);
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.tryPopulateContentFromExportFile:: reading json string took [%d]ms", stopwatchRead.stop()));
+        Log.d(String.format(Locale.getDefault(), "reading json string took [%d]ms", stopwatchRead.stop()));
 
         if(this.tryFetchContentFromJsonString(jsonString, content))
         {
-            Log.d(Constants.LOG_TAG, String.format("JsonHandler.tryPopulateContentFromExportFile:: success - took [%d]ms", stopwatchFetch.stop()));
+            Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatchFetch.stop()));
             return true;
         }
         else
         {
-            Log.d(Constants.LOG_TAG, String.format("JsonHandler.tryPopulateContentFromExportFile:: failed - took [%d]ms", stopwatchFetch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatchFetch.stop()));
             return false;
         }
     }
@@ -140,7 +141,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadContent:: loading content..."));
+        Log.i("loading...");
         Stopwatch stopwatchLoad = new Stopwatch(true);
 
         boolean success;
@@ -150,12 +151,12 @@ public class JsonHandler implements IDatabaseWrapper
             this.tryPopulateDefaultContentFromDatabaseMock(content);
             this.saveContent(content);
 
-            Log.e(Constants.LOG_TAG, ("JsonHandler.loadContent:: reloading content in order to get all defaults..."));
+            Log.i("reloading content in order to get all defaults...");
         }
 
         Stopwatch stopwatchRead = new Stopwatch(true);
         jsonString = this.readStringFromInternalStorageFile(App.config.getExportFileName());
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: reading json string took [%d]ms", stopwatchRead.stop()));
+        Log.d(String.format(Locale.getDefault(), "reading json string took [%d]ms", stopwatchRead.stop()));
 
         if(!jsonString.isEmpty())
         {
@@ -168,11 +169,11 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(success)
         {
-            Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: success - took [%d]ms", stopwatchLoad.stop()));
+            Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatchLoad.stop()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadContent:: failed - took [%d]ms", stopwatchLoad.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatchLoad.stop()));
         }
 
         return success;
@@ -180,7 +181,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean initializeForFirstUse(Content content)
     {
-        Log.i(Constants.LOG_TAG, "JsonHandler.initializeForFirstUse:: creating root location and defaults for first use...");
+        Log.i("creating root location and defaults for first use...");
         content.addElement(Location.create("root"));
         content.addElement(CreditType.getDefault());
         content.addElement(Category.getDefault());
@@ -192,7 +193,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean tryFetchContentFromJsonString(String jsonString, Content content)
     {
-        Log.d(Constants.LOG_TAG, ("JsonHandler.fetchContentFromJsonString:: fetching content from json string..."));
+        Log.d("fetching...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(!jsonString.isEmpty())
@@ -205,25 +206,25 @@ public class JsonHandler implements IDatabaseWrapper
 
                 this.createVisitedAttractionsAndAddToVisits(this.temporaryVisits, content);
 
-                Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchContentFromJsonString:: success  - took [%d]ms", stopwatch.stop()));
+                Log.d(String.format(Locale.getDefault(), "success  - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContentFromJsonString:: failed: json string invalid - took [%d]ms", stopwatch.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed: json string invalid - took [%d]ms", stopwatch.stop()));
                 return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchContentFromJsonString:: failed: json string is empty - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed: json string is empty - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
 
     private boolean tryCreateElementsAndAddToContent(String jsonString, Content content)
     {
-        Log.d(Constants.LOG_TAG, "JsonHandler.tryCreateElementsAndAddToContent:: creating elements and populating content");
+        Log.d("creating...");
 
         try
         {
@@ -231,7 +232,7 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(jsonObjectContent.isNull(Constants.JSON_STRING_IDENTIFIER) || !jsonObjectContent.getString(Constants.JSON_STRING_IDENTIFIER).equals(Constants.JSON_STRING_ID))
             {
-                Log.e(Constants.LOG_TAG, "JsonHandler.tryCreateElementsAndAddToContent:: JsonString could not be identified as CoasterCreditCounterExportFile");
+                Log.e("JsonString could not be identified as CoasterCreditCounterExportFile");
                 return false;
             }
 
@@ -299,7 +300,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         catch(JSONException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.tryCreateElementsAndAddToContent:: failed: JSONException [%s]", e.getMessage()));
+            Log.e(String.format("failed: JSONException [%s]", e.getMessage()));
             return false;
         }
 
@@ -401,7 +402,7 @@ public class JsonHandler implements IDatabaseWrapper
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createTemporaryElements:: failed: JSONException [%s]", e.getMessage()));
+            Log.e(String.format("failed: JSONException [%s]", e.getMessage()));
             throw e;
         }
 
@@ -425,7 +426,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!creditTypes.contains(CreditType.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCreditTypes:: no default fetched from json - adding created default");
+            Log.e("no default fetched from json - adding created default");
             creditTypes.add(CreditType.getDefault());
         }
 
@@ -449,7 +450,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!categories.contains(Category.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createCategories:: no default fetched from json - adding created default");
+            Log.e("no default fetched from json - adding created default");
             categories.add(Category.getDefault());
         }
 
@@ -473,7 +474,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!manufacturers.contains(Manufacturer.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createManufacturers:: no default fetched from json - adding created default");
+            Log.e("no default fetched from json - adding created default");
             manufacturers.add(Manufacturer.getDefault());
         }
 
@@ -512,7 +513,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!models.contains(Model.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createModels:: no default fetched from json - adding created default");
+            Log.e("no default fetched from json - adding created default");
             models.add(Model.getDefault());
         }
 
@@ -536,7 +537,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         if(!statuses.contains(Status.getDefault()))
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.createStatuses:: no default fetched from json - adding created default");
+            Log.e("no default fetched from json - adding created default");
             statuses.add(Status.getDefault());
         }
 
@@ -633,7 +634,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a CreditType - returning default", uuid));
+            Log.e(String.format("fetched Element for UUID [%s] is not a CreditType - returning default", uuid));
             return CreditType.getDefault();
         }
     }
@@ -647,7 +648,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getCategoryFromUuid:: fetched Element for UUID [%s] is not a Category - returning default", uuid));
+            Log.e(String.format("fetched Element for UUID [%s] is not a Category - returning default", uuid));
             return Category.getDefault();
         }
     }
@@ -661,7 +662,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getManufacturerFromUuid:: fetched Element for UUID [%s] is not a Manufacturer - returning default", uuid));
+            Log.e(String.format("fetched Element for UUID [%s] is not a Manufacturer - returning default", uuid));
             return Manufacturer.getDefault();
         }
     }
@@ -675,7 +676,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getModelsFromUuid:: fetched Element for UUID [%s] is not a Model - returning default", uuid));
+            Log.e(String.format("fetched Element for UUID [%s] is not a Model - returning default", uuid));
             return Model.getDefault();
         }
     }
@@ -689,7 +690,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.getStatusFromUuid:: fetched Element for UUID [%s] is not a Status - returning default", uuid));
+            Log.e(String.format("fetched Element for UUID [%s] is not a Status - returning default", uuid));
             return Status.getDefault();
         }
     }
@@ -722,7 +723,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean exportContent(Content content, Uri exportFileDocumentTreeUri, String exportFileName)
     {
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: exporting content to uri [%s] under file name [%s]", exportFileDocumentTreeUri, exportFileName));
+        Log.i(String.format("exporting content to uri [%s] under file name [%s]...", exportFileDocumentTreeUri, exportFileName));
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -733,18 +734,18 @@ public class JsonHandler implements IDatabaseWrapper
 
             if(this.writeStringToExternalStorageFile(exportFileUri, jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: success - took [%d]ms", stopwatch.stop()));
+                Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: failed - took [%d]ms", stopwatch.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatch.stop()));
                 return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.exportContent:: failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed: json object is null - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
@@ -752,7 +753,7 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.saveContent:: trying to save content to internal storage..."));
+        Log.i("saving...");
 
         Stopwatch stopwatch = new Stopwatch(true);
         JSONObject jsonObject = this.createContentJsonObject(content);
@@ -760,17 +761,17 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(this.writeStringToInternalStorageFile(App.config.getExportFileName(), jsonObject.toString()))
             {
-                Log.i(Constants.LOG_TAG,  String.format("Content.saveContent:: success - took [%d]ms", stopwatch.stop()));
+                Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG,  String.format("Content.saveContent:: failed - took [%d]ms", stopwatch.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatch.stop()));
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Content.saveContent:: failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed: json object is null - took [%d]ms", stopwatch.stop()));
         }
 
         return false;
@@ -778,7 +779,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private JSONObject createContentJsonObject(Content content)
     {
-        Log.d(Constants.LOG_TAG, ("JsonHandler.createContentJsonObject:: creating json object from content..."));
+        Log.d("creating...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         try
@@ -827,14 +828,13 @@ public class JsonHandler implements IDatabaseWrapper
                     ? JSONObject.NULL
                     : this.createJsonArray(content.getContentAsType(Note.class)));
 
-            Log.d(Constants.LOG_TAG, String.format("Content.createContentJsonObject:: success - took [%d]ms", stopwatch.stop()));
+            Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.createContentJsonObject:: failed: JSONException [%s] - took [%d]ms",
-                    e.getMessage(), stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
         }
 
         return null;
@@ -869,23 +869,23 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean loadPreferences(Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.loadPreferencess:: loading preferences..."));
+        Log.i("loading...");
 
         if(!App.config.resetToDefaultPreferencesOnStartup())
         {
             Stopwatch stopwatchLoad = new Stopwatch(true);
             Stopwatch stopwatchRead = new Stopwatch(true);
             String jsonString = this.readStringFromInternalStorageFile(App.config.getPreferencesFileName());
-            Log.d(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: reading json string took [%d]ms", stopwatchRead.stop()));
+            Log.d(String.format(Locale.getDefault(), "reading json string took [%d]ms", stopwatchRead.stop()));
 
             if(this.tryFetchPreferencesFromJsonString(jsonString, preferences))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: success - took [%d]ms", stopwatchLoad.stop()));
+                Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatchLoad.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.loadPreferences:: failed - took [%d]ms", stopwatchLoad.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatchLoad.stop()));
                 return false;
             }
         }
@@ -897,7 +897,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     private boolean tryFetchPreferencesFromJsonString(String jsonString, Preferences preferences)
     {
-        Log.d(Constants.LOG_TAG, ("JsonHandler.tryFetchPreferencesFromJsonString:: fetching preferences from json string..."));
+        Log.d("fetching...");
 
         if(!jsonString.isEmpty())
         {
@@ -939,25 +939,25 @@ public class JsonHandler implements IDatabaseWrapper
                     preferences.setIncrement(jsonObjectPreferences.getInt(Constants.JSON_STRING_INCREMENT));
                 }
 
-                Log.d(Constants.LOG_TAG, String.format("JsonHandler.tryFetchPreferencesFromJsonString:: success - took [%d]ms", stopwatch.stop()));
+                Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             catch(JSONException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.tryFetchPreferencesFromJsonString:: failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed: JSONException [%s] - took [%d]ms", e.getMessage(), stopwatch.stop()));
                 return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.tryFetchPreferencesFromJsonString:: failed: json string is empty");
+            Log.e("failed: json string is empty");
             return false;
         }
     }
 
     public boolean savePreferences(Preferences preferences)
     {
-        Log.i(Constants.LOG_TAG, ("JsonHandler.savePreferences:: saving preferences..."));
+        Log.i("saving...");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -967,18 +967,18 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(this.writeStringToInternalStorageFile(App.config.getPreferencesFileName(), jsonObject.toString()))
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: success - took [%d]ms", stopwatch.stop()));
+                Log.d(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
                 return true;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: failed: could not write to json file - took [%d]ms", stopwatch.stop()));
+                Log.e(String.format(Locale.getDefault(), "failed: could not write to json file - took [%d]ms", stopwatch.stop()));
                 return false;
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.savePreferences:: failed: json object is null - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed: json object is null - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
@@ -987,12 +987,12 @@ public class JsonHandler implements IDatabaseWrapper
     {
         if(this.fetchImportFileUri(uri, importFileName) != null)
         {
-            Log.w(Constants.LOG_TAG, String.format("JsonHandler.validateImportFileUri:: uri [%s] with importFileName [%s] is valid", uri, importFileName));
+            Log.d(String.format("uri [%s] with importFileName [%s] is valid", uri, importFileName));
             return true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("JsonHandler.validateImportFileUri:: uri [%s] with importFileName [%s] invalid", uri, importFileName));
+            Log.e(String.format("uri [%s] with importFileName [%s] invalid", uri, importFileName));
             return false;
         }
     }
@@ -1005,12 +1005,12 @@ public class JsonHandler implements IDatabaseWrapper
         {
             if(this.hasJsonFileExtension(uri))
             {
-                Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: passed uri [%s] is most likely ImportFileUri", uri));
+                Log.d(String.format("passed uri [%s] is most likely ImportFileUri", uri));
                 importFileUri = uri;
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: passed uri [%s] is neither Directory nor .json file", uri));
+                Log.e(String.format("passed uri [%s] is neither Directory nor .json file", uri));
             }
         }
         else
@@ -1021,17 +1021,17 @@ public class JsonHandler implements IDatabaseWrapper
 
                 if(importFile != null)
                 {
-                    Log.i(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: fetched ExportFileUri [%s]", importFile.getUri()));
+                    Log.i(String.format("fetched ExportFileUri [%s]", importFile.getUri()));
                     importFileUri = importFile.getUri();
                 }
                 else
                 {
-                    Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: ImportFile [%s] not found in Directory [%s]", importFileName, uri));
+                    Log.e(String.format("ImportFile [%s] not found in Directory [%s]", importFileName, uri));
                 }
             }
             else
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.fetchImportFileUri:: unable to fetch uri from [%s]- no ExportFileName passed", uri));
+                Log.e(String.format("unable to fetch uri from [%s]- no ExportFileName passed", uri));
             }
         }
 
@@ -1072,7 +1072,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public String readStringFromUri(Uri uri)
     {
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.readStringFromUri:: reading string from [%s]...", uri));
+        Log.d(String.format("reading from [%s]...", uri));
         InputStream inputStream = null;
 
         try
@@ -1082,7 +1082,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         catch (FileNotFoundException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromUri:: FileNotFoundException: file at [%s] does not exist: [%s]", uri, e.getMessage()));
+            Log.e(String.format("FileNotFoundException: file at [%s] does not exist: [%s]", uri, e.getMessage()));
             e.printStackTrace();
         }
 
@@ -1114,7 +1114,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             catch (IOException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInputStream:: IOException: [%s]", e.getMessage()));
+                Log.e(String.format("IOException: [%s]", e.getMessage()));
                 e.printStackTrace();
             }
             finally
@@ -1136,7 +1136,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "JsonHandler.readStringFromInputStream:: InputStream is NULL");
+            Log.e("InputStream is NULL");
         }
 
         return output;
@@ -1144,7 +1144,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public String readStringFromInternalStorageFile(String fileName)
     {
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInternalStorageFile:: reading string from file [%s]", fileName));
+        Log.d(String.format("reading from [%s]", fileName));
 
         String output = "";
 
@@ -1164,11 +1164,11 @@ public class JsonHandler implements IDatabaseWrapper
             }
             catch(FileNotFoundException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInternalStorageFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
+                Log.e(String.format("FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
             }
             catch(IOException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInternalStorageFile:: IOException: reading FileInputStream failed!\n[%s] ", e.getMessage()));
+                Log.e(String.format("IOException: reading FileInputStream failed!\n[%s] ", e.getMessage()));
             }
             finally
             {
@@ -1179,13 +1179,13 @@ public class JsonHandler implements IDatabaseWrapper
                 }
                 catch(IOException e)
                 {
-                    Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInternalStorageFile:: IOException: closing FileInputStream failed!\n[%s] ", e.getMessage()));
+                    Log.e(String.format("IOException: closing FileInputStream failed!\n[%s] ", e.getMessage()));
                 }
             }
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.readStringFromInternalStorageFile:: file [%s] does not exist - returning empty output", fileName));
+            Log.e(String.format("file [%s] does not exist - returning empty output", fileName));
         }
 
         return output;
@@ -1193,7 +1193,7 @@ public class JsonHandler implements IDatabaseWrapper
 
     public boolean writeStringToInternalStorageFile(String fileName, String input)
     {
-        Log.i(Constants.LOG_TAG, String.format("JsonHandler.writeStringToInternalStorageFile:: writing to file [%s]", fileName));
+        Log.d(String.format("writing to [%s]", fileName));
 
         File file = new File(App.getContext().getFilesDir(), fileName);
 
@@ -1205,11 +1205,11 @@ public class JsonHandler implements IDatabaseWrapper
         }
         catch(FileNotFoundException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.writeStringToInternalStorageFile:: FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
+            Log.e(String.format("FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
         }
         catch(IOException e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.writeStringToInternalStorageFile:: IOException: writing FileOutputStream failed!\n[%s]", e.getMessage()));
+            Log.e(String.format("IOException: writing FileOutputStream failed!\n[%s]", e.getMessage()));
         }
         finally
         {
@@ -1219,7 +1219,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
             catch(IOException e)
             {
-                Log.e(Constants.LOG_TAG, String.format("JsonHandler.writeStringToInternalStorageFile:: IOException: closing FileOutputStream failed!\n[%s]", e.getMessage()));
+                Log.e(String.format("IOException: closing FileOutputStream failed!\n[%s]", e.getMessage()));
             }
         }
 
@@ -1239,7 +1239,7 @@ public class JsonHandler implements IDatabaseWrapper
         }
         catch (Exception e)
         {
-            Log.e(Constants.LOG_TAG, String.format("JsonHandler.writeStringToExternalStorageFile:: Exception [%s]", e.getMessage()));
+            Log.e(String.format("Exception [%s]", e.getMessage()));
             return false;
         }
 
@@ -1259,21 +1259,21 @@ public class JsonHandler implements IDatabaseWrapper
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.create:: empty implementation to satisfy interface");
+        Log.e("empty implementation to satisfy interface");
         return false;
     }
 
     @Override
     public boolean update(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.update:: empty implementation to satisfy interface");
+        Log.e("empty implementation to satisfy interface");
         return false;
     }
 
     @Override
     public boolean delete(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG, "JsonHandler.delete:: empty implementation to satisfy interface");
+        Log.e("empty implementation to satisfy interface");
         return false;
     }
 
@@ -1304,7 +1304,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCreditsCount:: [%d] credits found - took [%d]ms", totalCreditsCount, stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "[%d] credits found - took [%d]ms", totalCreditsCount, stopwatch.stop()));
 
         return totalCreditsCount;
     }
@@ -1321,7 +1321,7 @@ public class JsonHandler implements IDatabaseWrapper
             totalCreditsRideCount += attraction.fetchTotalRideCount();
         }
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalCreditsRideCount:: [%d] rides on creditable attractions found - took [%d]ms", totalCreditsRideCount, stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "[%d] rides on creditable attractions found - took [%d]ms", totalCreditsRideCount, stopwatch.stop()));
 
         return totalCreditsRideCount;
     }
@@ -1347,7 +1347,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         int totalVisits = App.content.getContentOfType(Visit.class).size();
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalVisits:: [%d] visits found - took [%d]ms", totalVisits, stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "[%d] visits found - took [%d]ms", totalVisits, stopwatch.stop()));
 
         return totalVisits;
     }
@@ -1377,7 +1377,7 @@ public class JsonHandler implements IDatabaseWrapper
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchTotalVisitedParksCount:: [%d] visited parks found - took [%d]ms", totalVisitedParksCount, stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "[%d] visited parks found - took [%d]ms", totalVisitedParksCount, stopwatch.stop()));
 
         return totalVisitedParksCount;
     }
@@ -1389,7 +1389,7 @@ public class JsonHandler implements IDatabaseWrapper
 
         List<IElement> currentVisits = Visit.fetchVisitsForYearAndDay(Calendar.getInstance(), App.content.getContentAsType(Visit.class));
 
-        Log.d(Constants.LOG_TAG, String.format("JsonHandler.fetchCurrentVisits:: fetching current visits took [%d]ms", stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "Locale.getDefault(), fetching current visits took [%d]ms", stopwatch.stop()));
 
         return currentVisits;
     }

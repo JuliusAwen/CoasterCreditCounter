@@ -1,16 +1,14 @@
 package de.juliusawen.coastercreditcounter.persistence.databaseMock;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.application.Content;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
@@ -27,6 +25,8 @@ import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalT
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public final class DatabaseMock implements IDatabaseWrapper
 {
@@ -51,7 +51,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private DatabaseMock()
     {
-        Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.Constructor:: initializing DatabaseMock...");
+        Log.frame(LogLevel.INFO, "initializing...", '#', true);
 
         this.creditTypes = new CreditTypes();
         this.categories = new Categories();
@@ -65,7 +65,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean loadContent(Content content)
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.loadContent:: mocking Parks and Visits...");
+        Log.i("mocking Parks and Visits...");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
@@ -86,24 +86,24 @@ public final class DatabaseMock implements IDatabaseWrapper
         this.mockEuropaPark();
         this.mockEnergylandia();
 
-        Log.e(Constants.LOG_TAG, "DatabaseMock.loadContent:: creating node tree");
+        Log.i("creating node tree");
         content.addElement(locations.Bremen); //adding one location is enough - content is searching for root from there
         this.flattenContentTree(App.content.getRootLocation());
 
-        Log.i(Constants.LOG_TAG, "DatabaseMock.loadContent:: adding Properties to content");
+        Log.i("adding Properties to content");
         content.addElements(ConvertTool.convertElementsToType(creditTypes.AllCreditTypes, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(categories.AllCategories, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(manufacturers.AllManufacturers, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(models.AllModels, IElement.class));
         content.addElements(ConvertTool.convertElementsToType(statuses.AllStatuses, IElement.class));
 
-        Log.e(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "DatabaseMock.loadContent:: mock data successfully created - took [%d]ms", stopwatch.stop()));
+        Log.d(String.format(Locale.getDefault(), "mock data successfully created - took [%d]ms", stopwatch.stop()));
         return true;
     }
 
     private void mockPhantasialand()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockPhantasialand");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park phantasialand = Park.create("Phantasialand");
         locations.Germany.addChildAndSetParent(phantasialand);
@@ -246,7 +246,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockHeidePark()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHeidePark");
+        Log.frame(LogLevel.INFO, "creating park...", '+', true);
 
         Park heidePark = Park.create("Heide Park");
         locations.Germany.addChildAndSetParent(heidePark);
@@ -410,7 +410,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockWalibiHolland()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockWalibiHolland");
+        Log.frame(LogLevel.INFO, "creating Park...", '#', true);
 
         Park walibiHolland = Park.create("Walibi Holland");
         locations.Netherlands.addChildAndSetParent(walibiHolland);
@@ -543,7 +543,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockOsterwiese()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockOsterwiese");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         //2018
         Park osterwiese2018 = Park.create("Osterwiese 2018");
@@ -579,7 +579,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockFreimarkt()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockFreimarkt");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         //2018
         Park freimarkt2018 = Park.create("Freimarkt 2018");
@@ -630,7 +630,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockPortAventura()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockPortAventura");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park portAventura = Park.create("Port Aventura");
         locations.Spain.addChildAndSetParent(portAventura);
@@ -741,7 +741,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockFerrariLand()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockFerrariLand");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park ferrariLand = Park.create("Ferrari Land");
         locations.Spain.addChildAndSetParent(ferrariLand);
@@ -789,7 +789,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockSlagharen()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockSlagharen");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park slagharen = Park.create("Attractiepark Slagharen");
         locations.Netherlands.addChildAndSetParent(slagharen);
@@ -884,7 +884,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockHolidayPark()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHolidayPark");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park holidayPark = Park.create("Holiday Park");
         locations.Germany.addChildAndSetParent(holidayPark);
@@ -923,7 +923,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockMovieParkGermany()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockMovieParkGermany");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park movieParkGermany = Park.create("Movie Park Germany");
         locations.Germany.addChildAndSetParent(movieParkGermany);
@@ -1059,7 +1059,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockToverland()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockToverland");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park toverland = Park.create("Toverland");
         this.locations.Netherlands.addChildAndSetParent(toverland);
@@ -1146,7 +1146,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockEfteling()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEfteling");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park efteling = Park.create("Efteling");
         locations.Netherlands.addChildAndSetParent(efteling);
@@ -1237,7 +1237,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockHansaPark()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockHansaPark");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park hansaPark = Park.create("Hansa Park");
         locations.Germany.addChildAndSetParent(hansaPark);
@@ -1351,7 +1351,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockMagicParkVerden()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockMagicParkVerden");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park magicParkVerden = Park.create("Magic Park Verden");
         locations.Germany.addChildAndSetParent(magicParkVerden);
@@ -1374,7 +1374,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockEuropaPark()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEuropaPark");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park europaPark = Park.create("Europa Park");
         locations.Germany.addChildAndSetParent(europaPark);
@@ -1558,7 +1558,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private void mockEnergylandia()
     {
-        Log.e(Constants.LOG_TAG, "DatabaseMock.mockEnergylandia");
+        Log.frame(LogLevel.INFO, "creating Park...", '+', true);
 
         Park energylandia = Park.create("Energylandia");
         locations.Poland.addChildAndSetParent(energylandia);
@@ -1698,7 +1698,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
     private Visit createVisit(int day, int month, int year, LinkedHashMap<OnSiteAttraction, Integer> rides)
     {
-        Log.i(Constants.LOG_TAG, String.format("DatabaseMock.createVisit:: creating Visit at [%s]...", day + "." + month + "." + year));
+        Log.d(String.format("creating Visit at [%s]...", day + "." + month + "." + year));
 
         Visit visit = Visit.create(year, month - 1, day);
 
@@ -1717,11 +1717,15 @@ public final class DatabaseMock implements IDatabaseWrapper
     {
         if(App.content.containsElement(element))
         {
-            Log.w(Constants.LOG_TAG,  String.format("DatabaseMock.flattenContentTree:: not adding %s to content as it is already known", element));
+            Log.w(String.format("DatabaseMock.flattenContentTree:: not adding %s to content as it is already known", element));
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("DatabaseMock.flattenContentTree:: adding %s to content", element));
+            if(App.config.logDetailsOnStartup)
+            {
+                Log.v(String.format("DatabaseMock.flattenContentTree:: adding %s to content", element));
+            }
+
             App.content.addElement(element);
         }
 
@@ -1734,42 +1738,42 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public boolean saveContent(Content content)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.saveContent:: DatabaseMock is not able to persist any data - content not persited");
+        Log.w("DatabaseMock is not able to persist any data - content not persited");
         return true;
     }
 
     @Override
     public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.synchronize:: DatabaseMock is not able to persist any data - persistence not synchronized");
+        Log.w("DatabaseMock is not able to persist any data - persistence not synchronized");
         return true;
     }
 
     @Override
     public boolean create(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.create:: DatabaseMock is not able to persist any data - elements not created");
+        Log.w("DatabaseMock is not able to persist any data - elements not created");
         return true;
     }
 
     @Override
     public boolean update(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.update:: DatabaseMock is not able to persist any data - elements not updated");
+        Log.w("DatabaseMock is not able to persist any data - elements not updated");
         return true;
     }
 
     @Override
     public boolean delete(Set<IElement> elements)
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.delete:: DatabaseMock is not able to persist any data - elements not deleted");
+        Log.w("DatabaseMock is not able to persist any data - elements not deleted");
         return true;
     }
 
     @Override
     public StatisticsGlobalTotals fetchStatisticsGlobalTotals()
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchStatisticsGlobalTotals:: empty mock implementation to satisfy interface");
+        Log.w("mock implementation to satisfy interface - invalid statistics returned");
 
         StatisticsGlobalTotals statisticsGlobalTotals = new StatisticsGlobalTotals();
         statisticsGlobalTotals.totalVisits = -1;
@@ -1782,7 +1786,7 @@ public final class DatabaseMock implements IDatabaseWrapper
     @Override
     public List<IElement> fetchCurrentVisits()
     {
-        Log.e(Constants.LOG_TAG,  "DatabaseMock.fetchCurrentVisits:: empty mock implementation to satisfy interface");
+        Log.w("mock implementation to satisfy interface - empty list returned");
         return new ArrayList<>();
     }
 

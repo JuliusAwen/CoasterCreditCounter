@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +35,9 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
-
-import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
@@ -105,7 +103,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("NavigationHubActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == RESULT_OK)
         {
@@ -115,7 +113,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 {
                     Visit resultElement = (Visit) ResultFetcher.fetchResultElement(data);
 
-                    Log.i(LOG_TAG, String.format("NavigationHubActivity.onActivityResult<GO_TO_CURRENT_VISIT>:: opening current visit %s...", resultElement));
+                    Log.i(String.format("<GO_TO_CURRENT_VISIT>: opening current visit %s...", resultElement));
                     ActivityDistributor.goToCurrentVisit(this, resultElement);
                     break;
                 }
@@ -128,7 +126,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Log.e(LOG_TAG, "NavigationHubActivity.onActivityResult<PICK_IMPORT_FILE>:: result data is null");
+                        Log.e("<PICK_IMPORT_FILE>: result data is null");
                     }
                     break;
                 }
@@ -141,7 +139,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Log.e(LOG_TAG, "NavigationHubActivity.onActivityResult<PICK_IMPORT_FILE_LOCATION>:: result data is null");
+                        Log.e("<PICK_IMPORT_FILE_LOCATION>: result data is null");
                     }
                     break;
                 }
@@ -154,7 +152,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Log.e(LOG_TAG, "NavigationHubActivity.onActivityResult<PICK_EXPORT_FILE_LOCATION>:: result data is null");
+                        Log.e("<PICK_EXPORT_FILE_LOCATION>: result data is null");
                     }
                     break;
                 }
@@ -169,7 +167,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             if(item.getItemId() == android.R.id.home)
             {
-                Log.d(LOG_TAG, "NavigationHubActivity.onOptionsItemSelected<HOME>:: opening navigation drawer...");
+                Log.d("<HOME>: opening navigation drawer...");
                 this.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
@@ -179,12 +177,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 {
                     if(this.viewModel.currentVisits.size() > 1)
                     {
-                        Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: [%d] current visits found - offering pick", this.viewModel.currentVisits.size()));
+                        Log.i(String.format(Locale.getDefault(), "<GO_TO_CURRENT_VISIT>: [%d] current visits found - offering pick", this.viewModel.currentVisits.size()));
                         ActivityDistributor.startActivityPickForResult(this, RequestCode.PICK_VISIT, this.viewModel.currentVisits);
                     }
                     else
                     {
-                        Log.i(LOG_TAG, String.format("NavigationHubActivity.handleGoToCurrentVisitSelected:: only one current visit found - opening %s...", this.viewModel.currentVisits.get(0)));
+                        Log.i(String.format("<GO_TO_CURRENT_VISIT>: only one current visit found - opening %s...", this.viewModel.currentVisits.get(0)));
                         ActivityDistributor.goToCurrentVisit(this, this.viewModel.currentVisits.get(0));
                     }
                     return true;
@@ -233,7 +231,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     private void decorateStatisticsGlobalTotals(StatisticsGlobalTotals statisticsGlobalTotals)
     {
-        Log.d(LOG_TAG, "NavigationHubActivity.decorateStatisticsGlobalTotals:: setting global totals");
+        Log.d("setting Statistics");
 
         this.textViewTotalCoasterCreditsCount.setText(StringTool.buildSpannableStringWithTypeface(
                 String.format(Locale.getDefault(), "%s %d", getString(R.string.statistic_total_coaster_credits), statisticsGlobalTotals.totalCredits),
@@ -262,7 +260,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             if(keyCode == KeyEvent.KEYCODE_BACK)
             {
-                Log.i(LOG_TAG, "NavigationHubActivity.onKeyDown<BACK>:: hardware back button pressed");
+                Log.i("<BACK>: hardware back button pressed");
 
                 if(this.isNavigationDrawerOpen())
                 {
@@ -278,7 +276,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        this.clickBackAgainToExitToast = Toaster.makeShortToast(this, "Click BACK again to exit");
+                        this.clickBackAgainToExitToast = Toaster.makeShortToast(this, getString(R.string.text_click_back_again_to_exit));
                         this.viewModel.lastBackClickedInMS = System.currentTimeMillis();
                     }
                 }
@@ -313,62 +311,62 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             {
                 case R.id.navigationItem_BrowseLocations:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <BrowseLocations> selected");
+                    Log.i("<BrowseLocations> selected");
                     this.startActivityShowLocations();
                     break;
                 }
 
                 case R.id.navigationItem_ManageCreditTypes:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCreditTypes> selected");
+                    Log.i("<ManageCreditTypes> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_CREDIT_TYPES);
                     break;
                 }
 
                 case R.id.navigationItem_ManageCategories:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageCategories> selected");
+                    Log.i("<ManageCategories> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_CATEGORIES);
                     break;
                 }
 
                 case R.id.navigationItem_ManageManufacturers:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageManufacturers> selected");
+                    Log.i("<ManageManufacturers> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_MANUFACTURERS);
                     break;
                 }
 
                 case R.id.navigationItem_ManageModels:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageModels> selected");
+                    Log.i("<ManageModels> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_MODELS);
                     break;
                 }
 
                 case R.id.navigationItem_ManageStatuses:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <ManageStatuses> selected");
+                    Log.i("<ManageStatuses> selected");
                     ActivityDistributor.startActivityManageForResult(NavigationHubActivity.this, RequestCode.MANAGE_STATUSES);
                     break;
                 }
 
                 case R.id.navigationItem_Import:
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Import> selected");
+                    Log.i("<Import> selected");
                     this.launchPickImportFileLocationIntent();
                     break;
                 }
 
                 case R.id.navigationItem_Export:
                 {
-                    Log.d(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: <Export> selected");
+                    Log.d("<Export> selected");
                     this.launchPickExportFileLocationIntent();
                     break;
                 }
 
                 default:
-                    Log.e(Constants.LOG_TAG, "NavigationHubActivity.onNavigationItemSelected:: unknown item selected");
+                    Log.e("unknown item selected");
                     return false;
             }
         }
@@ -435,7 +433,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("NavigationHubActivity.handleImportFilePicked:: invalid uri [%s] - aborting", importFileUri.getPath()));
+            Log.e(String.format("invalid uri [%s] - aborting", importFileUri.getPath()));
             Toaster.makeShortToast(this, getString(R.string.error_import_fail_invalid_uri));
         }
     }
@@ -536,12 +534,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(this.viewModel.isImporting)
         {
-            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: app is importing...");
+            Log.i("app is importing...");
             super.showProgressBar(true);
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startImportContent:: starting async import...");
+            Log.i("starting async import...");
 
             this.viewModel.isImporting = true;
             this.viewModel.isImportSuccessful = false;
@@ -573,7 +571,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     public void finishImportContent()
     {
-        Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: finishing import...");
+        Log.i("finishing import...");
         super.showProgressBar(false);
         this.viewModel.isImporting = false;
 
@@ -585,7 +583,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 @Override
                 public void onClick(View view)
                 {
-                    Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent.onSnackbarClick:: restoring content backup...");
+                    Log.i("restoring content backup...");
 
                     if(App.content.restoreBackup(true))
                     {
@@ -594,7 +592,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     }
                     else
                     {
-                        Log.e(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent.onSnackbarClick:: restoring content backup failed");
+                        Log.e("restoring content backup failed");
                         Toaster.makeShortToast(NavigationHubActivity.this, getString(R.string.error_undo_not_possible));
                     }
                 }
@@ -604,7 +602,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         else
         {
             Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.error_import_fail));
-            Log.e(Constants.LOG_TAG, "NavigationHubActivity.finishImportContent:: importing content failed");
+            Log.e("importing content failed");
         }
 
         this.resume();
@@ -614,12 +612,12 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(this.viewModel.isExporting)
         {
-            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: app is exporting...");
+            Log.i("app is exporting...");
             super.showProgressBar(true);
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "NavigationHubActivity.startExport:: starting async export...");
+            Log.i("starting async export...");
 
             this.viewModel.isExporting = true;
             this.viewModel.isExportSuccessful = false;
@@ -648,7 +646,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
     public void finishExportContent()
     {
-        Log.i(Constants.LOG_TAG, "NavigationHubActivity.finishExportContent:: finishing import/export...");
+        Log.i("finishing import/export...");
 
         super.showProgressBar(false);
         this.viewModel.isExporting = false;
@@ -661,7 +659,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         else
         {
             Toaster.makeLongToast(NavigationHubActivity.this, getString(R.string.error_export_fail));
-            Log.e(Constants.LOG_TAG, "NavigationHubActivity.finishExportContent:: exporting content failed");
+            Log.e("exporting content failed");
         }
 
         this.closeNavigationDrawer();
@@ -671,10 +669,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(this.isNavigationDrawerOpen())
         {
-            Log.d(Constants.LOG_TAG, "NavigationHubActivity.closeNavigationDrawer:: closing navigation drawer...");
+            Log.d("closing navigation drawer...");
             this.drawerLayout.closeDrawers();
         }
     }
 }
-
-

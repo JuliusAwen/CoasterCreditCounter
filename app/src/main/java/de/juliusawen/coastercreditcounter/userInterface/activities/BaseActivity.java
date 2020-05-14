@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +33,8 @@ import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
@@ -54,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(Constants.LOG_TAG, "BaseActivity.onCreate:: creating activity...");
+        Log.frame(LogLevel.VERBOSE, "creating...", '#', true);
 
         this.setContentView();
 
@@ -70,13 +71,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
                 this.viewModel.optionsMenuButler = new OptionsMenuButler(this);
             }
 
-            Log.i(Constants.LOG_TAG, String.format(Constants.LOG_DIVIDER_ON_CREATE + "BaseActivity.onCreate:: calling [%s].create()", this.getClass().getSimpleName()));
+            Log.frame(LogLevel.INFO, String.format("creating [%s]", this.getClass().getSimpleName()), '#', false);
             this.create();
             this.viewModel.activityIsCreated = true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, "BaseActivity.onCreate:: app is not initialized");
+            Log.w("app is not initialized");
             this.startAppInitialization();
         }
     }
@@ -93,8 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         {
             if(!this.viewModel.activityIsCreated)
             {
-                Log.e(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME +
-                        String.format("BaseActivity.onResume:: derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
+                Log.e(String.format("derived activity is not created - calling [%s].create()", this.getClass().getSimpleName()));
                 this.create();
             }
 
@@ -108,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
                 }
             }
 
-            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_RESUME + String.format("BaseActivity.onResume:: calling [%s].resume()", this.getClass().getSimpleName()));
+            Log.frame(LogLevel.INFO, String.format("resuming [%s]", this.getClass().getSimpleName()), '*', false);
             this.resume();
         }
     }
@@ -134,12 +134,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         //Todo: introduce SplashScreen
         if(this.viewModel.isInitializingApp)
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: app is initializing...");
+            Log.i("app is initializing...");
             this.showProgressBar(true);
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.startAppInitialization:: starting async app initialization...");
+            Log.i("starting async app initialization...");
 
             this.viewModel.isInitializingApp = true;
             this.showProgressBar(true);
@@ -171,16 +171,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         if(this.viewModel.isAppProperlyInitialized)
         {
             Intent intent = getIntent();
-            Log.i(Constants.LOG_TAG,
-                    String.format("BaseActivity.finishAppInitialization:: restarting [%s] in new thread - existing thread is cleared",
-                            StringTool.parseActivityName(intent.getComponent().getShortClassName())));
+            Log.i(String.format("restarting [%s] in new thread - existing thread is cleared", StringTool.parseActivityName(intent.getComponent().getShortClassName())));
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //this clears the stacktrace
             ActivityDistributor.startActivityViaIntent(this, intent);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.InitializeApp.doInBackground:: App initialization failed - closing App");
+            Log.e("App initialization failed - closing App");
             finishAndRemoveTask();
         }
     }
@@ -221,7 +219,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     @Override
     public void handlePopupItemClicked(PopupItem item)
     {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.handleOptionsItemSelected:: PopupMenuItem [%s] clicked - unhandled", item));
+        Log.e(String.format("[%s] clicked - unhandled", item));
     }
 
 
@@ -231,14 +229,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
         if(buttonFunction == ButtonFunction.CLOSE)
         {
-            Log.i(Constants.LOG_TAG, String.format("BaseActivity.onHelpOverlayFragmentInteraction:: [%s] selected", buttonFunction));
+            Log.i(String.format("[%s] selected", buttonFunction));
             this.setHelpOverlayVisibility(false);
         }
     }
 
     protected void createHelpOverlayFragment(String title, CharSequence message)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.addHelpOverlayFragment:: preparing HelpOverlayFragment...");
+        Log.d("preparing HelpOverlayFragment...");
 
         this.viewModel.isHelpOverlayAdded = true;
         this.viewModel.helpOverlayFragmentTitle = title;
@@ -247,8 +245,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     protected BaseActivity setHelpOverlayTitleAndMessage(String title, String message)
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.setHelpOverlayTitleAndMessage:: setting HelpOverlay title and message...");
-        Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayTitleAndMessage:: setting title [%s] and message [%s]", title, message));
+        Log.d("setting HelpOverlay title and message...");
+        Log.v(String.format("setting title [%s] and message [%s]", title, message));
 
         title = title.trim();
         message = message.trim();
@@ -271,8 +269,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             this.instantiateHelpOverlayFragment();
         }
 
-        Log.i(Constants.LOG_TAG, "BaseActivity.showHelpOverlayFragment:: showing HelpOverlayFragment");
-        Log.v(Constants.LOG_TAG, String.format("BaseActivity.showHelpOverlayFragment:: ...with title [%s] and message [%s]...",
+        Log.i("showing HelpOverlayFragment");
+        Log.v(String.format("...with title [%s] and message [%s]...",
                 this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage));
 
         this.setHelpOverlayVisibility(true);
@@ -282,7 +280,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(this.helpOverlayFragment == null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: creating HelpOverlayFragment...");
+            Log.d("creating HelpOverlayFragment...");
 
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             this.helpOverlayFragment = HelpOverlayFragment.newInstance(this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage);
@@ -292,7 +290,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.createHelpOverlayFragment:: re-using HelpOverlayFragment");
+            Log.e("re-using HelpOverlayFragment");
         }
     }
 
@@ -300,7 +298,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(this.helpOverlayFragment != null)
         {
-            Log.v(Constants.LOG_TAG, String.format("BaseActivity.setHelpOverlayVisibility:: setting HelpOverlayFragment to isVisible[%S]...", isVisible));
+            Log.v(String.format("isVisible[%S]...", isVisible));
 
             if(isVisible)
             {
@@ -324,13 +322,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.setHelpOverlayVisibility:: HelpOverlayFragment not created");
+            Log.e("HelpOverlayFragment not created");
         }
     }
 
     protected BaseActivity createToolbar()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createToolbar:: setting SupportActionBar...");
+        Log.d("setting SupportActionBar...");
         setSupportActionBar(this.toolbar);
 
         return this;
@@ -340,7 +338,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(getSupportActionBar() != null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: adding home button to toolbar...");
+            Log.d("adding to toolbar...");
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -350,14 +348,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
                 @Override
                 public void onClick(View view)
                 {
-                    Log.i(Constants.LOG_TAG, "BaseActivity.onToolbarHomeButtonBackClicked:: toolbar home button clicked...");
+                    Log.i("toolbar home button clicked...");
                     onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
                 }
             });
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.addToolbarHomeButton:: SupportActionBar not found");
+            Log.e("SupportActionBar not found");
         }
 
         return this;
@@ -367,14 +365,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(getSupportActionBar() != null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: adding menu icon to toolbar...");
+            Log.d("adding menu icon to toolbar...");
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_menu, R.color.white));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.addToolbarMenuIcon:: SupportActionBar not found");
+            Log.e("SupportActionBar not found");
         }
 
         return this;
@@ -384,7 +382,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(getSupportActionBar() != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setToolbarTitleAndSubtitle:: setting toolbar title [%s] and subtitle [%s]", title, subtitle));
+            Log.d(String.format("setting toolbar title [%s] and subtitle [%s]", title, subtitle));
 
             if(title != null)
             {
@@ -400,7 +398,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "BaseActivity.setToolbarTitleAndSubtitle:: SupportActionBar not found");
+            Log.e("SupportActionBar not found");
         }
 
         return this;
@@ -445,14 +443,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     public void createFloatingActionButton()
     {
-        Log.d(Constants.LOG_TAG, "BaseActivity.createFloatingActionButton:: creating FloatingActionButton...");
+        Log.d("creating...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
     public void setFloatingActionButtonIcon(Drawable icon)
     {
-        Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonIcon:: setting FloatingActionButton icon...");
+        Log.v("setting icon...");
         if(this.floatingActionButton != null)
         {
             icon.setTint(Color.WHITE);
@@ -462,7 +460,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
-        Log.v(Constants.LOG_TAG, "BaseActivity.setFloatingActionButtonOnClickListener:: setting FloatingActionButton onClickListener...");
+        Log.v("setting onClickListener...");
 
         if(this.floatingActionButton != null)
         {
@@ -475,7 +473,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.setFloatingActionButtonVisibility:: FloatingActionButton isVisible[%s]", isVisible));
+            Log.d(String.format("isVisible [%s]", isVisible));
 
             if(isVisible)
             {
@@ -492,7 +490,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(this.floatingActionButton != null)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.animateFloatingActionButtonTransition:: animating FloatingActionButton transition...");
+            Log.d("animating...");
 
             this.floatingActionButton.hide();
 
@@ -535,8 +533,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            Log.d(Constants.LOG_TAG, "BaseActivity.onKeyDown<BACK>:: finishing activity");
-            Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+            Log.d("<BACK>: finishing activity");
+            Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '-', false);
             finish();
             return true;
         }
@@ -545,7 +543,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     protected void getStatistics(StatisticType statisticType)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: fetching statistics of type [%s]", statisticType));
+        Log.d(String.format("fetching type [%s]", statisticType));
 
         this.showProgressBar(true);
         new StatisticsProvider().execute(this, statisticType);
@@ -580,7 +578,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     private void provideStatistics(StatisticType statisticType, IStatistic statistics)
     {
-        Log.d(Constants.LOG_TAG, String.format("BaseActivity.getStatistics:: statistics of type [%s] fetched - calling [%s].decorateStatistics(...)",
+        Log.d(String.format("statistics of type [%s] fetched - calling [%s].decorateStatistics(...)",
                 statisticType, this.getClass().getSimpleName()));
 
         this.showProgressBar(false);
@@ -589,7 +587,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     protected void decorateStatistics(StatisticType statisticType, IStatistic statistics)
     {
-        Log.e(Constants.LOG_TAG, String.format("BaseActivity.decorateStatistics:: [%s] does not override decorateStatistics()", this.getClass().getSimpleName()));
+        Log.e(String.format("[%s] does not override decorateStatistics()", this.getClass().getSimpleName()));
     }
 
     protected void showProgressBar(boolean show)
@@ -617,12 +615,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(element.isPersistable())
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: marking %s for creation", element));
+            Log.i(String.format("marking %s for creation", element));
             this.viewModel.elementsToCreate.add(element);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForCreation:: %s is not persistable", element));
+            Log.e(String.format("%s is not persistable", element));
         }
 
         App.content.addElement(element);
@@ -640,12 +638,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(element.isPersistable())
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: marking %s for update", element));
+            Log.i(String.format("marking %s for update", element));
             this.viewModel.elementsToUpdate.add(element);
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForUpdate:: %s is not persistable", element));
+            Log.e(String.format("%s is not persistable", element));
         }
     }
 
@@ -664,7 +662,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
         if(element.isPersistable())
         {
-            Log.d(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: marking %s for deletion", element));
+            Log.i(String.format("marking %s for deletion", element));
             this.viewModel.elementsToDelete.add(element);
 
             if(deleteDescendants && element.hasChildren())
@@ -680,7 +678,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("BaseActivity.markForDeletion:: [%s] is not persistable", element));
+            Log.e(String.format("[%s] is not persistable", element));
         }
 
         if(deleteDescendants)
@@ -703,11 +701,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
-            Log.i(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence.");
+            Log.i("synchronizing persistence.");
 
             if(!App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
             {
-                Log.e(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: synchronizing persistence failed");
+                Log.e("synchronizing persistence failed");
                 throw new IllegalStateException();
             }
 
@@ -717,7 +715,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "BaseActivity.synchronizePersistency:: persistence is synchronous");
+            Log.v("persistence is synchronous");
         }
     }
 }

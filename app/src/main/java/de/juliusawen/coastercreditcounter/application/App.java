@@ -2,9 +2,10 @@ package de.juliusawen.coastercreditcounter.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class App extends Application
 {
@@ -32,8 +33,7 @@ public class App extends Application
     @Override
     public void onCreate()
     {
-        Log.i(Constants.LOG_TAG, "App.onCreate:: creating app...");
-
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
         super.onCreate();
 
         App.isInitialized = false;
@@ -44,19 +44,25 @@ public class App extends Application
 
     public static boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "App.initialize:: initializing <Preferences> and <Content>...");
+        Log.i("initializing <Preferences> and <Content>...");
+
+        if(!App.config.logDetailsOnStartup)
+        {
+            Log.restrictLogging(LogLevel.INFO, "avoiding log spam during initialization");
+        }
 
         App.preferences = Preferences.getInstance(App.persistence);
         App.content = Content.getInstance(App.persistence);
 
+        boolean success = false;
         if(App.preferences.initialize() && App.content.initialize())
         {
             App.isInitialized = true;
-            return true;
+            success = true;
         }
-        else
-        {
-            return false;
-        }
+
+        Log.restrictLogging(LogLevel.NONE, "initialization done");
+
+        return success;
     }
 }

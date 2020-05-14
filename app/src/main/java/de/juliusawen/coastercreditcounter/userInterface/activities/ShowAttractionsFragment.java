@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
@@ -43,8 +44,6 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
-import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
-
 public  class ShowAttractionsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowParkSharedViewModel viewModel;
@@ -53,7 +52,6 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
     public static ShowAttractionsFragment newInstance()
     {
-        Log.i(LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowAttractionsFragment.newInstance:: instantiating fragment...");
         return new ShowAttractionsFragment();
     }
 
@@ -76,7 +74,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.v(LOG_TAG, "ShowAttractionsFragment.onCreate:: creating fragment...");
+        Log.frame(LogLevel.INFO, "creating...", '#', true);
         super.onCreate(savedInstanceState);
 
         this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
@@ -110,7 +108,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(LOG_TAG, String.format("ShowAttractionsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -265,13 +263,13 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         this.fragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(LOG_TAG, String.format("ShowAttractionsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
+            Log.i(String.format("deleting %s...", this.viewModel.longClickedElement));
 
             for(Visit visit : this.viewModel.longClickedElement.getParent().getChildrenAsType(Visit.class))
             {
@@ -293,12 +291,12 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         if(resetContent)
         {
-            Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: resetting content...");
+            Log.d("resetting content...");
             this.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(OnSiteAttraction.class));
         }
         else
         {
-            Log.d(LOG_TAG, "ShowAttractionsFragment.updateContentRecyclerView:: notifying data set changed...");
+            Log.d("notifying data set changed...");
             this.contentRecyclerViewAdapter.notifyDataSetChanged();
         }
 

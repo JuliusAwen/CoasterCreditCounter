@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,9 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Parent: Location
@@ -36,7 +34,7 @@ public final class Location extends Element implements IPersistable
         if(Element.isNameValid(name))
         {
             location = new Location(name, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Location.create:: %s created.", location.getFullName()));
+            Log.d(String.format("%s created", location.getFullName()));
         }
 
         return location;
@@ -46,7 +44,7 @@ public final class Location extends Element implements IPersistable
     {
         if(!this.isRootLocation())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Location.getRootLocation:: %s is not root location - calling parent", this));
+            Log.v(String.format("%s is not root location - calling parent", this));
             return ((Location)super.getParent()).getRootLocation();
         }
         else
@@ -71,9 +69,7 @@ public final class Location extends Element implements IPersistable
     {
         if((this.hasChildrenOfType(Location.class) && this.hasChildrenOfType(Park.class)))
         {
-            Log.d(Constants.LOG_TAG,
-                    String.format("Location.sortChildTypes:: sorting %s's child types - parksToTheTop[%S] according to App.Preferences",
-                            this, App.preferences.sortParksToTopOfLocationsChildren()));
+            Log.d(String.format("sorting %s's child types - parksToTheTop[%S] according to App.Preferences", this, App.preferences.sortParksToTopOfLocationsChildren()));
 
             List<IElement> sortedChildren = new LinkedList<>();
 
@@ -101,13 +97,13 @@ public final class Location extends Element implements IPersistable
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            Log.v(Constants.LOG_TAG, String.format("Location.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Location.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

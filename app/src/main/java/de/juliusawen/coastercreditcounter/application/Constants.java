@@ -3,9 +3,8 @@ package de.juliusawen.coastercreditcounter.application;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
-    public static final String LOG_DIVIDER = "########################";
-    public static final String LOG_DIVIDER_ON_CREATE = "############";
-    public static final String LOG_DIVIDER_ON_RESUME = "######";
+    public static final String LOG_DIVIDER = "+++++++++++++++++++++";
+    public static final String LOG_DIVIDER_ON_CREATE = "############ ";
     public static final String LOG_DIVIDER_FINISH = "-------finished_";
 
     public static final int TOOLBAR_CLICK_COUNT = 3;
@@ -60,9 +59,8 @@ public abstract class Constants
     public static final String JSON_STRING_NOTE = "note";
     public static final String JSON_STRING_NOTE_TEXT = "note text";
 
+    public static final String JSON_STRING_LOG_LEVEL = "log level";
     public static final String JSON_STRING_DETAIL_ORDER = "detail order";
-
-
     public static final String JSON_STRING_DEFAULT_SORT_ORDER = "default sort order";
     public static final String JSON_STRING_EXPAND_LATEST_YEAR_HEADER = "expand latest year header";
     public static final String JSON_STRING_FIRST_DAY_OF_THE_WEEK = "first day of the week";
@@ -88,6 +86,7 @@ public abstract class Constants
     public static final String EXTRA_TYPE_TO_MANAGE = "de.juliusawen.coding.extra_type_to_manage";
     public static final String EXTRA_REQUEST_CODE = "de.juliusawen.coding.extra_request_code";
     public static final String EXTRA_SINGLE_PICK = "de.juliusawen.coding.extra_single_pick";
+    public static final String EXTRA_DEFAULT_TAB = "de.juliusawen.coding.extra_default_tab";
 
 
     public static final String FRAGMENT_ARG_HELP_TITLE = "de.juliusawen.coding.fragment_arg_help_title";

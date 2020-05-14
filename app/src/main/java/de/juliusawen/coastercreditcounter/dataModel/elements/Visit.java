@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +16,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Parent: Park<br>
@@ -57,7 +56,7 @@ public final class Visit extends Element implements IPersistable
     public static Visit create(Calendar calendar, UUID uuid)
     {
         Visit visit = new Visit(StringTool.fetchSimpleDate(calendar), uuid, calendar);
-        Log.v(Constants.LOG_TAG,  String.format("Visit.create:: %s created.", visit.getFullName()));
+        Log.d(String.format("%s created", visit.getFullName()));
 
         return visit;
     }
@@ -99,7 +98,7 @@ public final class Visit extends Element implements IPersistable
     {
         String date = StringTool.fetchSimpleDate(this.calendar);
 
-        Log.d(Constants.LOG_TAG, String.format("Visit.setName:: set date for %s to [%s] - changing name...", this, date));
+        Log.d(String.format("set date for %s to [%s] - changing name...", this, date));
 
         super.setName(date);
     }
@@ -121,7 +120,7 @@ public final class Visit extends Element implements IPersistable
 
     public static void setSortOrder(SortOrder sortOrder)
     {
-        Log.d(Constants.LOG_TAG, String.format("Visit.setSortOrder:: sort order set to [%s]", sortOrder.toString()));
+        Log.d(String.format("sort order set to [%s]", sortOrder.toString()));
         Visit.sortOrder = sortOrder;
     }
 
@@ -133,18 +132,18 @@ public final class Visit extends Element implements IPersistable
         {
             if(Visit.isSameDay(visit.getCalendar(), calendar))
             {
-                Log.v(Constants.LOG_TAG, String.format("Visit.fetchVisitsForYearAndDay:: Found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
+                Log.v(String.format("found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
                 foundVisits.add(visit);
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("Visit.fetchVisitsForYearAndDay:: [%d] visits found for [%s]", foundVisits.size(), StringTool.fetchSimpleDate(calendar)));
+        Log.d(String.format(Locale.getDefault(), "[%d] visits found for [%s]", foundVisits.size(), StringTool.fetchSimpleDate(calendar)));
         return foundVisits;
     }
 
     public void setEditingEnabled(boolean enabled)
     {
-        Log.d(Constants.LOG_TAG, String.format("Visit.setEditingEnabled:: %s editing enabled set to [%s]", this, enabled));
+        Log.i(String.format("%s editing enabled set to [%s]", this, enabled));
         this.isEditingEnabled = enabled;
     }
 
@@ -175,13 +174,13 @@ public final class Visit extends Element implements IPersistable
             }
             jsonObject.put(Constants.JSON_STRING_RIDE_COUNTS_BY_ATTRACTION, hasVisitedAttractions ? jsonArrayRideCountsByAttraction : JSONObject.NULL);
 
-            Log.v(Constants.LOG_TAG, String.format("Visit.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Visit.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

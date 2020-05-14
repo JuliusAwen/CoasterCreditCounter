@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,12 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
-
-import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowParkOverviewFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
@@ -43,7 +42,6 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
 
     public static ShowParkOverviewFragment newInstance()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowParkOverviewFragment.newInstance:: instantiating fragment...");
         return new ShowParkOverviewFragment();
     }
 
@@ -65,6 +63,8 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
+        Log.frame(LogLevel.INFO, "creating...", '#', true);
+        
         super.onCreate(savedInstanceState);
         this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
         this.setHasOptionsMenu(true);
@@ -92,7 +92,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(LOG_TAG, String.format("ShowParkOvierviewFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -198,11 +198,11 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ShowParkOverviewFragment.handleActionConfirmed:: deleting %s...", this.viewModel.park.getNote()));
+            Log.i(String.format("deleting %s...", this.viewModel.park.getNote()));
 
             ShowParkOverviewFragment.this.fragmentInteraction.markForUpdate(this.viewModel.park);
             ShowParkOverviewFragment.this.fragmentInteraction.markForDeletion(this.viewModel.park.getNote(), false);

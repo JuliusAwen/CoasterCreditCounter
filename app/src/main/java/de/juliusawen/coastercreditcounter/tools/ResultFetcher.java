@@ -1,14 +1,15 @@
 package de.juliusawen.coastercreditcounter.tools;
 
 import android.content.Intent;
-import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public abstract class ResultFetcher
 {
@@ -19,11 +20,11 @@ public abstract class ResultFetcher
         if(resultElementUuidString != null)
         {
             resultElement = App.content.getContentByUuid(UUID.fromString(resultElementUuidString));
-            Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElement:: result element %s fetched", resultElement));
+            Log.d(String.format("result element %s fetched", resultElement));
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "ResultFetcher.fetchResultElement:: no result element fetched");
+            Log.d("no result element fetched");
         }
 
         return resultElement;
@@ -34,7 +35,7 @@ public abstract class ResultFetcher
         ArrayList<String> resultElementsUuidStrings = data.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS);
         ArrayList<IElement> resultElements = App.content.getContentByUuidStrings(resultElementsUuidStrings);
 
-        Log.d(Constants.LOG_TAG, String.format("ResultFetcher.fetchResultElements:: [%d] result elements fetched", resultElements.size()));
+        Log.d(String.format(Locale.getDefault(), "[%d] result elements fetched", resultElements.size()));
 
         return resultElements;
     }

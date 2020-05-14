@@ -1,16 +1,18 @@
 package de.juliusawen.coastercreditcounter.application;
 
-import android.util.Log;
-
 import de.juliusawen.coastercreditcounter.BuildConfig;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class AppConfig
 {
-    private final String DATABASE_MOCK = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
-    private final String JSON_HANDLER = Constants.DATABASE_WRAPPER_JSON_HANDLER;
+    public final boolean logDetailsOnStartup = false;
 
-    private final String databaseWrapperToUse = JSON_HANDLER;
+    private final String databaseMock = Constants.DATABASE_WRAPPER_DATABASE_MOCK;
+    private final String jsonHandler = Constants.DATABASE_WRAPPER_JSON_HANDLER;
+
+    private final String databaseWrapperToUse = jsonHandler;
 
     private final String exportFileName = "CoasterCreditCounterExport.json";
     private final String preferencesFileName = "Preferences.json";
@@ -41,31 +43,32 @@ public class AppConfig
     public final int maxHeightForNoteInDP = 120;
 
 
-    AppConfig()
+    public AppConfig()
     {
-        Log.i(Constants.LOG_TAG, "AppConfig.Constructor:: <AppConfig> instantiated");
-        Log.i(Constants.LOG_TAG, String.format("AppConfig.Constructor:: Configuration: \n%s", this));
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
+        Log.wrap(LogLevel.INFO, this.toString(), '-', false);
     }
 
     @Override
     public String toString()
     {
         return String.format(
-                Constants.LOG_DIVIDER + "\n" +
-                        "databaseWrapperToUse [%s]\n" +
-                        "contentExportFileName [%s]\n" +
-                        "preferencesFileName [%s]\n" +
-                        "isDebugBuild [%S]\n" +
-                        "resetToDefaultContentOnStartup [%S]\n" +
-                        "resetToDefaultPreferencesOnStartup [%S]\n" +
-                        "alwaysImportFromDatabaseMock [%S]\n" +
-                        "validateContent [%S]\n" +
-                        Constants.LOG_DIVIDER,
+                "App Configuration:\n" +
+                        "DebugBuild [%S]\n" +
+                        "Log details on startup [%S]\n" +
+                        "DatabaseWrapper [%s]\n" +
+                        "ContentExport file name [%s]\n" +
+                        "Preferences file name [%s]\n" +
+                        "Reset To default Content on startup [%S]\n" +
+                        "Reset to default Preferences on startup [%S]\n" +
+                        "Always import from DatabaseMock [%S]\n" +
+                        "Validate content [%S]",
 
-                this.databaseWrapperToUse(),
+                this.isDebugBuild(),
+                this.logDetailsOnStartup,
+                this.getDatabaseWrapper(),
                 this.getExportFileName(),
                 this.getPreferencesFileName(),
-                this.isDebugBuild(),
                 this.resetToDefaultContentOnStartup(),
                 this.resetToDefaultPreferencesOnStartup(),
                 this.alwaysImportFromDatabaseMock(),
@@ -73,7 +76,7 @@ public class AppConfig
         );
     }
 
-    public String databaseWrapperToUse()
+    public String getDatabaseWrapper()
     {
         return this.databaseWrapperToUse;
     }

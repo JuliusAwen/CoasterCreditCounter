@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -26,6 +27,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufact
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class CreateSimpleElementActivity extends BaseActivity
 {
@@ -75,7 +78,7 @@ public class CreateSimpleElementActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.onEditorAction:: actionId[%d]", actionId));
+                Log.i(String.format(Locale.getDefault(), "actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -145,7 +148,7 @@ public class CreateSimpleElementActivity extends BaseActivity
             }
             else
             {
-                Log.i(Constants.LOG_TAG, "CreateSimpleElementActivity.handleOnEditorActionDone:: input is invalid");
+                Log.i("input is invalid");
                 this.textInputLayout.setError(getString(R.string.error_name_invalid));
             }
         }
@@ -158,27 +161,27 @@ public class CreateSimpleElementActivity extends BaseActivity
         switch(this.viewModel.requestCode)
         {
             case CREATE_CREDIT_TYPE:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating CreditType [%s]", input));
+                Log.d(String.format("creating CreditType [%s]", input));
                 createdElement = CreditType.create(input);
                 break;
 
             case CREATE_CATEGORY:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Category [%s]", input));
+                Log.d(String.format("creating Category [%s]", input));
                 createdElement = Category.create(input);
                 break;
 
             case CREATE_MANUFACTURER:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Manufacturer [%s]", input));
+                Log.d(String.format("creating Manufacturer [%s]", input));
                 createdElement = Manufacturer.create(input);
                 break;
 
             case CREATE_STATUS:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Status [%s]", input));
+                Log.d(String.format("creating Status [%s]", input));
                 createdElement = Status.create(input);
                 break;
 
             case CREATE_NOTE:
-                Log.d(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: creating Note with text [%s]", input));
+                Log.d(String.format("creating Note with text [%s]", input));
                 createdElement = Note.create(input);
                 break;
         }
@@ -194,7 +197,7 @@ public class CreateSimpleElementActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateSimpleElementActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
 
         Intent intent = new Intent();
 
@@ -205,7 +208,7 @@ public class CreateSimpleElementActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

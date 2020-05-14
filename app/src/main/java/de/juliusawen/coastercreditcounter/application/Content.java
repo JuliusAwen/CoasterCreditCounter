@@ -1,10 +1,9 @@
 package de.juliusawen.coastercreditcounter.application;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,6 +11,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class Content
 {
@@ -37,22 +38,22 @@ public class Content
     private Content(Persistence persistence)
     {
         this.persistence = persistence;
-        Log.i(Constants.LOG_TAG,"Content.Constructor:: <Content> instantiated");
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
     }
 
     public boolean initialize()
     {
-        Log.i(Constants.LOG_TAG, "Content.initialize:: initializing content...");
+        Log.i("initializing...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         if(this.persistence.loadContent(this))
         {
-            Log.i(Constants.LOG_TAG, String.format("Content.initialize:: content initialization successful - took [%d]ms", stopwatch.stop()));
+            Log.i(String.format(Locale.getDefault(), "successful - took [%d]ms", stopwatch.stop()));
             return true;
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("Content.initialize:: content initialization failed - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
@@ -63,7 +64,7 @@ public class Content
         {
             this.rootLocation = null;
             this.elementsByUuid.clear();
-            Log.i(Constants.LOG_TAG, "Content.clear:: content cleared");
+            Log.i("cleared");
         }
     }
 
@@ -74,13 +75,13 @@ public class Content
             this.backupElements = new LinkedHashMap<>(this.elementsByUuid);
 
             this.isRestoreBackupPossible = true;
-            Log.i(Constants.LOG_TAG, "Content.backup:: content backup created");
+            Log.i("backup created");
             return true;
         }
         else
         {
             this.isRestoreBackupPossible = false;
-            Log.i(Constants.LOG_TAG, "Content.backup:: no backup created - content is empty");
+            Log.i("no backup created - content is empty");
             return false;
         }
     }
@@ -96,24 +97,24 @@ public class Content
                 this.isRestoreBackupPossible = false;
                 this.backupElements = null;
 
-                Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup restored");
+                Log.i("backup restored");
 
                 if(saveBackup && this.persistence.saveContent(this))
                 {
-                    Log.i(Constants.LOG_TAG, "Content.restoreBackup:: content backup saved");
+                    Log.i("content backup saved");
                 }
 
                 return true;
             }
             else
             {
-                Log.w(Constants.LOG_TAG, "Content.restoreBackup:: content backup is empty");
+                Log.w("backup is empty");
                 return true;
             }
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "Content.restoreBackup:: restore content backup not possible");
+            Log.d("restoring backup not possible");
             return false;
         }
     }
@@ -133,12 +134,12 @@ public class Content
         if(!locations.isEmpty())
         {
             this.rootLocation = locations.get(0).getRootLocation();
-            Log.i(Constants.LOG_TAG,  String.format("Content.setRootLocation:: %s set as root", rootLocation));
+            Log.i(String.format("%s set as root", rootLocation));
         }
         else
         {
             String message = "not able to set root location: no location located in content - closing app";
-            Log.e(Constants.LOG_TAG, "Content.setRootLocation:: " + message);
+            Log.e(message);
             throw new IllegalStateException(message);
         }
     }
@@ -151,7 +152,7 @@ public class Content
         }
         else if(App.isInitialized)
         {
-            Log.w(Constants.LOG_TAG, String.format("Content.containsElement:: Content does not contain %s", element));
+            Log.w(String.format("does not contain %s", element));
         }
 
         return false;
@@ -204,7 +205,7 @@ public class Content
             elements.add(this.getContentByUuid(UUID.fromString(uuidString)));
         }
 
-        Log.v(Constants.LOG_TAG, String.format("Content.getContentByUuidStrings:: fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
+        Log.v(String.format(Locale.getDefault(), "fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
 
         return elements;
     }
@@ -217,7 +218,7 @@ public class Content
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Content.getContentByUuid:: No element found for uuid[%s]", uuid));
+            Log.w(String.format("no element found for uuid [%s]", uuid));
             return null;
         }
     }
@@ -232,7 +233,7 @@ public class Content
 
     public void addElement(IElement element)
     {
-        Log.v(Constants.LOG_TAG,  String.format("Content.addElement:: %s added", element.getFullName()));
+        Log.v(String.format("%s added", element.getFullName()));
         this.elementsByUuid.put(element.getUuid(), element);
     }
 
@@ -240,7 +241,7 @@ public class Content
     {
         if(this.elementsByUuid.containsKey(element.getUuid()))
         {
-            Log.v(Constants.LOG_TAG,  String.format("Content.removeElement:: %s removed", element));
+            Log.v(String.format("%s removed", element));
             this.elementsByUuid.remove(element.getUuid());
         }
     }

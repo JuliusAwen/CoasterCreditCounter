@@ -1,17 +1,15 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.IHasNote;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /***
  * Parent: Location<br>
@@ -37,7 +35,7 @@ public final class Park extends Element implements IHasNote, IPersistable
         if(Element.isNameValid(name))
         {
             park = new Park(name, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Park.create:: %s created", park.getFullName()));
+            Log.d(String.format("%s created", park.getFullName()));
         }
 
         return park;
@@ -59,7 +57,7 @@ public final class Park extends Element implements IHasNote, IPersistable
     {
         if(child.equals(this.note))
         {
-            Log.v(Constants.LOG_TAG, String.format("Park.deleteChild:: setting private field %s on %s to NULL", this.note, this));
+            Log.v(String.format("setting private field %s on %s to NULL", this.note, this));
             this.note = null;
         }
 
@@ -75,13 +73,13 @@ public final class Park extends Element implements IHasNote, IPersistable
             JsonTool.putNameAndUuid(jsonObject, this);
             JsonTool.putChildren(jsonObject, this);
 
-            Log.v(Constants.LOG_TAG, String.format("Park.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Park.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

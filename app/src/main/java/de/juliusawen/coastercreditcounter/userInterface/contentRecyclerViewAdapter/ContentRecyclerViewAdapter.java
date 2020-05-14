@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import android.graphics.Typeface;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
@@ -46,6 +45,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpa
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -110,7 +110,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public ContentRecyclerViewAdapter setItems(List<IElement> items)
     {
-        Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItems:: setting [%d] items...", items.size()));
+        Log.d(String.format(Locale.getDefault(), "setting [%d] items...", items.size()));
 
         this.originalItems = new ArrayList<>(items);
         this.generationByItem.clear();
@@ -178,7 +178,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
     {
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: initializing [%d] items - generation [%d]...", items.size(), generation));
+        Log.v(String.format(Locale.getDefault(), "initializing [%d] items - generation [%d]...", items.size(), generation));
 
         ArrayList<IElement> initializedItems = new ArrayList<>();
         for(IElement item : items)
@@ -189,7 +189,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             if(this.expandedItems.contains(item))
             {
                 ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.initializeItems:: item %s is expanded - adding [%d] children", item, relevantChildren.size()));
+                Log.v(String.format(Locale.getDefault(), "item %s is expanded - adding [%d] children", item, relevantChildren.size()));
                 initializedItems.addAll(this.initializeItems(relevantChildren, generation + 1));
             }
         }
@@ -406,7 +406,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         IElement item = this.items.get(position);
         int generation = this.getGeneration(item);
 
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderItem:: binding %s for position [%d] - generation [%d]...", item, position, generation));
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", item, position, generation));
 
 
         //setExpandToggle
@@ -722,7 +722,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 default:
-                    Log.e(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: DetailType [%s] for %s not found",
+                    Log.e(String.format("ContentRecyclerViewAdapter.getSpannableDetailString:: DetailType [%s] for %s not found",
                             DetailType.getValue(detailType.ordinal()), item));
                     break;
             }
@@ -752,7 +752,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
         VisitedAttraction visitedAttraction = (VisitedAttraction) this.items.get(position);
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.bindViewHolderVisitedAttraction:: binding %s for position [%d]", visitedAttraction, position));
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]", visitedAttraction, position));
 
         if(!this.formatAsPrettyPrint)
         {
@@ -785,7 +785,8 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             viewHolder.linearLayoutEditable.setVisibility(View.GONE);
 
-            viewHolder.textViewPrettyPrint.setText(App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.fetchTotalRideCount(), visitedAttraction.getName()));
+            viewHolder.textViewPrettyPrint.setText(
+                    App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.fetchTotalRideCount(), visitedAttraction.getName()));
             viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
         }
     }
@@ -796,7 +797,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if(generation == null)
         {
-            Log.e(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getGeneration:: could not determine generation for %s - returning -1...", item));
+            Log.e(String.format("could not determine generation for %s - returning -1...", item));
             generation = -1;
         }
 
@@ -833,7 +834,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             String message =
                     String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]",
                             item.getClass().getSimpleName());
-            Log.e(Constants.LOG_TAG, message);
+            Log.e(message);
 
             if(BuildConfig.DEBUG)
             {
@@ -902,12 +903,12 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(!this.items.isEmpty() && !this.isAllExpanded())
         {
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding all items");
+            Log.v("expanding all items");
 
             int itemsCount;
             do
             {
-                Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: expanding next generation");
+                Log.v("expanding next generation");
 
                 List<IElement> itemsList = new ArrayList<>(this.items);
                 itemsCount = itemsList.size();
@@ -921,11 +922,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             scrollToItem(this.items.get(0));
 
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandAll:: all [%d] items expanded", itemsCount));
+            Log.d(String.format(Locale.getDefault(), "all [%d] items expanded", itemsCount));
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.expandAll:: no items to expand");
+            Log.v("no items to expand");
         }
 
         return this;
@@ -952,7 +953,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: expanding item %s...", item));
+                Log.v(String.format("expanding item %s...", item));
 
                 this.expandedItems.add(item);
                 notifyItemChanged(this.items.indexOf(item));
@@ -967,7 +968,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     this.items.add(index, child);
                     notifyItemInserted(index);
 
-                    Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandItem:: added child %s at index [%d] - generation [%d]", child, index, generation));
+                    Log.v(String.format(Locale.getDefault(), "added child %s at index [%d] - generation [%d]", child, index, generation));
                 }
 
                 if(scrollToItem)
@@ -1022,18 +1023,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             List<IElement> itemsList = new ArrayList<>(this.expandedItems);
 
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.expandAll:: collapsing all [%d] items", itemsList.size()));
+            Log.d(String.format(Locale.getDefault(), "collapsing all [%d] items", itemsList.size()));
 
             for(IElement item : itemsList)
             {
                 this.collapseItem(item, false);
             }
 
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: all items collapsed");
+            Log.v("all items collapsed");
         }
         else
         {
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.collapseAll:: no items to collapse");
+            Log.v("no items to collapse");
         }
 
         return this;
@@ -1046,7 +1047,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             List<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: collapsing item %s...", item));
+                Log.v(String.format("collapsing item %s...", item));
 
                 this.expandedItems.remove(item);
                 notifyItemChanged(items.indexOf(item));
@@ -1064,7 +1065,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                     this.generationByItem.remove(child);
 
-                    Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.collapseItem:: removed child %s at index [%d]", child, index));
+                    Log.v(String.format(Locale.getDefault(), "removed child %s at index [%d]", child, index));
                 }
 
                 if(scrollToItem)
@@ -1143,7 +1144,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                         else
                         {
-                            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.getSelectionOnClickListener.onClick:: %s clicked - GroupHeaders are ignored.", selectedItem));
+                            Log.d(String.format("%s clicked - GroupHeaders are ignored.", selectedItem));
                         }
                     }
                 }
@@ -1201,7 +1202,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void setAllItemsSelected()
     {
-        Log.d(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setAllItemsSelected:: selecting all items...");
+        Log.d("selecting all items...");
 
         this.selectedItemsInOrderOfSelection.clear();
 
@@ -1235,7 +1236,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             if(!this.selectedItemsInOrderOfSelection.contains(element))
             {
                 this.selectedItemsInOrderOfSelection.add(element);
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemSelected:: %s selected", element));
+                Log.v(String.format("%s selected", element));
             }
 
             if(this.items.contains(element))
@@ -1247,7 +1248,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void setAllItemsDeselected()
     {
-        Log.i(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setAllItemsDeselected:: deselecting all elements...");
+        Log.i("deselecting all elements...");
 
         LinkedList<IElement> selectedItems = new LinkedList<>(this.selectedItemsInOrderOfSelection);
         this.setItemsDeselected(selectedItems);
@@ -1268,7 +1269,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             if(this.selectedItemsInOrderOfSelection.contains(element))
             {
                 selectedItemsInOrderOfSelection.remove(element);
-                Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setItemDeselected:: %s deselected", element));
+                Log.v(String.format("%s deselected", element));
             }
 
             if(this.items.contains(element))
@@ -1325,7 +1326,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     {
         if(item != null && this.items.contains(item) && this.recyclerView != null)
         {
-            Log.d(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.scrollToItem:: scrolling to %s", item));
+            Log.d(String.format("scrolling to %s", item));
             recyclerView.scrollToPosition(items.indexOf(item));
         }
     }
@@ -1336,7 +1337,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             this.items.add(new BottomSpacer());
             notifyItemInserted(this.items.size() - 1);
-            Log.v(Constants.LOG_TAG, "ContentRecyclerViewAdapter.addBottomSpacer:: added BottomSpacer");
+            Log.v("added BottomSpacer");
         }
 
         return this;
@@ -1347,11 +1348,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(typeface <= 3)
         {
             this.typefacesByContentType.put(type, typeface);
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForContentType:: [%d] set for [%s]", typeface, type.getSimpleName()));
+            Log.v(String.format(Locale.getDefault(), "[%d] set for [%s]", typeface, type.getSimpleName()));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setTypefaceForContentType:: unknown typeface");
+            Log.e("unknown typeface");
         }
 
         return this;
@@ -1368,11 +1369,11 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if(typeface <= 3)
         {
             this.typefacesByDetailType.put(type, typeface);
-            Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setTypefaceForDetailType:: [%d] set for [%s]", typeface, type));
+            Log.v(String.format(Locale.getDefault(), "[%d] set for [%s]", typeface, type));
         }
         else
         {
-            Log.e(Constants.LOG_TAG, "ContentRecyclerViewAdapter.setTypefaceForDetailType:: unknown typeface");
+            Log.e("unknown typeface");
         }
 
         return this;
@@ -1422,7 +1423,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public ContentRecyclerViewAdapter setUseDedicatedExpansionOnClickListener(boolean useDedicatedExpansionOnClickListener)
     {
         this.useDedicatedExpansionOnClickListener = useDedicatedExpansionOnClickListener;
-        Log.v(Constants.LOG_TAG, String.format("ContentRecyclerViewAdapter.setUseDedicatedExpansionOnClickListener:: set to [%S]", useDedicatedExpansionOnClickListener));
+        Log.v(String.format("set to [%S]", useDedicatedExpansionOnClickListener));
         return this;
     }
 

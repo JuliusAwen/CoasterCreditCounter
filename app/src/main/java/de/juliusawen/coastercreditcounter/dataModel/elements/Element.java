@@ -1,14 +1,11 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Event;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
@@ -24,6 +21,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IPropert
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  * Simple Node.
@@ -82,7 +80,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            Log.e(Constants.LOG_TAG,  String.format("Element.setName:: name[%s] is invalid", name));
+            Log.e(String.format("name[%s] is invalid", name));
             return false;
         }
     }
@@ -91,12 +89,12 @@ public abstract class Element implements IElement
     {
         if(!name.trim().isEmpty())
         {
-            Log.v(Constants.LOG_TAG,  String.format("Element.verifyName:: name [%s] is valid", name));
+            Log.v(String.format("name [%s] is valid", name));
             return true;
         }
         else
         {
-            Log.w(Constants.LOG_TAG, "Element.verifyName:: name is invalid - empty string");
+            Log.w("name is invalid - empty string");
             return false;
         }
     }
@@ -130,7 +128,7 @@ public abstract class Element implements IElement
 
     public void addChildrenAtIndexAndSetParent(int index, List<IElement> children)
     {
-        Log.v(Constants.LOG_TAG, String.format("Element.addChildrenAtIndexAndSetParent:: called with [%d] children", children.size()));
+        Log.v(String.format(Locale.getDefault(), "called with [%d] children", children.size()));
         int increment = 0;
         for (IElement child : children)
         {
@@ -146,16 +144,16 @@ public abstract class Element implements IElement
         {
             if(child.getParent() != null)
             {
-                Log.w(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s already has parent %s - setting new parent %s", child, child.getParent(), this));
+                Log.w(String.format("%s already has parent %s - setting new parent %s", child, child.getParent(), this));
             }
             child.setParent(this);
 
-            Log.v(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s -> child %s added", this, child));
+            Log.v(String.format("%s -> child %s added", this, child));
             this.children.add(index, child);
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("Element.addChildAtIndexAndSetParent:: %s already contains child [%s]", this, child));
+            Log.w(String.format("%s already contains child [%s]", this, child));
         }
     }
 
@@ -165,7 +163,7 @@ public abstract class Element implements IElement
         {
             this.getChildren().removeAll(children);
             this.getChildren().addAll(children);
-            Log.v(Constants.LOG_TAG, String.format("Element.reorderChildren:: %s -> [%d] children removed and then added again in given order", this, children.size()));
+            Log.v(String.format(Locale.getDefault(), "%s -> [%d] children removed and added again in given order", this, children.size()));
         }
     }
 
@@ -181,11 +179,13 @@ public abstract class Element implements IElement
     {
         if(child.equals(this))
         {
-            throw new IllegalStateException("Element can not be it's own child!");
+            String message = "Element can not be it's own child";
+            Log.e("Element can not be it's own child");
+            throw new IllegalStateException(message);
         }
 
         this.getChildren().add(child);
-        Log.v(Constants.LOG_TAG, String.format("Element.addChild:: %s -> child %s added", this, child));
+        Log.v(String.format("%s -> child %s added", this, child));
     }
 
     public boolean containsChild(IElement child)
@@ -258,25 +258,27 @@ public abstract class Element implements IElement
     {
         if(this.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, "setParent ORPHAN");
+            Log.w("ORPHAN");
         }
 
         if(parent.equals(this))
         {
-            throw new IllegalStateException("Element can not be it's own parent!");
+            String message = "Element can not be it's own parent";
+            Log.e(message);
+            throw new IllegalStateException(message);
         }
 
         this.parent = parent;
-        Log.v(Constants.LOG_TAG,  String.format("Element.setParent:: %s -> parent %s set", this, parent));
+        Log.v( String.format("%s -> parent %s set", this, parent));
     }
 
     public void relocate(IElement newParent)
     {
-        Log.i(Constants.LOG_TAG,  String.format("Element.relocateElement:: %s will be relocated from %s to %s...", this, this.parent, newParent));
+        Log.i( String.format("%s will be relocated from %s to %s...", this, this.parent, newParent));
 
         if(this.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, "relocateElement ORPHAN");
+            Log.w("ORPHAN");
         }
 
         this.getParent().getChildren().remove(this);
@@ -300,7 +302,7 @@ public abstract class Element implements IElement
         }
         else
         {
-            Log.v(Constants.LOG_TAG, String.format("Element.deleteElement:: %s is an ORPHAN - no need to remove it from parent", this));
+            Log.v(String.format("%s is an ORPHAN - no need to remove it from parent", this));
         }
     }
 
@@ -309,12 +311,12 @@ public abstract class Element implements IElement
         if(this.containsChild(child))
         {
             this.getChildren().remove(child);
-            Log.v(Constants.LOG_TAG,  String.format("Element.deleteChild:: %s -> child %s deleted", this, child));
+            Log.v( String.format("%s -> child %s deleted", this, child));
         }
         else
         {
-            String errorMessage = String.format("Element.deleteChild:: %s -> child %s not found", this, child);
-            Log.e(Constants.LOG_TAG, errorMessage);
+            String errorMessage = String.format("%s -> child %s not found", this, child);
+            Log.e(errorMessage);
             throw new IllegalStateException(errorMessage);
         }
     }
@@ -323,10 +325,10 @@ public abstract class Element implements IElement
     {
         if(this.isOrphan())
         {
-            Log.e(Constants.LOG_TAG, "removeElement ORPHAN");
+            Log.w("ORPHAN");
         }
 
-        Log.d(Constants.LOG_TAG, String.format("Element.removeElement:: removing %s...", this));
+        Log.d(String.format("removing %s...", this));
 
         int index = this.parent.getIndexOfChild(this);
 

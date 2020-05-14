@@ -20,8 +20,8 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.enums.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class DeveloperOptionsActivity extends BaseActivity
 {

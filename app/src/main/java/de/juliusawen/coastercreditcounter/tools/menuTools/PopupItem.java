@@ -1,9 +1,7 @@
 package de.juliusawen.coastercreditcounter.tools.menuTools;
 
-import android.util.Log;
-
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public enum PopupItem
 {
@@ -48,7 +46,7 @@ public enum PopupItem
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("PopupItem.getValue:: ordinal [%s] out of bounds (Enum has [%s] values) - returning NO_FUNCTION", ordinal, values().length));
+            Log.e(String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning NO_FUNCTION", ordinal, values().length));
             return NO_FUNCTION;
         }
     }

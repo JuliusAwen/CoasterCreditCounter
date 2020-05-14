@@ -1,10 +1,9 @@
 package de.juliusawen.coastercreditcounter.tools;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public abstract class Toaster
 {
@@ -13,7 +12,7 @@ public abstract class Toaster
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.show();
 
-        Log.i(Constants.LOG_TAG, String.format("Toaster.makeToast:: showing toast ['%s']", text));
+        Log.i(String.format("showing toast [\"%s\"]", text));
         return toast;
     }
 
@@ -22,7 +21,7 @@ public abstract class Toaster
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
 
-        Log.i(Constants.LOG_TAG, String.format("Toaster.makeLongToast:: showing toast ['%s']", text));
+        Log.i(String.format("showing toast [\"%s\"]", text));
         return toast;
     }
 

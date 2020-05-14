@@ -1,12 +1,10 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader;
 
-import android.util.Log;
-
 import java.util.UUID;
 
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class GroupHeader extends Element implements IGroupHeader
 {
@@ -23,7 +21,7 @@ public class GroupHeader extends Element implements IGroupHeader
         GroupHeader groupHeader;
         groupHeader = new GroupHeader(groupItem.getName(), groupItem, null);
 
-        Log.v(Constants.LOG_TAG,  String.format("GroupHeader.create:: %s created", groupHeader.getFullName()));
+        Log.d(String.format("%s created", groupHeader.getFullName()));
 
         return groupHeader;
     }

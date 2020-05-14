@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -31,12 +30,12 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
-
-import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowAttractionActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
@@ -84,7 +83,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(LOG_TAG, String.format("ShowAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -96,7 +95,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
                 {
                     if(!resultElement.getName().equals(this.viewModel.formerAttractionName))
                     {
-                        Log.d(LOG_TAG, String.format("ShowAttractionActivity.onActivityResult<EditAttraction>:: %s's name has changed'", this.viewModel.formerAttractionName));
+                        Log.d(String.format("<EditAttraction> %s's name has changed'", this.viewModel.formerAttractionName));
 
                         for(IElement visit : resultElement.getParent().getChildrenOfType(Visit.class))
                         {
@@ -105,8 +104,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
                                 if(visitedAttraction.getName().equals(this.viewModel.formerAttractionName))
                                 {
                                     visitedAttraction.setName(resultElement.getName());
-                                    Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.onActivityResult<EditAttraction>:: renamed VisitedAttraction %s to %s",
-                                            this.viewModel.formerAttractionName, visitedAttraction));
+                                    Log.i(String.format("<EditAttraction>:: renamed VisitedAttraction %s to %s", this.viewModel.formerAttractionName, visitedAttraction));
                                 }
                             }
                         }
@@ -162,7 +160,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             @Override
             public void onClick(View view)
             {
-                Log.i(LOG_TAG, "ShowAttractionActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i("FloatingActionButton pressed");
 
                 if(viewModel.attraction.getNote() != null)
                 {
@@ -219,11 +217,11 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.handleActionConfirmed:: deleting %s...", this.viewModel.attraction.getNote()));
+            Log.i(String.format("deleting %s...", this.viewModel.attraction.getNote()));
 
             super.markForUpdate(this.viewModel.attraction);
             super.markForDeletion(this.viewModel.attraction.getNote(), false);
@@ -344,13 +342,13 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowAttractionActivity.returnResult:: returning %s with ResultCode[%d]", this.viewModel.attraction, resultCode));
+        Log.i(String.format(Locale.getDefault(), "returning %s with ResultCode[%d]", this.viewModel.attraction, resultCode));
 
         Intent intent = new Intent();
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

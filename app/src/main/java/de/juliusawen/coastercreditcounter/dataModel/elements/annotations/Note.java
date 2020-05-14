@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.annotations;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +11,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.JsonTool;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 /**
  *  Parent: Park, Visit, Attraction or Event
@@ -40,8 +39,9 @@ public class Note extends Element implements IElement, IPersistable
         if(Element.isNameValid(name))
         {
             note = new Note(name, text, uuid);
-            Log.v(Constants.LOG_TAG,  String.format("Note.create:: %s created", note.getFullName()));
+            Log.d(String.format("%s created", note.getFullName()));
         }
+
         return note;
     }
 
@@ -55,7 +55,7 @@ public class Note extends Element implements IElement, IPersistable
                 ? String.format("%s%s", firstRow.substring(0, App.config.maxCharacterCountForShortenedText), "...")
                 : firstRow;
 
-        Log.v(Constants.LOG_TAG,  String.format("Note.buildName:: built name [%s] from text [%s]", name, text));
+        Log.v(String.format("built name [%s] from text [%s]", name, text));
 
         return name;
     }
@@ -80,13 +80,13 @@ public class Note extends Element implements IElement, IPersistable
             JsonTool.putNameAndUuid(jsonObject, this);
             jsonObject.put(Constants.JSON_STRING_NOTE_TEXT, this.getText());
 
-            Log.v(Constants.LOG_TAG, String.format("Note.toJson:: created JSON for %s [%s]", this, jsonObject.toString()));
+            Log.v(String.format("created JSON for %s [%s]", this, jsonObject.toString()));
             return jsonObject;
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-            Log.e(Constants.LOG_TAG, String.format("Note.toJson:: creation for %s failed with JSONException [%s]", this, e.getMessage()));
+            Log.e(String.format("creation for %s failed with JSONException [%s]", this, e.getMessage()));
             throw e;
         }
     }

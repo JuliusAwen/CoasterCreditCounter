@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -38,6 +38,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class CreateAttractionActivity extends BaseActivity
 {
@@ -173,7 +175,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == RESULT_OK)
         {
@@ -213,7 +215,7 @@ public class CreateAttractionActivity extends BaseActivity
                     }
                 }
 
-                Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.onActivityResult:: picked %s", pickedElement));
+                Log.i(String.format("picked %s", pickedElement));
             }
             else
             {
@@ -287,7 +289,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         if(this.textInputLayoutAttractionName.getError() != null || this.textInputLayoutUntrackedRideCount.getError() != null)
         {
-            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: some input is invalid");
+            Log.w("some input is invalid");
             return;
         }
 
@@ -295,7 +297,7 @@ public class CreateAttractionActivity extends BaseActivity
         int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
         if(untrackedRideCount < 0)
         {
-            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
+            Log.w("entered untracked ride count is invalid");
             this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
             return;
         }
@@ -310,7 +312,7 @@ public class CreateAttractionActivity extends BaseActivity
         {
             super.markForCreation(this.viewModel.attraction);
 
-            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
+            Log.d(String.format("adding child %s to parent %s", this.viewModel.attraction, this.viewModel.parentPark));
             this.viewModel.parentPark.addChildAndSetParent(viewModel.attraction);
             super.markForUpdate(viewModel.parentPark);
 
@@ -318,7 +320,7 @@ public class CreateAttractionActivity extends BaseActivity
         }
         else
         {
-            Log.w(Constants.LOG_TAG, String.format("CreateAttractionActivity.handleEditAttraction:: entered name [%s] is invalid", this.viewModel.name));
+            Log.w(String.format("entered name [%s] is invalid", this.viewModel.name));
             this.textInputLayoutAttractionName.setError(getString(R.string.error_name_invalid));
         }
     }
@@ -336,12 +338,12 @@ public class CreateAttractionActivity extends BaseActivity
             }
             catch(NumberFormatException nfe)
             {
-                Log.e(Constants.LOG_TAG, String.format("EditAttractionActivity.fetchUntrackedRideCountFromTextInput:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+                Log.e(String.format("catched NumberFormatException parsing untracked ride count: [%s]", nfe));
             }
         }
         else
         {
-            Log.w(Constants.LOG_TAG, "CreateAttractionActivity.handleEditAttraction:: no untracked ride count was entered - setting to 0");
+            Log.w("no untracked ride count was entered - setting to 0");
             this.decorateTextInputUntrackedRideCount();
             untrackedRideCount = 0;
         }
@@ -365,12 +367,12 @@ public class CreateAttractionActivity extends BaseActivity
 
                 this.viewModel.attraction = attraction;
 
-                Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: sucessfully created %s", this.viewModel.attraction));
+                Log.d(String.format("sucessfully created %s", this.viewModel.attraction));
                 return true;
             }
         }
 
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.tryCreateAttraction:: creation of Attraction with name [%s] failed", this.viewModel.name));
+        Log.d(String.format("creation of Attraction with name [%s] failed", this.viewModel.name));
         return false;
     }
 
@@ -413,7 +415,7 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCreditType> selected");
+                Log.d("<PickCreditType> selected");
 
                 if(viewModel.model.isCreditTypeSet())
                 {
@@ -431,7 +433,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void updateLayoutCreditType(CreditType creditType)
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.updateLayoutCreditType:: setting CreditType %s...", creditType));
+        Log.d(String.format("setting CreditType %s...", creditType));
 
         this.textViewCreditType.setText(creditType.getName());
         this.textViewCreditType.setTextColor(getColor(R.color.black));
@@ -448,7 +450,7 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickCategory> selected");
+                Log.d("<PickCategory> selected");
 
                 if(viewModel.model.isCategorySet())
                 {
@@ -466,7 +468,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void updateLayoutCategory(Category category)
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.updateLayoutCategory:: setting Category %s", category));
+        Log.d(String.format("setting Category %s", category));
 
         this.textViewCategory.setText(category.getName());
         this.textViewCategory.setTextColor(getColor(R.color.black));
@@ -483,7 +485,7 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickManufacturer> selected");
+                Log.d("<PickManufacturer> selected");
 
                 if(viewModel.model.isManufacturerSet())
                 {
@@ -501,7 +503,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void updateLayoutManufacturer(Manufacturer manufacturer)
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.updateLayoutManufacturer:: setting %s", manufacturer));
+        Log.d(String.format("setting %s", manufacturer));
 
         this.textViewManufacturer.setText(manufacturer.getName());
         this.textViewManufacturer.setTextColor(getColor(R.color.black));
@@ -527,7 +529,7 @@ public class CreateAttractionActivity extends BaseActivity
 
         private void updateLayoutModel(Model model)
         {
-            Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.updateLayoutManufacturer:: setting %s", model));
+            Log.d(String.format("setting %s", model));
 
             this.textViewModel.setText(model.getName());
 
@@ -564,7 +566,7 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "CreateAttractionActivity.onClick:: <PickStatus> selected");
+                Log.d("<PickStatus> selected");
                 ActivityDistributor.startActivityPickForResult(CreateAttractionActivity.this, RequestCode.PICK_STATUS, App.content.getContentOfType(Status.class));
             }
         });
@@ -575,7 +577,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void updateLayoutStatus(Status status)
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateAttractionActivity.updateLayoutStatus:: setting Status %s", status));
+        Log.d(String.format("setting Status %s", status));
 
         this.textViewStatus.setText(status.getName());
         this.viewModel.status = status;
@@ -649,7 +651,7 @@ public class CreateAttractionActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.getOnEditorActionListener.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(String.format(Locale.getDefault(), "actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -668,18 +670,18 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
+            Log.i(String.format("returning %s", this.viewModel.attraction));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

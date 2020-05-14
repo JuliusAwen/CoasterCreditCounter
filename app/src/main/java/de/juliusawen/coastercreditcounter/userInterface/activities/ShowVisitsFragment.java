@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -36,6 +36,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
@@ -52,14 +54,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     public static ShowVisitsFragment newInstance()
     {
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_ON_CREATE + "ShowVisitsFragment.newInstance:: instantiating fragment...");
         return new ShowVisitsFragment();
     }
 
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onCreate:: creating fragment...");
+        Log.frame(LogLevel.INFO, "creating...", '#', true);
         super.onCreate(savedInstanceState);
 
         this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
@@ -94,7 +95,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -211,7 +212,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     private void pickDate()
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.pickDate:: picking date for visit in %s", this.viewModel.park));
+        Log.i(String.format("picking date for visit in %s", this.viewModel.park));
 
         this.viewModel.calendar = (Calendar)((Visit)this.viewModel.longClickedElement).getCalendar().clone();
         int year = this.viewModel.calendar.get(Calendar.YEAR);
@@ -223,7 +224,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
             {
-                Log.v(Constants.LOG_TAG, String.format("ShowVisitsFragment.onDateSet:: picked date: year[%d], month[%d], day[%d]", year, month, day));
+                Log.v(String.format(Locale.getDefault(), "picked date: year[%d], month[%d], day[%d]", year, month, day));
                 viewModel.calendar.set(year, month, day);
 
                 if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
@@ -242,7 +243,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 }
                 else
                 {
-                    Log.v(Constants.LOG_TAG, "ShowVisitsFragment.onDateSet:: same date picked - doing nothing");
+                    Log.v("same date picked - doing nothing");
                 }
 
                 viewModel.datePickerDialog.dismiss();
@@ -286,13 +287,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         this.fragmentInteraction.setFloatingActionButtonVisibility(true);
 
         if(requestCode == RequestCode.DELETE)
         {
-            Log.i(Constants.LOG_TAG, String.format("ShowVisitsFragment.handleActionConfirmed:: deleting %s...", this.viewModel.longClickedElement));
+            Log.i(String.format("deleting %s...", this.viewModel.longClickedElement));
 
             ShowVisitsFragment.this.fragmentInteraction.markForDeletion(this.viewModel.longClickedElement, true);
             updateContentRecyclerView();
@@ -301,7 +302,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
     private void updateContentRecyclerView()
     {
-        Log.i(Constants.LOG_TAG, "ShowVisitsFragment.updateContentRecyclerView:: updating RecyclerView...");
+        Log.i("updating RecyclerView...");
         this.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 

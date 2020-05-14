@@ -1,13 +1,12 @@
 package de.juliusawen.coastercreditcounter.tools.menuTools;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
-import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
@@ -16,6 +15,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
@@ -324,7 +324,7 @@ public class OptionsMenuButler
     public boolean handleMenuItemSelected(MenuItem item)
     {
         OptionsItem optionsItem = this.getOptionsItem(item);
-        Log.i(Constants.LOG_TAG, String.format("OptionsMenuButler.handleMenuItemSelected:: OptionsItem [#%d - %s] selected", optionsItem.ordinal(), optionsItem));
+        Log.i(String.format(Locale.getDefault(), "OptionsItem [#%d - %s] selected", optionsItem.ordinal(), optionsItem));
 
         switch(optionsItem)
         {
@@ -339,7 +339,7 @@ public class OptionsMenuButler
             case SORT_BY_MANUFACTURER:
             case SORT_BY_MODEL:
             case SORT_BY_STATUS:
-                Log.v(Constants.LOG_TAG, String.format("OptionsMenuButler.handleOptionsItemSelected:: Item [%s] has no function", optionsItem));
+                Log.v(String.format("OptionsItem [%s] has no function", optionsItem));
                 return true;
 
             case HELP:
@@ -479,7 +479,7 @@ public class OptionsMenuButler
             }
         }
 
-        Log.e(Constants.LOG_TAG, String.format("OptionsMenuButler.handleMenuItemSelected:: OptionsItem [#%d - %s] unhandled", optionsItem.ordinal(), optionsItem));
+        Log.e(String.format(Locale.getDefault(), "OptionsItem [#%d - %s] unhandled", optionsItem.ordinal(), optionsItem));
         return false;
     }
 

@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -25,24 +25,17 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
+import de.juliusawen.coastercreditcounter.enums.Tab;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
-
-import static de.juliusawen.coastercreditcounter.application.Constants.LOG_TAG;
 
 public class ShowParkActivity extends BaseActivity implements
         ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
 {
-    private enum Tab
-    {
-        SHOW_PARK_OVERVIEW,
-        SHOW_ATTRACTIONS,
-        SHOW_VISITS
-    }
-
     private ShowParkSharedViewModel viewModel;
     private ViewPager viewPager;
 
@@ -73,7 +66,7 @@ public class ShowParkActivity extends BaseActivity implements
         super.getOptionsMenuButler().setViewModel(this.viewModel);
 
         this.createTabPagerAdapter();
-        this.viewPager.setCurrentItem(1);
+        this.viewPager.setCurrentItem(getIntent().getIntExtra(Constants.EXTRA_DEFAULT_TAB, 0));
     }
 
     @Override
@@ -235,13 +228,12 @@ public class ShowParkActivity extends BaseActivity implements
         this.viewPager.setCurrentItem(this.viewPager.getCurrentItem());
         this.onPageSelectedViewPager(Tab.values()[this.viewPager.getCurrentItem()]);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowParkActivity.createTabPagerAdapter:: adapter created with [%d] tabs, selected tab[%s]",
-                tabLayout.getTabCount(), Tab.values()[this.viewPager.getCurrentItem()]));
+        Log.d(String.format(Locale.getDefault(), "adapter created with [%d] tabs, selected tab[%s]", tabLayout.getTabCount(), Tab.values()[this.viewPager.getCurrentItem()]));
     }
 
     private void onPageSelectedViewPager(Tab tab)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowParkActivity.onPageSelectedViewPager:: selected tab [%s]", tab));
+        Log.i(String.format("selected tab [%s]", tab));
 
         switch(tab)
         {
@@ -276,7 +268,7 @@ public class ShowParkActivity extends BaseActivity implements
                         @Override
                         public void onClick(View view)
                         {
-                            Log.i(LOG_TAG, "ShowParkActivity.onClickFloatingActionButton:: FloatingActionButton clicked");
+                            Log.i("FloatingActionButton clicked");
 
                             Note note = viewModel.park.getNote();
                             if(note != null)
@@ -335,13 +327,13 @@ public class ShowParkActivity extends BaseActivity implements
         TabPagerAdapter(FragmentManager fragmentManager)
         {
             super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-            Log.d(Constants.LOG_TAG, "ShowParkActivity.TabPagerAdapter.Constructor:: instantiating adapter...");
+            Log.d("ShowParkActivity.TabPagerAdapter.Constructor:: instantiating adapter...");
         }
 
         @Override
         public Fragment getItem(int position)
         {
-            Log.v(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: returning fragment for tab position [%d]", position));
+            Log.v(String.format(Locale.getDefault(), "returning fragment for tab position [%d]", position));
 
             switch(Tab.values()[position])
             {
@@ -361,7 +353,7 @@ public class ShowParkActivity extends BaseActivity implements
                 }
 
                 default:
-                    Log.e(Constants.LOG_TAG, String.format("ShowParkActivity.TabPagerAdapter.getItem:: tab position [%d] does not exist", position));
+                    Log.e(String.format(Locale.getDefault(), "tab position [%d] does not exist", position));
                     return null;
             }
         }

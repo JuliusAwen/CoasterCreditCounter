@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class AlertDialogFragment extends DialogFragment
 {
@@ -30,8 +30,7 @@ public class AlertDialogFragment extends DialogFragment
             RequestCode requestCode,
             boolean isChildFragment)
     {
-        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
-                "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
+        Log.i(String.format("instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]", 
                 title, message, positiveButtonText, negativeButtonText));
 
         AlertDialogFragment alertDialogFragment = new AlertDialogFragment();
@@ -59,8 +58,7 @@ public class AlertDialogFragment extends DialogFragment
             RequestCode requestCode,
             boolean isChildFragment)
     {
-        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.newInstance:: " +
-                        "instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
+        Log.i(String.format("instantiating AlertDialogFragment with Title[%s], Message[%s], PositiveButtonText[%s], NegativeButtonText[%s]",
                 title, message, positiveButtonText, negativeButtonText));
 
         AlertDialogFragment alertDialogFragment = new AlertDialogFragment();
@@ -86,7 +84,7 @@ public class AlertDialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        Log.v(Constants.LOG_TAG, "AlertDialogFragment.onCreateDialog:: creating alert dialog...");
+        Log.v("AlertDialogFragment.onCreateDialog:: creating alert dialog...");
 
         Bundle args = getArguments();
         assert args != null;
@@ -129,7 +127,7 @@ public class AlertDialogFragment extends DialogFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: PositiveButton [%s] clicked", positiveButtonText));
+                        Log.i(String.format("PositiveButton [%s] clicked", positiveButtonText));
                         dialog.dismiss();
                         AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
                     }
@@ -139,7 +137,7 @@ public class AlertDialogFragment extends DialogFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        Log.i(Constants.LOG_TAG, String.format("AlertDialogFragment.onClick:: NegativeButton [%s] clicked", negativeButtonText));
+                        Log.i(String.format("NegativeButton [%s] clicked", negativeButtonText));
                         dialog.dismiss();
                         AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
                     }

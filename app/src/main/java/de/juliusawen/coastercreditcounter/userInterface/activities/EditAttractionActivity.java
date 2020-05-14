@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -36,6 +36,8 @@ import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class EditAttractionActivity extends BaseActivity
 {
@@ -139,7 +141,7 @@ public class EditAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
         {
@@ -179,7 +181,7 @@ public class EditAttractionActivity extends BaseActivity
                     }
                 }
 
-                Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.onActivityResult:: picked %s", pickedElement));
+                Log.i(String.format("picked %s", pickedElement));
             }
             else
             {
@@ -253,7 +255,7 @@ public class EditAttractionActivity extends BaseActivity
     {
         if(this.textInputLayoutAttractionName.getError() != null || this.textInputLayoutUntrackedRideCount.getError() != null)
         {
-            Log.w(Constants.LOG_TAG, "EditAttractionActivity.handleEditAttraction:: some input is invalid");
+            Log.w("some input is invalid");
             return;
         }
 
@@ -261,7 +263,7 @@ public class EditAttractionActivity extends BaseActivity
         int untrackedRideCount = this.fetchUntrackedRideCountFromTextInput();
         if(untrackedRideCount < 0)
         {
-            Log.w(Constants.LOG_TAG, "EditAttractionActivity.handleEditAttraction:: entered untracked ride count is invalid");
+            Log.w("entered untracked ride count is invalid");
             this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
             return;
         }
@@ -274,17 +276,17 @@ public class EditAttractionActivity extends BaseActivity
         boolean somethingChanged = false;
 
         String name = this.textInputEditTextAttractionName.getText().toString();
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: attraction name entered [%s]", name));
+        Log.v(String.format("attraction name entered [%s]", name));
         if(!this.viewModel.attraction.getName().equals(name.trim()))
         {
             if(this.viewModel.attraction.setName(name))
             {
-                Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed name to [%s]", this.viewModel.attraction.getName()));
+                Log.i(String.format("changed name to [%s]", this.viewModel.attraction.getName()));
                 somethingChanged = true;
             }
             else
             {
-                Log.w(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: name [%s] is invalid", name));
+                Log.w(String.format("name [%s] is invalid", name));
                 this.textInputLayoutAttractionName.setError(getString(R.string.error_name_invalid));
                 return;
             }
@@ -295,7 +297,7 @@ public class EditAttractionActivity extends BaseActivity
         {
             this.viewModel.attraction.setUntracktedRideCount(this.viewModel.untrackedRideCount);
 
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: untracked ride count set to [%d]", this.viewModel.attraction.getUntracktedRideCount()));
+            Log.d(String.format(Locale.getDefault(), "untracked ride count set to [%d]", this.viewModel.attraction.getUntracktedRideCount()));
             somethingChanged = true;
         }
 
@@ -326,16 +328,14 @@ public class EditAttractionActivity extends BaseActivity
         if(!this.viewModel.attraction.getModel().equals(this.viewModel.model))
         {
             this.viewModel.attraction.setModel(this.viewModel.model);
-            Log.d(Constants.LOG_TAG,
-                    String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Model to %s",
-                    this.viewModel.attraction, this.viewModel.attraction.getModel()));
+            Log.d(String.format("changed %s's Model to %s", this.viewModel.attraction, this.viewModel.attraction.getModel()));
             somethingChanged = true;
         }
 
         if(!this.viewModel.attraction.getStatus().equals(this.viewModel.status))
         {
             this.viewModel.attraction.setStatus(this.viewModel.status);
-            Log.d(Constants.LOG_TAG, String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Status to %s",
+            Log.d(String.format("changed %s's Status to %s",
                     this.viewModel.attraction, this.viewModel.attraction.getStatus()));
             somethingChanged = true;
         }
@@ -347,7 +347,7 @@ public class EditAttractionActivity extends BaseActivity
         }
         else
         {
-            Log.d(Constants.LOG_TAG, "EditAttractionActivity.handleEditAttraction:: nothing changed - cancel");
+            Log.d("nothing changed - cancel");
             this.returnResult(RESULT_CANCELED);
         }
     }
@@ -365,7 +365,7 @@ public class EditAttractionActivity extends BaseActivity
             }
             catch(NumberFormatException nfe)
             {
-                Log.e(Constants.LOG_TAG, String.format("EditAttractionActivity.fetchUntrackedRideCountFromTextInput:: catched NumberFormatException parsing untracked ride count: [%s]", nfe));
+                Log.e(String.format("catched NumberFormatException parsing untracked ride count: [%s]", nfe));
             }
         }
 
@@ -429,9 +429,7 @@ public class EditAttractionActivity extends BaseActivity
         }
 
         this.viewModel.attraction.setCreditType(creditType);
-        Log.d(Constants.LOG_TAG,
-                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's CreditType to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
+        Log.d(String.format("changed %s's CreditType to %s", this.viewModel.attraction, this.viewModel.attraction.getCreditType()));
 
         return true;
     }
@@ -444,9 +442,7 @@ public class EditAttractionActivity extends BaseActivity
         }
 
         this.viewModel.attraction.setCategory(category);
-        Log.d(Constants.LOG_TAG,
-                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Category to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getCategory()));
+        Log.d(String.format("changed %s's Category to %s", this.viewModel.attraction, this.viewModel.attraction.getCategory()));
 
         return true;
     }
@@ -459,9 +455,7 @@ public class EditAttractionActivity extends BaseActivity
         }
 
         this.viewModel.attraction.setManufacturer(manufacturer);
-        Log.d(Constants.LOG_TAG,
-                String.format("EditAttractionActivity.handleEditAttraction:: changed %s's Manufacturer to %s",
-                        this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
+        Log.d(String.format("changed %s's Manufacturer to %s", this.viewModel.attraction, this.viewModel.attraction.getManufacturer()));
 
         return true;
     }
@@ -479,7 +473,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCreditType> selected");
+                Log.d("<PickCreditType> selected");
 
                 if(viewModel.model.isCreditTypeSet())
                 {
@@ -502,7 +496,7 @@ public class EditAttractionActivity extends BaseActivity
             creditType = CreditType.getDefault();
         }
 
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutCreditType:: setting CreditType %s...", creditType));
+        Log.v(String.format("setting CreditType %s...", creditType));
 
         this.viewModel.creditType = creditType;
 
@@ -518,7 +512,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickCategory> selected");
+                Log.d("<PickCategory> selected");
 
                 if(viewModel.model.isCategorySet())
                 {
@@ -541,7 +535,7 @@ public class EditAttractionActivity extends BaseActivity
             category = Category.getDefault();
         }
 
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutCategory:: setting Category %s", category));
+        Log.v(String.format("setting Category %s", category));
 
         this.viewModel.category = category;
 
@@ -557,7 +551,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickManufacturer> selected");
+                Log.d("<PickManufacturer> selected");
 
                 if(viewModel.model.isManufacturerSet())
                 {
@@ -580,7 +574,7 @@ public class EditAttractionActivity extends BaseActivity
             manufacturer = Manufacturer.getDefault();
         }
 
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutManufacturer:: setting Manufacturer %s", manufacturer));
+        Log.v(String.format("setting Manufacturer %s", manufacturer));
 
         this.viewModel.manufacturer = manufacturer;
 
@@ -596,7 +590,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickModel> selected");
+                Log.d("<PickModel> selected");
                 ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_MODEL, App.content.getContentOfType(Model.class));
             }
         });
@@ -606,7 +600,7 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutModel(Model model)
     {
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutModel:: setting Model %s", model));
+        Log.v(String.format("setting Model %s", model));
 
         this.viewModel.model = model;
 
@@ -658,7 +652,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Log.d(Constants.LOG_TAG, "EditAttractionActivity.onClick:: <PickStatus> selected");
+                Log.d("<PickStatus> selected");
                 ActivityDistributor.startActivityPickForResult(EditAttractionActivity.this, RequestCode.PICK_STATUS, App.content.getContentOfType(Status.class));
             }
         });
@@ -669,7 +663,7 @@ public class EditAttractionActivity extends BaseActivity
 
     private void updateLayoutStatus(Status status)
     {
-        Log.v(Constants.LOG_TAG, String.format("EditAttractionActivity.updateLayoutStatus:: setting Status %s", status));
+        Log.v(String.format("setting Status %s", status));
 
         this.textViewStatus.setText(status.getName());
         this.viewModel.status = status;
@@ -695,7 +689,7 @@ public class EditAttractionActivity extends BaseActivity
             {
                 if(editable.length() > textInputLayoutUntrackedRideCount.getCounterMaxLength())
                 {
-                    textInputLayoutUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_digit_count_exceeded,
+                    textInputLayoutUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_digit_count_exceeded, 
                             textInputLayoutUntrackedRideCount.getCounterMaxLength()));
                 }
                 else if(editable.length() == 0)
@@ -745,7 +739,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
-                Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.getOnEditorActionListener.onClickEditorAction:: actionId[%d]", actionId));
+                Log.i(String.format(Locale.getDefault(), "actionId[%d]", actionId));
 
                 boolean handled = false;
 
@@ -765,22 +759,22 @@ public class EditAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("EditAttractionActivity.returnResult:: returning %s", this.viewModel.attraction));
+            Log.i(String.format("returning %s", this.viewModel.attraction));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
         }
         else
         {
-            Log.i(Constants.LOG_TAG, "EditAttractionActivity.returnResult:: no changes - returning no element");
+            Log.i("no changes - returning no element");
         }
 
         setResult(resultCode, intent);
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }

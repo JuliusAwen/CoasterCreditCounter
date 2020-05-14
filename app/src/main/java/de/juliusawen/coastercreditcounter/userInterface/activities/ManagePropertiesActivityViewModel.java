@@ -10,7 +10,7 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class ManagePropertiesActivityViewModelButler extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class ManagePropertiesActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;

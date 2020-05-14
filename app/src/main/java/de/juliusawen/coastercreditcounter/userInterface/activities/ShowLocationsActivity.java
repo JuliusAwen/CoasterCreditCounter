@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -34,6 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDist
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
 import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
@@ -101,6 +101,62 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+
+        if(resultCode == RESULT_OK)
+        {
+            switch(RequestCode.getValue(requestCode))
+            {
+                case CREATE_LOCATION:
+                case CREATE_PARK:
+                {
+                    this.updateContentRecyclerView();
+                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
+                    invalidateOptionsMenu();
+                    break;
+                }
+
+                case SORT_LOCATIONS:
+                case SORT_PARKS:
+                {
+                    List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
+
+                    IElement parent = resultElements.get(0).getParent();
+                    Log.d(String.format("<SortElements> reordering %s's children...", parent));
+                    parent.reorderChildren(resultElements);
+
+                    this.updateContentRecyclerView();
+
+                    String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+                    if(selectedElementUuidString != null)
+                    {
+                        IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
+                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                    }
+                    else
+                    {
+                        Log.v("<SortElements> no selected element returned");
+                    }
+
+                    super.markForUpdate(parent);
+                    break;
+                }
+
+                case EDIT_LOCATION:
+                case EDIT_PARK:
+                {
+                    this.updateContentRecyclerView();
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if(keyCode == KeyEvent.KEYCODE_BACK)
@@ -122,7 +178,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             @Override
             public void onClick(View view)
             {
-                Log.i(Constants.LOG_TAG, "ShowLocationsActivity.onClickFloatingActionButton:: FloatingActionButton pressed");
+                Log.i("FloatingActionButton clicked");
                 enableRelocationMode(false);
             }
         });
@@ -145,65 +201,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         super.setFloatingActionButtonVisibility(enabled);
 
-        Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.setSelectionModeEnabled:: selection mode enabled[%S]", this.viewModel.relocationModeEnabled));
+        Log.d(String.format("selection mode enabled[%S]", this.viewModel.relocationModeEnabled));
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
-
-        if(resultCode == RESULT_OK)
-        {
-            switch(RequestCode.getValue(requestCode))
-            {
-                case CREATE_LOCATION:
-                case CREATE_PARK:
-                {
-                    this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
-                    invalidateOptionsMenu();
-                    break;
-                }
-
-                case SORT_LOCATIONS:
-                case SORT_PARKS:
-                {
-                    List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
-
-                    IElement parent = resultElements.get(0).getParent();
-                    Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.onActivityResult<SortElements>:: reordering %s's children...", parent));
-                    parent.reorderChildren(resultElements);
-
-                    this.updateContentRecyclerView();
-
-                    String selectedElementUuidString = data.getStringExtra(Constants.EXTRA_ELEMENT_UUID);
-                    if(selectedElementUuidString != null)
-                    {
-                        IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
-                    }
-                    else
-                    {
-                        Log.v(Constants.LOG_TAG, "ShowLocationsActivity.onActivityResult<SortElements>:: no selected element returned");
-                    }
-
-                    super.markForUpdate(parent);
-                    break;
-                }
-
-                case EDIT_LOCATION:
-                case EDIT_PARK:
-                {
-                    this.updateContentRecyclerView();
-                    break;
-                }
-            }
-        }
-    }
-
+    
     private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
         return new RecyclerOnClickListener.OnClickListener()
@@ -213,7 +213,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             {
                 IElement element = (IElement) view.getTag();
 
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onClickRecyclerView:: %s clicked", element));
+                Log.i(String.format("%s clicked", element));
 
                 if(!viewModel.relocationModeEnabled)
                 {
@@ -241,7 +241,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             public boolean onLongClick(final View view)
             {
                 viewModel.longClickedElement = (Element) view.getTag();
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.onLongClickRecyclerView:: %s long clicked", viewModel.longClickedElement));
+                Log.i(String.format("%s long clicked", viewModel.longClickedElement));
 
                 if(!viewModel.relocationModeEnabled)
                 {
@@ -390,15 +390,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 }
                 else
                 {
-                    Log.w(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: %s is already located at %s - aborting relocation",
-                            this.viewModel.longClickedElement, this.viewModel.newParent));
+                    Log.w(String.format("%s is already located at %s - aborting relocation", this.viewModel.longClickedElement, this.viewModel.newParent));
                     this.enableRelocationMode(false);
                 }
             }
             else
             {
-                Log.d(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleRelocation:: cannot relocate %s to itself - aborting relocation",
-                        this.viewModel.longClickedElement));
+                Log.d(String.format("cannot relocate %s to itself - aborting relocation", this.viewModel.longClickedElement));
                 this.enableRelocationMode(false);
             }
         }
@@ -432,8 +430,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     break;
 
                 case RELOCATE:
-                    Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleAlertDialogClick<RELOCATE>:: relocating %s to %s...",
-                            this.viewModel.longClickedElement, this.viewModel.newParent));
+                    Log.i(String.format("<RELOCATE> relocating %s to %s...", this.viewModel.longClickedElement, this.viewModel.newParent));
 
                     this.viewModel.longClickedElement.relocate(this.viewModel.newParent);
                     this.viewModel.newParent = null;
@@ -446,13 +443,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public void handleActionConfirmed(RequestCode requestCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: handling confirmed action [%s]", requestCode));
+        Log.i(String.format("handling confirmed action [%s]", requestCode));
 
         switch(requestCode)
         {
             case DELETE:
             {
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: deleting %s...", viewModel.longClickedElement));
+                Log.i(String.format("deleting %s...", viewModel.longClickedElement));
 
                 ShowLocationsActivity.super.markForUpdate(this.viewModel.longClickedElement.getParent());
                 ShowLocationsActivity.super.markForDeletion(this.viewModel.longClickedElement, true);
@@ -464,7 +461,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             case REMOVE:
             {
-                Log.i(Constants.LOG_TAG, String.format("ShowLocationsActivity.handleActionConfirmed:: removing %s...", viewModel.longClickedElement));
+                Log.i(String.format("removing %s...", viewModel.longClickedElement));
 
                 IElement parent = this.viewModel.longClickedElement.getParent();
 
@@ -482,7 +479,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void updateContentRecyclerView()
     {
-        Log.d(Constants.LOG_TAG, "ShowLocationsActivity.updateContentRecyclerView:: resetting content...");
+        Log.d("resetting content...");
         this.viewModel.contentRecyclerViewAdapter.setItems(new ArrayList<>(Collections.singleton(viewModel.currentLocation)));
     }
 }

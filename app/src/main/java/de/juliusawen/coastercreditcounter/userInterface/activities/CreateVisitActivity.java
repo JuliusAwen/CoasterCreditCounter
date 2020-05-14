@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -11,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -25,6 +25,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Visited
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -62,7 +64,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.onActivityResult:: requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
 
         if(resultCode == RESULT_OK)
         {
@@ -96,7 +98,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void pickDate()
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.pickDate:: picking date for visit in %s", this.viewModel.park));
+        Log.i(String.format("picking date for visit in %s", this.viewModel.park));
 
         this.viewModel.calendar = Calendar.getInstance();
         int year = this.viewModel.calendar.get(Calendar.YEAR);
@@ -108,7 +110,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
             {
-                Log.v(Constants.LOG_TAG, String.format("CreateVisitActivity.onDateSet:: picked date: year[%d], month[%d], day[%d]", year, month, day));
+                Log.v(String.format(Locale.getDefault(), "picked date: year[%d], month[%d], day[%d]", year, month, day));
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
 
@@ -172,7 +174,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void createVisit(Calendar calendar)
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.createVisit:: creating visit for %s", this.viewModel.park));
+        Log.d(String.format("creating visit for %s", this.viewModel.park));
 
         if(this.viewModel.existingVisit != null)
         {
@@ -190,7 +192,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void deleteExistingVisit()
     {
-        Log.d(Constants.LOG_TAG, String.format("CreateVisitActivity.deleteExistingVisit:: deleting %s", this.viewModel.existingVisit.getFullName()));
+        Log.d(String.format("deleting %s", this.viewModel.existingVisit.getFullName()));
 
         super.markForUpdate(this.viewModel.park);
         super.markForDeletion(this.viewModel.existingVisit, true);
@@ -259,19 +261,19 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void returnResult(int resultCode)
     {
-        Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: resultCode[%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
         {
-            Log.i(Constants.LOG_TAG, String.format("CreateVisitActivity.returnResult:: returning %s", this.viewModel.visit));
+            Log.i(String.format("returning %s", this.viewModel.visit));
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.visit.getUuid().toString());
         }
 
         setResult(resultCode, intent);
         super.synchronizePersistency(); // has to be called manually because after calling finish() BaseActivity.onPause() is not called for some strange reason...
 
-        Log.i(Constants.LOG_TAG, Constants.LOG_DIVIDER_FINISH + this.getClass().getSimpleName());
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
         finish();
     }
 }
