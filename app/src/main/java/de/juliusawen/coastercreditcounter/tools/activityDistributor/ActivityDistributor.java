@@ -589,11 +589,11 @@ public abstract class ActivityDistributor
 
         Intent showParkIntent = new Intent(context, ShowParkActivity.class);
         showParkIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.SHOW_PARK.ordinal());
+        showParkIntent.putExtra(Constants.EXTRA_DEFAULT_TAB, Tab.SHOW_VISITS.ordinal());
         showParkIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getParent().getUuid().toString());
 
         Intent showVisitIntent = new Intent(context, ShowVisitActivity.class);
         showVisitIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.SHOW_VISIT.ordinal());
-        showVisitIntent.putExtra(Constants.EXTRA_DEFAULT_TAB, Tab.SHOW_VISITS.ordinal());
         showVisitIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getUuid().toString());
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);

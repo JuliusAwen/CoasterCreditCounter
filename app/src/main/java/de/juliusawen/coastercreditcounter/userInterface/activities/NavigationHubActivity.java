@@ -87,6 +87,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     @Override
     protected void resume()
     {
+        invalidateOptionsMenu();
         this.viewModel.currentVisits = App.persistence.fetchCurrentVisits();
 
         for (int i = 0; i < this.navigationView.getMenu().size(); i++)
