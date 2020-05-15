@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.tools;
 
+import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -9,7 +10,9 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
+import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public abstract class StringTool
 {
@@ -126,5 +129,18 @@ public abstract class StringTool
     {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(App.config.getTimeFormat(), Locale.getDefault());
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static String getStringResource(int resourceId)
+    {
+        try
+        {
+            return App.getContext().getString(resourceId);
+        }
+        catch(Resources.NotFoundException rnfe)
+        {
+            Log.e(String.format(Locale.getDefault(), "resourceId[%d] not found", resourceId), rnfe);
+            return App.getContext().getString(R.string.error_missing_text);
+        }
     }
 }

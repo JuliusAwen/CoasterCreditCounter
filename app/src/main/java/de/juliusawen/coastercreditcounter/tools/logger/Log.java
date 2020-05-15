@@ -1,5 +1,8 @@
 package de.juliusawen.coastercreditcounter.tools.logger;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import de.juliusawen.coastercreditcounter.application.Constants;
 
 public final class Log
@@ -16,29 +19,42 @@ public final class Log
         Log.printRestrictionLogLevel = logLevel;
     }
 
-    public static void v (String message)
+    public static void v(String message)
     {
         Log.print(LogLevel.VERBOSE, message, true);
     }
 
-    public static void d (String message)
+    public static void d(String message)
     {
         Log.print(LogLevel.DEBUG, message, true);
     }
 
-    public static void i (String message)
+    public static void i(String message)
     {
         Log.print(LogLevel.INFO, message, true);
     }
 
-    public static void w (String message)
+    public static void w(String message)
     {
         Log.print(LogLevel.WARNING, message, true);
     }
 
-    public static void e (String message)
+    public static void e(String message)
     {
         Log.print(LogLevel.ERROR, message, true);
+    }
+
+    public static void e(String message, Throwable exception)
+    {
+        Log.print(LogLevel.ERROR, Log.formatException(message, exception), true);
+    }
+
+    private static String formatException(String message, Throwable exception)
+    {
+        StringWriter stackTrace = new StringWriter();
+        exception.printStackTrace(new PrintWriter(stackTrace));
+
+        return String.format("%s\n%s", message, stackTrace.toString());
     }
 
     private static void print(LogLevel logLevel, String message, boolean printCallerTag)
