@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attract
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -64,7 +65,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -261,7 +262,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
@@ -273,7 +274,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
         setResult(resultCode, intent);
         super.synchronizePersistency(); // has to be called manually because after calling finish() BaseActivity.onPause() is not called for some strange reason...
 
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

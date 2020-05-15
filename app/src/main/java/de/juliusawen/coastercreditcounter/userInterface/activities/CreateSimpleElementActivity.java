@@ -26,6 +26,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditTy
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -197,7 +198,7 @@ public class CreateSimpleElementActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -208,7 +209,7 @@ public class CreateSimpleElementActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity
 
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this, MainActivity.class));
         ActivityDistributor.startActivityViaClass(this, NavigationHubActivity.class);
+
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

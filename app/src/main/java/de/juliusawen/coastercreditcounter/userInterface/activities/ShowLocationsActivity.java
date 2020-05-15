@@ -28,6 +28,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -106,7 +107,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -160,6 +161,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
             if(this.viewModel.relocationModeEnabled)

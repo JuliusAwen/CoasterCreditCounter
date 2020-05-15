@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -289,7 +290,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode, IElement element)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -326,7 +327,7 @@ public class PickElementsActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

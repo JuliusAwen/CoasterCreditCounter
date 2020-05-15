@@ -36,6 +36,7 @@ import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
@@ -103,7 +104,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -258,10 +259,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         if(!this.viewModel.isExporting && !this.viewModel.isImporting)
         {
+            Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
             if(keyCode == KeyEvent.KEYCODE_BACK)
             {
-                Log.i("<BACK>: hardware back button pressed");
-
                 if(this.isNavigationDrawerOpen())
                 {
                     this.closeNavigationDrawer();
@@ -272,6 +273,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                     if(this.viewModel.lastBackClickedInMS + MAX_DELAY_FOR_BACK_DOUBLE_CLICK_TO_EXIT > System.currentTimeMillis())
                     {
                         this.clickBackAgainToExitToast.cancel();
+                        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
                         finish();
                     }
                     else
@@ -282,6 +284,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                 }
             }
         }
+
         return true;
     }
 

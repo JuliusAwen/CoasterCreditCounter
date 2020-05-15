@@ -35,6 +35,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -175,7 +176,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -670,7 +671,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -681,7 +682,7 @@ public class CreateAttractionActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

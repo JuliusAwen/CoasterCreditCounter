@@ -533,13 +533,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
-            Log.d("<BACK>: finishing activity");
             Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '-', false);
             finish();
             return true;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 

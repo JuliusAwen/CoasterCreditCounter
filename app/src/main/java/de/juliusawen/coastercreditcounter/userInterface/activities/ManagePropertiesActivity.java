@@ -40,6 +40,7 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.SortTool;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -183,7 +184,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode != RESULT_OK)
         {
@@ -304,11 +305,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
             this.returnResult(RESULT_OK);
             return true;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -812,7 +816,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -826,7 +830,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

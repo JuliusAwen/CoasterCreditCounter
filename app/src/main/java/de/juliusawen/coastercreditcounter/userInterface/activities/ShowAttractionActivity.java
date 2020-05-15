@@ -83,7 +83,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), resultCode));
+        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -144,11 +144,14 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
         if(keyCode == KeyEvent.KEYCODE_BACK)
         {
             this.returnResult(RESULT_OK);
             return true;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -342,13 +345,13 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "returning %s with ResultCode[%d]", this.viewModel.attraction, resultCode));
+        Log.i(String.format("returning %s with ResultCode[%s]", this.viewModel.attraction, StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }

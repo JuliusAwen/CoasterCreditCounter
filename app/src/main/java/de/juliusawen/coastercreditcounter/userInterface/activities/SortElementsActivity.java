@@ -23,6 +23,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IPropert
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
+import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -274,8 +275,10 @@ public class SortElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.d(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
+        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+
         Intent intent = new Intent();
+
         if(resultCode == RESULT_OK)
         {
             if(this.viewModel.defaultProperty != null)
@@ -295,7 +298,7 @@ public class SortElementsActivity extends BaseActivity
         }
 
         setResult(resultCode, intent);
-        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', true);
+        Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '+', false);
         finish();
     }
 }
