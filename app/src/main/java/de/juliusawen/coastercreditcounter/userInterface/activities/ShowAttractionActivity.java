@@ -39,7 +39,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ShowAttractionActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowAttractionActivityViewModel viewModel;
+    private ShowAttractionViewModel viewModel;
 
     private TextView textViewAttractionDetailCreditType;
     private TextView textViewAttractionDetailCategory;
@@ -60,7 +60,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     @Override
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowAttractionActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowAttractionViewModel.class);
 
         if(this.viewModel.attraction == null)
         {

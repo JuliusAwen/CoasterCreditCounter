@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
+import android.net.Uri;
+
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -9,11 +11,19 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class DeveloperOptionsActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class NavigationHubViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
-    public RequestCode requestCode = RequestCode.DEVELOPER_OPTIONS;
+    public RequestCode requestCode = RequestCode.NAVIGATE;
+    public List<IElement> currentVisits;
 
-    public DeveloperOptionsActivity.Mode mode;
+    public Uri uri;
+    public boolean isImporting = false;
+    public boolean isImportSuccessful = false;
+
+    public boolean isExporting = false;
+    public boolean isExportSuccessful = false;
+
+    long lastBackClickedInMS;
 
     @Override
     public RequestCode getRequestCode()
@@ -30,11 +40,21 @@ public class DeveloperOptionsActivityViewModel extends ViewModel implements IOpt
     @Override
     public List<IElement> getElements()
     {
-        return null;
+        return this.currentVisits;
     }
 
     @Override
-    public void setElements(List<IElement> elements) {}
+    public void setElements(List<IElement> elements)
+    {
+        if(!elements.isEmpty() && elements.get(0).isVisit())
+        {
+            this.currentVisits = elements;
+        }
+        else
+        {
+            throw new IllegalArgumentException("NavigationHubActivityViewModel.setElements:: elements are not Visits");
+        }
+    }
 
     @Override
     public IElement getElement()

@@ -59,9 +59,9 @@ public class CreateChildForLocationActivity extends BaseActivity
         this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.viewModel.parentLocation.getName(), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();

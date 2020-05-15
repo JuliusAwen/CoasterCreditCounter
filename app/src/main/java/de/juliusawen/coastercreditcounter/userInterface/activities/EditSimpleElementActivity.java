@@ -28,7 +28,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class EditSimpleElementActivity extends BaseActivity
 {
-    private EditSimpleElementActivityViewModel viewModel;
+    private EditSimpleElementViewModel viewModel;
     private TextInputLayout textInputLayout;
     private TextInputEditText textInputEditText;
 
@@ -43,7 +43,7 @@ public class EditSimpleElementActivity extends BaseActivity
         this.textInputLayout = findViewById(R.id.textInputLayout);
         this.textInputEditText = findViewById(R.id.textInputEditText);
 
-        this.viewModel = new ViewModelProvider(this).get(EditSimpleElementActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(EditSimpleElementViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {

@@ -31,7 +31,7 @@ public class DeveloperOptionsActivity extends BaseActivity
         SHOW_LOG
     }
 
-    private DeveloperOptionsActivityViewModel viewModel;
+    private DeveloperOptionsViewModel viewModel;
 
     private String toolbarTitle = "DevelopersOptions";
 
@@ -54,7 +54,7 @@ public class DeveloperOptionsActivity extends BaseActivity
     @Override
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(DeveloperOptionsActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(DeveloperOptionsViewModel.class);
 
         this.linearLayoutShowBuildConfig = findViewById(R.id.linearLayoutDeveloperOptions_ShowBuildConfig);
         this.textViewShowBuildConfigApplicationId = findViewById(R.id.textViewShowDeveloperOptions_ShowBuildConfig_ApplicationId);

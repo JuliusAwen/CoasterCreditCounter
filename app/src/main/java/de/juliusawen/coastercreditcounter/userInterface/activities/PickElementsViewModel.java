@@ -9,14 +9,14 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class SortElementsActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class PickElementsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
-    public List<IElement> elementsToSort;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public List<IElement> elementsToPickFrom;
 
-    public IElement selectedElement;
-    public IElement defaultProperty;
+    public boolean isSinglePick;
+
 
     @Override
     public RequestCode getRequestCode()
@@ -33,13 +33,13 @@ public class SortElementsActivityViewModel extends ViewModel implements IOptions
     @Override
     public List<IElement> getElements()
     {
-        return this.elementsToSort;
+        return this.elementsToPickFrom;
     }
 
     @Override
     public void setElements(List<IElement> elements)
     {
-        this.elementsToSort = elements;
+        this.elementsToPickFrom = elements;
     }
 
     @Override

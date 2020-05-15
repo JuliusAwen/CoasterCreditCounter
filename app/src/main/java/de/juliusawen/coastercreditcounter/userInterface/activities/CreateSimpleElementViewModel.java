@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
-public class CreateSimpleElementActivityViewModel extends ViewModel
+public class CreateSimpleElementViewModel extends ViewModel
 {
     public RequestCode requestCode;
 

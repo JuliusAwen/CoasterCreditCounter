@@ -41,7 +41,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class EditAttractionActivity extends BaseActivity
 {
-    private EditAttractionActivityViewModel viewModel;
+    private EditAttractionViewModel viewModel;
 
     private TextInputLayout textInputLayoutAttractionName;
     private TextInputEditText textInputEditTextAttractionName;
@@ -112,7 +112,7 @@ public class EditAttractionActivity extends BaseActivity
         this.pickIconGrey = DrawableProvider.getColoredDrawableMutation(R.drawable.ic_baseline_arrow_drop_down, R.color.grey);
 
 
-        this.viewModel = new ViewModelProvider(this).get(EditAttractionActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(EditAttractionViewModel.class);
 
         if(this.viewModel.attraction == null)
         {

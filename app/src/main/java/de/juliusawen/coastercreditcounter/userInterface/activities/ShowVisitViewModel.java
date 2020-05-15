@@ -5,18 +5,18 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class PickElementsActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class ShowVisitViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-    public List<IElement> elementsToPickFrom;
+    public Visit visit;
 
-    public boolean isSinglePick;
-
+    public IElement longClickedElement;
 
     @Override
     public RequestCode getRequestCode()
@@ -33,18 +33,15 @@ public class PickElementsActivityViewModel extends ViewModel implements IOptions
     @Override
     public List<IElement> getElements()
     {
-        return this.elementsToPickFrom;
+        return null;
     }
 
     @Override
-    public void setElements(List<IElement> elements)
-    {
-        this.elementsToPickFrom = elements;
-    }
+    public void setElements(List<IElement> elements) {}
 
     @Override
     public IElement getElement()
     {
-        return null;
+        return this.visit;
     }
 }

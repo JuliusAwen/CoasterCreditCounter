@@ -31,7 +31,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class CreateVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private CreateVisitActivityViewModel viewModel;
+    private CreateVisitViewModel viewModel;
 
 
     protected void setContentView()
@@ -41,7 +41,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(CreateVisitActivityViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(CreateVisitViewModel.class);
 
         if(this.viewModel.park == null)
         {

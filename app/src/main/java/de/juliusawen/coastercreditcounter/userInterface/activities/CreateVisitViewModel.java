@@ -9,7 +9,7 @@ import java.util.Calendar;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 
-public class CreateVisitActivityViewModel extends ViewModel
+public class CreateVisitViewModel extends ViewModel
 {
     public Park park;
     public Visit visit;
