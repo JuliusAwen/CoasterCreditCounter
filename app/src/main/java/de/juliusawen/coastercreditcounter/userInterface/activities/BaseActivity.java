@@ -238,7 +238,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
     {
-        ButtonFunction buttonFunction = ButtonFunction.values()[view.getId()];
+        ButtonFunction buttonFunction = ButtonFunction.getValue(view.getId());
         if(buttonFunction == ButtonFunction.CLOSE)
         {
             Log.i(String.format("[%s] selected", buttonFunction));
@@ -258,7 +258,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     protected BaseActivity setHelpOverlayTitleAndMessage(String title, String message)
     {
         Log.d("setting HelpOverlay title and message...");
-        Log.v(String.format("setting title [%s] and message [%s]", title, message));
+        Log.v(String.format("...with title [%s] and message [%s]", title, message));
 
         title = title.trim();
         message = message.trim();
@@ -282,8 +282,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
 
         Log.i("showing HelpOverlayFragment");
-        Log.v(String.format("...with title [%s] and message [%s]...",
-                this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage));
+        Log.v(String.format("...with title [%s] and message [%s]...", this.viewModel.helpOverlayFragmentTitle, this.viewModel.helpOverlayFragmentMessage));
 
         this.setHelpOverlayVisibility(true);
     }
@@ -302,7 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e("re-using HelpOverlayFragment");
+            Log.e("re-using existing HelpOverlayFragment");
         }
     }
 
@@ -334,7 +333,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
         else
         {
-            Log.e("HelpOverlayFragment not created");
+            Log.e("HelpOverlayFragment not found");
         }
     }
 
@@ -358,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
                 @Override
                 public void onClick(View view)
                 {
-                    Log.i("toolbar home button clicked...");
+                    Log.i("toolbar home button clicked - firing KeyEvent...");
                     onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.KEYCODE_BACK, KeyEvent.ACTION_UP));
                 }
             });
@@ -582,8 +581,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     private void provideStatistics(StatisticType statisticType, IStatistic statistics)
     {
-        Log.d(String.format("statistics of type [%s] fetched - calling [%s].decorateStatistics(...)",
-                statisticType, this.getClass().getSimpleName()));
+        Log.d(String.format("statistics of type [%s] fetched - calling [%s].decorateStatistics(...)", statisticType, this.getClass().getSimpleName()));
 
         this.showProgressBar(false);
         this.decorateStatistics(statisticType, statistics);
@@ -705,11 +703,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         if(!(this.viewModel.elementsToCreate.isEmpty() && this.viewModel.elementsToUpdate.isEmpty() && this.viewModel.elementsToDelete.isEmpty()))
         {
-            Log.i("synchronizing persistence.");
+            Log.i("synchronizing...");
 
             if(!App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete)))
             {
-                Log.e("synchronizing persistence failed");
+                Log.e("failed");
                 throw new IllegalStateException();
             }
 

@@ -735,7 +735,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             @Override
             public void onClick(View view)
             {
-                Log.i("FloatingActionButton pressed");
+                Log.i("FloatingActionButton clicked");
 
                 switch(viewModel.propertyTypeToManage)
                 {

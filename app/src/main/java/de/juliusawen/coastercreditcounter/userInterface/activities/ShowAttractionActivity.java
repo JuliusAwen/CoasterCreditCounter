@@ -163,7 +163,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
             @Override
             public void onClick(View view)
             {
-                Log.i("FloatingActionButton pressed");
+                Log.i("FloatingActionButton clicked");
 
                 if(viewModel.attraction.getNote() != null)
                 {

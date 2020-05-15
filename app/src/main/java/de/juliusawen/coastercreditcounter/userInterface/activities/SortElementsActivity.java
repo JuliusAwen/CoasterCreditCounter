@@ -113,7 +113,7 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d("accepted - return code <OK>...");
+                Log.d("FloatingActionButton clicked");
                 returnResult(RESULT_OK);
             }
         });
@@ -149,11 +149,11 @@ public class SortElementsActivity extends BaseActivity
 
                 if(view.equals(frameLayoutDialogDown))
                 {
-                    Log.v("button<DOWN> clicked");
+                    Log.v("button <DOWN> clicked");
                 }
                 else if(view.equals(frameLayoutDialogUp))
                 {
-                    Log.v("button<UP> clicked");
+                    Log.v("button <UP> clicked");
                 }
             }
         };
@@ -171,11 +171,14 @@ public class SortElementsActivity extends BaseActivity
                 switch(event.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
+                    {
                         view.performClick();
+
                         if (handler != null)
                         {
                             return true;
                         }
+
                         handler = new Handler();
                         if(view.equals(frameLayoutDialogDown))
                         {
@@ -185,13 +188,17 @@ public class SortElementsActivity extends BaseActivity
                         {
                             handler.post(actionSortUp);
                         }
+
                         break;
+                    }
 
                     case MotionEvent.ACTION_UP:
+                    {
                         if (handler == null)
                         {
                             return true;
                         }
+
                         if(view.equals(frameLayoutDialogDown))
                         {
                             handler.removeCallbacks(actionSortDown);
@@ -200,9 +207,12 @@ public class SortElementsActivity extends BaseActivity
                         {
                             handler.removeCallbacks(actionSortUp);
                         }
+
                         handler = null;
                         break;
+                    }
                 }
+
                 return false;
             }
 

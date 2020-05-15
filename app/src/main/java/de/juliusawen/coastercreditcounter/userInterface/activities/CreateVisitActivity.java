@@ -84,7 +84,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
                 this.returnResult(RESULT_OK);
             }
-
         }
         else if(resultCode == RESULT_CANCELED)
         {
@@ -114,7 +113,6 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
                 Log.v(String.format(Locale.getDefault(), "picked date: year[%d], month[%d], day[%d]", year, month, day));
                 viewModel.calendar.set(year, month, day);
                 viewModel.datePicked = true;
-
 
                 List<IElement> existingVisits = Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class));
                 viewModel.existingVisit = existingVisits.isEmpty() ? null : (Visit) existingVisits.get(0);
