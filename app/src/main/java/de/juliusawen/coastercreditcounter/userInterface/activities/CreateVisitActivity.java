@@ -261,7 +261,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)

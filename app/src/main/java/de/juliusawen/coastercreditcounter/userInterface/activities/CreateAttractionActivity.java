@@ -670,7 +670,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format(Locale.getDefault(), "resultCode [%d]", resultCode));
+        Log.i(String.format(Locale.getDefault(), "resultCode[%d]", resultCode));
 
         Intent intent = new Intent();
 
