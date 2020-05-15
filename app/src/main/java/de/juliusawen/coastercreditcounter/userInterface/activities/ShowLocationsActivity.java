@@ -89,12 +89,13 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.locations)), getString(R.string.help_text_show_locations));
-        super.createToolbar().addToolbarHomeButton();
+        super.createToolbar();
+        super.addToolbarHomeButton();
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
+        super.setOptionsMenuButlerViewModel(this.viewModel);
 
 
         this.enableRelocationMode(this.viewModel.relocationModeEnabled);

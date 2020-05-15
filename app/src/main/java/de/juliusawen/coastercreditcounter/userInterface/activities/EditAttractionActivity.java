@@ -128,9 +128,9 @@ public class EditAttractionActivity extends BaseActivity
         this.createTextInputUntrackedRideCount();
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), null);
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();

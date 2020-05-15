@@ -59,11 +59,11 @@ public class ShowParkActivity extends BaseActivity implements
         }
 
         super.createHelpOverlayFragment(null, null);
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .createFloatingActionButton();
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.createFloatingActionButton();
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
+        super.setOptionsMenuButlerViewModel(this.viewModel);
 
         this.createTabPagerAdapter();
         this.viewPager.setCurrentItem(getIntent().getIntExtra(Constants.EXTRA_DEFAULT_TAB, 0));
@@ -94,7 +94,7 @@ public class ShowParkActivity extends BaseActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        OptionsItem optionsItem = super.getOptionsMenuButler().getOptionsItem(item);
+        OptionsItem optionsItem = super.getOptionsItem(item);
 
         if(this.getCurrentTab() == Tab.SHOW_VISITS)
         {
@@ -110,7 +110,7 @@ public class ShowParkActivity extends BaseActivity implements
             }
         }
 
-        return super.getOptionsMenuButler().handleMenuItemSelected(item);
+        return super.handleMenuItemSelected(item);
     }
 
     @Override

@@ -68,8 +68,8 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.help_title_show_attraction)), getString(R.string.help_text_show_attraction));
-        super.createToolbar()
-                .addToolbarHomeButton();
+        super.createToolbar();
+        super.addToolbarHomeButton();
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();

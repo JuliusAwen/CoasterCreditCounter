@@ -67,10 +67,10 @@ public class DeveloperOptionsActivity extends BaseActivity
         this.textViewShowLog = findViewById(R.id.textViewDeveloperOptions_ShowLog);
 
         super.createHelpOverlayFragment(getString(R.string.title_help, "DeveloperOptions"), "You are a developer - you can do it on your own...!");
-        super.createToolbar()
-                .addToolbarHomeButton();
+        super.createToolbar();
+        super.addToolbarHomeButton();
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
+        super.setOptionsMenuButlerViewModel(this.viewModel);
 
         this.changeViewMode(Mode.SHOW_BUILD_CONFIG);
         this.showBuildConfig();
@@ -79,7 +79,7 @@ public class DeveloperOptionsActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(super.getOptionsMenuButler().getOptionsItem(item))
+        switch(super.getOptionsItem(item))
         {
             case SHOW_BUILD_CONFIG:
                 this.changeViewMode(Mode.SHOW_BUILD_CONFIG);

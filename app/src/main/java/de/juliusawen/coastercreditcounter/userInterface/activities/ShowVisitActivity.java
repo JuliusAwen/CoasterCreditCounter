@@ -69,14 +69,14 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(this.viewModel.visit.getName(), this.viewModel.visit.getParent().getName());
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
+        super.setOptionsMenuButlerViewModel(this.viewModel);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(super.getOptionsMenuButler().getOptionsItem(item))
+        switch(super.getOptionsItem(item))
         {
             case ENABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(true);

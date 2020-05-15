@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateAttractionActivity;
-import de.juliusawen.coastercreditcounter.userInterface.activities.CreateChildForLocationActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.CreateChildForLocation.CreateChildForLocationActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateSimpleElementActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.CreateVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.EditAttractionActivity;

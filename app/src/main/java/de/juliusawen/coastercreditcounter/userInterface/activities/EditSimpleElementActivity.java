@@ -59,9 +59,9 @@ public class EditSimpleElementActivity extends BaseActivity
         this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_edit_simple_element));
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();

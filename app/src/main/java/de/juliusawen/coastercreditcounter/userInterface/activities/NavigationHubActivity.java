@@ -74,12 +74,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
-        super.createToolbar()
-                .addToolbarMenuIcon()
-                .setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
+        super.createToolbar();
+        super.addToolbarMenuIcon();
+        super.setToolbarTitleAndSubtitle(getString(R.string.name_app), getString(R.string.subtitle_navigation_hub));
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
-
+        super.setOptionsMenuButlerViewModel(this.viewModel);
 
         this.createStatisticsGlobalTotals();
     }
@@ -174,7 +173,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             }
             else
             {
-                if(super.getOptionsMenuButler().getOptionsItem(item) == OptionsItem.GO_TO_CURRENT_VISIT)
+                if(super.getOptionsItem(item) == OptionsItem.GO_TO_CURRENT_VISIT)
                 {
                     if(this.viewModel.currentVisits.size() > 1)
                     {

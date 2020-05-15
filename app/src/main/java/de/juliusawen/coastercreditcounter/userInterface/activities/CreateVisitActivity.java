@@ -48,8 +48,8 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
             this.viewModel.park = (Park) App.content.getContentByUuid(UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID)));
         }
 
-        super.createToolbar()
-                .addToolbarHomeButton();
+        super.createToolbar();
+        super.addToolbarHomeButton();
 
         this.decorateToolbar();
 

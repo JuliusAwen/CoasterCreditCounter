@@ -35,7 +35,9 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
@@ -183,9 +185,19 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    protected OptionsMenuButler getOptionsMenuButler()
+    protected void setOptionsMenuButlerViewModel(IOptionsMenuButlerCompatibleViewModel viewModel)
     {
-        return this.viewModel.optionsMenuButler;
+        this.viewModel.optionsMenuButler.setViewModel(viewModel);
+    }
+
+    protected OptionsItem getOptionsItem(MenuItem item)
+    {
+        return this.viewModel.optionsMenuButler.getOptionsItem(item);
+    }
+
+    protected boolean handleMenuItemSelected(MenuItem item)
+    {
+        return this.viewModel.optionsMenuButler.handleMenuItemSelected(item);
     }
 
     @Override
@@ -326,15 +338,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    protected BaseActivity createToolbar()
+    protected void createToolbar()
     {
         Log.d("setting SupportActionBar...");
         setSupportActionBar(this.toolbar);
-
-        return this;
     }
 
-    protected BaseActivity addToolbarHomeButton()
+    protected void addToolbarHomeButton()
     {
         if(getSupportActionBar() != null)
         {
@@ -357,11 +367,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         {
             Log.e("SupportActionBar not found");
         }
-
-        return this;
     }
 
-    protected BaseActivity addToolbarMenuIcon()
+    protected void addToolbarMenuIcon()
     {
         if(getSupportActionBar() != null)
         {
@@ -374,11 +382,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         {
             Log.e("SupportActionBar not found");
         }
-
-        return this;
     }
 
-    protected BaseActivity setToolbarTitleAndSubtitle(String title, String subtitle)
+    protected void setToolbarTitleAndSubtitle(String title, String subtitle)
     {
         if(getSupportActionBar() != null)
         {
@@ -400,11 +406,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         {
             Log.e("SupportActionBar not found");
         }
-
-        return this;
     }
 
-    private BaseActivity setToolbarOnClickListeners()
+    private void setToolbarOnClickListeners()
     {
         this.toolbar.setOnClickListener(new View.OnClickListener()
         {
@@ -437,8 +441,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
                 return true;
             }
         });
-
-        return this;
     }
 
     public void createFloatingActionButton()

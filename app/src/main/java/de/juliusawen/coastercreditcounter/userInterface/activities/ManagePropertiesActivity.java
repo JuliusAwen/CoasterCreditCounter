@@ -168,14 +168,14 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
-        super.createToolbar()
-                .addToolbarHomeButton()
-                .setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
+        super.createToolbar();
+        super.addToolbarHomeButton();
+        super.setToolbarTitleAndSubtitle(getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE), getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_SUBTITLE));
 
         super.createFloatingActionButton();
         this.decorateFloatingActionButton();
 
-        super.getOptionsMenuButler().setViewModel(this.viewModel);
+        super.setOptionsMenuButlerViewModel(this.viewModel);
     }
 
     @Override
@@ -272,7 +272,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(super.getOptionsMenuButler().getOptionsItem(item) == OptionsItem.SORT)
+        if(super.getOptionsItem(item) == OptionsItem.SORT)
         {
             switch(this.viewModel.requestCode)
             {

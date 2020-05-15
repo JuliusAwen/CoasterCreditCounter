@@ -46,15 +46,20 @@ public final class Log
 
     public static void e(String message, Throwable exception)
     {
-        Log.print(LogLevel.ERROR, Log.formatException(message, exception), true);
+        Log.print(LogLevel.ERROR, String.format("%s\n%s", message, Log.getExceptionStackTrace(exception)), true);
     }
 
-    private static String formatException(String message, Throwable exception)
+    public static void e(Throwable exception)
+    {
+        Log.print(LogLevel.ERROR, Log.getExceptionStackTrace(exception), true);
+    }
+
+    private static String getExceptionStackTrace(Throwable exception)
     {
         StringWriter stackTrace = new StringWriter();
         exception.printStackTrace(new PrintWriter(stackTrace));
 
-        return String.format("%s\n%s", message, stackTrace.toString());
+        return stackTrace.toString();
     }
 
     private static void print(LogLevel logLevel, String message, boolean printCallerTag)
