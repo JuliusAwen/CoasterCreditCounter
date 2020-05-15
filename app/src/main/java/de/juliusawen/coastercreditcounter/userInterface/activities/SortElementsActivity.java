@@ -32,7 +32,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class SortElementsActivity extends BaseActivity
 {
-    private SortElementsActivityViewModelButler viewModel;
+    private SortElementsActivityViewModel viewModel;
 
     private View frameLayoutDialogDown;
     private View frameLayoutDialogUp;
@@ -44,7 +44,7 @@ public class SortElementsActivity extends BaseActivity
 
     protected void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(SortElementsActivityViewModelButler.class);
+        this.viewModel = new ViewModelProvider(this).get(SortElementsActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {

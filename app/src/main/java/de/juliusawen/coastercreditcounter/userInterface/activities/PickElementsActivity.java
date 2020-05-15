@@ -35,7 +35,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 
 public class PickElementsActivity extends BaseActivity
 {
-    private PickElementsActivityViewModelButler viewModel;
+    private PickElementsActivityViewModel viewModel;
 
     private LinearLayout linearLayoutSelectAll;
     private TextView textViewSelectOrDeselectAll;
@@ -54,7 +54,7 @@ public class PickElementsActivity extends BaseActivity
         this.textViewSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.textViewPickElements_SelectAll);
         this.radioButtonSelectOrDeselectAll = this.linearLayoutSelectAll.findViewById(R.id.radioButtonPickElements_SelectAll);
 
-        this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModelButler.class);
+        this.viewModel = new ViewModelProvider(this).get(PickElementsActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {

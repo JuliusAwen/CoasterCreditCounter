@@ -1,7 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.net.Uri;
-
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -11,19 +9,14 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class NavigationHubActivityViewModelButler extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class PickElementsActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
-    public RequestCode requestCode = RequestCode.NAVIGATE;
-    public List<IElement> currentVisits;
+    public RequestCode requestCode;
+    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public List<IElement> elementsToPickFrom;
 
-    public Uri uri;
-    public boolean isImporting = false;
-    public boolean isImportSuccessful = false;
+    public boolean isSinglePick;
 
-    public boolean isExporting = false;
-    public boolean isExportSuccessful = false;
-
-    long lastBackClickedInMS;
 
     @Override
     public RequestCode getRequestCode()
@@ -34,26 +27,19 @@ public class NavigationHubActivityViewModelButler extends ViewModel implements I
     @Override
     public ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
-        return null;
+        return this.contentRecyclerViewAdapter;
     }
 
     @Override
     public List<IElement> getElements()
     {
-        return this.currentVisits;
+        return this.elementsToPickFrom;
     }
 
     @Override
     public void setElements(List<IElement> elements)
     {
-        if(!elements.isEmpty() && elements.get(0).isVisit())
-        {
-            this.currentVisits = elements;
-        }
-        else
-        {
-            throw new IllegalArgumentException("NavigationHubActivityViewModel.setElements:: elements are not Visits");
-        }
+        this.elementsToPickFrom = elements;
     }
 
     @Override

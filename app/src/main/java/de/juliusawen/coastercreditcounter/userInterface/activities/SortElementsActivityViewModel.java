@@ -5,18 +5,18 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 
-public class ShowVisitActivityViewModelButler extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class SortElementsActivityViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
+    public List<IElement> elementsToSort;
     public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
-    public Visit visit;
 
-    public IElement longClickedElement;
+    public IElement selectedElement;
+    public IElement defaultProperty;
 
     @Override
     public RequestCode getRequestCode()
@@ -33,15 +33,18 @@ public class ShowVisitActivityViewModelButler extends ViewModel implements IOpti
     @Override
     public List<IElement> getElements()
     {
-        return null;
+        return this.elementsToSort;
     }
 
     @Override
-    public void setElements(List<IElement> elements) {}
+    public void setElements(List<IElement> elements)
+    {
+        this.elementsToSort = elements;
+    }
 
     @Override
     public IElement getElement()
     {
-        return this.visit;
+        return null;
     }
 }

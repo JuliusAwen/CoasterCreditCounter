@@ -42,7 +42,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
-    private ShowLocationsActivityViewModelButler viewModel;
+    private ShowLocationsActivityViewModel viewModel;
 
     protected void setContentView()
     {
@@ -51,7 +51,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     public void create()
     {
-        this.viewModel = new ViewModelProvider(this).get(ShowLocationsActivityViewModelButler.class);
+        this.viewModel = new ViewModelProvider(this).get(ShowLocationsActivityViewModel.class);
 
         if(this.viewModel.requestCode == null)
         {

@@ -41,7 +41,7 @@ import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialo
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
 {
-    private NavigationHubActivityViewModelButler viewModel;
+    private NavigationHubActivityViewModel viewModel;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -68,7 +68,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.drawerLayout = findViewById(R.id.navigationDrawer);
         this.navigationView = this.drawerLayout.findViewById(R.id.navigationView);
 
-        this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModelButler.class);
+        this.viewModel = new ViewModelProvider(this).get(NavigationHubActivityViewModel.class);
 
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
