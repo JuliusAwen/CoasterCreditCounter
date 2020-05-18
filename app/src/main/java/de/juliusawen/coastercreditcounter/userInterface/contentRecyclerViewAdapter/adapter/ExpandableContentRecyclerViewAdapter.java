@@ -23,7 +23,7 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecyclerViewAdapter implements IDecorableExpandableContentRecyclerViewAdapter
 {
     private boolean isExpandable;
-    private boolean useDedicatedExpansionOnClickListener;
+//    private boolean useDedicatedExpansionOnClickListener;
 
     private final HashMap<IElement, Integer> generationByElement = new HashMap<>();
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
@@ -33,7 +33,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
     {
         super(content, configuration);
         this.isExpandable = configuration.isExpandable;
-        this.useDedicatedExpansionOnClickListener = configuration.useDedicatedExpansionToggleOnClickListener;
+//        this.useDedicatedExpansionOnClickListener = configuration.useDedicatedExpansionToggleOnClickListener;
         this.relevantChildTypesInSortOrder.addAll(configuration.getRelevantChildTypesInSortOrder());
 
         this.content = this.initializeItems(this.content, 0);
@@ -90,10 +90,10 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
                 viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.error_outline, R.color.default_color));
             }
 
-            if(this.useDedicatedExpansionOnClickListener)
-            {
-                viewHolder.imageViewExpandToggle.setOnClickListener(this.getDedicatedExpansionToggleOnClickListener());
-            }
+//            if(this.useDedicatedExpansionOnClickListener)
+//            {
+//                viewHolder.imageViewExpandToggle.setOnClickListener(this.getDedicatedExpansionToggleOnClickListener());
+//            }
 
             super.setPadding(generation, viewHolder);
         }

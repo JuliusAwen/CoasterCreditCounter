@@ -2,7 +2,7 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-enum ViewType
+enum ItemViewType
 {
     UNDETERMINED,
 
@@ -10,11 +10,11 @@ enum ViewType
     VISITED_ATTRACTION,
     BOTTOM_SPACER;
 
-    static ViewType getValue(int ordinal)
+    static ItemViewType getValue(int ordinal)
     {
-        if(ViewType.values().length >= ordinal)
+        if(ItemViewType.values().length >= ordinal)
         {
-            return ViewType.values()[ordinal];
+            return ItemViewType.values()[ordinal];
         }
         else
         {

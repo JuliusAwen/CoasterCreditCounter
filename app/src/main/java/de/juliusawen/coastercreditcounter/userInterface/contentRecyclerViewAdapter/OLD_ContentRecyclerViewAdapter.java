@@ -334,12 +334,12 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         switch (viewType)
         {
             case ITEM:
-                view = layoutInflater.inflate(R.layout.layout_recycler_view_item, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_view_type_element, viewGroup, false);
                 viewHolder = new ViewHolderItem(view);
                 break;
 
             case VISITED_ATTRACTION:
-                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_visited_attraction, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_view_type_visited_attraction, viewGroup, false);
                 viewHolder = new ViewHolderVisitedAttraction(view);
                 break;
 

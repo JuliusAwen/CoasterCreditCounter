@@ -18,6 +18,7 @@ class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
     final TextView textViewCount;
     final ImageView imageViewDecrease;
     final ImageView imageViewIncrease;
+
     final TextView textViewPrettyPrint;
 
     ViewHolderVisitedAttraction(View view)
@@ -36,6 +37,7 @@ class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
 
         this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
         this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.remove_circle_outline));
+
 
         this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
     }

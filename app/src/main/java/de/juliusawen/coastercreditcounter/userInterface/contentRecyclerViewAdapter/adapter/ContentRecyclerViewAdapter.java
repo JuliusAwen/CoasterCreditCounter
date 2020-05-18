@@ -38,15 +38,15 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
 
         if(element.isVisitedAttraction())
         {
-            return ViewType.VISITED_ATTRACTION.ordinal();
+            return ItemViewType.VISITED_ATTRACTION.ordinal();
         }
         else if(element.isBottomSpacer())
         {
-            return ViewType.BOTTOM_SPACER.ordinal();
+            return ItemViewType.BOTTOM_SPACER.ordinal();
         }
         else
         {
-            return ViewType.ELEMENT.ordinal();
+            return ItemViewType.ELEMENT.ordinal();
         }
     }
 
@@ -57,15 +57,15 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
         View view;
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
 
-        switch(ViewType.getValue(typeOfView))
+        switch(ItemViewType.getValue(typeOfView))
         {
             case ELEMENT:
-                view = layoutInflater.inflate(R.layout.layout_recycler_view_item, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_view_type_element, viewGroup, false);
                 viewHolder = new ViewHolderElement(view);
                 break;
 
             case VISITED_ATTRACTION:
-                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_visited_attraction, viewGroup, false);
+                view = layoutInflater.inflate(R.layout.layout_recycler_view_item_view_type_visited_attraction, viewGroup, false);
                 viewHolder = new ViewHolderVisitedAttraction(view);
                 break;
 
@@ -75,7 +75,7 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
                 break;
 
             default:
-                throw new IllegalStateException(String.format("unknown ViewType [%s]", ViewType.getValue(typeOfView)));
+                throw new IllegalStateException(String.format("unknown ViewType [%s]", ItemViewType.getValue(typeOfView)));
         }
 
         return viewHolder;
@@ -84,10 +84,10 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
-        ViewType viewType = ViewType.getValue(viewHolder.getItemViewType());
-        Log.v(String.format("binding ViewType[%s]", viewType));
+        ItemViewType itemViewType = ItemViewType.getValue(viewHolder.getItemViewType());
+        Log.v(String.format("binding ViewType[%s]", itemViewType));
 
-        switch (viewType)
+        switch (itemViewType)
         {
             case ELEMENT:
                 ViewHolderElement viewHolderElement = (ViewHolderElement) viewHolder;
@@ -103,7 +103,7 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
                 break;
 
             default:
-                throw new IllegalStateException(String.format("unknown ViewType[%s]", viewType));
+                throw new IllegalStateException(String.format("unknown ViewType[%s]", itemViewType));
         }
     }
 

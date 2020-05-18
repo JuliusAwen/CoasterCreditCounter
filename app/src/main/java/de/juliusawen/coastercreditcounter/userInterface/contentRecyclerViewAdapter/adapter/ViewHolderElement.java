@@ -11,7 +11,7 @@ import de.juliusawen.coastercreditcounter.R;
 
 class ViewHolderElement extends RecyclerView.ViewHolder
 {
-    final LinearLayout linearLayoutItem;
+    final LinearLayout linearLayoutElement;
     final ImageView imageViewExpandToggle;
     final TextView textViewDetailAbove;
     final TextView textViewName;
@@ -22,7 +22,7 @@ class ViewHolderElement extends RecyclerView.ViewHolder
     ViewHolderElement(View view)
     {
         super(view);
-        this.linearLayoutItem = view.findViewById(R.id.linearLayoutRecyclerViewItem);
+        this.linearLayoutElement = view.findViewById(R.id.linearLayoutRecyclerViewItem);
         this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_DetailAbove);
         this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
         this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_DetailBelow);

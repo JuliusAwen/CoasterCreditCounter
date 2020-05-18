@@ -62,7 +62,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         this.setPadding(0, viewHolder);
         this.setCustomOnClickListeners(viewHolder);
         viewHolder.itemView.setTag(element);
-        viewHolder.linearLayoutItem.setVisibility(View.VISIBLE);
+        viewHolder.linearLayoutElement.setVisibility(View.VISIBLE);
 
         return element;
     }
@@ -73,7 +73,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 / App.getContext().getResources().getDisplayMetrics().density))
                 * generation;
 
-        viewHolder.linearLayoutItem.setPadding(padding, 0, padding, 0);
+        viewHolder.linearLayoutElement.setPadding(padding, 0, padding, 0);
     }
 
     private void setCustomOnClickListeners(ViewHolderElement viewHolderElement)
@@ -100,12 +100,12 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         this.scrollToElement(item1);
     }
 
-    protected void scrollToElement(IElement item)
+    protected void scrollToElement(IElement element)
     {
-        if(item != null && this.content.contains(item) && this.recyclerView != null)
+        if(element != null && this.content.contains(element) && this.recyclerView != null)
         {
-            Log.d(String.format("scrolling to %s", item));
-            recyclerView.scrollToPosition(content.indexOf(item));
+            Log.d(String.format("scrolling to %s", element));
+            recyclerView.scrollToPosition(content.indexOf(element));
         }
     }
 

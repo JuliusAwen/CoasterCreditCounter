@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
 
-import android.graphics.Typeface;
 import android.view.View;
 
 import java.util.List;
@@ -46,8 +45,7 @@ abstract class DecorableContentRecyclerViewAdapter extends PlainContentRecyclerV
 
     private void applyTypeface(IElement element, ViewHolderElement viewHolder)
     {
-        int typeface = this.decoration.getTypeface(element);
-        viewHolder.textViewName.setTypeface(null, typeface != -1 ? typeface : Typeface.NORMAL);
+        viewHolder.textViewName.setTypeface(null, this.decoration.getTypeface(element));
     }
 
     private void applySpecialStringRecource(IElement element, ViewHolderElement viewHolder)

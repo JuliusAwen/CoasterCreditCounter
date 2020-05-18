@@ -164,11 +164,13 @@ public class ContentRecyclerViewDecoration
         {
             if(type.isAssignableFrom(element.getClass()))
             {
-                return this.typefacesByContentType.get(type);
+                int typeface = this.typefacesByContentType.get(type);
+                Log.v(String.format("found Typeface [%s] for [%s]", StringTool.typefaceToString(typeface), type.getSimpleName()));
+                return typeface;
             }
         }
 
-        return -1;
+        return Typeface.NORMAL;
     }
 
     String getSpecialString(IElement element)
@@ -177,14 +179,18 @@ public class ContentRecyclerViewDecoration
         {
             if(type.isAssignableFrom(element.getClass()))
             {
+                String specialString = "";
                 if(element.isVisit())
                 {
-                    return App.getContext().getString(this.specialStringResourcesByContentType.get(Visit.class), element.getName(), element.getParent().getName());
+                    specialString = App.getContext().getString(this.specialStringResourcesByContentType.get(Visit.class), element.getName(), element.getParent().getName());
                 }
                 else if(element.isProperty() && ((IProperty)element).isDefault())
                 {
-                    return App.getContext().getString(this.specialStringResourcesByContentType.get(IProperty.class), element.getName());
+                    specialString = App.getContext().getString(this.specialStringResourcesByContentType.get(IProperty.class), element.getName());
                 }
+
+                Log.v(String.format("SpecialString [%s] found for [%s]", specialString, element));
+                return specialString;
             }
         }
 
@@ -217,11 +223,15 @@ public class ContentRecyclerViewDecoration
             }
         }
 
-        HashMap<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDiplayMode = new HashMap<>();
-        detailTypesByDetailDiplayMode.put(DetailDisplayMode.ABOVE, detailTypesToDisplayAbove);
-        detailTypesByDetailDiplayMode.put(DetailDisplayMode.BELOW, detailTypesToDisplayBelow);
+        HashMap<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = new HashMap<>();
+        detailTypesByDetailDisplayMode.put(DetailDisplayMode.ABOVE, detailTypesToDisplayAbove);
+        detailTypesByDetailDisplayMode.put(DetailDisplayMode.BELOW, detailTypesToDisplayBelow);
 
-        return detailTypesByDetailDiplayMode;
+        Log.v(String.format(Locale.getDefault(), "found [%d] Details to display above and [%d] to display below %s",
+                detailTypesToDisplayAbove.size(),
+                detailTypesToDisplayBelow.size(),
+                element));
+        return detailTypesByDetailDisplayMode;
     }
 
     SpannableString getSpannableDetailString(IElement element, Set<DetailType> detailTypes)
@@ -350,7 +360,10 @@ public class ContentRecyclerViewDecoration
             }
         }
 
-        return StringTool.buildSpannableStringWithTypefaces(this.getOrderedDetailString(detailSubStringsByDetailType), typefacesByDetailSubString);
+        String orderedDetailString = this.getOrderedDetailString(detailSubStringsByDetailType);
+        Log.v(String.format("DetailString [%s] built for %s", orderedDetailString, element));
+
+        return StringTool.buildSpannableStringWithTypefaces(orderedDetailString, typefacesByDetailSubString);
     }
 
     private String getOrderedDetailString(HashMap<DetailType, String> detailSubstringsByDetailType)
