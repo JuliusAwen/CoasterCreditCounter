@@ -10,9 +10,7 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.interfaces.IDecorableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableContentRecyclerViewAdapter;
 
 abstract class DecorableContentRecyclerViewAdapter extends PlainContentRecyclerViewAdapter implements IDecorableContentRecyclerViewAdapter
 {

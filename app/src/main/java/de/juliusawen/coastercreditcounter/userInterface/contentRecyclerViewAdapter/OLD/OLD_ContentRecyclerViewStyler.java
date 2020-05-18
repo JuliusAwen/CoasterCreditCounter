@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD;
 
 import android.graphics.Typeface;
 
@@ -13,6 +13,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufact
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.GroupType;
 
 public abstract class OLD_ContentRecyclerViewStyler
 {

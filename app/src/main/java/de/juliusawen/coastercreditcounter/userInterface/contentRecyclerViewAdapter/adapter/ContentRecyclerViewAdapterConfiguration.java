@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 
 public class ContentRecyclerViewAdapterConfiguration
 {

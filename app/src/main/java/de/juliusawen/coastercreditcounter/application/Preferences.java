@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.persistence.Persistence;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
 
 @SuppressWarnings("FieldCanBeLocal") // Want this stuff up here for better overview
 public class Preferences implements IPersistable

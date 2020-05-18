@@ -27,9 +27,9 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
 
 public class SortElementsActivity extends BaseActivity
 {

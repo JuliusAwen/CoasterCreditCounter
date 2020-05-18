@@ -42,7 +42,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.interfaces.IExpandableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IExpandableContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener

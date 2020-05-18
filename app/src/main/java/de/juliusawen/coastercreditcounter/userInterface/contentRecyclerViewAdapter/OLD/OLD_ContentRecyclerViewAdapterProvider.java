@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD;
 
 import java.util.HashSet;
 import java.util.List;

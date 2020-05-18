@@ -8,6 +8,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHe
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewDecoration;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
 
 abstract class ContentRecyclerViewDecorationPresetProvider
 {

@@ -32,7 +32,6 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 
 class GroupHeaderProvider
 {

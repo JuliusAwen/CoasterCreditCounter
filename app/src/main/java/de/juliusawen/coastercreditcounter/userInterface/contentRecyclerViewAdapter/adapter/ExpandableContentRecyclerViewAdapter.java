@@ -18,7 +18,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.interfaces.IDecorableExpandableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableExpandableContentRecyclerViewAdapter;
 
 abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecyclerViewAdapter implements IDecorableExpandableContentRecyclerViewAdapter
 {

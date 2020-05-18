@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapt
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewDecoration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.interfaces.IContentRecyclerViewAdapter;
 
 public class ContentRecyclerViewAdapterOrder
 {

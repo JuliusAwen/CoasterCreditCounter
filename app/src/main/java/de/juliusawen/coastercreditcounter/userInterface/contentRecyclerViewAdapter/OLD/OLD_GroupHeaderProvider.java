@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +32,7 @@ import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.GroupType;
 
 public class OLD_GroupHeaderProvider
 {

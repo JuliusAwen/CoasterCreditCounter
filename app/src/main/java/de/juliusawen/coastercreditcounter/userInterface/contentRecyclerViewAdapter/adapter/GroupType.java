@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
 
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 

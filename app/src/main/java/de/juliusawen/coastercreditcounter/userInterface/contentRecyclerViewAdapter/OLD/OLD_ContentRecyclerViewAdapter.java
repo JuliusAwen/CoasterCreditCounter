@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD;
 
 import android.graphics.Typeface;
 import android.text.SpannableString;
@@ -46,6 +46,9 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailDisplayMode;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.GroupType;
 
 public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
