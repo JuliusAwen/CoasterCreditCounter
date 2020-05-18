@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-public enum ContentRecyclerViewAdapterType
+public enum OLD_ContentRecyclerViewAdapterType
 {
     EXPANDABLE,
     SELECTABLE,

@@ -27,9 +27,9 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -57,7 +57,7 @@ public class SortElementsActivity extends BaseActivity
             this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(this.viewModel.oldContentRecyclerViewAdapter == null)
         {
             if(App.preferences.defaultPropertiesAlwaysAtTop() && this.viewModel.elementsToSort.get(0).isProperty())
             {
@@ -73,7 +73,7 @@ public class SortElementsActivity extends BaseActivity
                 }
             }
 
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+            this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                     this.viewModel.elementsToSort,
                     new HashSet<Class<? extends IElement>>(),
                     false)
@@ -87,7 +87,7 @@ public class SortElementsActivity extends BaseActivity
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_sort_elements));
@@ -106,7 +106,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
 
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
@@ -124,14 +124,14 @@ public class SortElementsActivity extends BaseActivity
     private void createActionDialog()
     {
         ImageButton buttonDown = findViewById(R.id.buttonActionDialogUpDown_Down);
-        buttonDown.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_downward, R.color.white));
+        buttonDown.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.arrow_downward, R.color.white));
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
         this.frameLayoutDialogDown = findViewById(R.id.frameLayoutDialogUpDown_Down);
         this.frameLayoutDialogDown.setOnClickListener(this.getActionDialogOnClickListener());
         this.frameLayoutDialogDown.setOnTouchListener(this.getActionDialogOnTouchListener());
 
         ImageButton buttonUp = findViewById(R.id.buttonActionDialogUpDown_Up);
-        buttonUp.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_arrow_upward, R.color.white));
+        buttonUp.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.arrow_upward, R.color.white));
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
         this.frameLayoutDialogUp = findViewById(R.id.frameLayoutDialogUpDown_Up);
         this.frameLayoutDialogUp.setOnClickListener(this.getActionDialogOnClickListener());
@@ -145,7 +145,7 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                viewModel.selectedElement = viewModel.contentRecyclerViewAdapter.getLastSelectedItem();
+                viewModel.selectedElement = viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem();
 
                 if(view.equals(frameLayoutDialogDown))
                 {
@@ -245,7 +245,7 @@ public class SortElementsActivity extends BaseActivity
             if(position < viewModel.elementsToSort.size() - 1)
             {
                 Log.v("swapping elements");
-                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
+                viewModel.oldContentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
                 Collections.swap(viewModel.elementsToSort, position, position + 1);
             }
             else
@@ -269,7 +269,7 @@ public class SortElementsActivity extends BaseActivity
             {
                 Log.v("swapping elements");
 
-                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
+                viewModel.oldContentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
                 Collections.swap(viewModel.elementsToSort, position, position - 1);
             }
             else
@@ -285,7 +285,7 @@ public class SortElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -298,12 +298,12 @@ public class SortElementsActivity extends BaseActivity
                 this.viewModel.elementsToSort.add(0, this.viewModel.defaultProperty);
             }
 
-            Log.d(String.format(Locale.getDefault(), "returning [%d] elements as result", this.viewModel.elementsToSort.size()));
+            Log.d(String.format(Locale.getDefault(), "returning [%d] Elements as result", this.viewModel.elementsToSort.size()));
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.viewModel.elementsToSort));
 
-            if(!this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+            if(!this.viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
             {
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
             }
         }
 

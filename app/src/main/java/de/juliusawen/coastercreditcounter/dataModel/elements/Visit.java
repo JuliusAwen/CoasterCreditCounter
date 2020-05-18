@@ -132,12 +132,12 @@ public final class Visit extends Element implements IPersistable
         {
             if(Visit.isSameDay(visit.getCalendar(), calendar))
             {
-                Log.v(String.format("found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
+                Log.i(String.format("found %s for [%s]", visit, StringTool.fetchSimpleDate(calendar)));
                 foundVisits.add(visit);
             }
         }
 
-        Log.d(String.format(Locale.getDefault(), "[%d] visits found for [%s]", foundVisits.size(), StringTool.fetchSimpleDate(calendar)));
+        Log.i(String.format(Locale.getDefault(), "[%d] visits found for [%s]", foundVisits.size(), StringTool.fetchSimpleDate(calendar)));
         return foundVisits;
     }
 

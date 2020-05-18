@@ -8,12 +8,12 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
 
 public class ManagePropertiesViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
-    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
     public List<IElement> elements;
 
     public PropertyType propertyTypeToManage;
@@ -29,9 +29,9 @@ public class ManagePropertiesViewModel extends ViewModel implements IOptionsMenu
     }
 
     @Override
-    public ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    public OLD_ContentRecyclerViewAdapter getOldContentRecyclerViewAdapter()
     {
-        return this.contentRecyclerViewAdapter;
+        return this.oldContentRecyclerViewAdapter;
     }
 
     @Override

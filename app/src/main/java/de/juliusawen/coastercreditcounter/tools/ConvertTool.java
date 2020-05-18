@@ -15,7 +15,7 @@ public abstract class ConvertTool
         LinkedList<T> convertedElements = new LinkedList<>();
         if(!elementsToConvert.isEmpty())
         {
-            Log.d(String.format(Locale.getDefault(), "converting [%d] elements of type [%s] to type [%s]",
+            Log.d(String.format(Locale.getDefault(), "converting [%d] Elements of type [%s] to type [%s]",
                     elementsToConvert.size(), elementsToConvert.get(0).getClass().getSimpleName(), type.getSimpleName()));
 
             for(IElement element : elementsToConvert)
@@ -32,7 +32,7 @@ public abstract class ConvertTool
         }
         else
         {
-            Log.v("no elements to convert");
+            Log.v("no Elements to convert");
         }
 
         return convertedElements;

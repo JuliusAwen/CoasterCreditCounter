@@ -65,7 +65,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -159,7 +159,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     private void showVisitAlreadyExistsDialog()
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
-                R.drawable.ic_baseline_warning,
+                R.drawable.warning,
                 getString(R.string.alert_dialog_title_visit_already_exists),
                 getString(R.string.alert_dialog_message_visit_already_exists),
                 getString(R.string.text_accept),
@@ -201,7 +201,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     private void showPickAttractionsDialog()
     {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
-                R.drawable.ic_baseline_notification_important,
+                R.drawable.notification_important,
                 getString(R.string.alert_dialog_title_add_attractions),
                 getString(R.string.alert_dialog_message_confirm_add_attractions_to_visit),
                 getString(R.string.text_yes),
@@ -260,7 +260,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)

@@ -16,6 +16,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,6 +28,7 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
@@ -38,6 +41,8 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.interfaces.IExpandableContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -73,6 +78,19 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
+        if(false)
+        {
+            IExpandableContentRecyclerViewAdapter contentRecyclerViewAdapter =
+                    new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
+                    .servePreset(this.viewModel.requestCode)
+                    .placeOrderFor(IExpandableContentRecyclerViewAdapter.class);
+
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter((RecyclerView.Adapter) contentRecyclerViewAdapter);
+        }
+
+
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
         super.createToolbar();
@@ -83,6 +101,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.createStatisticsGlobalTotals();
     }
+
 
     @Override
     protected void resume()
@@ -104,7 +123,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -403,7 +422,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             substringsByTypeface.put(exportFileName, Typeface.BOLD_ITALIC);
 
             AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
-                    R.drawable.ic_baseline_error_outline,
+                    R.drawable.error_outline,
                     getString(R.string.alert_dialog_title_export_file_not_found),
                     getString(R.string.alert_dialog_message_export_file_not_found, exportFileName),
                     substringsByTypeface,
@@ -444,7 +463,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private void showAlertDialogFragmentOverwriteContent()
     {
         AlertDialogFragment alertDialogFragmentOverwriteContent = AlertDialogFragment.newInstance(
-                R.drawable.ic_baseline_warning,
+                R.drawable.warning,
                 getString(R.string.alert_dialog_title_overwrite_content),
                 getString(R.string.alert_dialog_message_confirm_overwrite_content),
                 getString(R.string.text_accept),
@@ -473,7 +492,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
             FragmentManager fragmentManager = getSupportFragmentManager();
 
             AlertDialogFragment alertDialogFragmentOverwriteFile = AlertDialogFragment.newInstance(
-                    R.drawable.ic_baseline_warning,
+                    R.drawable.warning,
                     getString(R.string.alert_dialog_title_overwrite_file),
                     getString(R.string.alert_dialog_message_overwrite_file),
                     getString(R.string.text_accept),
@@ -558,7 +577,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         {
             NavigationHubActivity navigationHubActivity = navigationHubActivities[0];
 
-            navigationHubActivity.viewModel.isImportSuccessful = App.persistence.importContent(navigationHubActivity.viewModel.uri, App.preferences.getExportFileName());
+            navigationHubActivity.viewModel.isImportSuccessful = App.persistence.tryImportContent(navigationHubActivity.viewModel.uri, App.preferences.getExportFileName());
 
             return navigationHubActivities[0];
         }
@@ -635,7 +654,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         protected NavigationHubActivity doInBackground(NavigationHubActivity... navigationHubActivities)
         {
             NavigationHubActivity navigationHubActivity = navigationHubActivities[0];
-            navigationHubActivity.viewModel.isExportSuccessful = App.persistence.exportContent(navigationHubActivity.viewModel.uri, App.preferences.getExportFileName());
+            navigationHubActivity.viewModel.isExportSuccessful = App.persistence.tryExportContent(navigationHubActivity.viewModel.uri, App.preferences.getExportFileName());
             return navigationHubActivities[0];
         }
 

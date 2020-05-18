@@ -29,10 +29,10 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewStyler;
 
 public class PickElementsActivity extends BaseActivity
 {
@@ -70,7 +70,7 @@ public class PickElementsActivity extends BaseActivity
         }
 
         boolean groupByCategory = false;
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(this.viewModel.oldContentRecyclerViewAdapter == null)
         {
             switch(this.viewModel.requestCode)
             {
@@ -85,7 +85,7 @@ public class PickElementsActivity extends BaseActivity
 
                 case PICK_ATTRACTIONS:
                 {
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             OnSiteAttraction.class,
                             true)
@@ -96,7 +96,7 @@ public class PickElementsActivity extends BaseActivity
 
                 case PICK_VISIT:
                 {
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             new HashSet<Class<? extends IElement>>(),
                             false)
@@ -107,7 +107,7 @@ public class PickElementsActivity extends BaseActivity
 
                 default:
                 {
-                    this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                             this.viewModel.elementsToPickFrom,
                             new HashSet<Class<? extends IElement>>(),
                             true)
@@ -117,12 +117,12 @@ public class PickElementsActivity extends BaseActivity
             }
         }
 
-        if(this.viewModel.contentRecyclerViewAdapter != null)
+        if(this.viewModel.oldContentRecyclerViewAdapter != null)
         {
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
+            this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
             RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
         }
 
 
@@ -136,7 +136,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(groupByCategory)
         {
-            ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.CATEGORY);
+            OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.oldContentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.CATEGORY);
         }
 
         if(!this.viewModel.isSinglePick)
@@ -147,14 +147,14 @@ public class PickElementsActivity extends BaseActivity
             this.decorateFloatingActionButtonCheck();
         }
 
-        Log.d(String.format("requestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
+        Log.d(String.format("RequestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
     }
 
     private void decorateFloatingActionButtonCheck()
     {
         Log.d("decorating FloatingActionButton <CHECK>...");
 
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -162,7 +162,7 @@ public class PickElementsActivity extends BaseActivity
             {
                 Log.i("<CHECK> clicked");
 
-                if(!viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+                if(!viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
                 {
                     Log.d("<CHECK> accepted - returning <RESULT_OK>");
                     returnResult(RESULT_OK);
@@ -183,7 +183,7 @@ public class PickElementsActivity extends BaseActivity
     {
         this.linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
-        if(this.viewModel.contentRecyclerViewAdapter.isAllSelected())
+        if(this.viewModel.oldContentRecyclerViewAdapter.isAllSelected())
         {
             this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         }
@@ -197,25 +197,25 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.d("RadioButton clicked");
+                Log.d("RadioButton<SELECT_ALL> clicked");
 
                 if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.setAllItemsSelected();
+                    viewModel.oldContentRecyclerViewAdapter.setAllItemsSelected();
                     changeRadioButtonToDeselectAll();
                 }
                 else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
                 {
-                    viewModel.contentRecyclerViewAdapter.setAllItemsDeselected();
+                    viewModel.oldContentRecyclerViewAdapter.setAllItemsDeselected();
                     changeRadioButtonToSelectAll();
                 }
             }
         });
     }
 
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewOnClickListener()
     {
-        return new RecyclerOnClickListener.OnClickListener()
+        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -226,21 +226,20 @@ public class PickElementsActivity extends BaseActivity
                 {
                     if(element.isGroupHeader())
                     {
-                        viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-                        if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                        viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                        if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                         {
                             invalidateOptionsMenu();
                         }
                     }
                     else
                     {
-                        Log.d("single pick - return code <OK>");
                         returnResult(RESULT_OK, element);
                     }
                 }
                 else
                 {
-                    if(!view.isSelected() && viewModel.contentRecyclerViewAdapter.isAllSelected())
+                    if(!view.isSelected() && viewModel.oldContentRecyclerViewAdapter.isAllSelected())
                     {
                         changeRadioButtonToDeselectAll();
                     }
@@ -252,7 +251,7 @@ public class PickElementsActivity extends BaseActivity
                         }
                     }
 
-                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                     {
                         invalidateOptionsMenu();
                     }
@@ -290,7 +289,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode, IElement element)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 
@@ -300,14 +299,14 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(this.viewModel.requestCode == RequestCode.PICK_VISIT)
                 {
-                    Log.d(String.format("returning %s", this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem()));
-                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                    Log.d(String.format("returning %s", this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem()));
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
                 }
                 else
                 {
                     LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
 
-                    for(IElement selectedElement : this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+                    for(IElement selectedElement : this.viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
                     {
                         if(!selectedElement.isOrphan())
                         {
@@ -315,7 +314,7 @@ public class PickElementsActivity extends BaseActivity
                         }
                     }
 
-                    Log.d(String.format(Locale.getDefault(), "returning [%d] elements", selectedElementsWithoutOrphanElements.size()));
+                    Log.d(String.format(Locale.getDefault(), "returning [%d] Elements", selectedElementsWithoutOrphanElements.size()));
                     intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(selectedElementsWithoutOrphanElements));
                 }
             }

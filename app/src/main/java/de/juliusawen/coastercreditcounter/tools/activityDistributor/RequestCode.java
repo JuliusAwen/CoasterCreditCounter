@@ -93,8 +93,8 @@ public enum RequestCode
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("RequestCode.getValue:: ordinal [%s] out of bounds (Enum has [%s] values) - returning INVALID", ordinal, values().length));
-            return INVALID;
+            Log.e(Constants.LOG_TAG, String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning [%s]", ordinal, values().length, values()[0]));
+            return values()[0];
         }
     }
 }

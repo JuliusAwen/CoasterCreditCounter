@@ -79,7 +79,7 @@ public final class Model extends Element implements IProperty, IHasCreditType, I
     public static void setDefault(Model defaultModel)
     {
         Model.defaultModel = defaultModel;
-        Log.i(String.format("%s set as default", Model.defaultModel.getFullName()));
+        Log.i(String.format("%s set as default", Model.defaultModel));
     }
 
     public boolean isCreditTypeSet()

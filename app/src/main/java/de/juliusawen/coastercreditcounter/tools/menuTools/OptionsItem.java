@@ -1,7 +1,9 @@
 package de.juliusawen.coastercreditcounter.tools.menuTools;
 
+import android.util.Log;
+
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 public enum OptionsItem
 {
@@ -64,14 +66,14 @@ public enum OptionsItem
 
     //ACTION MENU ITEMS
 
-    EXPAND_ALL(R.string.menu_item_expand_all, R.drawable.ic_baseline_expand_more_24px),
-    COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.ic_baseline_expand_less_24px),
+    EXPAND_ALL(R.string.menu_item_expand_all, R.drawable.expand),
+    COLLAPSE_ALL(R.string.menu_item_collapse_all, R.drawable.collapse),
 
-    GO_TO_CURRENT_VISIT(R.string.menu_item_go_to_current_visit, R.drawable.ic_baseline_local_activity),
-    GO_TO_MANAGE_PROPERTIES(R.string.menu_item_go_to_manage_elements, R.drawable.ic_baseline_build),
+    GO_TO_CURRENT_VISIT(R.string.menu_item_go_to_current_visit, R.drawable.local_activity),
+    GO_TO_MANAGE_PROPERTIES(R.string.menu_item_go_to_manage_elements, R.drawable.build),
 
-    ENABLE_EDITING(R.string.menu_item_enable_editing, R.drawable.ic_baseline_create),
-    DISABLE_EDITING(R.string.menu_item_disable_editing, R.drawable.ic_baseline_block),
+    ENABLE_EDITING(R.string.menu_item_enable_editing, R.drawable.create),
+    DISABLE_EDITING(R.string.menu_item_disable_editing, R.drawable.block),
 
 
     //DEVELOPER OPTIONS
@@ -101,8 +103,8 @@ public enum OptionsItem
         }
         else
         {
-            Log.e(String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning NO_FUNCTION", ordinal, values().length));
-            return NO_FUNCTION;
+            Log.e(Constants.LOG_TAG, String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning [%s]", ordinal, values().length, values()[0]));
+            return values()[0];
         }
     }
 }

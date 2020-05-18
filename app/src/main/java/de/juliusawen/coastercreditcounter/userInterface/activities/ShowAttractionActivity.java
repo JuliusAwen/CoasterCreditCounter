@@ -83,7 +83,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -157,7 +157,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.comment, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -184,7 +184,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
         {
             AlertDialogFragment alertDialogFragmentDelete =
                     AlertDialogFragment.newInstance(
-                            R.drawable.ic_baseline_warning,
+                            R.drawable.warning,
                             getString(R.string.alert_dialog_title_delete),
                             getString(R.string.alert_dialog_message_confirm_delete, this.viewModel.attraction.getNote().getName()),
                             getString(R.string.text_accept),

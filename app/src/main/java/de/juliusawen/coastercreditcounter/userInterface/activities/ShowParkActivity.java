@@ -262,7 +262,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             case SHOW_PARK_OVERVIEW:
             {
-                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_comment, R.color.white));
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.comment, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
                     {
                         @Override
@@ -286,7 +286,7 @@ public class ShowParkActivity extends BaseActivity implements
 
             case SHOW_ATTRACTIONS:
             {
-                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.add, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
                     {
                         @Override
@@ -300,7 +300,7 @@ public class ShowParkActivity extends BaseActivity implements
 
             case SHOW_VISITS:
             {
-                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+                super.animateFloatingActionButtonTransition(DrawableProvider.getColoredDrawable(R.drawable.add, R.color.white));
                 super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
                     {
                         @Override
@@ -319,9 +319,9 @@ public class ShowParkActivity extends BaseActivity implements
     {
         private final Drawable[] tabTitleDrawables = new Drawable[]
                 {
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_home, R.color.white),
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_airline_seat_legroom_extra, R.color.white),
-                        DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_local_activity, R.color.white)
+                        DrawableProvider.getColoredDrawable(R.drawable.home, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.airline_seat_legroom_extra, R.color.white),
+                        DrawableProvider.getColoredDrawable(R.drawable.local_activity, R.color.white)
                 };
 
         TabPagerAdapter(FragmentManager fragmentManager)

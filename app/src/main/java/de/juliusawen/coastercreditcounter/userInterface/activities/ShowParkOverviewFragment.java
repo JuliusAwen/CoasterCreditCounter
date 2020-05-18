@@ -87,13 +87,13 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     {
         super.onResume();
         this.viewModel.requestCode = RequestCode.SHOW_PARK_OVERVIEW;
-        this.viewModel.contentRecyclerViewAdapter = null;
+        this.viewModel.oldContentRecyclerViewAdapter = null;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -164,7 +164,7 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     {
         AlertDialogFragment alertDialogFragmentDelete =
                 AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_delete),
                         getString(R.string.alert_dialog_message_confirm_delete, this.viewModel.park.getNote().getName()),
                         getString(R.string.text_accept),

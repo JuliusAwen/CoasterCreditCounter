@@ -63,9 +63,11 @@ public interface IElement
     boolean isEvent();
     boolean isModel();
 
+    boolean isPersistable();
+
     boolean isGroupHeader();
     boolean isOrphan();
-    boolean isPersistable();
+    boolean isBottomSpacer();
 
     boolean hasCreditType();
     boolean hasCategory();

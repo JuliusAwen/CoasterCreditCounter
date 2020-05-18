@@ -19,6 +19,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasMode
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStatus;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
+import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.dataModel.traits.IOrphan;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -411,6 +412,11 @@ public abstract class Element implements IElement
         return this instanceof Model;
     }
 
+    public boolean isPersistable()
+    {
+        return this instanceof IPersistable;
+    }
+
     public boolean isGroupHeader()
     {
         return this instanceof IGroupHeader;
@@ -421,9 +427,9 @@ public abstract class Element implements IElement
         return this instanceof IOrphan;
     }
 
-    public boolean isPersistable()
+    public boolean isBottomSpacer()
     {
-        return this instanceof IPersistable;
+        return this instanceof BottomSpacer;
     }
 
     public boolean hasCreditType()

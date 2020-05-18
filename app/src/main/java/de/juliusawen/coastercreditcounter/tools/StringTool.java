@@ -93,7 +93,7 @@ public abstract class StringTool
         return simpleDateFormat.format(calendar.getTime());
     }
 
-    public static String getStringResource(int resourceId)
+    public static String getString(int resourceId)
     {
         try
         {
@@ -132,6 +132,28 @@ public abstract class StringTool
             default:
                 Log.e(String.format(Locale.getDefault(), "unknown ResultCode[%d]", resultCode));
                 return "unknown ResultCode";
+        }
+    }
+
+    public static String typefaceToString(int typeface)
+    {
+        switch(typeface)
+        {
+            case 0:
+                return "NORMAL";
+
+            case 1:
+                return "BOLD";
+
+            case 2:
+                return "ITALIC";
+
+            case 3:
+                return "BOLD_ITALIC";
+
+            default:
+                Log.e(String.format(Locale.getDefault(), "unknown Typeface[%d]", typeface));
+                return "unknown Typeface";
         }
     }
 

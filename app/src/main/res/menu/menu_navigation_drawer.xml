@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigationItem_BrowseLocations"
-            android:icon="@drawable/ic_baseline_place"
+            android:icon="@drawable/place"
             android:title="@string/text_browse_locations"/>
     </group>
 
@@ -14,23 +14,23 @@
                 <item
                     android:id="@+id/navigationItem_ManageCreditTypes"
                     android:title="@string/item_navigation_drawer_manage_credit_types"
-                    android:icon="@drawable/ic_baseline_build"/>
+                    android:icon="@drawable/build"/>
                 <item
                     android:id="@+id/navigationItem_ManageCategories"
                     android:title="@string/item_navigation_drawer_manage_categories"
-                    android:icon="@drawable/ic_baseline_build"/>
+                    android:icon="@drawable/build"/>
                 <item
                     android:id="@+id/navigationItem_ManageManufacturers"
                     android:title="@string/item_navigation_drawer_manage_manufacturers"
-                    android:icon="@drawable/ic_baseline_build"/>
+                    android:icon="@drawable/build"/>
                 <item
                     android:id="@+id/navigationItem_ManageModels"
                     android:title="@string/item_navigation_drawer_manage_models"
-                    android:icon="@drawable/ic_baseline_build"/>
+                    android:icon="@drawable/build"/>
                 <item
                     android:id="@+id/navigationItem_ManageStatuses"
                     android:title="@string/item_navigation_drawer_manage_statuses"
-                    android:icon="@drawable/ic_baseline_build"/>
+                    android:icon="@drawable/build"/>
             </menu>
         </item>
     </group>
@@ -40,11 +40,11 @@
             <menu>
                 <item
                     android:id="@+id/navigationItem_Import"
-                    android:icon="@drawable/ic_baseline_unarchive"
+                    android:icon="@drawable/unarchive"
                     android:title="@string/item_navigation_drawer_import" />
                 <item
                     android:id="@+id/navigationItem_Export"
-                    android:icon="@drawable/ic_baseline_archive"
+                    android:icon="@drawable/archive"
                     android:title="@string/item_navigation_drawer_export" />
             </menu>
         </item>

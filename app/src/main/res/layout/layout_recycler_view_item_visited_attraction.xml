@@ -28,7 +28,7 @@
                 style="@style/IncreaseDecreaseImageHolder"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Decrease"
                 android:contentDescription="@string/description_decrease_ride_count"
-                android:src="@drawable/ic_baseline_error_outline"/>
+                android:src="@drawable/error_outline"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutRecyclerViewVisitedAttraction_Counter"
@@ -57,7 +57,7 @@
                 style="@style/IncreaseDecreaseImageHolder"
                 android:id="@+id/imageViewRecyclerViewItemVisitedAttraction_Increase"
                 android:contentDescription="@string/description_increase_ride_count"
-                android:src="@drawable/ic_baseline_error_outline"/>
+                android:src="@drawable/error_outline"/>
 
         </LinearLayout>
 

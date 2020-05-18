@@ -17,9 +17,9 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewStyler;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class OptionsMenuButler
@@ -434,31 +434,31 @@ public class OptionsMenuButler
             switch(optionsItem)
             {
                 case GROUP_BY_NONE:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.NONE);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.NONE);
                     return true;
 
                 case GROUP_BY_PARK:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.PARK);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.PARK);
                     return true;
 
                 case GROUP_BY_CREDIT_TYPE:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CREDIT_TYPE);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CREDIT_TYPE);
                     return true;
 
                 case GROUP_BY_CATEGORY:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CATEGORY);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.CATEGORY);
                     return true;
 
                 case GROUP_BY_MANUFACTURER:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MANUFACTURER);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MANUFACTURER);
                     return true;
 
                 case GROUP_BY_MODEL:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MODEL);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.MODEL);
                     return true;
 
                 case GROUP_BY_STATUS:
-                    ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.STATUS);
+                    OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.getContentRecyclerViewAdapter(), this.getRequestCode(), GroupType.STATUS);
                     return true;
             }
         }
@@ -1145,10 +1145,10 @@ public class OptionsMenuButler
                 : null;
     }
 
-    private ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    private OLD_ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
         return this.viewModel != null
-                ? this.viewModel.getContentRecyclerViewAdapter()
+                ? this.viewModel.getOldContentRecyclerViewAdapter()
                 : null;
     }
 

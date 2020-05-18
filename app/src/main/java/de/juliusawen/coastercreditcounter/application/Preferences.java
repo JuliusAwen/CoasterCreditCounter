@@ -62,25 +62,25 @@ public class Preferences implements IPersistable
     {
         return String.format(Locale.getDefault(),
                 "App Preferences:\n" +
-                        "Default SortOrder is [%s]\n" +
-                        "Expand latest year in visits list [%S]\n" +
-                        "First day of the week is [%s]\n" +
-                        "Default increment is [%d]",
+                        "  Default SortOrder is [%s]\n" +
+                        "  Expand latest year in visits list [%S]\n" +
+                        "  First day of the week is [%s]\n" +
+                        "  Default increment is [%d]",
 
                 this.getDefaultSortOrder(),
                 this.expandLatestYearHeaderByDefault,
-                this.getFirstDayOfTheWeek(),
+                this.dayNames[this.getFirstDayOfTheWeek()],
                 this.getIncrement()
         );
     }
 
     public boolean initialize()
     {
-        Log.i("initializing...");
+        Log.d("initializing...");
         Stopwatch stopwatch = new Stopwatch(true);
 
         boolean success = false;
-        if(persistence.loadPreferences(this))
+        if(persistence.tryLoadPreferences(this))
         {
             if(this.validate())
             {
@@ -97,8 +97,8 @@ public class Preferences implements IPersistable
 
         if(!success)
         {
-            this.createDefaultPreferences();
-            Log.i(String.format(Locale.getDefault(), "using defaults - took [%d]ms", stopwatch.stop()));
+            this.createDefaults();
+            Log.w(String.format(Locale.getDefault(), "using defaults - took [%d]ms", stopwatch.stop()));
             success = true;
         }
 
@@ -106,43 +106,43 @@ public class Preferences implements IPersistable
         return success;
     }
 
-    public boolean createDefaultPreferences()
+    public boolean createDefaults()
     {
-        Log.w("creating default preferences");
+        Log.w("creating...");
 
         Stopwatch stopwatch = new Stopwatch(true);
 
         this.setDefaults();
 
-        if(persistence.savePreferences(this))
+        if(persistence.trySavePreferences(this))
         {
-            Log.w(String.format(Locale.getDefault(), "default preferences successfully created - took [%d]ms", stopwatch.stop()));
+            Log.w(String.format(Locale.getDefault(), "success - took [%d]ms", stopwatch.stop()));
             return true;
         }
         else
         {
-            Log.e(String.format(Locale.getDefault(), "initializing preferences failed - took [%d]ms", stopwatch.stop()));
+            Log.e(String.format(Locale.getDefault(), "failed - took [%d]ms", stopwatch.stop()));
             return false;
         }
     }
 
     private boolean validate()
     {
-        Log.i("validating preferences...");
+        Log.d("validating...");
 
         if(this.getDefaultSortOrder() == null)
         {
-            Log.e("validation failed: default SortOrder is null");
+            Log.e("default SortOrder is null");
             return false;
         }
 
-        Log.d("validation successful");
+        Log.i("valid");
         return true;
     }
 
     public void setDefaults()
     {
-        Log.d("setting defaults...");
+        Log.d("setting...");
 
         this.setDefaultSortOrder(SortOrder.DESCENDING);
         this.setExpandLatestYearHeaderByDefault(true);

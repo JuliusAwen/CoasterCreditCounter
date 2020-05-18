@@ -1,11 +1,14 @@
 package de.juliusawen.coastercreditcounter.application;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
 import de.juliusawen.coastercreditcounter.persistence.Persistence;
+import de.juliusawen.coastercreditcounter.tools.ExceptionHandler;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
+import de.juliusawen.coastercreditcounter.userInterface.activities.MainActivity;
 
 public class App extends Application
 {
@@ -33,8 +36,10 @@ public class App extends Application
     @Override
     public void onCreate()
     {
-        Log.frame(LogLevel.INFO, "instantiated", '#', true);
         super.onCreate();
+        Log.frame(LogLevel.INFO, "creating...", '#', true);
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this, MainActivity.class));
 
         App.isInitialized = false;
         App.instance = this;
@@ -64,5 +69,23 @@ public class App extends Application
         Log.restrictLogging(LogLevel.NONE, "initialization done");
 
         return success;
+    }
+
+    public static void terminate()
+    {
+        ActivityManager activityManager = (ActivityManager) App.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        if(activityManager != null)
+        {
+            for(ActivityManager.AppTask appTask : activityManager.getAppTasks())
+            {
+                Log.frame(LogLevel.INFO, String.format("trying to finishAndRemoveTask [%s]", appTask.toString()), '-', true);
+                appTask.finishAndRemoveTask();
+            }
+        }
+        else
+        {
+            Log.frame(LogLevel.INFO, "not able to get ActivityManager - exiting system with -1", '-', true);
+            System.exit(-1);
+        }
     }
 }

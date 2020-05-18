@@ -43,10 +43,10 @@ public class Content
 
     public boolean initialize()
     {
-        Log.i("initializing...");
+        Log.d("initializing...");
         Stopwatch stopwatch = new Stopwatch(true);
 
-        if(this.persistence.loadContent(this))
+        if(this.persistence.tryLoadContent(this))
         {
             Log.i(String.format(Locale.getDefault(), "successful - took [%d]ms", stopwatch.stop()));
             return true;
@@ -99,7 +99,7 @@ public class Content
 
                 Log.i("backup restored");
 
-                if(saveBackup && this.persistence.saveContent(this))
+                if(saveBackup && this.persistence.trySaveContent(this))
                 {
                     Log.i("content backup saved");
                 }
@@ -168,6 +168,7 @@ public class Content
                 content.add(type.cast(element));
             }
         }
+
         return content;
     }
 
@@ -181,6 +182,7 @@ public class Content
                 content.add(element);
             }
         }
+
         return content;
     }
 
@@ -191,6 +193,7 @@ public class Content
         {
             uuidStrings.add(element.getUuid().toString());
         }
+
         return uuidStrings;
     }
 
@@ -205,7 +208,7 @@ public class Content
             elements.add(this.getContentByUuid(UUID.fromString(uuidString)));
         }
 
-        Log.v(String.format(Locale.getDefault(), "fetching [%d] elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
+        Log.v(String.format(Locale.getDefault(), "fetching [%d] Elements took [%d]ms ", uuidStrings.size(), stopwatch.stop()));
 
         return elements;
     }
@@ -218,7 +221,7 @@ public class Content
         }
         else
         {
-            Log.w(String.format("no element found for uuid [%s]", uuid));
+            Log.w(String.format("no Element found for uuid [%s]", uuid));
             return null;
         }
     }

@@ -40,10 +40,10 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -85,19 +85,19 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         invalidateOptionsMenu();
 
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(this.viewModel.oldContentRecyclerViewAdapter == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = this.createContentRecyclerView()
+            this.viewModel.oldContentRecyclerViewAdapter = this.createContentRecyclerView()
                     .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
         }
 
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
+        this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
                 .addIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener())
                 .addDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
 
         if(Visit.isCurrentVisit(this.viewModel.visit))
         {
@@ -106,11 +106,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(this.viewModel.visit.isEditingEnabled())
         {
-            this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
+            this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
         }
         else
         {
-            this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
+            this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
         }
 
         this.handleFloatingActionButtonVisibility();
@@ -126,7 +126,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             case ENABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(true);
                 invalidateOptionsMenu();
-                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
+                this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
                 this.handleFloatingActionButtonVisibility();
                 Log.d(String.format("<ENABLE_EDITING> enabled editing for %s", this.viewModel.visit));
                 return true;
@@ -134,7 +134,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             case DISABLE_EDITING:
                 this.viewModel.visit.setEditingEnabled(false);
                 invalidateOptionsMenu();
-                this.viewModel.contentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
+                this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
                 this.handleFloatingActionButtonVisibility();
                 Log.d(String.format("<DISABLE_EDITING> disabled editing %s", this.viewModel.visit));
                 return true;
@@ -148,7 +148,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -164,7 +164,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+                    this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
 
                     super.markForUpdate(this.viewModel.visit);
                     break;
@@ -190,7 +190,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -216,19 +216,19 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         else
         {
             super.setFloatingActionButtonVisibility(true);
-            this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
+            this.viewModel.oldContentRecyclerViewAdapter.addBottomSpacer();
         }
     }
 
-    private ContentRecyclerViewAdapter createContentRecyclerView()
+    private OLD_ContentRecyclerViewAdapter createContentRecyclerView()
     {
-        return ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), VisitedAttraction.class)
+        return OLD_ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), VisitedAttraction.class)
                 .groupItems(GroupType.CATEGORY);
     }
 
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
-        return new RecyclerOnClickListener.OnClickListener()
+        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -237,8 +237,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 if(element.isGroupHeader())
                 {
-                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-                    if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                    viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                    if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                     {
                         invalidateOptionsMenu();
                     }
@@ -299,7 +299,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 {
                     AlertDialogFragment alertDialogFragmentRemove =
                             AlertDialogFragment.newInstance(
-                                    R.drawable.ic_baseline_warning,
+                                    R.drawable.warning,
                                     getString(R.string.alert_dialog_title_remove),
                                     getString(R.string.alert_dialog_message_remove_visited_attraction, viewModel.longClickedElement.getName()),
                                     getString(R.string.text_accept),
@@ -447,18 +447,18 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(resetContent)
         {
             Log.d("resetting content...");
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
+            this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
                     .expandAll();
 
             if(!this.allAttractionsAdded())
             {
-                this.viewModel.contentRecyclerViewAdapter.addBottomSpacer();
+                this.viewModel.oldContentRecyclerViewAdapter.addBottomSpacer();
             }
         }
         else
         {
             Log.d("notifying data set changed...");
-            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+            this.viewModel.oldContentRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
 }

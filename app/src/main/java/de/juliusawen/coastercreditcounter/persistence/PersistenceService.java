@@ -64,7 +64,7 @@ public class PersistenceService extends IntentService
     private void create(Intent intent)
     {
         Set<IElement> elementsToCreate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_CREATE_UUIDS)));
-        Log.d(String.format(Locale.getDefault(), "creating [%d] elements...", elementsToCreate.size()));
+        Log.d(String.format(Locale.getDefault(), "creating [%d] Elements...", elementsToCreate.size()));
 
         if(this.databaseWrapper.create(elementsToCreate))
         {
@@ -79,7 +79,7 @@ public class PersistenceService extends IntentService
     private void delete(Intent intent)
     {
         Set<IElement> elementsToDelete = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_DELETE_UUIDS)));
-        Log.d(String.format(Locale.getDefault(), "deleting [%d] elements...", elementsToDelete.size()));
+        Log.d(String.format(Locale.getDefault(), "deleting [%d] Elements...", elementsToDelete.size()));
 
         if(databaseWrapper.delete(elementsToDelete))
         {
@@ -94,7 +94,7 @@ public class PersistenceService extends IntentService
     private void update(Intent intent)
     {
         Set<IElement> elementsToUpdate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_UPDATE_UUIDS)));
-        Log.d(String.format(Locale.getDefault(), "updating [%d] elements...", elementsToUpdate.size()));
+        Log.d(String.format(Locale.getDefault(), "updating [%d] Elements...", elementsToUpdate.size()));
 
         if(databaseWrapper.update(elementsToUpdate))
         {

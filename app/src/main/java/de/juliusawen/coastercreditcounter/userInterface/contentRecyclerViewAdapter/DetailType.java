@@ -1,6 +1,8 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import android.util.Log;
+
+import de.juliusawen.coastercreditcounter.application.Constants;
 
 public enum DetailType
 {
@@ -21,8 +23,8 @@ public enum DetailType
         }
         else
         {
-            Log.e(String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning NONE", ordinal, values().length));
-            return NONE;
+            Log.e(Constants.LOG_TAG, String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning [%s]", ordinal, values().length, values()[0]));
+            return values()[0];
         }
     }
 }

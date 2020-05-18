@@ -47,7 +47,7 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private enum ViewType
     {
@@ -57,14 +57,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private RecyclerView recyclerView;
-    private final GroupHeaderProvider groupHeaderProvider;
+    private final OLD_GroupHeaderProvider OLDGroupHeaderProvider;
 
     private ArrayList<IElement> originalItems;
     private ArrayList<IElement> items = new ArrayList<>();
 
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
 
-    private final ContentRecyclerViewAdapterType contentRecyclerViewAdapterType;
+    private final OLD_ContentRecyclerViewAdapterType OLDContentRecyclerViewAdapterType;
     private GroupType groupType;
     private boolean formatAsPrettyPrint;
 
@@ -73,7 +73,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private boolean useDedicatedExpansionOnClickListener;
 
-    private RecyclerOnClickListener.OnClickListener recyclerOnClickListener;
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener recyclerCustomOnClickListener;
     private final View.OnClickListener expansionOnClickListener;
     private final View.OnClickListener selectionOnClickListener;
     private View.OnClickListener increaseRideCountOnClickListener;
@@ -90,14 +90,14 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private final HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IElement>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
-    ContentRecyclerViewAdapter(GetContentRecyclerViewAdapterRequest request)
+    OLD_ContentRecyclerViewAdapter(OLD_GetContentRecyclerViewAdapterRequest request)
     {
-        this.contentRecyclerViewAdapterType = request.contentRecyclerViewAdapterType;
+        this.OLDContentRecyclerViewAdapterType = request.OLDContentRecyclerViewAdapterType;
         this.selectMultipleItems = request.selectMultiple;
 
         this.initializeContentTypesByDetailDisplayModeByDetailType();
 
-        this.groupHeaderProvider = new GroupHeaderProvider();
+        this.OLDGroupHeaderProvider = new OLD_GroupHeaderProvider();
         this.groupType = GroupType.NONE;
 
         this.relevantChildTypesInSortOrder.addAll(request.relevantChildTypesInSortOrder);
@@ -108,7 +108,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         this.selectionOnClickListener = this.getSelectionOnClickListener();
     }
 
-    public ContentRecyclerViewAdapter setItems(List<IElement> items)
+    public OLD_ContentRecyclerViewAdapter setItems(List<IElement> items)
     {
         Log.d(String.format(Locale.getDefault(), "setting [%d] items...", items.size()));
 
@@ -121,7 +121,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter groupItems(GroupType groupType)
+    public OLD_ContentRecyclerViewAdapter groupItems(GroupType groupType)
     {
         this.groupType = groupType;
         this.selectedItemsInOrderOfSelection.clear();
@@ -135,35 +135,35 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
 
             case PARK:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.PARK);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.PARK);
                 break;
 
             case CREDIT_TYPE:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.CREDIT_TYPE);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.CREDIT_TYPE);
                 break;
 
             case CATEGORY:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.CATEGORY);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.CATEGORY);
                 break;
 
             case MANUFACTURER:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.MANUFACTURER);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.MANUFACTURER);
                 break;
 
             case MODEL:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.MODEL);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.MODEL);
                 break;
 
             case STATUS:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.STATUS);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.STATUS);
                 break;
 
             case YEAR:
-                groupedItems = this.groupHeaderProvider.groupElements(this.originalItems, GroupType.YEAR);
+                groupedItems = this.OLDGroupHeaderProvider.groupElements(this.originalItems, GroupType.YEAR);
 
                 if(App.preferences.expandLatestYearHeaderByDefault())
                 {
-                    SpecialGroupHeader latestSpecialGroupHeader = this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
+                    SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
                     this.expandedItems.add(latestSpecialGroupHeader);
                 }
                 break;
@@ -254,9 +254,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             super(view);
             this.linearLayoutItem = view.findViewById(R.id.linearLayoutRecyclerViewItem);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
-            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_UpperDetail);
+            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_DetailAbove);
             this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
-            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_LowerDetail);
+            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_DetailBelow);
             this.linearLayoutPrettyPrint = view.findViewById(R.id.linearLayoutRecyclerViewItem_PrettyPrint);
             this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
         }
@@ -284,10 +284,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
 
             this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
-            this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_add_circle_outline));
+            this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.add_circle_outline));
 
             this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
-            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_remove_circle_outline));
+            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.remove_circle_outline));
 
             this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
         }
@@ -308,7 +308,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         IElement item = this.items.get(position);
 
         //maybe && item.getParent().isVisit?
-        if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.COUNTABLE && (item.isVisitedAttraction()))
+        if(this.OLDContentRecyclerViewAdapterType == OLD_ContentRecyclerViewAdapterType.COUNTABLE && (item.isVisitedAttraction()))
         {
             return ViewType.VISITED_ATTRACTION.ordinal();
         }
@@ -421,16 +421,16 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             if(this.expandedItems.contains(item))
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_down));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.arrow_drop_down));
             }
             else
             {
-                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_baseline_arrow_drop_right));
+                viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.arrow_drop_right));
             }
         }
         else
         {
-            viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_error_outline, R.color.default_color));
+            viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.error_outline, R.color.default_color));
         }
 
         if(this.useDedicatedExpansionOnClickListener)
@@ -551,18 +551,18 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             //set onClickListeners
             if(!viewHolder.itemView.hasOnClickListeners())
             {
-                if(this.contentRecyclerViewAdapterType == ContentRecyclerViewAdapterType.SELECTABLE)
+                if(this.OLDContentRecyclerViewAdapterType == OLD_ContentRecyclerViewAdapterType.SELECTABLE)
                 {
                     viewHolder.itemView.setOnClickListener(this.selectionOnClickListener);
-                    if(this.recyclerOnClickListener != null)
+                    if(this.recyclerCustomOnClickListener != null)
                     {
-                        viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                        viewHolder.itemView.setOnLongClickListener(new OLD_ContentRecyclerViewOnClickListener(this.recyclerCustomOnClickListener));
                     }
                 }
-                else if(this.recyclerOnClickListener != null)
+                else if(this.recyclerCustomOnClickListener != null)
                 {
-                    viewHolder.itemView.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-                    viewHolder.itemView.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                    viewHolder.itemView.setOnClickListener(new OLD_ContentRecyclerViewOnClickListener(this.recyclerCustomOnClickListener));
+                    viewHolder.itemView.setOnLongClickListener(new OLD_ContentRecyclerViewOnClickListener(this.recyclerCustomOnClickListener));
                 }
             }
 
@@ -763,10 +763,10 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewHolder.linearLayoutEditable.setVisibility(View.VISIBLE);
 
             viewHolder.linearLayoutCounter.setTag(visitedAttraction);
-            if(!viewHolder.linearLayoutCounter.hasOnClickListeners() && this.recyclerOnClickListener != null)
+            if(!viewHolder.linearLayoutCounter.hasOnClickListeners() && this.recyclerCustomOnClickListener != null)
             {
-                viewHolder.linearLayoutCounter.setOnClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
-                viewHolder.linearLayoutCounter.setOnLongClickListener(new RecyclerOnClickListener(this.recyclerOnClickListener));
+                viewHolder.linearLayoutCounter.setOnClickListener(new OLD_ContentRecyclerViewOnClickListener(this.recyclerCustomOnClickListener));
+                viewHolder.linearLayoutCounter.setOnLongClickListener(new OLD_ContentRecyclerViewOnClickListener(this.recyclerCustomOnClickListener));
             }
 
             viewHolder.textViewName.setText(visitedAttraction.getName());
@@ -867,25 +867,25 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return null;
     }
 
-    public ContentRecyclerViewAdapter setOnClickListener(RecyclerOnClickListener.OnClickListener onClickListener)
+    public OLD_ContentRecyclerViewAdapter setOnClickListener(OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener customOnClickListener)
     {
-        this.recyclerOnClickListener = onClickListener;
+        this.recyclerCustomOnClickListener = customOnClickListener;
         return this;
     }
 
-    public ContentRecyclerViewAdapter addIncreaseRideCountOnClickListener(View.OnClickListener increaseOnClickListener)
+    public OLD_ContentRecyclerViewAdapter addIncreaseRideCountOnClickListener(View.OnClickListener increaseOnClickListener)
     {
         this.increaseRideCountOnClickListener = increaseOnClickListener;
         return this;
     }
 
-    public ContentRecyclerViewAdapter addDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
+    public OLD_ContentRecyclerViewAdapter addDecreaseRideCountOnClickListener(View.OnClickListener decreaseOnClickListener)
     {
         this.decreaseRideCountOnClickListener = decreaseOnClickListener;
         return this;
     }
 
-    public ContentRecyclerViewAdapter toggleExpansion(IElement item)
+    public OLD_ContentRecyclerViewAdapter toggleExpansion(IElement item)
     {
         if(!this.relevantChildTypesInSortOrder.isEmpty())
         {
@@ -902,7 +902,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter expandAll()
+    public OLD_ContentRecyclerViewAdapter expandAll()
     {
         if(!this.items.isEmpty() && !this.isAllExpanded())
         {
@@ -935,7 +935,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter expandGroupHeaderOfElement(IElement element)
+    public OLD_ContentRecyclerViewAdapter expandGroupHeaderOfElement(IElement element)
     {
         for(IElement item : this.items)
         {
@@ -949,7 +949,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter expandItem(IElement item, boolean scrollToItem)
+    public OLD_ContentRecyclerViewAdapter expandItem(IElement item, boolean scrollToItem)
     {
         if(!this.expandedItems.contains(item))
         {
@@ -982,7 +982,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     {
                         index--;
                     }
-                    ((LinearLayoutManager)ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
+                    ((LinearLayoutManager) OLD_ContentRecyclerViewAdapter.this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
                 }
             }
         }
@@ -1020,7 +1020,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return true;
     }
 
-    public ContentRecyclerViewAdapter collapseAll()
+    public OLD_ContentRecyclerViewAdapter collapseAll()
     {
         if(!this.items.isEmpty() && !this.isAllCollapsed())
         {
@@ -1165,9 +1165,9 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                 }
 
-                if(recyclerOnClickListener != null)
+                if(recyclerCustomOnClickListener != null)
                 {
-                    recyclerOnClickListener.onClick(view);
+                    recyclerCustomOnClickListener.onClick(view);
                 }
             }
         };
@@ -1334,7 +1334,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public ContentRecyclerViewAdapter addBottomSpacer()
+    public OLD_ContentRecyclerViewAdapter addBottomSpacer()
     {
         if(!this.items.isEmpty() && !(this.items.get(this.items.size() - 1) instanceof BottomSpacer))
         {
@@ -1346,7 +1346,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter setTypefaceForContentType(Class<? extends IElement> type, int typeface)
+    public OLD_ContentRecyclerViewAdapter setTypefaceForContentType(Class<? extends IElement> type, int typeface)
     {
         if(typeface <= 3)
         {
@@ -1361,13 +1361,13 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter clearTypefacesForContentType()
+    public OLD_ContentRecyclerViewAdapter clearTypefacesForContentType()
     {
         this.typefacesByContentType.clear();
         return this;
     }
 
-    public ContentRecyclerViewAdapter setTypefaceForDetailType(DetailType type, int typeface)
+    public OLD_ContentRecyclerViewAdapter setTypefaceForDetailType(DetailType type, int typeface)
     {
         if(typeface <= 3)
         {
@@ -1382,7 +1382,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this;
     }
 
-    public ContentRecyclerViewAdapter clearTypefacesForDetailType()
+    public OLD_ContentRecyclerViewAdapter clearTypefacesForDetailType()
     {
         this.typefacesByDetailType.clear();
         return this;
@@ -1391,20 +1391,20 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     /**
      *  set a string resource which replaces the element.getName() string for the given class
      */
-    public ContentRecyclerViewAdapter setSpecialStringResourceForType(Class<? extends IElement> type,  int stringResource)
+    public OLD_ContentRecyclerViewAdapter setSpecialStringResourceForType(Class<? extends IElement> type, int stringResource)
     {
         this.specialStringResourcesByType.put(type, stringResource);
         return this;
     }
 
-    public ContentRecyclerViewAdapter clearDetailTypesAndModeForContentType()
+    public OLD_ContentRecyclerViewAdapter clearDetailTypesAndModeForContentType()
     {
         this.contentTypesByDetailDisplayModeByDetailType.clear();
         this.initializeContentTypesByDetailDisplayModeByDetailType();
         return this;
     }
 
-    public ContentRecyclerViewAdapter setDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
+    public OLD_ContentRecyclerViewAdapter setDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
         this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);
         return this;
@@ -1423,7 +1423,7 @@ public class ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return this.groupType;
     }
 
-    public ContentRecyclerViewAdapter setUseDedicatedExpansionOnClickListener(boolean useDedicatedExpansionOnClickListener)
+    public OLD_ContentRecyclerViewAdapter setUseDedicatedExpansionOnClickListener(boolean useDedicatedExpansionOnClickListener)
     {
         this.useDedicatedExpansionOnClickListener = useDedicatedExpansionOnClickListener;
         Log.v(String.format("set to [%S]", useDedicatedExpansionOnClickListener));

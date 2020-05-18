@@ -70,7 +70,7 @@ public class CreateChildForLocationActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

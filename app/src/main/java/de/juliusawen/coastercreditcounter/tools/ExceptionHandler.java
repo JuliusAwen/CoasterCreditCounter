@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.tools;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 
@@ -8,6 +7,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import de.juliusawen.coastercreditcounter.BuildConfig;
+import de.juliusawen.coastercreditcounter.application.App;
+import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
@@ -34,25 +35,14 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
         if(!BuildConfig.DEBUG)
         {
             Log.wrap(LogLevel.INFO, String.format("trying to restart {%s]", this.activity.getName()), '-', true);
-            Intent intent = new Intent(context, activity);
-            this.context.startActivity(intent);
+
+            Intent intent = new Intent(this.context, this.activity);
+            intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
+            ActivityDistributor.startActivityViaIntent(this.context, intent);
         }
         else
         {
-            ActivityManager activityManager = (ActivityManager) this.context.getSystemService(Context.ACTIVITY_SERVICE);
-            if(activityManager != null)
-            {
-                for(ActivityManager.AppTask appTask : activityManager.getAppTasks())
-                {
-                    Log.i(String.format("trying to finishAndRemoveTask [%s]", appTask.toString()));
-                    appTask.finishAndRemoveTask();
-                }
-            }
-            else
-            {
-                Log.frame(LogLevel.INFO, "not able to get ActivityManager - exiting system with -1", '-', true);
-                System.exit(-1);
-            }
+            App.terminate();
         }
     }
 }

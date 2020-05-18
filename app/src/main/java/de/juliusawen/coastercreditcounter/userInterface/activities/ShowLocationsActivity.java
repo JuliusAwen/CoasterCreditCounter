@@ -37,8 +37,8 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -65,27 +65,27 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.currentLocation = elementUuid != null ? App.content.getContentByUuid(UUID.fromString(elementUuid)) : App.content.getRootLocation();
         }
 
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(this.viewModel.oldContentRecyclerViewAdapter == null)
         {
             HashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new HashSet<>();
             childTypesToExpandInSortOrder.add(Park.class);
             childTypesToExpandInSortOrder.add(Location.class);
 
-            this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
+            this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(
                     new ArrayList<>(Collections.singleton(this.viewModel.currentLocation)),
                     childTypesToExpandInSortOrder)
                     .setTypefaceForContentType(Location.class, Typeface.BOLD)
                     .addBottomSpacer();
         }
-        this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+        this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
 
         if(this.viewModel.currentLocation.isRootLocation())
         {
-            this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation, true);
+            this.viewModel.oldContentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation, true);
         }
 
 
@@ -107,7 +107,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -117,7 +117,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case CREATE_PARK:
                 {
                     this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
+                    this.viewModel.oldContentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
                     invalidateOptionsMenu();
                     break;
                 }
@@ -137,7 +137,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     if(selectedElementUuidString != null)
                     {
                         IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                        this.viewModel.oldContentRecyclerViewAdapter.scrollToItem(selectedElement);
                     }
                     else
                     {
@@ -176,7 +176,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_close, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.close, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -194,12 +194,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(enabled)
         {
-            this.viewModel.contentRecyclerViewAdapter.setItemSelected(this.viewModel.longClickedElement);
+            this.viewModel.oldContentRecyclerViewAdapter.setItemSelected(this.viewModel.longClickedElement);
             super.setToolbarTitleAndSubtitle(getString(R.string.title_relocate), getString(R.string.subtitle_relocate_select_new_parent));
         }
         else
         {
-            this.viewModel.contentRecyclerViewAdapter.setItemDeselected(this.viewModel.longClickedElement);
+            this.viewModel.oldContentRecyclerViewAdapter.setItemDeselected(this.viewModel.longClickedElement);
             super.setToolbarTitleAndSubtitle(getString(R.string.locations), "");
         }
 
@@ -208,9 +208,9 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         Log.d(String.format("selection mode enabled[%S]", this.viewModel.relocationModeEnabled));
     }
     
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
-        return new RecyclerOnClickListener.OnClickListener()
+        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -223,8 +223,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 {
                     if(element.isLocation())
                     {
-                        viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-                        if(viewModel.contentRecyclerViewAdapter.isAllExpanded() || viewModel.contentRecyclerViewAdapter.isAllCollapsed())
+                        viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                        if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                         {
                             invalidateOptionsMenu();
                         }
@@ -326,7 +326,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             case REMOVE_ELEMENT:
                 AlertDialogFragment alertDialogFragmentRemove = AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_remove),
                         getString(R.string.alert_dialog_message_confirm_remove_location, viewModel.longClickedElement.getName(), viewModel.longClickedElement.getParent().getName()),
                         getString(R.string.text_accept),
@@ -344,7 +344,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
             case DELETE_ELEMENT:
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_delete),
                         getString(R.string.alert_dialog_message_confirm_delete_with_children, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
@@ -374,7 +374,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                         FragmentManager fragmentManager = getSupportFragmentManager();
 
                         AlertDialogFragment alertDialogFragmentRelocate = AlertDialogFragment.newInstance(
-                                R.drawable.ic_baseline_warning,
+                                R.drawable.warning,
                                 getString(R.string.alert_dialog_title_relocate),
                                 getString(R.string.alert_dialog_message_confirm_relocate, viewModel.longClickedElement.getName(), element.getName()),
                                 getString(R.string.text_accept),
@@ -484,6 +484,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private void updateContentRecyclerView()
     {
         Log.d("resetting content...");
-        this.viewModel.contentRecyclerViewAdapter.setItems(new ArrayList<>(Collections.singleton(viewModel.currentLocation)));
+        this.viewModel.oldContentRecyclerViewAdapter.setItems(new ArrayList<>(Collections.singleton(viewModel.currentLocation)));
     }
 }

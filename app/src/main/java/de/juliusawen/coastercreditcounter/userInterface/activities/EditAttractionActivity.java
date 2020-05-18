@@ -109,8 +109,8 @@ public class EditAttractionActivity extends BaseActivity
         this.textInputEditTextUntrackedRideCount = findViewById(R.id.textInputEditTextCreateOrEditAttraction_UntrackedRideCount);
 
 
-        this.pickIconBlack = DrawableProvider.getColoredDrawableMutation(R.drawable.ic_baseline_arrow_drop_down, R.color.black);
-        this.pickIconGrey = DrawableProvider.getColoredDrawableMutation(R.drawable.ic_baseline_arrow_drop_down, R.color.grey);
+        this.pickIconBlack = DrawableProvider.getColoredDrawableMutation(R.drawable.arrow_drop_down, R.color.black);
+        this.pickIconGrey = DrawableProvider.getColoredDrawableMutation(R.drawable.arrow_drop_down, R.color.grey);
 
 
         this.viewModel = new ViewModelProvider(this).get(EditAttractionViewModel.class);
@@ -142,7 +142,7 @@ public class EditAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
         {
@@ -239,7 +239,7 @@ public class EditAttractionActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override

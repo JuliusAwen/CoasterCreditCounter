@@ -110,15 +110,17 @@ public final class Log
 
     public static void wrap(LogLevel logLevel, String message, Character wrapChar, boolean includeCallerTag)
     {
-        String wrapper = Log.getLogDivider(wrapChar, 32);
-
+        String wrapper;
         if(includeCallerTag)
         {
-            Log.print(logLevel, String.format("\n%s\n%s%s\n%s", wrapper, Log.fetchCallerTag(), message, wrapper), !includeCallerTag);
+            String callerTag = Log.fetchCallerTag();
+            wrapper = Log.getLogDivider(wrapChar, callerTag.length() + 3 + message.length());
+            Log.print(logLevel, String.format(" \n%s\n %s%s\n%s", wrapper, callerTag, message, wrapper), !includeCallerTag);
         }
         else
         {
-            Log.print(logLevel, String.format("\n%s\n%s\n%s", wrapper, message, wrapper), !includeCallerTag);
+            wrapper = Log.getLogDivider(wrapChar, message.length() + 2);
+            Log.print(logLevel, String.format(" \n%s\n%s\n%s", wrapper, message, wrapper), !includeCallerTag);
         }
     }
 
@@ -170,13 +172,17 @@ public final class Log
 
     private static String getLogDivider(Character frameChar, int lenght)
     {
-        StringBuilder decorativeBorder = new StringBuilder();
-
-        for(int i = 0; i < lenght; i++)
+        if(lenght > 150)
         {
-            decorativeBorder.append(frameChar);
+            lenght = 150;
         }
 
-        return decorativeBorder.toString();
+        StringBuilder logDivider = new StringBuilder();
+        for(int i = 0; i < lenght; i++)
+        {
+            logDivider.append(frameChar);
+        }
+
+        return logDivider.toString();
     }
 }

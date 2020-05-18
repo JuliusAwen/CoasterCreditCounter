@@ -62,40 +62,33 @@ public class Persistence
         return this.databaseWrapper;
     }
 
-    public boolean loadContent(Content content)
+    public boolean tryLoadContent(Content content)
     {
-        Log.i("loading content...");
         return this.databaseWrapper.loadContent(content);
     }
 
-    public boolean saveContent(Content content)
+    public boolean trySaveContent(Content content)
     {
-        Log.i("saving content...");
         return this.databaseWrapper.saveContent(content);
     }
 
-    public boolean loadPreferences(Preferences preferences)
+    public boolean tryLoadPreferences(Preferences preferences)
     {
-        Log.i("loading preferences...");
-
-        return this.jsonHandler.loadPreferences(preferences);
+        return this.jsonHandler.tryLoadPreferences(preferences);
     }
 
-    public boolean savePreferences(Preferences preferences)
+    public boolean trySavePreferences(Preferences preferences)
     {
-        Log.i("saving preferences...");
         return this.jsonHandler.savePreferences(preferences);
     }
 
     public boolean validateImportFileUri(Uri uri, String importFileName)
     {
-        Log.i("validating...");
         return this.jsonHandler.validateImportFileUri(uri, importFileName);
     }
 
-    public boolean importContent(Uri uri, String exportFileName)
+    public boolean tryImportContent(Uri uri, String exportFileName)
     {
-        Log.i("importing content via JsonHandler...");
         return this.jsonHandler.importContent(App.content, uri, exportFileName);
     }
 
@@ -104,13 +97,12 @@ public class Persistence
         return this.jsonHandler.exportFileExists(exportFileDocumentTreeUri, exportFileName);
     }
 
-    public boolean exportContent(Uri exportFileDocumentTreeUri, String exportFileName)
+    public boolean tryExportContent(Uri exportFileDocumentTreeUri, String exportFileName)
     {
-        Log.i("exporting content via JsonHandler...");
         return this.jsonHandler.exportContent(App.content, exportFileDocumentTreeUri, exportFileName);
     }
 
-    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
+    public boolean trySynchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
         int size;
 
@@ -122,31 +114,31 @@ public class Persistence
         elementsToCreate.removeAll(elementsToDelete);
         if(elementsToCreate.size() != size)
         {
-            Log.d(String.format(Locale.getDefault(), "removed [%d] elements from ElementsToCreate since they will be deleted anyway", size - elementsToCreate.size()));
+            Log.d(String.format(Locale.getDefault(), "removed [%d] Elements from ElementsToCreate since they will be deleted anyway", size - elementsToCreate.size()));
         }
 
         size = elementsToUpdate.size();
         elementsToUpdate.removeAll(elementsToDelete);
         if(elementsToUpdate.size() != size)
         {
-            Log.d(String.format(Locale.getDefault(), "removed [%d] elements from ElementsToUpdate since they will be deleted anyway", size - elementsToUpdate.size()));
+            Log.d(String.format(Locale.getDefault(), "removed [%d] Elements from ElementsToUpdate since they will be deleted anyway", size - elementsToUpdate.size()));
         }
 
         size = elementsToUpdate.size();
         elementsToUpdate.removeAll(elementsToCreate);
         if(elementsToUpdate.size() != size)
         {
-            Log.d(String.format(Locale.getDefault(), "removed [%d] elements from ElementsToUpdate since they will be created in updated state anyway", size - elementsToUpdate.size()));
+            Log.d(String.format(Locale.getDefault(), "removed [%d] Elements from ElementsToUpdate since they will be created in updated state anyway", size - elementsToUpdate.size()));
         }
 
         size = elementsToDelete.size();
         elementsToDelete.removeAll(elementsToCreateAndToDelete);
         if(elementsToDelete.size() != size)
         {
-            Log.d(String.format(Locale.getDefault(), "removed [%d] elements from ElementsToDelete since they won't be created anyway", size - elementsToDelete.size()));
+            Log.d(String.format(Locale.getDefault(), "removed [%d] Elements from ElementsToDelete since they won't be created anyway", size - elementsToDelete.size()));
         }
 
-        Log.i(String.format(Locale.getDefault(), "creating [%d], updating [%d], deleting [%d] elements...", elementsToCreate.size(), elementsToUpdate.size(), elementsToDelete.size()));
+        Log.i(String.format(Locale.getDefault(), "creating [%d], updating [%d], deleting [%d] Elements...", elementsToCreate.size(), elementsToUpdate.size(), elementsToDelete.size()));
 
 
         for(IElement element : elementsToCreate)

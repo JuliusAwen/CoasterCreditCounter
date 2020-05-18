@@ -51,13 +51,13 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -95,9 +95,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.viewModel.elements = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
             this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
-            if(this.viewModel.contentRecyclerViewAdapter == null)
+            if(this.viewModel.oldContentRecyclerViewAdapter == null)
             {
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+                this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
                         this.viewModel.elements,
                         this.getPropertyType(),
                         false)
@@ -106,7 +106,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
         else //ManageMode
         {
-            if(this.viewModel.contentRecyclerViewAdapter == null)
+            if(this.viewModel.oldContentRecyclerViewAdapter == null)
             {
                 this.viewModel.elements = App.content.getContentOfType(this.getPropertyType());
                 for(IElement element : this.viewModel.elements)
@@ -117,7 +117,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
                 childTypesToExpand.add(Model.class); // Models can be grouped - so the GroupHeaders<Model> must be expandable
                 childTypesToExpand.add(Attraction.class);
-                this.viewModel.contentRecyclerViewAdapter = ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.elements, childTypesToExpand)
+                this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.elements, childTypesToExpand)
                         .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD)
                         .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
 
@@ -126,7 +126,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     case CREDIT_TYPE:
                     case STATUS:
                     {
-                        this.viewModel.contentRecyclerViewAdapter
+                        this.viewModel.oldContentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
@@ -136,7 +136,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case CATEGORY:
                     {
-                        this.viewModel.contentRecyclerViewAdapter
+                        this.viewModel.oldContentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
@@ -145,7 +145,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                     case MANUFACTURER:
                     {
-                        this.viewModel.contentRecyclerViewAdapter
+                        this.viewModel.oldContentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                                 .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
@@ -155,17 +155,17 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
         }
 
-        if(this.viewModel.contentRecyclerViewAdapter != null)
+        if(this.viewModel.oldContentRecyclerViewAdapter != null)
         {
-            this.viewModel.contentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
+            this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.contentRecyclerViewAdapter);
+            recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
         }
 
         if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
         {
-            ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.contentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
+            OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.oldContentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -184,7 +184,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode != RESULT_OK)
         {
@@ -316,9 +316,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         return super.onKeyDown(keyCode, event);
     }
 
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewAdapterOnClickListener()
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewAdapterOnClickListener()
     {
-        return new RecyclerOnClickListener.OnClickListener()
+        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -334,7 +334,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 else if(element.hasChildren())
                 {
-                    viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
+                    viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
                 }
                 else if(element.isAttraction())
                 {
@@ -585,7 +585,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_delete),
                         alertDialogMessage,
                         getString(R.string.text_accept),
@@ -603,7 +603,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 String alterDialogMessage = getString(R.string.alert_dialog_message_confirm_set_as_default, viewModel.longClickedElement.getName());
 
                 AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_set_as_default),
                         alterDialogMessage,
                         getString(R.string.text_accept),
@@ -729,7 +729,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_add, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.add, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -765,7 +765,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private ContentRecyclerViewAdapter updateContentRecyclerView(boolean resetContent)
+    private OLD_ContentRecyclerViewAdapter updateContentRecyclerView(boolean resetContent)
     {
         if(resetContent)
         {
@@ -778,16 +778,16 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
             }
             this.viewModel.elements = elements;
-            this.viewModel.contentRecyclerViewAdapter.setItems(this.viewModel.elements);
+            this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.elements);
             invalidateOptionsMenu();
         }
         else
         {
             Log.d("notifying data set changes...");
-            this.viewModel.contentRecyclerViewAdapter.notifyDataSetChanged();
+            this.viewModel.oldContentRecyclerViewAdapter.notifyDataSetChanged();
         }
 
-        return this.viewModel.contentRecyclerViewAdapter;
+        return this.viewModel.oldContentRecyclerViewAdapter;
     }
 
     private Class<? extends IProperty> getPropertyType()

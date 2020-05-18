@@ -24,8 +24,8 @@ public enum ButtonFunction
         }
         else
         {
-            Log.e(Constants.LOG_TAG, String.format("ButtonFunction.getValue:: ordinal [%s] out of bounds (Enum has [%s] values) - returning NONE", ordinal, values().length));
-            return NONE;
+            Log.e(Constants.LOG_TAG, String.format("ordinal [%s] out of bounds (Enum has [%s] values) - returning [%s]", ordinal, values().length, values()[0]));
+            return values()[0];
         }
     }
 }

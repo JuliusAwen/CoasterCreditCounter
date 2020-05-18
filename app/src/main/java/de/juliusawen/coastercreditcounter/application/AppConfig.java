@@ -53,16 +53,17 @@ public class AppConfig
     public String toString()
     {
         return String.format(
+
                 "App Configuration:\n" +
-                        "DebugBuild [%S]\n" +
-                        "Log details on startup [%S]\n" +
-                        "DatabaseWrapper [%s]\n" +
-                        "ContentExport file name [%s]\n" +
-                        "Preferences file name [%s]\n" +
-                        "Reset To default Content on startup [%S]\n" +
-                        "Reset to default Preferences on startup [%S]\n" +
-                        "Always import from DatabaseMock [%S]\n" +
-                        "Validate content [%S]",
+                        "  DebugBuild [%S]\n" +
+                        "  Log details on startup [%S]\n" +
+                        "  DatabaseWrapper [%s]\n" +
+                        "  ContentExport file name [%s]\n" +
+                        "  Preferences file name [%s]\n" +
+                        "  Reset To default Content on startup [%S]\n" +
+                        "  Reset to default Preferences on startup [%S]\n" +
+                        "  Always import from DatabaseMock [%S]\n" +
+                        "  Validate content [%S]",
 
                 this.isDebugBuild(),
                 this.logDetailsOnStartup,

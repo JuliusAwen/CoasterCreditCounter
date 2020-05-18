@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public class GroupHeaderProvider
+public class OLD_GroupHeaderProvider
 {
     private final Map<UUID, IGroupHeader> groupHeadersByGroupElementUuid = new HashMap<>();
     private final List<SpecialGroupHeader> specialGroupHeaders = new ArrayList<>();
@@ -77,7 +77,7 @@ public class GroupHeaderProvider
 
     private List<IGroupHeader> createGroupHeaders(List<IElement> elements, GroupType groupType)
     {
-        Log.d(String.format(Locale.getDefault(), "initalizing GroupHeaders for [%d] elements...", elements.size()));
+        Log.d(String.format(Locale.getDefault(), "initalizing GroupHeaders for [%d] Elements...", elements.size()));
 
         List<IGroupHeader> groupedElements = new ArrayList<>();
         for(IElement element : elements)
@@ -317,7 +317,7 @@ public class GroupHeaderProvider
         }
         else
         {
-            Log.v("not sorted - list contains less than two elements");
+            Log.v("not sorted - list contains less than two Elements");
             return groupHeaders;
         }
     }
@@ -328,11 +328,11 @@ public class GroupHeaderProvider
 
         if(visits.isEmpty())
         {
-            Log.v("no elements to group");
+            Log.v("no Elements to group");
             return new LinkedList<IElement>(visits);
         }
 
-        Log.d(String.format(Locale.getDefault(), "adding SpecialGroupHeaders to [%d] elements...", visits.size()));
+        Log.d(String.format(Locale.getDefault(), "adding SpecialGroupHeaders to [%d] Visits...", visits.size()));
 
         for(SpecialGroupHeader specialGroupHeader : this.specialGroupHeaders)
         {

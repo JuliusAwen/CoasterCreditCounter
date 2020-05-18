@@ -7,12 +7,12 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
 
 public class PickElementsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
-    public ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
     public List<IElement> elementsToPickFrom;
 
     public boolean isSinglePick;
@@ -25,9 +25,9 @@ public class PickElementsViewModel extends ViewModel implements IOptionsMenuButl
     }
 
     @Override
-    public ContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    public OLD_ContentRecyclerViewAdapter getOldContentRecyclerViewAdapter()
     {
-        return this.contentRecyclerViewAdapter;
+        return this.oldContentRecyclerViewAdapter;
     }
 
     @Override

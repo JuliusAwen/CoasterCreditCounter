@@ -450,7 +450,7 @@ public abstract class SortTool
             }
         }
 
-        Log.d(String.format("sorted [%s] elements [%s] of type [%s] [%s]", elements.size(), sortType, elements.get(0).getClass().getSimpleName(), sortOrder));
+        Log.d(String.format("sorted [%s] Elements [%s] of type [%s] [%s]", elements.size(), sortType, elements.get(0).getClass().getSimpleName(), sortOrder));
         return SortTool.sortDefaultPropertyToTopAccordingToPreferences(sortedElements);
     }
 
@@ -471,7 +471,7 @@ public abstract class SortTool
             {
                 if(element.isProperty() && ((IProperty)element).isDefault())
                 {
-                    Log.d( String.format("SortTool.sortDefaultPropertyToTopAccordingToPreferences:: sorting [%s] to top of list", element));
+                    Log.d( String.format("sorting [%s] to top of list", element));
                     defaultProperty = element;
                     break;
                 }
@@ -491,7 +491,7 @@ public abstract class SortTool
     {
         if(elementsToSort.size() > 1)
         {
-            Log.v(String.format(Locale.getDefault(), "sorted [%d] elements based on comparison list containing [%d] elements", elementsToSort.size(), comparisonList.size()));
+            Log.v(String.format(Locale.getDefault(), "sorted [%d] Elements based on comparison list containing [%d] elements", elementsToSort.size(), comparisonList.size()));
             List<IElement> sortedElements = new ArrayList<>();
             for(IElement element : comparisonList)
             {

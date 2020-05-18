@@ -66,7 +66,6 @@ public final class DatabaseMock implements IDatabaseWrapper
     public boolean loadContent(Content content)
     {
         Log.i("mocking Parks and Visits...");
-
         Stopwatch stopwatch = new Stopwatch(true);
 
         this.mockPhantasialand();

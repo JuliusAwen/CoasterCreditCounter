@@ -41,16 +41,16 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.RecyclerOnClickListener;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD_ContentRecyclerViewOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowParkSharedViewModel viewModel;
-    private ContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    private OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
     private ShowVisitsFragmentInteraction fragmentInteraction;
 
     public static ShowVisitsFragment newInstance()
@@ -66,7 +66,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
 
-        this.contentRecyclerViewAdapter = this.createContentRecyclerAdapter();
+        this.oldContentRecyclerViewAdapter = this.createContentRecyclerAdapter();
 
         this.setHasOptionsMenu(true);
     }
@@ -82,7 +82,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.oldContentRecyclerViewAdapter);
     }
 
     @Override
@@ -90,13 +90,13 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         super.onResume();
         this.viewModel.requestCode = RequestCode.SHOW_VISITS;
-        this.viewModel.contentRecyclerViewAdapter = this.contentRecyclerViewAdapter;
+        this.viewModel.oldContentRecyclerViewAdapter = this.oldContentRecyclerViewAdapter;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(String.format("requestCode[%s], resultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
@@ -137,17 +137,17 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         }
     }
 
-    private ContentRecyclerViewAdapter createContentRecyclerAdapter()
+    private OLD_ContentRecyclerViewAdapter createContentRecyclerAdapter()
     {
-        return ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.park.getChildrenOfType(Visit.class), Visit.class)
+        return OLD_ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.park.getChildrenOfType(Visit.class), Visit.class)
                 .setTypefaceForContentType(SpecialGroupHeader.class, Typeface.BOLD)
                 .groupItems(GroupType.YEAR)
                 .setOnClickListener(this.getContentRecyclerViewOnClickListener());
     }
 
-    private RecyclerOnClickListener.OnClickListener getContentRecyclerViewOnClickListener()
+    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewOnClickListener()
     {
-        return new RecyclerOnClickListener.OnClickListener()
+        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -159,8 +159,8 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                 }
                 else if(element.isGroupHeader())
                 {
-                    contentRecyclerViewAdapter.toggleExpansion(element);
-                    if(contentRecyclerViewAdapter.isAllExpanded() || contentRecyclerViewAdapter.isAllCollapsed())
+                    oldContentRecyclerViewAdapter.toggleExpansion(element);
+                    if(oldContentRecyclerViewAdapter.isAllExpanded() || oldContentRecyclerViewAdapter.isAllCollapsed())
                     {
                         getActivity().invalidateOptionsMenu();
                     }
@@ -194,7 +194,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         AlertDialogFragment alertDialogFragmentDelete =
                 AlertDialogFragment.newInstance(
-                        R.drawable.ic_baseline_warning,
+                        R.drawable.warning,
                         getString(R.string.alert_dialog_title_delete),
                         getString(R.string.alert_dialog_message_confirm_delete_with_children, viewModel.longClickedElement.getName()),
                         getString(R.string.text_accept),
@@ -304,7 +304,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void updateContentRecyclerView()
     {
         Log.i("updating RecyclerView...");
-        this.contentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
+        this.oldContentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
     }
 
     public interface ShowVisitsFragmentInteraction

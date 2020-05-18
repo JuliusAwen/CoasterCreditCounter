@@ -143,7 +143,7 @@ public class EditSimpleElementActivity extends BaseActivity
 
     private void decorateFloatingActionButton()
     {
-        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.ic_baseline_check, R.color.white));
+        super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -211,7 +211,7 @@ public class EditSimpleElementActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

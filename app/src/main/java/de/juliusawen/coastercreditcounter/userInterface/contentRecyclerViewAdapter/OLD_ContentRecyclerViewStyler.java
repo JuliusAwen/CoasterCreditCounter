@@ -14,11 +14,11 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
-public abstract class ContentRecyclerViewStyler
+public abstract class OLD_ContentRecyclerViewStyler
 {
-    public static void groupElementsAndSetDetailModes(ContentRecyclerViewAdapter contentRecyclerViewAdapter, RequestCode requestCode, GroupType groupType)
+    public static void groupElementsAndSetDetailModes(OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter, RequestCode requestCode, GroupType groupType)
     {
-        contentRecyclerViewAdapter
+        oldContentRecyclerViewAdapter
                 .clearTypefacesForContentType()
                 .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .clearTypefacesForDetailType()
@@ -33,7 +33,7 @@ public abstract class ContentRecyclerViewStyler
                 switch(groupType)
                 {
                     case NONE:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                                 .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                                 .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                                 .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -42,7 +42,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case CREDIT_TYPE:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setTypefaceForContentType(CreditType.class, Typeface.BOLD)
@@ -50,7 +50,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case CATEGORY:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setTypefaceForContentType(Category.class, Typeface.BOLD)
@@ -58,7 +58,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case MANUFACTURER:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setTypefaceForContentType(Manufacturer.class, Typeface.BOLD)
@@ -66,7 +66,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
                 }
 
-                contentRecyclerViewAdapter
+                oldContentRecyclerViewAdapter
                     .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                     .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
                 break;
@@ -76,7 +76,7 @@ public abstract class ContentRecyclerViewStyler
             {
                 if(groupType == GroupType.CATEGORY)
                 {
-                    contentRecyclerViewAdapter
+                    oldContentRecyclerViewAdapter
                             .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
@@ -93,7 +93,7 @@ public abstract class ContentRecyclerViewStyler
                 switch(groupType)
                 {
                     case NONE:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -104,7 +104,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case PARK:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -115,7 +115,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case CREDIT_TYPE:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER ,DetailDisplayMode.ABOVE)
@@ -126,7 +126,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case CATEGORY:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
@@ -137,7 +137,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case MANUFACTURER:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
@@ -148,7 +148,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case MODEL:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.ABOVE)
@@ -159,7 +159,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
 
                     case STATUS:
-                        contentRecyclerViewAdapter
+                        oldContentRecyclerViewAdapter
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                             .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
@@ -170,7 +170,7 @@ public abstract class ContentRecyclerViewStyler
                         break;
                 }
 
-                contentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+                oldContentRecyclerViewAdapter.setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
             }
         }
     }
