@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/linearLayoutRecyclerViewItem"
+        android:id="@+id/linearLayoutRecyclerView"
         style="@style/StandardBarLayout"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -24,14 +24,14 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/imageViewRecyclerViewItem"
+                android:id="@+id/imageViewRecyclerView"
                 style="@style/ExpandToggleImageHolder"
                 android:src="@drawable/error_outline"
                 android:contentDescription="@string/description_image_view"
                 android:visibility="invisible"/>
 
             <LinearLayout
-                android:id="@+id/linearLayoutRecyclerViewItem_Text"
+                android:id="@+id/linearLayoutRecyclerView_Text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -40,25 +40,27 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewRecyclerViewItem_DetailAbove"
+                    android:id="@+id/textViewRecyclerView_DetailAbove"
                     style="@style/DetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4sp"
-                    android:gravity="start"/>
+                    android:gravity="start"
+                    android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/textViewRecyclerViewItem_Name"
+                    android:id="@+id/textViewRecyclerView_Name"
                     style="@style/StandardTextView"
                     android:gravity="start"/>
 
                 <TextView
-                    android:id="@+id/textViewRecyclerViewItem_DetailBelow"
+                    android:id="@+id/textViewRecyclerView_DetailBelow"
                     style="@style/DetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4sp"
-                    android:gravity="start"/>
+                    android:gravity="start"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

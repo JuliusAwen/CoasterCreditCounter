@@ -13,8 +13,16 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ICountableRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableExpandableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IExpandableContentRecyclerViewAdapter;
 
 public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAdapter
+        implements IContentRecyclerViewAdapter, IDecorableContentRecyclerViewAdapter, IExpandableContentRecyclerViewAdapter, ICountableRecyclerViewAdapter,
+        IDecorableExpandableContentRecyclerViewAdapter
+
 {
     protected RecyclerView recyclerView;
 
@@ -25,8 +33,8 @@ public class ContentRecyclerViewAdapter extends ExpandableContentRecyclerViewAda
         Log.wrap(LogLevel.DEBUG,
                 String.format("Details:\n\n%s\n\n%s\n\n%s",
                         String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
-                        this.configuration,
-                        this.configuration.getDecoration()),
+                        configuration,
+                        configuration.getDecoration()),
                 '=', false);
         Log.wrap(LogLevel.INFO, "instantiated", '#', true);
     }

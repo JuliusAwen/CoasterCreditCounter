@@ -11,23 +11,24 @@ import de.juliusawen.coastercreditcounter.R;
 
 class ViewHolderElement extends RecyclerView.ViewHolder
 {
-    final LinearLayout linearLayoutElement;
-    final ImageView imageViewExpandToggle;
+    final LinearLayout linearLayout;
     final TextView textViewDetailAbove;
     final TextView textViewName;
     final TextView textViewDetailBelow;
+    final ImageView imageViewExpandToggle;
+
     final TextView textViewPrettyPrint;
 
 
     ViewHolderElement(View view)
     {
         super(view);
-        this.linearLayoutElement = view.findViewById(R.id.linearLayoutRecyclerViewItem);
-        this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_DetailAbove);
-        this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
-        this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_DetailBelow);
-        this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
+        this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerView);
+        this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerView_DetailAbove);
+        this.textViewName = view.findViewById(R.id.textViewRecyclerView_Name);
+        this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerView_DetailBelow);
+        this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerView);
 
-        this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
+        this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
     }
 }

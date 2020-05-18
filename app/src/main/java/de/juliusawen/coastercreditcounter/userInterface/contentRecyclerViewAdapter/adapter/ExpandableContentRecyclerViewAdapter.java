@@ -18,12 +18,10 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableExpandableContentRecyclerViewAdapter;
 
-abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecyclerViewAdapter implements IDecorableExpandableContentRecyclerViewAdapter
+abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecyclerViewAdapter
 {
-    private boolean isExpandable;
-//    private boolean useDedicatedExpansionOnClickListener;
+    private final boolean isExpandable;
 
     private final HashMap<IElement, Integer> generationByElement = new HashMap<>();
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
@@ -32,9 +30,9 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
     ExpandableContentRecyclerViewAdapter(List<IElement> content, ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(content, configuration);
+
         this.isExpandable = configuration.isExpandable;
-//        this.useDedicatedExpansionOnClickListener = configuration.useDedicatedExpansionToggleOnClickListener;
-        this.relevantChildTypesInSortOrder.addAll(configuration.getRelevantChildTypesInSortOrder());
+        this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
 
         this.content = this.initializeItems(this.content, 0);
     }
@@ -67,10 +65,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         if(this.isExpandable)
         {
             int generation = this.getGeneration(element);
-
             Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", element, position, generation));
-
-            viewHolder.imageViewExpandToggle.setTag(element);
 
             if(!this.getRelevantChildren(element).isEmpty())
             {
@@ -90,30 +85,27 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
                 viewHolder.imageViewExpandToggle.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.error_outline, R.color.default_color));
             }
 
-//            if(this.useDedicatedExpansionOnClickListener)
-//            {
-//                viewHolder.imageViewExpandToggle.setOnClickListener(this.getDedicatedExpansionToggleOnClickListener());
-//            }
-
             super.setPadding(generation, viewHolder);
         }
 
         return element;
     }
 
-    private View.OnClickListener getDedicatedExpansionToggleOnClickListener()
+    @Override
+    protected IElement handleOnClick(View view, boolean performExternalClick)
     {
-        return new View.OnClickListener()
+        IElement element = super.handleOnClick(view, performExternalClick);
+
+        if(this.isExpandable)
         {
-            @Override
-            public void onClick(View view)
-            {
-                toggleExpansion((IElement) view.getTag());
-            }
-        };
+            this.toggleExpansion(element);
+        }
+
+        return element;
     }
 
-    private void toggleExpansion(IElement element)
+
+    public void toggleExpansion(IElement element)
     {
         if(!this.relevantChildTypesInSortOrder.isEmpty())
         {
@@ -130,7 +122,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         }
     }
 
-    private void expandAll()
+    public void expandAll()
     {
         if(!this.content.isEmpty() && !this.isAllExpanded())
         {
@@ -173,7 +165,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         }
     }
 
-    private void expandElement(IElement element, boolean scrollToElement)
+    public void expandElement(IElement element, boolean scrollToElement)
     {
         if(!this.expandedElements.contains(element))
         {
@@ -191,7 +183,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
                 {
                     this.generationByElement.put(child, generation);
 
-                    index ++;
+                    index++;
                     this.content.add(index, child);
                     super.notifyItemInserted(index);
 
@@ -209,6 +201,10 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
                     ((LinearLayoutManager) this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
                 }
             }
+        }
+        else
+        {
+            Log.d(String.format("element [%s] is either already expanded or unknown", element));
         }
     }
 
@@ -230,12 +226,13 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         return this.recyclerView.getLayoutManager();
     }
 
-    private boolean isAllExpanded()
+    public boolean isAllExpanded()
     {
         for(IElement element : this.content)
         {
             for(IElement relevantChild : this.getRelevantChildren(element))
             {
+                //Todo: test with deep location --> getRelevantAncestors needed?
                 if(relevantChild.isLocation())
                 {
                     List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
@@ -260,7 +257,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         return true;
     }
 
-    private void collapseAll()
+    public void collapseAll()
     {
         if(!this.content.isEmpty() && !this.isAllCollapsed())
         {
@@ -281,7 +278,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         }
     }
 
-    private void collapseElement(IElement element, boolean scrollToElement)
+    public void collapseElement(IElement element, boolean scrollToElement)
     {
         if(this.expandedElements.contains(element))
         {
@@ -317,24 +314,6 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         }
     }
 
-    private boolean isAllCollapsed()
-    {
-        for(IElement element : this.content)
-        {
-            List<IElement> relevantChildren = this.getRelevantChildren(element);
-            int relevantChildCount = relevantChildren.size();
-
-            relevantChildren.removeAll(this.content);
-
-            if(relevantChildCount != relevantChildren.size())
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private ArrayList<IElement> getRelevantChildren(IElement element)
     {
         ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
@@ -351,6 +330,30 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
             }
         }
 
+        //  ---GetRelevantAncestors?---
+        //        List<IElement> children;
+        //        do
+        //        {
+        //            children = element.getChildren();
+        //            for(IElement child : children)
+        //            {
+        //                for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
+        //                {
+        //                    if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
+        //                    {
+        //                        distinctRelevantChildren.add(child);
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        while(!children.isEmpty());
+
         return distinctRelevantChildren;
+    }
+
+    public boolean isAllCollapsed()
+    {
+        return this.expandedElements.isEmpty();
     }
 }

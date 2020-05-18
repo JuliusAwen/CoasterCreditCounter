@@ -5,8 +5,10 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -14,23 +16,52 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements IContentRecyclerViewAdapter
+abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     protected RecyclerView recyclerView;
 
     protected List<IElement> content;
-    protected ContentRecyclerViewAdapterConfiguration configuration;
 
-    protected ContentRecyclerViewOnClickListener.CustomItemOnClickListener customItemOnClickListener;
+    private final View.OnClickListener internalOnClickListener;
+    private final View.OnLongClickListener internalOnLongClickListener;
+
+    private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
+    private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
 
     PlainContentRecyclerViewAdapter(List<IElement> content, ContentRecyclerViewAdapterConfiguration configuration)
     {
         this.content = content;
-        this.configuration = configuration;
-        this.customItemOnClickListener = configuration.getCustomItemOnClickListener();
+        this.internalOnClickListener = this.getInternalOnClickListener();
+        this.internalOnLongClickListener = this.getInternalOnLongClickListener();
+        this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
+        this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
+
         Log.v("instantiated");
+    }
+
+    private View.OnClickListener getInternalOnClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnClick(view, true);
+            }
+        };
+    }
+
+    private View.OnLongClickListener getInternalOnLongClickListener()
+    {
+        return new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return handleOnLongClick(view, true);
+            }
+        };
     }
 
     @Override
@@ -38,14 +69,6 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     {
         this.recyclerView = recyclerView;
         super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView)
-    {
-        this.recyclerView = null;
-        this.content = null;
-        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override
@@ -60,9 +83,11 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
         this.setPadding(0, viewHolder);
-        this.setCustomOnClickListeners(viewHolder);
+        this.setOnClickListeners(viewHolder);
+
         viewHolder.itemView.setTag(element);
-        viewHolder.linearLayoutElement.setVisibility(View.VISIBLE);
+        viewHolder.textViewName.setText(element.getName());
+        viewHolder.linearLayout.setVisibility(View.VISIBLE);
 
         return element;
     }
@@ -73,21 +98,110 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 / App.getContext().getResources().getDisplayMetrics().density))
                 * generation;
 
-        viewHolder.linearLayoutElement.setPadding(padding, 0, padding, 0);
+        viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
-    private void setCustomOnClickListeners(ViewHolderElement viewHolderElement)
+    private void setOnClickListeners(ViewHolderElement viewHolderElement)
     {
-        if(this.customItemOnClickListener != null && !viewHolderElement.itemView.hasOnClickListeners())
-        {
-            viewHolderElement.itemView.setOnClickListener(new ContentRecyclerViewOnClickListener(this.customItemOnClickListener));
-            viewHolderElement.itemView.setOnLongClickListener(new ContentRecyclerViewOnClickListener(this.customItemOnClickListener));
-        }
+        viewHolderElement.itemView.setOnClickListener(this.internalOnClickListener);
+        viewHolderElement.itemView.setOnLongClickListener(this.internalOnLongClickListener);
     }
 
-    protected void notifyElementChanged(IElement element)
+    protected IElement handleOnClick(View view, boolean performExternalClick)
+    {
+        IElement element = this.fetchElement(view);
+
+        if(performExternalClick)
+        {
+            View.OnClickListener externalOnClickListener = this.fetchExternalOnClickListener(element);
+            if(externalOnClickListener != null)
+            {
+                externalOnClickListener.onClick(view);
+            }
+        }
+
+        return element;
+    }
+
+    private View.OnClickListener fetchExternalOnClickListener(IElement element)
+    {
+        if(this.externalOnClickListenersByType.containsKey(element.getClass()))
+        {
+            return this.externalOnClickListenersByType.get(element.getClass());
+        }
+        else
+        {
+            for(Class<? extends IElement> type : this.externalOnClickListenersByType.keySet())
+            {
+                if(type.isAssignableFrom(element.getClass()))
+                {
+                    return this.externalOnClickListenersByType.get(type);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected boolean handleOnLongClick(View view, boolean performExternalLongClick)
+    {
+        IElement element = this.fetchElement(view);
+        if(performExternalLongClick)
+        {
+            View.OnLongClickListener externalOnLongClickListener = fetchExternalOnLongClickListener(element);
+            if(externalOnLongClickListener != null)
+            {
+                return externalOnLongClickListener.onLongClick(view);
+            }
+        }
+
+        return false;
+    }
+
+    private View.OnLongClickListener fetchExternalOnLongClickListener(IElement element)
+    {
+        if(this.externalOnLongClickListenersByType.containsKey(element.getClass()))
+        {
+            return this.externalOnLongClickListenersByType.get(element.getClass());
+        }
+        else
+        {
+            for(Class<? extends IElement> type : this.externalOnLongClickListenersByType.keySet())
+            {
+                if(type.isAssignableFrom(element.getClass()))
+                {
+                    return this.externalOnLongClickListenersByType.get(type);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected IElement fetchElement(View view)
+    {
+        Object tag = view.getTag();
+        if(IElement.class.isAssignableFrom(tag.getClass()))
+        {
+            return (IElement) tag;
+        }
+
+        throw new IllegalArgumentException(String.format("View tag object's type [%s] is not assignable from IElement", tag.getClass().getSimpleName()));
+    }
+
+    public void notifyElementInserted(IElement element)
+    {
+        super.notifyItemInserted(this.content.indexOf(element));
+    }
+
+    public void notifyElementChanged(IElement element)
     {
         super.notifyItemChanged(this.content.indexOf(element));
+    }
+
+    public void notifyElementRemoved(IElement element)
+    {
+        super.notifyItemRemoved(this.content.indexOf(element));
     }
 
     private void swapItems(IElement item1, IElement item2)

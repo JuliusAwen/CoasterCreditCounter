@@ -1,26 +1,30 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
 
+import android.view.View;
+
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class ContentRecyclerViewAdapterConfiguration
 {
-    private ContentRecyclerViewOnClickListener.CustomItemOnClickListener customItemOnClickListener;
-
     public boolean isDecorable = false;
     public boolean isExpandable = false;
     public boolean isSelectable = false;
     public boolean isCountable = false;
-    public boolean useDedicatedExpansionToggleOnClickListener = false;
 
     private GroupType groupType = GroupType.NONE;
 
     private ContentRecyclerViewDecoration decoration;
 
-    private LinkedHashSet<Class<? extends IElement>> relevantChildTypesInSortOrder;
+    private final LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new LinkedHashSet<>();
+
+    private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
+    private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
     public ContentRecyclerViewAdapterConfiguration(ContentRecyclerViewDecoration decoration)
     {
@@ -39,66 +43,48 @@ public class ContentRecyclerViewAdapterConfiguration
         Log.v(String.format("Decoration set:\n%s", decoration));
     }
 
-    public ContentRecyclerViewOnClickListener.CustomItemOnClickListener getCustomItemOnClickListener()
+    public Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
     {
-        return this.customItemOnClickListener;
+        return this.onClickListenersByType;
     }
 
-    public void setCustomItemOnClickListener(ContentRecyclerViewOnClickListener.CustomItemOnClickListener customItemOnClickListener)
+    public Map<Class<? extends IElement>, View.OnLongClickListener> getOnLongClickListenersByType()
     {
-        this.customItemOnClickListener = customItemOnClickListener;
-        Log.v("set");
+        return this.onLongClickListenersByType;
     }
 
-    public void setRelevantChildTypesInSortOrder(LinkedHashSet<Class<? extends IElement>> relevantChildTypesInSortOrder)
+    public void addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
-        this.relevantChildTypesInSortOrder = relevantChildTypesInSortOrder;
+        this.onClickListenersByType.put(type, onClickListener);
+        Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
-    public LinkedHashSet<Class<? extends IElement>> getRelevantChildTypesInSortOrder()
+    public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
-        return this.relevantChildTypesInSortOrder;
+        this.onLongClickListenersByType.put(type, onLongClickListener);
+        Log.v(String.format("for [%s]", type.getSimpleName()));
+    }
+
+    public void addchildTypesToExpandInSortOrder(LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder)
+    {
+        this.childTypesToExpandInSortOrder.addAll(childTypesToExpandInSortOrder);
+        Log.v(String.format(Locale.getDefault(), "added [%d] Elements", childTypesToExpandInSortOrder.size()));
+    }
+
+    public void addChildTypeToExpand(Class<? extends IElement> childTypeToExpand)
+    {
+        this.childTypesToExpandInSortOrder.add(childTypeToExpand);
+        Log.v(String.format("added [%s]", childTypeToExpand));
+    }
+
+    public LinkedHashSet<Class<? extends IElement>> getChildTypesToExpandInSortOrder()
+    {
+        return this.childTypesToExpandInSortOrder;
     }
 
     public boolean validate(boolean tryFix)
     {
         Log.v("validating...");
-
-        if(this.isSelectable && this.getCustomItemOnClickListener() == null)
-        {
-            Log.e("CustomItemOnClickListener cannot be NULL when isSelectable");
-            if(!tryFix)
-            {
-                return false;
-            }
-
-            this.isSelectable = false;
-            Log.w("changed isSelectable to FALSE");
-        }
-
-        if(this.useDedicatedExpansionToggleOnClickListener && !this.isExpandable)
-        {
-            Log.e("isExpandable cannot be FALSE when useDedicatedExpansionOnClickListener");
-            if(!tryFix)
-            {
-                return false;
-            }
-
-            this.useDedicatedExpansionToggleOnClickListener = false;
-            Log.w("changed useDedicatedExpansionToggleOnClickListener to FALSE");
-        }
-
-        if(this.isExpandable && this.getCustomItemOnClickListener() == null && !this.useDedicatedExpansionToggleOnClickListener)
-        {
-            Log.e("CustomItemOnClickListener cannot be NULL when isExpandable and !useDedicatedExpansionOnClickListener");
-            if(!tryFix)
-            {
-                return false;
-            }
-
-            this.useDedicatedExpansionToggleOnClickListener = true;
-            Log.w("changed useDedicatedExpansionToggleOnClickListener to TRUE");
-        }
 
         Log.d("valid");
         return true;
@@ -107,7 +93,7 @@ public class ContentRecyclerViewAdapterConfiguration
     @Override
     public String toString()
     {
-        //Todo: add relevantChildTypes
+        //Todo: add relevantChildTypes and CustomOnClickListeners
         return String.format(Locale.getDefault(),
 
                 "ContentRecyclerViewConfiguration:\n" +
@@ -115,17 +101,14 @@ public class ContentRecyclerViewAdapterConfiguration
                         "  isExpandable[%S]\n" +
                         "  isSelectable[%S]\n" +
                         "  isCountable[%S]\n" +
-                        "  useDedicatedExpansionOnClickListener[%S]\n" +
-                        "  GroupType[%S]\n" +
-                        "  %s RecyclerOnClickListener",
+                        "  GroupType[%S]",
 
                 this.isDecorable,
                 this.isExpandable,
                 this.isSelectable,
                 this.isCountable,
-                this.useDedicatedExpansionToggleOnClickListener,
-                this.groupType,
-                this.customItemOnClickListener != null ? "with" : "no"
+                this.groupType
         );
     }
 }
+

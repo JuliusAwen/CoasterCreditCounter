@@ -10,18 +10,20 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableContentRecyclerViewAdapter;
 
-abstract class DecorableContentRecyclerViewAdapter extends PlainContentRecyclerViewAdapter implements IDecorableContentRecyclerViewAdapter
+abstract class DecorableContentRecyclerViewAdapter extends PlainContentRecyclerViewAdapter
 {
-    private boolean isDecorable;
-    protected ContentRecyclerViewDecoration decoration;
+    private final boolean isDecorable;
+
+    private final ContentRecyclerViewDecoration decoration;
 
     DecorableContentRecyclerViewAdapter(List<IElement> content, ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(content, configuration);
+
         this.isDecorable = configuration.isDecorable;
         this.decoration = configuration.getDecoration();
+
         Log.wrap(LogLevel.VERBOSE, String.format("instantiated [%s] with \n%s", this.getClass().getSimpleName(), this.decoration), '=', false);
     }
 
@@ -49,7 +51,10 @@ abstract class DecorableContentRecyclerViewAdapter extends PlainContentRecyclerV
     private void applySpecialStringRecource(IElement element, ViewHolderElement viewHolder)
     {
         String specialString = this.decoration.getSpecialString(element);
-        viewHolder.textViewName.setText(specialString != null ? specialString : element.getName());
+        if(specialString != null)
+        {
+            viewHolder.textViewName.setText(specialString);
+        }
     }
 
     private void setDetails(IElement element, ViewHolderElement viewHolder)

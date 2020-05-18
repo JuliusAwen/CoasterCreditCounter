@@ -255,11 +255,11 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ViewHolderItem(View view)
         {
             super(view);
-            this.linearLayoutItem = view.findViewById(R.id.linearLayoutRecyclerViewItem);
-            this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerViewItem);
-            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerViewItem_DetailAbove);
-            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItem_Name);
-            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerViewItem_DetailBelow);
+            this.linearLayoutItem = view.findViewById(R.id.linearLayoutRecyclerView);
+            this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerView);
+            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerView_DetailAbove);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerView_Name);
+            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerView_DetailBelow);
             this.linearLayoutPrettyPrint = view.findViewById(R.id.linearLayoutRecyclerViewItem_PrettyPrint);
             this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
         }

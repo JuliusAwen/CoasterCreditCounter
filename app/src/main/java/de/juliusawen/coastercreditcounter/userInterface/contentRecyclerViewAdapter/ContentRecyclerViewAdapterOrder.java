@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
+import android.view.View;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -11,7 +13,6 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewDecoration;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewOnClickListener;
 
 public class ContentRecyclerViewAdapterOrder
 {
@@ -87,9 +88,15 @@ public class ContentRecyclerViewAdapterOrder
         }
     }
 
-    public ContentRecyclerViewAdapterOrder addOnClickListener(ContentRecyclerViewOnClickListener.CustomItemOnClickListener customItemOnClickListener)
+    public ContentRecyclerViewAdapterOrder addOnClickListenerForType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
-        this.configuration.setCustomItemOnClickListener(customItemOnClickListener);
+        this.configuration.addOnClickListenerByType(type, onClickListener);
+        return this;
+    }
+
+    public ContentRecyclerViewAdapterOrder addOnLongClickListenerForType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
+    {
+        this.configuration.addOnLongClickListenerByType(type, onLongClickListener);
         return this;
     }
 
@@ -114,7 +121,10 @@ public class ContentRecyclerViewAdapterOrder
         }
         else
         {
-            throw new IllegalStateException(String.format("\nContentRecyclerViewAdapterConfiguration not valid:\n%s", this.configuration));
+            throw new IllegalStateException(
+                    String.format("\nContentRecyclerViewAdapterConfiguration not valid:\n%s\n\n%s",
+                        this.configuration.isSelectable,
+                        this.configuration.validate(false)));
         }
     }
 }

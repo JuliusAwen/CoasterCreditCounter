@@ -28,8 +28,10 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
@@ -42,7 +44,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IExpandableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -78,12 +80,45 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-        if(false)
+        if(true)
         {
-            IExpandableContentRecyclerViewAdapter contentRecyclerViewAdapter =
-                    new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
+            IContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
                     .servePreset(this.viewModel.requestCode)
-                    .placeOrderFor(IExpandableContentRecyclerViewAdapter.class);
+                    .addOnClickListenerForType(Park.class, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Log.e(String.format("Park [%s] clicked", ((IElement) view.getTag()).getName()));
+                        }
+                    })
+                    .addOnLongClickListenerForType(Park.class, new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View view)
+                        {
+                            Log.e(String.format("Park [%s] long clicked", ((IElement) view.getTag()).getName()));
+                            return true;
+                        }
+                    })
+                    .addOnClickListenerForType(IElement.class, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Log.e(String.format("IElement [%s] clicked", ((IElement) view.getTag()).getName()));
+                        }
+                    })
+                    .addOnLongClickListenerForType(OnSiteAttraction.class, new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View view)
+                        {
+                            Log.e(String.format("Attraction [%s] long clicked", ((IElement) view.getTag()).getName()));
+                            return true;
+                        }
+                    })
+                    .placeOrderFor(IContentRecyclerViewAdapter.class);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -17,28 +17,27 @@ abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(configuration.getDecoration(), requestCode);
 
         LinkedHashSet<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
+        ContentRecyclerViewAdapterConfigurationPreset configurationPreset;
         switch(requestCode)
         {
             case NAVIGATE:
             {
-                configuration.isDecorable = true;
-                configuration.isExpandable = true;
-                configuration.isSelectable = false;
-                configuration.isCountable = false;
-                configuration.useDedicatedExpansionToggleOnClickListener = true;
+                configurationPreset = ContentRecyclerViewAdapterConfigurationPreset.DECORABLE_EXPANDABLE;
 
                 relevantChildTypesInSortOrder.add(IAttraction.class);
-                configuration.setRelevantChildTypesInSortOrder(relevantChildTypesInSortOrder);
                 break;
             }
 
             default:
-                configuration.isDecorable = false;
-                configuration.isExpandable = false;
-                configuration.isSelectable = false;
-                configuration.isCountable = false;
-                configuration.useDedicatedExpansionToggleOnClickListener = false;
+                configurationPreset = ContentRecyclerViewAdapterConfigurationPreset.PLAIN;
                 break;
         }
+
+        configuration.addchildTypesToExpandInSortOrder(relevantChildTypesInSortOrder);
+
+        configuration.isDecorable = configurationPreset.isDecorable;
+        configuration.isExpandable = configurationPreset.isExpandable;
+        configuration.isSelectable = configurationPreset.isSelectable;
+        configuration.isCountable = configurationPreset.isCountable;
     }
 }

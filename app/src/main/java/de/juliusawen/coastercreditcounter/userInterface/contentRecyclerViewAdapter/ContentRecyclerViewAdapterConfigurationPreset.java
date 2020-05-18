@@ -2,31 +2,28 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 enum ContentRecyclerViewAdapterConfigurationPreset
 {
-    PLAIN(false, false, false, false, false),
-    DECORABLE(true, false, false, false, false),
-    EXPANDABLE(false, true, false, false, false),
-    SELECTABLE(false, false, true, false, false),
-    COUNTABLE(false, false, false, true, false),
+    PLAIN(false, false, false, false),
+    DECORABLE(true, false, false, false),
+    EXPANDABLE(false, true, false, false),
+    SELECTABLE(false, false, true, false),
+    COUNTABLE(false, false, false, true),
 
-    DECORABLE_EXPANDABLE(true, true, false, false, false);
+    DECORABLE_EXPANDABLE(true, true, false, false);
 
     boolean isDecorable;
     boolean isExpandable;
     boolean isSelectable;
     boolean isCountable;
-    boolean useDedicatedExpansionToggleOnClickListener;
 
     ContentRecyclerViewAdapterConfigurationPreset(
             boolean isDecorable,
             boolean isExpandable,
             boolean isSelectable,
-            boolean isCountable,
-            boolean useDedicatedExpansionToggleOnClickListener)
+            boolean isCountable)
     {
         this.isDecorable = isDecorable;
         this.isExpandable = isExpandable;
         this.isSelectable = isSelectable;
         this.isCountable = isCountable;
-        this.useDedicatedExpansionToggleOnClickListener = useDedicatedExpansionToggleOnClickListener;
     }
 }
