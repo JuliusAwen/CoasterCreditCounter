@@ -9,14 +9,14 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 abstract class ConfigurationPresetProvider
 {
-    static void applyConfigurationPreset(AdapterConfiguration adapterConfiguration, RequestCode requestCode)
+    static Configuration createPresetConfiguration(RequestCode requestCode)
     {
-        Log.d(String.format("applying for RequestCode[%s]...", requestCode));
+        Log.d(String.format("creating for RequestCode[%s]...", requestCode));
 
-        RecyclerViewDecorationPresetProvider.applyDecorationPreset(adapterConfiguration.getRecyclerViewDecoration(), requestCode);
-
+        Configuration configuration = new Configuration();
         LinkedHashSet<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
         ConfigurationPreset configurationPreset;
+
         switch(requestCode)
         {
             case NAVIGATE:
@@ -32,11 +32,14 @@ abstract class ConfigurationPresetProvider
                 break;
         }
 
-        adapterConfiguration.addchildTypesToExpandInSortOrder(relevantChildTypesInSortOrder);
+        configuration.addchildTypesToExpandInSortOrder(relevantChildTypesInSortOrder);
 
-        adapterConfiguration.isDecorable = configurationPreset.isDecorable;
-        adapterConfiguration.isExpandable = configurationPreset.isExpandable;
-        adapterConfiguration.isSelectable = configurationPreset.isSelectable;
-        adapterConfiguration.isCountable = configurationPreset.isCountable;
+        configuration.isGroupable = configurationPreset.isGroupable;
+        configuration.isDecorable = configurationPreset.isDecorable;
+        configuration.isExpandable = configurationPreset.isExpandable;
+        configuration.isSelectable = configurationPreset.isSelectable;
+        configuration.isCountable = configurationPreset.isCountable;
+
+        return configuration;
     }
 }

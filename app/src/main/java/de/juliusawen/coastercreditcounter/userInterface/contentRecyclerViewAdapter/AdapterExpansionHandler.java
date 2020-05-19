@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 {
@@ -27,14 +28,19 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
     private final HashSet<IElement> expandedElements = new HashSet<>();
 
-    AdapterExpansionHandler(List<IElement> content, AdapterConfiguration adapterConfiguration)
+    AdapterExpansionHandler(List<IElement> content, Configuration configuration)
     {
-        super(content, adapterConfiguration);
+        super(content, configuration);
 
-        this.isExpandable = adapterConfiguration.isExpandable;
-        this.relevantChildTypesInSortOrder.addAll(adapterConfiguration.getChildTypesToExpandInSortOrder());
+        this.isExpandable = configuration.isExpandable;
+        this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
 
-        this.content = this.initializeItems(this.content, 0);
+        if(this.isExpandable)
+        {
+            this.content = this.initializeItems(this.content, 0);
+
+            Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with [%d] relevant child types", this.relevantChildTypesInSortOrder.size()), '=', false);
+        }
     }
 
     private ArrayList<IElement> initializeItems(List<IElement> elements, int generation)

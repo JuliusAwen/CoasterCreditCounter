@@ -28,14 +28,14 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public class RecyclerViewDecoration
+public class Decoration
 {
     protected final HashMap<Class<? extends IElement>, Integer> specialStringResourcesByContentType = new HashMap<>();
     protected final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
     protected final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
     protected final HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IElement>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
-    RecyclerViewDecoration()
+    Decoration()
     {
         this.initializeContentTypesByDetailDisplayModeByDetailType();
         Log.v("instantiated");
@@ -89,7 +89,7 @@ public class RecyclerViewDecoration
                 .clearDetailTypesAndModeForContentType();
     }
 
-    private RecyclerViewDecoration clearTypefacesForContentType()
+    private Decoration clearTypefacesForContentType()
     {
         Log.v("clearing...");
 
@@ -97,14 +97,14 @@ public class RecyclerViewDecoration
         return this;
     }
 
-    private RecyclerViewDecoration clearTypefacesForDetailType()
+    private Decoration clearTypefacesForDetailType()
     {
         Log.v("clearing...");
         this.typefacesByDetailType.clear();
         return this;
     }
 
-    private RecyclerViewDecoration clearDetailTypesAndModeForContentType()
+    private Decoration clearDetailTypesAndModeForContentType()
     {
         Log.v("clearing...");
         this.contentTypesByDetailDisplayModeByDetailType.clear();
@@ -112,7 +112,7 @@ public class RecyclerViewDecoration
         return this;
     }
 
-    public RecyclerViewDecoration addTypefaceForContentType(Class<? extends IElement> contentType, int typeface)
+    public Decoration addTypefaceForContentType(Class<? extends IElement> contentType, int typeface)
     {
         if(typeface <= 3)
         {
@@ -127,7 +127,7 @@ public class RecyclerViewDecoration
         return this;
     }
 
-    public RecyclerViewDecoration addTypefaceForDetailType(DetailType type, int typeface)
+    public Decoration addTypefaceForDetailType(DetailType type, int typeface)
     {
         if(typeface <= 3)
         {
@@ -142,14 +142,14 @@ public class RecyclerViewDecoration
         return this;
     }
 
-    public RecyclerViewDecoration addSpecialStringResourceForType(Class<? extends IElement> contentType, int stringResource)
+    public Decoration addSpecialStringResourceForType(Class<? extends IElement> contentType, int stringResource)
     {
         Log.v(String.format(Locale.getDefault(), "added StringResource[%d (%s)] for [%s]", stringResource, StringTool.getString(stringResource), contentType.getSimpleName()));
         this.specialStringResourcesByContentType.put(contentType, stringResource);
         return this;
     }
 
-    public RecyclerViewDecoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
+    public Decoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
         Log.v(String.format("added DetailType[%s] and DetailDisplayMode[%s] for [%s]", detailType, detailDisplayMode, contentType.getSimpleName()));
         this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);

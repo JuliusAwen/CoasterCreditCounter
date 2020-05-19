@@ -25,14 +25,16 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler
 {
     protected RecyclerView recyclerView;
 
-    ContentRecyclerViewAdapter(List<IElement> content, AdapterConfiguration adapterConfiguration)
+    ContentRecyclerViewAdapter(List<IElement> content, Configuration configuration)
     {
-        super(content, adapterConfiguration);
+        super(content, configuration);
 
         Log.wrap(LogLevel.DEBUG,
                 String.format("Details:\n\n%s\n\n%s\n\n%s",
-                        String.format(Locale.getDefault(), "[%d] Elements", this.content.size()), adapterConfiguration,
-                        adapterConfiguration.getRecyclerViewDecoration()),
+                        String.format(Locale.getDefault(), "[%d] Elements",
+                                this.content.size()),
+                        configuration,
+                        configuration.getDecoration()),
                 '=', false);
         Log.wrap(LogLevel.INFO, "instantiated", '#', true);
     }

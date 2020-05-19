@@ -11,20 +11,23 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-abstract class AdapterDecorationHandler extends AdapterBaseHandler
+abstract class AdapterDecorationHandler extends AdapterGroupingHandler
 {
     private final boolean isDecorable;
 
-    private final RecyclerViewDecoration recyclerViewDecoration;
+    private final Decoration decoration;
 
-    AdapterDecorationHandler(List<IElement> content, AdapterConfiguration adapterConfiguration)
+    AdapterDecorationHandler(List<IElement> content, Configuration configuration)
     {
-        super(content, adapterConfiguration);
+        super(content, configuration);
 
-        this.isDecorable = adapterConfiguration.isDecorable;
-        this.recyclerViewDecoration = adapterConfiguration.getRecyclerViewDecoration();
+        this.isDecorable = configuration.isDecorable;
+        this.decoration = configuration.getDecoration();
 
-        Log.wrap(LogLevel.VERBOSE, String.format("instantiated [%s] with \n%s", this.getClass().getSimpleName(), this.recyclerViewDecoration), '=', false);
+        if(this.isDecorable)
+        {
+            Log.wrap(LogLevel.VERBOSE, String.format("instantiated [%s] with \n%s", this.getClass().getSimpleName(), this.decoration), '=', false);
+        }
     }
 
     protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
@@ -45,12 +48,12 @@ abstract class AdapterDecorationHandler extends AdapterBaseHandler
 
     private void applyTypeface(IElement element, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
     {
-        viewHolder.textViewName.setTypeface(null, this.recyclerViewDecoration.getTypeface(element));
+        viewHolder.textViewName.setTypeface(null, this.decoration.getTypeface(element));
     }
 
     private void applySpecialStringRecource(IElement element, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
     {
-        String specialString = this.recyclerViewDecoration.getSpecialString(element);
+        String specialString = this.decoration.getSpecialString(element);
         if(specialString != null)
         {
             viewHolder.textViewName.setText(specialString);
@@ -62,11 +65,11 @@ abstract class AdapterDecorationHandler extends AdapterBaseHandler
         viewHolder.textViewDetailAbove.setVisibility(View.GONE);
         viewHolder.textViewDetailBelow.setVisibility(View.GONE);
 
-        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = this.recyclerViewDecoration.getDetailTypesByDetailDisplayMode(element);
+        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = this.decoration.getDetailTypesByDetailDisplayMode(element);
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE).size() > 0)
         {
-            viewHolder.textViewDetailAbove.setText(this.recyclerViewDecoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
+            viewHolder.textViewDetailAbove.setText(this.decoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
             if(viewHolder.textViewDetailAbove.getText().length() != 0)
             {
                 viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
@@ -75,7 +78,7 @@ abstract class AdapterDecorationHandler extends AdapterBaseHandler
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW).size() > 0)
         {
-            viewHolder.textViewDetailBelow.setText(this.recyclerViewDecoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
+            viewHolder.textViewDetailBelow.setText(this.decoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
             if(viewHolder.textViewDetailBelow.getText().length() != 0)
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);

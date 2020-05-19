@@ -16,6 +16,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -29,15 +30,20 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
     private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
 
-    AdapterBaseHandler(List<IElement> content, AdapterConfiguration adapterConfiguration)
+    AdapterBaseHandler(List<IElement> content, Configuration configuration)
     {
         this.content = content;
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
-        this.externalOnClickListenersByType.putAll(adapterConfiguration.getOnClickListenersByType());
-        this.externalOnLongClickListenersByType.putAll(adapterConfiguration.getOnLongClickListenersByType());
+        this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
+        this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
 
-        Log.v("instantiated");
+        Log.wrap(LogLevel.VERBOSE,
+                String.format(Locale.getDefault(), "Instantiated with [%d] Elements, [%d] external OnClickListeners and [%d] external OnLongClickListeners",
+                        this.content.size(),
+                        this.externalOnClickListenersByType.size(),
+                        this.externalOnLongClickListenersByType.size()),
+                '=', false);
     }
 
     private View.OnClickListener getInternalOnClickListener()
