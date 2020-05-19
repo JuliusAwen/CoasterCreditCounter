@@ -3,9 +3,6 @@ package de.juliusawen.coastercreditcounter.application;
 public abstract class Constants
 {
     public static final String LOG_TAG = "JA.C";
-    public static final String LOG_DIVIDER = "+++++++++++++++++++++";
-    public static final String LOG_DIVIDER_ON_CREATE = "############ ";
-    public static final String LOG_DIVIDER_FINISH = "-------finished_";
 
     public static final int TOOLBAR_CLICK_COUNT = 3;
     public static final long TOOLBAR_LAST_CLICK_MAX_DELAY = 1000;

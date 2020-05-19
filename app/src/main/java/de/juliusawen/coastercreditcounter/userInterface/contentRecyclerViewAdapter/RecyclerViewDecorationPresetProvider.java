@@ -7,18 +7,14 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttrac
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewDecoration;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
 
-abstract class ContentRecyclerViewDecorationPresetProvider
+abstract class RecyclerViewDecorationPresetProvider
 {
-
-    static void applyDecorationPreset(ContentRecyclerViewDecoration decoration, RequestCode requestCode)
+    static void applyDecorationPreset(RecyclerViewDecoration recyclerViewDecoration, RequestCode requestCode)
     {
         Log.d(String.format("applying for RequestCode[%s]...", requestCode));
 
-        decoration
+        recyclerViewDecoration
                 .addTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .addTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC);
 
@@ -27,7 +23,7 @@ abstract class ContentRecyclerViewDecorationPresetProvider
         {
             case NAVIGATE:
             {
-                decoration
+                recyclerViewDecoration
                         .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
                         .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
                         .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)

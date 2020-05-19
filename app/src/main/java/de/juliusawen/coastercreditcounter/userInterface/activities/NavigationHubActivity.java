@@ -44,7 +44,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableExpandableContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -82,7 +82,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(true)
         {
-            IContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
+            IDecorableExpandableContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
                     .servePreset(this.viewModel.requestCode)
                     .addOnClickListenerForType(Park.class, new View.OnClickListener()
                     {
@@ -118,7 +118,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                             return true;
                         }
                     })
-                    .placeOrderFor(IContentRecyclerViewAdapter.class);
+                    .placeOrderFor(IDecorableExpandableContentRecyclerViewAdapter.class);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));

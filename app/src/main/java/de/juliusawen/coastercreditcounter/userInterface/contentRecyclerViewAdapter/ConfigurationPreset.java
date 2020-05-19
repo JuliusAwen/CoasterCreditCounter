@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-enum ContentRecyclerViewAdapterConfigurationPreset
+enum ConfigurationPreset
 {
     PLAIN(false, false, false, false),
     DECORABLE(true, false, false, false),
@@ -15,7 +15,7 @@ enum ContentRecyclerViewAdapterConfigurationPreset
     boolean isSelectable;
     boolean isCountable;
 
-    ContentRecyclerViewAdapterConfigurationPreset(
+    ConfigurationPreset(
             boolean isDecorable,
             boolean isExpandable,
             boolean isSelectable,

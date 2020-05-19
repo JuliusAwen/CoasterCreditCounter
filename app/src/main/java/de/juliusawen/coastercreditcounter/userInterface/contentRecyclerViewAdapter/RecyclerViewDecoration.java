@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.graphics.Typeface;
 import android.text.SpannableString;
@@ -28,14 +28,14 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public class ContentRecyclerViewDecoration
+public class RecyclerViewDecoration
 {
     protected final HashMap<Class<? extends IElement>, Integer> specialStringResourcesByContentType = new HashMap<>();
     protected final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
     protected final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
     protected final HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IElement>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
-    public ContentRecyclerViewDecoration()
+    RecyclerViewDecoration()
     {
         this.initializeContentTypesByDetailDisplayModeByDetailType();
         Log.v("instantiated");
@@ -89,7 +89,7 @@ public class ContentRecyclerViewDecoration
                 .clearDetailTypesAndModeForContentType();
     }
 
-    private ContentRecyclerViewDecoration clearTypefacesForContentType()
+    private RecyclerViewDecoration clearTypefacesForContentType()
     {
         Log.v("clearing...");
 
@@ -97,14 +97,14 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    private ContentRecyclerViewDecoration clearTypefacesForDetailType()
+    private RecyclerViewDecoration clearTypefacesForDetailType()
     {
         Log.v("clearing...");
         this.typefacesByDetailType.clear();
         return this;
     }
 
-    private ContentRecyclerViewDecoration clearDetailTypesAndModeForContentType()
+    private RecyclerViewDecoration clearDetailTypesAndModeForContentType()
     {
         Log.v("clearing...");
         this.contentTypesByDetailDisplayModeByDetailType.clear();
@@ -112,7 +112,7 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    public ContentRecyclerViewDecoration addTypefaceForContentType(Class<? extends IElement> contentType, int typeface)
+    public RecyclerViewDecoration addTypefaceForContentType(Class<? extends IElement> contentType, int typeface)
     {
         if(typeface <= 3)
         {
@@ -127,7 +127,7 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    public ContentRecyclerViewDecoration addTypefaceForDetailType(DetailType type, int typeface)
+    public RecyclerViewDecoration addTypefaceForDetailType(DetailType type, int typeface)
     {
         if(typeface <= 3)
         {
@@ -142,14 +142,14 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    public ContentRecyclerViewDecoration addSpecialStringResourceForType(Class<? extends IElement> contentType, int stringResource)
+    public RecyclerViewDecoration addSpecialStringResourceForType(Class<? extends IElement> contentType, int stringResource)
     {
         Log.v(String.format(Locale.getDefault(), "added StringResource[%d (%s)] for [%s]", stringResource, StringTool.getString(stringResource), contentType.getSimpleName()));
         this.specialStringResourcesByContentType.put(contentType, stringResource);
         return this;
     }
 
-    public ContentRecyclerViewDecoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
+    public RecyclerViewDecoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
         Log.v(String.format("added DetailType[%s] and DetailDisplayMode[%s] for [%s]", detailType, detailDisplayMode, contentType.getSimpleName()));
         this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);

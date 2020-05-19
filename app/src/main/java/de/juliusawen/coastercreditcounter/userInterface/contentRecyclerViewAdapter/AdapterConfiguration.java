@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.view.View;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public class ContentRecyclerViewAdapterConfiguration
+public class AdapterConfiguration
 {
     public boolean isDecorable = false;
     public boolean isExpandable = false;
@@ -19,36 +19,36 @@ public class ContentRecyclerViewAdapterConfiguration
 
     private GroupType groupType = GroupType.NONE;
 
-    private ContentRecyclerViewDecoration decoration;
+    private RecyclerViewDecoration recyclerViewDecoration;
 
     private final LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new LinkedHashSet<>();
 
     private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
-    public ContentRecyclerViewAdapterConfiguration(ContentRecyclerViewDecoration decoration)
+    public AdapterConfiguration(RecyclerViewDecoration recyclerViewDecoration)
     {
-        this.decoration = decoration;
+        this.recyclerViewDecoration = recyclerViewDecoration;
         Log.v("instantiated");
     }
 
-    public ContentRecyclerViewDecoration getDecoration()
+    public RecyclerViewDecoration getRecyclerViewDecoration()
     {
-        return this.decoration;
+        return this.recyclerViewDecoration;
     }
 
-    public void setDecoration(ContentRecyclerViewDecoration decoration)
+    public void setRecyclerViewDecoration(RecyclerViewDecoration recyclerViewDecoration)
     {
-        this.decoration = decoration;
-        Log.v(String.format("Decoration set:\n%s", decoration));
+        this.recyclerViewDecoration = recyclerViewDecoration;
+        Log.v(String.format("Decoration set:\n%s", recyclerViewDecoration));
     }
 
-    public Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
+    Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
     {
         return this.onClickListenersByType;
     }
 
-    public Map<Class<? extends IElement>, View.OnLongClickListener> getOnLongClickListenersByType()
+    Map<Class<? extends IElement>, View.OnLongClickListener> getOnLongClickListenersByType()
     {
         return this.onLongClickListenersByType;
     }
@@ -65,6 +65,11 @@ public class ContentRecyclerViewAdapterConfiguration
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
+    LinkedHashSet<Class<? extends IElement>> getChildTypesToExpandInSortOrder()
+    {
+        return this.childTypesToExpandInSortOrder;
+    }
+
     public void addchildTypesToExpandInSortOrder(LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder)
     {
         this.childTypesToExpandInSortOrder.addAll(childTypesToExpandInSortOrder);
@@ -75,11 +80,6 @@ public class ContentRecyclerViewAdapterConfiguration
     {
         this.childTypesToExpandInSortOrder.add(childTypeToExpand);
         Log.v(String.format("added [%s]", childTypeToExpand));
-    }
-
-    public LinkedHashSet<Class<? extends IElement>> getChildTypesToExpandInSortOrder()
-    {
-        return this.childTypesToExpandInSortOrder;
     }
 
     public boolean validate(boolean tryFix)

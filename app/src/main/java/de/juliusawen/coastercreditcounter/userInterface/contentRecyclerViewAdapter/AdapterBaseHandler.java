@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.view.View;
 
@@ -17,7 +17,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpa
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     protected RecyclerView recyclerView;
 
@@ -29,13 +29,13 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
 
-    PlainContentRecyclerViewAdapter(List<IElement> content, ContentRecyclerViewAdapterConfiguration configuration)
+    AdapterBaseHandler(List<IElement> content, AdapterConfiguration adapterConfiguration)
     {
         this.content = content;
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
-        this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
-        this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
+        this.externalOnClickListenersByType.putAll(adapterConfiguration.getOnClickListenersByType());
+        this.externalOnLongClickListenersByType.putAll(adapterConfiguration.getOnLongClickListenersByType());
 
         Log.v("instantiated");
     }
@@ -77,7 +77,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         return this.content.size();
     }
 
-    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
+    protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
     {
         IElement element = this.content.get(position);
         Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
@@ -92,7 +92,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         return element;
     }
 
-    protected void setPadding(int generation, ViewHolderElement viewHolder)
+    protected void setPadding(int generation, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
     {
         int padding = ConvertTool.convertDpToPx((int)(App.getContext().getResources().getDimension(R.dimen.standard_padding)
                 / App.getContext().getResources().getDisplayMetrics().density))
@@ -101,7 +101,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
-    private void setOnClickListeners(ViewHolderElement viewHolderElement)
+    private void setOnClickListeners(ContentRecyclerViewAdapter.ViewHolderElement viewHolderElement)
     {
         viewHolderElement.itemView.setOnClickListener(this.internalOnClickListener);
         viewHolderElement.itemView.setOnLongClickListener(this.internalOnLongClickListener);
@@ -223,7 +223,7 @@ abstract class PlainContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         }
     }
 
-    protected PlainContentRecyclerViewAdapter addBottomSpacer()
+    protected AdapterBaseHandler addBottomSpacer()
     {
         if(!this.content.isEmpty() && !(this.content.get(this.content.size() - 1) instanceof BottomSpacer))
         {

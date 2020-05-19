@@ -10,37 +10,39 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewAdapterConfiguration;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.ContentRecyclerViewDecoration;
 
 public class ContentRecyclerViewAdapterOrder
 {
     private List<IElement> content;
-    private ContentRecyclerViewAdapterConfiguration configuration;
+    private AdapterConfiguration adapterConfiguration;
 
     private boolean presetOrdered = false;
 
     public ContentRecyclerViewAdapterOrder(List<IElement> content)
     {
         this.content = content;
-        this.configuration = new ContentRecyclerViewAdapterConfiguration(new ContentRecyclerViewDecoration());
+        this.adapterConfiguration = new AdapterConfiguration(new RecyclerViewDecoration());
         Log.v("instantiated");
+    }
+
+    public AdapterConfiguration getAdapterConfiguration()
+    {
+        return this.adapterConfiguration;
     }
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
     {
-        ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
+        ConfigurationPresetProvider.applyConfigurationPreset(this.adapterConfiguration, requestCode);
         this.presetOrdered = true;
         return this;
     }
 
-    public ContentRecyclerViewAdapterOrder makeItDecorable(ContentRecyclerViewDecoration decoration)
+    public ContentRecyclerViewAdapterOrder makeItDecorable(RecyclerViewDecoration recyclerViewDecoration)
     {
         if(!this.presetOrdered)
         {
-            this.configuration.isDecorable = true;
-            this.configuration.setDecoration(decoration);
+            this.adapterConfiguration.isDecorable = true;
+            this.adapterConfiguration.setRecyclerViewDecoration(recyclerViewDecoration);
             return this;
         }
         else
@@ -53,7 +55,7 @@ public class ContentRecyclerViewAdapterOrder
     {
         if(!this.presetOrdered)
         {
-            this.configuration.isExpandable = true;
+            this.adapterConfiguration.isExpandable = true;
             return this;
         }
         else
@@ -66,7 +68,7 @@ public class ContentRecyclerViewAdapterOrder
     {
         if(!this.presetOrdered)
         {
-            this.configuration.isSelectable = true;
+            this.adapterConfiguration.isSelectable = true;
             return this;
         }
         else
@@ -79,7 +81,7 @@ public class ContentRecyclerViewAdapterOrder
     {
         if(!this.presetOrdered)
         {
-            this.configuration.isCountable = true;
+            this.adapterConfiguration.isCountable = true;
             return this;
         }
         else
@@ -90,28 +92,28 @@ public class ContentRecyclerViewAdapterOrder
 
     public ContentRecyclerViewAdapterOrder addOnClickListenerForType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
-        this.configuration.addOnClickListenerByType(type, onClickListener);
+        this.adapterConfiguration.addOnClickListenerByType(type, onClickListener);
         return this;
     }
 
     public ContentRecyclerViewAdapterOrder addOnLongClickListenerForType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
-        this.configuration.addOnLongClickListenerByType(type, onLongClickListener);
+        this.adapterConfiguration.addOnLongClickListenerByType(type, onLongClickListener);
         return this;
     }
 
     public <T extends IContentRecyclerViewAdapter> T placeOrderFor(Class<T> type)
     {
-        if(this.configuration.validate(!BuildConfig.DEBUG))
+        if(this.adapterConfiguration.validate(!BuildConfig.DEBUG))
         {
             Log.wrap(LogLevel.VERBOSE,
                     String.format("delivering ContentRecyclerViewAdapter with %s:\n\n%s\n\n%s",
                             String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
-                            this.configuration,
-                            this.configuration.getDecoration()),
+                            this.adapterConfiguration,
+                            this.adapterConfiguration.getRecyclerViewDecoration()),
                     '=', false);
 
-            ContentRecyclerViewAdapter adapter = new ContentRecyclerViewAdapter(this.content, this.configuration);
+            ContentRecyclerViewAdapter adapter = new ContentRecyclerViewAdapter(this.content, this.adapterConfiguration);
             if(type.isInstance(adapter))
             {
                 return type.cast(adapter);
@@ -123,8 +125,8 @@ public class ContentRecyclerViewAdapterOrder
         {
             throw new IllegalStateException(
                     String.format("\nContentRecyclerViewAdapterConfiguration not valid:\n%s\n\n%s",
-                        this.configuration.isSelectable,
-                        this.configuration.validate(false)));
+                        this.adapterConfiguration.isSelectable,
+                        this.adapterConfiguration.validate(false)));
         }
     }
 }

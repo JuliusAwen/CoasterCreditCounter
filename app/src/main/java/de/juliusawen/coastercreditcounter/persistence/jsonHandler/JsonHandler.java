@@ -52,7 +52,7 @@ import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
 import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 
 public class JsonHandler implements IDatabaseWrapper
 {

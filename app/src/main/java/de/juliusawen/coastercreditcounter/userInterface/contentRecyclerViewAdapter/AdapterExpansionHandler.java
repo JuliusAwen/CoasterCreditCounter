@@ -1,4 +1,4 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.adapter;
+package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.view.View;
 
@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecyclerViewAdapter
+abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 {
     private final boolean isExpandable;
 
@@ -27,12 +27,12 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
     private final HashSet<IElement> expandedElements = new HashSet<>();
 
-    ExpandableContentRecyclerViewAdapter(List<IElement> content, ContentRecyclerViewAdapterConfiguration configuration)
+    AdapterExpansionHandler(List<IElement> content, AdapterConfiguration adapterConfiguration)
     {
-        super(content, configuration);
+        super(content, adapterConfiguration);
 
-        this.isExpandable = configuration.isExpandable;
-        this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
+        this.isExpandable = adapterConfiguration.isExpandable;
+        this.relevantChildTypesInSortOrder.addAll(adapterConfiguration.getChildTypesToExpandInSortOrder());
 
         this.content = this.initializeItems(this.content, 0);
     }
@@ -58,7 +58,7 @@ abstract class ExpandableContentRecyclerViewAdapter extends DecorableContentRecy
         return initializedItems;
     }
 
-    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
+    protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
     {
         IElement element = super.bindViewHolderElement(viewHolder, position);
 

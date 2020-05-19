@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import de.juliusawen.coastercreditcounter.application.Constants;
 
-public final class Log
+public abstract class Log
 {
     private static final String tag = Constants.LOG_TAG;
     private static LogLevel printRestrictionLogLevel = LogLevel.NONE;
