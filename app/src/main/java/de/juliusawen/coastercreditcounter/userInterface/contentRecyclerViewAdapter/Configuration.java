@@ -135,19 +135,18 @@ public class Configuration
     {
         //Todo: add relevantChildTypes and CustomOnClickListeners
         return String.format(Locale.getDefault(),
-
                 "ContentRecyclerViewConfiguration:\n" +
-                        "  isDecorable[%S]\n" +
-                        "  isExpandable[%S]\n" +
+                        "  isGroupable[%S]" + (this.isDecorable ? String.format(" - GroupType[%s]\n", this.groupType) : "\n") +
+                        "  isDecorable[%S]" +
+                        "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpandInSortOrder.size()) : "\n") +
                         "  isSelectable[%S]\n" +
-                        "  isCountable[%S]\n" +
-                        "  GroupType[%S]",
+                        "  isCountable[%S]\n",
 
+                this.isGroupable,
                 this.isDecorable,
                 this.isExpandable,
                 this.isSelectable,
-                this.isCountable,
-                this.groupType
+                this.isCountable
         );
     }
 }
