@@ -17,20 +17,14 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected List<IElement> content;
     protected ArrayList<IElement> ungroupedContent;
 
-    private boolean isGroupable;
-    private GroupType groupType = GroupType.NONE;
+    private GroupType groupType;
     private GroupHeaderProvider groupHeaderProvider;
 
     AdapterContentHandler(Configuration configuration)
     {
-        this.isGroupable = configuration.isGroupable;
-
-        if(this.isGroupable)
-        {
-            this.groupType = configuration.getGroupType();
-            this.groupHeaderProvider = new GroupHeaderProvider();
-            Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with GroupType[%s]", this.groupType), '=', false);
-        }
+        this.groupType = configuration.getGroupType();
+        this.groupHeaderProvider = new GroupHeaderProvider();
+        Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with GroupType[%s]", this.groupType), '=', false);
     }
 
     @Override
@@ -55,11 +49,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     public void groupContent(GroupType groupType)
     {
-        if(!this.isGroupable)
-        {
-            throw new IllegalAccessError("ContentRecyclerView is not groupable");
-        }
-
         this.groupType = groupType;
         Log.d(String.format("grouping Content by GroupType[%s]", this.groupType));
 

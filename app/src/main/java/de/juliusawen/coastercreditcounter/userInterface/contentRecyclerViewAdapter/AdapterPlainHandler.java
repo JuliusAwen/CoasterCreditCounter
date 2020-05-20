@@ -73,7 +73,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
     {
-        IElement element = this.content.get(position);
+        IElement element = super.getElement(position);
         Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
         this.setPadding(0, viewHolder);
@@ -182,7 +182,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected AdapterPlainHandler addBottomSpacer()
     {
-        if(!super.content.isEmpty() && !(super.content.get(super.content.size() - 1) instanceof BottomSpacer))
+        if(!super.content.isEmpty() && !(super.getElement(super.getItemCount() - 1) instanceof BottomSpacer))
         {
             super.insertElement(new BottomSpacer());
             Log.v("added BottomSpacer");

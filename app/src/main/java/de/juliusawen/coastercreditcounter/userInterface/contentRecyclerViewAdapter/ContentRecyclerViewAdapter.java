@@ -45,7 +45,7 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler
     @Override
     public int getItemViewType(int position)
     {
-        IElement element = this.content.get(position);
+        IElement element = super.getElement(position);
 
         if(element.isVisitedAttraction())
         {
@@ -96,13 +96,13 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         ItemViewType itemViewType = ItemViewType.getValue(viewHolder.getItemViewType());
-        Log.v(String.format("binding ViewType[%s]", itemViewType));
+        Log.v(String.format(Locale.getDefault(), "binding ViewType[%s] for position[%d]", itemViewType, position));
 
         switch (itemViewType)
         {
             case ELEMENT:
                 ViewHolderElement viewHolderElement = (ViewHolderElement) viewHolder;
-                this.bindViewHolderElement(viewHolderElement, position);
+                super.bindViewHolderElement(viewHolderElement, position);
                 break;
 
 //            case VISITED_ATTRACTION:
@@ -118,16 +118,10 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler
         }
     }
 
-    @Override
-    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
-    {
-        return super.bindViewHolderElement(viewHolder, position);
-    }
 
     private enum ItemViewType
     {
         UNDETERMINED,
-
         ELEMENT,
         VISITED_ATTRACTION,
         BOTTOM_SPACER;
