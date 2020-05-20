@@ -21,7 +21,7 @@ abstract class ConfigurationPresetProvider
         {
             case NAVIGATE:
             {
-                configurationPreset = ConfigurationPreset.DECORABLE_EXPANDABLE;
+                configurationPreset = ConfigurationPreset.GROUPABLE_DECORABLE_EXPANDABLE;
 
                 relevantChildTypesInSortOrder.add(IAttraction.class);
                 break;

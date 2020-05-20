@@ -3,7 +3,6 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,24 +27,22 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
     private final HashSet<IElement> expandedElements = new HashSet<>();
 
-    AdapterExpansionHandler(List<IElement> content, Configuration configuration)
+    AdapterExpansionHandler(Configuration configuration)
     {
-        super(content, configuration);
+        super(configuration);
 
         this.isExpandable = configuration.isExpandable;
-        this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
 
         if(this.isExpandable)
         {
-            this.content = this.initializeItems(this.content, 0);
-
+            this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
             Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with [%d] relevant child types", this.relevantChildTypesInSortOrder.size()), '=', false);
         }
     }
 
     private ArrayList<IElement> initializeItems(List<IElement> elements, int generation)
     {
-        Log.v(String.format(Locale.getDefault(), "initializing [%d] elements - generation [%d]...", elements.size(), generation));
+        Log.d(String.format(Locale.getDefault(), "initializing [%d] elements - generation [%d]...", elements.size(), generation));
 
         ArrayList<IElement> initializedItems = new ArrayList<>();
         for(IElement item : elements)
@@ -98,24 +95,28 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     }
 
     @Override
-    protected IElement handleOnClick(View view, boolean performExternalClick)
+    protected void handleOnClick(View view, boolean performExternalClick)
     {
-        IElement element = super.handleOnClick(view, performExternalClick);
+        super.handleOnClick(view, performExternalClick);
 
         if(this.isExpandable)
         {
+            IElement element = super.fetchElement(view);
             this.toggleExpansion(element);
         }
-
-        return element;
     }
 
 
     public void toggleExpansion(IElement element)
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         if(!this.relevantChildTypesInSortOrder.isEmpty())
         {
-            Log.v("toggling...");
+            Log.d("toggling expansion...");
 
             if(!this.expandedElements.contains(element))
             {
@@ -130,9 +131,14 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
     public void expandAll()
     {
-        if(!this.content.isEmpty() && !this.isAllExpanded())
+        if(!this.isExpandable)
         {
-            Log.v("expanding all elements");
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
+        if(!super.content.isEmpty() && !this.isAllExpanded())
+        {
+            Log.d("expanding all elements");
 
             int expandedElementsCount;
             do
@@ -147,9 +153,9 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                     this.expandElement(element, false);
                 }
             }
-            while(expandedElementsCount != this.content.size());
+            while(expandedElementsCount != super.getItemCount());
 
-            super.scrollToElement(this.content.get(0));
+            super.scrollToElement(super.getElement(0));
 
             Log.d(String.format(Locale.getDefault(), "all [%d] elements expanded", expandedElementsCount));
         }
@@ -173,6 +179,11 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
     public void expandElement(IElement element, boolean scrollToElement)
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         if(!this.expandedElements.contains(element))
         {
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(element);
@@ -184,27 +195,25 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                 super.notifyElementChanged(element);
 
                 int generation = this.getGeneration(element) + 1;
-                int index = this.content.indexOf(element);
+                int position = super.getPosition(element);
                 for(IElement child : relevantChildren)
                 {
                     this.generationByElement.put(child, generation);
 
-                    index++;
-                    this.content.add(index, child);
-                    super.notifyItemInserted(index);
-
-                    Log.v(String.format(Locale.getDefault(), "added child %s at index [%d] - generation [%d]", child, index, generation));
+                    position++;
+                    super.insertElement(position, child);
+                    Log.v(String.format(Locale.getDefault(), "added child %s at position [%d] - generation [%d]", child, position, generation));
                 }
 
                 if(scrollToElement)
                 {
                     //scroll to element above expanded element (if any)
-                    index = this.content.indexOf(element);
-                    if(index > 0)
+                    position = super.getPosition(element);
+                    if(position > 0)
                     {
-                        index--;
+                        position--;
                     }
-                    ((LinearLayoutManager) this.getLayoutManager()).scrollToPositionWithOffset(index, 0);
+                    ((LinearLayoutManager) super.getLayoutManager()).scrollToPositionWithOffset(position, 0);
                 }
             }
         }
@@ -227,13 +236,13 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         return generation;
     }
 
-    private RecyclerView.LayoutManager getLayoutManager()
-    {
-        return this.recyclerView.getLayoutManager();
-    }
-
     public boolean isAllExpanded()
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         for(IElement element : this.content)
         {
             for(IElement relevantChild : this.getRelevantChildren(element))
@@ -265,11 +274,16 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
     public void collapseAll()
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         if(!this.content.isEmpty() && !this.isAllCollapsed())
         {
             List<IElement> elementsToCollapse = new ArrayList<>(this.expandedElements);
 
-            Log.v(String.format(Locale.getDefault(), "collapsing all [%s] elements...", elementsToCollapse.size()));
+            Log.d(String.format(Locale.getDefault(), "collapsing all [%s] elements...", elementsToCollapse.size()));
 
             for(IElement element : elementsToCollapse)
             {
@@ -286,6 +300,11 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
     public void collapseElement(IElement element, boolean scrollToElement)
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         if(this.expandedElements.contains(element))
         {
             List<IElement> relevantChildren = this.getRelevantChildren(element);
@@ -336,30 +355,28 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
             }
         }
 
-        //  ---GetRelevantAncestors?---
-        //        List<IElement> children;
-        //        do
-        //        {
-        //            children = element.getChildren();
-        //            for(IElement child : children)
-        //            {
-        //                for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
-        //                {
-        //                    if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
-        //                    {
-        //                        distinctRelevantChildren.add(child);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        while(!children.isEmpty());
-
         return distinctRelevantChildren;
     }
 
     public boolean isAllCollapsed()
     {
+        if(!this.isExpandable)
+        {
+            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+        }
+
         return this.expandedElements.isEmpty();
+    }
+
+    @Override
+    public void groupContent(GroupType groupType)
+    {
+        super.groupContent(groupType);
+
+        if(this.isExpandable)
+        {
+            this.generationByElement.clear();
+            super.content = this.initializeItems(super.content, 0);
+        }
     }
 }

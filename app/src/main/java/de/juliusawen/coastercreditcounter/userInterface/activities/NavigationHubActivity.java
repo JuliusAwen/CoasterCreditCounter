@@ -32,6 +32,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
@@ -44,7 +45,8 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IDecorableExpandableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IGroupableContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -66,6 +68,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         setContentView(R.layout.activity_navigation_hub);
     }
 
+    private IGroupableContentRecyclerViewAdapter contentRecyclerViewAdapter;
+
     protected void create()
     {
         this.textViewTotalCoasterCreditsCount = findViewById(R.id.textViewStatisticsGlobalTotals_totalCoasterCreditsCount);
@@ -82,14 +86,14 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         if(true)
         {
-            IDecorableExpandableContentRecyclerViewAdapter contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(Park.class))
+            this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(OnSiteAttraction.class))
                     .servePreset(this.viewModel.requestCode)
                     .addOnClickListenerForType(Park.class, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            Log.e(String.format("Park [%s] clicked", ((IElement) view.getTag()).getName()));
+                            Log.e(String.format("%s clicked", view.getTag()));
                         }
                     })
                     .addOnLongClickListenerForType(Park.class, new View.OnLongClickListener()
@@ -97,7 +101,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         @Override
                         public boolean onLongClick(View view)
                         {
-                            Log.e(String.format("Park [%s] long clicked", ((IElement) view.getTag()).getName()));
+                            Log.e(String.format("%s long clicked", view.getTag()));
                             return true;
                         }
                     })
@@ -106,7 +110,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         @Override
                         public void onClick(View view)
                         {
-                            Log.e(String.format("IElement [%s] clicked", ((IElement) view.getTag()).getName()));
+                            Log.e(String.format("%s clicked", view.getTag()));
                         }
                     })
                     .addOnLongClickListenerForType(OnSiteAttraction.class, new View.OnLongClickListener()
@@ -114,17 +118,27 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         @Override
                         public boolean onLongClick(View view)
                         {
-                            Log.e(String.format("Attraction [%s] long clicked", ((IElement) view.getTag()).getName()));
+                            Log.e(String.format("%s long clicked - grouping content by Manufacturer", view.getTag()));
+                            groupCRVA(GroupType.MANUFACTURER);
                             return true;
                         }
                     })
-                    .placeOrderFor(IDecorableExpandableContentRecyclerViewAdapter.class);
+                    .addOnLongClickListenerForType(GroupHeader.class, new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View view)
+                        {
+                            Log.e(String.format("%s long clicked - grouping content by Park", view.getTag()));
+                            groupCRVA(GroupType.PARK);
+                            return true;
+                        }
+                    })
+                    .placeOrderFor(IGroupableContentRecyclerViewAdapter.class);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter((RecyclerView.Adapter) contentRecyclerViewAdapter);
         }
-
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
@@ -137,6 +151,10 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         this.createStatisticsGlobalTotals();
     }
 
+    private void groupCRVA(GroupType groupType)
+    {
+        this.contentRecyclerViewAdapter.groupContent(groupType);
+    }
 
     @Override
     protected void resume()

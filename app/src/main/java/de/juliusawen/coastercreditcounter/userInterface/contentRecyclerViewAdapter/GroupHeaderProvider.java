@@ -56,7 +56,7 @@ class GroupHeaderProvider
         }
 
         List<IGroupHeader> groupedElements = this.groupHeadersByGroupElementUuid.isEmpty()
-                ? this.createGroupHeaders(elements, groupType)
+                ? this.initializeGroupHeaders(elements, groupType)
                 : this.updateGroupHeaders(elements, groupType);
 
         LinkedList<IElement> emptyHeaders = new LinkedList<>();
@@ -75,9 +75,9 @@ class GroupHeaderProvider
         return ConvertTool.convertElementsToType(groupedElements, IElement.class);
     }
 
-    private List<IGroupHeader> createGroupHeaders(List<IElement> elements, GroupType groupType)
+    private List<IGroupHeader> initializeGroupHeaders(List<IElement> elements, GroupType groupType)
     {
-        Log.d(String.format(Locale.getDefault(), "initalizing GroupHeaders for [%d] Elements...", elements.size()));
+        Log.d(String.format(Locale.getDefault(), "initializing GroupHeaders for [%d] Elements...", elements.size()));
 
         List<IGroupHeader> groupedElements = new ArrayList<>();
         for(IElement element : elements)
@@ -90,12 +90,9 @@ class GroupHeaderProvider
             {
                 groupHeader.addChild(element);
 
-                Log.v(String.format("added %s to %s", element, groupHeader));
-
                 if(!groupedElements.contains(groupHeader))
                 {
                     groupedElements.add(groupHeader);
-                    Log.v(String.format("added %s to GroupedElements", groupHeader));
                 }
             }
             else
@@ -104,17 +101,17 @@ class GroupHeaderProvider
                 this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
                 groupedElements.add(groupHeader);
                 groupHeader.addChild(element);
-
-                Log.v(String.format("created new %s and added %s", groupHeader, element));
             }
         }
-        Log.d(String.format(Locale.getDefault(), "created [%d] GroupHeaders", groupedElements.size()));
+        Log.d(String.format(Locale.getDefault(), "created initial [%d] GroupHeaders", groupedElements.size()));
 
         return groupedElements;
     }
 
     private List<IGroupHeader> updateGroupHeaders(List<IElement> elements, GroupType groupType)
     {
+        Log.d(String.format(Locale.getDefault(), "updating GroupHeaders for [%d] Elements...", elements.size()));
+
         List<IGroupHeader> groupedElements = new ArrayList<>();
 
         for(IGroupHeader groupHeader : this.groupHeadersByGroupElementUuid.values())
@@ -122,6 +119,7 @@ class GroupHeaderProvider
             groupHeader.getChildren().clear();
         }
 
+        int createdGroupHeadersCount = 0;
         for(IElement element : elements)
         {
             IElement groupElement = this.getGroupElement(element, groupType);
@@ -140,7 +138,6 @@ class GroupHeaderProvider
                 if(!groupedElements.contains(groupHeader))
                 {
                     groupedElements.add(groupHeader);
-                    Log.v(String.format("added %s to GroupedAttractions", groupHeader));
                 }
 
                 groupHeader.addChild(element);
@@ -150,12 +147,12 @@ class GroupHeaderProvider
                 groupHeader = GroupHeader.create(groupElement);
                 this.groupHeadersByGroupElementUuid.put(groupElementUuid, groupHeader);
                 groupedElements.add(groupHeader);
-
                 groupHeader.addChild(element);
-                Log.v(String.format("created new %s and added %s", groupHeader, element));
+                createdGroupHeadersCount ++;
             }
         }
 
+        Log.d(String.format(Locale.getDefault(), "created [%d] more GroupHeaders", createdGroupHeadersCount));
         return groupedElements;
     }
 

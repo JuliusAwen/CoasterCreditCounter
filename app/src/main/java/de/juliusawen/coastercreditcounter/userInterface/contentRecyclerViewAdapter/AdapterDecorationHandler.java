@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import android.view.View;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -11,21 +10,20 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-abstract class AdapterDecorationHandler extends AdapterGroupingHandler
+abstract class AdapterDecorationHandler extends AdapterPlainHandler
 {
     private final boolean isDecorable;
+    private Decoration decoration;
 
-    private final Decoration decoration;
-
-    AdapterDecorationHandler(List<IElement> content, Configuration configuration)
+    AdapterDecorationHandler(Configuration configuration)
     {
-        super(content, configuration);
+        super(configuration);
 
         this.isDecorable = configuration.isDecorable;
-        this.decoration = configuration.getDecoration();
 
         if(this.isDecorable)
         {
+            this.decoration = configuration.getDecoration();
             Log.wrap(LogLevel.VERBOSE, String.format("instantiated [%s] with \n%s", this.getClass().getSimpleName(), this.decoration), '=', false);
         }
     }

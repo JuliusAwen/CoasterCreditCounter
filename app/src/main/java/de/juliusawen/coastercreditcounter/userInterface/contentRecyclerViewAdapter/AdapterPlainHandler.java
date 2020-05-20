@@ -2,11 +2,7 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -18,11 +14,9 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+abstract class AdapterPlainHandler extends AdapterContentHandler
 {
-    protected RecyclerView recyclerView;
-
-    protected List<IElement> content;
+    private final boolean hasExternalOnClickListeners;
 
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
@@ -30,20 +24,25 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
     private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
 
-    AdapterBaseHandler(List<IElement> content, Configuration configuration)
+    AdapterPlainHandler(Configuration configuration)
     {
-        this.content = content;
+        super(configuration);
+
+        this.hasExternalOnClickListeners = configuration.hasExternalOnClickListeners;
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
-        this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
-        this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
 
-        Log.wrap(LogLevel.VERBOSE,
-                String.format(Locale.getDefault(), "Instantiated with [%d] Elements, [%d] external OnClickListeners and [%d] external OnLongClickListeners",
-                        this.content.size(),
-                        this.externalOnClickListenersByType.size(),
-                        this.externalOnLongClickListenersByType.size()),
-                '=', false);
+        if(this.hasExternalOnClickListeners)
+        {
+            this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
+            this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
+
+            Log.wrap(LogLevel.VERBOSE,
+                    String.format(Locale.getDefault(), "Instantiated with [%d] external OnClickListeners and [%d] external OnLongClickListeners",
+                            this.externalOnClickListenersByType.size(),
+                            this.externalOnLongClickListenersByType.size()),
+                    '=', false);
+        }
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -70,18 +69,7 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
         };
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView)
-    {
-        this.recyclerView = recyclerView;
-        super.onAttachedToRecyclerView(recyclerView);
-    }
 
-    @Override
-    public int getItemCount()
-    {
-        return this.content.size();
-    }
 
     protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
     {
@@ -89,9 +77,15 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
         Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
         this.setPadding(0, viewHolder);
-        this.setOnClickListeners(viewHolder);
 
         viewHolder.itemView.setTag(element);
+        viewHolder.itemView.setOnClickListener(this.internalOnClickListener);
+        viewHolder.itemView.setOnLongClickListener(this.internalOnLongClickListener);
+
+        viewHolder.imageViewExpandToggle.setTag(element);
+        viewHolder.imageViewExpandToggle.setOnClickListener(this.internalOnClickListener);
+        viewHolder.imageViewExpandToggle.setOnLongClickListener(this.internalOnLongClickListener);
+
         viewHolder.textViewName.setText(element.getName());
         viewHolder.linearLayout.setVisibility(View.VISIBLE);
 
@@ -107,26 +101,17 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
         viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
-    private void setOnClickListeners(ContentRecyclerViewAdapter.ViewHolderElement viewHolderElement)
+    protected void handleOnClick(View view, boolean performExternalClick)
     {
-        viewHolderElement.itemView.setOnClickListener(this.internalOnClickListener);
-        viewHolderElement.itemView.setOnLongClickListener(this.internalOnLongClickListener);
-    }
-
-    protected IElement handleOnClick(View view, boolean performExternalClick)
-    {
-        IElement element = this.fetchElement(view);
-
-        if(performExternalClick)
+        if(performExternalClick && this.hasExternalOnClickListeners)
         {
+            IElement element = this.fetchElement(view);
             View.OnClickListener externalOnClickListener = this.fetchExternalOnClickListener(element);
             if(externalOnClickListener != null)
             {
                 externalOnClickListener.onClick(view);
             }
         }
-
-        return element;
     }
 
     private View.OnClickListener fetchExternalOnClickListener(IElement element)
@@ -151,9 +136,9 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
 
     protected boolean handleOnLongClick(View view, boolean performExternalLongClick)
     {
-        IElement element = this.fetchElement(view);
-        if(performExternalLongClick)
+        if(performExternalLongClick && this.hasExternalOnClickListeners)
         {
+            IElement element = this.fetchElement(view);
             View.OnLongClickListener externalOnLongClickListener = fetchExternalOnLongClickListener(element);
             if(externalOnLongClickListener != null)
             {
@@ -195,46 +180,11 @@ abstract class AdapterBaseHandler extends RecyclerView.Adapter<RecyclerView.View
         throw new IllegalArgumentException(String.format("View tag object's type [%s] is not assignable from IElement", tag.getClass().getSimpleName()));
     }
 
-    public void notifyElementInserted(IElement element)
+    protected AdapterPlainHandler addBottomSpacer()
     {
-        super.notifyItemInserted(this.content.indexOf(element));
-    }
-
-    public void notifyElementChanged(IElement element)
-    {
-        super.notifyItemChanged(this.content.indexOf(element));
-    }
-
-    public void notifyElementRemoved(IElement element)
-    {
-        super.notifyItemRemoved(this.content.indexOf(element));
-    }
-
-    private void swapItems(IElement item1, IElement item2)
-    {
-        int index1 = this.content.indexOf(item1);
-        int index2 = this.content.indexOf(item2);
-
-        Collections.swap(this.content, index1, index2);
-        notifyItemMoved(index1, index2);
-        this.scrollToElement(item1);
-    }
-
-    protected void scrollToElement(IElement element)
-    {
-        if(element != null && this.content.contains(element) && this.recyclerView != null)
+        if(!super.content.isEmpty() && !(super.content.get(super.content.size() - 1) instanceof BottomSpacer))
         {
-            Log.d(String.format("scrolling to %s", element));
-            recyclerView.scrollToPosition(content.indexOf(element));
-        }
-    }
-
-    protected AdapterBaseHandler addBottomSpacer()
-    {
-        if(!this.content.isEmpty() && !(this.content.get(this.content.size() - 1) instanceof BottomSpacer))
-        {
-            this.content.add(new BottomSpacer());
-            notifyItemInserted(this.content.size() - 1);
+            super.insertElement(new BottomSpacer());
             Log.v("added BottomSpacer");
         }
 

@@ -12,7 +12,7 @@ abstract class DecorationPresetProvider
 {
     static Decoration createPresetDecoration(RequestCode requestCode)
     {
-        Log.d(String.format("creating for RequestCode[%s]...", requestCode));
+        Log.v(String.format("creating for RequestCode[%s]...", requestCode));
 
         Decoration decoration = new Decoration();
 

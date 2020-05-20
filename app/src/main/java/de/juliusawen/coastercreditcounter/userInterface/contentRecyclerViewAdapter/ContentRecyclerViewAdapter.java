@@ -19,20 +19,23 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 class ContentRecyclerViewAdapter extends AdapterExpansionHandler
-        implements IContentRecyclerViewAdapter, IDecorableContentRecyclerViewAdapter, IExpandableContentRecyclerViewAdapter, ICountableRecyclerViewAdapter,
-        IDecorableExpandableContentRecyclerViewAdapter
-
+        implements
+        IContentRecyclerViewAdapter,
+        IGroupableContentRecyclerViewAdapter,
+        IDecorableContentRecyclerViewAdapter,
+        IExpandableContentRecyclerViewAdapter,
+        ICountableRecyclerViewAdapter,
+        IDecorableExpandableContentRecyclerViewAdapter,
+        IGroupableDecorableExpandableContentRecyclerViewAdapter
 {
-    protected RecyclerView recyclerView;
-
     ContentRecyclerViewAdapter(List<IElement> content, Configuration configuration)
     {
-        super(content, configuration);
+        super(configuration);
+        this.setContent(content);
 
         Log.wrap(LogLevel.DEBUG,
                 String.format("Details:\n\n%s\n\n%s\n\n%s",
-                        String.format(Locale.getDefault(), "[%d] Elements",
-                                this.content.size()),
+                        String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
                         configuration,
                         configuration.getDecoration()),
                 '=', false);

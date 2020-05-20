@@ -15,6 +15,9 @@ public class Configuration
     boolean isGroupable = false;
     private GroupType groupType = GroupType.NONE;
 
+    boolean hasExternalOnClickListeners = false;
+    private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
+    private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
     boolean isDecorable = false;
     private Decoration decoration;
@@ -27,9 +30,6 @@ public class Configuration
     boolean isSelectable = false;
     boolean isCountable = false;
 
-
-    private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
-    private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
     GroupType getGroupType()
     {
@@ -88,12 +88,14 @@ public class Configuration
 
     public void addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
+        this.hasExternalOnClickListeners = true;
         this.onClickListenersByType.put(type, onClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
     public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
+        this.hasExternalOnClickListeners = true;
         this.onLongClickListenersByType.put(type, onLongClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }

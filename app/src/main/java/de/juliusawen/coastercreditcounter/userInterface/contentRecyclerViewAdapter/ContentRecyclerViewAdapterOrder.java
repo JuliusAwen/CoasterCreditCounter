@@ -21,12 +21,7 @@ public class ContentRecyclerViewAdapterOrder
     {
         this.content = content;
         this.configuration = new Configuration();
-        Log.v(String.format(Locale.getDefault(), "instantiated with [%d] Elements", content.size()));
-    }
-
-    public Configuration getConfiguration()
-    {
-        return this.configuration;
+        Log.d(String.format(Locale.getDefault(), "instantiated with [%d] Elements", content.size()));
     }
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
@@ -75,57 +70,4 @@ public class ContentRecyclerViewAdapterOrder
                         this.configuration.validate(false)));
         }
     }
-
-//    public ContentRecyclerViewAdapterOrder makeItDecorable(RecyclerViewDecoration recyclerViewDecoration)
-//    {
-//        if(!this.presetOrdered)
-//        {
-//            this.adapterConfiguration.isDecorable = true;
-//            this.adapterConfiguration.setRecyclerViewDecoration(recyclerViewDecoration);
-//            return this;
-//        }
-//        else
-//        {
-//            throw new UnsupportedOperationException("already ordered a preset");
-//        }
-//    }
-//
-//    public ContentRecyclerViewAdapterOrder makeItExpandable()
-//    {
-//        if(!this.presetOrdered)
-//        {
-//            this.adapterConfiguration.isExpandable = true;
-//            return this;
-//        }
-//        else
-//        {
-//            throw new UnsupportedOperationException("already ordered a preset");
-//        }
-//    }
-//
-//    public ContentRecyclerViewAdapterOrder makeItSelectable()
-//    {
-//        if(!this.presetOrdered)
-//        {
-//            this.adapterConfiguration.isSelectable = true;
-//            return this;
-//        }
-//        else
-//        {
-//            throw new UnsupportedOperationException("already ordered a preset");
-//        }
-//    }
-//
-//    public ContentRecyclerViewAdapterOrder makeItCountable()
-//    {
-//        if(!this.presetOrdered)
-//        {
-//            this.adapterConfiguration.isCountable = true;
-//            return this;
-//        }
-//        else
-//        {
-//            throw new UnsupportedOperationException("already ordered a preset");
-//        }
-//    }
 }

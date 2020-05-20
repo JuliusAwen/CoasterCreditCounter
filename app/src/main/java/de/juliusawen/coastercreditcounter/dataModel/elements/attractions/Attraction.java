@@ -74,7 +74,6 @@ public abstract class Attraction extends Element implements IAttraction
     {
         if(this.getModel().isCreditTypeSet())
         {
-            Log.v(String.format("getting %s's CreditType from %s", this, this.getModel()));
             return this.getModel().getCreditType();
         }
 
@@ -102,7 +101,6 @@ public abstract class Attraction extends Element implements IAttraction
     {
         if(this.getModel().isCategorySet())
         {
-            Log.v( String.format("getting %s's Category from %s", this, this.getModel()));
             return this.getModel().getCategory();
         }
 
@@ -130,7 +128,6 @@ public abstract class Attraction extends Element implements IAttraction
     {
         if(this.getModel().isManufacturerSet())
         {
-            Log.v( String.format("getting %s's Manufacturer from %s", this, this.getModel()));
             return this.getModel().getManufacturer();
         }
 
