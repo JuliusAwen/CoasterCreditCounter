@@ -30,8 +30,9 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         if(this.isDecorable)
         {
             this.decoration = configuration.getDecoration();
-            Log.v(String.format("\n%s", this.decoration));
         }
+
+        Log.v(String.format("isDecorable[%S]%s", configuration.isDecorable, configuration.isDecorable ? String.format("\n%s", configuration.getDecoration()) : ""));
     }
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)

@@ -21,7 +21,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 {
-    private boolean isExpandable;
+    private boolean isExpandable = false;
 
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
@@ -39,18 +39,19 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         super.configure(configuration);
 
         this.isExpandable = configuration.isExpandable;
+
+        StringBuilder childTypes = new StringBuilder();
         if(this.isExpandable)
         {
             this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
 
-            StringBuilder childTypes = new StringBuilder();
             for(Class<? extends IElement> type : configuration.getChildTypesToExpandInSortOrder())
             {
                 childTypes.append(String.format("\n[%s]", type.getSimpleName()));
             }
-
-            Log.v(String.format("set ChildTypes:%s", childTypes));
         }
+
+        Log.v(String.format("isExpandable[%S]%s", configuration.isDecorable, configuration.isExpandable ? String.format("ChildTypes:%s", childTypes) : childTypes));
     }
 
     @Override
@@ -60,6 +61,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
         if(this.isExpandable)
         {
+            Log.v(String.format("grouping Content by GroupType[%s]", groupType));
             this.generationByItem.clear();
             super.content = this.initializeItems(super.content, 0);
         }

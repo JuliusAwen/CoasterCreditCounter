@@ -15,12 +15,14 @@ public class ContentRecyclerViewAdapterOrder
 {
     private List<IElement> content;
     private Configuration configuration;
+    private IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     public ContentRecyclerViewAdapterOrder(List<IElement> content)
     {
+        Log.d(String.format(Locale.getDefault(), "instantiating with [%d] Elements - instantiating dependencies...", content.size()));
         this.content = content;
         this.configuration = new Configuration();
-        Log.d(String.format(Locale.getDefault(), "instantiated with [%d] Elements", content.size()));
+        this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapter();
     }
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
@@ -53,7 +55,8 @@ public class ContentRecyclerViewAdapterOrder
                             this.configuration.getDecoration()),
                     '=', false);
 
-            return new ContentRecyclerViewAdapter(this.configuration, this.content);
+            this.contentRecyclerViewAdapter.initialize(this.configuration, this.content);
+            return this.contentRecyclerViewAdapter;
         }
         else
         {

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class Configuration
 {
@@ -29,6 +30,10 @@ public class Configuration
 
     boolean isCountable = false;
 
+    Configuration()
+    {
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
+    }
 
     GroupType getGroupType()
     {
@@ -38,7 +43,7 @@ public class Configuration
     public void setGroupType(GroupType groupType)
     {
         this.groupType = groupType;
-        Log.d(String.format("set GroupType[%s]", groupType));
+        Log.v(String.format("set GroupType[%s]", groupType));
     }
 
 
@@ -51,7 +56,7 @@ public class Configuration
     {
         this.isDecorable = true;
         this.decoration = decoration;
-        Log.d(String.format("\n%s", decoration));
+        Log.v(String.format("\n%s", decoration));
     }
 
 
@@ -64,7 +69,7 @@ public class Configuration
     {
         this.isExpandable = true;
         this.childTypesToExpandInSortOrder.addAll(childTypesToExpandInSortOrder);
-        Log.d(String.format(Locale.getDefault(), "added [%d] types to expand", childTypesToExpandInSortOrder.size()));
+        Log.v(String.format(Locale.getDefault(), "added [%d] types to expand", childTypesToExpandInSortOrder.size()));
     }
 
     public void addChildTypeToExpand(Class<? extends IElement> childTypeToExpand)
@@ -88,14 +93,14 @@ public class Configuration
     {
         this.hasExternalOnClickListeners = true;
         this.onClickListenersByType.put(type, onClickListener);
-        Log.d(String.format("for [%s]", type.getSimpleName()));
+        Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
     public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
         this.hasExternalOnClickListeners = true;
         this.onLongClickListenersByType.put(type, onLongClickListener);
-        Log.d(String.format("for [%s]", type.getSimpleName()));
+        Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
     public boolean validate(boolean tryFix)
@@ -150,7 +155,7 @@ public class Configuration
                 "ContentRecyclerViewConfiguration:\n" +
                         "  groupType[%s]\n" +
                         "  isDecorable[%S]\n" +
-                        "  isSelectable[%S]\n" + (this.isSelectable ? String.format(" - isMultipleSelection[%S]", this.isMultipleSelection) :  "\n") +
+                        "  isSelectable[%S]" + (this.isSelectable ? String.format(" - isMultipleSelection[%S]", this.isMultipleSelection) :  "\n") +
                         "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpandInSortOrder.size()) : "\n") +
                         "  isCountable[%S]\n",
 

@@ -16,19 +16,24 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
 {
-    ContentRecyclerViewAdapter(Configuration configuration, List<IElement> content)
+    ContentRecyclerViewAdapter()
     {
         super();
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
+    }
+
+    public void initialize(Configuration configuration, List<IElement> content)
+    {
         this.configure(configuration);
         this.setContent(content);
-        Log.frame(LogLevel.INFO, "instantiated", '#', true);
+        Log.d("initialized");
     }
 
     @Override
     protected void configure(Configuration configuration)
     {
-        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n\n%s", configuration, configuration.getDecoration()), '=', false);
         super.configure(configuration);
+        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n\n%s", configuration, configuration.getDecoration()), '=', false);
     }
 
     @Override
@@ -36,6 +41,13 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     {
         Log.d(String.format(Locale.getDefault(), "setting [%d] Items", content.size()));
         super.setContent(content);
+    }
+
+    @Override
+    public void groupContent(GroupType groupType)
+    {
+        Log.d(String.format("grouping Content by GroupType[%s]", groupType));
+        super.groupContent(groupType);
     }
 
     @Override

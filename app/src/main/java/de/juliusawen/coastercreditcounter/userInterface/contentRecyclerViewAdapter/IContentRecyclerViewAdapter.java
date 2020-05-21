@@ -6,6 +6,8 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
 public interface IContentRecyclerViewAdapter
 {
+    void initialize(Configuration configuration, List<IElement> content);
+
     void setContent(List<IElement> content);
     void notifyContentChanged();
 

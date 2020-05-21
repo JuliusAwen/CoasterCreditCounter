@@ -15,8 +15,8 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 {
-    private boolean isSelectable;
-    private boolean selectMultipleItems;
+    private boolean isSelectable = false;
+    private boolean isMultipleSelection = false;
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
 
     AdapterSelectionHandler()
@@ -29,7 +29,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
-
+        this.isSelectable = configuration.isSelectable;
+        this.isMultipleSelection = configuration.isMultipleSelection;
+        Log.v(String.format("isSelectable[%S], isMultipleSelection[%S]", configuration.isSelectable, configuration.isMultipleSelection));
     }
 
     @Override
@@ -109,6 +111,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public void selectItem(IElement element, boolean scrollToItem)
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return;
+        }
+
         if(element != null)
         {
             if(!this.selectedItemsInOrderOfSelection.contains(element))
@@ -117,7 +125,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
                 Log.v(String.format("%s selected", element));
             }
 
-            if(super.itemExists(element))
+            if(super.exists(element))
             {
                 super.notifyItemChanged(element);
             }
@@ -126,6 +134,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public void deselectAll()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return;
+        }
+
         Log.i("deselecting all elements...");
         LinkedList<IElement> selectedItems = new LinkedList<>(this.selectedItemsInOrderOfSelection);
         this.deselectItems(selectedItems);
@@ -141,6 +155,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public void deselectItem(IElement element, boolean scrollToItem)
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return;
+        }
+
         if(element != null)
         {
             if(this.selectedItemsInOrderOfSelection.contains(element))
@@ -155,6 +175,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public boolean isAllSelected()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return false;
+        }
+
         List<IElement> items = new ArrayList<>(super.content);
         items.removeAll(this.selectedItemsInOrderOfSelection);
 
@@ -163,11 +189,23 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public boolean isAllDeselected()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return false;
+        }
+
         return this.selectedItemsInOrderOfSelection.isEmpty();
     }
 
     public LinkedList<IElement> getSelectedItemsInOrderOfSelection()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return new LinkedList<>();
+        }
+
         LinkedList<IElement> selectedItems = new LinkedList<>();
 
         for(IElement item : this.selectedItemsInOrderOfSelection)
@@ -183,6 +221,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     public IElement getLastSelectedItem()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return null;
+        }
+
         if(!this.selectedItemsInOrderOfSelection.isEmpty())
         {
             return this.selectedItemsInOrderOfSelection.get(0);

@@ -14,10 +14,10 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     protected RecyclerView recyclerView;
-    protected List<IElement> content;
-    protected ArrayList<IElement> ungroupedContent;
+    protected List<IElement> content = new ArrayList<>();
+    protected ArrayList<IElement> ungroupedContent = new ArrayList<>();
 
-    private GroupType groupType;
+    private GroupType groupType = GroupType.NONE;
     private final GroupHeaderProvider groupHeaderProvider;
 
     AdapterContentHandler()
@@ -29,12 +29,13 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
-        Log.v(String.format("set GroupType[%s]", groupType));
+        Log.v(String.format("GroupType is [%s]", configuration.getGroupType()));
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView)
     {
+        Log.d("attaching...");
         this.recyclerView = recyclerView;
         super.onAttachedToRecyclerView(recyclerView);
     }
@@ -55,7 +56,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
         this.groupContent(this.groupType);
-        this.notifyContentChanged();
     }
 
     public void notifyContentChanged()
@@ -63,7 +63,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         super.notifyDataSetChanged();
     }
 
-    protected boolean itemExists(IElement element)
+    protected boolean exists(IElement element)
     {
         if(element != null)
         {
@@ -75,7 +75,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected IElement getItem(int position)
     {
-        if(position >= this.getItemCount())
+        if(position < this.getItemCount())
         {
             return this.content.get(position);
         }
@@ -85,7 +85,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected int getPosition(IElement element)
     {
-        if(itemExists(element))
+        if(exists(element))
         {
             return this.content.indexOf(element);
         }
@@ -106,7 +106,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     public void notifyItemChanged(IElement element)
     {
-        if(this.itemExists(element))
+        if(this.exists(element))
         {
             super.notifyItemChanged(this.getPosition(element));
         }
@@ -114,7 +114,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     public void removeItem(IElement element)
     {
-        if(this.itemExists(element))
+        if(this.exists(element))
         {
             super.notifyItemRemoved(this.getPosition(element));
             this.content.remove(element);
@@ -123,7 +123,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     private void swapItems(IElement element1, IElement element2)
     {
-        if(this.itemExists(element1) && this.itemExists(element2))
+        if(this.exists(element1) && this.exists(element2))
         {
             int fromPosition = this.getPosition(element1);
             int toPosition = this.getPosition(element2);
@@ -136,19 +136,32 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected void scrollToItem(IElement element)
     {
-        if(this.itemExists(element) && this.recyclerView != null)
+        if(this.content.isEmpty())
         {
-            Log.d(String.format("scrolling to %s", element));
-            this.recyclerView.scrollToPosition(this.getPosition(element));
+            Log.w("not scrolling - Content is empty");
+            return;
         }
 
-        throw new IllegalStateException("RecyclerView can not be null");
+        if(!this.exists(element))
+        {
+            Log.w(String.format("not scrolling - %s does not exist in Content", element));
+            return;
+        }
+
+        if(this.recyclerView == null)
+        {
+            Log.w("not scrolling - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
+            return;
+        }
+
+        Log.d(String.format("scrolling to %s", element));
+        this.recyclerView.scrollToPosition(this.getPosition(element));
     }
 
     public void groupContent(GroupType groupType)
     {
         this.groupType = groupType;
-        Log.d(String.format("grouping Content by GroupType[%s]", this.groupType));
+        Log.v(String.format("grouping Content by GroupType[%s]", groupType));
 
         //        this.selectedItemsInOrderOfSelection.clear();
         //        if(App.preferences.expandLatestYearHeaderByDefault())
@@ -157,15 +170,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         //            this.expandedItems.add(latestSpecialGroupHeader);
         //        }
 
-        List<IElement> groupedItems = this.groupType == GroupType.NONE
+        this.content = this.groupType == GroupType.NONE
                 ? new ArrayList<>(this.content)
                 : this.groupHeaderProvider.groupElements(this.ungroupedContent, this.groupType);
 
-        if(!this.content.isEmpty())
-        {
-            this.scrollToItem(this.getItem(0));
-        }
-
-        this.content = groupedItems;
+        this.notifyContentChanged();
+        this.scrollToItem(this.getItem(0));
     }
 }

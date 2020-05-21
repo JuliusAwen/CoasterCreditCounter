@@ -27,6 +27,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class Decoration
 {
@@ -38,7 +39,7 @@ public class Decoration
     Decoration()
     {
         this.initializeContentTypesByDetailDisplayModeByDetailType();
-        Log.v("instantiated");
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
     private void initializeContentTypesByDetailDisplayModeByDetailType()

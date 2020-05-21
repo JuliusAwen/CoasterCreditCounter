@@ -21,7 +21,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterPlainHandler extends AdapterContentHandler
 {
-    private boolean hasExternalOnClickListeners;
+    private boolean hasExternalOnClickListeners = false;
 
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
